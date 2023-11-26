@@ -7,6 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Mapster" Version="7.4.1-pre01" />
+        <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
     </ItemGroup>
@@ -15,12 +17,6 @@
       <ProjectReference Include="..\ConsiliumTempus.Application\ConsiliumTempus.Application.csproj" />
       <ProjectReference Include="..\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj" />
       <ProjectReference Include="..\ConsiliumTempus.Infrastructure\ConsiliumTempus.Infrastructure.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Common\Mapping\" />
-      <Folder Include="Contracts\" />
-      <Folder Include="Controllers\" />
     </ItemGroup>
 
 </Project>
