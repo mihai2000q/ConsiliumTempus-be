@@ -41,17 +41,18 @@ dotnet run
 
 The application will run in https mode by default, but that can be changed by:
 
-Send a request to test if it works
+Send a request to test if it works, see examle below. By default, the host is: ``https://localhost:7121/api``
 
-```
-GET https://localhost:1234/api/login
+```js
+GET {{host}}/auth/login
 ```
 
 It will say access denied, however, now you know that you have a working connection to the API.
 
 ## Testing
 
-More about testing at [Testing](docs/Testing.md)
+The backend of the application is tested using the **xUnit** framework. The tests are divided into Unit and Integration Tests.<br> 
+For more information check out the documentation on [Testing](docs/Testing.md)
 
 ## Architecture
 

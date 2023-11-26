@@ -4,5 +4,5 @@
 
 ## User
 
-More on the user at...
-See more at [User](docs/domain/Aggregates.User.md)
+This is the user of the application.
+See more at [User](domain/Aggregates.User.md)
