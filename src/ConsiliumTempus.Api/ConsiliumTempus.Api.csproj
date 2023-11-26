@@ -11,4 +11,16 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ConsiliumTempus.Application\ConsiliumTempus.Application.csproj" />
+      <ProjectReference Include="..\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj" />
+      <ProjectReference Include="..\ConsiliumTempus.Infrastructure\ConsiliumTempus.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Common\Mapping\" />
+      <Folder Include="Contracts\" />
+      <Folder Include="Controllers\" />
+    </ItemGroup>
+
 </Project>
