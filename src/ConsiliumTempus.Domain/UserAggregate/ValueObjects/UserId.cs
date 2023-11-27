@@ -1,16 +1,27 @@
-﻿namespace ConsiliumTempus.Domain.UserAggregate.ValueObjects;
+﻿using ConsiliumTempus.Domain.Common.Models;
 
-public class UserId
+namespace ConsiliumTempus.Domain.UserAggregate.ValueObjects;
+
+public class UserId : AggregateRootId<Guid>
 {
-    public Guid Value { get; set; }
+    public sealed override Guid Value { get; protected set; }
+
+    private UserId()
+    {
+    }
 
     private UserId(Guid value)
     {
         Value = value;
     }
-    
+
     public static UserId CreateUnique()
     {
         return new UserId(Guid.NewGuid());
+    }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
     }
 }
