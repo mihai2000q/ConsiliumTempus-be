@@ -41,7 +41,7 @@ dotnet run
 
 The application will run in https mode by default, but that can be changed by:
 
-Send a request to test if it works, see examle below. By default, the host is: ``https://localhost:7121/api``
+Send a request to test if it works, see examle below. By default, the host is `https://localhost:7121/api`
 
 ```js
 GET {{host}}/auth/login
@@ -56,14 +56,19 @@ For more information check out the documentation on [Testing](docs/Testing.md)
 
 ## Architecture
 
-The architecture of this app...
-See more at [Architecture](docs/Architecture.md)
+The architecture implemented in this application is following the principles of Clean Coding, Clean Architecture and Domain-Driven-Design. 
+The 4 layers of this type of architecture feature the:
+- Domain Layer - the place where the domain models are structured
+- Application Layer - intermediator between layers that validates and makes abstract calls to the infrastructure
+- Infrastructure Layer - the data access layer for the database
+- Presentation Layer - the endpoint where the application becomes exposed
+
+For more, go check out [Architecture](docs/Architecture.md).
 
 ## Api
 
-The api of this app...
-See more at [Api](docs/Api.md)
+More about the Api and the HTTP Requests and Response can be found at [Api documentation](docs/Api.md).
 
 ## Domain Models
 
-More about the domain models can be found at [Domain Models](docs/Domain.md)
+More about the domain models can be found at [Domain Models](docs/Domain.md).

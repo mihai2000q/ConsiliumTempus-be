@@ -5,6 +5,8 @@
 - [Integration Testing](#integration-testing)
     - [Coding Convention](#coding-convention-1)
 
+The backend of the application is tested using the **xUnit** framework. The tests are divided into Unit and Integration Tests.
+
 ## Unit Testing
 
 The Unit tests are designed to test single units of code in isolation. They are quick and easy to create, and help find and fix bugs early in the development cycle. They can be typically run using the IDE by right clicking any of them. 

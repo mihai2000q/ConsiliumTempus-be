@@ -2,7 +2,7 @@
 
 ## User
 
-This is the user of the application. It holds sensitive data.
+This is the user of the application. It holds sensitive data like the password or email.
 
 ```csharp
 class User
