@@ -1,10 +1,10 @@
-﻿using ConsiliumTempus.Domain.UserAggregate.ValueObjects;
+﻿using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.UserAggregate.ValueObjects;
 
 namespace ConsiliumTempus.Domain.UserAggregate;
 
-public class User
+public class User : AggregateRoot<UserId, Guid>
 {
-    public UserId Id { get; private set; }
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
     public string Email { get; private set; }
