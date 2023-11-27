@@ -3,6 +3,7 @@
 - [Abstract](#abstract)
 - [Get Started](#get-started)
     - [Restore Dependencies](#restore-dependencies)
+    - [Dotnet User Secrets](#dotnet-user-secrets)
     - [Final Steps](#final-steps)
 - [Testing](#testing)
 - [Architecture](#architecture)
@@ -17,11 +18,21 @@ This is the backend of the Consilium Tempus application.
 
 To get started developing on this backend application you will need to do the following steps.
 
+### Dotnet User Secrets
+
+To make sure that the dotnet user secrets are all setup type in the terminal the following command:
+
+```sh
+dotnet user-secrets list --project /src/ConsiliumTempus.Api
+```
+
+The above command should list out one secret key that is used for the Jwt Token Generator Settings.
+
 ### Restore Dependencies
 
 To restore the nuget dependencies try the following command in the terminal:
 
-```
+```sh
 dotnet restore
 ```
 
@@ -29,13 +40,13 @@ dotnet restore
 
 Now, to check whether the app can build without any errors run:
 
-```
+```sh
 dotnet build
 ```
 
 For testing purposes, run the application:
 
-```
+```sh
 dotnet run
 ```
 

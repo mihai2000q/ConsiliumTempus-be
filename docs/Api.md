@@ -1,8 +1,5 @@
 # Consilium Tempus Backend API
 
-- [Api Controller](#api-controller)
-- [Authentication](#authentication)
-
 In order to use the application you will need a JWT token.
 
 ## Api Controller
@@ -15,6 +12,5 @@ The template Api Controller resolves the following:
 - it injects the mapper and the mediator
 - it contains a solution to returning validation problems, conflicts, etc.
 
-## Authentication
-
-For more information go to [Auth](api/Api.Auth.md).
+Below you will find complete documentation on each Controller of the Api Layer:
+- [Authentication](api/Api.Auth.md)
