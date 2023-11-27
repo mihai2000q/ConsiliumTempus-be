@@ -1,4 +1,4 @@
-﻿namespace ConsiliumTempus.Api.Contracts.Authentication;
+﻿namespace ConsiliumTempus.Api.Contracts.Authentication.Register;
 
 public record RegisterRequest(
     string FirstName,

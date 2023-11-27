@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Authentication;
+using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
 using MapsterMapper;
 using MediatR;
