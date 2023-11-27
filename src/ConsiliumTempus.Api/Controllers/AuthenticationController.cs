@@ -1,6 +1,8 @@
 ﻿using ConsiliumTempus.Api.Contracts.Authentication;
+using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
+using ConsiliumTempus.Application.Authentication.Queries;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -24,6 +26,18 @@ public class AuthenticationController : ApiController
 
         return result.Match(
             registerResult => Ok(Mapper.Map<RegisterResponse>(registerResult)),
+            Problem
+        );
+    }
+    
+    [HttpPost("Login")]
+    public async Task<IActionResult> Login(LoginRequest request)
+    {
+        var query = Mapper.Map<LoginQuery>(request);
+        var result = await Mediator.Send(query);
+
+        return result.Match(
+            loginResult => Ok(Mapper.Map<LoginResponse>(loginResult)),
             Problem
         );
     }
