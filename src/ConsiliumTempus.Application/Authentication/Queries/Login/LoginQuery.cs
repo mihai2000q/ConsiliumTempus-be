@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using MediatR;
 
-namespace ConsiliumTempus.Application.Authentication.Queries;
+namespace ConsiliumTempus.Application.Authentication.Queries.Login;
 
 public record LoginQuery(
     string Email,

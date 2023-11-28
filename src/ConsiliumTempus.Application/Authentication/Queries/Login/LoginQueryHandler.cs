@@ -4,7 +4,7 @@ using ConsiliumTempus.Domain.Common.Errors;
 using ErrorOr;
 using MediatR;
 
-namespace ConsiliumTempus.Application.Authentication.Queries;
+namespace ConsiliumTempus.Application.Authentication.Queries.Login;
 
 public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<LoginResult>>
 {

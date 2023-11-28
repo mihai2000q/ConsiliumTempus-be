@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ConsiliumTempus.Application.Authentication.Queries;
+namespace ConsiliumTempus.Application.Authentication.Queries.Login;
 
 public class LoginQueryValidator : AbstractValidator<LoginQuery>
 {
