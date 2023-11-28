@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using ConsiliumTempus.Application.Common.Behavior;
+using ConsiliumTempus.Application.Common.Validation;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

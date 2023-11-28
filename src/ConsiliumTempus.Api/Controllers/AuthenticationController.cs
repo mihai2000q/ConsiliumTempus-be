@@ -1,8 +1,6 @@
-﻿using ConsiliumTempus.Api.Contracts.Authentication;
-using ConsiliumTempus.Api.Contracts.Authentication.Login;
+﻿using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
-using ConsiliumTempus.Application.Authentication.Queries;
 using ConsiliumTempus.Application.Authentication.Queries.Login;
 using MapsterMapper;
 using MediatR;

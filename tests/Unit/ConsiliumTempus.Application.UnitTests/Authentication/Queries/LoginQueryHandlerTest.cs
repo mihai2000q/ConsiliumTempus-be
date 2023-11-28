@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Application.Authentication.Queries;
-using ConsiliumTempus.Application.Authentication.Queries.Login;
+﻿using ConsiliumTempus.Application.Authentication.Queries.Login;
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Domain.UserAggregate;
