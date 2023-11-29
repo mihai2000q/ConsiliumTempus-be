@@ -3,7 +3,10 @@ using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Infrastructure.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence;
+using ConsiliumTempus.Infrastructure.Persistence.Database;
+using ConsiliumTempus.Infrastructure.Persistence.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -16,14 +19,9 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuth(configuration)
-            .AddPersistence();
+            .AddPersistence(configuration);
         
         return services;
-    }
-
-    private static void AddPersistence(this IServiceCollection services)
-    {
-        services.AddScoped<IUserRepository, UserRepository>();
     }
 
     private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
@@ -48,5 +46,21 @@ public static class DependencyInjection
             });
         
         return services;
+    }
+    
+    private static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
+    {
+        var databaseSettings = new DatabaseSettings();
+        configuration.Bind(DatabaseSettings.SectionName, databaseSettings);
+        
+        services.AddDbContext<ConsiliumTempusDbContext>(options => options
+            .UseSqlServer($"" +
+                          $"Server={databaseSettings.Server},{databaseSettings.Port};" +
+                          $"Database={databaseSettings.Name};" +
+                          $"User Id={databaseSettings.User};" +
+                          $"Password={databaseSettings.Password};" +
+                          $"Encrypt=false")); 
+        
+        services.AddScoped<IUserRepository, UserRepository>();
     }
 }

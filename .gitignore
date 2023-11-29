@@ -1,8 +1,14 @@
-# IDE folder
+# Rider - IDE
 .idea/
-
-bin/
-obj/
-/packages/
 riderModule.iml
 /_ReSharper.Caches/
+
+# Environment File
+.env
+
+# Compile Folders
+bin/
+obj/
+
+# Nuget Dependencies
+/packages/
