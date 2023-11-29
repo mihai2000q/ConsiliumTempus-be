@@ -47,7 +47,7 @@ jobs:
       run: dotnet build --no-restore
       
     - name: Test
-      run: dotnet test --no-build --verbosity normal  --filter "FullyQualifiedName~UnitTests"
+      run: dotnet test --no-build --verbosity normal --filter "FullyQualifiedName~UnitTests"
   
   integration-test:
 
@@ -69,5 +69,5 @@ jobs:
     
     # TODO: setup DB for this purpose
     - name: Test
-      run: dotnet test --no-build --verbosity normal  --filter "FullyQualifiedName~IntegrationTests"
+      run: dotnet test --no-build --verbosity normal --filter "FullyQualifiedName~IntegrationTests"
   
