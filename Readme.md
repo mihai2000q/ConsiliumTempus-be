@@ -29,39 +29,52 @@ To initialize the environment for dotnet user-secrets, type in the following com
 dotnet user-secrets init
 ```
 
-To add a ket-value secret pair, type in the following command (be sure that you are in the right directory):
+To add a secret key-value pair, type in the following command (be sure that you are in the right directory):
 
 ```sh
-dotnet user-secrets set --project /src/ConsiliumTempus.Api "JwtSettings:SecretKey" "Super-Secret-Key-Example"
+dotnet user-secrets set --project ./src/ConsiliumTempus.Api "JwtSettings:SecretKey" "Super-Secret-Key-Example"
 ```
+
+The above command "injects" the secret key: "Super-Secrey-Key-Example" into the .NET configuration files of the Api, `appsettings.json` and `appsettings.Development.json`, into the "JwtSettings" JSON object into the SecretKey Property (Note: if the name of the object, or the property shall change, the user-secret should too).
 
 To make sure that the dotnet user secrets are all setup type in the terminal the following command:
 
 ```sh
-dotnet user-secrets list --project /src/ConsiliumTempus.Api
+dotnet user-secrets list --project ./src/ConsiliumTempus.Api
 ```
 
 The above command should list out one secret key that is used for the Jwt Token Generator Settings.
 
-To be noted that for the production environment another key is gonna be randomly written and encrypted using an official encrypting algorithm.
+To be noted that for the production environment another key is gonna be randomly written and encrypted using an official encrypting algorithm, as the dotnet user-secrets is used ONLY for development.
 
 ### Docker
 
-docker compose file provided...
+If you decide to run the application in Docker, a `docker-compose.yml` file has been provided. This file uses variables from the `.env` file, which is locally defined for each user. Therefore, you can copy paste the `.env.dev` file and rename it to `.env`. It contains the parameters needed for the Database container initialization and appliance of migrations shell script.
 
-environment file ...
+Next, to sync up the Application with the Database, go inside the `appsettings.Development.json` file (inside `src/ConsiliumTempus.Api`), and change the *Server* parameter from **Localhost** to the container name, which by default is **CT-Database**, and also the *Port* from **7123** to **1433**.
 
-default user is SA
+Once you have the environment files setup, just type in the following command:
 
-inside `appsettings.Development.json`, change the Server parameter from Localhost to the container name, which by default is: `CT-Database`
+```sh
+docker compose up -d
+```
 
-it is running in development mode by default via composer...
+This command will open up 2 containers: one for the database and the other for the application, which is running by default in development mode.
+
+To run only the docker database, run the following command:
+
+```sh
+docker compose up -d database
+```
+
+To finalize the database setup, run the `apply-migration-to-database.sh` shell script.
+
+To enable the production mode in Docker, the `docker-compose.yml` should be changed (however, that does not work at the moment).
 
 ### Local Development
 
-For local development you will either install your own database instance or use the one from the docker containers (recommended).
-
-In case you do prefer another database instance, don't forget to change the database parameters inside the `.env` file and the `appsettings.Development.json` from within the Api Project.
+For local development you will either install your own database instance or use the one from the docker containers (recommended). <br>
+For recapitulation purposes, just procure an `.env` file and start only the database container (the `appsettings.Development.json` shoud match the `.env` and the *Server* is **Localhost**).
 
 #### Restore Dependencies
 
@@ -91,7 +104,7 @@ The application will run in https by default, but that can be changed by inside 
 
 #### Test Development Environemnt
 
-To send a request (via Postman) in order to test if everything works accordingly, see example below. By default, the *host* is `https://localhost:7123/api`
+To send a request (via Postman) in order to test if everything works accordingly, see example below. By default, the *host* is `http://localhost:7121/api` for http, and `http://localhost:7121/api` for https (you can use any of them in https mode).
 
 ```js
 POST {{host}}/auth/login

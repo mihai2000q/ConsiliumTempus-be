@@ -1,0 +1,24 @@
+# Compiled files
+[b|B]in
+[O|o]bj
+
+# Git
+.github/
+.gitignore
+
+# IDE
+.idea/
+
+# Doc
+docs/
+Readme.md
+
+# Environment
+.env*/
+
+# Shell Scripts
+*.sh
+
+# Docker
+Dockerfile
+docker-compose.yml

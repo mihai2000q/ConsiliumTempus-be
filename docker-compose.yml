@@ -1,0 +1,28 @@
+version: '3.9'
+
+name: consilium-tempus
+services:
+  backend-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: CT-Backend
+    ports:
+      - "7123:80" 
+    depends_on:
+      - database
+    environment:
+      # should be defined in Development Environment to allow loading dotnet user-secrets locally
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      # map the dotnet user-secret folder
+      - $APPDATA/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+  database:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    container_name: CT-Database
+    ports:
+      - "${DATABASE_PORT}:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${DATABASE_PASSWORD}
