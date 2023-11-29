@@ -11,4 +11,7 @@ bin/
 obj/
 
 # Nuget Dependencies
-/packages/
+packages/
+
+# Logging Folder
+logs/

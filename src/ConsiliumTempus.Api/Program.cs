@@ -4,6 +4,9 @@ using ConsiliumTempus.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    builder.Logging
+        .AddLogger(builder.Configuration);
+    
     builder.Services
         .AddApplication()
         .AddInfrastructure(builder.Configuration)
