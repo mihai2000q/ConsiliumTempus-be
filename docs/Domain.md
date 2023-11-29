@@ -1,8 +1,7 @@
 # Consilium Tempus Backend Domain Models
 
-- [User](#user)
+Below you will find a complete list and documentation for each Aggregate and Entity.
 
-## User
+## Aggregates
 
-More on the user at...
-See more at [User](docs/domain/Aggregates.User.md)
+- [User](domain/Aggregates.User.md)

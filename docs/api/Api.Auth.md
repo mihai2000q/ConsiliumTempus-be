@@ -4,23 +4,30 @@
     - [Register](#register)
         - [Register Request](#register-request)
         - [Register Response](#register-response)
-    - [Login](#register)
-        - [Login Request](#register-request)
-        - [Login Response](#register-response)
+    - [Login](#login)
+        - [Login Request](#login-request)
+        - [Login Response](#login-response)
 
 ## Auth
+
+In order to use the application the user should first register. When registering a User will be created. After that, the user can login, where, a token will be created. This token holds sensitive data. The developer can test whether the token generator worked accordingly by grabbing the token hash and decode it on [jwt.io](https://jwt.io). See example below:
+
+![Decoded Jwt Token](../images/api/auth-jwt-token.png)
+
+### Register
 
 ```js
 POST {{host}}/auth/register
 ```
 
-### Register
-
 #### Register Request
 
 ```json
 {
-    
+    "firstName": "Firsty",
+    "lastName": "Lasty",
+    "email": "FirstLasty@example.com",
+    "password": "password123"
 }
 ```
 
@@ -32,17 +39,22 @@ POST {{host}}/auth/register
 
 ```json
 {
-
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzQyM2NkMS0wNGY1LTQ5ZjAtOWY1OS0yOGVjNDk1YjllNzAiLCJlbWFpbCI6IkZpcnN0TGFzdHlAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoiRmlyc3R5IiwiZmFtaWx5X25hbWUiOiJMYXN0eSIsImp0aSI6ImQzZWJlOTExLWFmNDktNDE3OC1iZmVmLWEwODljMDg5ZGI5ZSIsImV4cCI6MTcwMTIwMjQyNSwiaXNzIjoiQ29uc2lsaXVtVGVtcHVzIiwiYXVkIjoiQ29uc2lsaXVtVGVtcHVzIn0.KqiE-eQqyd-VtfMJB3x9dNW2wR6_TrkGpGZ-ZyxxPWI"
 }
 ```
 
 ### Login
 
+```js
+POST {{host}}/auth/login
+```
+
 #### Login Request
 
 ```json
 {
-    
+    "email": "FirstLasty@example.com",
+    "password": "password123"
 }
 ```
 
@@ -54,6 +66,6 @@ POST {{host}}/auth/register
 
 ```json
 {
-    
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzQyM2NkMS0wNGY1LTQ5ZjAtOWY1OS0yOGVjNDk1YjllNzAiLCJlbWFpbCI6IkZpcnN0TGFzdHlAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoiRmlyc3R5IiwiZmFtaWx5X25hbWUiOiJMYXN0eSIsImp0aSI6ImQzZWJlOTExLWFmNDktNDE3OC1iZmVmLWEwODljMDg5ZGI5ZSIsImV4cCI6MTcwMTIwMjQyNSwiaXNzIjoiQ29uc2lsaXVtVGVtcHVzIiwiYXVkIjoiQ29uc2lsaXVtVGVtcHVzIn0.KqiE-eQqyd-VtfMJB3x9dNW2wR6_TrkGpGZ-ZyxxPWI"
 }
 ```
