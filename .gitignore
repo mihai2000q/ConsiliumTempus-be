@@ -15,3 +15,6 @@ packages/
 
 # Logging Folder
 logs/
+
+# Local Solution Settings
+ConsiliumTempus-be.sln.DotSettings.*
