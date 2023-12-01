@@ -5,7 +5,6 @@ using ConsiliumTempus.Domain.UserAggregate;
 using ConsiliumTempus.Infrastructure.Authentication;
 using FluentAssertions.Extensions;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.Authentication;
 
