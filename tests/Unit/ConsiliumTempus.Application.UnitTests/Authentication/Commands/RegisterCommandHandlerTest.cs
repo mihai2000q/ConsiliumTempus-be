@@ -2,10 +2,7 @@
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Domain.UserAggregate;
-using ErrorOr;
-using FluentAssertions;
 using FluentAssertions.Extensions;
-using Moq;
 
 namespace ConsiliumTempus.Application.UnitTests.Authentication.Commands;
 
@@ -14,16 +11,16 @@ public class RegisterCommandHandlerTest
     #region Setup
 
     private readonly Mock<IJwtTokenGenerator> _jwtTokenGenerator;
+    private readonly Mock<IScrambler> _scrambler;
     private readonly Mock<IUserRepository> _userRepository;
     private readonly RegisterCommandHandler _uut;
 
     public RegisterCommandHandlerTest()
     {
         _jwtTokenGenerator = new Mock<IJwtTokenGenerator>();
+        _scrambler = new Mock<IScrambler>();
         _userRepository = new Mock<IUserRepository>();
-        _uut = new RegisterCommandHandler(_jwtTokenGenerator.Object, _userRepository.Object);
-        
-        
+        _uut = new RegisterCommandHandler(_jwtTokenGenerator.Object, _scrambler.Object, _userRepository.Object);
     }
 
     #endregion
@@ -32,13 +29,15 @@ public class RegisterCommandHandlerTest
     public async Task WhenRegisterIsSuccessful_ShouldCreateUserAndReturnNewToken()
     {
         // Arrange
-        const string email = "Example@Email.com";
+        const string password = "Password123";
         var command = new RegisterCommand(
             "FirstName",
             "LastName",
-            email,
-            "Password123");
+            "Example@Email.com",
+            password);
+
         const string token = "This is a token";
+        const string hashedPassword = "This is the hash password for Password123";
 
         User? callbackAddedUser = null;
         User? callbackUserUsedForJwt = null;
@@ -47,6 +46,9 @@ public class RegisterCommandHandlerTest
         _jwtTokenGenerator.Setup(j => j.GenerateToken(It.IsAny<User>()))
             .Callback<User>(r => callbackUserUsedForJwt = r)
             .Returns(token);
+
+        _scrambler.Setup(s => s.HashPassword(password))
+            .Returns(hashedPassword);
         
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -60,7 +62,7 @@ public class RegisterCommandHandlerTest
         callbackAddedUser?.FirstName.Should().Be(command.FirstName);
         callbackAddedUser?.LastName.Should().Be(command.LastName);
         callbackAddedUser?.Email.Should().Be(command.Email);
-        callbackAddedUser?.Password.Should().Be(command.Password);
+        callbackAddedUser?.Password.Should().Be(hashedPassword);
         callbackAddedUser?.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         callbackAddedUser?.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         

@@ -9,11 +9,13 @@ namespace ConsiliumTempus.Application.Authentication.Queries.Login;
 public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<LoginResult>>
 {
     private readonly IUserRepository _userRepository;
+    private readonly IScrambler _scrambler;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-    public LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
+    public LoginQueryHandler(IUserRepository userRepository, IScrambler scrambler, IJwtTokenGenerator jwtTokenGenerator)
     {
         _userRepository = userRepository;
+        _scrambler = scrambler;
         _jwtTokenGenerator = jwtTokenGenerator;
     }
 
@@ -27,7 +29,8 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<LoginResult
             return Errors.Authentication.InvalidCredentials;
         }
 
-        if (user.Password != query.Password)
+        var isPasswordEqual = _scrambler.VerifyPassword(query.Password, user.Password);
+        if (!isPasswordEqual)
         {
             return Errors.Authentication.InvalidCredentials;
         }

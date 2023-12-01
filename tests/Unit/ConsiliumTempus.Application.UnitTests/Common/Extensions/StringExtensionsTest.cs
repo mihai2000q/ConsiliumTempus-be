@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
-using FluentAssertions;
 
 namespace ConsiliumTempus.Application.UnitTests.Common.Extensions;
 
