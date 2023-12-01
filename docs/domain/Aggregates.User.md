@@ -2,7 +2,7 @@
 
 ## User
 
-This is the user of the application. It holds sensitive data like the password or email.
+This is the **user** of the application. It holds sensitive data like the *password* or *email*. The **password** is encrypted using the BCrypt Algorithm.
 
 ```csharp
 class User
@@ -17,7 +17,7 @@ class User
     "firstName": "Tiffany",
     "lastName": "Doe",
     "email": "user@gmail.com",
-    "password": "Amiko1232!", // TODO: Hash this
+    "password": "$2a$13$R1tGdA1LDsVG.Ge95l42oOEPQ2Xl/VvgMTkiQOODlrM5hQpISv0qC",
     "createdDateTime": "2020-01-01T00:00:00.0000000Z",
     "updatedDateTime": "2020-01-01T00:00:00.0000000Z"
 }
