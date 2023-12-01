@@ -2,40 +2,47 @@
 
 - [Abstract](#abstract)
 - [Get Started](#get-started)
+    - [Prerequisites](#prerequisites)
     - [Dotnet User Secrets](#dotnet-user-secrets)
-    - [Docker](#docker)
+    - [Docker Containers](#docker-containers)
     - [Local Development](#local-development)
 - [Testing](#testing)
+- [Git](#git)
 - [Architecture](#architecture)
 - [Api](#api)
 - [Domain Models](#domain-models)
 - [Database](#database)
+- [License](#license)
 
 ## Abstract
 
-This is the backend of the Consilium Tempus application. It is written completely in C# using the ASP.Net Core framework and is using .NET 7.
+This is the backend of the Consilium Tempus application. It is written completely in C# using the ASP.Net Core framework.
 
 ## Get Started
 
 To get started on contributing for the development of this backend application you can do it locally or by using Docker, by following the next steps.
 
+### Prerequisites
+
+#### Microsoft SDK
+
+This application is written in .NET 7.0, therefore, the developer requires the Microsoft SDK of that version. If you do not have it already, please download it from here `https://dotnet.microsoft.com/en-us/download/dotnet/7.0` (you may have to restart afterwards).
+
+#### Docker
+
+Developing becomes easier while using isolated containers provided by Docker, so, if you do not have it installed already, please do so from here: `https://www.docker.com/products/docker-desktop/` (you may have to restart afterwards).
+
 ### Dotnet User Secrets
 
-For the development environment, a secret key for the Jwt Settings must be set in a safe storage. 
+For the development environment, a secret key for the Jwt Settings must be set in a safe storage. The store has already been initialized on the Api Project, all that is left is to add the key. 
 
-To initialize the environment for dotnet user-secrets, type in the following command:
-
-```sh
-dotnet user-secrets init
-```
-
-To add a secret key-value pair, type in the following command (be sure that you are in the right directory):
+To add a secret key-value pair, type in the following command (be sure that the key is longer than 36 characters):
 
 ```sh
-dotnet user-secrets set --project ./src/ConsiliumTempus.Api "JwtSettings:SecretKey" "Super-Secret-Key-Example"
+dotnet user-secrets set --project ./src/ConsiliumTempus.Api "JwtSettings:SecretKey" "This-is-a-Super-Duper-Secret-Key-Example"
 ```
 
-The above command "injects" the secret key: "Super-Secrey-Key-Example" into the .NET configuration files of the Api, `appsettings.json` and `appsettings.Development.json`, into the "JwtSettings" JSON object into the SecretKey Property (Note: if the name of the object, or the property shall change, the user-secret should too).
+The above command injects the secret key: *"This-is-a-Super-Duper-Secret-Key-Example"* into the .NET configuration files of the Api, `appsettings.json` and `appsettings.Development.json`, into the **"JwtSettings"** JSON object right inside the **SecretKey** Property (Note: if the name of the object, or the property shall change, the user-secret should too).
 
 To make sure that the dotnet user secrets are all setup type in the terminal the following command:
 
@@ -47,7 +54,7 @@ The above command should list out one secret key that is used for the Jwt Token 
 
 To be noted that for the production environment another key is gonna be randomly written and encrypted using an official encrypting algorithm, as the dotnet user-secrets is used ONLY for development.
 
-### Docker
+### Docker Containers
 
 If you decide to run the application in Docker, a `docker-compose.yml` file has been provided. This file uses variables from the `.env` file, which is locally defined for each user. Therefore, you can copy paste the `.env.dev` file and rename it to `.env`. It contains the parameters needed for the Database container initialization and appliance of migrations shell script.
 
@@ -61,12 +68,6 @@ docker compose up -d
 
 This command will open up 2 containers: one for the database and the other for the application, which is running by default in development mode.
 
-To run only the docker database, run the following command:
-
-```sh
-docker compose up -d database
-```
-
 To finalize the database setup, run the `apply-migration-to-database.sh` shell script.
 
 To enable the production mode in Docker, the `docker-compose.yml` should be changed (however, that does not work at the moment).
@@ -74,7 +75,17 @@ To enable the production mode in Docker, the `docker-compose.yml` should be chan
 ### Local Development
 
 For local development you will either install your own database instance or use the one from the docker containers (recommended). <br>
-For recapitulation purposes, just procure an `.env` file and start only the database container (the `appsettings.Development.json` shoud match the `.env` and the *Server* is **Localhost**).
+For recapitulation purposes:
+- create an `.env` file
+- start only the database container 
+- make sure the `appsettings.Development.json` still matches the `.env`
+- apply the migration
+
+To run only the docker database, run the following command:
+
+```sh
+docker compose up -d database
+```
 
 #### Restore Dependencies
 
@@ -97,14 +108,14 @@ dotnet build
 To run the application, type in the following command:
 
 ```sh
-dotnet run
+dotnet run --project ./src/ConsiliumTempus.Api
 ```
 
-The application will run in https by default, but that can be changed by inside the profile on the `launchsettings.json` file:
+The application will run in https by default, but that can be changed by inside the profile on the `launchsettings.json` file, or specify the profile on run.
 
 #### Test Development Environemnt
 
-To send a request (via Postman) in order to test if everything works accordingly, see example below. By default, the *host* is `http://localhost:7121/api` for http, and `http://localhost:7121/api` for https (you can use any of them in https mode).
+To send a request (via Postman) in order to test if everything works accordingly, see example below. By default, the *host* is `http://localhost:7121/api` for http, and `https://localhost:7123/api` for https (you can use any of them in https mode).
 
 ```js
 POST {{host}}/auth/login
@@ -124,19 +135,23 @@ It will return an Invalid Credentials Error, however, now you know that you have
 ## Testing
 
 The backend of the application is tested using the **xUnit** framework. The tests are divided into Unit and Integration Tests.<br> 
-For more information check out the documentation on [Testing](docs/Testing.md)
+For more information check out the documentation on [Testing](docs/Testing.md).
+
+## Git
+
+The application is stored on the well known cloud-based service and version control **Github**. <br>
+More about the convetions for Git can be found [here](docs/Git.md).
 
 ## Architecture
 
 The architecture implemented in this application is following the principles of Clean Coding, Clean Architecture and Domain-Driven-Design. 
 The 4 layers of this type of architecture feature the:
-- Domain Layer - the place where the domain models are structured
-- Application Layer - intermediator between layers that validates and makes abstract calls to the infrastructure
+- Domain Layer - the place where the domain models are defined
 - Infrastructure Layer - the data access layer for the database
+- Application Layer - intermediator between layers that validates and makes abstract calls to the infrastructure
 - Presentation Layer - the endpoint where the application becomes exposed
 
-For more, go check out [Architecture](docs/Architecture.md).
-
+For more, go check out the [documentation](docs/Architecture.md).
 ## Api
 
 More about the Api and the HTTP Requests and Response can be found at [Api documentation](docs/Api.md).
@@ -149,3 +164,23 @@ More about the domain models can be found at [Domain Models](docs/Domain.md).
 
 The database chosen for this application infrastructure is a Microsoft SQL Server. <br>
 For more information about the database please check out the [documentation](docs/Database.md). 
+
+## License
+
+Copyright 2023 Consilium Tempus
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+---
+
+**Consilium Tempus** 2023 - 2023

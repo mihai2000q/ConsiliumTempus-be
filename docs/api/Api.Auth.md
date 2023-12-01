@@ -10,7 +10,7 @@
 
 ## Auth
 
-In order to use the application the user should first register. When registering a User will be created. After that, the user can login, where, a token will be created. This token holds sensitive data. The developer can test whether the token generator worked accordingly by grabbing the token hash and decode it on [jwt.io](https://jwt.io). See example below:
+In order to use the application the user should first register. When registering a **User** will be created. After that, the user can login, where, a token will be created. This token holds sensitive data. The developer can test whether the token generator worked accordingly by grabbing the token hash and decode it on [jwt.io](https://jwt.io). See example below:
 
 ![Decoded Jwt Token](../images/api/auth-jwt-token.png)
 

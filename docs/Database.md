@@ -1,15 +1,18 @@
 # Consilium Tempus Backend Database
 
+The RDBMS chosen for this application infrastructure is a Microsoft SQL Server.
+
 ## Migrations
 
-As the infrastructure layer relies on the Entity Framework Core, to release, update or create any kind of migration we will use the EF CLI provided by the dotnet tools.
+As the infrastructure layer relies on the **Entity Framework Core**, to release, update or create any kind of migration we will use the EF CLI provided by the dotnet tools.
 
 To install the dotnet EF Core CLI, please type the following in the terminal:
 
 ```sh
 dotnet tool install --global dotnet-ef --version 7.0.14
 ```
-The version has been mentioned so that we avoid using .NET 8, as the project is still in .NET 7. <br>
+The version has been mentioned so that we avoid using .NET 8, as the project is still in .NET 7.
+
 To make sure that it has been installed you can type the following:
 
 ```sh
@@ -22,7 +25,9 @@ In order to create a migration you can use the following command:
 dotnet ef migrations add Update -p ./src/ConsiliumTempus.Infrastructure -s ./src/ConsiliumTempus.Api/
 ```
 
-That will create a migration named with a timestamp followed by the suffix *Update*. The **Naming Convention** is \[VERB\_TABLE(\_COLUMN)\], for example, if the user table has been modified by the _Email_ Column name would be `Update_Users_Email`, otherwise, if the table has been thoroughly modified `Update_Users` suffices.
+That will create a migration named with a timestamp followed by the suffix *Update*. 
+
+The **Naming Convention** is \[VERB\_TABLE(\_COLUMN)\], for example, if the user table has been modified by the _Email_ Column, the name would be `Update_Users_Email`, otherwise, if the table has been thoroughly modified `Update_Users` suffices.
 
 To apply the migration you can type the following command:
 
