@@ -2,9 +2,6 @@
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Domain.UserAggregate;
-using ErrorOr;
-using FluentAssertions;
-using Moq;
 
 namespace ConsiliumTempus.Application.UnitTests.Authentication.Queries;
 
@@ -13,14 +10,16 @@ public class LoginQueryHandlerTest
     #region Setup
 
     private readonly Mock<IJwtTokenGenerator> _jwtTokenGenerator;
+    private readonly Mock<IScrambler> _scrambler;
     private readonly Mock<IUserRepository> _userRepository;
     private readonly LoginQueryHandler _uut;
 
     public LoginQueryHandlerTest()
     {
         _jwtTokenGenerator = new Mock<IJwtTokenGenerator>();
+        _scrambler = new Mock<IScrambler>();
         _userRepository = new Mock<IUserRepository>();
-        _uut = new LoginQueryHandler(_userRepository.Object, _jwtTokenGenerator.Object);
+        _uut = new LoginQueryHandler(_userRepository.Object, _scrambler.Object, _jwtTokenGenerator.Object);
     }
 
     #endregion
@@ -33,10 +32,15 @@ public class LoginQueryHandlerTest
             "Some@Example.com", 
             "Password123");
 
+        const string hashedPassword = "This is the has for Password123";
+        
         var mockUser = new Mock<User>();
-        mockUser.SetupGet(u => u.Password).Returns(query.Password);
+        mockUser.SetupGet(u => u.Password).Returns(hashedPassword);
         _userRepository.Setup(u => u.GetUserByEmail(query.Email))
             .Returns(mockUser.Object);
+
+        _scrambler.Setup(s => s.VerifyPassword(query.Password, hashedPassword))
+            .Returns(true);
         
         const string mockToken = "This is a token";
         _jwtTokenGenerator.Setup(j => j.GenerateToken(mockUser.Object))
@@ -83,9 +87,12 @@ public class LoginQueryHandlerTest
             "Password123");
         
         var mockUser = new Mock<User>();
-        mockUser.SetupGet(u => u.Password).Returns("Random Password");
+        mockUser.SetupGet(u => u.Password).Returns(It.IsAny<string>());
         _userRepository.Setup(u => u.GetUserByEmail(query.Email))
             .Returns(mockUser.Object);
+        
+        _scrambler.Setup(s => s.VerifyPassword(query.Password, It.IsAny<string>()))
+            .Returns(false);
         
         // Act
         var outcome = await _uut.Handle(query, default);
