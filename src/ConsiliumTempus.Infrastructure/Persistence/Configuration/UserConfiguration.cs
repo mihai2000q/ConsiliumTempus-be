@@ -33,8 +33,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         
         builder.Property(u => u.Email)
             .HasMaxLength(PropertiesValidation.User.EmailMaximumLength);
-        
-        builder.Property(u => u.Password)
-            .HasMaxLength(PropertiesValidation.User.PasswordMaximumLength);
+
+        builder.Property(u => u.Password);
     }
 }
