@@ -54,6 +54,7 @@ public class RegisterCommandHandlerTest
         var outcome = await _uut.Handle(command, default);
 
         // Assert
+        _userRepository.Verify(r => r.GetUserByEmail(command.Email), Times.Once());
         _userRepository.Verify(r => r.Add(It.IsAny<User>()), Times.Once());
         _jwtTokenGenerator.Verify(j => j.GenerateToken(It.IsAny<User>()), Times.Once());
         
@@ -82,7 +83,7 @@ public class RegisterCommandHandlerTest
             "");
 
         _userRepository.Setup(r => r.GetUserByEmail(email))
-            .Returns(new Mock<User>().Object);
+            .ReturnsAsync(new Mock<User>().Object);
         
         // Act
         var outcome = await _uut.Handle(command, default);

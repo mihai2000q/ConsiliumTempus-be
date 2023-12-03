@@ -37,7 +37,7 @@ public class LoginQueryHandlerTest
         var mockUser = new Mock<User>();
         mockUser.SetupGet(u => u.Password).Returns(hashedPassword);
         _userRepository.Setup(u => u.GetUserByEmail(query.Email))
-            .Returns(mockUser.Object);
+            .ReturnsAsync(mockUser.Object);
 
         _scrambler.Setup(s => s.VerifyPassword(query.Password, hashedPassword))
             .Returns(true);
@@ -69,7 +69,7 @@ public class LoginQueryHandlerTest
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _userRepository.Verify(u => u.GetUserByEmail(It.IsAny<string>()), Times.Once());
+        _userRepository.Verify(u => u.GetUserByEmail(query.Email), Times.Once());
 
         outcome.IsError.Should().BeTrue();
         outcome.Errors.Should().HaveCount(1);
@@ -89,7 +89,7 @@ public class LoginQueryHandlerTest
         var mockUser = new Mock<User>();
         mockUser.SetupGet(u => u.Password).Returns(It.IsAny<string>());
         _userRepository.Setup(u => u.GetUserByEmail(query.Email))
-            .Returns(mockUser.Object);
+            .ReturnsAsync(mockUser.Object);
         
         _scrambler.Setup(s => s.VerifyPassword(query.Password, It.IsAny<string>()))
             .Returns(false);

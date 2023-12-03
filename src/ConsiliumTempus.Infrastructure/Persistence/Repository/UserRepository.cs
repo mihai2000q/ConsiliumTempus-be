@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Domain.UserAggregate;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
@@ -13,14 +14,14 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public User? GetUserByEmail(string email)
+    public async Task<User?> GetUserByEmail(string email)
     {
-        return _dbContext.Users.SingleOrDefault(u => u.Email == email);
+        return await _dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
     }
 
-    public void Add(User user)
+    public async Task Add(User user)
     {
-        _dbContext.Add(user);
-        _dbContext.SaveChanges();
+        await _dbContext.AddAsync(user);
+        await _dbContext.SaveChangesAsync();
     }
 }
