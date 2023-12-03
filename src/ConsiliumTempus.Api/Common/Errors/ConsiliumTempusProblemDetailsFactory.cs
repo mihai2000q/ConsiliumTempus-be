@@ -35,6 +35,9 @@ public class ConsiliumTempusProblemDetailsFactory : ProblemDetailsFactory
             Detail = detail,
             Instance = instance
         };
+        
+        ApplyProblemDetails(httpContext, problemDetails, statusCode.Value);
+        
         return problemDetails;
     }
 
@@ -76,8 +79,10 @@ public class ConsiliumTempusProblemDetailsFactory : ProblemDetailsFactory
 
         var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
         problemDetails.Extensions["traceId"] = traceId;
-        
+
         if (httpContext.Items[HttpContextItemKeys.Errors] is List<Error> errors)
-            problemDetails.Extensions.Add("errorCodes", errors.Select(e => e));
+        {
+            problemDetails.Extensions.Add("errorCodes", errors.Select(e => e.Code));
+        }
     }
 }

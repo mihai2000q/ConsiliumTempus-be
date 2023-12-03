@@ -1,6 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.UserAggregate;
 using ConsiliumTempus.Infrastructure.Authentication;
 using FluentAssertions.Extensions;
