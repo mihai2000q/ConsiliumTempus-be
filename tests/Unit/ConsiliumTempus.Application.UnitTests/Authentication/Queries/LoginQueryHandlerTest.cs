@@ -73,7 +73,7 @@ public class LoginQueryHandlerTest
 
         outcome.IsError.Should().BeTrue();
         outcome.Errors.Should().HaveCount(1);
-        outcome.FirstError.Type.Should().Be(ErrorType.Conflict);
+        outcome.FirstError.Type.Should().Be(ErrorType.Unauthorized);
         outcome.FirstError.Code.Should().Be("Authentication.InvalidCredentials");
         outcome.FirstError.Description.Should().Be("Invalid Credentials");
     }
@@ -102,7 +102,7 @@ public class LoginQueryHandlerTest
 
         outcome.IsError.Should().BeTrue();
         outcome.Errors.Should().HaveCount(1);
-        outcome.FirstError.Type.Should().Be(ErrorType.Conflict);
+        outcome.FirstError.Type.Should().Be(ErrorType.Unauthorized);
         outcome.FirstError.Code.Should().Be("Authentication.InvalidCredentials");
         outcome.FirstError.Description.Should().Be("Invalid Credentials");
     }
