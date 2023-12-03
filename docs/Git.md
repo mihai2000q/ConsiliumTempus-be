@@ -8,6 +8,7 @@ Usually, whenever the code has to be modified an issue will be created on **Gith
 - **refactor** - when the code is just being cleaned up
 - **bug** - if the issue is supposed to solve a known problem
 - **documentation** - if the source code is not the target, but its documentation
+- **test** - if a unit or integration test for the source code is being written
 
 
 ## Git Branches
@@ -18,6 +19,7 @@ Based on the above label the branch will have similar prefixes:
 - **refactor** for a _refactor_ issue
 - **bug** for a _bug_ issue
 - **doc** for a _documentation_ issue
+- **test** for a _test_ issue
 
 For example, if your ticket's name is "Infrastructure - New Repository for Menus" and it is a feature issue, then the branch name should look something like this: `feature/139-infrastructure-...`.
 

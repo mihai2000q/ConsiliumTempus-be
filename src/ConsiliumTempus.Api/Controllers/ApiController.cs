@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using ConsiliumTempus.Api.Common.Http;
+using ErrorOr;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ public abstract class ApiController : ControllerBase
             return ValidationProblem(errors);
         }
         
-        HttpContext.Items["Errors"] = errors;
+        HttpContext.Items[HttpContextItemKeys.Errors] = errors;
 
         return Problem(errors[0]);
     }
@@ -55,6 +56,7 @@ public abstract class ApiController : ControllerBase
             ErrorType.Validation => StatusCodes.Status400BadRequest,
             ErrorType.NotFound => StatusCodes.Status404NotFound,
             ErrorType.Conflict => StatusCodes.Status409Conflict,
+            ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
             _ => StatusCodes.Status500InternalServerError
         };
 

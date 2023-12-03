@@ -48,7 +48,7 @@ This layer represents the interface code, or it could be implied that it is the 
 The main operations that this layer performs after receiving a request are:
 - map the request to a command by using _Mapster_
 - send the command to the application layer through _MediatR_ and wait for a result
-- finally, the result is either mapped to a response and sent back with 200 status code to the user, or an error is mapped appropriately to the corresponding status code and sent back (Validation Problems are written in RFC Format).
+- finally, the result is either mapped to a response and sent back with 200 status code to the user, or an error is mapped appropriately to the corresponding status code and sent back in RFC Format.
 
 In conclusion, all **requests** have a mapping configuration to a specific application layer *command* or *query*, and all the application layer *results* map to an api layer **response**. Also, to be noted that all the mapping configurations are injected on runtime via the executing assembly.
 
