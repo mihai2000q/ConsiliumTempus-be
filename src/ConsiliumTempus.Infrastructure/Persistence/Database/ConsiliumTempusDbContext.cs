@@ -14,8 +14,7 @@ public class ConsiliumTempusDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .ApplyConfigurationsFromAssembly(typeof(ConsiliumTempusDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ConsiliumTempusDbContext).Assembly);
         
         // Never generate any of the primary keys, let the application generate them
         modelBuilder.Model.GetEntityTypes()

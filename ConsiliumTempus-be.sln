@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsiliumTempus.Infrastruct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsiliumTempus.Api.UnitTests", "tests\Unit\ConsiliumTempus.Api.UnitTests\ConsiliumTempus.Api.UnitTests.csproj", "{3E665AFB-CDF0-4201-8546-E770567FCFDF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsiliumTempus.Api.IntegrationTests", "tests\Integration\ConsiliumTempus.Api.IntegrationTests\ConsiliumTempus.Api.IntegrationTests.csproj", "{5DD61BDD-1CC5-4A40-9127-DFAA22F225D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,7 @@ Global
 		{2574E5A5-F9A8-4610-A853-66B9E9A2E08E} = {D2BB4E3B-58FF-4305-8477-1A49E33EEDAB}
 		{D7A7C62A-A376-430A-AAD3-5E73719A7378} = {A94EA951-E084-42EB-B4D4-8A31DB9B7A03}
 		{3E665AFB-CDF0-4201-8546-E770567FCFDF} = {A94EA951-E084-42EB-B4D4-8A31DB9B7A03}
+		{5DD61BDD-1CC5-4A40-9127-DFAA22F225D7} = {D2BB4E3B-58FF-4305-8477-1A49E33EEDAB}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A0D9EEEE-D6E7-4C4B-BB19-C3C276D33EF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -74,5 +77,9 @@ Global
 		{3E665AFB-CDF0-4201-8546-E770567FCFDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E665AFB-CDF0-4201-8546-E770567FCFDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E665AFB-CDF0-4201-8546-E770567FCFDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DD61BDD-1CC5-4A40-9127-DFAA22F225D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DD61BDD-1CC5-4A40-9127-DFAA22F225D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DD61BDD-1CC5-4A40-9127-DFAA22F225D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DD61BDD-1CC5-4A40-9127-DFAA22F225D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
