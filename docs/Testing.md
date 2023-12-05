@@ -138,6 +138,6 @@ Inside the constructor it removes all "real" instances of the database context a
 
 #### Base Integration Test
 
-This class also implements the Async Lifetime so that it can reset the Database on dispose (which happens after each method run). This class also initializes a singleton http client and the Jwt Settings from the Testing configuration, by using the ones initialized in the factory.
+This class also implements the Async Lifetime so that it can reset the Database on dispose (which happens after each method run). This class also initializes a singleton http client from the factory, and the Jwt Settings from the Testing configuration. The database is capable of reinitializing state, therefore, inside the initialize task, it will add datasets from an sql file. The sub class will be able to mention the filename, if it wants a certain state of the database (only one dataset per test class). To add more datasets, go to the `MockData` package inside the project (do not add multi-line comments). 
 
 This class is intended to be extended from each test so that the **Client** and the **Docker Container** are initialized. 
