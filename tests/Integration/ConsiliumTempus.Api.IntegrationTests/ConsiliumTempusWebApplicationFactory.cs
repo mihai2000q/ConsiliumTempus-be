@@ -1,6 +1,6 @@
 ﻿using System.Data.Common;
+using ConsiliumTempus.Infrastructure.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -15,24 +15,31 @@ namespace ConsiliumTempus.Api.IntegrationTests;
 
 public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
+    private const string MsSqlImage = "mcr.microsoft.com/mssql/server:2022-latest";
+    private const string DatabasePassword = "StrongPassword123";
+    
     private readonly MsSqlContainer _dbContainer =
         new MsSqlBuilder()
-            .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-            .WithPassword("StrongPassword123")
+            .WithImage(MsSqlImage)
+            .WithPassword(DatabasePassword)
             .Build();
 
-    private DbConnection _dbConnection = default!;
-    private Respawner _respawner = default!;
+    private DbConnection _dbConnection = null!;
+    private Respawner _respawner = null!;
 
-    public HttpClient HttpClient { get; private set; } = default!;
+    public JwtSettings JwtSettings { get; private set; } = null!;
+    public HttpClient HttpClient { get; private set; } = null!;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseEnvironment("Testing");
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll(typeof(DbContextOptions<ConsiliumTempusDbContext>));
             services.AddDbContext<ConsiliumTempusDbContext>(options =>
                 options.UseSqlServer(_dbContainer.GetConnectionString()));
+
+            services.Configure<JwtSettings>(j => JwtSettings = j);
         });
     }
 

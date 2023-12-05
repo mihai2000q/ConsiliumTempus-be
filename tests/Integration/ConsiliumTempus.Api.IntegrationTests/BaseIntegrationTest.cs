@@ -1,4 +1,6 @@
-﻿namespace ConsiliumTempus.Api.IntegrationTests;
+﻿using ConsiliumTempus.Infrastructure.Authentication;
+
+namespace ConsiliumTempus.Api.IntegrationTests;
 
 public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebApplicationFactory>, IAsyncLifetime
 {
@@ -6,10 +8,13 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
     
     protected readonly HttpClient Client;
 
+    protected readonly JwtSettings JwtSettings;
+
     protected BaseIntegrationTest(ConsiliumTempusWebApplicationFactory factory)
     {
         _resetDatabase = factory.ResetDatabaseAsync;
         Client = factory.HttpClient;
+        JwtSettings = factory.JwtSettings;
     }
 
     public Task InitializeAsync() => Task.CompletedTask;
