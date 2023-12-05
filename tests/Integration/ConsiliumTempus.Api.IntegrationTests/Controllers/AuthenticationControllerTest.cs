@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
+using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,8 @@ namespace ConsiliumTempus.Api.IntegrationTests.Controllers;
 
 public class AuthenticationControllerTest : BaseIntegrationTest
 {
-    public AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory factory) : base(factory)
+    public AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory factory) 
+        : base(factory, "AuthData")
     {
     }
     
@@ -32,7 +34,48 @@ public class AuthenticationControllerTest : BaseIntegrationTest
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<RegisterResponse>();
-        response?.Token.Should().NotBeNullOrWhiteSpace();
+        Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email, request.FirstName, request.LastName);
+    }
+    
+    [Fact]
+    public async Task WhenRegisterFails_ShouldReturnDuplicateEmailError()
+    {
+        // Arrange
+        var request = new RegisterRequest(
+            "Michael",
+            "Jordan",
+            "MichaelJ@Gmail.com",
+            "MichaelJordan2");
+        
+        // Act
+        var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
+    
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.Conflict);
+
+        var error = await outcome.Content.ReadFromJsonAsync<ProblemDetails>();
+        error?.Title.Should().Be("Email is already in use");
+        error?.Status.Should().Be(StatusCodes.Status409Conflict);
+        var errorCodes = error?.Extensions["errorCodes"] as JsonElement?;
+        errorCodes?.ValueKind.Should().Be(JsonValueKind.Array);
+    }
+    
+    [Fact]
+    public async Task WhenLoginIsSuccessful_ShouldReturnToken()
+    {
+        // Arrange
+        var request = new LoginRequest(
+            "MichaelJ@Gmail.com",
+            "MichaelJordan2");
+        
+        // Act
+        var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
+    
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        
+        var response = await outcome.Content.ReadFromJsonAsync<LoginResponse>();
+        Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email);
     }
     
     [Fact]

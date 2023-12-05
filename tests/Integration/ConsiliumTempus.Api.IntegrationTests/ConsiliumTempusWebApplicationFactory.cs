@@ -1,5 +1,4 @@
 ﻿using System.Data.Common;
-using ConsiliumTempus.Infrastructure.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -27,7 +26,6 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
     private DbConnection _dbConnection = null!;
     private Respawner _respawner = null!;
 
-    public JwtSettings JwtSettings { get; private set; } = null!;
     public HttpClient HttpClient { get; private set; } = null!;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -38,8 +36,6 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
             services.RemoveAll(typeof(DbContextOptions<ConsiliumTempusDbContext>));
             services.AddDbContext<ConsiliumTempusDbContext>(options =>
                 options.UseSqlServer(_dbContainer.GetConnectionString()));
-
-            services.Configure<JwtSettings>(j => JwtSettings = j);
         });
     }
 
