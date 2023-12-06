@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Api.Common.Http;
-using ConsiliumTempus.Api.Common.Mapping;
+﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.Controllers;

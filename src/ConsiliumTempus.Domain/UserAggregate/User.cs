@@ -5,10 +5,10 @@ namespace ConsiliumTempus.Domain.UserAggregate;
 
 public class User : AggregateRoot<UserId, Guid>
 {
-    public string FirstName { get; private set; }
-    public string LastName { get; private set; }
-    public string Email { get; private set; }
-    public virtual string Password { get; private set; }
+    public string FirstName { get; private set; } = string.Empty;
+    public string LastName { get; private set; } = string.Empty;
+    public string Email { get; private set; } = string.Empty;
+    public virtual string Password { get; private set; } = string.Empty;
     public DateTime CreatedDateTime { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
     
