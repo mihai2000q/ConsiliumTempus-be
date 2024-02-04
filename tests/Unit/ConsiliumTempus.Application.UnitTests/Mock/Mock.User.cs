@@ -6,7 +6,7 @@ public static class Mock
     {
         public static Domain.UserAggregate.User CreateMock(string email = "", string password = "")
         {
-            return Domain.UserAggregate.User.Create("", "", email, password);
+            return Domain.UserAggregate.User.Create(email, password, "", "");
         }
     }
 }
