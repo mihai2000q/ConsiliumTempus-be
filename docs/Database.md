@@ -1,6 +1,8 @@
 # Consilium Tempus Backend Database
 
 The RDBMS chosen for this application infrastructure is a Microsoft SQL Server.
+<br>
+More about the Database Design choices can be read at [Database Diagrams](Domain.md/#database-diagrams).
 
 ## Migrations
 
