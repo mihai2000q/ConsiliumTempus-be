@@ -16,24 +16,22 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     private static void ConfigureUsersTable(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(u => u.Id);
-
-        builder.HasIndex(u => u.Email)
-            .IsUnique();
-
         builder.Property(u => u.Id)
             .HasConversion(
                 id => id.Value,
                 value => UserId.Create(value));
+        
+        builder.HasIndex(u => u.Email)
+            .IsUnique();
+        builder.Property(u => u.Email)
+            .HasMaxLength(PropertiesValidation.User.EmailMaximumLength);
+
+        builder.Property(u => u.Password);
 
         builder.Property(u => u.FirstName)
             .HasMaxLength(PropertiesValidation.User.FirstNameMaximumLength);
 
         builder.Property(u => u.LastName)
             .HasMaxLength(PropertiesValidation.User.LastNameMaximumLength);
-
-        builder.Property(u => u.Email)
-            .HasMaxLength(PropertiesValidation.User.EmailMaximumLength);
-
-        builder.Property(u => u.Password);
     }
 }

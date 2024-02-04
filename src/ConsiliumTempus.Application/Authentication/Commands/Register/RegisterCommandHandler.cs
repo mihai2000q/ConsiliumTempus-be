@@ -20,10 +20,10 @@ public class RegisterCommandHandler(
         var password = scrambler.HashPassword(command.Password);
 
         var user = User.Create(
-            command.FirstName,
-            command.LastName,
             command.Email,
-            password);
+            password,
+            command.FirstName,
+            command.LastName);
         await userRepository.Add(user);
 
         var token = jwtTokenGenerator.GenerateToken(user);

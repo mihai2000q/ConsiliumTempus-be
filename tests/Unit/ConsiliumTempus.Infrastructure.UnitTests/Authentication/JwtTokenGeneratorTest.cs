@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using ConsiliumTempus.Domain.UserAggregate;
 using ConsiliumTempus.Infrastructure.Authentication;
 using FluentAssertions.Extensions;
 using Microsoft.Extensions.Options;
@@ -36,11 +35,11 @@ public class JwtTokenGeneratorTest
     public void WhenGenerateToken_ReturnNewToken()
     {
         // Arrange
-        var user = User.Create(
-            "First",
-            "Last",
+        var user = Mock.Mock.User.CreateMock(
             "FirstyLasty@Example.com",
-            "Password123");
+            "Password123",
+            "First",
+            "Last");
 
         var handler = new JwtSecurityTokenHandler();
         
