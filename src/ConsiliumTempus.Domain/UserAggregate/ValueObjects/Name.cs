@@ -14,8 +14,8 @@ public class Name : ValueObject
         Last = last;
     }
 
-    public string First { get; init; } = string.Empty;
-    public string Last { get; init; } = string.Empty;
+    public string First { get; private set; } = string.Empty;
+    public string Last { get; private set; } = string.Empty;
 
     public static Name Create(string first, string last)
     {

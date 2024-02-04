@@ -23,8 +23,8 @@ public sealed class User : AggregateRoot<UserId, Guid>
     }
 
 
-    public Credentials Credentials { get; private set; }
-    public Name Name { get; private set; } 
+    public Credentials Credentials { get; private set; } = default!;
+    public Name Name { get; private set; } = default!;
     public DateTime CreatedDateTime { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
 

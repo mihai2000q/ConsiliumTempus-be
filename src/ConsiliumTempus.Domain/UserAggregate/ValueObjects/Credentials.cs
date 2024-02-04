@@ -14,8 +14,8 @@ public class Credentials : ValueObject
         Password = password;
     }
 
-    public string Email { get; init; } = string.Empty;
-    public string Password { get; init; } = string.Empty;
+    public string Email { get; private set; } = string.Empty;
+    public string Password { get; private set; } = string.Empty;
 
     public static Credentials Create(string email, string password)
     {
