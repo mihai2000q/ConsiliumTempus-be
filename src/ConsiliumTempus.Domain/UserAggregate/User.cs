@@ -5,6 +5,10 @@ namespace ConsiliumTempus.Domain.UserAggregate;
 
 public sealed class User : AggregateRoot<UserId, Guid>
 {
+    private User()
+    {
+    }
+    
     private User(
         UserId id,
         string firstName,
@@ -20,10 +24,6 @@ public sealed class User : AggregateRoot<UserId, Guid>
         Password = password;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
-    }
-
-    public User()
-    {
     }
 
     public string FirstName { get; private set; } = string.Empty;

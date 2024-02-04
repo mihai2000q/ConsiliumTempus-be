@@ -83,7 +83,7 @@ public class RegisterCommandHandlerTest
             "");
 
         _userRepository.Setup(r => r.GetUserByEmail(email))
-            .ReturnsAsync(new Mock<User>().Object);
+            .ReturnsAsync(Mock.Mock.User.CreateMock());
         
         // Act
         var outcome = await _uut.Handle(command, default);

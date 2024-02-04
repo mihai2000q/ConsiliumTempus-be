@@ -8,6 +8,9 @@ The aforementioned refers to the constraints that each property has
 Additionally, on the bottom of the page there can be found [Database Diagrams](#database-diagrams) 
 representing the relationships of the aggregates with other aggregates and/or entities.
 
+Each aggregate, entity or value object has an empty private constructor 
+so that the Entity Framework can initialize them.
+
 ## Aggregates
 
 - [User Aggregate](domain/aggregates/Aggregates.User.md)
