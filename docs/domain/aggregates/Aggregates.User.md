@@ -2,7 +2,9 @@
 
 ## User
 
-This is the **user** of the application. It holds sensitive data like the *password* or *email*. The **password** is encrypted using the BCrypt Algorithm.
+This is the **user** of the application. 
+It holds sensitive data like the *password* or *email*. 
+The **password** is encrypted using the BCrypt Algorithm.
 
 ```csharp
 class User
