@@ -3,21 +3,18 @@ using ConsiliumTempus.Domain.UserAggregate.ValueObjects;
 
 namespace ConsiliumTempus.Domain.UserAggregate;
 
-public class User : AggregateRoot<UserId, Guid>
+public sealed class User : AggregateRoot<UserId, Guid>
 {
-    public string FirstName { get; private set; } = string.Empty;
-    public string LastName { get; private set; } = string.Empty;
-    public string Email { get; private set; } = string.Empty;
-    public virtual string Password { get; private set; } = string.Empty;
-    public DateTime CreatedDateTime { get; private set; }
-    public DateTime UpdatedDateTime { get; private set; }
+    private User()
+    {
+    }
     
     private User(
-        UserId id, 
-        string firstName, 
-        string lastName, 
-        string email, 
-        string password, 
+        UserId id,
+        string firstName,
+        string lastName,
+        string email,
+        string password,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
     {
@@ -29,21 +26,26 @@ public class User : AggregateRoot<UserId, Guid>
         UpdatedDateTime = updatedDateTime;
     }
 
+    public string FirstName { get; private set; } = string.Empty;
+    public string LastName { get; private set; } = string.Empty;
+    public string Email { get; private set; } = string.Empty;
+    public string Password { get; private set; } = string.Empty;
+    public DateTime CreatedDateTime { get; private set; }
+    public DateTime UpdatedDateTime { get; private set; }
+
     public static User Create(
-        string firstName, 
-        string lastName, 
-        string email, 
+        string firstName,
+        string lastName,
+        string email,
         string password)
     {
         return new User(
             UserId.CreateUnique(),
-            firstName, 
+            firstName,
             lastName,
             email,
             password,
             DateTime.UtcNow,
             DateTime.UtcNow);
     }
-    
-    public User() { }
 }

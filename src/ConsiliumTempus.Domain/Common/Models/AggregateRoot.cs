@@ -6,7 +6,7 @@ public class AggregateRoot<TId, TIdType> : Entity<TId>
     protected AggregateRoot()
     {
     }
-    
+
     protected AggregateRoot(TId id) : base(id)
     {
     }

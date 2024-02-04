@@ -34,16 +34,15 @@ public class LoginQueryHandlerTest
 
         const string hashedPassword = "This is the has for Password123";
         
-        var mockUser = new Mock<User>();
-        mockUser.SetupGet(u => u.Password).Returns(hashedPassword);
+        var user = Mock.Mock.User.CreateMock(password: hashedPassword);
         _userRepository.Setup(u => u.GetUserByEmail(query.Email))
-            .ReturnsAsync(mockUser.Object);
+            .ReturnsAsync(user);
 
         _scrambler.Setup(s => s.VerifyPassword(query.Password, hashedPassword))
             .Returns(true);
         
         const string mockToken = "This is a token";
-        _jwtTokenGenerator.Setup(j => j.GenerateToken(mockUser.Object))
+        _jwtTokenGenerator.Setup(j => j.GenerateToken(user))
             .Returns(mockToken);
         
         // Act
@@ -85,11 +84,10 @@ public class LoginQueryHandlerTest
         var query = new LoginQuery(
             "Some@Example.com", 
             "Password123");
-        
-        var mockUser = new Mock<User>();
-        mockUser.SetupGet(u => u.Password).Returns(It.IsAny<string>());
+
+        var user = Mock.Mock.User.CreateMock(email: query.Email);
         _userRepository.Setup(u => u.GetUserByEmail(query.Email))
-            .ReturnsAsync(mockUser.Object);
+            .ReturnsAsync(user);
         
         _scrambler.Setup(s => s.VerifyPassword(query.Password, It.IsAny<string>()))
             .Returns(false);

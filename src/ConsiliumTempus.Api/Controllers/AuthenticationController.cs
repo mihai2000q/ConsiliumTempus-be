@@ -11,12 +11,8 @@ namespace ConsiliumTempus.Api.Controllers;
 
 [Route("api/auth")]
 [AllowAnonymous]
-public class AuthenticationController : ApiController
+public class AuthenticationController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
-    public AuthenticationController(IMapper mapper, ISender mediator) : base(mapper, mediator)
-    {
-    }
-
     [HttpPost("Register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
@@ -28,7 +24,7 @@ public class AuthenticationController : ApiController
             Problem
         );
     }
-    
+
     [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {

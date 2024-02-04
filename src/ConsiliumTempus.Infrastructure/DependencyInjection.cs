@@ -19,7 +19,7 @@ public static class DependencyInjection
     {
         services.AddAuth(configuration)
             .AddPersistence(configuration);
-        
+
         return services;
     }
 
@@ -27,11 +27,11 @@ public static class DependencyInjection
     {
         var jwtSettings = new JwtSettings();
         configuration.Bind(JwtSettings.SectionName, jwtSettings);
-        
+
         services.AddSingleton(Options.Create(jwtSettings));
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-        
-        services.AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -41,27 +41,27 @@ public static class DependencyInjection
                 ValidIssuer = jwtSettings.Issuer,
                 ValidAudience = jwtSettings.Audience,
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+                    Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
             });
-        
+
         services.AddSingleton<IScrambler, Scrambler>();
-        
+
         return services;
     }
-    
+
     private static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
         var databaseSettings = new DatabaseSettings();
         configuration.Bind(DatabaseSettings.SectionName, databaseSettings);
-        
+
         services.AddDbContext<ConsiliumTempusDbContext>(options => options
             .UseSqlServer($"" +
                           $"Server={databaseSettings.Server},{databaseSettings.Port};" +
                           $"Database={databaseSettings.Name};" +
                           $"User Id={databaseSettings.User};" +
                           $"Password={databaseSettings.Password};" +
-                          $"Encrypt=false")); 
-        
+                          $"Encrypt=false"));
+
         services.AddScoped<IUserRepository, UserRepository>();
     }
 }

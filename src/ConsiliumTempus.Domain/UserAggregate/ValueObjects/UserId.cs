@@ -2,10 +2,8 @@
 
 namespace ConsiliumTempus.Domain.UserAggregate.ValueObjects;
 
-public class UserId : AggregateRootId<Guid>
+public sealed class UserId : AggregateRootId<Guid>
 {
-    public sealed override Guid Value { get; protected set; }
-
     private UserId()
     {
     }
@@ -15,11 +13,13 @@ public class UserId : AggregateRootId<Guid>
         Value = value;
     }
 
+    public override Guid Value { get; protected set; }
+
     public static UserId CreateUnique()
     {
         return new UserId(Guid.NewGuid());
     }
-    
+
     public static UserId Create(Guid value)
     {
         return new UserId(value);

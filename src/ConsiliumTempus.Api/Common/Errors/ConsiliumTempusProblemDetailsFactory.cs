@@ -8,14 +8,9 @@ using Microsoft.Extensions.Options;
 
 namespace ConsiliumTempus.Api.Common.Errors;
 
-public class ConsiliumTempusProblemDetailsFactory : ProblemDetailsFactory
+public class ConsiliumTempusProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) : ProblemDetailsFactory
 {
-    private readonly ApiBehaviorOptions _options;
-
-    public ConsiliumTempusProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
-    {
-        _options = options.Value;
-    }
+    private readonly ApiBehaviorOptions _options = options.Value;
 
     public override ProblemDetails CreateProblemDetails(
         HttpContext httpContext,
@@ -35,9 +30,9 @@ public class ConsiliumTempusProblemDetailsFactory : ProblemDetailsFactory
             Detail = detail,
             Instance = instance
         };
-        
+
         ApplyProblemDetails(httpContext, problemDetails, statusCode.Value);
-        
+
         return problemDetails;
     }
 
@@ -81,8 +76,6 @@ public class ConsiliumTempusProblemDetailsFactory : ProblemDetailsFactory
         problemDetails.Extensions["traceId"] = traceId;
 
         if (httpContext.Items[HttpContextItemKeys.Errors] is List<Error> errors)
-        {
             problemDetails.Extensions.Add("errorCodes", errors.Select(e => e.Code));
-        }
     }
 }

@@ -20,7 +20,7 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
             .IsEmail();
         RuleFor(c => c.Password)
             .NotEmpty()
-            .MaximumLength(PropertiesValidation.User.PasswordMaximumLength)
+            .MaximumLength(PropertiesValidation.User.PlainPasswordMaximumLength)
             .IsPassword();
     }
 }

@@ -24,3 +24,17 @@ class User
     "updatedDateTime": "2020-01-01T00:00:00.0000000Z"
 }
 ```
+
+For database design checkout the [User Diagram](../diagrams/Diagram.User.md).
+
+### Properties Validation
+
+- The **First Name** cannot be longer than 100 characters
+- The **Last Name** cannot be longer than 100 characters
+- The **Email** cannot be longer than 100 characters
+- The plain **Password** cannot be longer than 100 characters
+
+### Errors
+
+Possible errors that can occur are the following:
+- **Duplicate Email** when the email is already in use
