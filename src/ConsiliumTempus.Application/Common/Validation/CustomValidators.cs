@@ -5,7 +5,7 @@ namespace ConsiliumTempus.Application.Common.Validation;
 
 public static class CustomValidators
 {
-    public static IRuleBuilderOptions<T, string> IsPassword<T>(this IRuleBuilder<T, string> ruleBuilder) 
+    public static IRuleBuilderOptions<T, string> IsPassword<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
         return ruleBuilder.Must(p => p.Length > 8)
             .WithMessage("'{PropertyName}' must be longer than 8 characters")
@@ -16,7 +16,7 @@ public static class CustomValidators
             .Must(p => p.ContainsNumber())
             .WithMessage("'{PropertyName}' must contain at least a number");
     }
-    
+
     public static IRuleBuilderOptions<T, string> IsEmail<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
         return ruleBuilder.Must(p => p.IsValidEmail())

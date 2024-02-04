@@ -9,47 +9,32 @@ namespace ConsiliumTempus.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public abstract class ApiController : ControllerBase
+public abstract class ApiController(IMapper mapper, ISender mediator) : ControllerBase
 {
-    protected readonly IMapper Mapper;
-    protected readonly ISender Mediator;
+    protected readonly IMapper Mapper = mapper;
+    protected readonly ISender Mediator = mediator;
 
-    protected ApiController(IMapper mapper, ISender mediator)
-    {
-        Mapper = mapper;
-        Mediator = mediator;
-    }
-    
     protected IActionResult Problem(List<Error> errors)
     {
-        if (errors.Count is 0)
-        {
-            return Problem();
-        }
+        if (errors.Count is 0) return Problem();
 
-        if (errors.All(error => error.Type is ErrorType.Validation))
-        {
-            return ValidationProblem(errors);
-        }
-        
+        if (errors.All(error => error.Type is ErrorType.Validation)) return ValidationProblem(errors);
+
         HttpContext.Items[HttpContextItemKeys.Errors] = errors;
 
         return Problem(errors[0]);
     }
 
-    private IActionResult ValidationProblem(List<Error> errors)
+    private ActionResult ValidationProblem(List<Error> errors)
     {
         var modelStateDictionary = new ModelStateDictionary();
 
-        foreach (var error in errors)
-        {
-            modelStateDictionary.AddModelError(error.Code, error.Description);
-        }
+        foreach (var error in errors) modelStateDictionary.AddModelError(error.Code, error.Description);
 
         return ValidationProblem(modelStateDictionary);
     }
 
-    private IActionResult Problem(Error error)
+    private ObjectResult Problem(Error error)
     {
         var statusCode = error.Type switch
         {

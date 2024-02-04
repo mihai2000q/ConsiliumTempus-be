@@ -19,7 +19,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasIndex(u => u.Email)
             .IsUnique();
-        
+
         builder.Property(u => u.Id)
             .HasConversion(
                 id => id.Value,
@@ -27,10 +27,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.FirstName)
             .HasMaxLength(PropertiesValidation.User.FirstNameMaximumLength);
-        
+
         builder.Property(u => u.LastName)
             .HasMaxLength(PropertiesValidation.User.LastNameMaximumLength);
-        
+
         builder.Property(u => u.Email)
             .HasMaxLength(PropertiesValidation.User.EmailMaximumLength);
 

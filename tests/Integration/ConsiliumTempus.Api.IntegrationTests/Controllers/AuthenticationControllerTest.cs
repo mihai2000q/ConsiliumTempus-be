@@ -10,13 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers;
 
-public class AuthenticationControllerTest : BaseIntegrationTest
+public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory factory)
+    : BaseIntegrationTest(factory, "AuthData")
 {
-    public AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory factory) 
-        : base(factory, "AuthData")
-    {
-    }
-    
     [Fact]
     public async Task WhenRegisterIsSuccessful_ShouldReturnToken()
     {

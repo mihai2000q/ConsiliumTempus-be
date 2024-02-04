@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 {
     builder.Logging
         .AddLogger(builder.Configuration);
-    
+
     builder.Services
         .AddApplication()
         .AddInfrastructure(builder.Configuration)
@@ -22,4 +22,6 @@ var app = builder.Build();
     app.Run();
 }
 
-public partial class Program {  }
+public partial class Program
+{
+}

@@ -3,8 +3,6 @@
 public abstract class Entity<TId> : IEquatable<Entity<TId>>
     where TId : notnull
 {
-    public TId Id { get; } = default!;
-
     protected Entity()
     {
     }
@@ -12,6 +10,13 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
     protected Entity(TId id)
     {
         Id = id;
+    }
+
+    public TId Id { get; } = default!;
+
+    public bool Equals(Entity<TId>? other)
+    {
+        return Equals((object?)other);
     }
 
     public override bool Equals(object? obj)
@@ -22,11 +27,6 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
     public override int GetHashCode()
     {
         return Id.GetHashCode();
-    }
-
-    public bool Equals(Entity<TId>? other)
-    {
-        return Equals((object?)other);
     }
 
     public static bool operator ==(Entity<TId> left, Entity<TId> right)

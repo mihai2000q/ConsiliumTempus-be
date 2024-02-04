@@ -6,34 +6,21 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Authentication.Queries.Login;
 
-public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<LoginResult>>
+public class LoginQueryHandler(
+    IUserRepository userRepository,
+    IScrambler scrambler,
+    IJwtTokenGenerator jwtTokenGenerator)
+    : IRequestHandler<LoginQuery, ErrorOr<LoginResult>>
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IScrambler _scrambler;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-
-    public LoginQueryHandler(IUserRepository userRepository, IScrambler scrambler, IJwtTokenGenerator jwtTokenGenerator)
-    {
-        _userRepository = userRepository;
-        _scrambler = scrambler;
-        _jwtTokenGenerator = jwtTokenGenerator;
-    }
-
     public async Task<ErrorOr<LoginResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUserByEmail(query.Email);
-        if (user is null)
-        {
-            return Errors.Authentication.InvalidCredentials;
-        }
+        var user = await userRepository.GetUserByEmail(query.Email);
+        if (user is null) return Errors.Authentication.InvalidCredentials;
 
-        var isPasswordEqual = _scrambler.VerifyPassword(query.Password, user.Password);
-        if (!isPasswordEqual)
-        {
-            return Errors.Authentication.InvalidCredentials;
-        }
+        var isPasswordEqual = scrambler.VerifyPassword(query.Password, user.Password);
+        if (!isPasswordEqual) return Errors.Authentication.InvalidCredentials;
 
-        var token = _jwtTokenGenerator.GenerateToken(user);
+        var token = jwtTokenGenerator.GenerateToken(user);
 
         return new LoginResult(token);
     }

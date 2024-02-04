@@ -24,7 +24,7 @@ public sealed class AuthenticationMappingConfig : IRegister
     private static void LoginMappings(TypeAdapterConfig config)
     {
         config.NewConfig<LoginRequest, LoginQuery>();
-        
+
         config.NewConfig<LoginResult, LoginResponse>();
     }
 }

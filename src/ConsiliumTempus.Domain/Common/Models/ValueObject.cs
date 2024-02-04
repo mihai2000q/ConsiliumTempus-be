@@ -2,24 +2,21 @@
 
 public abstract class ValueObject : IEquatable<ValueObject>
 {
+    public bool Equals(ValueObject? other)
+    {
+        return Equals((object?)other);
+    }
+
     protected abstract IEnumerable<object> GetEqualityComponents();
 
     public override bool Equals(object? obj)
     {
-        if (obj == null || obj.GetType() != GetType())
-        {
-            return false;
-        }
+        if (obj == null || obj.GetType() != GetType()) return false;
 
         var valueObject = (ValueObject)obj;
 
         return GetEqualityComponents()
             .SequenceEqual(valueObject.GetEqualityComponents());
-    }
-
-    public bool Equals(ValueObject? other)
-    {
-        return Equals((object?)other);
     }
 
     public static bool operator ==(ValueObject left, ValueObject right)
