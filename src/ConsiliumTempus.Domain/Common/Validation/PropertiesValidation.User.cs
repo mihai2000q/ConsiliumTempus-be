@@ -7,6 +7,6 @@ public static partial class PropertiesValidation
         public const short FirstNameMaximumLength = 100;
         public const short LastNameMaximumLength = 100;
         public const short EmailMaximumLength = 100;
-        public const short PasswordMaximumLength = 100;
+        public const short PlainPasswordMaximumLength = 100;
     }
 }
