@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     container_name: CT-Backend
     ports:
-      - "7123:80" 
+      - "7124:80"
     depends_on:
       - database
     environment:
