@@ -20,6 +20,7 @@ public class RegisterCommandHandler(
 
         var password = scrambler.HashPassword(command.Password);
 
+        var user = User.Create(
             Credentials.Create(
                 command.Email,
                 password), 
