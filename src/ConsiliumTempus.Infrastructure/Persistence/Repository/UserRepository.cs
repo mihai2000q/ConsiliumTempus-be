@@ -9,7 +9,7 @@ public class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRepositor
 {
     public async Task<User?> GetUserByEmail(string email)
     {
-        return await dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
+        return await dbContext.Users.SingleOrDefaultAsync(u => u.Credentials.Email == email);
     }
 
     public async Task Add(User user)

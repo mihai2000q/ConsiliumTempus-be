@@ -17,7 +17,7 @@ public class LoginQueryHandler(
         var user = await userRepository.GetUserByEmail(query.Email);
         if (user is null) return Errors.Authentication.InvalidCredentials;
 
-        var isPasswordEqual = scrambler.VerifyPassword(query.Password, user.Password);
+        var isPasswordEqual = scrambler.VerifyPassword(query.Password, user.Credentials.Password);
         if (!isPasswordEqual) return Errors.Authentication.InvalidCredentials;
 
         var token = jwtTokenGenerator.GenerateToken(user);

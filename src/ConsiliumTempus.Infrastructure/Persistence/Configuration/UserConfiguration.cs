@@ -21,17 +21,20 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 id => id.Value,
                 value => UserId.Create(value));
         
-        builder.HasIndex(u => u.Email)
+        builder.HasIndex(u => u.Credentials.Email)
             .IsUnique();
-        builder.Property(u => u.Email)
+        builder.Property(u => u.Credentials.Email)
             .HasMaxLength(PropertiesValidation.User.EmailMaximumLength);
 
-        builder.Property(u => u.Password);
+        builder.Property(u => u.Credentials.Password);
 
-        builder.Property(u => u.FirstName)
+        builder.Property(u => u.Name.First)
+            .HasColumnName("FirstName")
             .HasMaxLength(PropertiesValidation.User.FirstNameMaximumLength);
 
-        builder.Property(u => u.LastName)
+        builder.Property(u => u.Name.Last)
+            .HasColumnName("LastName")
             .HasMaxLength(PropertiesValidation.User.LastNameMaximumLength);
+        
     }
 }
