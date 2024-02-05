@@ -39,7 +39,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         return workspace;
     }
 
-    private void AddUser(UserAggregate userAggregate)
+    public void AddUser(UserAggregate userAggregate)
     {
         _users.Add(userAggregate);
     }

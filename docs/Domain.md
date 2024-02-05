@@ -5,7 +5,7 @@
   * [Aggregates](#aggregates)
   * [Entities](#entities)
   * [Value Objects](#value-objects)
-  * [Notable Errors](#notable-errors)
+  * [General Domain Errors](#general-domain-errors)
   * [Database Diagrams](#database-diagrams)
 
 Below, you will find a complete list and documentation for each **Aggregate**, **Entity** and **Value Object**.
@@ -57,12 +57,13 @@ The value objects are:
 
 - Nothing atm.
 
-## Notable Errors
+## General Domain Errors
 
 These errors are not tied to any aggregate, therefore notable and only used in the Application Layer.
 
 - Authentication
-  - **Invalid Credentials** for when, upon authentication, the credentials are invalid
+  - **Invalid Credentials** when, upon authentication, the credentials are invalid
+  - **Invalid Token** when the token is deemed invalid (i.e., userId is wrong), typically when it has been tampered with
 
 ## Database Diagrams
 
