@@ -1,6 +1,6 @@
 ﻿namespace ConsiliumTempus.Domain.Common.Models;
 
-public abstract class Entity<TId> : IEquatable<Entity<TId>>
+public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     where TId : notnull
 {
     protected Entity()
@@ -12,6 +12,9 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
         Id = id;
     }
 
+    private readonly List<IDomainEvent> _domainEvents = [];
+    
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
     public TId Id { get; } = default!;
 
     public bool Equals(Entity<TId>? other)
@@ -37,5 +40,15 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
     public static bool operator !=(Entity<TId> left, Entity<TId> right)
     {
         return !Equals(left, right);
+    }
+
+    public void AddDomainEvent(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
     }
 }
