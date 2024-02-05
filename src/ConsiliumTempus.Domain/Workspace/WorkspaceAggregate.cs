@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
@@ -6,6 +7,7 @@ namespace ConsiliumTempus.Domain.Workspace;
 
 public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
     private WorkspaceAggregate()
     {
     }

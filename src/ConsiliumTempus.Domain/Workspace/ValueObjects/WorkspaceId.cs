@@ -1,9 +1,11 @@
-﻿using ConsiliumTempus.Domain.Common.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 public sealed class WorkspaceId : AggregateRootId<Guid>
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
     private WorkspaceId()
     {
     }

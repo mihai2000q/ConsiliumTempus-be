@@ -1,9 +1,11 @@
-﻿using ConsiliumTempus.Domain.Common.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Domain.User.ValueObjects;
 
 public class Credentials : ValueObject
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
     private Credentials()
     {
     }
@@ -14,14 +16,14 @@ public class Credentials : ValueObject
         Password = password;
     }
 
-    public string Email { get; private set; } = string.Empty;
-    public string Password { get; private set; } = string.Empty;
+    public string Email { get; } = string.Empty;
+    public string Password { get; } = string.Empty;
 
     public static Credentials Create(string email, string password)
     {
         return new Credentials(email, password);
     }
-    
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Email;

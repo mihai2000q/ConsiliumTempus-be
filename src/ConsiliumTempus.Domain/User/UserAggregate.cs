@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.User.Events;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
@@ -7,6 +8,7 @@ namespace ConsiliumTempus.Domain.User;
 
 public sealed class UserAggregate : AggregateRoot<UserId, Guid>
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
     private UserAggregate()
     {
     }

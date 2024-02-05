@@ -7,7 +7,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
         return Equals((object?)other);
     }
 
-    protected abstract IEnumerable<object> GetEqualityComponents();
+    protected abstract IEnumerable<object?> GetEqualityComponents();
 
     public override bool Equals(object? obj)
     {
