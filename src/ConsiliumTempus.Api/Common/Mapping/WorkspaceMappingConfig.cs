@@ -6,6 +6,8 @@ namespace ConsiliumTempus.Api.Common.Mapping;
 
 public sealed class WorkspaceMappingConfig : IRegister
 {
+    public const string Token = "token";
+    
     public void Register(TypeAdapterConfig config)
     {
         CreateMappings(config);
@@ -13,8 +15,12 @@ public sealed class WorkspaceMappingConfig : IRegister
 
     private static void CreateMappings(TypeAdapterConfig config)
     {
-        config.NewConfig<WorkspaceCreateRequest, WorkspaceCreateCommand>();
+        config.NewConfig<WorkspaceCreateRequest, WorkspaceCreateCommand>()
+            .Map(dest => dest.Token, 
+                _ => MapContext.Current!.Parameters[Token]);
 
-        config.NewConfig<WorkspaceCreateResult, WorkspaceCreateResponse>();
+        config.NewConfig<WorkspaceCreateResult, WorkspaceCreateResponse>()
+            .Map(dest => dest, src => src.Workspace)
+            .Map(dest => dest.Id, src => src.Workspace.Id.Value.ToString());
     }
 }

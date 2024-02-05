@@ -5,4 +5,5 @@ namespace ConsiliumTempus.Application.Workspace.Command.Create;
 
 public record WorkspaceCreateCommand(
     string Name,
-    string Description) : IRequest<ErrorOr<WorkspaceCreateResult>>;
+    string Description,
+    string Token) : IRequest<ErrorOr<WorkspaceCreateResult>>;

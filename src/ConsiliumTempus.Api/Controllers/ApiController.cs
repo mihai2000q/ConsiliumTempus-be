@@ -2,6 +2,7 @@
 using ErrorOr;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -9,6 +10,7 @@ namespace ConsiliumTempus.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public abstract class ApiController(IMapper mapper, ISender mediator) : ControllerBase
 {
     protected readonly IMapper Mapper = mapper;

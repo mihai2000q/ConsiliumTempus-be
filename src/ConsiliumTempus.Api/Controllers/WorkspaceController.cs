@@ -1,7 +1,10 @@
-﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
+﻿using ConsiliumTempus.Api.Common.Http;
+using ConsiliumTempus.Api.Common.Mapping;
+using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Application.Workspace.Command.Create;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.Controllers;
@@ -12,11 +15,14 @@ public class WorkspaceController(IMapper mapper, ISender mediator) : ApiControll
     [HttpPost("Create")]
     public async Task<IActionResult> Create(WorkspaceCreateRequest request)
     {
-        var command = Mapper.Map<WorkspaceCreateCommand>(request);
+        var token = await HttpContext.GetTokenAsync(HttpContextItemKeys.Token);
+        var command = Mapper.From(request)
+            .AddParameters(WorkspaceMappingConfig.Token, token!)
+            .AdaptToType<WorkspaceCreateCommand>();
         var result = await Mediator.Send(command);
 
         return result.Match(
-            createResult => Ok(Mapper.Map<WorkspaceCreateResult>(createResult)),
+            createResult => Ok(Mapper.Map<WorkspaceCreateResponse>(createResult)),
             Problem
         );
     }
