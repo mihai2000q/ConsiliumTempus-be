@@ -12,9 +12,9 @@ update or create any kind of migration, we will use the EF CLI provided by the d
 To install the dotnet EF Core CLI, please type the following in the terminal:
 
 ```sh
-dotnet tool install --global dotnet-ef --version 7.0.14
+dotnet tool install --global dotnet-ef --version 8.0.1
 ```
-The version has been mentioned so that we avoid using .NET 8, as the project is still in .NET 7.
+The version has been mentioned just as a precaution, as the project is using the .Net 8.0.1.
 
 To make sure that it has been installed, you can type the following:
 
