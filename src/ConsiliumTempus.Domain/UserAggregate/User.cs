@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.UserAggregate.ValueObjects;
+using ConsiliumTempus.Domain.WorkspaceAggregate;
 
 namespace ConsiliumTempus.Domain.UserAggregate;
 
@@ -22,11 +23,13 @@ public sealed class User : AggregateRoot<UserId, Guid>
         UpdatedDateTime = updatedDateTime;
     }
 
+    private readonly List<Workspace> _workspaces = [];
 
     public Credentials Credentials { get; private set; } = default!;
     public Name Name { get; private set; } = default!;
     public DateTime CreatedDateTime { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
+    public IReadOnlyList<Workspace> Workspaces => _workspaces.AsReadOnly();
 
     public static User Create(
         Credentials credentials,
@@ -38,5 +41,9 @@ public sealed class User : AggregateRoot<UserId, Guid>
             name,
             DateTime.UtcNow,
             DateTime.UtcNow);
+    }
+    public void AddWorkspace(Workspace workspace)
+    {
+        _workspaces.Add(workspace);
     }
 }
