@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using ConsiliumTempus.Application.Common.Security;
 using ConsiliumTempus.Application.Common.Validation;
 using FluentValidation;
 using MediatR;
@@ -18,6 +19,8 @@ public static class DependencyInjection
             typeof(ValidationBehavior<,>));
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        services.AddScoped<Security>();
 
         return services;
     }

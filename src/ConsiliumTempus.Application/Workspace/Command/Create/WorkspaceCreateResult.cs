@@ -1,4 +1,5 @@
-﻿namespace ConsiliumTempus.Application.Workspace.Command.Create;
+﻿using ConsiliumTempus.Domain.Workspace;
 
-public record WorkspaceCreateResult(
-    string Message);
+namespace ConsiliumTempus.Application.Workspace.Command.Create;
+
+public record WorkspaceCreateResult(WorkspaceAggregate Workspace);
