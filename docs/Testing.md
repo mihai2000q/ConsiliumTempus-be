@@ -27,8 +27,11 @@ There is exactly one test class for each important class, excluding POJOs
 The name of the test **class** will be the class under testing followed by the suffix "Test." 
 <br>
 The name of the **variable** component under testing is going to be called **uut** (Unit Under Testing).  
-The name of the test **methods** will be _T1_T2_ where _T1_ is the scenario we are testing,
+The name of the test **methods** can be _T1_T2_, where _T1_ is the scenario we are testing,
 and _T2_ is the expected outcome. 
+<br>
+_T1_T2_T3_ is also accepted, where *T1* is the method/component under test, 
+*T2* the scenario and *T3* the expected outcome.
 <br>
 Inside each class there will be a header **region** named _Setup_. 
 <br>
@@ -89,8 +92,11 @@ The name of the test **class** will be the class under testing followed by the s
 (the project already mentions that it is an integration Test). 
 <br>
 The name of the **variable** component under testing is going to be called **sut** (System Under Testing).  
-The name of the test **methods** will be _T1_T2_ where _T1_ is the scenario we are testing,
+The name of the test **methods** can be _T1_T2_, where _T1_ is the scenario we are testing,
 and _T2_ is the expected outcome. 
+<br>
+_T1_T2_T3_ is also accepted, where *T1* is the method/component under test, 
+*T2* the scenario and *T3* the expected outcome.
 <br>
 Inside each class there will be a header **region** named _Setup_. 
 <br>
@@ -118,7 +124,7 @@ public class RegisterCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenRegisterIsSuccessfull_ShouldCreateUserAndReturnNewToken() {
+    public async Task HandleRegisterCommand_WhenValid_ShouldCreateUserAndReturnNewToken() {
         // Arrange
         var command = RegisterCommand("Example@Email.com");
 
