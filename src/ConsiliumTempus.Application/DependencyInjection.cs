@@ -20,7 +20,7 @@ public static class DependencyInjection
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        services.AddScoped<Security>();
+        services.AddScoped<ISecurity, Security>();
 
         return services;
     }

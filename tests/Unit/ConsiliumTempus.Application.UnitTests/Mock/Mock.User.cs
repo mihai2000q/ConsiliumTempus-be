@@ -7,7 +7,9 @@ public static class Mock
 {
     public static class User
     {
-        public static UserAggregate CreateMock(string email = "", string password = "")
+        public static UserAggregate CreateMock(
+            string email = "Some@example.com",
+            string password = "Password123")
         {
             return UserAggregate.Create(Credentials.Create(email, password), Name.Create("", ""));
         }

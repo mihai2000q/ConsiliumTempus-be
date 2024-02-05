@@ -51,7 +51,7 @@ public class WorkspaceControllerTest
 
         // Assert
         _mediator.Verify(m => m.Send(It.Is<WorkspaceCreateCommand>(
-                command => Utils.Workspace.AssertWorkspaceCreateCommand(command, request, token)),
+                command => Utils.Workspace.AssertCreateCommand(command, request, token)),
                 default), 
             Times.Once());
 
@@ -59,7 +59,7 @@ public class WorkspaceControllerTest
         ((OkObjectResult)outcome).Value.Should().BeOfType<WorkspaceCreateResponse>();
         
         var response = ((OkObjectResult)outcome).Value as WorkspaceCreateResponse;
-        Utils.Workspace.AssertWorkspaceCreateResponse(response!, result);
+        Utils.Workspace.AssertCreateResponse(response!, result);
     }
     
     [Fact]
@@ -84,7 +84,7 @@ public class WorkspaceControllerTest
         // Assert
         _mediator.Verify(m => m.Send(
                 It.Is<WorkspaceCreateCommand>(
-                    command => Utils.Workspace.AssertWorkspaceCreateCommand(command, request, token)),
+                    command => Utils.Workspace.AssertCreateCommand(command, request, token)),
                 default), 
             Times.Once());
 

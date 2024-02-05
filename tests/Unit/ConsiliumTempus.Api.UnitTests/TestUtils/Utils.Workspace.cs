@@ -7,7 +7,7 @@ public static partial class Utils
 {
     public static class Workspace
     {
-        public static bool AssertWorkspaceCreateCommand(
+        public static bool AssertCreateCommand(
             WorkspaceCreateCommand command, 
             WorkspaceCreateRequest request, 
             string token)
@@ -18,7 +18,7 @@ public static partial class Utils
             return true;
         }
 
-        public static void AssertWorkspaceCreateResponse(
+        public static void AssertCreateResponse(
             WorkspaceCreateResponse response,
             WorkspaceCreateResult result)
         {

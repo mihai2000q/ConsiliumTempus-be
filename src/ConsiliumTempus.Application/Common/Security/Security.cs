@@ -7,7 +7,7 @@ using ErrorOr;
 
 namespace ConsiliumTempus.Application.Common.Security;
 
-public class Security(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
+public class Security(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository) : ISecurity
 {
     public async Task<ErrorOr<UserAggregate>> GetUserFromToken(string plainToken)
     {
