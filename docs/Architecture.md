@@ -40,6 +40,9 @@ Those are objects that are equal if all their values are equal.
 This Layer also implements the **Error Or** Library, 
 so that inside the Application Layer errors can be returned instead of models, or command results.
 
+This Layer also implements the **Mediatr.Contracts** Library to implement the domain events 
+and make use of the *Notification Handler* feature from MediatR inside the [Application Layer](#application-layer).
+
 More about the domain models can be found at [Domain Models](./Domain.md).
 
 ## Infrastructure Layer
@@ -83,6 +86,9 @@ Before handling any request, it does server-side validation on all the propertie
 This goal is achieved using the _Fluent Validation_ and a _Pipeline Behavior_ (provided by MediatR), 
 that searches at runtime through the Assembly for a validator 
 and translates all the errors from the Validation to our Domain Errors.
+
+Additionally, should a domain model trigger a domain event, 
+it will be handled on this layer thanks to the *Notification Handler* provided by MediatR.
 
 ## Presentation Layer—Api
 

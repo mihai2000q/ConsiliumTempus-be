@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.UserAggregate;
+using ConsiliumTempus.Domain.UserAggregate.ValueObjects;
 using ErrorOr;
 using MediatR;
 
@@ -19,11 +20,13 @@ public class RegisterCommandHandler(
 
         var password = scrambler.HashPassword(command.Password);
 
-        var user = User.Create(
-            command.FirstName,
-            command.LastName,
-            command.Email,
-            password);
+        var user = User.Register(
+            Credentials.Create(
+                command.Email,
+                password), 
+            Name.Create(
+                command.FirstName,
+                command.LastName));
         await userRepository.Add(user);
 
         var token = jwtTokenGenerator.GenerateToken(user);

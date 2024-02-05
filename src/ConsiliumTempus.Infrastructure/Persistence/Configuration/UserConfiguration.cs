@@ -16,24 +16,36 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     private static void ConfigureUsersTable(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(u => u.Id);
-
-        builder.HasIndex(u => u.Email)
-            .IsUnique();
-
+        builder.HasIndex(u => u.Id);
         builder.Property(u => u.Id)
             .HasConversion(
                 id => id.Value,
                 value => UserId.Create(value));
 
-        builder.Property(u => u.FirstName)
-            .HasMaxLength(PropertiesValidation.User.FirstNameMaximumLength);
-
-        builder.Property(u => u.LastName)
-            .HasMaxLength(PropertiesValidation.User.LastNameMaximumLength);
-
-        builder.Property(u => u.Email)
+        builder.OwnsOne(u => u.Credentials)
+            .HasIndex(c => c.Email);
+        builder.OwnsOne(u => u.Credentials)
+            .Property(c => c.Email)
+            .HasColumnName("Email")
             .HasMaxLength(PropertiesValidation.User.EmailMaximumLength);
 
-        builder.Property(u => u.Password);
+        builder.OwnsOne(u => u.Credentials)
+            .Property(c => c.Password)
+            .HasColumnName("Password");
+        
+        builder.OwnsOne(u => u.Name)
+            .Property(u => u.First)
+            .HasColumnName("FirstName")
+            .HasMaxLength(PropertiesValidation.User.FirstNameMaximumLength);
+        
+        builder.OwnsOne(u => u.Name)
+            .Property(u => u.Last)
+            .HasColumnName("LastName")
+            .HasMaxLength(PropertiesValidation.User.LastNameMaximumLength);
+        
+        builder
+            .HasMany(e => e.Workspaces)
+            .WithMany(w => w.Users)
+            .UsingEntity("UserToWorkspace");
     }
 }

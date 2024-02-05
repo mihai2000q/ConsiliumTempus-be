@@ -60,10 +60,10 @@ public class RegisterCommandHandlerTest
         
         callbackAddedUser.Should().Be(callbackUserUsedForJwt);
         callbackAddedUser?.Id.Should().NotBeNull();
-        callbackAddedUser?.FirstName.Should().Be(command.FirstName);
-        callbackAddedUser?.LastName.Should().Be(command.LastName);
-        callbackAddedUser?.Email.Should().Be(command.Email);
-        callbackAddedUser?.Password.Should().Be(hashedPassword);
+        callbackAddedUser?.Name.First.Should().Be(command.FirstName);
+        callbackAddedUser?.Name.Last.Should().Be(command.LastName);
+        callbackAddedUser?.Credentials.Email.Should().Be(command.Email);
+        callbackAddedUser?.Credentials.Password.Should().Be(hashedPassword);
         callbackAddedUser?.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         callbackAddedUser?.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         
