@@ -15,7 +15,7 @@ public class WorkspaceController(IMapper mapper, ISender mediator) : ApiControll
     [HttpPost("Create")]
     public async Task<IActionResult> Create(WorkspaceCreateRequest request)
     {
-        var token = await HttpContext.GetTokenAsync(HttpContextItemKeys.Token);
+        var token = GetToken();
         var command = Mapper.From(request)
             .AddParameters(WorkspaceMappingConfig.Token, token!)
             .AdaptToType<WorkspaceCreateCommand>();
