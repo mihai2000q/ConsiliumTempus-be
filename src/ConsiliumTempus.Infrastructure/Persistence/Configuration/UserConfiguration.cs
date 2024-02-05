@@ -42,10 +42,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .Property(u => u.Last)
             .HasColumnName("LastName")
             .HasMaxLength(PropertiesValidation.User.LastNameMaximumLength);
-        
-        builder
-            .HasMany(e => e.Workspaces)
-            .WithMany(w => w.Users)
-            .UsingEntity("UserToWorkspace");
     }
 }
