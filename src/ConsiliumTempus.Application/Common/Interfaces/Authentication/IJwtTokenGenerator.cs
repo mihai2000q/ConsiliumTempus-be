@@ -1,8 +1,8 @@
-﻿using ConsiliumTempus.Domain.UserAggregate;
+﻿using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.Common.Interfaces.Authentication;
 
 public interface IJwtTokenGenerator
 {
-    string GenerateToken(User user);
+    string GenerateToken(UserAggregate userAggregate);
 }

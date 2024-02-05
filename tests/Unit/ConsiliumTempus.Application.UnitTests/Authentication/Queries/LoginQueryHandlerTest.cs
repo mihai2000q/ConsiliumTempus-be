@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Application.Authentication.Queries.Login;
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
-using ConsiliumTempus.Domain.UserAggregate;
+using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.UnitTests.Authentication.Queries;
 
@@ -50,7 +50,7 @@ public class LoginQueryHandlerTest
 
         // Assert
         _userRepository.Verify(u => u.GetUserByEmail(It.IsAny<string>()), Times.Once());
-        _jwtTokenGenerator.Verify(j => j.GenerateToken(It.IsAny<User>()), Times.Once());
+        _jwtTokenGenerator.Verify(j => j.GenerateToken(It.IsAny<UserAggregate>()), Times.Once());
         
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(mockToken);

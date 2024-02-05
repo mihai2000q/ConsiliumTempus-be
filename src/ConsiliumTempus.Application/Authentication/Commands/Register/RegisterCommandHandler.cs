@@ -1,8 +1,8 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.UserAggregate;
-using ConsiliumTempus.Domain.UserAggregate.ValueObjects;
+using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.User.ValueObjects;
 using ErrorOr;
 using MediatR;
 
@@ -20,7 +20,7 @@ public class RegisterCommandHandler(
 
         var password = scrambler.HashPassword(command.Password);
 
-        var user = User.Register(
+        var user = UserAggregate.Register(
             Credentials.Create(
                 command.Email,
                 password), 

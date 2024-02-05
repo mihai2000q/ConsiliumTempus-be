@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.UserAggregate;
-using ConsiliumTempus.Domain.WorkspaceAggregate;
+using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -12,8 +12,8 @@ public class ConsiliumTempusDbContext(
     DbContextOptions<ConsiliumTempusDbContext> options)
     : DbContext(options)
 {
-    public DbSet<User> Users { get; init; } = null!;
-    public DbSet<Workspace> Workspaces { get; init; } = null!;
+    public DbSet<UserAggregate> Users { get; init; } = null!;
+    public DbSet<WorkspaceAggregate> Workspaces { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

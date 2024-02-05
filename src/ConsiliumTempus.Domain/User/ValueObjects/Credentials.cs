@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Models;
 
-namespace ConsiliumTempus.Domain.UserAggregate.ValueObjects;
+namespace ConsiliumTempus.Domain.User.ValueObjects;
 
 public class Credentials : ValueObject
 {

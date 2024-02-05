@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Models;
 
-namespace ConsiliumTempus.Domain.WorkspaceAggregate.ValueObjects;
+namespace ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 public sealed class WorkspaceId : AggregateRootId<Guid>
 {

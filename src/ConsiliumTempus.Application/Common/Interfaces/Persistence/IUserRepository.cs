@@ -1,10 +1,10 @@
-﻿using ConsiliumTempus.Domain.UserAggregate;
+﻿using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.Common.Interfaces.Persistence;
 
 public interface IUserRepository
 {
-    Task<User?> GetUserByEmail(string email);
+    Task<UserAggregate?> GetUserByEmail(string email);
 
-    Task Add(User user);
+    Task Add(UserAggregate userAggregate);
 }

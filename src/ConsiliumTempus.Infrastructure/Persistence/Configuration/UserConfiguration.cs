@@ -1,19 +1,19 @@
 ﻿using ConsiliumTempus.Domain.Common.Validation;
-using ConsiliumTempus.Domain.UserAggregate;
-using ConsiliumTempus.Domain.UserAggregate.ValueObjects;
+using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.User.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
 
-public class UserConfiguration : IEntityTypeConfiguration<User>
+public class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(EntityTypeBuilder<UserAggregate> builder)
     {
         ConfigureUsersTable(builder);
     }
 
-    private static void ConfigureUsersTable(EntityTypeBuilder<User> builder)
+    private static void ConfigureUsersTable(EntityTypeBuilder<UserAggregate> builder)
     {
         builder.HasKey(u => u.Id);
         builder.HasIndex(u => u.Id);

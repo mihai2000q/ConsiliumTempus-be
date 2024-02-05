@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
-using ConsiliumTempus.Domain.UserAggregate;
+using ConsiliumTempus.Domain.User;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -12,7 +12,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTokenGene
 {
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
 
-    public string GenerateToken(User user)
+    public string GenerateToken(UserAggregate userAggregate)
     {
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(
@@ -21,10 +21,10 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTokenGene
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Credentials.Email),
-            new Claim(JwtRegisteredClaimNames.GivenName, user.Name.First),
-            new Claim(JwtRegisteredClaimNames.FamilyName, user.Name.Last),
+            new Claim(JwtRegisteredClaimNames.Sub, userAggregate.Id.Value.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, userAggregate.Credentials.Email),
+            new Claim(JwtRegisteredClaimNames.GivenName, userAggregate.Name.First),
+            new Claim(JwtRegisteredClaimNames.FamilyName, userAggregate.Name.Last),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

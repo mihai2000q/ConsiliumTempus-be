@@ -1,5 +1,5 @@
 ﻿using ConsiliumTempus.Application.Authentication.Events;
-using ConsiliumTempus.Domain.UserAggregate.Events;
+using ConsiliumTempus.Domain.User.Events;
 
 namespace ConsiliumTempus.Application.UnitTests.Authentication.Events;
 
