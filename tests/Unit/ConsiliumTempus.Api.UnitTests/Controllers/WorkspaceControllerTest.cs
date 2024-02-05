@@ -2,7 +2,7 @@
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
-using ConsiliumTempus.Application.Workspace.Command.Create;
+using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Domain.Common.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Http;

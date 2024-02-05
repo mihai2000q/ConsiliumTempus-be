@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using MediatR;
 
-namespace ConsiliumTempus.Application.Workspace.Command.Create;
+namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
 public record WorkspaceCreateCommand(
     string Name,

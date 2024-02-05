@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 
-namespace ConsiliumTempus.Application.Workspace.Command.Create;
+namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
 public class WorkspaceCreateCommandValidator : AbstractValidator<WorkspaceCreateCommand>
 {

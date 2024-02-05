@@ -1,5 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
-using ConsiliumTempus.Application.Workspace.Command.Create;
+using ConsiliumTempus.Application.Workspace.Commands.Create;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;

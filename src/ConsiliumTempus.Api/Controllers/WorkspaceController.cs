@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Api.Common.Http;
 using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
-using ConsiliumTempus.Application.Workspace.Command.Create;
+using ConsiliumTempus.Application.Workspace.Commands.Create;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
