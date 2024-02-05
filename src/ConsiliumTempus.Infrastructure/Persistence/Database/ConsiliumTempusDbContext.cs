@@ -1,16 +1,23 @@
-﻿using ConsiliumTempus.Domain.UserAggregate;
+﻿using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.UserAggregate;
+using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Database;
 
-public class ConsiliumTempusDbContext(DbContextOptions<ConsiliumTempusDbContext> options) : DbContext(options)
+public class ConsiliumTempusDbContext(
+    PublishDomainEventInterceptor publishDomainEventInterceptor,
+    DbContextOptions<ConsiliumTempusDbContext> options)
+    : DbContext(options)
 {
-    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<User> Users { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ConsiliumTempusDbContext).Assembly);
+        modelBuilder
+            .Ignore<List<IDomainEvent>>() // Don't save the list of domain events
+            .ApplyConfigurationsFromAssembly(typeof(ConsiliumTempusDbContext).Assembly);
 
         // Never generate any of the primary keys, let the application generate them
         modelBuilder.Model.GetEntityTypes()
@@ -20,5 +27,11 @@ public class ConsiliumTempusDbContext(DbContextOptions<ConsiliumTempusDbContext>
             .ForEach(p => p.ValueGenerated = ValueGenerated.Never);
 
         base.OnModelCreating(modelBuilder);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(publishDomainEventInterceptor);
+        base.OnConfiguring(optionsBuilder);
     }
 }

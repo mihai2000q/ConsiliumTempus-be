@@ -3,6 +3,7 @@ using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Infrastructure.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
+using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using ConsiliumTempus.Infrastructure.Persistence.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,19 @@ public static class DependencyInjection
                           $"Password={databaseSettings.Password};" +
                           $"Encrypt=false"));
 
+        services.AddInterceptors()
+            .AddRepositories();
+    }
+
+    private static IServiceCollection AddInterceptors(this IServiceCollection services)
+    {
+        services.AddScoped<PublishDomainEventInterceptor>();
+
+        return services;
+    }
+
+    private static void AddRepositories(this IServiceCollection services)
+    {
         services.AddScoped<IUserRepository, UserRepository>();
     }
 }
