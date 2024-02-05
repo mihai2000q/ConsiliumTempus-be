@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Api;
 using ConsiliumTempus.Application;
 using ConsiliumTempus.Infrastructure;
@@ -22,6 +23,7 @@ var app = builder.Build();
     app.Run();
 }
 
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public partial class Program
 {
 }
