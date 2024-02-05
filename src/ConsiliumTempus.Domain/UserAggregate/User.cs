@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.UserAggregate.Events;
 using ConsiliumTempus.Domain.UserAggregate.ValueObjects;
 using ConsiliumTempus.Domain.WorkspaceAggregate;
 
@@ -42,6 +43,18 @@ public sealed class User : AggregateRoot<UserId, Guid>
             DateTime.UtcNow,
             DateTime.UtcNow);
     }
+    
+    public static User Register(
+        Credentials credentials,
+        Name name)
+    {
+        var user = Create(credentials, name);
+
+        user.AddDomainEvent(new UserRegistered(user));
+        
+        return user;
+    }
+
     public void AddWorkspace(Workspace workspace)
     {
         _workspaces.Add(workspace);
