@@ -2,7 +2,8 @@
 
 The RDBMS chosen for this application infrastructure is a Microsoft SQL Server.
 <br>
-More about the Database Design choices can be read at [Database Diagrams](Domain.md/#database-diagrams).
+More about the Database Design choices can be read at [Database Diagrams](Domain.md/#database-diagrams), 
+and for a clear picture of the whole application check this out [Database Diagram](Database.Diagram.md). 
 
 ## Migrations
 
