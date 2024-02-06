@@ -3,7 +3,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
-public record WorkspaceCreateCommand(
+public record CreateWorkspaceCommand(
     string Name,
     string Description,
-    string Token) : IRequest<ErrorOr<WorkspaceCreateResult>>;
+    string Token) : IRequest<ErrorOr<CreateWorkspaceResult>>;

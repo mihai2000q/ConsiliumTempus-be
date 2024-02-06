@@ -8,8 +8,8 @@ public static partial class Utils
     public static class Workspace
     {
         public static bool AssertCreateCommand(
-            WorkspaceCreateCommand command, 
-            WorkspaceCreateRequest request, 
+            CreateWorkspaceCommand command, 
+            CreateWorkspaceRequest request, 
             string token)
         {
             command.Name.Should().Be(request.Name);
@@ -19,8 +19,8 @@ public static partial class Utils
         }
 
         public static void AssertCreateResponse(
-            WorkspaceCreateResponse response,
-            WorkspaceCreateResult result)
+            CreateWorkspaceResponse response,
+            CreateWorkspaceResult result)
         {
             response.Id.Should().Be(result.Workspace.Id.Value.ToString());
             response.Name.Should().Be(result.Workspace.Name);

@@ -34,7 +34,7 @@ public class WorkspaceControllerTest
     public async Task WhenWorkspaceCreateIsSuccessful_ShouldReturnNewWorkspace()
     {
         // Arrange
-        var request = new WorkspaceCreateRequest(
+        var request = new CreateWorkspaceRequest(
             "Workspace Name",
             "Workspace Description that is very long");
 
@@ -42,23 +42,23 @@ public class WorkspaceControllerTest
         _httpContext.SetupGet(h => h.Request.Headers.Authorization)
             .Returns($"Bearer {token}");
         
-        var result = new WorkspaceCreateResult(Mock.Mock.Workspace.CreateMock(request.Name, request.Description));
-        _mediator.Setup(m => m.Send(It.IsAny<WorkspaceCreateCommand>(), default))
+        var result = new CreateWorkspaceResult(Mock.Mock.Workspace.CreateMock(request.Name, request.Description));
+        _mediator.Setup(m => m.Send(It.IsAny<CreateWorkspaceCommand>(), default))
             .ReturnsAsync(result);
         
         // Act
         var outcome = await _uut.Create(request);
 
         // Assert
-        _mediator.Verify(m => m.Send(It.Is<WorkspaceCreateCommand>(
+        _mediator.Verify(m => m.Send(It.Is<CreateWorkspaceCommand>(
                 command => Utils.Workspace.AssertCreateCommand(command, request, token)),
                 default), 
             Times.Once());
 
         outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<WorkspaceCreateResponse>();
+        ((OkObjectResult)outcome).Value.Should().BeOfType<CreateWorkspaceResponse>();
         
-        var response = ((OkObjectResult)outcome).Value as WorkspaceCreateResponse;
+        var response = ((OkObjectResult)outcome).Value as CreateWorkspaceResponse;
         Utils.Workspace.AssertCreateResponse(response!, result);
     }
     
@@ -66,7 +66,7 @@ public class WorkspaceControllerTest
     public async Task WhenWorkspaceCreateFails_ShouldReturnInvalidTokenError()
     {
         // Arrange
-        var request = new WorkspaceCreateRequest(
+        var request = new CreateWorkspaceRequest(
             "Workspace Name",
             "Workspace Description that is very long");
 
@@ -75,7 +75,7 @@ public class WorkspaceControllerTest
             .Returns($"Bearer {token}");
         
         var error = Errors.Authentication.InvalidToken;
-        _mediator.Setup(m => m.Send(It.IsAny<WorkspaceCreateCommand>(), default))
+        _mediator.Setup(m => m.Send(It.IsAny<CreateWorkspaceCommand>(), default))
             .ReturnsAsync(error);
         
         // Act
@@ -83,7 +83,7 @@ public class WorkspaceControllerTest
 
         // Assert
         _mediator.Verify(m => m.Send(
-                It.Is<WorkspaceCreateCommand>(
+                It.Is<CreateWorkspaceCommand>(
                     command => Utils.Workspace.AssertCreateCommand(command, request, token)),
                 default), 
             Times.Once());

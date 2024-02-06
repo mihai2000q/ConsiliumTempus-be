@@ -7,19 +7,19 @@ using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Commands.Create;
 
-public class WorkspaceCreateCommandHandlerTest
+public class CreateWorkspaceCommandHandlerTest
 {
     #region Setup
 
     private readonly Mock<ISecurity> _security;
     private readonly Mock<IWorkspaceRepository> _workspaceRepository;
-    private readonly WorkspaceCreateCommandHandler _uut;
+    private readonly CreateWorkspaceCommandHandler _uut;
 
-    public WorkspaceCreateCommandHandlerTest()
+    public CreateWorkspaceCommandHandlerTest()
     {
         _security = new Mock<ISecurity>();
         _workspaceRepository = new Mock<IWorkspaceRepository>();
-        _uut = new WorkspaceCreateCommandHandler(_security.Object, _workspaceRepository.Object);
+        _uut = new CreateWorkspaceCommandHandler(_security.Object, _workspaceRepository.Object);
     }
 
     #endregion
@@ -28,7 +28,7 @@ public class WorkspaceCreateCommandHandlerTest
     public async Task WhenWorkspaceCreateIsSuccessful_ShouldAddUserAndReturnNewWorkspace()
     {
         // Arrange
-        var command = new WorkspaceCreateCommand(
+        var command = new CreateWorkspaceCommand(
             "Workspace 1",
             "This is a description",
             "This is a token");
@@ -55,7 +55,7 @@ public class WorkspaceCreateCommandHandlerTest
     public async Task WhenWorkspaceCreateFailsDueToToken_ShouldReturnInvalidToken()
     {
         // Arrange
-        var command = new WorkspaceCreateCommand(
+        var command = new CreateWorkspaceCommand(
             "Workspace 1",
             "This is a description",
             "This is a token");

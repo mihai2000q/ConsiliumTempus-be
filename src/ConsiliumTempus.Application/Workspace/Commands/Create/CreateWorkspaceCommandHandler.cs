@@ -6,12 +6,12 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
-public class WorkspaceCreateCommandHandler(
+public class CreateWorkspaceCommandHandler(
     ISecurity security,
     IWorkspaceRepository workspaceRepository)
-    : IRequestHandler<WorkspaceCreateCommand, ErrorOr<WorkspaceCreateResult>>
+    : IRequestHandler<CreateWorkspaceCommand, ErrorOr<CreateWorkspaceResult>>
 {
-    public async Task<ErrorOr<WorkspaceCreateResult>> Handle(WorkspaceCreateCommand command,
+    public async Task<ErrorOr<CreateWorkspaceResult>> Handle(CreateWorkspaceCommand command,
         CancellationToken cancellationToken)
     {
         var user = await security.GetUserFromToken(command.Token);
@@ -24,6 +24,6 @@ public class WorkspaceCreateCommandHandler(
         workspace.AddUser(user.Value);
         await workspaceRepository.Add(workspace);
 
-        return new WorkspaceCreateResult(workspace);
+        return new CreateWorkspaceResult(workspace);
     }
 }

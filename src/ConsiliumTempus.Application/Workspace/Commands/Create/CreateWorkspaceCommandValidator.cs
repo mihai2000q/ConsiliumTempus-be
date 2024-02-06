@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
-public class WorkspaceCreateCommandValidator : AbstractValidator<WorkspaceCreateCommand>
+public class CreateWorkspaceCommandValidator : AbstractValidator<CreateWorkspaceCommand>
 {
-    public WorkspaceCreateCommandValidator()
+    public CreateWorkspaceCommandValidator()
     {
         RuleFor(c => c.Name)
             .NotEmpty()

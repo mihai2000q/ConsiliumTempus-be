@@ -15,11 +15,11 @@ public sealed class WorkspaceMappingConfig : IRegister
 
     private static void CreateMappings(TypeAdapterConfig config)
     {
-        config.NewConfig<WorkspaceCreateRequest, WorkspaceCreateCommand>()
+        config.NewConfig<CreateWorkspaceRequest, CreateWorkspaceCommand>()
             .Map(dest => dest.Token, 
                 _ => MapContext.Current!.Parameters[Token]);
 
-        config.NewConfig<WorkspaceCreateResult, WorkspaceCreateResponse>()
+        config.NewConfig<CreateWorkspaceResult, CreateWorkspaceResponse>()
             .Map(dest => dest, src => src.Workspace)
             .Map(dest => dest.Id, src => src.Workspace.Id.Value.ToString());
     }

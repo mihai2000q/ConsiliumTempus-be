@@ -10,7 +10,7 @@ public static partial class Utils
     {
         public static bool AssertFromCreateCommand(
             WorkspaceAggregate workspace,
-            WorkspaceCreateCommand command,
+            CreateWorkspaceCommand command,
             UserAggregate user)
         {
             workspace.Name.Should().Be(command.Name);
