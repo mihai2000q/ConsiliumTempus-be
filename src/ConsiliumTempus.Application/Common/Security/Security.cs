@@ -15,11 +15,18 @@ public class Security(IJwtTokenGenerator jwtTokenGenerator, IUserRepository user
         
         if (jwtUserId.IsError) return jwtUserId.Errors;
 
-        var userId = UserId.Create(jwtUserId.Value);
-        var user = await userRepository.Get(userId);
+        try
+        {
+            var userId = UserId.Create(jwtUserId.Value);
+            var user = await userRepository.Get(userId);
 
-        if (user is null) return Errors.Authentication.InvalidToken;
+            if (user is null) return Errors.Authentication.InvalidToken;
 
-        return user;
+            return user;
+        }
+        catch (FormatException)
+        {
+            return Errors.Authentication.InvalidToken;
+        }
     }
 }

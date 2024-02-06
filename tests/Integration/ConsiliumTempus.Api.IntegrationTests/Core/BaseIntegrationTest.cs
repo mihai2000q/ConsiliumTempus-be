@@ -36,18 +36,18 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
 
     public async Task InitializeAsync()
     {
+        if (_defaultUsers)
+        {
+            await AddTestData(Constants.DefaultUsersFilePath);
+            UseCustomToken();
+        }
+        
         if (_testDataDirectory != null)
         {
             foreach (var file in Directory.GetFiles(GetTestDataDirectoryPath()))
             {
                 await AddTestData(file);
             }
-        }
-
-        if (_defaultUsers)
-        {
-            await AddTestData(Constants.DefaultUsersFilePath);
-            UseCustomToken();
         }
     }
 
@@ -61,6 +61,13 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
             TestAuthHandler.AuthenticationSchema, 
             GetToken(email));
+    }
+    
+    protected void UseInvalidToken()
+    {
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            TestAuthHandler.AuthenticationSchema, 
+            GetInvalidToken());
     }
 
     private async Task AddTestData(string path)
@@ -93,5 +100,10 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         if (user is null) throw new Exception("There is no user with that email");
             
         return Utils.Token.CreateMock(user, JwtSettings);
+    }
+
+    private string GetInvalidToken()
+    {
+        return Utils.Token.CreateInvalidToken(JwtSettings);
     }
 }

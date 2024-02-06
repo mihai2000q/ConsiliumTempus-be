@@ -36,5 +36,31 @@ public static partial class Utils
 
             return new JwtSecurityTokenHandler().WriteToken(securityToken);
         }
+
+        public static string CreateInvalidToken(JwtSettings jwtSettings)
+        {
+            var signingCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+                SecurityAlgorithms.HmacSha256);
+            
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, ""),
+                new Claim(JwtRegisteredClaimNames.Email, ""),
+                new Claim(JwtRegisteredClaimNames.GivenName, ""),
+                new Claim(JwtRegisteredClaimNames.FamilyName, ""),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var securityToken = new JwtSecurityToken(
+                jwtSettings.Issuer,
+                jwtSettings.Audience,
+                expires: DateTime.UtcNow.AddHours(jwtSettings.ExpiryHours),
+                claims: claims,
+                signingCredentials: signingCredentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(securityToken);
+        }
     }
 }

@@ -1,13 +1,10 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using System.Text.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers;
 
@@ -48,13 +45,7 @@ public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory f
         var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
     
         // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.Conflict);
-
-        var error = await outcome.Content.ReadFromJsonAsync<ProblemDetails>();
-        error?.Title.Should().Be("Email is already in use");
-        error?.Status.Should().Be(StatusCodes.Status409Conflict);
-        var errorCodes = error?.Extensions["errorCodes"] as JsonElement?;
-        errorCodes?.ValueKind.Should().Be(JsonValueKind.Array);
+        await outcome.ValidateError(HttpStatusCode.Conflict, "Email is already in use");
     }
     
     [Fact]
@@ -87,12 +78,6 @@ public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory f
         var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
     
         // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-
-        var error = await outcome.Content.ReadFromJsonAsync<ProblemDetails>();
-        error?.Title.Should().Be("Invalid Credentials");
-        error?.Status.Should().Be(StatusCodes.Status401Unauthorized);
-        var errorCodes = error?.Extensions["errorCodes"] as JsonElement?;
-        errorCodes?.ValueKind.Should().Be(JsonValueKind.Array);
+        await outcome.ValidateError(HttpStatusCode.Unauthorized, "Invalid Credentials");
     }
 }
