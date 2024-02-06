@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
+using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers;
 
 public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory factory)
-    : BaseIntegrationTest(factory, "AuthData", false)
+    : BaseIntegrationTest(factory, "Auth", false)
 {
     [Fact]
     public async Task WhenRegisterIsSuccessful_ShouldReturnToken()

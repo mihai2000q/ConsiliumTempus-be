@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
+using ConsiliumTempus.Api.IntegrationTests.Core;
 using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers;

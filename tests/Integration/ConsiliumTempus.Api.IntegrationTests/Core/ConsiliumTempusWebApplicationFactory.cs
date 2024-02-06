@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Respawn;
 using Testcontainers.MsSql;
 
-namespace ConsiliumTempus.Api.IntegrationTests;
+namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
