@@ -6,7 +6,7 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using FluentAssertions;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth;
 
 public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory factory)
     : BaseIntegrationTest(factory, "Auth", false)
