@@ -9,17 +9,35 @@
 
 This is the controller that takes care of creating, reading, updating and deleting a Workspace.
 
+### Get
+
+Only users that are part of the workspace can retrieve it.
+
+```js
+GET {{host}}/api/workspaces/{id}
+```
+
+- **id** is a 36 characters strings
+
+#### Get Workspace Request
+
+Sends the id of the object inside the route request.
+
+#### Get Workspace Response
+
+Returns the workspace [Dto](dto/Dto.Workspace.md).
+
 ### Create
 
 Anyone logged in can create a workspace.
 
 ```js
-POST {{host}}/api/workspace/create
+POST {{host}}/api/workspaces/create
 ```
 
 #### Create Workspace Request
 
-Sends data for the new workspace needs to be created.
+Sends body data for the new workspace needs to be created.
 
 ```json
 {
@@ -30,12 +48,4 @@ Sends data for the new workspace needs to be created.
 
 #### Create Workspace Response
 
-Receives the newly created workspace.
-
-```json
-{
-  "id": "00000000-0000-0000-0000-000000000000",
-  "name": "Workspace Name",
-  "description": "This is the description of the workspace"
-}
-```
+Returns the newly created workspace [Dto](dto/Dto.Workspace.md).
