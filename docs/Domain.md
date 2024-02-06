@@ -26,6 +26,8 @@ This Id has to inherit from the **Aggregate Root Id**, which is a value object
 **Aggregate Root** is also essentially an **Entity** at its roots,
 however, an *Aggregate** will usually be a model that contains all the relations of multiple entities.
 
+Each aggregate can have its own set of **entities** or **value objects**.
+
 Each aggregate has a set of possible *errors* and *properties validation*.
 The aforementioned refers to the constraints that each property has
 (i.e., the name cannot be longer than 100 characters).

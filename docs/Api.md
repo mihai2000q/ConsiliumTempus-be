@@ -15,6 +15,30 @@ where **controller** is the name of the controller (i.e., for a Food Controller 
 the controller will return status code 405)
 - it injects the mapper and the mediator
 - it contains a solution to returning validation problems, conflicts, etc.
+- it provides a way to grab the token from the Headers of the Request
+
+## Authentication
+
+The developer shall provide a token for endpoints that do not allow anonymous requests.
+One way to add one inside Postman is to go to the *Authorization* tab and under the type *JWT Bearer* add the following:
+- **Secret Key**, defined in the [Get Started](../Readme.md/#dotnet-user-secrets) chapter 
+- and **Payload** which should include the following:
+  - **sub**, the user id of an existing user
+  - **email** of the user
+  - **given_name** (first name) of the user
+  - **family_name** (last name) of the user
+  - **jti**, the id of the token
+  - **exp**, the expiration date in ms
+  - **iss** (Issuer) of the application (can be found in the Jwt Settings inside the `appsettings.json`)
+  - **aud** (Audience) of the application (can be found in the Jwt Settings inside the `appsettings.json`)
+
+An example can be found below: 
+(for a better view of the payload check the Api Auth [documentation](api/Api.Auth.md/#auth))
+
+![Postman JWT Token](images/api/postman-jwt-token.png)
+
+## Controllers
 
 Below, you will find complete documentation on each Controller of the Api Layer:
 - [Authentication](api/Api.Auth.md)
+- [Workspace](api/Api.Workspace.md)
