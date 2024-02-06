@@ -2,7 +2,6 @@
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
 
 namespace ConsiliumTempus.Application.UnitTests.Common.Security;

@@ -1,5 +1,8 @@
 ﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
+using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
+using ConsiliumTempus.Domain.Workspace;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -18,13 +21,18 @@ public static partial class Utils
             return true;
         }
 
-        public static void AssertCreateResponse(
-            CreateWorkspaceResponse response,
-            CreateWorkspaceResult result)
+        public static void AssertDto(
+            IActionResult outcome,
+            WorkspaceAggregate workspace)
         {
-            response.Id.Should().Be(result.Workspace.Id.Value.ToString());
-            response.Name.Should().Be(result.Workspace.Name);
-            response.Description.Should().Be(result.Workspace.Description);
+            outcome.Should().BeOfType<OkObjectResult>();
+            ((OkObjectResult)outcome).Value.Should().BeOfType<WorkspaceDto>();
+        
+            var response = ((OkObjectResult)outcome).Value as WorkspaceDto;
+            
+            response!.Id.Should().Be(workspace.Id.Value.ToString());
+            response.Name.Should().Be(workspace.Name);
+            response.Description.Should().Be(workspace.Description);
         }
     }
 }

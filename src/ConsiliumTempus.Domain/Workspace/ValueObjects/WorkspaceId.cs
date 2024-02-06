@@ -21,6 +21,11 @@ public sealed class WorkspaceId : AggregateRootId<Guid>
     {
         return new WorkspaceId(Guid.NewGuid());
     }
+    
+    public static WorkspaceId Create(string value)
+    {
+        return Create(new Guid(value));
+    }
 
     public static WorkspaceId Create(Guid value)
     {

@@ -30,7 +30,7 @@ POST {{host}}/api/auth/register
 
 #### Register Request
 
-Sends data needed to create the user.
+Sends data needed to create the user in body.
 
 ```json
 {
@@ -65,7 +65,7 @@ POST {{host}}/api/auth/login
 
 #### Login Request
 
-Sends credentials of user.
+Sends credentials of user in body.
 
 ```json
 {

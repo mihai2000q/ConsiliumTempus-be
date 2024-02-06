@@ -8,7 +8,7 @@ public static partial class Utils
     {
         public static bool AssertUserId(UserId userId, string id)
         {
-            userId.Should().Be(UserId.Create(new Guid(id)));
+            userId.Should().Be(UserId.Create(id));
             return true;
         }
     }

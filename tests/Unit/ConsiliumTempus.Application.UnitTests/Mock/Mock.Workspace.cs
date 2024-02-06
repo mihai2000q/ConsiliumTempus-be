@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Workspace;
 
-namespace ConsiliumTempus.Api.UnitTests.Mock;
+namespace ConsiliumTempus.Application.UnitTests.Mock;
 
 public static partial class Mock
 {

@@ -39,6 +39,22 @@ An example can be found below:
 
 ## Controllers
 
+Typically, each controller will extend the Api Controller, 
+have a route similar to its name and have the methods in the following order:
+- **Get** Requests
+- **Post** Requests
+- **Put** Requests
+- **Delete** Requests
+
 Below, you will find complete documentation on each Controller of the Api Layer:
 - [Authentication](api/Api.Auth.md)
 - [Workspace](api/Api.Workspace.md)
+
+
+## Dto
+
+A **Data Transfer Object** (Dto) 
+is usually an aggregate that has undergone mapping so that it can be sent as an Api Response. 
+
+A full list of these Dtos can be found below:
+- [Workspace](api/dto/Dto.Workspace.md)
