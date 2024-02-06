@@ -22,7 +22,7 @@ public class RegisterCommandHandler(
 
         var user = UserAggregate.Register(
             Credentials.Create(
-                command.Email,
+                command.Email.ToLower(),
                 password), 
             Name.Create(
                 command.FirstName,

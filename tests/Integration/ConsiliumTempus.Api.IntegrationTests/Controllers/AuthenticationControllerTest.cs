@@ -31,7 +31,7 @@ public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory f
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<RegisterResponse>();
-        Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email, request.FirstName, request.LastName);
+        Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email.ToLower(), request.FirstName, request.LastName);
     }
     
     [Fact]
@@ -72,7 +72,7 @@ public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory f
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         
         var response = await outcome.Content.ReadFromJsonAsync<LoginResponse>();
-        Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email);
+        Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email.ToLower());
     }
     
     [Fact]

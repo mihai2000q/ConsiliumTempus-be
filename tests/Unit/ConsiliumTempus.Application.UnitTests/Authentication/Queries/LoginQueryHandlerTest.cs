@@ -35,7 +35,7 @@ public class LoginQueryHandlerTest
         const string hashedPassword = "This is the has for Password123";
         
         var user = Mock.Mock.User.CreateMock(password: hashedPassword);
-        _userRepository.Setup(u => u.GetUserByEmail(query.Email))
+        _userRepository.Setup(u => u.GetUserByEmail(query.Email.ToLower()))
             .ReturnsAsync(user);
 
         _scrambler.Setup(s => s.VerifyPassword(query.Password, hashedPassword))
@@ -68,7 +68,7 @@ public class LoginQueryHandlerTest
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _userRepository.Verify(u => u.GetUserByEmail(query.Email), Times.Once());
+        _userRepository.Verify(u => u.GetUserByEmail(query.Email.ToLower()), Times.Once());
 
         outcome.IsError.Should().BeTrue();
         outcome.Errors.Should().HaveCount(1);

@@ -62,7 +62,7 @@ public class RegisterCommandHandlerTest
         callbackAddedUser?.Id.Should().NotBeNull();
         callbackAddedUser?.Name.First.Should().Be(command.FirstName);
         callbackAddedUser?.Name.Last.Should().Be(command.LastName);
-        callbackAddedUser?.Credentials.Email.Should().Be(command.Email);
+        callbackAddedUser?.Credentials.Email.Should().Be(command.Email.ToLower());
         callbackAddedUser?.Credentials.Password.Should().Be(hashedPassword);
         callbackAddedUser?.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         callbackAddedUser?.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
