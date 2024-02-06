@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers;
 
 public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory factory)
-    : BaseIntegrationTest(factory, "AuthData")
+    : BaseIntegrationTest(factory, "AuthData", false)
 {
     [Fact]
     public async Task WhenRegisterIsSuccessful_ShouldReturnToken()

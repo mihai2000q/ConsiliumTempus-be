@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Infrastructure.Authentication;
+﻿using System.Net.Http.Headers;
+using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Infrastructure.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,18 +12,23 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
 {
     private readonly ConsiliumTempusDbContext _dbContext;
     private readonly Func<Task> _resetDatabase;
-    
+
     private readonly string? _testDataFilename;
-    private Func<string> GetTestDataFilePath => () => $"../../../MockData/{_testDataFilename}.sql";
+    private static Func<string, string> GetTestDataFilePath => fileName => $"../../../MockData/{fileName}.sql";
+    private readonly bool _defaultUsers;
 
     protected readonly HttpClient Client;
     protected readonly JwtSettings JwtSettings = new();
 
-    protected BaseIntegrationTest(ConsiliumTempusWebApplicationFactory factory, string? testDataFilename = null)
+    protected BaseIntegrationTest(
+        ConsiliumTempusWebApplicationFactory factory, 
+        string? testDataFilename = null,
+        bool defaultUsers = true)
     {
         _dbContext = factory.Services.GetRequiredService<ConsiliumTempusDbContext>();
         _resetDatabase = factory.ResetDatabaseAsync;
         _testDataFilename = testDataFilename;
+        _defaultUsers = defaultUsers;
         Client = factory.HttpClient;
         factory.Services.GetRequiredService<IConfiguration>()
             .Bind(JwtSettings.SectionName, JwtSettings);
@@ -31,7 +38,15 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
     {
         if (_testDataFilename != null)
         {
-            await AddTestData();
+            await AddTestData(GetTestDataFilePath(_testDataFilename));
+        }
+
+        if (_defaultUsers)
+        {
+            await AddTestData(GetTestDataFilePath("Users"));
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                TestAuthHandler.AuthenticationSchema, 
+                GetToken());
         }
     }
 
@@ -40,9 +55,21 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         await _resetDatabase();
     }
 
-    private async Task AddTestData()
+    protected string GetToken(string? email = null)
     {
-        var rawQueries = await File.ReadAllLinesAsync(GetTestDataFilePath());
+        var user = email is null ? 
+            _dbContext.Users.FirstOrDefault() :
+            _dbContext.Users.FirstOrDefault(u => u.Credentials.Email == email);
+
+        if (user is null) throw new Exception("There is no user with that email");
+            
+        var token = Utils.Token.CreateMock(user, JwtSettings);
+        return $"{token}";
+    }
+
+    private async Task AddTestData(string path)
+    {
+        var rawQueries = await File.ReadAllLinesAsync(path);
         var queries = ParseQueries(rawQueries);
 
         foreach (var query in queries)

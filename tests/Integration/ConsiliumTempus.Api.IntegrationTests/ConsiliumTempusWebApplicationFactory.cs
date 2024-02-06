@@ -1,5 +1,7 @@
 ﻿using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -12,6 +14,7 @@ using Testcontainers.MsSql;
 
 namespace ConsiliumTempus.Api.IntegrationTests;
 
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private const string MsSqlImage = "mcr.microsoft.com/mssql/server:2022-latest";
@@ -36,6 +39,9 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
             services.RemoveAll(typeof(DbContextOptions<ConsiliumTempusDbContext>));
             services.AddDbContext<ConsiliumTempusDbContext>(options =>
                 options.UseSqlServer(_dbContainer.GetConnectionString()));
+            
+            services.AddAuthentication(TestAuthHandler.AuthenticationSchema)
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.AuthenticationSchema, _ => { });
         });
     }
 
@@ -63,7 +69,7 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
         _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.SqlServer,
-            SchemasToInclude = new[] { "dbo" }
+            SchemasToInclude = ["dbo"]
         });
     }
 
