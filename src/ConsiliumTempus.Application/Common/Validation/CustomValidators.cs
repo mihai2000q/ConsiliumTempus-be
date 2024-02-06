@@ -19,7 +19,13 @@ public static class CustomValidators
 
     public static IRuleBuilderOptions<T, string> IsEmail<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
-        return ruleBuilder.Must(p => p.IsValidEmail())
+        return ruleBuilder.Must(e => e.IsValidEmail())
             .WithMessage("'{PropertyName}' must be valid");
+    }
+
+    public static IRuleBuilderOptions<T, string> IsId<T>(this IRuleBuilder<T, string> ruleBuilder)
+    {
+        return ruleBuilder.Must(p => p.Length == 36)
+            .WithMessage("'{PropertyName}' must be 36 characters");
     }
 }
