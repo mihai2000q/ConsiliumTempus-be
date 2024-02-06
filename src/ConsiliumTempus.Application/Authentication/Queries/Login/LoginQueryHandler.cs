@@ -14,7 +14,7 @@ public class LoginQueryHandler(
 {
     public async Task<ErrorOr<LoginResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
     {
-        var user = await userRepository.GetUserByEmail(query.Email);
+        var user = await userRepository.GetUserByEmail(query.Email.ToLower());
         if (user is null) return Errors.Authentication.InvalidCredentials;
 
         var isPasswordEqual = scrambler.VerifyPassword(query.Password, user.Credentials.Password);

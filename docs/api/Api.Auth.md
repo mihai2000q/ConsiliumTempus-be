@@ -22,11 +22,15 @@ See the example below:
 
 ### Register
 
+Anyone can register.
+
 ```js
-POST {{host}}/auth/register
+POST {{host}}/api/auth/register
 ```
 
 #### Register Request
+
+Sends data needed to create the user.
 
 ```json
 {
@@ -38,6 +42,8 @@ POST {{host}}/auth/register
 ```
 
 #### Register Response
+
+Returns a token about the newly created user.
 
 ```js
 200 OK
@@ -51,11 +57,15 @@ POST {{host}}/auth/register
 
 ### Login
 
+Anyone can login.
+
 ```js
-POST {{host}}/auth/login
+POST {{host}}/api/auth/login
 ```
 
 #### Login Request
+
+Sends credentials of user.
 
 ```json
 {
@@ -65,6 +75,8 @@ POST {{host}}/auth/login
 ```
 
 #### Login Response
+
+Returns token based on the user information.
 
 ```js
 200 OK

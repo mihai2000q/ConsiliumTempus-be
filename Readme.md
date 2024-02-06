@@ -170,7 +170,7 @@ For more information, check out the documentation on [Testing](docs/Testing.md).
 
 The application is stored on the well-known cloud-based service and version control **GitHub**.
 <br>
-More about the consequences for Git can be found [here](docs/Git.md).
+More about the decisions about Git can be found [here](docs/Git.md).
 
 ## Architecture
 

@@ -2,11 +2,10 @@
 using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.Controllers;
+using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Application.Authentication.Queries.Login;
 using ConsiliumTempus.Domain.Common.Errors;
-using Mapster;
-using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,17 +21,12 @@ public class AuthenticationControllerTest
 
     public AuthenticationControllerTest()
     {
-        var config = TypeAdapterConfig.GlobalSettings;
-        config.Scan(typeof(AuthenticationMappingConfig).Assembly);
-        IMapper mapper = new Mapper(config);
+        var mapper = Utils.GetMapper<AuthenticationMappingConfig>();
+        
         _mediator = new Mock<ISender>();
         _uut = new AuthenticationController(mapper, _mediator.Object);
-
-        // Resolve Http Context
-        Mock<HttpContext> httpContext = new();
-        _uut.ControllerContext.HttpContext = httpContext.Object;
-        httpContext.SetupGet(h => h.Items)
-            .Returns(new Dictionary<object, object?>());
+        
+        Utils.ResolveHttpContext(_uut);
     }
 
     #endregion
@@ -57,7 +51,7 @@ public class AuthenticationControllerTest
 
         // Assert
         _mediator.Verify(m => m.Send(
-                It.Is<RegisterCommand>(command => AssertRegisterCommand(command, request)), 
+                It.Is<RegisterCommand>(command => Utils.Authentication.AssertRegisterCommand(command, request)), 
                 default),
             Times.Once());
 
@@ -86,16 +80,11 @@ public class AuthenticationControllerTest
 
         // Assert
         _mediator.Verify(m => m.Send(
-                It.Is<RegisterCommand>(command => AssertRegisterCommand(command, request)), 
+                It.Is<RegisterCommand>(command => Utils.Authentication.AssertRegisterCommand(command, request)), 
                 default),
             Times.Once());
 
-        outcome.Should().BeOfType<ObjectResult>();
-        ((ObjectResult)outcome).Value.Should().BeOfType<ProblemDetails>();
-        
-        var error = ((ObjectResult)outcome).Value as ProblemDetails;
-        error?.Status.Should().Be(StatusCodes.Status409Conflict);
-        error?.Title.Should().Be("Email is already in use");
+        outcome.ValidateError(StatusCodes.Status409Conflict, "Email is already in use");
     }
 
     [Fact]
@@ -115,7 +104,7 @@ public class AuthenticationControllerTest
 
         // Assert
         _mediator.Verify(m => m.Send(
-                It.Is<LoginQuery>(query => AssertLoginQuery(query, request)), 
+                It.Is<LoginQuery>(query => Utils.Authentication.AssertLoginQuery(query, request)), 
                 default),
             Times.Once());
 
@@ -142,31 +131,10 @@ public class AuthenticationControllerTest
 
         // Assert
         _mediator.Verify(m => m.Send(
-                It.Is<LoginQuery>(query => AssertLoginQuery(query, request)), 
+                It.Is<LoginQuery>(query => Utils.Authentication.AssertLoginQuery(query, request)), 
                 default),
             Times.Once());
 
-        outcome.Should().BeOfType<ObjectResult>();
-        ((ObjectResult)outcome).Value.Should().BeOfType<ProblemDetails>();
-        
-        var error = ((ObjectResult)outcome).Value as ProblemDetails;
-        error?.Status.Should().Be(StatusCodes.Status401Unauthorized);
-        error?.Title.Should().Be("Invalid Credentials");
-    }
-
-    private static bool AssertRegisterCommand(RegisterCommand command, RegisterRequest request)
-    {
-        command.FirstName.Should().Be(request.FirstName);
-        command.LastName.Should().Be(request.LastName);
-        command.Email.Should().Be(request.Email);
-        command.Password.Should().Be(request.Password);
-        return true;
-    }
-    
-    private static bool AssertLoginQuery(LoginQuery query, LoginRequest request)
-    {
-        query.Email.Should().Be(request.Email);
-        query.Password.Should().Be(request.Password);
-        return true;
+        outcome.ValidateError(StatusCodes.Status401Unauthorized, "Invalid Credentials");
     }
 }

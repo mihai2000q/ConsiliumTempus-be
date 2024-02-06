@@ -1,19 +1,19 @@
 ﻿using ConsiliumTempus.Domain.Common.Validation;
-using ConsiliumTempus.Domain.WorkspaceAggregate;
-using ConsiliumTempus.Domain.WorkspaceAggregate.ValueObjects;
+using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
 
-public class WorkspaceConfiguration : IEntityTypeConfiguration<Workspace>
+public class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceAggregate>
 {
-    public void Configure(EntityTypeBuilder<Workspace> builder)
+    public void Configure(EntityTypeBuilder<WorkspaceAggregate> builder)
     {
         ConfigureWorkspacesTable(builder);
     }
 
-    private static void ConfigureWorkspacesTable(EntityTypeBuilder<Workspace> builder)
+    private static void ConfigureWorkspacesTable(EntityTypeBuilder<WorkspaceAggregate> builder)
     {
         builder.HasKey(w => w.Id);
         builder.Property(u => u.Id)

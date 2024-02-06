@@ -1,5 +1,7 @@
 ﻿using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -10,17 +12,15 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Respawn;
 using Testcontainers.MsSql;
 
-namespace ConsiliumTempus.Api.IntegrationTests;
+namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private const string MsSqlImage = "mcr.microsoft.com/mssql/server:2022-latest";
-    private const string DatabasePassword = "StrongPassword123";
-    
     private readonly MsSqlContainer _dbContainer =
         new MsSqlBuilder()
-            .WithImage(MsSqlImage)
-            .WithPassword(DatabasePassword)
+            .WithImage(Constants.MsSqlImage)
+            .WithPassword(Constants.DatabasePassword)
             .Build();
 
     private DbConnection _dbConnection = null!;
@@ -30,12 +30,15 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Testing");
+        builder.UseEnvironment(Constants.Environment);
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll(typeof(DbContextOptions<ConsiliumTempusDbContext>));
             services.AddDbContext<ConsiliumTempusDbContext>(options =>
                 options.UseSqlServer(_dbContainer.GetConnectionString()));
+            
+            services.AddAuthentication(TestAuthHandler.AuthenticationSchema)
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.AuthenticationSchema, _ => { });
         });
     }
 
@@ -63,7 +66,7 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
         _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.SqlServer,
-            SchemasToInclude = new[] { "dbo" }
+            SchemasToInclude = ["dbo"]
         });
     }
 

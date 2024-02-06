@@ -2,6 +2,7 @@
 using ErrorOr;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -9,11 +10,24 @@ namespace ConsiliumTempus.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public abstract class ApiController(IMapper mapper, ISender mediator) : ControllerBase
 {
     protected readonly IMapper Mapper = mapper;
     protected readonly ISender Mediator = mediator;
 
+    protected string GetToken()
+    {
+        try
+        {
+            return HttpContext.Request.Headers.Authorization.First()!.Split(" ")[1];
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Could not read the Token: {e.Message}");
+        }
+    }
+    
     protected IActionResult Problem(List<Error> errors)
     {
         if (errors.Count is 0) return Problem();

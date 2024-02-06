@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
+using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers;
 
 public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory factory)
-    : BaseIntegrationTest(factory, "AuthData")
+    : BaseIntegrationTest(factory, "Auth", false)
 {
     [Fact]
     public async Task WhenRegisterIsSuccessful_ShouldReturnToken()
@@ -30,7 +31,7 @@ public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory f
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<RegisterResponse>();
-        Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email, request.FirstName, request.LastName);
+        Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email.ToLower(), request.FirstName, request.LastName);
     }
     
     [Fact]
@@ -71,7 +72,7 @@ public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory f
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         
         var response = await outcome.Content.ReadFromJsonAsync<LoginResponse>();
-        Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email);
+        Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email.ToLower());
     }
     
     [Fact]

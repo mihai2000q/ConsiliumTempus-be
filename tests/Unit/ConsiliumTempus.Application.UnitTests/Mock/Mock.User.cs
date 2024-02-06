@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.UserAggregate.ValueObjects;
+﻿using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.User.ValueObjects;
 
 namespace ConsiliumTempus.Application.UnitTests.Mock;
 
@@ -6,9 +7,11 @@ public static class Mock
 {
     public static class User
     {
-        public static Domain.UserAggregate.User CreateMock(string email = "", string password = "")
+        public static UserAggregate CreateMock(
+            string email = "Some@example.com",
+            string password = "Password123")
         {
-            return Domain.UserAggregate.User.Create(Credentials.Create(email, password), Name.Create("", ""));
+            return UserAggregate.Create(Credentials.Create(email, password), Name.Create("", ""));
         }
     }
 }

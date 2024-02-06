@@ -1,17 +1,19 @@
-﻿using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.UserAggregate.Events;
-using ConsiliumTempus.Domain.UserAggregate.ValueObjects;
-using ConsiliumTempus.Domain.WorkspaceAggregate;
+﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.User.Events;
+using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Domain.Workspace;
 
-namespace ConsiliumTempus.Domain.UserAggregate;
+namespace ConsiliumTempus.Domain.User;
 
-public sealed class User : AggregateRoot<UserId, Guid>
+public sealed class UserAggregate : AggregateRoot<UserId, Guid>
 {
-    private User()
+    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    private UserAggregate()
     {
     }
     
-    private User(
+    private UserAggregate(
         UserId id,
         Credentials credentials,
         Name name,
@@ -24,19 +26,19 @@ public sealed class User : AggregateRoot<UserId, Guid>
         UpdatedDateTime = updatedDateTime;
     }
 
-    private readonly List<Workspace> _workspaces = [];
+    private readonly List<WorkspaceAggregate> _workspaces = [];
 
     public Credentials Credentials { get; private set; } = default!;
     public Name Name { get; private set; } = default!;
     public DateTime CreatedDateTime { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
-    public IReadOnlyList<Workspace> Workspaces => _workspaces.AsReadOnly();
+    public IReadOnlyList<WorkspaceAggregate> Workspaces => _workspaces.AsReadOnly();
 
-    public static User Create(
+    public static UserAggregate Create(
         Credentials credentials,
         Name name)
     {
-        return new User(
+        return new UserAggregate(
             UserId.CreateUnique(),
             credentials,
             name,
@@ -44,7 +46,7 @@ public sealed class User : AggregateRoot<UserId, Guid>
             DateTime.UtcNow);
     }
     
-    public static User Register(
+    public static UserAggregate Register(
         Credentials credentials,
         Name name)
     {
@@ -55,8 +57,8 @@ public sealed class User : AggregateRoot<UserId, Guid>
         return user;
     }
 
-    public void AddWorkspace(Workspace workspace)
+    public void AddWorkspace(WorkspaceAggregate workspaceAggregate)
     {
-        _workspaces.Add(workspace);
+        _workspaces.Add(workspaceAggregate);
     }
 }

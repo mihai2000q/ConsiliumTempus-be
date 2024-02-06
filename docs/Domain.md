@@ -5,7 +5,7 @@
   * [Aggregates](#aggregates)
   * [Entities](#entities)
   * [Value Objects](#value-objects)
-  * [Notable Errors](#notable-errors)
+  * [General Domain Errors](#general-domain-errors)
   * [Database Diagrams](#database-diagrams)
 
 Below, you will find a complete list and documentation for each **Aggregate**, **Entity** and **Value Object**.
@@ -25,6 +25,8 @@ This Id has to inherit from the **Aggregate Root Id**, which is a value object
 (they won't be included in the value object lists as they are required and part of all the aggregates).
 **Aggregate Root** is also essentially an **Entity** at its roots,
 however, an *Aggregate** will usually be a model that contains all the relations of multiple entities.
+
+Each aggregate can have its own set of **entities** or **value objects**.
 
 Each aggregate has a set of possible *errors* and *properties validation*.
 The aforementioned refers to the constraints that each property has
@@ -57,12 +59,13 @@ The value objects are:
 
 - Nothing atm.
 
-## Notable Errors
+## General Domain Errors
 
 These errors are not tied to any aggregate, therefore notable and only used in the Application Layer.
 
 - Authentication
-  - **Invalid Credentials** for when, upon authentication, the credentials are invalid
+  - **Invalid Credentials** when, upon authentication, the credentials are invalid
+  - **Invalid Token** when the token is deemed invalid (i.e., userId is wrong), typically when it has been tampered with
 
 ## Database Diagrams
 

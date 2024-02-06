@@ -47,7 +47,7 @@ For database design checkout the [User Diagram](../diagrams/Diagram.User.md).
 - The **Email** cannot be longer than 100 characters
 - The plain **Password** cannot be longer than 100 characters
 
-### Errors
+### Domain Errors
 
 - **Duplicate Email** when the email is already in use
 
