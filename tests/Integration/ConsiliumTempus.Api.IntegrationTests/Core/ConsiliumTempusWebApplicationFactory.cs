@@ -17,13 +17,10 @@ namespace ConsiliumTempus.Api.IntegrationTests.Core;
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private const string MsSqlImage = "mcr.microsoft.com/mssql/server:2022-latest";
-    private const string DatabasePassword = "StrongPassword123";
-    
     private readonly MsSqlContainer _dbContainer =
         new MsSqlBuilder()
-            .WithImage(MsSqlImage)
-            .WithPassword(DatabasePassword)
+            .WithImage(Constants.MsSqlImage)
+            .WithPassword(Constants.DatabasePassword)
             .Build();
 
     private DbConnection _dbConnection = null!;
@@ -33,7 +30,7 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Testing");
+        builder.UseEnvironment(Constants.Environment);
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll(typeof(DbContextOptions<ConsiliumTempusDbContext>));

@@ -47,9 +47,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         if (_defaultUsers)
         {
             await AddTestData(Constants.DefaultUsersFilePath);
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                TestAuthHandler.AuthenticationSchema, 
-                GetToken());
+            UseCustomToken();
         }
     }
 
@@ -58,15 +56,11 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         await _resetDatabase();
     }
 
-    protected string GetToken(string? email = null)
+    protected void UseCustomToken(string? email = null)
     {
-        var user = email is null ? 
-            _dbContext.Users.FirstOrDefault() :
-            _dbContext.Users.FirstOrDefault(u => u.Credentials.Email == email);
-        
-        if (user is null) throw new Exception("There is no user with that email");
-            
-        return Utils.Token.CreateMock(user, JwtSettings);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            TestAuthHandler.AuthenticationSchema, 
+            GetToken(email));
     }
 
     private async Task AddTestData(string path)
@@ -88,5 +82,16 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
             .Split(";")
             .Where(line => !string.IsNullOrWhiteSpace(line))
             .Select(q => q + ";");
+    }
+    
+    private string GetToken(string? email = null)
+    {
+        var user = email is null ? 
+            _dbContext.Users.FirstOrDefault() :
+            _dbContext.Users.FirstOrDefault(u => u.Credentials.Email == email.ToLower());
+        
+        if (user is null) throw new Exception("There is no user with that email");
+            
+        return Utils.Token.CreateMock(user, JwtSettings);
     }
 }

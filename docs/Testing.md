@@ -1,12 +1,16 @@
 # Consilium Tempus Backend Testing
 
-- [Unit Testing](#unit-testing)
-    - [Coding Convention](#coding-convention)
-- [Integration Testing](#integration-testing)
-    - [Coding Convention](#coding-convention-1)
-    - [Api Integration](#api-integration)
+* [Unit Testing](#unit-testing)
+  * [Coding Convention](#coding-convention)
+* [Integration Testing](#integration-testing)
+  * [Coding Convention](#coding-convention-1)
+  * [Api Integration](#api-integration)
+    * [Web Application Factory](#web-application-factory)
+    * [Base Integration Test](#base-integration-test)
+    * [Test Auth Handler](#test-auth-handler)
 
-The backend of the application is tested using the **xUnit** framework. The tests are divided into Unit and Integration Tests.
+The backend of the application is tested using the **xUnit** framework. 
+The tests are divided into Unit and Integration Tests.
 
 ## Unit Testing
 
@@ -74,9 +78,15 @@ public class RegisterCommandHandlerTest
 
 ## Integration Testing
 
-Integration testing is a type of software testing where components of the software are gradually integrated and then tested as a unified group. Usually these components are already working well individually (Unit Tests), but they may break when integrated with other components.
+Integration testing is a type of software testing where components of the software are gradually integrated 
+and then tested as a unified group. 
+Usually these components are already working well individually (Unit Tests), 
+but they may break when integrated with other components.
 
-In order for an integration test to run accordingly, it needs a backing database, however, it should not interfere with the development environment. For those reasons, the tests have been designed so that they open a new Docker container on each run. Additionally, all tests will share the same database, however, it will reset the state between each run.
+In order for an integration test to run accordingly, it needs a backing database, however, 
+it should not interfere with the development environment. 
+For those reasons, the tests have been designed so that they open a new Docker container on each run. 
+Additionally, all tests will share the same database, however, it will reset the state between each run.
 
 Inside the Api Layer a configuration file is proposed for this Integration Testing environment, `appsettings.Testing.json`.
 
@@ -141,7 +151,14 @@ public class RegisterCommandHandlerTest
 
 The Presentation Layer is exposed through REST, therefore; to test it thoroughly, an HTTP Client is needed.
 
-Inside the project, the classes **Web Application Factory** and the **Base Integration Test** provide a client and minimal functionality to write Api Integration Tests.
+Inside the project, the **Core** directory contains the classes that are primordial for Api Integration Testing.
+<br>
+The core components are:
+- Web Application Factory
+- Base Integration Test
+- Test Auth Handler
+
+Together, they provide all the functionalities to write Api Integration Tests.
 
 Unlike the other layers, the Api replaces the *SUT* variable component with the **Client**; 
 therefore, it does not need the *Setup* region either.
@@ -149,29 +166,47 @@ therefore, it does not need the *Setup* region either.
 #### Web Application Factory
 
 The **Web Application Factory** class creates a Docker Container with the following credentials, by default:
-- **password** = StrongPassword123 (can be changed)
+- **password** = StrongPassword123 (can be changed inside the Constants class)
 - **username** = sa
 - **database name** = master
  
 Inside the constructor it removes all "real"
 instances of the database context and injects the above-mentioned container.
+On construction, the Testing Environment is set to take in the parameters in the `appsettings.Testing.json`, 
+and the **Test Auth Handler** is invoked to add authentication to the tests.
 It also implements the Async Lifetime interface from the **xUnit Framework**
 which provides two methods for initialization and dispose.
 When initializing, it applies the following:
 - apply the migrations to the database
-- create a singleton http client
-- finally, create a database connection to start the **Respawner** that will reset the state of the container after each running method
+- create a singleton HTTP Client
+- finally, create a database connection to start the **Respawner** 
+that will reset the state of the container after each running method
 
 #### Base Integration Test
 
 This class also implements the Async Lifetime so that it can reset the Database on disposing
 (which happens after each method runs).
-This class also initializes a singleton http client from the factory,
-and the Jwt Settings from the Testing configuration.
-The database is capable of reinitializing state,
-therefore, inside the initialize task, it will add datasets from an sql file.
-The subclass will be able to mention the filename
+This class also borrows a singleton http client from the factory, 
+and initializes the Jwt Settings from the Testing configuration (`appsettings.Testing.json`).
+The database is capable of reinitializing state, 
+therefore, inside the initialize task, it will add datasets from multiple sql files from within a directory.
+The subclass will be able to mention the directory name
 if it wants a certain state of the database (only one dataset per test class).
-To add more datasets, go to the `MockData` package inside the project (do not add multi-line comments). 
+To add more datasets, go to the `MockData` package inside the project 
+(do not add multi-line comments) and add a directory with as many sql files you need.
+Each sql file represents a table inside the database.
 
-This class is intended to be extended from each test so that the **Client** and the **Docker Container** are initialized. 
+By default, inside the database there will be a dataset of Users 
+(can be deactivated per Test on the constructor parameters).
+Those Users can be modified inside the sole table inside the `MockData` directory (`Users.sql`).
+The base class also provides a way to create custom tokens based on email. 
+To use a custom Token for each test method, make use of the method `UseCustomToken` and pass the email of the user.
+
+This class is intended to be extended for each test so that the **Client** and the **Docker Container** are initialized.
+
+#### Test Auth Handler
+
+This class is used by the Web App Factory to let the Client bypass any Authentication Layer that requires it.
+In other words, some endpoints will require some type of authorization and others might just accept anonymous requests.
+However, those that require authorization will, typically, require a Token as well 
+(which is already provided and discussed in the [Base Integration Test](#base-integration-test) class).
