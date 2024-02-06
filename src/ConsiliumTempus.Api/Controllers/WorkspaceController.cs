@@ -1,10 +1,8 @@
-﻿using ConsiliumTempus.Api.Common.Http;
-using ConsiliumTempus.Api.Common.Mapping;
+﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.Controllers;
@@ -17,7 +15,7 @@ public class WorkspaceController(IMapper mapper, ISender mediator) : ApiControll
     {
         var token = GetToken();
         var command = Mapper.From(request)
-            .AddParameters(WorkspaceMappingConfig.Token, token!)
+            .AddParameters(WorkspaceMappingConfig.Token, token)
             .AdaptToType<WorkspaceCreateCommand>();
         var result = await Mediator.Send(command);
 
