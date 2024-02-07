@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace ConsiliumTempus.Infrastructure.Authentication;
+namespace ConsiliumTempus.Infrastructure.Authorization.Token;
 
 public class TokenRequirement : IAuthorizationRequirement;

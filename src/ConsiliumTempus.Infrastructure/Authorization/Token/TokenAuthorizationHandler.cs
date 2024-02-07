@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-namespace ConsiliumTempus.Infrastructure.Authentication;
+namespace ConsiliumTempus.Infrastructure.Authorization.Token;
 
 public class TokenAuthorizationHandler(IServiceScopeFactory serviceScopeFactory) 
     : AuthorizationHandler<TokenRequirement>

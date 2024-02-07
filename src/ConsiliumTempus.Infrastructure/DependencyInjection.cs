@@ -2,6 +2,8 @@
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Infrastructure.Authentication;
+using ConsiliumTempus.Infrastructure.Authorization;
+using ConsiliumTempus.Infrastructure.Authorization.Token;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using ConsiliumTempus.Infrastructure.Persistence.Repository;
@@ -19,19 +21,19 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuth(configuration)
+        services.AddAppAuthentication(configuration)
+            .AddAppAuthorization()
             .AddPersistence(configuration);
 
         return services;
     }
 
-    private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddAppAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtSettings = new JwtSettings();
         configuration.Bind(JwtSettings.SectionName, jwtSettings);
 
         services.AddSingleton(Options.Create(jwtSettings));
-        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
         services.AddAuthentication(auth =>
             {
@@ -52,12 +54,20 @@ public static class DependencyInjection
                 };
                 options.MapInboundClaims = false;
             });
+        
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddSingleton<IScrambler, Scrambler>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddAppAuthorization(this IServiceCollection services)
+    {
         services.AddAuthorization();
 
-        services.AddSingleton<IScrambler, Scrambler>();
         services.AddSingleton<IAuthorizationHandler, TokenAuthorizationHandler>();
         services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
-
+        
         return services;
     }
 

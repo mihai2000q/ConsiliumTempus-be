@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ConsiliumTempus.Infrastructure.Authorization.Token;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
-namespace ConsiliumTempus.Infrastructure.Authentication;
+namespace ConsiliumTempus.Infrastructure.Authorization;
 
 public class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options) 
     : DefaultAuthorizationPolicyProvider(options)
