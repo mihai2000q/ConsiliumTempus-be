@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ConsiliumTempus.Domain.Common.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ConsiliumTempus.Api.Common.Attributes;
 
-public sealed class ValidateTokenAttribute(ValidateTokenEnum policy = ValidateTokenEnum.ValidateToken)
+public sealed class ValidateTokenAttribute(Validate policy = Validate.Token)
     : AuthorizeAttribute(policy.ToString());
 
-public enum ValidateTokenEnum
-{
-    ValidateToken
-}

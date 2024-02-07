@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
-namespace ConsiliumTempus.Infrastructure.Authorization;
+namespace ConsiliumTempus.Infrastructure.Authorization.Providers;
 
 public class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options) 
     : DefaultAuthorizationPolicyProvider(options)
@@ -13,8 +13,9 @@ public class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
 
         if (policy is not null) return policy;
 
-        return new AuthorizationPolicyBuilder()
-            .AddRequirements(new TokenRequirement())
-            .Build();
+        var builder = new AuthorizationPolicyBuilder()
+            .AddRequirements(new TokenRequirement());
+        
+        return builder.Build();
     }
 }

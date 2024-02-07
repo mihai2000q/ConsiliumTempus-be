@@ -1,12 +1,14 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Infrastructure.Authorization;
+using ConsiliumTempus.Infrastructure.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRepository
+public class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRepository, IUserProvider
 {
     public async Task<UserAggregate?> Get(UserId id)
     {   

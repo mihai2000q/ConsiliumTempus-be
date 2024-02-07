@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Infrastructure.Authorization.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -21,8 +21,8 @@ public class TokenAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
         if (!Guid.TryParse(jwtUserId, out var userId)) return;
 
         using var scope = serviceScopeFactory.CreateScope();
-        var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
-        var user = await userRepository.Get(UserId.Create(userId));
+        var userProvider = scope.ServiceProvider.GetRequiredService<IUserProvider>();
+        var user = await userProvider.Get(UserId.Create(userId));
         
         if (user is null) return;
         

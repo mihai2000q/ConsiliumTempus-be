@@ -3,6 +3,7 @@ using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Infrastructure.Authentication;
 using ConsiliumTempus.Infrastructure.Authorization;
+using ConsiliumTempus.Infrastructure.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Authorization.Token;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
@@ -65,8 +66,9 @@ public static class DependencyInjection
     {
         services.AddAuthorization();
 
-        services.AddSingleton<IAuthorizationHandler, TokenAuthorizationHandler>();
+        services.AddScoped<IUserProvider, UserRepository>();
         services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+        services.AddSingleton<IAuthorizationHandler, TokenAuthorizationHandler>();
         
         return services;
     }
