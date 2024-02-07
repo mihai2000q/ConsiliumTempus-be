@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Authentication.Commands.Register;
+using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Domain.User;
@@ -60,8 +61,8 @@ public class RegisterCommandHandlerTest
         
         callbackAddedUser.Should().Be(callbackUserUsedForJwt);
         callbackAddedUser?.Id.Should().NotBeNull();
-        callbackAddedUser?.Name.First.Should().Be(command.FirstName);
-        callbackAddedUser?.Name.Last.Should().Be(command.LastName);
+        callbackAddedUser?.Name.First.Should().Be(command.FirstName.CapitalizeWord());
+        callbackAddedUser?.Name.Last.Should().Be(command.LastName.CapitalizeWord());
         callbackAddedUser?.Credentials.Email.Should().Be(command.Email.ToLower());
         callbackAddedUser?.Credentials.Password.Should().Be(hashedPassword);
         callbackAddedUser?.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());

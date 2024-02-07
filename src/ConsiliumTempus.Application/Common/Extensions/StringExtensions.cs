@@ -15,4 +15,31 @@ public static class StringExtensions
 
     public static bool IsValidEmail(this string str) =>
         Regex.RegexStore.EmailRegex().IsMatch(str);
+
+    public static string Capitalize(this string str)
+    {
+        var separators = new[] { " ", "-" };
+        if (str.Length == 0) return string.Empty;
+        if (str.Length == 1) return str.ToUpper();
+        foreach (var separator in separators)
+        {
+            if (str.Contains(separator))
+            {
+                return str.CapitalizeEachWord(separator);
+            }
+        }
+
+        return str.CapitalizeWord();
+    }
+
+    private static string CapitalizeEachWord(this string str, string separator)
+    {
+        return string
+            .Join(separator, str
+                .Split(separator)
+                .Select(CapitalizeWord));
+    }
+    
+    public static string CapitalizeWord(this string word) => 
+        word.ToUpper()[0] + word.ToLower()[1..];
 }

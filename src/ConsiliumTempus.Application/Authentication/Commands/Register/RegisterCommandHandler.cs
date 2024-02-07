@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Authentication;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
@@ -25,8 +26,8 @@ public class RegisterCommandHandler(
                 command.Email.ToLower(),
                 password), 
             Name.Create(
-                command.FirstName,
-                command.LastName));
+                command.FirstName.Capitalize(),
+                command.LastName.Capitalize()));
         await userRepository.Add(user);
 
         var token = jwtTokenGenerator.GenerateToken(user);

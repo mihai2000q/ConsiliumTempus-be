@@ -5,7 +5,7 @@ namespace ConsiliumTempus.Application.UnitTests.Common.Extensions;
 public class StringExtensionsTest
 {
     [Fact]
-    public void WhenStringContainsUppercaseLetter_ShouldReturnTrue()
+    public void ContainsUppercase_WhenStringContainsUppercaseLetter_ShouldReturnTrue()
     {
         // Arrange
         const string str = "Uppercase";
@@ -18,7 +18,7 @@ public class StringExtensionsTest
     }
     
     [Fact]
-    public void WhenStringDoesNotContainUppercaseLetter_ShouldReturnFalse()
+    public void ContainsUppercase_WhenStringDoesNotContainUppercaseLetter_ShouldReturnFalse()
     {
         // Arrange
         const string str = "uppercase";
@@ -31,7 +31,7 @@ public class StringExtensionsTest
     }
     
     [Fact]
-    public void WhenStringContainsLowercaseLetter_ShouldReturnTrue()
+    public void ContainsLowercase_WhenStringContainsLowercaseLetter_ShouldReturnTrue()
     {
         // Arrange
         const string str = "lowercase";
@@ -44,7 +44,7 @@ public class StringExtensionsTest
     }
     
     [Fact]
-    public void WhenStringDoesNotContainLowercaseLetter_ShouldReturnFalse()
+    public void ContainsLowercase_WhenStringDoesNotContainLowercaseLetter_ShouldReturnFalse()
     {
         // Arrange
         const string str = "LOWERCASE";
@@ -57,7 +57,7 @@ public class StringExtensionsTest
     }
     
     [Fact]
-    public void WhenStringContainsNumber_ShouldReturnTrue()
+    public void ContainsNumber_WhenStringContainsNumber_ShouldReturnTrue()
     {
         // Arrange
         const string str = "lowercase1";
@@ -70,7 +70,7 @@ public class StringExtensionsTest
     }
     
     [Fact]
-    public void WhenStringDoesNotContainsNumber_ShouldReturnFalse()
+    public void ContainsNumber_WhenStringDoesNotContainsNumber_ShouldReturnFalse()
     {
         // Arrange
         const string str = "no numbers here";
@@ -83,7 +83,7 @@ public class StringExtensionsTest
     }
     
     [Fact]
-    public void WhenStringIsValidEmail_ShouldReturnTrue()
+    public void IsValidEmail_WhenStringIsValidEmail_ShouldReturnTrue()
     {
         // Arrange
         const string str = "Some@Example.com";
@@ -96,7 +96,7 @@ public class StringExtensionsTest
     }
     
     [Fact]
-    public void WhenStringIsNotValidEmail_ShouldReturnFalse()
+    public void IsValidEmail_WhenStringIsNotValidEmail_ShouldReturnFalse()
     {
         // Arrange
         var input = new[] { "SomeExample", "Some@Example", "SomeExample.com" };
@@ -106,5 +106,45 @@ public class StringExtensionsTest
 
         // Assert
         outcome.Should().AllBeEquivalentTo(false);
+    }
+
+    [Fact]
+    public void Capitalize_WhenLengthIs0_ShouldReturnEmpty()
+    {
+        // Arrange
+        const string input = "";
+        
+        // Act
+        var outcome = input.Capitalize();
+
+        // Assert
+        outcome.Should().BeEmpty();
+    }
+    
+    [Fact]
+    public void Capitalize_WhenLengthIs1_ShouldReturnUpper()
+    {
+        // Arrange
+        const string input = "l";
+        
+        // Act
+        var outcome = input.Capitalize();
+
+        // Assert
+        outcome.Should().Be("L");
+    }
+    
+    [Fact]
+    public void Capitalize_WhenLengthIsOver1_ShouldReturnCapitalizedWords()
+    {
+        // Arrange
+        var inputs = new[] { "aNdReI", "mIchAel JaMES", "CHRISTIAN-MICHAEL" };
+        var expectedOutcomes = new[] { "Andrei", "Michael James", "Christian-Michael" };
+        
+        // Act
+        var outcomes = inputs.Select(s => s.Capitalize());
+
+        // Assert
+        outcomes.Should().BeEquivalentTo(expectedOutcomes);
     }
 }

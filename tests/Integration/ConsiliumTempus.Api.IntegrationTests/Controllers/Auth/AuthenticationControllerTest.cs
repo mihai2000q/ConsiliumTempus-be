@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Application.Common.Extensions;
 using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth;
@@ -28,7 +29,12 @@ public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory f
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<RegisterResponse>();
-        Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email.ToLower(), request.FirstName, request.LastName);
+        Utils.Auth.AssertToken(
+            response?.Token,
+            JwtSettings, 
+            request.Email.ToLower(), 
+            request.FirstName.CapitalizeWord(), 
+            request.LastName.CapitalizeWord());
     }
     
     [Fact]
