@@ -15,13 +15,11 @@ public class CreateWorkspaceCommandHandler(
         CancellationToken cancellationToken)
     {
         var user = await security.GetUserFromToken(command.Token);
-
-        if (user.IsError) return user.Errors;
         
         var workspace = WorkspaceAggregate.Create(
             command.Name,
             command.Description);
-        workspace.AddUser(user.Value);
+        workspace.AddUser(user);
         await workspaceRepository.Add(workspace);
 
         return new CreateWorkspaceResult(workspace);

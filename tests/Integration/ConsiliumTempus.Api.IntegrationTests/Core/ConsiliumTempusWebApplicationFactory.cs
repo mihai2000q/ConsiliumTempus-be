@@ -37,7 +37,11 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
             services.AddDbContext<ConsiliumTempusDbContext>(options =>
                 options.UseSqlServer(_dbContainer.GetConnectionString()));
             
-            services.AddAuthentication(TestAuthHandler.AuthenticationSchema)
+            services.AddAuthentication(auth =>
+                {
+                    auth.DefaultAuthenticateScheme = TestAuthHandler.AuthenticationSchema;
+                    auth.DefaultChallengeScheme = TestAuthHandler.AuthenticationSchema;
+                })
                 .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.AuthenticationSchema, _ => { });
         });
     }

@@ -65,7 +65,6 @@ These errors are not tied to any aggregate, therefore notable and only used in t
 
 - Authentication
   - **Invalid Credentials** when, upon authentication, the credentials are invalid
-  - **Invalid Token** when the token is deemed invalid (i.e., userId is wrong), typically when it has been tampered with
 
 ## Database Diagrams
 

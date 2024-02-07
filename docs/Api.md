@@ -32,6 +32,8 @@ One way to add one inside Postman is to go to the *Authorization* tab and under 
   - **iss** (Issuer) of the application (can be found in the Jwt Settings inside the `appsettings.json`)
   - **aud** (Audience) of the application (can be found in the Jwt Settings inside the `appsettings.json`)
 
+**NOTICE**: The claims are case-sensitive, therefore, they should match with the database data 
+
 An example can be found below: 
 (for a better view of the payload check the Api Auth [documentation](api/Api.Auth.md/#auth))
 

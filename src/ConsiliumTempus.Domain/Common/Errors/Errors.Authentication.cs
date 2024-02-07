@@ -9,9 +9,5 @@ public static partial class Errors
         public static Error InvalidCredentials => Error.Unauthorized(
             "Authentication.InvalidCredentials",
             "Invalid Credentials");
-        
-        public static Error InvalidToken => Error.Unauthorized(
-            "Jwt.InvalidToken",
-            "Invalid Token");
     }
 }

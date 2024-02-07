@@ -92,33 +92,4 @@ public class WorkspaceControllerTest
         
         Utils.Workspace.AssertDto(outcome, result.Workspace);
     }
-    
-    [Fact]
-    public async Task WhenWorkspaceCreateFails_ShouldReturnInvalidTokenError()
-    {
-        // Arrange
-        var request = new CreateWorkspaceRequest(
-            "Workspace Name",
-            "Workspace Description that is very long");
-
-        const string token = "This-is-the-token";
-        _httpContext.SetupGet(h => h.Request.Headers.Authorization)
-            .Returns($"Bearer {token}");
-        
-        var error = Errors.Authentication.InvalidToken;
-        _mediator.Setup(m => m.Send(It.IsAny<CreateWorkspaceCommand>(), default))
-            .ReturnsAsync(error);
-        
-        // Act
-        var outcome = await _uut.Create(request);
-
-        // Assert
-        _mediator.Verify(m => m.Send(
-                It.Is<CreateWorkspaceCommand>(
-                    command => Utils.Workspace.AssertCreateCommand(command, request, token)),
-                default), 
-            Times.Once());
-
-        outcome.ValidateError(StatusCodes.Status401Unauthorized, "Invalid Token");
-    }
 }
