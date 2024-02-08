@@ -15,6 +15,9 @@ public class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceAggregat
 
     private static void ConfigureWorkspacesTable(EntityTypeBuilder<WorkspaceAggregate> builder)
     {
+        builder.ToTable("Workspace");
+
+        builder.HasIndex(w => w.Id);
         builder.HasKey(w => w.Id);
         builder.Property(u => u.Id)
             .HasConversion(
@@ -26,5 +29,7 @@ public class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceAggregat
 
         builder.Property(w => w.Description)
             .HasMaxLength(PropertiesValidation.Workspace.DescriptionMaximumLength);
+
+        builder.Ignore(w => w.Users); // resolved in UserToWorkspaceConfiguration
     }
 }
