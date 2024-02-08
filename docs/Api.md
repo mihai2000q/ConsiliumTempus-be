@@ -48,6 +48,11 @@ An example can be found below:
 
 ![Postman JWT Token](images/api/postman-jwt-token.png)
 
+## Authorization
+
+To add authorization for each endpoint, 
+use the **Has Permission** Attribute in combination with the **Permissions** Enum from the [Domain](Domain.md/#enums).
+
 ## Controllers
 
 Typically, each controller will extend the Api Controller, 

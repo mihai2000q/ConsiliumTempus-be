@@ -1,9 +1,11 @@
-﻿using ConsiliumTempus.Api.Common.Mapping;
+﻿using ConsiliumTempus.Api.Common.Attributes;
+using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Domain.Common.Enums;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +15,7 @@ namespace ConsiliumTempus.Api.Controllers;
 [Route("api/workspaces")]
 public class WorkspaceController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
+    [HasPermission(Permissions.ReadWorkspace)]
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(GetWorkspaceRequest request)
     {
