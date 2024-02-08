@@ -33,7 +33,7 @@ class User
 }
 ```
 
-For database design checkout the [User Diagram](../diagrams/Diagram.User.md).
+For database design, check out the [User Diagram](../diagrams/aggregates/Diagram.User.md).
 
 ### Value Objects
 

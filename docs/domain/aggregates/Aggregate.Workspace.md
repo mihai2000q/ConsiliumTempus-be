@@ -20,7 +20,7 @@ class Workspace
 }
 ```
 
-For database design checkout the [Workspace Diagram](../diagrams/Diagram.Workspace.md).
+For database design checkout the [Workspace Diagram](../diagrams/aggregates/Diagram.Workspace.md).
 
 ### Properties Validation
 

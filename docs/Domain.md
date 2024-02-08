@@ -5,7 +5,7 @@
   * [Aggregates](#aggregates)
   * [Entities](#entities)
   * [Value Objects](#value-objects)
-  * [General Domain Errors](#general-domain-errors)
+  * [Domain Errors](#domain-errors)
   * [Database Diagrams](#database-diagrams)
 
 Below, you will find a complete list and documentation for each **Aggregate**, **Entity** and **Value Object**.
@@ -16,7 +16,7 @@ representing the relationships of the aggregates with other aggregates and/or en
 ## General
 
 Each aggregate, entity or value object has an empty private constructor 
-so that the Entity Framework can initialize them.
+so that the Entity Framework Core can initialize them.
 
 ## Aggregates
 
@@ -34,8 +34,8 @@ The aforementioned refers to the constraints that each property has
 
 The aggregates are:
 
-- [User Aggregate](domain/aggregates/Aggregates.User.md)
-- [Workspace Aggregate](domain/aggregates/Aggregates.Workspace.md)
+- [User Aggregate](domain/aggregates/Aggregate.User)
+- [Workspace Aggregate](domain/aggregates/Aggregate.Workspace)
 
 ## Entities
 
@@ -46,7 +46,8 @@ Typically, the entities will be persisted in the database on another table.
 
 The entities are:
 
-- Nothing atm
+- [Permission](domain/entities/Entity.Permission.md)
+- [Workspace Role](domain/entities/Entity.WorkspaceRole.md)
 
 ## Value Objects
 
@@ -59,17 +60,39 @@ The value objects are:
 
 - Nothing atm.
 
-## General Domain Errors
+## Domain Errors
 
 These errors are not tied to any aggregate, therefore notable and only used in the Application Layer.
 
 - Authentication
   - **Invalid Credentials** when, upon authentication, the credentials are invalid
 
+## Enums
+
+The enums defined in the Domain of the application are:
+- **Permissions**, which are used on the Presentation Layer for Authorization
+- **Validate**, to validate the token
+
+## Relations
+
+The classes inside the Relations package contain the entities used to create the joint tables between other entities.
+<br>
+Those include:
+
+- **UserToWorkspace**
+- **WorkspaceRoleHasPermission**
+
 ## Database Diagrams
 
+The database diagrams show the relations that the above entities have inside the database.
 For a full picture of the database diagram, check this out [Database Diagram](Database.Diagram.md).
-These diagrams show the relations that the above aggregates have inside the database.
+<br>
+For individual diagrams (they exclude additional info about external entities, 
+except the primary key and direct relations), check below:
 
-- [User Diagram](domain/diagrams/Diagram.User.md)
-- [Workspace Diagram](domain/diagrams/Diagram.Workspace.md)
+- Aggregates
+  - [User Diagram](domain/diagrams/aggregates/Diagram.User.md)
+  - [Workspace Diagram](domain/diagrams/aggregates/Diagram.Workspace.md)
+- Entities
+  - [Permission Diagram](domain/diagrams/entities/Diagram.Permission.md)
+  - [Permission Diagram](domain/diagrams/entities/Diagram.WorkspaceRole.md)
