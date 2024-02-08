@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Infrastructure.Authorization.Token;
+﻿using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Infrastructure.Authorization.Permission;
+using ConsiliumTempus.Infrastructure.Authorization.Token;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
@@ -13,8 +15,11 @@ public class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
 
         if (policy is not null) return policy;
 
-        var builder = new AuthorizationPolicyBuilder()
-            .AddRequirements(new TokenRequirement());
+        var builder = new AuthorizationPolicyBuilder();
+
+        builder = policyName == Validate.Token.ToString() ? 
+            builder.AddRequirements(new TokenRequirement()) : 
+            builder.AddRequirements(new PermissionRequirement(policyName));
         
         return builder.Build();
     }
