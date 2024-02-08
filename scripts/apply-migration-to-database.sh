@@ -1,4 +1,6 @@
-source .././.env
+cd ..
+
+source ./.env
 
 dotnet tool install --global dotnet-ef --version 8.0.1
 
