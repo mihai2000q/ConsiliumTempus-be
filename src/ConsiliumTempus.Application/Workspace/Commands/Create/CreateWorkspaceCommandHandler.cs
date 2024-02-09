@@ -1,5 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Security;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Workspace;
 using ErrorOr;
 using MediatR;
@@ -8,7 +10,9 @@ namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
 public class CreateWorkspaceCommandHandler(
     ISecurity security,
-    IWorkspaceRepository workspaceRepository)
+    IWorkspaceRepository workspaceRepository,
+    IWorkspaceRoleRepository workspaceRoleRepository,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<CreateWorkspaceCommand, ErrorOr<CreateWorkspaceResult>>
 {
     public async Task<ErrorOr<CreateWorkspaceResult>> Handle(CreateWorkspaceCommand command,
@@ -19,8 +23,14 @@ public class CreateWorkspaceCommandHandler(
         var workspace = WorkspaceAggregate.Create(
             command.Name,
             command.Description);
-        workspace.AddUser(user);
+
+        var role = WorkspaceRole.Admin;
+        workspaceRoleRepository.Attach(role);
+        var membership = Membership.Create(user, workspace, role);
+        workspace.AddUserMembership(membership);
+        
         await workspaceRepository.Add(workspace);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new CreateWorkspaceResult(workspace);
     }

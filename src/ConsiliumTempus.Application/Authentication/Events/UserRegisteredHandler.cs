@@ -1,10 +1,13 @@
-﻿using ConsiliumTempus.Domain.User.Events;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.User.Events;
 using ConsiliumTempus.Domain.Workspace;
 using MediatR;
 
 namespace ConsiliumTempus.Application.Authentication.Events;
 
-public class UserRegisteredHandler : INotificationHandler<UserRegistered>
+public class UserRegisteredHandler(IWorkspaceRoleRepository workspaceRoleRepository) : INotificationHandler<UserRegistered>
 {
     public async Task Handle(UserRegistered notification, CancellationToken cancellationToken)
     {
@@ -13,8 +16,12 @@ public class UserRegisteredHandler : INotificationHandler<UserRegistered>
             "This is your workspace, where you can create anything you desire. " +
             "Take a quick look on our features");
 
-        notification.User.AddWorkspace(workspace);
-
+        var role = WorkspaceRole.Admin;
+        workspaceRoleRepository.Attach(role);
+        
+        var membership = Membership.Create(notification.User, workspace, role);
+        notification.User.AddWorkspaceMembership(membership);
+        
         await Task.CompletedTask;
     }
 }
