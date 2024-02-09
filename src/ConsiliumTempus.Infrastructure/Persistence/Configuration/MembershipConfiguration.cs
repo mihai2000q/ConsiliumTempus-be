@@ -1,9 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
-using ConsiliumTempus.Domain.Common.Relations;
 using ConsiliumTempus.Domain.User;
-using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
-using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

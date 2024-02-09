@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace ConsiliumTempus.Infrastructure.Authorization.Providers;
 
-public class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options) 
+public class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
     : DefaultAuthorizationPolicyProvider(options)
 {
     public override async Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
@@ -17,10 +17,10 @@ public class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
 
         var builder = new AuthorizationPolicyBuilder();
 
-        builder = policyName == Validate.Token.ToString() ? 
-            builder.AddRequirements(new TokenRequirement()) : 
-            builder.AddRequirements(new PermissionRequirement(policyName));
-        
+        builder = policyName == Validate.Token.ToString()
+            ? builder.AddRequirements(new TokenRequirement())
+            : builder.AddRequirements(new PermissionRequirement(policyName));
+
         return builder.Build();
     }
 }

@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
-using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 
 namespace ConsiliumTempus.Infrastructure.Persistence;
