@@ -11,8 +11,8 @@ public static partial class Utils
     public static class Workspace
     {
         public static bool AssertCreateCommand(
-            CreateWorkspaceCommand command, 
-            CreateWorkspaceRequest request, 
+            CreateWorkspaceCommand command,
+            CreateWorkspaceRequest request,
             string token)
         {
             command.Name.Should().Be(request.Name);
@@ -27,9 +27,9 @@ public static partial class Utils
         {
             outcome.Should().BeOfType<OkObjectResult>();
             ((OkObjectResult)outcome).Value.Should().BeOfType<WorkspaceDto>();
-        
+
             var response = ((OkObjectResult)outcome).Value as WorkspaceDto;
-            
+
             response!.Id.Should().Be(workspace.Id.Value.ToString());
             response.Name.Should().Be(workspace.Name);
             response.Description.Should().Be(workspace.Description);

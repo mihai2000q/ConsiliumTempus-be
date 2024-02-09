@@ -17,7 +17,7 @@ public static partial class Utils
             command.Password.Should().Be(request.Password);
             return true;
         }
-    
+
         public static bool AssertLoginQuery(LoginQuery query, LoginRequest request)
         {
             query.Email.Should().Be(request.Email);

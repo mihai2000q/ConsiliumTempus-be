@@ -37,9 +37,6 @@ public class WorkspaceController(IMapper mapper, ISender mediator) : ApiControll
             .AdaptToType<CreateWorkspaceCommand>();
         var result = await Mediator.Send(command);
 
-        return result.Match(
-            createResult => Ok(Mapper.Map<WorkspaceDto>(createResult)),
-            Problem
-        );
+        return Ok(Mapper.Map<WorkspaceDto>(result));
     }
 }

@@ -22,10 +22,10 @@ public class AuthenticationControllerTest
     public AuthenticationControllerTest()
     {
         var mapper = Utils.GetMapper<AuthenticationMappingConfig>();
-        
+
         _mediator = new Mock<ISender>();
         _uut = new AuthenticationController(mapper, _mediator.Object);
-        
+
         Utils.ResolveHttpContext(_uut);
     }
 
@@ -51,7 +51,7 @@ public class AuthenticationControllerTest
 
         // Assert
         _mediator.Verify(m => m.Send(
-                It.Is<RegisterCommand>(command => Utils.Authentication.AssertRegisterCommand(command, request)), 
+                It.Is<RegisterCommand>(command => Utils.Authentication.AssertRegisterCommand(command, request)),
                 default),
             Times.Once());
 
@@ -61,7 +61,7 @@ public class AuthenticationControllerTest
         var response = ((OkObjectResult)outcome).Value as RegisterResponse;
         response?.Token.Should().Be(result.Token);
     }
-    
+
     [Fact]
     public async Task WhenRegisterFails_ShouldReturnDuplicateEmailError()
     {
@@ -71,7 +71,7 @@ public class AuthenticationControllerTest
             "LastName",
             "Example@Email.com",
             "Password123");
-        
+
         _mediator.Setup(m => m.Send(It.IsAny<RegisterCommand>(), default))
             .ReturnsAsync(Errors.User.DuplicateEmail);
 
@@ -80,7 +80,7 @@ public class AuthenticationControllerTest
 
         // Assert
         _mediator.Verify(m => m.Send(
-                It.Is<RegisterCommand>(command => Utils.Authentication.AssertRegisterCommand(command, request)), 
+                It.Is<RegisterCommand>(command => Utils.Authentication.AssertRegisterCommand(command, request)),
                 default),
             Times.Once());
 
@@ -98,23 +98,23 @@ public class AuthenticationControllerTest
         var result = new LoginResult("This is the token");
         _mediator.Setup(m => m.Send(It.IsAny<LoginQuery>(), default))
             .ReturnsAsync(result);
-        
+
         // Act
         var outcome = await _uut.Login(request);
 
         // Assert
         _mediator.Verify(m => m.Send(
-                It.Is<LoginQuery>(query => Utils.Authentication.AssertLoginQuery(query, request)), 
+                It.Is<LoginQuery>(query => Utils.Authentication.AssertLoginQuery(query, request)),
                 default),
             Times.Once());
 
         outcome.Should().BeOfType<OkObjectResult>();
         ((OkObjectResult)outcome).Value.Should().BeOfType<LoginResponse>();
-        
+
         var response = ((OkObjectResult)outcome).Value as LoginResponse;
         response?.Token.Should().Be(result.Token);
     }
-    
+
     [Fact]
     public async Task WhenLoginFails_ShouldReturnLoginResponse()
     {
@@ -125,13 +125,13 @@ public class AuthenticationControllerTest
 
         _mediator.Setup(m => m.Send(It.IsAny<LoginQuery>(), default))
             .ReturnsAsync(Errors.Authentication.InvalidCredentials);
-        
+
         // Act
         var outcome = await _uut.Login(request);
 
         // Assert
         _mediator.Verify(m => m.Send(
-                It.Is<LoginQuery>(query => Utils.Authentication.AssertLoginQuery(query, request)), 
+                It.Is<LoginQuery>(query => Utils.Authentication.AssertLoginQuery(query, request)),
                 default),
             Times.Once());
 
