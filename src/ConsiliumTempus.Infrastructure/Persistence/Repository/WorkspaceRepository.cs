@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
@@ -16,6 +16,5 @@ public class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IWorkspac
     public async Task Add(WorkspaceAggregate workspaceAggregate)
     {
         await dbContext.AddAsync(workspaceAggregate);
-        await dbContext.SaveChangesAsync();
     }
 }

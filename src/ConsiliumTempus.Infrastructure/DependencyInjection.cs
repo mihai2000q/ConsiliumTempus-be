@@ -1,11 +1,12 @@
 ﻿using System.Text;
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Infrastructure.Authentication;
-using ConsiliumTempus.Infrastructure.Authorization;
 using ConsiliumTempus.Infrastructure.Authorization.Permission;
 using ConsiliumTempus.Infrastructure.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Authorization.Token;
+using ConsiliumTempus.Infrastructure.Persistence;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using ConsiliumTempus.Infrastructure.Persistence.Repository;
@@ -67,6 +68,7 @@ public static class DependencyInjection
     {
         services.AddAuthorization();
 
+        services.AddScoped<IWorkspaceProvider, WorkspaceRepository>();
         services.AddScoped<IPermissionProvider, PermissionRepository>();
         services.AddScoped<IUserProvider, UserRepository>();
         services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
@@ -89,6 +91,7 @@ public static class DependencyInjection
                           $"Password={databaseSettings.Password};" +
                           $"Encrypt=false"));
 
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddInterceptors()
             .AddRepositories();
     }
@@ -104,5 +107,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
+        services.AddScoped<IMembershipRepository, MembershipRepository>();
+        services.AddScoped<IWorkspaceRoleRepository, WorkspaceRoleRepository>();
     }
 }

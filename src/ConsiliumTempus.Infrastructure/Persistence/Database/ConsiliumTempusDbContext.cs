@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Models;
+﻿using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;

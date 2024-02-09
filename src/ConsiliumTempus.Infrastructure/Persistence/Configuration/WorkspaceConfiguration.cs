@@ -29,7 +29,5 @@ public class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceAggregat
 
         builder.Property(w => w.Description)
             .HasMaxLength(PropertiesValidation.Workspace.DescriptionMaximumLength);
-
-        builder.Ignore(w => w.Users); // resolved in UserToWorkspaceConfiguration
     }
 }

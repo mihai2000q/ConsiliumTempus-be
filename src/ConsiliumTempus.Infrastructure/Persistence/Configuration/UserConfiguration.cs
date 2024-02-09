@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Domain.Workspace;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -45,7 +46,5 @@ public class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
             .Property(u => u.Last)
             .HasColumnName("LastName")
             .HasMaxLength(PropertiesValidation.User.LastNameMaximumLength);
-
-        builder.Ignore(u => u.Workspaces); // resolved in UserToWorkspaceConfiguration
     }
 }

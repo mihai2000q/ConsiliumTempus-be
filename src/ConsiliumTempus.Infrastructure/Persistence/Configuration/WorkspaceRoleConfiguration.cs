@@ -8,11 +8,14 @@ public class WorkspaceRoleConfiguration : IEntityTypeConfiguration<WorkspaceRole
 {
     public void Configure(EntityTypeBuilder<WorkspaceRole> builder)
     {
-        builder.ToTable("WorkspaceRole");
+        builder.ToTable(nameof(WorkspaceRole));
         
         builder.HasKey(wr => wr.Id);
+        builder.Property(wr => wr.Id)
+            .HasColumnOrder(0);
 
-        builder.Property(wr => wr.Name);
+        builder.Property(wr => wr.Name)
+            .HasColumnOrder(1);
 
         builder.Ignore(wr => wr.Permissions); // resolved in WorkspaceRoleHasPermissionConfiguration
 

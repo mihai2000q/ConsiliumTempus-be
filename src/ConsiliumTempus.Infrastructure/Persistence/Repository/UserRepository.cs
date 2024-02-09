@@ -1,7 +1,6 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
-using ConsiliumTempus.Infrastructure.Authorization;
 using ConsiliumTempus.Infrastructure.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +22,5 @@ public class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRepositor
     public async Task Add(UserAggregate userAggregate)
     {
         await dbContext.AddAsync(userAggregate);
-        await dbContext.SaveChangesAsync();
     }
 }
