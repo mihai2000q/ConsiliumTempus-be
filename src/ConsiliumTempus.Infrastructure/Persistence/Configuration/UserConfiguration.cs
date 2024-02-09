@@ -25,7 +25,8 @@ public class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
                 value => UserId.Create(value));
 
         builder.OwnsOne(u => u.Credentials)
-            .HasIndex(c => c.Email);
+            .HasIndex(c => c.Email)
+            .IsUnique();
         builder.OwnsOne(u => u.Credentials)
             .Property(c => c.Email)
             .HasColumnName("Email")

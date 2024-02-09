@@ -13,7 +13,15 @@ public class WorkspaceRoleHasPermissionConfiguration : IEntityTypeConfiguration<
     {
         builder.ToTable(nameof(WorkspaceRoleHasPermission));
         
-        builder.HasKey(w => new { w.RoleId, w.PermissionId });
+        builder.HasKey(w => new { w.WorkspaceRoleId, w.PermissionId });
+
+        builder.HasOne<WorkspaceRole>()
+            .WithMany()
+            .HasForeignKey(w => w.WorkspaceRoleId);
+
+        builder.HasOne<Permission>()
+            .WithMany()
+            .HasForeignKey(w => w.PermissionId);
 
         foreach (var roleHasPermission in AccessControlList.RoleHasPermissions)
         {

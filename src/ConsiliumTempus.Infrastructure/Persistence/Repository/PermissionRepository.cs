@@ -10,8 +10,10 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 public class PermissionRepository(ConsiliumTempusDbContext dbContext) : IPermissionProvider
 {
     public async Task<HashSet<string>> GetPermissions(UserId userId, WorkspaceId workspaceId)
-    {
+    { 
         var membership = await dbContext.Set<Membership>()
+            .Include(m => m.WorkspaceRole)
+            .ThenInclude(wr => wr.Permissions)
             .SingleAsync(u => u.User.Id == userId && u.Workspace.Id == workspaceId);
 
         return membership

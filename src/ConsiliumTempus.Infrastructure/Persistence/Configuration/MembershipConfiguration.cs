@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
-using ConsiliumTempus.Domain.User;
-using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,15 +12,19 @@ public class MembershipConfiguration : IEntityTypeConfiguration<Membership>
     {
         builder.ToTable(nameof(Membership));
 
-        builder.HasKey(m => m.Id);
+        builder.Ignore(m => m.Id);
         
-        builder.HasOne<UserAggregate>(m => m.User)
-            .WithMany(u => u.Memberships);
+        builder.HasOne(m => m.User)
+            .WithMany(u => u.Memberships)
+            .HasForeignKey(nameof(UserId));
 
-        builder.HasOne<WorkspaceAggregate>(m => m.Workspace)
-            .WithMany(w => w.Memberships);
+        builder.HasOne(m => m.Workspace)
+            .WithMany(w => w.Memberships)
+            .HasForeignKey(nameof(WorkspaceId));
 
-        builder.HasOne<WorkspaceRole>(m => m.WorkspaceRole)
+        builder.HasOne(m => m.WorkspaceRole)
             .WithMany();
+        
+        builder.HasKey(nameof(UserId), nameof(WorkspaceId));
     }
 }

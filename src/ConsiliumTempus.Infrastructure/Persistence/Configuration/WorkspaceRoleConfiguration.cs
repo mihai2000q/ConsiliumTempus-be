@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Relations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,7 +18,9 @@ public class WorkspaceRoleConfiguration : IEntityTypeConfiguration<WorkspaceRole
         builder.Property(wr => wr.Name)
             .HasColumnOrder(1);
 
-        builder.Ignore(wr => wr.Permissions); // resolved in WorkspaceRoleHasPermissionConfiguration
+        builder.HasMany(wr => wr.Permissions)
+            .WithMany()
+            .UsingEntity<WorkspaceRoleHasPermission>();
 
         builder.HasData(WorkspaceRole.GetValues());
     }
