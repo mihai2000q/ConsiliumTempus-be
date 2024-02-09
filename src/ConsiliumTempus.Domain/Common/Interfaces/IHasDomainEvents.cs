@@ -1,4 +1,4 @@
-﻿namespace ConsiliumTempus.Domain.Common.Models;
+﻿namespace ConsiliumTempus.Domain.Common.Interfaces;
 
 public interface IHasDomainEvents
 {

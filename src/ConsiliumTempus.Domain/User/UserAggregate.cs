@@ -1,12 +1,13 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.User.Events;
 using ConsiliumTempus.Domain.User.ValueObjects;
-using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.User;
 
-public sealed class UserAggregate : AggregateRoot<UserId, Guid>
+public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
     private UserAggregate()
@@ -26,13 +27,13 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>
         UpdatedDateTime = updatedDateTime;
     }
 
-    private readonly List<WorkspaceAggregate> _workspaces = [];
+    private readonly List<Membership> _memberships = [];
 
     public Credentials Credentials { get; private set; } = default!;
     public Name Name { get; private set; } = default!;
-    public DateTime CreatedDateTime { get; private set; }
-    public DateTime UpdatedDateTime { get; private set; }
-    public IReadOnlyList<WorkspaceAggregate> Workspaces => _workspaces.AsReadOnly();
+    public DateTime CreatedDateTime { get; init; }
+    public DateTime UpdatedDateTime { get; init; }
+    public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
 
     public static UserAggregate Create(
         Credentials credentials,
@@ -57,8 +58,8 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>
         return user;
     }
 
-    public void AddWorkspace(WorkspaceAggregate workspaceAggregate)
+    public void AddWorkspaceMembership(Membership membership)
     {
-        _workspaces.Add(workspaceAggregate);
+        _memberships.Add(membership);
     }
 }

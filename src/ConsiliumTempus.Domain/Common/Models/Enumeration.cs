@@ -51,7 +51,7 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
 
     public override int GetHashCode()
     {
-        return Id.GetHashCode() * Name.GetHashCode();
+        return Id.GetHashCode();
     }
 
     public override string ToString()
