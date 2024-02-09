@@ -1,5 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Authentication;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Domain.User.ValueObjects;
 
@@ -8,11 +8,11 @@ namespace ConsiliumTempus.Application.UnitTests.Common.Security;
 public class SecurityTest
 {
     #region Setup
-    
+
     private readonly Mock<IJwtTokenGenerator> _jwtTokenGenerator;
     private readonly Mock<IUserRepository> _userRepository;
     private readonly Application.Common.Security.Security _uut;
-    
+
     public SecurityTest()
     {
         _jwtTokenGenerator = new Mock<IJwtTokenGenerator>();
@@ -35,16 +35,16 @@ public class SecurityTest
         var user = Mock.Mock.User.CreateMock();
         _userRepository.Setup(u => u.Get(It.IsAny<UserId>()))
             .ReturnsAsync(user);
-        
+
         // Act
         var outcome = await _uut.GetUserFromToken(plainToken);
 
         // Assert
         _jwtTokenGenerator.Verify(j => j.GetUserIdFromToken(It.IsAny<string>()), Times.Once());
-        _userRepository.Verify(u => 
-            u.Get(It.Is<UserId>(id => Utils.User.AssertUserId(id, plainUserId))), 
+        _userRepository.Verify(u =>
+                u.Get(It.Is<UserId>(id => Utils.User.AssertUserId(id, plainUserId))),
             Times.Once());
-        
+
         outcome.Should().Be(user);
     }
 }

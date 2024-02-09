@@ -19,14 +19,13 @@ public class RegisterCommandHandler(
 {
     public async Task<ErrorOr<RegisterResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
-        if (await userRepository.GetUserByEmail(command.Email) is not null) return Errors.User.DuplicateEmail;
+        var email = command.Email.ToLower();
+        if (await userRepository.GetUserByEmail(email) is not null) return Errors.User.DuplicateEmail;
 
         var password = scrambler.HashPassword(command.Password);
 
         var user = UserAggregate.Register(
-            Credentials.Create(
-                command.Email.ToLower(),
-                password), 
+            Credentials.Create(email, password), 
             Name.Create(
                 command.FirstName.Capitalize(),
                 command.LastName.Capitalize()));

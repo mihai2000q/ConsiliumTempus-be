@@ -2,6 +2,9 @@
 using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Application.UnitTests.TestUtils;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
 using FluentAssertions.Extensions;
 
@@ -14,6 +17,7 @@ public class RegisterCommandHandlerTest
     private readonly Mock<IJwtTokenGenerator> _jwtTokenGenerator;
     private readonly Mock<IScrambler> _scrambler;
     private readonly Mock<IUserRepository> _userRepository;
+    private readonly Mock<IUnitOfWork> _unitOfWork;
     private readonly RegisterCommandHandler _uut;
 
     public RegisterCommandHandlerTest()
@@ -21,7 +25,12 @@ public class RegisterCommandHandlerTest
         _jwtTokenGenerator = new Mock<IJwtTokenGenerator>();
         _scrambler = new Mock<IScrambler>();
         _userRepository = new Mock<IUserRepository>();
-        _uut = new RegisterCommandHandler(_jwtTokenGenerator.Object, _scrambler.Object, _userRepository.Object);
+        _unitOfWork = new Mock<IUnitOfWork>();
+        _uut = new RegisterCommandHandler(
+            _jwtTokenGenerator.Object,
+            _scrambler.Object,
+            _userRepository.Object,
+            _unitOfWork.Object);
     }
 
     #endregion
@@ -30,12 +39,11 @@ public class RegisterCommandHandlerTest
     public async Task WhenRegisterIsSuccessful_ShouldCreateUserAndReturnNewToken()
     {
         // Arrange
-        const string password = "Password123";
         var command = new RegisterCommand(
             "FirstName",
             "LastName",
             "Example@Email.com",
-            password);
+            "Password123");
 
         const string token = "This is a token";
         const string hashedPassword = "This is the hash password for Password123";
@@ -48,17 +56,21 @@ public class RegisterCommandHandlerTest
             .Callback<UserAggregate>(r => callbackUserUsedForJwt = r)
             .Returns(token);
 
-        _scrambler.Setup(s => s.HashPassword(password))
+        _scrambler.Setup(s => s.HashPassword(command.Password))
             .Returns(hashedPassword);
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _userRepository.Verify(r => r.GetUserByEmail(command.Email), Times.Once());
-        _userRepository.Verify(r => r.Add(It.IsAny<UserAggregate>()), Times.Once());
-        _jwtTokenGenerator.Verify(j => j.GenerateToken(It.IsAny<UserAggregate>()), Times.Once());
-        
+        _userRepository.Verify(r =>
+            r.GetUserByEmail(It.IsAny<string>()), Times.Once());
+        _userRepository.Verify(r =>
+            r.Add(It.IsAny<UserAggregate>()), Times.Once());
+        _jwtTokenGenerator.Verify(j =>
+            j.GenerateToken(It.IsAny<UserAggregate>()), Times.Once());
+        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
+
         callbackAddedUser.Should().Be(callbackUserUsedForJwt);
         callbackAddedUser?.Id.Should().NotBeNull();
         callbackAddedUser?.Name.First.Should().Be(command.FirstName.CapitalizeWord());
@@ -67,7 +79,7 @@ public class RegisterCommandHandlerTest
         callbackAddedUser?.Credentials.Password.Should().Be(hashedPassword);
         callbackAddedUser?.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         callbackAddedUser?.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-        
+
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(token);
     }
@@ -76,26 +88,26 @@ public class RegisterCommandHandlerTest
     public async Task WhenRegisterFindsAnotherUserWithSameEmail_ShouldReturnDuplicateEmailError()
     {
         // Arrange
-        const string email = "Example@Email.com";
         var command = new RegisterCommand(
             "",
             "",
-            email,
+            "Example@Email.com",
             "");
 
-        _userRepository.Setup(r => r.GetUserByEmail(email))
+        _userRepository.Setup(r => r.GetUserByEmail(command.Email.ToLower()))
             .ReturnsAsync(Mock.Mock.User.CreateMock());
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _userRepository.Verify(r => r.GetUserByEmail(email), Times.Once());
-        
-        outcome.IsError.Should().BeTrue();
-        outcome.Errors.Should().HaveCount(1);
-        outcome.FirstError.Type.Should().Be(ErrorType.Conflict);
-        outcome.FirstError.Code.Should().Be("User.DuplicateEmail");
-        outcome.FirstError.Description.Should().Be("Email is already in use");
+        _userRepository.Verify(r => r.GetUserByEmail(It.IsAny<string>()), Times.Once());
+        _jwtTokenGenerator.Verify(j =>
+            j.GenerateToken(It.IsAny<UserAggregate>()), Times.Never());
+        _userRepository.Verify(r =>
+            r.Add(It.IsAny<UserAggregate>()), Times.Never());
+        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Never());
+
+        outcome.ValidateError(Errors.User.DuplicateEmail);
     }
 }

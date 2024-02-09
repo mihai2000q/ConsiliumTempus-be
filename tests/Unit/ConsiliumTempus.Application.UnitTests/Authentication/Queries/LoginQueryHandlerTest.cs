@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Application.Authentication.Queries.Login;
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.UnitTests.Authentication.Queries;
@@ -29,41 +29,41 @@ public class LoginQueryHandlerTest
     {
         // Arrange
         var query = new LoginQuery(
-            "Some@Example.com", 
+            "Some@Example.com",
             "Password123");
 
         const string hashedPassword = "This is the has for Password123";
-        
+
         var user = Mock.Mock.User.CreateMock(password: hashedPassword);
         _userRepository.Setup(u => u.GetUserByEmail(query.Email.ToLower()))
             .ReturnsAsync(user);
 
         _scrambler.Setup(s => s.VerifyPassword(query.Password, hashedPassword))
             .Returns(true);
-        
+
         const string mockToken = "This is a token";
         _jwtTokenGenerator.Setup(j => j.GenerateToken(user))
             .Returns(mockToken);
-        
+
         // Act
         var outcome = await _uut.Handle(query, default);
 
         // Assert
         _userRepository.Verify(u => u.GetUserByEmail(It.IsAny<string>()), Times.Once());
         _jwtTokenGenerator.Verify(j => j.GenerateToken(It.IsAny<UserAggregate>()), Times.Once());
-        
+
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(mockToken);
     }
-    
+
     [Fact]
     public async Task WhenLoginFailsDueToMissingUser_ShouldReturnInvalidCredentialsError()
     {
         // Arrange
         var query = new LoginQuery(
-            "Some@Example.com", 
+            "Some@Example.com",
             "Password123");
-        
+
         // Act
         var outcome = await _uut.Handle(query, default);
 
@@ -76,22 +76,22 @@ public class LoginQueryHandlerTest
         outcome.FirstError.Code.Should().Be("Authentication.InvalidCredentials");
         outcome.FirstError.Description.Should().Be("Invalid Credentials");
     }
-    
+
     [Fact]
     public async Task WhenLoginFailsDueToWrongPassword_ShouldReturnInvalidCredentialsError()
     {
         // Arrange
         var query = new LoginQuery(
-            "Some@Example.com", 
+            "Some@Example.com",
             "Password123");
 
-        var user = Mock.Mock.User.CreateMock(email: query.Email);
+        var user = Mock.Mock.User.CreateMock(query.Email);
         _userRepository.Setup(u => u.GetUserByEmail(query.Email))
             .ReturnsAsync(user);
-        
+
         _scrambler.Setup(s => s.VerifyPassword(query.Password, It.IsAny<string>()))
             .Returns(false);
-        
+
         // Act
         var outcome = await _uut.Handle(query, default);
 

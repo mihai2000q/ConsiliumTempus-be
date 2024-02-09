@@ -7,7 +7,7 @@ public static partial class Mock
     public static class Workspace
     {
         public static WorkspaceAggregate CreateMock(
-            string name = "Workspace Name", 
+            string name = "Workspace Name",
             string description = "This is the Workspace Description")
         {
             return WorkspaceAggregate.Create(name, description);
