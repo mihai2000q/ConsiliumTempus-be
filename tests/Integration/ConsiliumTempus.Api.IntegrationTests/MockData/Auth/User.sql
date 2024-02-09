@@ -1,4 +1,4 @@
-﻿INSERT INTO Users
+﻿INSERT INTO [User]
     (Id, FirstName, LastName, Email, Password, CreatedDateTime, UpdatedDateTime) 
 VALUES 
     ('10000000-0000-0000-0000-000000000001', 'Michael', 'Jordan', 'michaelj@gmail.com', 

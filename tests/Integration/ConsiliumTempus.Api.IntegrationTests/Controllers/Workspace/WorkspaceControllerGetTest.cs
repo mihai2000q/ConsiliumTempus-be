@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace;
 
@@ -35,5 +36,19 @@ public class WorkspaceControllerGetTest(ConsiliumTempusWebApplicationFactory fac
 
         // Assert
         await outcome.ValidateError(HttpStatusCode.NotFound, "Workspace could not be found");
+    }
+    
+    [Fact]
+    public async Task WhenWorkspaceGetDoesNotHaveAccessDueTo0Memberships_ShouldReturnForbiddenResponse()
+    {
+        // Arrange
+        const string id = "10000000-0000-0000-0000-000000000000";
+        
+        // Act
+        UseCustomToken("leom@gmail.com");
+        var outcome = await Client.GetAsync($"api/workspaces/{id}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 }

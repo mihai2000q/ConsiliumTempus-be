@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Core;
+namespace ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 
 public class TestAuthHandler(
+    ITokenProvider tokenProvider,
     IOptionsMonitor<AuthenticationSchemeOptions> options,
     ILoggerFactory logger,
     UrlEncoder encoder)
@@ -18,7 +19,8 @@ public class TestAuthHandler(
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var identity = new ClaimsIdentity(Array.Empty<Claim>(), AuthenticationType);
+        var token = tokenProvider.GetToken();
+        var identity = new ClaimsIdentity(token?.Claims ?? Array.Empty<Claim>(), AuthenticationType);
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, AuthenticationSchema);
 

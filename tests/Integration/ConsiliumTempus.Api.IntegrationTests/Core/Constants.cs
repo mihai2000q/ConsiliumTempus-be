@@ -1,4 +1,8 @@
-﻿namespace ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Relations;
+using Respawn.Graph;
+
+namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
 public static class Constants
 {
@@ -8,5 +12,9 @@ public static class Constants
     public const string Environment = "Testing";
     
     public const string MockDirectoryPath = "../../../MockData/";
-    public const string DefaultUsersFilePath = "../../../MockData/Users.sql";
+    public const string DefaultUsersFilePath = "../../../MockData/User.sql";
+
+    public static readonly Table[] TablesToIgnore = [
+        nameof(Permission), nameof(WorkspaceRole), nameof(WorkspaceRoleHasPermission)
+    ];
 }

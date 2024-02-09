@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Domain.Common.Entities;
-using ConsiliumTempus.Domain.User.ValueObjects;
+﻿using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
@@ -11,11 +10,13 @@ public class PermissionRepository(ConsiliumTempusDbContext dbContext) : IPermiss
 {
     public async Task<HashSet<string>> GetPermissions(UserId userId, WorkspaceId workspaceId)
     { 
-        var membership = await dbContext.Set<Membership>()
+        var membership = await dbContext.Memberships
             .Include(m => m.WorkspaceRole)
             .ThenInclude(wr => wr.Permissions)
-            .SingleAsync(u => u.User.Id == userId && u.Workspace.Id == workspaceId);
+            .SingleOrDefaultAsync(u => u.User.Id == userId && u.Workspace.Id == workspaceId);
 
+        if (membership is null) return [];
+        
         return membership
             .WorkspaceRole
             .Permissions

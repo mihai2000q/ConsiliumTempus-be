@@ -1,5 +1,8 @@
-﻿using System.Net.Http.Headers;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
+using ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Infrastructure.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +13,7 @@ namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
 public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebApplicationFactory>, IAsyncLifetime
 {
+    private readonly ITokenProvider _tokenProvider;
     private readonly ConsiliumTempusDbContext _dbContext;
     private readonly Func<Task> _resetDatabase;
 
@@ -25,6 +29,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         string? testDataDirectory = null,
         bool defaultUsers = true)
     {
+        _tokenProvider = factory.Services.GetRequiredService<ITokenProvider>();
         _dbContext = factory.Services.GetRequiredService<ConsiliumTempusDbContext>();
         _resetDatabase = factory.ResetDatabaseAsync;
         _testDataDirectory = testDataDirectory;
@@ -53,21 +58,20 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
 
     public async Task DisposeAsync()
     {
+        ResetToken();
         await _resetDatabase();
+        var smth = await _dbContext.Set<WorkspaceRole>().ToListAsync();
+        var mst = 2;
     }
 
     protected void UseCustomToken(string? email = null)
     {
-        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            TestAuthHandler.AuthenticationSchema, 
-            GetToken(email));
+        UseToken(GetToken(email));
     }
     
     protected void UseInvalidToken()
     {
-        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            TestAuthHandler.AuthenticationSchema, 
-            GetInvalidToken());
+        UseToken(GetInvalidToken());
     }
 
     private async Task AddTestData(string path)
@@ -91,7 +95,21 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
             .Select(q => q + ";");
     }
     
-    private string GetToken(string? email = null)
+    private void UseToken(JwtSecurityToken securityToken)
+    {
+        _tokenProvider.SetToken(securityToken);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            TestAuthHandler.AuthenticationSchema, 
+            Utils.Token.SecurityTokenToStringToken(securityToken));
+    }
+
+    private void ResetToken()
+    {
+        _tokenProvider.SetToken(null);
+        Client.DefaultRequestHeaders.Authorization = null;
+    }
+    
+    private JwtSecurityToken GetToken(string? email = null)
     {
         var user = email is null ? 
             _dbContext.Users.FirstOrDefault() :
@@ -102,7 +120,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         return Utils.Token.CreateMock(user, JwtSettings);
     }
 
-    private string GetInvalidToken()
+    private JwtSecurityToken GetInvalidToken()
     {
         return Utils.Token.CreateInvalidToken(JwtSettings);
     }

@@ -8,30 +8,30 @@ using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace ConsiliumTempus.Infrastructure.Authorization.Permission;
 
-public class PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFactory) 
+public class PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
     : AuthorizationHandler<PermissionRequirement>
 {
     protected override async Task HandleRequirementAsync(
-        AuthorizationHandlerContext context, 
+        AuthorizationHandlerContext context,
         PermissionRequirement requirement)
     {
         var jwtUserId = context.User.Claims.First(x => x.Type == JwtRegisteredClaimNames.Sub).Value;
-        
+
         using var scope = serviceScopeFactory.CreateScope();
         var permissionProvider = scope.ServiceProvider.GetRequiredService<IPermissionProvider>();
         var httpContextAccessor = scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
         var workspaceProvider = scope.ServiceProvider.GetRequiredService<IWorkspaceProvider>();
-        
+
         var request = httpContextAccessor.HttpContext?.Request;
         if (request is null) return;
-        
+
         var userId = UserId.Create(jwtUserId);
         var res = await GetWorkspaceId(request, workspaceProvider);
         if (res is null) return;
         if (res.NotFound)
         {
-            context.Succeed(requirement);    
-        } 
+            context.Succeed(requirement); // let the system return the not found error
+        }
         else
         {
             var permissions = await permissionProvider.GetPermissions(userId, res.WorkspaceId);
@@ -40,7 +40,7 @@ public class PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFac
     }
 
     private static async Task<WorkspaceIdResponse?> GetWorkspaceId(
-        HttpRequest request, 
+        HttpRequest request,
         IWorkspaceProvider workspaceProvider)
     {
         var stringId = request.Method switch
@@ -53,8 +53,8 @@ public class PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFac
         var workspaceId = WorkspaceId.Create(stringId);
         var workspace = await workspaceProvider.Get(workspaceId);
 
-        return workspace is null 
-            ? new WorkspaceIdResponse(workspaceId, true) 
+        return workspace is null
+            ? new WorkspaceIdResponse(workspaceId, true)
             : new WorkspaceIdResponse(workspaceId, false);
     }
 
@@ -68,7 +68,7 @@ public class PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFac
 
         return null;
     }
-    
+
     private class WorkspaceIdResponse(WorkspaceId workspaceId, bool notFound)
     {
         internal WorkspaceId WorkspaceId { get; } = workspaceId;

@@ -1,5 +1,6 @@
 ﻿using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
@@ -36,13 +37,17 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
             services.RemoveAll(typeof(DbContextOptions<ConsiliumTempusDbContext>));
             services.AddDbContext<ConsiliumTempusDbContext>(options =>
                 options.UseSqlServer(_dbContainer.GetConnectionString()));
+
+            services.AddSingleton<ITokenProvider, TokenProvider>();
             
             services.AddAuthentication(auth =>
                 {
                     auth.DefaultAuthenticateScheme = TestAuthHandler.AuthenticationSchema;
                     auth.DefaultChallengeScheme = TestAuthHandler.AuthenticationSchema;
                 })
-                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.AuthenticationSchema, _ => { });
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                    TestAuthHandler.AuthenticationSchema, 
+                    _ => { });
         });
     }
 
@@ -70,7 +75,8 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
         _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.SqlServer,
-            SchemasToInclude = ["dbo"]
+            SchemasToInclude = ["dbo"],
+            TablesToIgnore = Constants.TablesToIgnore
         });
     }
 
