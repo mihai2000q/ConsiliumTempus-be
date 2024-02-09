@@ -9,13 +9,13 @@ public class WorkspaceRoleHasPermission
     {
     }
     
-    private WorkspaceRoleHasPermission(int roleId, int permissionId)
+    private WorkspaceRoleHasPermission(int workspaceRoleId, int permissionId)
     {
-        RoleId = roleId;
+        WorkspaceRoleId = workspaceRoleId;
         PermissionId = permissionId;
     }
     
-    public int RoleId { get; init; }
+    public int WorkspaceRoleId { get; init; }
     public int PermissionId { get; init; }
 
     public static WorkspaceRoleHasPermission Create(int roleId, int permissionId)

@@ -2,11 +2,13 @@
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Common.Entities;
 
-public class Membership : Entity<Guid>, ITimestamps
+public class Membership : Entity<(UserId, WorkspaceId)>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private Membership()
@@ -14,12 +16,11 @@ public class Membership : Entity<Guid>, ITimestamps
     }
 
     private Membership(
-        Guid id,
         UserAggregate user,
         WorkspaceAggregate workspace,
         DateTime createdDateTime,
         DateTime updatedDateTime,
-        WorkspaceRole workspaceRole) : base(id)
+        WorkspaceRole workspaceRole) : base((user.Id, workspace.Id))
     {
         User = user;
         Workspace = workspace;
@@ -40,7 +41,6 @@ public class Membership : Entity<Guid>, ITimestamps
         WorkspaceRole workspaceRole)
     {
         return new Membership(
-            Guid.NewGuid(),
             user, 
             workspace,
             DateTime.UtcNow, 

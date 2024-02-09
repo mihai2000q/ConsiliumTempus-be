@@ -28,5 +28,5 @@ public sealed class WorkspaceRole : Enumeration<WorkspaceRole>
     }
 
     public string Description { get; init; } = string.Empty;
-    public IReadOnlyList<Permission> Permissions { get; init; } = new List<Permission>();
+    public ICollection<Permission> Permissions { get; init; } = [];
 }
