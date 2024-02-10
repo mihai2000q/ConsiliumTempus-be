@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IWorkspaceRepository, IWorkspaceProvider
+public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IWorkspaceRepository, IWorkspaceProvider
 {
     public async Task<WorkspaceAggregate?> Get(WorkspaceId id)
     {

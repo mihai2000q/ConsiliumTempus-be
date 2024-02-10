@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public class PermissionRepository(ConsiliumTempusDbContext dbContext) : IPermissionProvider
+public sealed class PermissionRepository(ConsiliumTempusDbContext dbContext) : IPermissionProvider
 {
     public async Task<HashSet<string>> GetPermissions(UserId userId, WorkspaceId workspaceId)
     { 

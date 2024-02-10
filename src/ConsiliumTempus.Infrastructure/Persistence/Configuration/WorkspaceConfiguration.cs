@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
 
-public class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceAggregate>
+public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceAggregate>
 {
     public void Configure(EntityTypeBuilder<WorkspaceAggregate> builder)
     {

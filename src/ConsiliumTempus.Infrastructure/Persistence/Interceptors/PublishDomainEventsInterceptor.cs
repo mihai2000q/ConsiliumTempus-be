@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 
-public class PublishDomainEventInterceptor(IPublisher mediator) : SaveChangesInterceptor
+public sealed class PublishDomainEventInterceptor(IPublisher mediator) : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace ConsiliumTempus.Infrastructure.Authorization.Providers;
 
-public class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
+public sealed class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
     : DefaultAuthorizationPolicyProvider(options)
 {
     public override async Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)

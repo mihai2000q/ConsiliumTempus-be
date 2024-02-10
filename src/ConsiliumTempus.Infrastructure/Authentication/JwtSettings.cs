@@ -1,6 +1,6 @@
 ﻿namespace ConsiliumTempus.Infrastructure.Authentication;
 
-public class JwtSettings
+public sealed class JwtSettings
 {
     public const string SectionName = "JwtSettings";
     public string SecretKey { get; init; } = string.Empty;

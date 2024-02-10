@@ -4,7 +4,7 @@ using ConsiliumTempus.Infrastructure.Persistence.Database;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public class MembershipRepository(ConsiliumTempusDbContext dbContext) : IMembershipRepository
+public sealed class MembershipRepository(ConsiliumTempusDbContext dbContext) : IMembershipRepository
 {
     public async Task Add(Membership membership)
     {

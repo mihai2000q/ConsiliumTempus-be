@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace ConsiliumTempus.Infrastructure.Authorization.Token;
 
-public class TokenAuthorizationHandler(IServiceScopeFactory serviceScopeFactory) 
+public sealed class TokenAuthorizationHandler(IServiceScopeFactory serviceScopeFactory) 
     : AuthorizationHandler<TokenRequirement>
 {
     protected override async Task HandleRequirementAsync(

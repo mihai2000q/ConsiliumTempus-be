@@ -4,7 +4,7 @@ using ConsiliumTempus.Infrastructure.Persistence.Database;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public class WorkspaceRoleRepository(ConsiliumTempusDbContext dbContext) : IWorkspaceRoleRepository
+public sealed class WorkspaceRoleRepository(ConsiliumTempusDbContext dbContext) : IWorkspaceRoleRepository
 {
     public void Attach(WorkspaceRole workspaceRole)
     {

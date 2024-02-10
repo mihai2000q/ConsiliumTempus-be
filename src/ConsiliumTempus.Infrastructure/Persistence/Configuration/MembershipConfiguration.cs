@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
 
-public class MembershipConfiguration : IEntityTypeConfiguration<Membership>
+public sealed class MembershipConfiguration : IEntityTypeConfiguration<Membership>
 {
     public void Configure(EntityTypeBuilder<Membership> builder)
     {
