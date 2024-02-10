@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
-public class CreateWorkspaceCommandHandler(
+public sealed class CreateWorkspaceCommandHandler(
     ISecurity security,
     IWorkspaceRepository workspaceRepository,
     IWorkspaceRoleRepository workspaceRoleRepository,

@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Authentication.Queries.Login;
 
-public class LoginQueryHandler(
+public sealed class LoginQueryHandler(
     IUserRepository userRepository,
     IScrambler scrambler,
     IJwtTokenGenerator jwtTokenGenerator)

@@ -2,4 +2,4 @@
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
-public record CreateWorkspaceResult(WorkspaceAggregate Workspace);
+public sealed record CreateWorkspaceResult(WorkspaceAggregate Workspace);

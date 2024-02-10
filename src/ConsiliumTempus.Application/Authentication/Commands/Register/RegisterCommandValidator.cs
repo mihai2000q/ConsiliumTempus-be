@@ -1,10 +1,12 @@
-﻿using ConsiliumTempus.Application.Common.Validation;
+﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Application.Common.Validation;
 using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.Authentication.Commands.Register;
 
-public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {
     public RegisterCommandValidator()
     {

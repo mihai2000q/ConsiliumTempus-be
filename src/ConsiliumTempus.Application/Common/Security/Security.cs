@@ -5,7 +5,7 @@ using ConsiliumTempus.Domain.User.ValueObjects;
 
 namespace ConsiliumTempus.Application.Common.Security;
 
-public class Security(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository) : ISecurity
+public sealed class Security(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository) : ISecurity
 {
     public async Task<UserAggregate> GetUserFromToken(string plainToken)
     {

@@ -10,7 +10,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Authentication.Commands.Register;
 
-public class RegisterCommandHandler(
+public sealed class RegisterCommandHandler(
     IJwtTokenGenerator jwtTokenGenerator,
     IScrambler scrambler,
     IUserRepository userRepository,

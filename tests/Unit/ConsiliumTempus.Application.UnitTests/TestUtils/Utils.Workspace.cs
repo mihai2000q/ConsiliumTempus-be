@@ -7,11 +7,11 @@ using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
-public static partial class Utils
+internal static partial class Utils
 {
-    public static class Workspace
+    internal static class Workspace
     {
-        public static bool AssertFromCreateCommand(
+        internal static bool AssertFromCreateCommand(
             WorkspaceAggregate workspace,
             CreateWorkspaceCommand command,
             UserAggregate user)
@@ -28,13 +28,13 @@ public static partial class Utils
             return true;
         }
 
-        public static bool AssertWorkspaceId(WorkspaceId workspaceId, string id)
+        internal static bool AssertWorkspaceId(WorkspaceId workspaceId, string id)
         {
             workspaceId.Should().Be(WorkspaceId.Create(id));
             return true;
         }
 
-        public static void AssertGetResult(GetWorkspaceResult result, WorkspaceAggregate workspace)
+        internal static void AssertGetResult(GetWorkspaceResult result, WorkspaceAggregate workspace)
         {
             result.Workspace.Id.Should().Be(workspace.Id);
             result.Workspace.Name.Should().Be(workspace.Name);

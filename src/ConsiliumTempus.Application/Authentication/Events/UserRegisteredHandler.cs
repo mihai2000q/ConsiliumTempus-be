@@ -7,7 +7,8 @@ using Constants = ConsiliumTempus.Domain.Common.Constants.Constants;
 
 namespace ConsiliumTempus.Application.Authentication.Events;
 
-public class UserRegisteredHandler(IWorkspaceRoleRepository workspaceRoleRepository) : INotificationHandler<UserRegistered>
+public sealed class UserRegisteredHandler(IWorkspaceRoleRepository workspaceRoleRepository)
+    : INotificationHandler<UserRegistered>
 {
     public Task Handle(UserRegistered notification, CancellationToken cancellationToken)
     {
@@ -17,10 +18,10 @@ public class UserRegisteredHandler(IWorkspaceRoleRepository workspaceRoleReposit
 
         var role = WorkspaceRole.Admin;
         workspaceRoleRepository.Attach(role);
-        
+
         var membership = Membership.Create(notification.User, workspace, role);
         notification.User.AddWorkspaceMembership(membership);
-        
+
         return Task.CompletedTask;
     }
 }

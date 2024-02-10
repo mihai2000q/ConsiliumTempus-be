@@ -2,11 +2,11 @@
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
-public static partial class Utils
+internal static partial class Utils
 {
-    public static class User
+    internal static class User
     {
-        public static bool AssertUserId(UserId userId, string id)
+        internal static bool AssertUserId(UserId userId, string id)
         {
             userId.Should().Be(UserId.Create(id));
             return true;

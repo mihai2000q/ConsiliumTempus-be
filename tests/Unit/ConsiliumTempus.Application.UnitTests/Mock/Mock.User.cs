@@ -3,9 +3,9 @@ using ConsiliumTempus.Domain.User.ValueObjects;
 
 namespace ConsiliumTempus.Application.UnitTests.Mock;
 
-public static partial class Mock
+internal static partial class Mock
 {
-    public static class User
+    internal static class User
     {
         public static UserAggregate CreateMock(
             string email = "Some@example.com",
