@@ -1,13 +1,14 @@
 # Domain Aggregates
 
-## User
+## Workspace
 
-This is the **workspace** of the application.
+This is the **workspace** of the application. It holds basic data like its name or the description.
 
 ```csharp
 class Workspace
 {
     Workspace Create()
+    void AddUserMembership()
 }
 ```
 
@@ -16,7 +17,9 @@ class Workspace
   "id": {"value": "00000000-0000-0000-0000-000000000000"},
   "name": "Workspace 1",
   "description": "This is the description of the workspace",
-  "users": [{}]
+  "createdDateTime": "2020-01-01T00:00:00.0000000Z",
+  "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
+  "memberships": [{}]
 }
 ```
 

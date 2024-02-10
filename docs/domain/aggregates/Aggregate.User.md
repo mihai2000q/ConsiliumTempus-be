@@ -3,14 +3,14 @@
 ## User
 
 This is the **user** of the application. 
-It holds sensitive data like the *password* or *email*. 
-The *password* is encrypted using the BCrypt Algorithm.
+It holds sensitive data like the hashed *password* or *email* and personal data of the user, like name or date of birth.
 
 ```csharp
 class User
 {
     User Create()
     User Register()
+    void AddWorkspaceMembership()
 }
 ```
 
@@ -29,7 +29,7 @@ class User
   },
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
-  "workspaces": [{}]
+  "memberships": [{}]
 }
 ```
 
@@ -53,4 +53,4 @@ For database design, check out the [User Diagram](../diagrams/aggregates/Diagram
 
 ### Domain Events
 
-- **User Registered** when the user registers, it will automatically create a workspace
+- **User Registered** when the user registers, it will automatically create a workspace with an admin membership

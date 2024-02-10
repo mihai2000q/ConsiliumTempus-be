@@ -5,7 +5,7 @@
 ### Relationships
 
 - **Many-to-many** relationship with the [User](../../aggregates/Aggregate.User.md) aggregate.
-- **Many-to-one** relationship with the [Workspace Role](../../entities/Entity.WorkspaceRole.md) entity.
+(through the **Many-to-one** relationship with the [Membership](../../entities/Entity.Membership.md) entity).
 
 ### Diagram
 

@@ -5,7 +5,7 @@
 ### Relationships
 
 - **Many-to-many** relationship with the [Permission](../../entities/Entity.Permission.md) entity.
-- **One-to-Many** relationship with the [Workspace](../../aggregates/Aggregate.Workspace.md) aggregate.
+- **One-to-Many** relationship with the [Membership](../../entities/Entity.Membership.md) entity.
 
 ### Diagram
 

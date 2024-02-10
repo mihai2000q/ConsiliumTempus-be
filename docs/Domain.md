@@ -46,6 +46,7 @@ Typically, the entities will be persisted in the database on another table.
 
 The entities are:
 
+- [Membership](domain/entities/Entity.Membership.md)
 - [Permission](domain/entities/Entity.Permission.md)
 - [Workspace Role](domain/entities/Entity.WorkspaceRole.md)
 
@@ -79,7 +80,6 @@ The classes inside the Relations package contain the entities used to create the
 <br>
 Those include:
 
-- **UserToWorkspace**
 - **WorkspaceRoleHasPermission**
 
 ## Database Diagrams
