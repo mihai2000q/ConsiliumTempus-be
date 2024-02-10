@@ -3,7 +3,7 @@ using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Domain.User.ValueObjects;
 
-public class Name : ValueObject
+public sealed class Name : ValueObject
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
     private Name()

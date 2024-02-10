@@ -8,7 +8,7 @@ using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Common.Entities;
 
-public class Membership : Entity<(UserId, WorkspaceId)>, ITimestamps
+public sealed class Membership : Entity<(UserId, WorkspaceId)>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private Membership()

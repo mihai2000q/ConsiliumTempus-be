@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Domain.Common.Relations;
 
-public class WorkspaceRoleHasPermission
+public sealed class WorkspaceRoleHasPermission
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private WorkspaceRoleHasPermission()
