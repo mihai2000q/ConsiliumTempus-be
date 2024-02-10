@@ -22,7 +22,7 @@ public class WorkspaceControllerTest
     public WorkspaceControllerTest()
     {
         var mapper = Utils.GetMapper<WorkspaceMappingConfig>();
-        
+
         _mediator = new Mock<ISender>();
         _uut = new WorkspaceController(mapper, _mediator.Object);
 
@@ -40,14 +40,14 @@ public class WorkspaceControllerTest
         var result = new GetWorkspaceResult(Mock.Mock.Workspace.CreateMock());
         _mediator.Setup(m => m.Send(It.IsAny<GetWorkspaceQuery>(), default))
             .ReturnsAsync(result);
-        
+
         // Act
         var outcome = await _uut.Get(request);
 
         // Assert
         Utils.Workspace.AssertDto(outcome, result.Workspace);
     }
-    
+
     [Fact]
     public async Task GetWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
     {
@@ -57,14 +57,14 @@ public class WorkspaceControllerTest
         var error = Errors.Workspace.NotFound;
         _mediator.Setup(m => m.Send(It.IsAny<GetWorkspaceQuery>(), default))
             .ReturnsAsync(error);
-        
+
         // Act
         var outcome = await _uut.Get(request);
 
         // Assert
         outcome.ValidateError(StatusCodes.Status404NotFound, "Workspace could not be found");
     }
-    
+
     [Fact]
     public async Task WhenWorkspaceCreateIsSuccessful_ShouldReturnNewWorkspace()
     {
@@ -76,49 +76,20 @@ public class WorkspaceControllerTest
         const string token = "This-is-the-token";
         _httpContext.SetupGet(h => h.Request.Headers.Authorization)
             .Returns($"Bearer {token}");
-        
+
         var result = new CreateWorkspaceResult(Mock.Mock.Workspace.CreateMock(request.Name, request.Description));
         _mediator.Setup(m => m.Send(It.IsAny<CreateWorkspaceCommand>(), default))
             .ReturnsAsync(result);
-        
+
         // Act
         var outcome = await _uut.Create(request);
 
         // Assert
         _mediator.Verify(m => m.Send(It.Is<CreateWorkspaceCommand>(
-                command => Utils.Workspace.AssertCreateCommand(command, request, token)),
-                default), 
-            Times.Once());
-        
-        Utils.Workspace.AssertDto(outcome, result.Workspace);
-    }
-    
-    [Fact]
-    public async Task WhenWorkspaceCreateFails_ShouldReturnInvalidTokenError()
-    {
-        // Arrange
-        var request = new CreateWorkspaceRequest(
-            "Workspace Name",
-            "Workspace Description that is very long");
-
-        const string token = "This-is-the-token";
-        _httpContext.SetupGet(h => h.Request.Headers.Authorization)
-            .Returns($"Bearer {token}");
-        
-        var error = Errors.Authentication.InvalidToken;
-        _mediator.Setup(m => m.Send(It.IsAny<CreateWorkspaceCommand>(), default))
-            .ReturnsAsync(error);
-        
-        // Act
-        var outcome = await _uut.Create(request);
-
-        // Assert
-        _mediator.Verify(m => m.Send(
-                It.Is<CreateWorkspaceCommand>(
                     command => Utils.Workspace.AssertCreateCommand(command, request, token)),
-                default), 
+                default),
             Times.Once());
 
-        outcome.ValidateError(StatusCodes.Status401Unauthorized, "Invalid Token");
+        Utils.Workspace.AssertDto(outcome, result.Workspace);
     }
 }

@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Models;
+﻿using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
@@ -12,6 +13,7 @@ public class ConsiliumTempusDbContext(
     DbContextOptions<ConsiliumTempusDbContext> options)
     : DbContext(options)
 {
+    public DbSet<Membership> Memberships { get; init; } = null!;
     public DbSet<UserAggregate> Users { get; init; } = null!;
     public DbSet<WorkspaceAggregate> Workspaces { get; init; } = null!;
 

@@ -1,4 +1,6 @@
-﻿namespace ConsiliumTempus.Domain.Common.Models;
+﻿using ConsiliumTempus.Domain.Common.Interfaces;
+
+namespace ConsiliumTempus.Domain.Common.Models;
 
 public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     where TId : notnull

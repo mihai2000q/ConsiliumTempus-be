@@ -184,6 +184,12 @@ The four layers of this type of architecture feature the:
 
 For more, go check out the [documentation](docs/Architecture.md).
 
+## Security
+
+The system features an RBAC way of authorizing the user.
+<br>
+For more information about the security of the application, check out the [documentation](docs/Security.md).
+
 ## Api
 
 More about the Api and the HTTP Requests and Response can be found at [Api documentation](docs/Api.md).

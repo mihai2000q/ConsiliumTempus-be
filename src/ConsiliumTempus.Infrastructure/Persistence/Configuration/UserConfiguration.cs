@@ -15,6 +15,8 @@ public class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
 
     private static void ConfigureUsersTable(EntityTypeBuilder<UserAggregate> builder)
     {
+        builder.ToTable("User");
+        
         builder.HasKey(u => u.Id);
         builder.HasIndex(u => u.Id);
         builder.Property(u => u.Id)
@@ -23,7 +25,8 @@ public class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
                 value => UserId.Create(value));
 
         builder.OwnsOne(u => u.Credentials)
-            .HasIndex(c => c.Email);
+            .HasIndex(c => c.Email)
+            .IsUnique();
         builder.OwnsOne(u => u.Credentials)
             .Property(c => c.Email)
             .HasColumnName("Email")
@@ -42,10 +45,5 @@ public class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
             .Property(u => u.Last)
             .HasColumnName("LastName")
             .HasMaxLength(PropertiesValidation.User.LastNameMaximumLength);
-        
-        builder
-            .HasMany(e => e.Workspaces)
-            .WithMany(w => w.Users)
-            .UsingEntity("UserToWorkspace");
     }
 }

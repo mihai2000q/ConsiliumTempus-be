@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -35,25 +35,25 @@ public class GetWorkspaceQueryHandlerTest
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _workspaceRepository.Verify(w => 
+        _workspaceRepository.Verify(w =>
                 w.Get(It.Is<WorkspaceId>(i => Utils.Workspace.AssertWorkspaceId(i, query.Id))),
             Times.Once());
 
         outcome.IsError.Should().BeFalse();
         Utils.Workspace.AssertGetResult(outcome.Value, workspace);
     }
-    
+
     [Fact]
     public async Task HandleGetWorkspaceQuery_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = new GetWorkspaceQuery("00000000-0000-0000-0000-000000000000");
-        
+
         // Act
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _workspaceRepository.Verify(w => 
+        _workspaceRepository.Verify(w =>
                 w.Get(It.Is<WorkspaceId>(i => Utils.Workspace.AssertWorkspaceId(i, query.Id))),
             Times.Once());
 

@@ -22,7 +22,151 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.UserAggregate.User", b =>
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Membership", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("WorkspaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("WorkspaceRoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "WorkspaceId");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.HasIndex("WorkspaceRoleId");
+
+                    b.ToTable("Membership", (string)null);
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permission", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "ReadWorkspace"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "UpdateWorkspace"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "DeleteWorkspace"
+                        });
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.WorkspaceRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(1);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkspaceRole", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "This role can only read data",
+                            Name = "View"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "This role can do most of the actions with some limitations",
+                            Name = "Member"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "This role can do everything",
+                            Name = "Admin"
+                        });
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.WorkspaceRoleHasPermission", b =>
+                {
+                    b.Property<int>("WorkspaceRoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("WorkspaceRoleId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("WorkspaceRoleHasPermission", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            WorkspaceRoleId = 1,
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 3
+                        });
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.User.UserAggregate", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -37,13 +181,16 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("User", (string)null);
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.WorkspaceAggregate.Workspace", b =>
+            modelBuilder.Entity("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -55,31 +202,63 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<DateTime>("UpdatedDateTime")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Workspaces");
+                    b.HasIndex("Id");
+
+                    b.ToTable("Workspace", (string)null);
                 });
 
-            modelBuilder.Entity("UserToWorkspace", b =>
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Membership", b =>
                 {
-                    b.Property<Guid>("UsersId")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "User")
+                        .WithMany("Memberships")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<Guid>("WorkspacesId")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", "Workspace")
+                        .WithMany("Memberships")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasKey("UsersId", "WorkspacesId");
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.WorkspaceRole", "WorkspaceRole")
+                        .WithMany()
+                        .HasForeignKey("WorkspaceRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasIndex("WorkspacesId");
+                    b.Navigation("User");
 
-                    b.ToTable("UserToWorkspace");
+                    b.Navigation("Workspace");
+
+                    b.Navigation("WorkspaceRole");
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.UserAggregate.User", b =>
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.WorkspaceRoleHasPermission", b =>
                 {
-                    b.OwnsOne("ConsiliumTempus.Domain.UserAggregate.ValueObjects.Credentials", "Credentials", b1 =>
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.Permission", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.WorkspaceRole", null)
+                        .WithMany()
+                        .HasForeignKey("WorkspaceRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.User.UserAggregate", b =>
+                {
+                    b.OwnsOne("ConsiliumTempus.Domain.User.ValueObjects.Credentials", "Credentials", b1 =>
                         {
-                            b1.Property<Guid>("UserId")
+                            b1.Property<Guid>("UserAggregateId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Email")
@@ -93,19 +272,20 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Password");
 
-                            b1.HasKey("UserId");
+                            b1.HasKey("UserAggregateId");
 
-                            b1.HasIndex("Email");
+                            b1.HasIndex("Email")
+                                .IsUnique();
 
-                            b1.ToTable("Users");
+                            b1.ToTable("User");
 
                             b1.WithOwner()
-                                .HasForeignKey("UserId");
+                                .HasForeignKey("UserAggregateId");
                         });
 
-                    b.OwnsOne("ConsiliumTempus.Domain.UserAggregate.ValueObjects.Name", "Name", b1 =>
+                    b.OwnsOne("ConsiliumTempus.Domain.User.ValueObjects.Name", "Name", b1 =>
                         {
-                            b1.Property<Guid>("UserId")
+                            b1.Property<Guid>("UserAggregateId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("First")
@@ -120,12 +300,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasColumnType("nvarchar(100)")
                                 .HasColumnName("LastName");
 
-                            b1.HasKey("UserId");
+                            b1.HasKey("UserAggregateId");
 
-                            b1.ToTable("Users");
+                            b1.ToTable("User");
 
                             b1.WithOwner()
-                                .HasForeignKey("UserId");
+                                .HasForeignKey("UserAggregateId");
                         });
 
                     b.Navigation("Credentials")
@@ -135,19 +315,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("UserToWorkspace", b =>
+            modelBuilder.Entity("ConsiliumTempus.Domain.User.UserAggregate", b =>
                 {
-                    b.HasOne("ConsiliumTempus.Domain.UserAggregate.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Memberships");
+                });
 
-                    b.HasOne("ConsiliumTempus.Domain.WorkspaceAggregate.Workspace", null)
-                        .WithMany()
-                        .HasForeignKey("WorkspacesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            modelBuilder.Entity("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", b =>
+                {
+                    b.Navigation("Memberships");
                 });
 #pragma warning restore 612, 618
         }

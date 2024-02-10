@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Domain.Common.Models;
+﻿using ConsiliumTempus.Domain.Common.Interfaces;
 
 namespace ConsiliumTempus.Domain.User.Events;
 

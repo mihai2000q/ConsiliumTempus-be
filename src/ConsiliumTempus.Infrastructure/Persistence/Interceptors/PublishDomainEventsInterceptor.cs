@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Domain.Common.Models;
+﻿using ConsiliumTempus.Domain.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

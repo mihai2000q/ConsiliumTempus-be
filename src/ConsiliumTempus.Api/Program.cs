@@ -24,6 +24,4 @@ var app = builder.Build();
 }
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-public partial class Program
-{
-}
+public partial class Program;

@@ -1,12 +1,13 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using ConsiliumTempus.Infrastructure.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IWorkspaceRepository
+public class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IWorkspaceRepository, IWorkspaceProvider
 {
     public async Task<WorkspaceAggregate?> Get(WorkspaceId id)
     {
@@ -16,6 +17,5 @@ public class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IWorkspac
     public async Task Add(WorkspaceAggregate workspaceAggregate)
     {
         await dbContext.AddAsync(workspaceAggregate);
-        await dbContext.SaveChangesAsync();
     }
 }

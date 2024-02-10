@@ -1,6 +1,9 @@
 # Consilium Tempus API
 
 * [Workspace](#workspace)
+  * [Get](#get)
+    * [Get Workspace Request](#get-workspace-request)
+    * [Get Workspace Response](#get-workspace-response)
   * [Create](#create)
     * [Create Workspace Request](#create-workspace-request)
     * [Create Workspace Response](#create-workspace-response)
@@ -11,7 +14,7 @@ This is the controller that takes care of creating, reading, updating and deleti
 
 ### Get
 
-Only users that are part of the workspace can retrieve it.
+Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
 
 ```js
 GET {{host}}/api/workspaces/{id}

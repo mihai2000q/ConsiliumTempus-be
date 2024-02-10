@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -17,11 +18,16 @@ public static partial class Utils
         {
             workspace.Name.Should().Be(command.Name);
             workspace.Description.Should().Be(command.Description);
-            workspace.Users.Should().HaveCount(1);
-            workspace.Users[0].Should().Be(user);
+            workspace.Memberships.Should().HaveCount(1);
+            workspace.Memberships[0].Id.Should().Be((user.Id, workspace.Id));
+            workspace.Memberships[0].User.Should().Be(user);
+            workspace.Memberships[0].Workspace.Should().Be(workspace);
+            workspace.Memberships[0].WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+            workspace.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             return true;
         }
-        
+
         public static bool AssertWorkspaceId(WorkspaceId workspaceId, string id)
         {
             workspaceId.Should().Be(WorkspaceId.Create(id));
@@ -33,7 +39,7 @@ public static partial class Utils
             result.Workspace.Id.Should().Be(workspace.Id);
             result.Workspace.Name.Should().Be(workspace.Name);
             result.Workspace.Description.Should().Be(workspace.Description);
-            result.Workspace.Users.Should().BeEquivalentTo(workspace.Users);
+            result.Workspace.Memberships.Should().BeEquivalentTo(workspace.Memberships);
         }
     }
 }

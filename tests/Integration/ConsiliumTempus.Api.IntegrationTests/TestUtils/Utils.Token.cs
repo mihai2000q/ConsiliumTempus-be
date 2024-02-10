@@ -11,7 +11,7 @@ public static partial class Utils
 {
     public static class Token
     {
-        public static string CreateMock(UserAggregate user, JwtSettings jwtSettings)
+        public static JwtSecurityToken CreateMock(UserAggregate user, JwtSettings jwtSettings)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(
@@ -34,10 +34,10 @@ public static partial class Utils
                 claims: claims,
                 signingCredentials: signingCredentials);
 
-            return new JwtSecurityTokenHandler().WriteToken(securityToken);
+            return securityToken;
         }
 
-        public static string CreateInvalidToken(JwtSettings jwtSettings)
+        public static JwtSecurityToken CreateInvalidToken(JwtSettings jwtSettings)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(
@@ -60,7 +60,12 @@ public static partial class Utils
                 claims: claims,
                 signingCredentials: signingCredentials);
 
-            return new JwtSecurityTokenHandler().WriteToken(securityToken);
+            return securityToken;
+        }
+
+        public static string SecurityTokenToStringToken(JwtSecurityToken token)
+        {
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

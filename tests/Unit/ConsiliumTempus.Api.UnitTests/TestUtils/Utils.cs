@@ -14,7 +14,7 @@ public static partial class Utils
         config.Scan(typeof(TMappingConfig).Assembly);
         return new Mapper(config);
     }
-    
+
     public static Mock<HttpContext> ResolveHttpContext(ApiController controller)
     {
         Mock<HttpContext> httpContext = new();
@@ -28,7 +28,7 @@ public static partial class Utils
     {
         response.Should().BeOfType<ObjectResult>();
         ((ObjectResult)response).Value.Should().BeOfType<ProblemDetails>();
-        
+
         var error = ((ObjectResult)response).Value as ProblemDetails;
         error?.Status.Should().Be(statusCode);
         error?.Title.Should().Be(title);

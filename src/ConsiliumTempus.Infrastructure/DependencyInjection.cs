@@ -1,11 +1,17 @@
 ﻿using System.Text;
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Infrastructure.Authentication;
+using ConsiliumTempus.Infrastructure.Authorization.Permission;
+using ConsiliumTempus.Infrastructure.Authorization.Providers;
+using ConsiliumTempus.Infrastructure.Authorization.Token;
+using ConsiliumTempus.Infrastructure.Persistence;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using ConsiliumTempus.Infrastructure.Persistence.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,35 +24,57 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuth(configuration)
+        services.AddAppAuthentication(configuration)
+            .AddAppAuthorization()
             .AddPersistence(configuration);
 
         return services;
     }
 
-    private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddAppAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtSettings = new JwtSettings();
         configuration.Bind(JwtSettings.SectionName, jwtSettings);
 
         services.AddSingleton(Options.Create(jwtSettings));
-        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
+        services.AddAuthentication(auth =>
             {
-                ValidIssuer = jwtSettings.Issuer,
-                ValidAudience = jwtSettings.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateIssuerSigningKey = true,
-                ValidateLifetime = true
+                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true
+                };
+                options.MapInboundClaims = false;
             });
-        services.AddAuthorization();
-
+        
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IScrambler, Scrambler>();
 
+        return services;
+    }
+
+    private static IServiceCollection AddAppAuthorization(this IServiceCollection services)
+    {
+        services.AddAuthorization();
+
+        services.AddScoped<IWorkspaceProvider, WorkspaceRepository>();
+        services.AddScoped<IPermissionProvider, PermissionRepository>();
+        services.AddScoped<IUserProvider, UserRepository>();
+        services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+        services.AddSingleton<IAuthorizationHandler, TokenAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+        
         return services;
     }
 
@@ -63,6 +91,7 @@ public static class DependencyInjection
                           $"Password={databaseSettings.Password};" +
                           $"Encrypt=false"));
 
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddInterceptors()
             .AddRepositories();
     }
@@ -78,5 +107,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
+        services.AddScoped<IMembershipRepository, MembershipRepository>();
+        services.AddScoped<IWorkspaceRoleRepository, WorkspaceRoleRepository>();
     }
 }

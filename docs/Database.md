@@ -5,6 +5,13 @@ The RDBMS chosen for this application infrastructure is a Microsoft SQL Server.
 More about the Database Design choices can be read at [Database Diagrams](Domain.md/#database-diagrams), 
 and for a clear picture of the whole application check this out [Database Diagram](Database.Diagram.md). 
 
+## Naming Convention
+
+### Tables
+
+It has been decided to use **singular** for table naming because of several reasons, 
+such as aestheticism, order or simplicity. 
+
 ## Migrations
 
 As the infrastructure layer relies on the **Entity Framework Core**, to release, 

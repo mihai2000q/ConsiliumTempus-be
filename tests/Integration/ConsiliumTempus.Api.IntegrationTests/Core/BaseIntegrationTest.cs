@@ -1,15 +1,19 @@
-﻿using System.Net.Http.Headers;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
+using ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Infrastructure.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
 public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebApplicationFactory>, IAsyncLifetime
 {
+    private readonly ITokenProvider _tokenProvider;
     private readonly ConsiliumTempusDbContext _dbContext;
     private readonly Func<Task> _resetDatabase;
 
@@ -18,18 +22,22 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
     private readonly bool _defaultUsers;
 
     protected readonly HttpClient Client;
+    protected readonly ITestOutputHelper TestOutputHelper;
     protected readonly JwtSettings JwtSettings = new();
 
     protected BaseIntegrationTest(
-        ConsiliumTempusWebApplicationFactory factory, 
+        ConsiliumTempusWebApplicationFactory factory,
+        ITestOutputHelper testOutputHelper,
         string? testDataDirectory = null,
         bool defaultUsers = true)
     {
+        _tokenProvider = factory.Services.GetRequiredService<ITokenProvider>();
         _dbContext = factory.Services.GetRequiredService<ConsiliumTempusDbContext>();
         _resetDatabase = factory.ResetDatabaseAsync;
         _testDataDirectory = testDataDirectory;
         _defaultUsers = defaultUsers;
         Client = factory.HttpClient;
+        TestOutputHelper = testOutputHelper;
         factory.Services.GetRequiredService<IConfiguration>()
             .Bind(JwtSettings.SectionName, JwtSettings);
     }
@@ -41,10 +49,11 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
             await AddTestData(Constants.DefaultUsersFilePath);
             UseCustomToken();
         }
-        
+
         if (_testDataDirectory != null)
         {
-            foreach (var file in Directory.GetFiles(GetTestDataDirectoryPath()))
+            var files = Directory.GetFiles(GetTestDataDirectoryPath()).Order();
+            foreach (var file in files)
             {
                 await AddTestData(file);
             }
@@ -53,21 +62,18 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
 
     public async Task DisposeAsync()
     {
+        ResetToken();
         await _resetDatabase();
     }
 
     protected void UseCustomToken(string? email = null)
     {
-        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            TestAuthHandler.AuthenticationSchema, 
-            GetToken(email));
+        UseToken(GetToken(email));
     }
-    
+
     protected void UseInvalidToken()
     {
-        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            TestAuthHandler.AuthenticationSchema, 
-            GetInvalidToken());
+        UseToken(GetInvalidToken());
     }
 
     private async Task AddTestData(string path)
@@ -75,10 +81,12 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         var rawQueries = await File.ReadAllLinesAsync(path);
         var queries = ParseQueries(rawQueries);
 
+        TestOutputHelper.WriteLine($"Importing data from: {path}");
         foreach (var query in queries)
         {
             await _dbContext.Database.ExecuteSqlRawAsync(query);
         }
+        TestOutputHelper.WriteLine($"Finished importing data from: {path}");
     }
 
     private static IEnumerable<string> ParseQueries(IEnumerable<string> rawQueries)
@@ -90,19 +98,33 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
             .Where(line => !string.IsNullOrWhiteSpace(line))
             .Select(q => q + ";");
     }
-    
-    private string GetToken(string? email = null)
+
+    private void UseToken(JwtSecurityToken securityToken)
     {
-        var user = email is null ? 
-            _dbContext.Users.FirstOrDefault() :
-            _dbContext.Users.FirstOrDefault(u => u.Credentials.Email == email.ToLower());
-        
+        _tokenProvider.SetToken(securityToken);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            TestAuthHandler.AuthenticationSchema,
+            Utils.Token.SecurityTokenToStringToken(securityToken));
+    }
+
+    private void ResetToken()
+    {
+        _tokenProvider.SetToken(null);
+        Client.DefaultRequestHeaders.Authorization = null;
+    }
+
+    private JwtSecurityToken GetToken(string? email = null)
+    {
+        var user = email is null
+            ? _dbContext.Users.FirstOrDefault()
+            : _dbContext.Users.SingleOrDefault(u => u.Credentials.Email == email.ToLower());
+
         if (user is null) throw new Exception("There is no user with that email");
-            
+
         return Utils.Token.CreateMock(user, JwtSettings);
     }
 
-    private string GetInvalidToken()
+    private JwtSecurityToken GetInvalidToken()
     {
         return Utils.Token.CreateInvalidToken(JwtSettings);
     }

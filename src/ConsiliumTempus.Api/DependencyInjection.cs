@@ -9,7 +9,8 @@ public static class DependencyInjection
 {
     public static void AddPresentation(this IServiceCollection services)
     {
-        services.AddMappings()
+        services.AddHttpContextAccessor()
+            .AddMappings()
             .AddSingleton<ProblemDetailsFactory, ConsiliumTempusProblemDetailsFactory>()
             .AddControllers();
     }
