@@ -52,7 +52,8 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
 
         if (_testDataDirectory != null)
         {
-            foreach (var file in Directory.GetFiles(GetTestDataDirectoryPath()))
+            var files = Directory.GetFiles(GetTestDataDirectoryPath()).Order();
+            foreach (var file in files)
             {
                 await AddTestData(file);
             }
@@ -80,12 +81,12 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         var rawQueries = await File.ReadAllLinesAsync(path);
         var queries = ParseQueries(rawQueries);
 
+        TestOutputHelper.WriteLine($"Importing data from: {path}");
         foreach (var query in queries)
         {
-            TestOutputHelper.WriteLine($"Importing data from: {path}");
             await _dbContext.Database.ExecuteSqlRawAsync(query);
-            TestOutputHelper.WriteLine($"Finished importing data from: {path}");
         }
+        TestOutputHelper.WriteLine($"Finished importing data from: {path}");
     }
 
     private static IEnumerable<string> ParseQueries(IEnumerable<string> rawQueries)
@@ -95,7 +96,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
             .Aggregate((curr, next) => curr + next)
             .Split(";")
             .Where(line => !string.IsNullOrWhiteSpace(line))
-            .Select(q => q.Replace("VALUES", " VALUES ") + ";");
+            .Select(q => q + ";");
     }
 
     private void UseToken(JwtSecurityToken securityToken)
