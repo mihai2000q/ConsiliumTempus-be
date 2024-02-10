@@ -2,11 +2,14 @@
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace;
 
-public class WorkspaceControllerCreateTest(ConsiliumTempusWebApplicationFactory factory)
-    : BaseIntegrationTest(factory)
+public class WorkspaceControllerCreateTest(
+    ConsiliumTempusWebApplicationFactory factory,
+    ITestOutputHelper testOutputHelper)
+    : BaseIntegrationTest(factory, testOutputHelper)
 {
     [Fact]
     public async Task WhenWorkspaceCreateIsSuccessful_ShouldReturnNewWorkspace()

@@ -2,12 +2,12 @@
 using System.Net.Http.Headers;
 using ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Infrastructure.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
@@ -22,10 +22,12 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
     private readonly bool _defaultUsers;
 
     protected readonly HttpClient Client;
+    protected readonly ITestOutputHelper TestOutputHelper;
     protected readonly JwtSettings JwtSettings = new();
 
     protected BaseIntegrationTest(
-        ConsiliumTempusWebApplicationFactory factory, 
+        ConsiliumTempusWebApplicationFactory factory,
+        ITestOutputHelper testOutputHelper,
         string? testDataDirectory = null,
         bool defaultUsers = true)
     {
@@ -35,6 +37,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         _testDataDirectory = testDataDirectory;
         _defaultUsers = defaultUsers;
         Client = factory.HttpClient;
+        TestOutputHelper = testOutputHelper;
         factory.Services.GetRequiredService<IConfiguration>()
             .Bind(JwtSettings.SectionName, JwtSettings);
     }
@@ -46,7 +49,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
             await AddTestData(Constants.DefaultUsersFilePath);
             UseCustomToken();
         }
-        
+
         if (_testDataDirectory != null)
         {
             foreach (var file in Directory.GetFiles(GetTestDataDirectoryPath()))
@@ -60,15 +63,13 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
     {
         ResetToken();
         await _resetDatabase();
-        var smth = await _dbContext.Set<WorkspaceRole>().ToListAsync();
-        var mst = 2;
     }
 
     protected void UseCustomToken(string? email = null)
     {
         UseToken(GetToken(email));
     }
-    
+
     protected void UseInvalidToken()
     {
         UseToken(GetInvalidToken());
@@ -83,6 +84,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         {
             await _dbContext.Database.ExecuteSqlRawAsync(query);
         }
+        TestOutputHelper.WriteLine($"Imported data from: {path}");
     }
 
     private static IEnumerable<string> ParseQueries(IEnumerable<string> rawQueries)
@@ -92,14 +94,14 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
             .Aggregate((curr, next) => curr + next)
             .Split(";")
             .Where(line => !string.IsNullOrWhiteSpace(line))
-            .Select(q => q + ";");
+            .Select(q => q.Replace("VALUES", " VALUES ") + ";");
     }
-    
+
     private void UseToken(JwtSecurityToken securityToken)
     {
         _tokenProvider.SetToken(securityToken);
         Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            TestAuthHandler.AuthenticationSchema, 
+            TestAuthHandler.AuthenticationSchema,
             Utils.Token.SecurityTokenToStringToken(securityToken));
     }
 
@@ -108,15 +110,15 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         _tokenProvider.SetToken(null);
         Client.DefaultRequestHeaders.Authorization = null;
     }
-    
+
     private JwtSecurityToken GetToken(string? email = null)
     {
-        var user = email is null ? 
-            _dbContext.Users.FirstOrDefault() :
-            _dbContext.Users.FirstOrDefault(u => u.Credentials.Email == email.ToLower());
-        
+        var user = email is null
+            ? _dbContext.Users.FirstOrDefault()
+            : _dbContext.Users.SingleOrDefault(u => u.Credentials.Email == email.ToLower());
+
         if (user is null) throw new Exception("There is no user with that email");
-            
+
         return Utils.Token.CreateMock(user, JwtSettings);
     }
 

@@ -6,11 +6,14 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Application.Common.Extensions;
 using FluentAssertions;
+using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth;
 
-public class AuthenticationControllerTest(ConsiliumTempusWebApplicationFactory factory)
-    : BaseIntegrationTest(factory, "Auth", false)
+public class AuthenticationControllerTest(
+    ConsiliumTempusWebApplicationFactory factory,
+    ITestOutputHelper testOutputHelper)
+    : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
 {
     [Fact]
     public async Task WhenRegisterIsSuccessful_ShouldReturnToken()
