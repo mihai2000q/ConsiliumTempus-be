@@ -82,9 +82,10 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
 
         foreach (var query in queries)
         {
+            TestOutputHelper.WriteLine($"Importing data from: {path}");
             await _dbContext.Database.ExecuteSqlRawAsync(query);
+            TestOutputHelper.WriteLine($"Finished importing data from: {path}");
         }
-        TestOutputHelper.WriteLine($"Imported data from: {path}");
     }
 
     private static IEnumerable<string> ParseQueries(IEnumerable<string> rawQueries)
