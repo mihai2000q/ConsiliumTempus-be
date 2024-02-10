@@ -198,7 +198,7 @@ Each sql file represents a table inside the database.
 
 By default, inside the database there will be a dataset of Users 
 (can be deactivated per Test on the constructor parameters).
-Those Users can be modified inside the sole table inside the `MockData` directory (`Users.sql`).
+Those Users can be modified inside the sole table inside the `MockData` directory (`User.sql`).
 The base class also provides a way to create custom tokens based on email. 
 To use a custom Token for each test method, make use of the method `UseCustomToken` and pass the email of the user.
 
@@ -210,3 +210,7 @@ This class is used by the Web App Factory to let the Client bypass any Authentic
 In other words, some endpoints will require some type of authorization and others might just accept anonymous requests.
 However, those that require authorization will, typically, require a Token as well 
 (which is already provided and discussed in the [Base Integration Test](#base-integration-test) class).
+
+The Handler also makes use of the **Token Provider** interface, 
+that is injecting a singleton service which provides a custom token 
+(the method: *Use Custom Token* from the Base Integration Test class makes use of this provider).
