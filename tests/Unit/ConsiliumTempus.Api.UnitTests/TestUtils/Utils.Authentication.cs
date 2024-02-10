@@ -5,9 +5,9 @@ using ConsiliumTempus.Application.Authentication.Queries.Login;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
-public static partial class Utils
+internal static partial class Utils
 {
-    public static class Authentication
+    internal static class Authentication
     {
         public static bool AssertRegisterCommand(RegisterCommand command, RegisterRequest request)
         {

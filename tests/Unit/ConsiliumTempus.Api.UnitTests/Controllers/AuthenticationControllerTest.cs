@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
-public class AuthenticationControllerTest
+public sealed class AuthenticationControllerTest
 {
     #region Setup
 

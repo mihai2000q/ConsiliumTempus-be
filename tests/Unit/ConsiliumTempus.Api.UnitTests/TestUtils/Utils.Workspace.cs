@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
-public static partial class Utils
+internal static partial class Utils
 {
-    public static class Workspace
+    internal static class Workspace
     {
-        public static bool AssertCreateCommand(
+        internal static bool AssertCreateCommand(
             CreateWorkspaceCommand command,
             CreateWorkspaceRequest request,
             string token)
@@ -21,7 +21,7 @@ public static partial class Utils
             return true;
         }
 
-        public static void AssertDto(
+        internal static void AssertDto(
             IActionResult outcome,
             WorkspaceAggregate workspace)
         {

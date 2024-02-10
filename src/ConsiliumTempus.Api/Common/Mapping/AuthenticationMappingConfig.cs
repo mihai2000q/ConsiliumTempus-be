@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Api.Contracts.Authentication.Login;
+﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Application.Authentication.Queries.Login;
@@ -6,6 +7,7 @@ using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
 
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed class AuthenticationMappingConfig : IRegister
 {
     public void Register(TypeAdapterConfig config)

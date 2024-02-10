@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
+﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
@@ -7,6 +8,7 @@ using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
 
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed class WorkspaceMappingConfig : IRegister
 {
     public const string Token = "token";

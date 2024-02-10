@@ -11,7 +11,7 @@ namespace ConsiliumTempus.Api.Controllers;
 
 [Route("api/auth")]
 [AllowAnonymous]
-public class AuthenticationController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
+public sealed class AuthenticationController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
     [HttpPost("Register")]
     public async Task<IActionResult> Register(RegisterRequest request)

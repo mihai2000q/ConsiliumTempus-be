@@ -1,5 +1,5 @@
 ﻿namespace ConsiliumTempus.Api.Contracts.Workspace.Create;
 
-public record CreateWorkspaceRequest(
+public sealed record CreateWorkspaceRequest(
     string Name,
     string Description);

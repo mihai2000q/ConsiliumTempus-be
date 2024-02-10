@@ -7,11 +7,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
-public static partial class Utils
+internal static partial class Utils
 {
-    public static class Token
+    internal static class Token
     {
-        public static JwtSecurityToken CreateMock(UserAggregate user, JwtSettings jwtSettings)
+        internal static JwtSecurityToken CreateMock(UserAggregate user, JwtSettings jwtSettings)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(
@@ -37,7 +37,7 @@ public static partial class Utils
             return securityToken;
         }
 
-        public static JwtSecurityToken CreateInvalidToken(JwtSettings jwtSettings)
+        internal static JwtSecurityToken CreateInvalidToken(JwtSettings jwtSettings)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(
@@ -63,7 +63,7 @@ public static partial class Utils
             return securityToken;
         }
 
-        public static string SecurityTokenToStringToken(JwtSecurityToken token)
+        internal static string SecurityTokenToStringToken(JwtSecurityToken token)
         {
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

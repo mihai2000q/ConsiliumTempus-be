@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ConsiliumTempus.Api.Controllers;
 
 [Route("api/workspaces")]
-public class WorkspaceController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
+public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
     [HasPermission(Permissions.ReadWorkspace)]
     [HttpGet("{id}")]

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
-public class WorkspaceControllerTest
+public sealed class WorkspaceControllerTest
 {
     #region Setup
 

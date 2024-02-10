@@ -1,6 +1,6 @@
 ﻿namespace ConsiliumTempus.Api.Contracts.Authentication.Register;
 
-public record RegisterRequest(
+public sealed record RegisterRequest(
     string FirstName,
     string LastName,
     string Email,

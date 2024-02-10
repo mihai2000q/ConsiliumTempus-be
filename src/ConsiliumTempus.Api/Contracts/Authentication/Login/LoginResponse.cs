@@ -1,4 +1,7 @@
-﻿namespace ConsiliumTempus.Api.Contracts.Authentication.Login;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public record LoginResponse(
+namespace ConsiliumTempus.Api.Contracts.Authentication.Login;
+
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+public sealed record LoginResponse(
     string Token);
