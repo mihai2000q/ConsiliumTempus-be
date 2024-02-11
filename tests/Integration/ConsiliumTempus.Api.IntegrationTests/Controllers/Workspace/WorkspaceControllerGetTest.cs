@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
 using Xunit.Abstractions;
 
@@ -45,7 +46,7 @@ public class WorkspaceControllerGetTest(
         var outcome = await Client.GetAsync($"api/workspaces/{id}");
 
         // Assert
-        await outcome.ValidateError(HttpStatusCode.NotFound, "Workspace could not be found");
+        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Workspace.NotFound.Description);
     }
 
     private async Task AssertSuccessfulResponse(string email, string id = "10000000-0000-0000-0000-000000000000")
