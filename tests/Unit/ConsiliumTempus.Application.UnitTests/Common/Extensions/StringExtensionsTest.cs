@@ -5,6 +5,24 @@ namespace ConsiliumTempus.Application.UnitTests.Common.Extensions;
 public class StringExtensionsTest
 {
     [Fact]
+    public void TruncateAggregate_WhenValid_ShouldReturnTheStringWithoutAggregate()
+    {
+        // Arrange
+        const string input1 = "WorkspaceAggregate";
+        const string input2 = "Workspace";
+
+        // Act
+        var outcome1 = input1.TruncateAggregate();
+        var outcome2 = input2.TruncateAggregate();
+        var outcome3 = "".TruncateAggregate();
+
+        // Assert
+        outcome1.Should().Be("Workspace");
+        outcome2.Should().Be("Workspace");
+        outcome3.Should().BeEmpty();
+    }
+
+    [Fact]
     public void ContainsUppercase_WhenStringContainsUppercaseLetter_ShouldReturnTrue()
     {
         // Arrange

@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Validation;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
 
     private static void ConfigureWorkspacesTable(EntityTypeBuilder<WorkspaceAggregate> builder)
     {
-        builder.ToTable("Workspace");
+        builder.ToTable(nameof(WorkspaceAggregate).TruncateAggregate());
 
         builder.HasIndex(w => w.Id);
         builder.HasKey(w => w.Id);

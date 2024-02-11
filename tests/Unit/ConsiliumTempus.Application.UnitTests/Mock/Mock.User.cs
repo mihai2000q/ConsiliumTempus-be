@@ -7,7 +7,7 @@ internal static partial class Mock
 {
     internal static class User
     {
-        public static UserAggregate CreateMock(
+        internal static UserAggregate CreateMock(
             string email = "Some@example.com",
             string password = "Password123")
         {

@@ -6,55 +6,55 @@ using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace;
 
-public class WorkspaceControllerGetTest(
+public class WorkspaceControllerDeleteTest(
     ConsiliumTempusWebApplicationFactory factory,
     ITestOutputHelper testOutputHelper)
     : BaseIntegrationTest(factory, testOutputHelper, "Workspace")
 {
     [Fact]
-    public async Task WhenWorkspaceGetWithAdminRole_ShouldReturnWorkspace()
+    public async Task WhenWorkspaceDeleteWithAdminRole_ShouldReturnWorkspace()
     {
-        await AssertSuccessfulResponse("michaelj@gmail.com");
+        await AssertSuccessfulRequest("michaelj@gmail.com");
     }
 
     [Fact]
-    public async Task WhenWorkspaceGetWithMemberRole_ShouldReturnWorkspace()
+    public async Task WhenWorkspaceDeleteWithMemberRole_ShouldReturnForbiddenResponse()
     {
-        await AssertSuccessfulResponse("stephenc@gmail.com");
+        await AssertForbiddenResponse("stephenc@gmail.com");
     }
 
     [Fact]
-    public async Task WhenWorkspaceGetWithViewRole_ShouldReturnWorkspace()
+    public async Task WhenWorkspaceDeleteWithViewRole_ShouldReturnForbiddenResponse()
     {
-        await AssertSuccessfulResponse("lebronj@gmail.com");
+        await AssertForbiddenResponse("lebronj@gmail.com");
     }
 
     [Fact]
-    public async Task WhenWorkspaceGetWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task WhenWorkspaceDeleteWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse("leom@gmail.com");
     }
 
     [Fact]
-    public async Task WhenWorkspaceGetFails_ShouldReturnNotFoundError()
+    public async Task WhenWorkspaceDeleteFails_ShouldReturnNotFoundError()
     {
         // Arrange
         const string id = "50000000-0000-0000-0000-000000000000";
 
         // Act
-        var outcome = await Client.GetAsync($"api/workspaces/{id}");
+        var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
         await outcome.ValidateError(HttpStatusCode.NotFound, "Workspace could not be found");
     }
 
-    private async Task AssertSuccessfulResponse(string email, string id = "10000000-0000-0000-0000-000000000000")
+    private async Task AssertSuccessfulRequest(string email, string id = "10000000-0000-0000-0000-000000000000")
     {
         // Arrange - parameters
 
         // Act
         UseCustomToken(email);
-        var outcome = await Client.GetAsync($"api/workspaces/{id}");
+        var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
         await Utils.Workspace.AssertDtoFromResponse(
@@ -69,7 +69,7 @@ public class WorkspaceControllerGetTest(
 
         // Act
         UseCustomToken(email);
-        var outcome = await Client.GetAsync($"api/workspaces/{id}");
+        var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);

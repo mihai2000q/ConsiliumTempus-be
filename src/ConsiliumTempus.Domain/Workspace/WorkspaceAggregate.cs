@@ -47,6 +47,13 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         return workspace;
     }
 
+    public void Update(string? name, string? description)
+    {
+        if (name is not null) Name = name;
+        if (description is not null) Description = description;
+        UpdatedDateTime = DateTime.UtcNow;
+    }
+
     public void AddUserMembership(Membership membership)
     {
         _memberships.Add(membership);

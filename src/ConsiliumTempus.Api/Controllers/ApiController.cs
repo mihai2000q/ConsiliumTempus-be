@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace ConsiliumTempus.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]s")]
 [ValidateToken]
 public abstract class ApiController(IMapper mapper, ISender mediator) : ControllerBase
 {

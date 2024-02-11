@@ -4,6 +4,9 @@ public static class StringExtensions
 {
     private static readonly char[] Numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
+    public static string TruncateAggregate(this string str) =>
+        str.Replace("Aggregate", "");
+
     public static bool ContainsUppercase(this string str) =>
         str.Any(char.IsUpper);
 
@@ -39,7 +42,7 @@ public static class StringExtensions
                 .Split(separator)
                 .Select(CapitalizeWord));
     }
-    
-    public static string CapitalizeWord(this string word) => 
+
+    public static string CapitalizeWord(this string word) =>
         word.ToUpper()[0] + word.ToLower()[1..];
 }

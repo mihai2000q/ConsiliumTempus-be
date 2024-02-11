@@ -86,7 +86,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         {
             await _dbContext.Database.ExecuteSqlRawAsync(query);
         }
-        TestOutputHelper.WriteLine($"Finished importing data from: {path}");
+        TestOutputHelper.WriteLine($"Finished importing data from: {path}\n");
     }
 
     private static IEnumerable<string> ParseQueries(IEnumerable<string> rawQueries)

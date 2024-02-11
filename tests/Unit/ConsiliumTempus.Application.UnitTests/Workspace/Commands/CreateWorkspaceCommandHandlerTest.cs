@@ -5,7 +5,7 @@ using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Domain.Workspace;
 
-namespace ConsiliumTempus.Application.UnitTests.Workspace.Commands.Create;
+namespace ConsiliumTempus.Application.UnitTests.Workspace.Commands;
 
 public class CreateWorkspaceCommandHandlerTest
 {

@@ -1,0 +1,28 @@
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using ErrorOr;
+using MediatR;
+
+namespace ConsiliumTempus.Application.Workspace.Commands.Update;
+
+public sealed class UpdateWorkspaceCommandHandler(
+    IWorkspaceRepository workspaceRepository,
+    IUnitOfWork unitOfWork) 
+    : IRequestHandler<UpdateWorkspaceCommand, ErrorOr<UpdateWorkspaceResult>>
+{
+    public async Task<ErrorOr<UpdateWorkspaceResult>> Handle(UpdateWorkspaceCommand command, CancellationToken cancellationToken)
+    {
+        var workspaceId = WorkspaceId.Create(command.Id);
+        var workspace = await workspaceRepository.Get(workspaceId, cancellationToken);
+
+        if (workspace is null) return Errors.Workspace.NotFound;
+        
+        workspace.Update(command.Name, command.Description);
+        
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return new UpdateWorkspaceResult(workspace);
+    }
+}
