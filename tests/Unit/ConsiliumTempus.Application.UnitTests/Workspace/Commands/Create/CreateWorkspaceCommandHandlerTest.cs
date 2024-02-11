@@ -3,7 +3,6 @@ using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Security;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
-using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Commands.Create;
@@ -14,7 +13,6 @@ public class CreateWorkspaceCommandHandlerTest
 
     private readonly Mock<ISecurity> _security;
     private readonly Mock<IWorkspaceRepository> _workspaceRepository;
-    private readonly Mock<IWorkspaceRoleRepository> _workspaceRoleRepository;
     private readonly Mock<IUnitOfWork> _unitOfWork;
     private readonly CreateWorkspaceCommandHandler _uut;
 
@@ -22,12 +20,10 @@ public class CreateWorkspaceCommandHandlerTest
     {
         _security = new Mock<ISecurity>();
         _workspaceRepository = new Mock<IWorkspaceRepository>();
-        _workspaceRoleRepository = new Mock<IWorkspaceRoleRepository>();
         _unitOfWork = new Mock<IUnitOfWork>();
         _uut = new CreateWorkspaceCommandHandler(
             _security.Object,
             _workspaceRepository.Object,
-            _workspaceRoleRepository.Object,
             _unitOfWork.Object);
     }
 
@@ -54,7 +50,6 @@ public class CreateWorkspaceCommandHandlerTest
         _workspaceRepository.Verify(w => w.Add(
             It.Is<WorkspaceAggregate>(workspace =>
                 Utils.Workspace.AssertFromCreateCommand(workspace, command, user))), Times.Once());
-        _workspaceRoleRepository.Verify(w => w.Attach(WorkspaceRole.Admin), Times.Once());
         _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
 
         Utils.Workspace.AssertFromCreateCommand(outcome.Workspace, command, user);
