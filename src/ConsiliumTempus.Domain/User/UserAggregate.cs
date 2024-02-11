@@ -32,7 +32,7 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
     public Credentials Credentials { get; private set; } = default!;
     public Name Name { get; private set; } = default!;
     public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; init; }
+    public DateTime UpdatedDateTime { get; private set; }
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
 
     public static UserAggregate Create(
@@ -56,6 +56,12 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
         user.AddDomainEvent(new UserRegistered(user));
         
         return user;
+    }
+    
+    public void Update(Name name)
+    {
+        Name = name;
+        UpdatedDateTime = DateTime.UtcNow;
     }
 
     public void AddWorkspaceMembership(Membership membership)

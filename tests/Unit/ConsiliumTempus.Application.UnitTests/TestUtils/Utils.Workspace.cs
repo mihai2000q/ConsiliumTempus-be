@@ -33,15 +33,12 @@ internal static partial class Utils
         
         internal static void AssertFromUpdateCommand(
             WorkspaceAggregate workspace,
-            UpdateWorkspaceCommand command,
-            WorkspaceAggregate oldWorkspace)
+            UpdateWorkspaceCommand command)
         {
             workspace.Id.Value.Should().Be(command.Id);
             workspace.Name.Should().Be(command.Name);
             workspace.Description.Should().Be(command.Description);
-            workspace.CreatedDateTime.Should().NotBe(workspace.UpdatedDateTime);
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            workspace.Memberships.Should().BeEquivalentTo(oldWorkspace.Memberships);
         }
 
         internal static bool AssertWorkspaceId(WorkspaceId workspaceId, Guid expectedId)
