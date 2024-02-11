@@ -8,6 +8,7 @@ using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Enums;
 using MapsterMapper;
 using MediatR;
@@ -28,6 +29,16 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
             getResult => Ok(Mapper.Map<WorkspaceDto>(getResult)),
             Problem
         );
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCollection(CancellationToken cancellationToken)
+    {
+        var token = GetToken();
+        var query = new GetCollectionWorkspaceQuery(token);
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return Ok(result.Select(w => Mapper.Map<WorkspaceDto>(w)));
     }
 
     [HttpPost]
