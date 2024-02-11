@@ -19,7 +19,7 @@ public class WorkspaceControllerGetTest(
         
         // Act
         UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.GetAsync($"api/workspaces/{id}");
+        var outcome = await Client.GetAsync($"api/workspace/{id}");
 
         // Assert
         await Utils.Workspace.AssertDtoFromResponse(
@@ -36,7 +36,7 @@ public class WorkspaceControllerGetTest(
         
         // Act
         UseCustomToken("stephenc@gmail.com");
-        var outcome = await Client.GetAsync($"api/workspaces/{id}");
+        var outcome = await Client.GetAsync($"api/workspace/{id}");
 
         // Assert
         await Utils.Workspace.AssertDtoFromResponse(
@@ -53,7 +53,7 @@ public class WorkspaceControllerGetTest(
         
         // Act
         UseCustomToken("lebronj@gmail.com");
-        var outcome = await Client.GetAsync($"api/workspaces/{id}");
+        var outcome = await Client.GetAsync($"api/workspace/{id}");
 
         // Assert
         await Utils.Workspace.AssertDtoFromResponse(
@@ -70,7 +70,7 @@ public class WorkspaceControllerGetTest(
         
         // Act
         UseCustomToken("leom@gmail.com");
-        var outcome = await Client.GetAsync($"api/workspaces/{id}");
+        var outcome = await Client.GetAsync($"api/workspace/{id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -83,7 +83,7 @@ public class WorkspaceControllerGetTest(
         const string id = "20000000-0000-0000-0000-000000000000";
         
         // Act
-        var outcome = await Client.GetAsync($"api/workspaces/{id}");
+        var outcome = await Client.GetAsync($"api/workspace/{id}");
 
         // Assert
         await outcome.ValidateError(HttpStatusCode.NotFound, "Workspace could not be found");

@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.Controllers;
 
-[Route("api/workspaces")]
 public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
     [HasPermission(Permissions.ReadWorkspace)]
@@ -29,7 +28,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         );
     }
 
-    [HttpPost("Create")]
+    [HttpPost]
     public async Task<IActionResult> Create(CreateWorkspaceRequest request, CancellationToken cancellationToken)
     {
         var token = GetToken();
