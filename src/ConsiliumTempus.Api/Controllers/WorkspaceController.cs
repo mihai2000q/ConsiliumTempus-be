@@ -16,7 +16,7 @@ namespace ConsiliumTempus.Api.Controllers;
 public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
     [HasPermission(Permissions.ReadWorkspace)]
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get(GetWorkspaceRequest request, CancellationToken cancellationToken)
     {
         var query = Mapper.Map<GetWorkspaceQuery>(request);

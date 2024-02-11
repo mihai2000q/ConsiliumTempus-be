@@ -28,7 +28,7 @@ internal static partial class Utils
             return true;
         }
 
-        internal static bool AssertWorkspaceId(WorkspaceId workspaceId, string id)
+        internal static bool AssertWorkspaceId(WorkspaceId workspaceId, Guid id)
         {
             workspaceId.Should().Be(WorkspaceId.Create(id));
             return true;
