@@ -39,7 +39,7 @@ public class WorkspaceControllerGetTest(
     public async Task WhenWorkspaceGetFails_ShouldReturnNotFoundError()
     {
         // Arrange
-        const string id = "20000000-0000-0000-0000-000000000000";
+        const string id = "50000000-0000-0000-0000-000000000000";
 
         // Act
         var outcome = await Client.GetAsync($"api/workspaces/{id}");
@@ -59,7 +59,7 @@ public class WorkspaceControllerGetTest(
         // Assert
         await Utils.Workspace.AssertDtoFromResponse(
             outcome,
-            "Workspace 1",
+            "Basketball",
             "This is the Description of the first Workspace");
     }
 

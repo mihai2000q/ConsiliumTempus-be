@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.Workspace;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,14 @@ internal static partial class Utils
             GetWorkspaceRequest request)
         {
             query.Id.Should().Be(request.Id);
+            return true;
+        }
+        
+        internal static bool AssertGetCollectionQuery(
+            GetCollectionWorkspaceQuery query,
+            string token)
+        {
+            query.Token.Should().Be(token);
             return true;
         }
         
@@ -52,9 +61,27 @@ internal static partial class Utils
 
             var response = ((OkObjectResult)outcome).Value as WorkspaceDto;
 
-            response!.Id.Should().Be(workspace.Id.Value.ToString());
-            response.Name.Should().Be(workspace.Name);
-            response.Description.Should().Be(workspace.Description);
+            AssertDto(response!, workspace);
+        }
+        
+        internal static void AssertDtos(
+            IActionResult outcome,
+            IEnumerable<WorkspaceAggregate> workspaces)
+        {
+            outcome.Should().BeOfType<OkObjectResult>();
+
+            var response = ((OkObjectResult)outcome).Value as IEnumerable<WorkspaceDto>;
+
+            response!.Zip(workspaces)
+                .ToList()
+                .ForEach(x => AssertDto(x.First, x.Second));
+        }
+
+        private static void AssertDto(WorkspaceDto dto, WorkspaceAggregate workspace)
+        {
+            dto.Id.Should().Be(workspace.Id.Value.ToString());
+            dto.Name.Should().Be(workspace.Name);
+            dto.Description.Should().Be(workspace.Description);
         }
     }
 }

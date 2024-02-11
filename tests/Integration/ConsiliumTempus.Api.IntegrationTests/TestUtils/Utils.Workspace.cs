@@ -12,14 +12,31 @@ internal static partial class Utils
         internal static async Task AssertDtoFromResponse(
             HttpResponseMessage response,
             string name,
-            string description)
+            string description,
+            string? id = null)
         {
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<WorkspaceDto>();
-            content!.Id.Should().NotBeNullOrWhiteSpace();
-            content.Name.Should().Be(name);
-            content.Description.Should().Be(description);
+            AssertDto(content!, name, description, id);
+        }
+
+        internal static void AssertDto(
+            WorkspaceDto dto,
+            string name,
+            string description,
+            string? id = null)
+        {
+            if (id is null)
+            {
+                dto.Id.Should().NotBeNullOrWhiteSpace();
+            }
+            else
+            {
+                dto.Id.Should().Be(id);
+            }
+            dto.Name.Should().Be(name);
+            dto.Description.Should().Be(description);
         }
     }
 }
