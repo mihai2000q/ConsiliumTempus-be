@@ -5,9 +5,9 @@ namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 
 public interface IUserRepository
 {
-    Task<UserAggregate?> Get(UserId id);
+    Task<UserAggregate?> Get(UserId id, CancellationToken cancellationToken = default);
     
-    Task<UserAggregate?> GetUserByEmail(string email);
+    Task<UserAggregate?> GetUserByEmail(string email, CancellationToken cancellationToken = default);
 
-    Task Add(UserAggregate userAggregate);
+    Task Add(UserAggregate userAggregate, CancellationToken cancellationToken = default);
 }

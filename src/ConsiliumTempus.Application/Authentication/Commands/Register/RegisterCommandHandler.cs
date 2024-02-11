@@ -20,18 +20,19 @@ public sealed class RegisterCommandHandler(
     public async Task<ErrorOr<RegisterResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
         var email = command.Email.ToLower();
-        if (await userRepository.GetUserByEmail(email) is not null) return Errors.User.DuplicateEmail;
+        if (await userRepository.GetUserByEmail(email, cancellationToken) is not null)
+            return Errors.User.DuplicateEmail;
 
         var password = scrambler.HashPassword(command.Password);
 
         var user = UserAggregate.Register(
-            Credentials.Create(email, password), 
+            Credentials.Create(email, password),
             Name.Create(
                 command.FirstName.Capitalize(),
                 command.LastName.Capitalize()));
-        await userRepository.Add(user);
+        await userRepository.Add(user, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         var token = jwtTokenGenerator.GenerateToken(user);
 
         return new RegisterResult(token);

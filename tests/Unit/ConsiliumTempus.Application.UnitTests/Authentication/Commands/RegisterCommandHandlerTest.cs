@@ -50,8 +50,9 @@ public class RegisterCommandHandlerTest
 
         UserAggregate? callbackAddedUser = null;
         UserAggregate? callbackUserUsedForJwt = null;
-        _userRepository.Setup(r => r.Add(It.IsAny<UserAggregate>()))
-            .Callback<UserAggregate>(r => callbackAddedUser = r);
+        _userRepository.Setup(r =>
+                r.Add(It.IsAny<UserAggregate>(), default))
+            .Callback<UserAggregate, CancellationToken>((r, _) => callbackAddedUser = r);
         _jwtTokenGenerator.Setup(j => j.GenerateToken(It.IsAny<UserAggregate>()))
             .Callback<UserAggregate>(r => callbackUserUsedForJwt = r)
             .Returns(token);
@@ -64,9 +65,9 @@ public class RegisterCommandHandlerTest
 
         // Assert
         _userRepository.Verify(r =>
-            r.GetUserByEmail(It.IsAny<string>()), Times.Once());
+            r.GetUserByEmail(It.IsAny<string>(), default), Times.Once());
         _userRepository.Verify(r =>
-            r.Add(It.IsAny<UserAggregate>()), Times.Once());
+            r.Add(It.IsAny<UserAggregate>(), default), Times.Once());
         _jwtTokenGenerator.Verify(j =>
             j.GenerateToken(It.IsAny<UserAggregate>()), Times.Once());
         _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
@@ -94,18 +95,20 @@ public class RegisterCommandHandlerTest
             "Example@Email.com",
             "");
 
-        _userRepository.Setup(r => r.GetUserByEmail(command.Email.ToLower()))
+        _userRepository.Setup(r => 
+                r.GetUserByEmail(command.Email.ToLower(), default))
             .ReturnsAsync(Mock.Mock.User.CreateMock());
 
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _userRepository.Verify(r => r.GetUserByEmail(It.IsAny<string>()), Times.Once());
+        _userRepository.Verify(r => 
+            r.GetUserByEmail(It.IsAny<string>(), default), Times.Once());
         _jwtTokenGenerator.Verify(j =>
             j.GenerateToken(It.IsAny<UserAggregate>()), Times.Never());
         _userRepository.Verify(r =>
-            r.Add(It.IsAny<UserAggregate>()), Times.Never());
+            r.Add(It.IsAny<UserAggregate>(), default), Times.Never());
         _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Never());
 
         outcome.ValidateError(Errors.User.DuplicateEmail);

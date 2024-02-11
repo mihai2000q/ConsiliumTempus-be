@@ -5,5 +5,5 @@ namespace ConsiliumTempus.Infrastructure.Authorization.Providers;
 
 public interface IUserProvider
 {
-    Task<UserAggregate?> Get(UserId id);
+    Task<UserAggregate?> Get(UserId id, CancellationToken cancellationToken = default);
 }

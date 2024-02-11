@@ -28,7 +28,8 @@ public class GetWorkspaceQueryHandlerTest
         var query = new GetWorkspaceQuery("00000000-0000-0000-0000-000000000000");
 
         var workspace = Mock.Mock.Workspace.CreateMock();
-        _workspaceRepository.Setup(w => w.Get(It.IsAny<WorkspaceId>()))
+        _workspaceRepository.Setup(w =>
+                w.Get(It.IsAny<WorkspaceId>(), default))
             .ReturnsAsync(workspace);
 
         // Act
@@ -36,7 +37,8 @@ public class GetWorkspaceQueryHandlerTest
 
         // Assert
         _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(i => Utils.Workspace.AssertWorkspaceId(i, query.Id))),
+                w.Get(It.Is<WorkspaceId>(i => 
+                    Utils.Workspace.AssertWorkspaceId(i, query.Id)), default),
             Times.Once());
 
         outcome.IsError.Should().BeFalse();
@@ -54,7 +56,8 @@ public class GetWorkspaceQueryHandlerTest
 
         // Assert
         _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(i => Utils.Workspace.AssertWorkspaceId(i, query.Id))),
+                w.Get(It.Is<WorkspaceId>(i =>
+                    Utils.Workspace.AssertWorkspaceId(i, query.Id)), default),
             Times.Once());
 
         outcome.ValidateError(Errors.Workspace.NotFound);

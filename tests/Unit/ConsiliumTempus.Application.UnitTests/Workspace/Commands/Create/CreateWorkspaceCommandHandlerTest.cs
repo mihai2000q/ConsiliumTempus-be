@@ -39,18 +39,23 @@ public class CreateWorkspaceCommandHandlerTest
             "This is a token");
 
         var user = Mock.Mock.User.CreateMock();
-        _security.Setup(s => s.GetUserFromToken(command.Token))
+        _security.Setup(s => s.GetUserFromToken(command.Token, default))
             .ReturnsAsync(user);
 
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _security.Verify(s => s.GetUserFromToken(It.IsAny<string>()), Times.Once());
+        _security.Verify(s => 
+            s.GetUserFromToken(It.IsAny<string>(), default), 
+            Times.Once());
         _workspaceRepository.Verify(w => w.Add(
             It.Is<WorkspaceAggregate>(workspace =>
-                Utils.Workspace.AssertFromCreateCommand(workspace, command, user))), Times.Once());
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
+                Utils.Workspace.AssertFromCreateCommand(workspace, command, user)), default), 
+            Times.Once());
+        _unitOfWork.Verify(u => 
+                u.SaveChangesAsync(default), 
+            Times.Once());
 
         Utils.Workspace.AssertFromCreateCommand(outcome.Workspace, command, user);
     }

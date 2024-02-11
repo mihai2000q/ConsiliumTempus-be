@@ -42,7 +42,7 @@ public sealed class WorkspaceControllerTest
             .ReturnsAsync(result);
 
         // Act
-        var outcome = await _uut.Get(request);
+        var outcome = await _uut.Get(request, default);
 
         // Assert
         Utils.Workspace.AssertDto(outcome, result.Workspace);
@@ -59,7 +59,7 @@ public sealed class WorkspaceControllerTest
             .ReturnsAsync(error);
 
         // Act
-        var outcome = await _uut.Get(request);
+        var outcome = await _uut.Get(request, default);
 
         // Assert
         outcome.ValidateError(StatusCodes.Status404NotFound, "Workspace could not be found");
@@ -82,7 +82,7 @@ public sealed class WorkspaceControllerTest
             .ReturnsAsync(result);
 
         // Act
-        var outcome = await _uut.Create(request);
+        var outcome = await _uut.Create(request, default);
 
         // Assert
         _mediator.Verify(m => m.Send(It.Is<CreateWorkspaceCommand>(

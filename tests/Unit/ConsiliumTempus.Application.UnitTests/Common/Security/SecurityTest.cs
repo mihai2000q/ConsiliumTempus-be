@@ -33,7 +33,7 @@ public class SecurityTest
             .Returns(plainUserId);
 
         var user = Mock.Mock.User.CreateMock();
-        _userRepository.Setup(u => u.Get(It.IsAny<UserId>()))
+        _userRepository.Setup(u => u.Get(It.IsAny<UserId>(), default))
             .ReturnsAsync(user);
 
         // Act
@@ -42,7 +42,7 @@ public class SecurityTest
         // Assert
         _jwtTokenGenerator.Verify(j => j.GetUserIdFromToken(It.IsAny<string>()), Times.Once());
         _userRepository.Verify(u =>
-                u.Get(It.Is<UserId>(id => Utils.User.AssertUserId(id, plainUserId))),
+                u.Get(It.Is<UserId>(id => Utils.User.AssertUserId(id, plainUserId)), default),
             Times.Once());
 
         outcome.Should().Be(user);

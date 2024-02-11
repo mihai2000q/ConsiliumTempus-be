@@ -14,10 +14,10 @@ namespace ConsiliumTempus.Api.Controllers;
 public sealed class AuthenticationController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
     [HttpPost("Register")]
-    public async Task<IActionResult> Register(RegisterRequest request)
+    public async Task<IActionResult> Register(RegisterRequest request, CancellationToken cancellationToken)
     {
         var command = Mapper.Map<RegisterCommand>(request);
-        var result = await Mediator.Send(command);
+        var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
             registerResult => Ok(Mapper.Map<RegisterResponse>(registerResult)),
@@ -26,10 +26,10 @@ public sealed class AuthenticationController(IMapper mapper, ISender mediator) :
     }
 
     [HttpPost("Login")]
-    public async Task<IActionResult> Login(LoginRequest request)
+    public async Task<IActionResult> Login(LoginRequest request, CancellationToken cancellationToken)
     {
         var query = Mapper.Map<LoginQuery>(request);
-        var result = await Mediator.Send(query);
+        var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
             loginResult => Ok(Mapper.Map<LoginResponse>(loginResult)),

@@ -16,16 +16,16 @@ public sealed class CreateWorkspaceCommandHandler(
     public async Task<CreateWorkspaceResult> Handle(CreateWorkspaceCommand command,
         CancellationToken cancellationToken)
     {
-        var user = await security.GetUserFromToken(command.Token);
-        
+        var user = await security.GetUserFromToken(command.Token, cancellationToken);
+
         var workspace = WorkspaceAggregate.Create(
             command.Name,
             command.Description);
-        await workspaceRepository.Add(workspace);
+        await workspaceRepository.Add(workspace, cancellationToken);
 
         var membership = Membership.Create(user, workspace, WorkspaceRole.Admin);
         workspace.AddUserMembership(membership);
-        
+
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new CreateWorkspaceResult(workspace);

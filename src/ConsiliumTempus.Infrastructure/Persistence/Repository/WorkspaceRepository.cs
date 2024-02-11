@@ -9,13 +9,15 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
 public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IWorkspaceRepository, IWorkspaceProvider
 {
-    public async Task<WorkspaceAggregate?> Get(WorkspaceId id)
+    public async Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default)
     {
-        return await dbContext.Workspaces.SingleOrDefaultAsync(w => w.Id == id);
+        return await dbContext.Workspaces.SingleOrDefaultAsync(
+            w => w.Id == id, 
+            cancellationToken);
     }
     
-    public async Task Add(WorkspaceAggregate workspaceAggregate)
+    public async Task Add(WorkspaceAggregate workspaceAggregate, CancellationToken cancellationToken = default)
     {
-        await dbContext.AddAsync(workspaceAggregate);
+        await dbContext.AddAsync(workspaceAggregate, cancellationToken);
     }
 }
