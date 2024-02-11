@@ -8,6 +8,7 @@ using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -40,7 +41,7 @@ public class WorkspaceControllerTest
         // Arrange
         var request = new GetWorkspaceRequest();
 
-        var result = new GetWorkspaceResult(Mock.Mock.Workspace.CreateMock());
+        var result = Mock.Mock.Workspace.CreateMock();
         _mediator.Setup(m => m.Send(It.IsAny<GetWorkspaceQuery>(), default))
             .ReturnsAsync(result);
 
@@ -52,7 +53,7 @@ public class WorkspaceControllerTest
             m.Send(It.Is<GetWorkspaceQuery>(query => Utils.Workspace.AssertGetQuery(query, request)), 
                 default),
             Times.Once());
-        Utils.Workspace.AssertDto(outcome, result.Workspace);
+        Utils.Workspace.AssertDto(outcome, result);
     }
 
     [Fact]
@@ -76,6 +77,31 @@ public class WorkspaceControllerTest
         
         outcome.ValidateError(StatusCodes.Status404NotFound, "Workspace could not be found");
     }
+    
+    [Fact]
+    public async Task GetCollectionWorkspace_ShouldReturnCollectionOfWorkspaces()
+    {
+        // Arrange
+        const string token = "This-is-a-token";
+        _httpContext.SetupGet(h => h.Request.Headers.Authorization)
+            .Returns($"Bearer {token}");
+        
+        var result = Mock.Mock.Workspace.CreateListMock();
+        _mediator.Setup(m => m.Send(It.IsAny<GetCollectionWorkspaceQuery>(), default))
+            .ReturnsAsync(result);
+
+        // Act
+        var outcome = await _uut.GetCollection(default);
+
+        // Assert
+        _httpContext.VerifyGet(h => h.Request.Headers.Authorization, Times.Once());
+        _mediator.Verify(m => 
+                m.Send(It.Is<GetCollectionWorkspaceQuery>(query => 
+                        Utils.Workspace.AssertGetCollectionQuery(query, token)), 
+                    default),
+            Times.Once());
+        Utils.Workspace.AssertDtos(outcome, result);
+    }
 
     [Fact]
     public async Task WhenWorkspaceCreateIsSuccessful_ShouldReturnNewWorkspace()
@@ -97,6 +123,7 @@ public class WorkspaceControllerTest
         var outcome = await _uut.Create(request, default);
 
         // Assert
+        _httpContext.VerifyGet(h => h.Request.Headers.Authorization, Times.Once());
         _mediator.Verify(m => m.Send(It.Is<CreateWorkspaceCommand>(
                     command => Utils.Workspace.AssertCreateCommand(command, request, token)),
                 default),

@@ -51,17 +51,12 @@ internal static partial class Utils
             return true;
         }
 
-        internal static void AssertGetResult(GetWorkspaceResult result, WorkspaceAggregate workspace)
-        {
-            AssertWorkspace(result.Workspace, workspace);
-        }
-
         internal static void AssertDeleteResult(DeleteWorkspaceResult result, WorkspaceAggregate workspace)
         {
             AssertWorkspace(result.Workspace, workspace);
         }
 
-        private static void AssertWorkspace(WorkspaceAggregate outcome, WorkspaceAggregate expected)
+        internal static void AssertWorkspace(WorkspaceAggregate outcome, WorkspaceAggregate expected)
         {
             outcome.Id.Should().Be(expected.Id);
             outcome.Name.Should().Be(expected.Name);

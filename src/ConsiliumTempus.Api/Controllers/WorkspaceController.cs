@@ -41,10 +41,11 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
         return Ok(Mapper.Map<WorkspaceDto>(result));
     }
-    
+
     [HasPermission(Permissions.UpdateWorkspace)]
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] UpdateWorkspaceRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update([FromBody] UpdateWorkspaceRequest request,
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<UpdateWorkspaceCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);

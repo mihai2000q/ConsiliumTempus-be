@@ -42,7 +42,7 @@ public class GetWorkspaceQueryHandlerTest
             Times.Once());
 
         outcome.IsError.Should().BeFalse();
-        Utils.Workspace.AssertGetResult(outcome.Value, workspace);
+        Utils.Workspace.AssertWorkspace(outcome.Value, workspace);
     }
 
     [Fact]

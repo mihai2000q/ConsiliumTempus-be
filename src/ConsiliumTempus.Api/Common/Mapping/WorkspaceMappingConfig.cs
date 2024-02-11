@@ -7,6 +7,7 @@ using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Domain.Workspace;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
@@ -28,9 +29,8 @@ public sealed class WorkspaceMappingConfig : IRegister
     {
         config.NewConfig<GetWorkspaceRequest, GetWorkspaceQuery>();
         
-        config.NewConfig<GetWorkspaceResult, WorkspaceDto>()
-            .Map(dest => dest, src => src.Workspace)
-            .Map(dest => dest.Id, src => src.Workspace.Id.Value.ToString());
+        config.NewConfig<WorkspaceAggregate, WorkspaceDto>()
+            .Map(dest => dest.Id, src => src.Id.Value.ToString());
     }
     
     private static void CreateMappings(TypeAdapterConfig config)
