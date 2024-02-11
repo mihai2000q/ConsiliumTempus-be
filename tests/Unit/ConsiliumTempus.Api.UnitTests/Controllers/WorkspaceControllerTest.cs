@@ -75,7 +75,7 @@ public class WorkspaceControllerTest
                     default),
             Times.Once());
         
-        outcome.ValidateError(StatusCodes.Status404NotFound, "Workspace could not be found");
+        outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
     }
     
     [Fact]
@@ -171,7 +171,7 @@ public class WorkspaceControllerTest
                 m.Send(It.Is<DeleteWorkspaceCommand>(command => command.Id == id), default),
             Times.Once());
         
-        outcome.ValidateError(StatusCodes.Status404NotFound, "Workspace could not be found");
+        outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
     }
     
     [Fact]
@@ -223,6 +223,6 @@ public class WorkspaceControllerTest
                     default),
             Times.Once());
         
-        outcome.ValidateError(StatusCodes.Status404NotFound, "Workspace could not be found");
+        outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
     }
 }

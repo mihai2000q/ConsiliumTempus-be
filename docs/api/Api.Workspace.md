@@ -4,10 +4,15 @@
   * [Get](#get)
     * [Get Workspace Request](#get-workspace-request)
     * [Get Workspace Response](#get-workspace-response)
+  * [Get Collection](#get-collection)
+    * [Get Collection Workspace Response](#get-collection-workspace-response)
   * [Create](#create)
     * [Create Workspace Request](#create-workspace-request)
     * [Create Workspace Response](#create-workspace-response)
-  * [Delete](#create)
+  * [Update](#update)
+    * [Update Workspace Request](#update-workspace-request)
+    * [Update Workspace Response](#update-workspace-response)
+  * [Delete](#delete)
     * [Delete Workspace Request](#delete-workspace-request)
     * [Delete Workspace Response](#delete-workspace-response)
 
@@ -33,6 +38,20 @@ Sends the id of the object inside the route request.
 
 Returns the workspace [Dto](dto/Dto.Workspace.md).
 
+
+### Get Collection
+
+Anyone logged in can request this data, but it will return only the workspaces that are linked to this user.
+
+```js
+GET {{host}}/api/workspaces
+```
+
+#### Get Collection Workspace Response
+
+Returns the workspaces [Dtos](dto/Dto.Workspace.md).
+
+
 ### Create
 
 Anyone logged in can create a workspace.
@@ -55,6 +74,7 @@ Sends body data that the new workspace needs to be created.
 #### Create Workspace Response
 
 Returns the newly created workspace [Dto](dto/Dto.Workspace.md).
+
 
 ### Update
 
@@ -82,6 +102,7 @@ All parameters are optional except the id.
 #### Update Workspace Response
 
 Returns the new workspace [Dto](dto/Dto.Workspace.md).
+
 
 ### Delete
 

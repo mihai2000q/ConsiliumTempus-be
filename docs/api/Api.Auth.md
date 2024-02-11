@@ -55,6 +55,7 @@ Returns a token about the newly created user.
 }
 ```
 
+
 ### Login
 
 Anyone can login.
