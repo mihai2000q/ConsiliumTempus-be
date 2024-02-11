@@ -72,7 +72,7 @@ These errors are not tied to any aggregate, therefore notable and only used in t
 
 The enums defined in the Domain of the application are:
 - **Permissions**, which are used on the Presentation Layer for Authorization
-- **Validate**, to validate the token
+- **Validate**, to validate the token and owners
 
 ## Relations
 

@@ -2,5 +2,6 @@
 
 public enum Validate
 {
-    Token
+    Token,
+    IsOwner
 }
