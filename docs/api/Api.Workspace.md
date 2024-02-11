@@ -43,7 +43,7 @@ POST {{host}}/api/workspaces
 
 #### Create Workspace Request
 
-Sends body data for the new workspace needs to be created.
+Sends body data that the new workspace needs to be created.
 
 ```json
 {
@@ -55,6 +55,33 @@ Sends body data for the new workspace needs to be created.
 #### Create Workspace Response
 
 Returns the newly created workspace [Dto](dto/Dto.Workspace.md).
+
+### Update
+
+Only member or admin users that are part of the workspace can update it
+([Update Workspace Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/workspaces
+```
+
+#### Update Workspace Request
+
+Sends body data that the new workspace needs to be updated.
+<br>
+All parameters are optional except the id.
+
+```json
+{
+  "id": "88882448-bd63-4731-8a05-f6333b6d22e2",
+  "name": "Workspace Name",
+  "description": "This is the new description of the workspace"
+}
+```
+
+#### Update Workspace Response
+
+Returns the new workspace [Dto](dto/Dto.Workspace.md).
 
 ### Delete
 

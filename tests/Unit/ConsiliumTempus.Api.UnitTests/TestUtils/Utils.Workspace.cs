@@ -1,6 +1,10 @@
 ﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
+using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
+using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Domain.Workspace;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +14,14 @@ internal static partial class Utils
 {
     internal static class Workspace
     {
+        internal static bool AssertGetQuery(
+            GetWorkspaceQuery query,
+            GetWorkspaceRequest request)
+        {
+            query.Id.Should().Be(request.Id);
+            return true;
+        }
+        
         internal static bool AssertCreateCommand(
             CreateWorkspaceCommand command,
             CreateWorkspaceRequest request,
@@ -18,6 +30,16 @@ internal static partial class Utils
             command.Name.Should().Be(request.Name);
             command.Description.Should().Be(request.Description);
             command.Token.Should().Be(token);
+            return true;
+        }
+        
+        internal static bool AssertUpdateCommand(
+            UpdateWorkspaceCommand command,
+            UpdateWorkspaceRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.Name.Should().Be(request.Name);
+            command.Description.Should().Be(request.Description);
             return true;
         }
 

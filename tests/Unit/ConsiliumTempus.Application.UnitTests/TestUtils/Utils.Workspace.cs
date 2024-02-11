@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
+using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
@@ -19,6 +20,8 @@ internal static partial class Utils
         {
             workspace.Name.Should().Be(command.Name);
             workspace.Description.Should().Be(command.Description);
+            workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.Memberships.Should().HaveCount(1);
             workspace.Memberships[0].Id.Should().Be((user.Id, workspace.Id));
             workspace.Memberships[0].User.Should().Be(user);
@@ -28,10 +31,23 @@ internal static partial class Utils
             workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             return true;
         }
-
-        internal static bool AssertWorkspaceId(WorkspaceId workspaceId, Guid id)
+        
+        internal static void AssertFromUpdateCommand(
+            WorkspaceAggregate workspace,
+            UpdateWorkspaceCommand command,
+            WorkspaceAggregate oldWorkspace)
         {
-            workspaceId.Should().Be(WorkspaceId.Create(id));
+            workspace.Id.Value.Should().Be(command.Id);
+            workspace.Name.Should().Be(command.Name);
+            workspace.Description.Should().Be(command.Description);
+            workspace.CreatedDateTime.Should().NotBe(workspace.UpdatedDateTime);
+            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            workspace.Memberships.Should().BeEquivalentTo(oldWorkspace.Memberships);
+        }
+
+        internal static bool AssertWorkspaceId(WorkspaceId workspaceId, Guid expectedId)
+        {
+            workspaceId.Should().Be(WorkspaceId.Create(expectedId));
             return true;
         }
 

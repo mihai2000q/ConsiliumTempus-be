@@ -2,9 +2,11 @@
 using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
+using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Domain.Common.Enums;
 using MapsterMapper;
@@ -39,6 +41,19 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
         return Ok(Mapper.Map<WorkspaceDto>(result));
     }
+    
+    [HasPermission(Permissions.UpdateWorkspace)]
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] UpdateWorkspaceRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateWorkspaceCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateResult => Ok(Mapper.Map<WorkspaceDto>(updateResult)),
+            Problem
+        );
+    }
 
     [HasPermission(Permissions.DeleteWorkspace)]
     [HttpDelete("{id:guid}")]
@@ -48,7 +63,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            getResult => Ok(Mapper.Map<WorkspaceDto>(getResult)),
+            deleteResult => Ok(Mapper.Map<WorkspaceDto>(deleteResult)),
             Problem
         );
     }
