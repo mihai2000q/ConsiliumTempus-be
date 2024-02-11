@@ -1,6 +1,4 @@
-﻿using ConsiliumTempus.Domain.User;
-
-namespace ConsiliumTempus.Api.Contracts.User.Update;
+﻿namespace ConsiliumTempus.Api.Contracts.User.Update;
 
 public sealed record UpdateUserRequest(
     Guid Id,

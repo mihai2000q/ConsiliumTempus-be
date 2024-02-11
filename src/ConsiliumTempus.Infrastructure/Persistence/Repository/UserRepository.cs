@@ -23,8 +23,13 @@ public sealed class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRe
             cancellationToken);
     }
 
-    public async Task Add(UserAggregate userAggregate, CancellationToken cancellationToken = default)
+    public async Task Add(UserAggregate user, CancellationToken cancellationToken = default)
     {
-        await dbContext.AddAsync(userAggregate, cancellationToken);
+        await dbContext.AddAsync(user, cancellationToken);
+    }
+
+    public void Remove(UserAggregate user)
+    {
+        dbContext.Remove(user);
     }
 }

@@ -117,7 +117,7 @@ DELETE {{host}}/api/workspaces/{id}
 
 #### Delete Workspace Request
 
-Sends the id of the object inside the route request.
+Sends the id of the workspace inside the route request.
 
 #### Delete Workspace Response
 

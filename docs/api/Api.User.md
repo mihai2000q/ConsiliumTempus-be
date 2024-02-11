@@ -29,3 +29,22 @@ All parameters are optional except the id.
 #### Update User Response
 
 Returns the new user [Dto](dto/Dto.User.md).
+
+
+### Delete
+
+Only the owner of this endpoint (the user in question) can update their data.
+
+```js
+DELETE {{host}}/api/users/{id}
+```
+
+- **id** is a 36 characters strings
+
+#### Delete User Request
+
+Sends the id of the user inside the route request.
+
+#### Delete User Response
+
+Returns the user [Dto](dto/Dto.User.md).

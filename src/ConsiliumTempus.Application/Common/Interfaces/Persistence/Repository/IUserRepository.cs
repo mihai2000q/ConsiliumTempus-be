@@ -9,5 +9,7 @@ public interface IUserRepository
     
     Task<UserAggregate?> GetUserByEmail(string email, CancellationToken cancellationToken = default);
 
-    Task Add(UserAggregate userAggregate, CancellationToken cancellationToken = default);
+    Task Add(UserAggregate user, CancellationToken cancellationToken = default);
+
+    void Remove(UserAggregate user);
 }
