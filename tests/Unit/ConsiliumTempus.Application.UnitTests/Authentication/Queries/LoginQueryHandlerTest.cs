@@ -35,7 +35,8 @@ public class LoginQueryHandlerTest
         const string hashedPassword = "This is the has for Password123";
 
         var user = Mock.Mock.User.CreateMock(password: hashedPassword);
-        _userRepository.Setup(u => u.GetUserByEmail(query.Email.ToLower()))
+        _userRepository.Setup(u => 
+                u.GetUserByEmail(query.Email.ToLower(), default))
             .ReturnsAsync(user);
 
         _scrambler.Setup(s => s.VerifyPassword(query.Password, hashedPassword))
@@ -49,8 +50,12 @@ public class LoginQueryHandlerTest
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _userRepository.Verify(u => u.GetUserByEmail(It.IsAny<string>()), Times.Once());
-        _jwtTokenGenerator.Verify(j => j.GenerateToken(It.IsAny<UserAggregate>()), Times.Once());
+        _userRepository.Verify(u => 
+            u.GetUserByEmail(It.IsAny<string>(), default), 
+            Times.Once());
+        _jwtTokenGenerator.Verify(j => 
+            j.GenerateToken(It.IsAny<UserAggregate>()),
+            Times.Once());
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(mockToken);
@@ -68,7 +73,9 @@ public class LoginQueryHandlerTest
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _userRepository.Verify(u => u.GetUserByEmail(query.Email.ToLower()), Times.Once());
+        _userRepository.Verify(u => 
+            u.GetUserByEmail(query.Email.ToLower(), default), 
+            Times.Once());
 
         outcome.IsError.Should().BeTrue();
         outcome.Errors.Should().HaveCount(1);
@@ -86,7 +93,7 @@ public class LoginQueryHandlerTest
             "Password123");
 
         var user = Mock.Mock.User.CreateMock(query.Email);
-        _userRepository.Setup(u => u.GetUserByEmail(query.Email))
+        _userRepository.Setup(u => u.GetUserByEmail(query.Email, default))
             .ReturnsAsync(user);
 
         _scrambler.Setup(s => s.VerifyPassword(query.Password, It.IsAny<string>()))
@@ -96,7 +103,9 @@ public class LoginQueryHandlerTest
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _userRepository.Verify(u => u.GetUserByEmail(It.IsAny<string>()), Times.Once());
+        _userRepository.Verify(u =>
+            u.GetUserByEmail(It.IsAny<string>(), default),
+            Times.Once());
 
         outcome.IsError.Should().BeTrue();
         outcome.Errors.Should().HaveCount(1);

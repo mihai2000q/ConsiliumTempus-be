@@ -2,9 +2,9 @@
 
 namespace ConsiliumTempus.Api.UnitTests.Mock;
 
-public static partial class Mock
+internal static partial class Mock
 {
-    public static class Workspace
+    internal static class Workspace
     {
         public static WorkspaceAggregate CreateMock(
             string name = "Workspace Name",

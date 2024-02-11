@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Authentication.Queries.Login;
 
-public class LoginQueryHandler(
+public sealed class LoginQueryHandler(
     IUserRepository userRepository,
     IScrambler scrambler,
     IJwtTokenGenerator jwtTokenGenerator)
@@ -14,7 +14,7 @@ public class LoginQueryHandler(
 {
     public async Task<ErrorOr<LoginResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
     {
-        var user = await userRepository.GetUserByEmail(query.Email.ToLower());
+        var user = await userRepository.GetUserByEmail(query.Email.ToLower(), cancellationToken);
         if (user is null) return Errors.Authentication.InvalidCredentials;
 
         var isPasswordEqual = scrambler.VerifyPassword(query.Password, user.Credentials.Password);

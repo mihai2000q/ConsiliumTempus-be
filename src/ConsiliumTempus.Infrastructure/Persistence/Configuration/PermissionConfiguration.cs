@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
 
-public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
+public sealed class PermissionConfiguration : IEntityTypeConfiguration<Permission>
 {
     public void Configure(EntityTypeBuilder<Permission> builder)
     {

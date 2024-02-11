@@ -5,7 +5,7 @@ namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 
 public interface IWorkspaceRepository
 {
-    Task<WorkspaceAggregate?> Get(WorkspaceId id);
+    Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default);
         
-    Task Add(WorkspaceAggregate workspace);
+    Task Add(WorkspaceAggregate workspace, CancellationToken cancellationToken = default);
 }

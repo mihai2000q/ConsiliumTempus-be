@@ -6,16 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
-public static partial class Utils
+internal static partial class Utils
 {
-    public static IMapper GetMapper<TMappingConfig>()
+    internal static IMapper GetMapper<TMappingConfig>()
     {
         var config = TypeAdapterConfig.GlobalSettings;
         config.Scan(typeof(TMappingConfig).Assembly);
         return new Mapper(config);
     }
 
-    public static Mock<HttpContext> ResolveHttpContext(ApiController controller)
+    internal static Mock<HttpContext> ResolveHttpContext(ApiController controller)
     {
         Mock<HttpContext> httpContext = new();
         controller.ControllerContext.HttpContext = httpContext.Object;
@@ -24,7 +24,7 @@ public static partial class Utils
         return httpContext;
     }
 
-    public static void ValidateError(this IActionResult response, int statusCode, string title)
+    internal static void ValidateError(this IActionResult response, int statusCode, string title)
     {
         response.Should().BeOfType<ObjectResult>();
         ((ObjectResult)response).Value.Should().BeOfType<ProblemDetails>();

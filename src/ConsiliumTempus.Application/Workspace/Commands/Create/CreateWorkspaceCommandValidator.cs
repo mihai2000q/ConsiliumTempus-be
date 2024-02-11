@@ -1,9 +1,11 @@
-﻿using ConsiliumTempus.Domain.Common.Validation;
+﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
-public class CreateWorkspaceCommandValidator : AbstractValidator<CreateWorkspaceCommand>
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+public sealed class CreateWorkspaceCommandValidator : AbstractValidator<CreateWorkspaceCommand>
 {
     public CreateWorkspaceCommandValidator()
     {

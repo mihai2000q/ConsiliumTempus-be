@@ -5,13 +5,13 @@ using ConsiliumTempus.Domain.User.ValueObjects;
 
 namespace ConsiliumTempus.Application.Common.Security;
 
-public class Security(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository) : ISecurity
+public sealed class Security(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository) : ISecurity
 {
-    public async Task<UserAggregate> GetUserFromToken(string plainToken)
+    public async Task<UserAggregate> GetUserFromToken(string plainToken, CancellationToken cancellationToken = default)
     {
         var jwtUserId = jwtTokenGenerator.GetUserIdFromToken(plainToken);
         var userId = UserId.Create(jwtUserId);
-        var user = await userRepository.Get(userId);
+        var user = await userRepository.Get(userId, cancellationToken);
         return user!;
     }
 }

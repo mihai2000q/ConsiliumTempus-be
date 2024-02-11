@@ -13,14 +13,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace ConsiliumTempus.Api.Controllers;
 
 [Route("api/workspaces")]
-public class WorkspaceController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
+public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
     [HasPermission(Permissions.ReadWorkspace)]
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(GetWorkspaceRequest request)
+    public async Task<IActionResult> Get(GetWorkspaceRequest request, CancellationToken cancellationToken)
     {
         var query = Mapper.Map<GetWorkspaceQuery>(request);
-        var result = await Mediator.Send(query);
+        var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
             getResult => Ok(Mapper.Map<WorkspaceDto>(getResult)),
@@ -29,13 +29,13 @@ public class WorkspaceController(IMapper mapper, ISender mediator) : ApiControll
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> Create(CreateWorkspaceRequest request)
+    public async Task<IActionResult> Create(CreateWorkspaceRequest request, CancellationToken cancellationToken)
     {
         var token = GetToken();
         var command = Mapper.From(request)
             .AddParameters(WorkspaceMappingConfig.Token, token)
             .AdaptToType<CreateWorkspaceCommand>();
-        var result = await Mediator.Send(command);
+        var result = await Mediator.Send(command, cancellationToken);
 
         return Ok(Mapper.Map<WorkspaceDto>(result));
     }

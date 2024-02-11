@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
-public class AuthenticationControllerTest
+public sealed class AuthenticationControllerTest
 {
     #region Setup
 
@@ -47,7 +47,7 @@ public class AuthenticationControllerTest
             .ReturnsAsync(result);
 
         // Act
-        var outcome = await _uut.Register(request);
+        var outcome = await _uut.Register(request, default);
 
         // Assert
         _mediator.Verify(m => m.Send(
@@ -76,7 +76,7 @@ public class AuthenticationControllerTest
             .ReturnsAsync(Errors.User.DuplicateEmail);
 
         // Act
-        var outcome = await _uut.Register(request);
+        var outcome = await _uut.Register(request, default);
 
         // Assert
         _mediator.Verify(m => m.Send(
@@ -100,7 +100,7 @@ public class AuthenticationControllerTest
             .ReturnsAsync(result);
 
         // Act
-        var outcome = await _uut.Login(request);
+        var outcome = await _uut.Login(request, default);
 
         // Assert
         _mediator.Verify(m => m.Send(
@@ -127,7 +127,7 @@ public class AuthenticationControllerTest
             .ReturnsAsync(Errors.Authentication.InvalidCredentials);
 
         // Act
-        var outcome = await _uut.Login(request);
+        var outcome = await _uut.Login(request, default);
 
         // Assert
         _mediator.Verify(m => m.Send(

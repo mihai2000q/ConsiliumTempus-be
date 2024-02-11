@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
-public record CreateWorkspaceCommand(
+public sealed record CreateWorkspaceCommand(
     string Name,
     string Description,
     string Token) : IRequest<CreateWorkspaceResult>;

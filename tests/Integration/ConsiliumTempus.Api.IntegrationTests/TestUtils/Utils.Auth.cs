@@ -5,11 +5,11 @@ using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
-public static partial class Utils
+internal static partial class Utils
 {
-    public static class Auth
+    internal static class Auth
     {
-        public static void AssertToken(string? token, JwtSettings jwtSettings, string email)
+        internal static void AssertToken(string? token, JwtSettings jwtSettings, string email)
         {
             var handler = new JwtSecurityTokenHandler();
             
@@ -36,7 +36,7 @@ public static partial class Utils
                 .Should().NotBeNullOrWhiteSpace();
         }
         
-        public static void AssertToken(string? token, JwtSettings jwtSettings, 
+        internal static void AssertToken(string? token, JwtSettings jwtSettings, 
             string email, string firstName, string lastName)
         {
             var handler = new JwtSecurityTokenHandler();

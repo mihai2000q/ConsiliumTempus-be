@@ -3,11 +3,11 @@ using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
-public static partial class Utils
+internal static partial class Utils
 {
-    public static class Membership
+    internal static class Membership
     {
-        public static void Assert(
+        internal static void Assert(
             Domain.Common.Entities.Membership membership,
             UserAggregate user,
             string workspaceName,

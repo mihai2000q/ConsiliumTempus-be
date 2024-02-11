@@ -2,4 +2,4 @@
 
 namespace ConsiliumTempus.Application.Workspace.Queries.Get;
 
-public record GetWorkspaceResult(WorkspaceAggregate Workspace);
+public sealed record GetWorkspaceResult(WorkspaceAggregate Workspace);

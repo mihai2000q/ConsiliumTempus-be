@@ -2,4 +2,4 @@
 
 namespace ConsiliumTempus.Domain.User.Events;
 
-public record UserRegistered(UserAggregate User) : IDomainEvent;
+public sealed record UserRegistered(UserAggregate User) : IDomainEvent;

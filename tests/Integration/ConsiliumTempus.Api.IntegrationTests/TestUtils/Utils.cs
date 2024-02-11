@@ -7,16 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
-public static partial class Utils
+internal static partial class Utils
 {
-    private static readonly Dictionary<HttpStatusCode, int> StatusCodesMap = new()
+    internal static readonly Dictionary<HttpStatusCode, int> StatusCodesMap = new()
     {
         { HttpStatusCode.Unauthorized, StatusCodes.Status401Unauthorized },
         { HttpStatusCode.NotFound, StatusCodes.Status404NotFound },
         { HttpStatusCode.Conflict, StatusCodes.Status409Conflict }
     };
     
-    public static async Task ValidateError(this HttpResponseMessage response, HttpStatusCode statusCode, string title)
+    internal static async Task ValidateError(this HttpResponseMessage response, HttpStatusCode statusCode, string title)
     {
         response.StatusCode.Should().Be(statusCode);
 

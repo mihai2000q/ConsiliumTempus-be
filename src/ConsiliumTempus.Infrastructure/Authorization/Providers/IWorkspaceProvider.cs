@@ -5,5 +5,5 @@ namespace ConsiliumTempus.Infrastructure.Authorization.Providers;
 
 public interface IWorkspaceProvider
 {
-    Task<WorkspaceAggregate?> Get(WorkspaceId id);
+    Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default);
 }

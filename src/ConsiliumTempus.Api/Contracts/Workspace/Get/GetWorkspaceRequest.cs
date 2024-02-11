@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.Contracts.Workspace.Get;
 
-public class GetWorkspaceRequest
+public sealed class GetWorkspaceRequest
 {
-    [FromRoute] 
+    [FromRoute]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public string Id { get; set; } = string.Empty;
 }

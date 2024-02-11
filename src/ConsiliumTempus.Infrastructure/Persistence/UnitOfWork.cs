@@ -3,7 +3,7 @@ using ConsiliumTempus.Infrastructure.Persistence.Database;
 
 namespace ConsiliumTempus.Infrastructure.Persistence;
 
-public class UnitOfWork(ConsiliumTempusDbContext dbContext) : IUnitOfWork
+public sealed class UnitOfWork(ConsiliumTempusDbContext dbContext) : IUnitOfWork
 {
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {

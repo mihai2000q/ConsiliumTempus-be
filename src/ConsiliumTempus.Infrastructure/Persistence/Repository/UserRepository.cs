@@ -7,20 +7,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRepository, IUserProvider
+public sealed class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRepository, IUserProvider
 {
-    public async Task<UserAggregate?> Get(UserId id)
+    public async Task<UserAggregate?> Get(UserId id, CancellationToken cancellationToken = default)
     {   
-        return await dbContext.Users.SingleOrDefaultAsync(u => u.Id == id);
+        return await dbContext.Users.SingleOrDefaultAsync(
+            u => u.Id == id, 
+            cancellationToken);
     }
 
-    public async Task<UserAggregate?> GetUserByEmail(string email)
+    public async Task<UserAggregate?> GetUserByEmail(string email, CancellationToken cancellationToken = default)
     {
-        return await dbContext.Users.SingleOrDefaultAsync(u => u.Credentials.Email == email);
+        return await dbContext.Users.SingleOrDefaultAsync(
+            u => u.Credentials.Email == email,
+            cancellationToken);
     }
 
-    public async Task Add(UserAggregate userAggregate)
+    public async Task Add(UserAggregate userAggregate, CancellationToken cancellationToken = default)
     {
-        await dbContext.AddAsync(userAggregate);
+        await dbContext.AddAsync(userAggregate, cancellationToken);
     }
 }

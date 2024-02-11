@@ -1,5 +1,7 @@
-﻿using ConsiliumTempus.Api.Common;
+﻿using System.Reflection;
 using ConsiliumTempus.Api.Common.Errors;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Serilog;
 
@@ -25,5 +27,15 @@ public static class DependencyInjection
             .CreateLogger();
 
         logging.AddSerilog(logger);
+    }
+    
+    private static IServiceCollection AddMappings(this IServiceCollection services)
+    {
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(Assembly.GetExecutingAssembly());
+
+        services.AddSingleton(config);
+        services.AddScoped<IMapper, ServiceMapper>();
+        return services;
     }
 }

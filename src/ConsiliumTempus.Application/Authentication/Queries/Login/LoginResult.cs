@@ -1,4 +1,4 @@
 ﻿namespace ConsiliumTempus.Application.Authentication.Queries.Login;
 
-public record LoginResult(
+public sealed record LoginResult(
     string Token);

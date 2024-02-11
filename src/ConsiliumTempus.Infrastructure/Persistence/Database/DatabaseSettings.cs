@@ -1,6 +1,6 @@
 ﻿namespace ConsiliumTempus.Infrastructure.Persistence.Database;
 
-public class DatabaseSettings
+public sealed class DatabaseSettings
 {
     public const string SectionName = "DatabaseSettings";
     public string Server { get; init; } = string.Empty;

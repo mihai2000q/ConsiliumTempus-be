@@ -3,9 +3,9 @@ using System.Security.Claims;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.Mock;
 
-public static partial class Mock
+internal static partial class Mock
 {
-    public static class Token
+    internal static class Token
     {
         public static string CreateMock(params (string, string)[] claims)
         {

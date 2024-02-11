@@ -1,9 +1,11 @@
-﻿using ConsiliumTempus.Application.Common.Validation;
+﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Application.Common.Validation;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.Workspace.Queries.Get;
 
-public class GetWorkspaceQueryValidator : AbstractValidator<GetWorkspaceQuery>
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+public sealed class GetWorkspaceQueryValidator : AbstractValidator<GetWorkspaceQuery>
 {
     public GetWorkspaceQueryValidator()
     {

@@ -5,11 +5,11 @@ using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
-public static partial class Utils
+internal static partial class Utils
 {
-    public static class Workspace
+    internal static class Workspace
     {
-        public static async Task AssertDtoFromResponse(
+        internal static async Task AssertDtoFromResponse(
             HttpResponseMessage response,
             string name,
             string description)

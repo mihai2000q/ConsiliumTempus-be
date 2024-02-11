@@ -1,9 +1,11 @@
-﻿using ConsiliumTempus.Application.Common.Validation;
+﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Application.Common.Validation;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.Authentication.Queries.Login;
 
-public class LoginQueryValidator : AbstractValidator<LoginQuery>
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+public sealed class LoginQueryValidator : AbstractValidator<LoginQuery>
 {
     public LoginQueryValidator()
     {

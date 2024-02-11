@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
 
-public class WorkspaceRoleHasPermissionConfiguration : IEntityTypeConfiguration<WorkspaceRoleHasPermission>
+public sealed class WorkspaceRoleHasPermissionConfiguration : IEntityTypeConfiguration<WorkspaceRoleHasPermission>
 {
     public void Configure(EntityTypeBuilder<WorkspaceRoleHasPermission> builder)
     {

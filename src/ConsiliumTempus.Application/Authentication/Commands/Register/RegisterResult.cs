@@ -1,4 +1,4 @@
 ﻿namespace ConsiliumTempus.Application.Authentication.Commands.Register;
 
-public record RegisterResult(
+public sealed record RegisterResult(
     string Token);

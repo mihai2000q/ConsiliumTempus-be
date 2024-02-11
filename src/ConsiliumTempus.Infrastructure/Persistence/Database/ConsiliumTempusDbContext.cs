@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Database;
 
-public class ConsiliumTempusDbContext(
+public sealed class ConsiliumTempusDbContext(
     PublishDomainEventInterceptor publishDomainEventInterceptor,
     DbContextOptions<ConsiliumTempusDbContext> options)
     : DbContext(options)

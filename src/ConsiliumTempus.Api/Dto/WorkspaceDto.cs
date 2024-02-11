@@ -1,6 +1,9 @@
-﻿namespace ConsiliumTempus.Api.Dto;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public record WorkspaceDto(
+namespace ConsiliumTempus.Api.Dto;
+
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+public sealed record WorkspaceDto(
     string Id,
     string Name,
     string Description);

@@ -7,28 +7,25 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
-public class CreateWorkspaceCommandHandler(
+public sealed class CreateWorkspaceCommandHandler(
     ISecurity security,
     IWorkspaceRepository workspaceRepository,
-    IWorkspaceRoleRepository workspaceRoleRepository,
     IUnitOfWork unitOfWork)
     : IRequestHandler<CreateWorkspaceCommand, CreateWorkspaceResult>
 {
     public async Task<CreateWorkspaceResult> Handle(CreateWorkspaceCommand command,
         CancellationToken cancellationToken)
     {
-        var user = await security.GetUserFromToken(command.Token);
-        
+        var user = await security.GetUserFromToken(command.Token, cancellationToken);
+
         var workspace = WorkspaceAggregate.Create(
             command.Name,
             command.Description);
+        await workspaceRepository.Add(workspace, cancellationToken);
 
-        var role = WorkspaceRole.Admin;
-        workspaceRoleRepository.Attach(role);
-        var membership = Membership.Create(user, workspace, role);
+        var membership = Membership.Create(user, workspace, WorkspaceRole.Admin);
         workspace.AddUserMembership(membership);
-        
-        await workspaceRepository.Add(workspace);
+
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new CreateWorkspaceResult(workspace);

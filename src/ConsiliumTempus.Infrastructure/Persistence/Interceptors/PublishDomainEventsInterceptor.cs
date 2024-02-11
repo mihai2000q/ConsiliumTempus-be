@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 
-public class PublishDomainEventInterceptor(IPublisher mediator) : SaveChangesInterceptor
+public sealed class PublishDomainEventInterceptor(IPublisher mediator) : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,
@@ -28,21 +28,26 @@ public class PublishDomainEventInterceptor(IPublisher mediator) : SaveChangesInt
     {
         if (dbContext is null) return;
 
-        // Get hold of all the various entities
-        var entitiesWithDomainEvents = dbContext.ChangeTracker.Entries<IHasDomainEvents>()
-            .Where(entry => entry.Entity.DomainEvents.Any())
-            .Select(entry => entry.Entity)
-            .ToList();
+        List<IHasDomainEvents> entitiesWithDomainEvents;
+        // loop for domain events within domain events
+        do
+        {
+            // Get hold of all the various entities
+            entitiesWithDomainEvents = dbContext.ChangeTracker.Entries<IHasDomainEvents>()
+                .Where(entry => entry.Entity.DomainEvents.Any())
+                .Select(entry => entry.Entity)
+                .ToList();
 
-        // Get hold of all the various domain events
-        var domainEvents = entitiesWithDomainEvents
-            .SelectMany(entry => entry.DomainEvents)
-            .ToList();
+            // Get hold of all the various domain events
+            var domainEvents = entitiesWithDomainEvents
+                .SelectMany(entry => entry.DomainEvents)
+                .ToList();
 
-        // Clear domain events
-        entitiesWithDomainEvents.ForEach(entity => entity.ClearDomainEvents());
+            // Clear domain events
+            entitiesWithDomainEvents.ForEach(entity => entity.ClearDomainEvents());
 
-        // Publish domain events
-        foreach (var domainEvent in domainEvents) await mediator.Publish(domainEvent);
+            // Publish domain events
+            foreach (var domainEvent in domainEvents) await mediator.Publish(domainEvent);
+        } while (entitiesWithDomainEvents.Count > 0);
     }
 }
