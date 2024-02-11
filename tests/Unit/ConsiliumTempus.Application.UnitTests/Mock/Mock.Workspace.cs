@@ -6,7 +6,7 @@ internal static partial class Mock
 {
     internal static class Workspace
     {
-        public static WorkspaceAggregate CreateMock(
+        internal static WorkspaceAggregate CreateMock(
             string name = "Workspace Name",
             string description = "This is the Workspace Description")
         {
