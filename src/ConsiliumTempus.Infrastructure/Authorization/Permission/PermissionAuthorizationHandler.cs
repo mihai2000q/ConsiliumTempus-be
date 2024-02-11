@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Domain.User.ValueObjects;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Authorization.Providers;
 using Microsoft.AspNetCore.Authorization;
@@ -43,12 +45,18 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         HttpRequest request,
         IWorkspaceProvider workspaceProvider)
     {
-        var stringId = request.Method switch
+        var stringId = request.RouteValues["controller"] switch
         {
-            "GET" => GetFromGetRequestWorkspaceStringId(request),
-            "DELETE" => GetFromDeleteRequestWorkspaceStringId(request),
+            Controllers.Workspace => request.Method switch
+            {
+                HttpRequestType.GET => GetStringIdFromRoute(request),
+                HttpRequestType.PUT => await GetStringIdFromBody(request),
+                HttpRequestType.DELETE => GetStringIdFromRoute(request),
+                _ => null
+            },
             _ => null
         };
+
         if (string.IsNullOrWhiteSpace(stringId)) return null;
 
         var workspaceId = WorkspaceId.Create(stringId);
@@ -59,31 +67,40 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             : new WorkspaceIdResponse(workspaceId, false);
     }
 
-    private static string? GetFromGetRequestWorkspaceStringId(HttpRequest request)
+    private static string? GetStringIdFromRoute(HttpRequest request)
     {
-        if (request.RouteValues["controller"]?.Equals("Workspace") == true &&
-            !string.IsNullOrEmpty((string?)request.RouteValues["id"]))
-        {
-            return (string?)request.RouteValues["id"];
-        }
+        var id = (string?)request.RouteValues["id"];
 
-        return null;
+        return !string.IsNullOrEmpty(id) ? id : null;
     }
-    
-    private static string? GetFromDeleteRequestWorkspaceStringId(HttpRequest request)
-    {
-        if (request.RouteValues["controller"]?.Equals("Workspace") == true &&
-            !string.IsNullOrEmpty((string?)request.RouteValues["id"]))
-        {
-            return (string?)request.RouteValues["id"];
-        }
 
-        return null;
+    private static async Task<string?> GetStringIdFromBody(HttpRequest request)
+    {
+        request.EnableBuffering();
+        var body = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(request.Body);
+        request.Body.Position = 0;
+        
+        var id = body?["id"] ?? "";
+        return !string.IsNullOrEmpty(id) ? id : null;
     }
 
     private class WorkspaceIdResponse(WorkspaceId workspaceId, bool notFound)
     {
         internal WorkspaceId WorkspaceId { get; } = workspaceId;
         internal bool NotFound { get; } = notFound;
+    }
+
+    private static class Controllers
+    {
+        public const string Workspace = "Workspace";
+    }
+
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    private static class HttpRequestType
+    {
+        public const string GET = "GET";
+        public const string POST = "POST";
+        public const string PUT = "PUT";
+        public const string DELETE = "DELETE";
     }
 }
