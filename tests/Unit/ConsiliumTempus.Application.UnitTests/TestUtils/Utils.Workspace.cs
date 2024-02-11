@@ -1,7 +1,6 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
-using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;

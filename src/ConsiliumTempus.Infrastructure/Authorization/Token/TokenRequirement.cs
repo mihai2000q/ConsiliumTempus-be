@@ -2,4 +2,4 @@
 
 namespace ConsiliumTempus.Infrastructure.Authorization.Token;
 
-public sealed class TokenRequirement : IAuthorizationRequirement;
+public sealed record TokenRequirement : IAuthorizationRequirement;
