@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
+using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Domain.Common.Errors;
 using MediatR;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
-public sealed class WorkspaceControllerTest
+public class WorkspaceControllerTest
 {
     #region Setup
 
@@ -91,5 +92,39 @@ public sealed class WorkspaceControllerTest
             Times.Once());
 
         Utils.Workspace.AssertDto(outcome, result.Workspace);
+    }
+    
+    [Fact]
+    public async Task DeleteWorkspace_WhenIsSuccessful_ShouldReturnWorkspace()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        
+        var result = new DeleteWorkspaceResult(Mock.Mock.Workspace.CreateMock());
+        _mediator.Setup(m => m.Send(It.IsAny<DeleteWorkspaceCommand>(), default))
+            .ReturnsAsync(result);
+
+        // Act
+        var outcome = await _uut.Delete(id, default);
+
+        // Assert
+        Utils.Workspace.AssertDto(outcome, result.Workspace);
+    }
+
+    [Fact]
+    public async Task DeleteWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator.Setup(m => m.Send(It.IsAny<DeleteWorkspaceCommand>(), default))
+            .ReturnsAsync(error);
+
+        // Act
+        var outcome = await _uut.Delete(id, default);
+
+        // Assert
+        outcome.ValidateError(StatusCodes.Status404NotFound, "Workspace could not be found");
     }
 }

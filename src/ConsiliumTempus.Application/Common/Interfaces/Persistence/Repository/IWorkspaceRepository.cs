@@ -8,4 +8,6 @@ public interface IWorkspaceRepository
     Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default);
         
     Task Add(WorkspaceAggregate workspace, CancellationToken cancellationToken = default);
+
+    void Remove(WorkspaceAggregate workspace);
 }

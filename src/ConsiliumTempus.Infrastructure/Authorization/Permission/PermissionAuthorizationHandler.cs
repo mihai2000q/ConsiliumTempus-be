@@ -45,7 +45,8 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
     {
         var stringId = request.Method switch
         {
-            "GET" => GetRequestWorkspaceStringId(request),
+            "GET" => GetFromGetRequestWorkspaceStringId(request),
+            "DELETE" => GetFromDeleteRequestWorkspaceStringId(request),
             _ => null
         };
         if (string.IsNullOrWhiteSpace(stringId)) return null;
@@ -58,7 +59,18 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             : new WorkspaceIdResponse(workspaceId, false);
     }
 
-    private static string? GetRequestWorkspaceStringId(HttpRequest request)
+    private static string? GetFromGetRequestWorkspaceStringId(HttpRequest request)
+    {
+        if (request.RouteValues["controller"]?.Equals("Workspace") == true &&
+            !string.IsNullOrEmpty((string?)request.RouteValues["id"]))
+        {
+            return (string?)request.RouteValues["id"];
+        }
+
+        return null;
+    }
+    
+    private static string? GetFromDeleteRequestWorkspaceStringId(HttpRequest request)
     {
         if (request.RouteValues["controller"]?.Equals("Workspace") == true &&
             !string.IsNullOrEmpty((string?)request.RouteValues["id"]))

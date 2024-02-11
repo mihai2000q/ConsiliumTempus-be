@@ -7,6 +7,9 @@
   * [Create](#create)
     * [Create Workspace Request](#create-workspace-request)
     * [Create Workspace Response](#create-workspace-response)
+  * [Delete](#create)
+    * [Delete Workspace Request](#delete-workspace-request)
+    * [Delete Workspace Response](#delete-workspace-response)
 
 ## Workspace
 
@@ -52,3 +55,22 @@ Sends body data for the new workspace needs to be created.
 #### Create Workspace Response
 
 Returns the newly created workspace [Dto](dto/Dto.Workspace.md).
+
+### Delete
+
+Only admin users that are part of the workspace can delete it 
+([Delete Workspace Permission](../Security.md/#permissions)).
+
+```js
+DELETE {{host}}/api/workspace/{id}
+```
+
+- **id** is a 36 characters strings
+
+#### Delete Workspace Request
+
+Sends the id of the object inside the route request.
+
+#### Delete Workspace Response
+
+Returns the workspace [Dto](dto/Dto.Workspace.md).

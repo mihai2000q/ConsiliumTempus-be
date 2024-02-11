@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
+using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
@@ -36,10 +37,22 @@ internal static partial class Utils
 
         internal static void AssertGetResult(GetWorkspaceResult result, WorkspaceAggregate workspace)
         {
-            result.Workspace.Id.Should().Be(workspace.Id);
-            result.Workspace.Name.Should().Be(workspace.Name);
-            result.Workspace.Description.Should().Be(workspace.Description);
-            result.Workspace.Memberships.Should().BeEquivalentTo(workspace.Memberships);
+            AssertWorkspace(result.Workspace, workspace);
+        }
+
+        internal static void AssertDeleteResult(DeleteWorkspaceResult result, WorkspaceAggregate workspace)
+        {
+            AssertWorkspace(result.Workspace, workspace);
+        }
+
+        private static void AssertWorkspace(WorkspaceAggregate outcome, WorkspaceAggregate expected)
+        {
+            outcome.Id.Should().Be(expected.Id);
+            outcome.Name.Should().Be(expected.Name);
+            outcome.Description.Should().Be(expected.Description);
+            outcome.CreatedDateTime.Should().BeCloseTo(expected.CreatedDateTime, TimeSpan.FromMinutes(1));
+            outcome.UpdatedDateTime.Should().BeCloseTo(expected.UpdatedDateTime, TimeSpan.FromMinutes(1));
+            outcome.Memberships.Should().BeEquivalentTo(expected.Memberships);
         }
     }
 }

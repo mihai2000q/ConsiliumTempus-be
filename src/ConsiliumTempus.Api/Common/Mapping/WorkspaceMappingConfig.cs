@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
+using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using Mapster;
 
@@ -17,6 +18,7 @@ public sealed class WorkspaceMappingConfig : IRegister
     {
         GetMappings(config);
         CreateMappings(config);
+        DeleteMappings(config);
     }
 
     private static void GetMappings(TypeAdapterConfig config)
@@ -35,6 +37,13 @@ public sealed class WorkspaceMappingConfig : IRegister
                 _ => MapContext.Current!.Parameters[Token]);
         
         config.NewConfig<CreateWorkspaceResult, WorkspaceDto>()
+            .Map(dest => dest, src => src.Workspace)
+            .Map(dest => dest.Id, src => src.Workspace.Id.Value.ToString());
+    }
+
+    private static void DeleteMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<DeleteWorkspaceResult, WorkspaceDto>()
             .Map(dest => dest, src => src.Workspace)
             .Map(dest => dest.Id, src => src.Workspace.Id.Value.ToString());
     }
