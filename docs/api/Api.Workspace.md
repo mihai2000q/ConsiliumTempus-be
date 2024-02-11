@@ -20,7 +20,7 @@ This is the controller that takes care of creating, reading, updating and deleti
 Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
 
 ```js
-GET {{host}}/api/workspace/{id}
+GET {{host}}/api/workspaces/{id}
 ```
 
 - **id** is a 36 characters strings
@@ -38,7 +38,7 @@ Returns the workspace [Dto](dto/Dto.Workspace.md).
 Anyone logged in can create a workspace.
 
 ```js
-POST {{host}}/api/workspace
+POST {{host}}/api/workspaces
 ```
 
 #### Create Workspace Request
@@ -62,7 +62,7 @@ Only admin users that are part of the workspace can delete it
 ([Delete Workspace Permission](../Security.md/#permissions)).
 
 ```js
-DELETE {{host}}/api/workspace/{id}
+DELETE {{host}}/api/workspaces/{id}
 ```
 
 - **id** is a 36 characters strings

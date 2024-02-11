@@ -19,7 +19,7 @@ public class WorkspaceControllerDeleteTest(
         
         // Act
         UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.DeleteAsync($"api/workspace/{id}");
+        var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
         await Utils.Workspace.AssertDtoFromResponse(
@@ -36,7 +36,7 @@ public class WorkspaceControllerDeleteTest(
         
         // Act
         UseCustomToken("stephenc@gmail.com");
-        var outcome = await Client.DeleteAsync($"api/workspace/{id}");
+        var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -50,7 +50,7 @@ public class WorkspaceControllerDeleteTest(
         
         // Act
         UseCustomToken("lebronj@gmail.com");
-        var outcome = await Client.DeleteAsync($"api/workspace/{id}");
+        var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -64,7 +64,7 @@ public class WorkspaceControllerDeleteTest(
         
         // Act
         UseCustomToken("leom@gmail.com");
-        var outcome = await Client.DeleteAsync($"api/workspace/{id}");
+        var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -77,7 +77,7 @@ public class WorkspaceControllerDeleteTest(
         const string id = "20000000-0000-0000-0000-000000000000";
         
         // Act
-        var outcome = await Client.DeleteAsync($"api/workspace/{id}");
+        var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
         await outcome.ValidateError(HttpStatusCode.NotFound, "Workspace could not be found");
