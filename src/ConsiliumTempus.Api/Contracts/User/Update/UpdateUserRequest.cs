@@ -2,5 +2,7 @@
 
 public sealed record UpdateUserRequest(
     Guid Id,
-    string? FirstName,
-    string? LastName);
+    string FirstName,
+    string LastName,
+    string? Role,
+    DateOnly? DateOfBirth);

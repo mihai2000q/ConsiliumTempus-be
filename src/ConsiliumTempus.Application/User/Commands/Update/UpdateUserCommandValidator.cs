@@ -13,9 +13,14 @@ public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCom
             .NotEmpty();
 
         RuleFor(c => c.FirstName)
+            .NotEmpty()
             .MaximumLength(PropertiesValidation.User.FirstNameMaximumLength);
         
         RuleFor(c => c.LastName)
+            .NotEmpty()
             .MaximumLength(PropertiesValidation.User.LastNameMaximumLength);
+
+        RuleFor(c => c.Role)
+            .MaximumLength(PropertiesValidation.User.RoleMaximumLength);
     }
 }

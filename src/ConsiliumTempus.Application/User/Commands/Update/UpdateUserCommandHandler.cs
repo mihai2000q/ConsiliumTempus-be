@@ -21,10 +21,12 @@ public sealed class UpdateUserCommandHandler(
 
         if (user is null) return Errors.User.NotFound;
 
-        var newName = Name.Create(
-            command.FirstName?.Capitalize() ?? user.Name.First,
-            command.LastName?.Capitalize() ?? user.Name.Last);
-        user.Update(newName);
+        user.Update(
+            Name.Create(
+                command.FirstName.Capitalize(),
+                command.LastName.Capitalize()),
+            command.Role,
+            command.DateOfBirth);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
