@@ -23,6 +23,8 @@ internal static partial class Utils
             command.Id.Should().Be(request.Id);
             command.FirstName.Should().Be(request.FirstName);
             command.LastName.Should().Be(request.LastName);
+            command.Role.Should().Be(request.Role);
+            command.DateOfBirth.Should().Be(request.DateOfBirth);
             return true;
         }
         
@@ -42,6 +44,8 @@ internal static partial class Utils
             dto.FirstName.Should().Be(user.Name.First);
             dto.LastName.Should().Be(user.Name.Last);
             dto.Email.Should().Be(user.Credentials.Email);
+            dto.Role.Should().Be(user.Role);
+            dto.DateOfBirth.Should().Be(user.DateOfBirth);
         }
     }
 }

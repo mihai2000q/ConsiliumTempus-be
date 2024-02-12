@@ -15,6 +15,8 @@ internal static partial class Utils
             command.LastName.Should().Be(request.LastName);
             command.Email.Should().Be(request.Email);
             command.Password.Should().Be(request.Password);
+            command.Role.Should().Be(request.Role);
+            command.DateOfBirth.Should().Be(request.DateOfBirth);
             return true;
         }
 

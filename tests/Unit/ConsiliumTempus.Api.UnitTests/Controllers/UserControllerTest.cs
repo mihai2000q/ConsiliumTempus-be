@@ -84,7 +84,9 @@ public class UserControllerTest
         var request = new UpdateUserRequest(
             Guid.NewGuid(),
             "New First Name",
-            "New Last Name");
+            "New Last Name",
+            null,
+            null);
 
         var result = new UpdateUserResult(Mock.Mock.User.CreateMock());
         _mediator.Setup(m => m.Send(It.IsAny<UpdateUserCommand>(), default))
@@ -110,7 +112,9 @@ public class UserControllerTest
         var request = new UpdateUserRequest(
             Guid.NewGuid(),
             "New First Name",
-            "New Last Name");
+            "New Last Name",
+            null,
+            null);
 
         var error = Errors.User.NotFound;
         _mediator.Setup(m => m.Send(It.IsAny<UpdateUserCommand>(), default))

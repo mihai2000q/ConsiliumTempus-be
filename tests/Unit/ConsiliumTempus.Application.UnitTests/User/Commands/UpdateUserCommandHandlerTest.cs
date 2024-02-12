@@ -35,7 +35,9 @@ public class UpdateUserCommandHandlerTest
         var command = new UpdateUserCommand(
             currentUser.Id.Value,
             "New First Name",
-            "New Last Name");
+            "New Last Name",
+            "Footballer",
+            null);
         
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -58,7 +60,9 @@ public class UpdateUserCommandHandlerTest
         var command = new UpdateUserCommand(
             Guid.NewGuid(), 
             "New First Name",
-            "New Last Name");
+            "New Last Name",
+            null,
+            null);
         
         // Act
         var outcome = await _uut.Handle(command, default);

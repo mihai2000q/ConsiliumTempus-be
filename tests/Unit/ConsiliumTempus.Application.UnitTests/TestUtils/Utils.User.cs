@@ -22,6 +22,8 @@ internal static partial class Utils
             result.User.Id.Value.Should().Be(command.Id);
             result.User.Name.First.Should().Be(command.FirstName);
             result.User.Name.Last.Should().Be(command.LastName);
+            result.User.Role.Should().Be(command.Role);
+            result.User.DateOfBirth.Should().Be(command.DateOfBirth);
             result.User.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         }
 
@@ -35,6 +37,8 @@ internal static partial class Utils
             outcome.Id.Should().Be(expected.Id);
             outcome.Name.Should().Be(expected.Name);
             outcome.Credentials.Should().Be(expected.Credentials);
+            outcome.Role.Should().Be(expected.Role);
+            outcome.DateOfBirth.Should().Be(expected.DateOfBirth);
             outcome.CreatedDateTime.Should().BeCloseTo(expected.CreatedDateTime, TimeSpan.FromMinutes(1));
             outcome.UpdatedDateTime.Should().BeCloseTo(expected.UpdatedDateTime, TimeSpan.FromMinutes(1));
             outcome.Memberships.Should().BeEquivalentTo(expected.Memberships);
