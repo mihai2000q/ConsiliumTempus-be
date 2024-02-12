@@ -29,7 +29,7 @@ class User
     "last": "Doe"
   },
   "role": "Software Developer",
-  "dateOfBirth": "2023-12-23",
+  "dateOfBirth": "2000-12-21",
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
   "memberships": [{}]

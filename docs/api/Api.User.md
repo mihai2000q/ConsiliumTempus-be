@@ -47,13 +47,15 @@ PUT {{host}}/api/users
 
 Sends body data that the new workspace needs to be updated.
 <br>
-All parameters are optional except the id.
+*Role* and *Date of Birth* are optional, but the first three are mandatory.
 
 ```json
 {
   "id": "00000000-0000-0000-0000-000000000000",
   "firstName": "New FirstName",
-  "lastName": "New lastName"
+  "lastName": "New lastName",
+  "role": null,
+  "dateOfBirth": "2000-12-21"
 }
 ```
 

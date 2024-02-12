@@ -34,10 +34,12 @@ Sends data needed to create the user in body.
 
 ```json
 {
-    "firstName": "Firsty",
-    "lastName": "Lasty",
-    "email": "FirstLasty@example.com",
-    "password": "password123"
+  "firstName": "Firsty",
+  "lastName": "Lasty",
+  "email": "FirstLasty@example.com",
+  "password": "password123",
+  "role": "Software Developer",
+  "dateOfBirth": "2000-12-21"
 }
 ```
 
