@@ -20,6 +20,7 @@
 
 This is the controller that takes care of creating, reading, updating and deleting a Workspace.
 
+
 ### Get
 
 Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).

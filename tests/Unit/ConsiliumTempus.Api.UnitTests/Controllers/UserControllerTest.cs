@@ -1,9 +1,11 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
+using ConsiliumTempus.Api.Contracts.User.Get;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Delete;
 using ConsiliumTempus.Application.User.Commands.Update;
+using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Domain.Common.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +30,52 @@ public class UserControllerTest
     }
 
     #endregion
+
+    [Fact]
+    public async Task GetUser_WhenIsSuccessful_ShouldReturnUser()
+    {
+        // Arrange
+        var request = new GetUserRequest();
+
+        var user = Mock.Mock.User.CreateMock();
+        _mediator.Setup(m => m.Send(It.IsAny<GetUserQuery>(), default))
+            .ReturnsAsync(user);
+
+        // Act
+        var outcome = await _uut.Get(request, default);
+
+        // Assert
+        _mediator.Verify(m =>
+                m.Send(It.Is<GetUserQuery>(
+                        query => Utils.User.AssertGetQuery(query, request)),
+                    default),
+            Times.Once());
+
+        Utils.User.AssertDto(outcome, user);
+    }
+
+    [Fact]
+    public async Task GetUser_WhenIsNotFound_ShouldReturnNotFoundError()
+    {
+        // Arrange
+        var request = new GetUserRequest();
+
+        var error = Errors.User.NotFound;
+        _mediator.Setup(m => m.Send(It.IsAny<GetUserQuery>(), default))
+            .ReturnsAsync(error);
+
+        // Act
+        var outcome = await _uut.Get(request, default);
+
+        // Assert
+        _mediator.Verify(m =>
+                m.Send(It.Is<GetUserQuery>(
+                        query => Utils.User.AssertGetQuery(query, request)),
+                    default),
+            Times.Once());
+
+        outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
+    }
 
     [Fact]
     public async Task UpdateUser_WhenIsSuccessful_ShouldReturnNewUser()

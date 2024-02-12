@@ -1,6 +1,8 @@
-﻿using ConsiliumTempus.Api.Contracts.User.Update;
+﻿using ConsiliumTempus.Api.Contracts.User.Get;
+using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.User.Commands.Update;
+using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Domain.User;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +12,12 @@ internal static partial class Utils
 {
     internal static class User
     {
+        internal static bool AssertGetQuery(GetUserQuery query, GetUserRequest request)
+        {
+            query.Id.Should().Be(request.Id);
+            return true;
+        }
+        
         internal static bool AssertUpdateCommand(UpdateUserCommand command, UpdateUserRequest request)
         {
             command.Id.Should().Be(request.Id);

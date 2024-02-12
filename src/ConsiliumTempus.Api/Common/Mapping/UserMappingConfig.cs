@@ -1,8 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Api.Contracts.User.Get;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.User.Commands.Delete;
 using ConsiliumTempus.Application.User.Commands.Update;
+using ConsiliumTempus.Application.User.Queries.Get;
+using ConsiliumTempus.Domain.User;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
@@ -12,8 +15,20 @@ public sealed class UserMappingConfig : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
+        GetMappings(config);
         PutMappings(config);
         DeleteMappings(config);
+    }
+
+    private static void GetMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<GetUserRequest, GetUserQuery>();
+        
+        config.NewConfig<UserAggregate, UserDto>()
+            .Map(dest => dest.Id, src => src.Id.Value.ToString())
+            .Map(dest => dest.FirstName, src => src.Name.First)
+            .Map(dest => dest.LastName, src => src.Name.Last)
+            .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 
     private static void PutMappings(TypeAdapterConfig config)

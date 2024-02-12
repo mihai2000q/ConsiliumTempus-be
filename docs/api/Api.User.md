@@ -1,8 +1,39 @@
 # Consilium Tempus API
 
+* [User](#user)
+  * [Get](#get)
+    * [Get User Request](#get-user-request)
+    * [Get User Response](#get-user-response)
+  * [Update](#update)
+    * [Update User Request](#update-user-request)
+    * [Update User Response](#update-user-response)
+  * [Delete](#delete)
+    * [Delete User Request](#delete-user-request)
+    * [Delete User Response](#delete-user-response)
+
 ## User
 
 This is the controller that takes care of reading, updating and deleting a User.
+
+
+### Get
+
+Anyone logged in can read the data of another user.
+
+```js
+GET {{host}}/api/users/{id}
+```
+
+- **id** is a 36 characters strings
+
+#### Get User Request
+
+Sends the id of the user inside the route request.
+
+#### Get User Response
+
+Returns the user [Dto](dto/Dto.User.md).
+
 
 ### Update
 
