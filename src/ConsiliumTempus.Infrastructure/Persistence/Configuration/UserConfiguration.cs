@@ -47,5 +47,8 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
                 .HasColumnName("LastName")
                 .HasMaxLength(PropertiesValidation.User.LastNameMaximumLength);
         });
+
+        builder.Property(u => u.Role)
+            .HasMaxLength(PropertiesValidation.User.RoleMaximumLength);
     }
 }
