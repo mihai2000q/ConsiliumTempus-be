@@ -66,6 +66,7 @@ have a route similar to its name and have the methods in the following order:
 Below, you will find complete documentation on each Controller of the Api Layer:
 - [Authentication](api/Api.Auth.md)
 - [Workspace](api/Api.Workspace.md)
+- [User](api/Api.User.md)
 
 ## Dto
 

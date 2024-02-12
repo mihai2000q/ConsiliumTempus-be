@@ -10,6 +10,7 @@ class User
 {
     User Create()
     User Register()
+    void Update()
     void AddWorkspaceMembership()
 }
 ```
@@ -27,6 +28,8 @@ class User
     "first": "Tiffany",
     "last": "Doe"
   },
+  "role": "Software Developer",
+  "dateOfBirth": "2000-12-21",
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
   "memberships": [{}]
@@ -46,10 +49,12 @@ For database design, check out the [User Diagram](../diagrams/aggregates/Diagram
 - The **Last Name** cannot be longer than 100 characters
 - The **Email** cannot be longer than 100 characters
 - The plain **Password** cannot be longer than 100 characters
+- The **Role** cannot be longer than 50 characters
 
 ### Domain Errors
 
 - **Duplicate Email** when the email is already in use
+- **Not Found** when the user cannot be found
 
 ### Domain Events
 

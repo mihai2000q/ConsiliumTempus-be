@@ -7,4 +7,6 @@ public sealed record RegisterCommand(
     string FirstName,
     string LastName,
     string Email,
-    string Password) : IRequest<ErrorOr<RegisterResult>>;
+    string Password,
+    string? Role,
+    DateOnly? DateOfBirth) : IRequest<ErrorOr<RegisterResult>>;

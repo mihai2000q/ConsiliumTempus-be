@@ -29,7 +29,9 @@ public sealed class RegisterCommandHandler(
             Credentials.Create(email, password),
             Name.Create(
                 command.FirstName.Capitalize(),
-                command.LastName.Capitalize()));
+                command.LastName.Capitalize()),
+            command.Role,
+            command.DateOfBirth);
         await userRepository.Add(user, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

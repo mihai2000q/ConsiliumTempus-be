@@ -1,0 +1,55 @@
+﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Api.Contracts.User.Get;
+using ConsiliumTempus.Api.Contracts.User.Update;
+using ConsiliumTempus.Api.Dto;
+using ConsiliumTempus.Application.User.Commands.Delete;
+using ConsiliumTempus.Application.User.Commands.Update;
+using ConsiliumTempus.Application.User.Queries.Get;
+using ConsiliumTempus.Domain.User;
+using Mapster;
+
+namespace ConsiliumTempus.Api.Common.Mapping;
+
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+public sealed class UserMappingConfig : IRegister
+{
+    public void Register(TypeAdapterConfig config)
+    {
+        GetMappings(config);
+        PutMappings(config);
+        DeleteMappings(config);
+    }
+
+    private static void GetMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<GetUserRequest, GetUserQuery>();
+        
+        config.NewConfig<UserAggregate, UserDto>()
+            .Map(dest => dest.Id, src => src.Id.Value.ToString())
+            .Map(dest => dest.FirstName, src => src.Name.First)
+            .Map(dest => dest.LastName, src => src.Name.Last)
+            .Map(dest => dest.Email, src => src.Credentials.Email);
+    }
+
+    private static void PutMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateUserRequest, UpdateUserCommand>();
+        
+        config.NewConfig<UpdateUserResult, UserDto>()
+            .Map(dest => dest, src => src.User)
+            .Map(dest => dest.Id, src => src.User.Id.Value.ToString())
+            .Map(dest => dest.FirstName, src => src.User.Name.First)
+            .Map(dest => dest.LastName, src => src.User.Name.Last)
+            .Map(dest => dest.Email, src => src.User.Credentials.Email);
+    }
+    
+    private static void DeleteMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<DeleteUserResult, UserDto>()
+            .Map(dest => dest, src => src.User)
+            .Map(dest => dest.Id, src => src.User.Id.Value.ToString())
+            .Map(dest => dest.FirstName, src => src.User.Name.First)
+            .Map(dest => dest.LastName, src => src.User.Name.Last)
+            .Map(dest => dest.Email, src => src.User.Credentials.Email);
+    }
+}

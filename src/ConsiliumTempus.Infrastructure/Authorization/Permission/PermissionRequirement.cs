@@ -2,7 +2,4 @@
 
 namespace ConsiliumTempus.Infrastructure.Authorization.Permission;
 
-public sealed class PermissionRequirement(string permission) : IAuthorizationRequirement
-{
-    public string Permission { get; set; } = permission;
-}
+public sealed record PermissionRequirement(string Permission) : IAuthorizationRequirement;

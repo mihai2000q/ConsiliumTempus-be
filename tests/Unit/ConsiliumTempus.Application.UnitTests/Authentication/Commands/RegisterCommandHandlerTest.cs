@@ -43,7 +43,9 @@ public class RegisterCommandHandlerTest
             "FirstName",
             "LastName",
             "Example@Email.com",
-            "Password123");
+            "Password123",
+            null,
+            null);
 
         const string token = "This is a token";
         const string hashedPassword = "This is the hash password for Password123";
@@ -78,6 +80,8 @@ public class RegisterCommandHandlerTest
         callbackAddedUser?.Name.Last.Should().Be(command.LastName.CapitalizeWord());
         callbackAddedUser?.Credentials.Email.Should().Be(command.Email.ToLower());
         callbackAddedUser?.Credentials.Password.Should().Be(hashedPassword);
+        callbackAddedUser?.Role.Should().Be(command.Role);
+        callbackAddedUser?.DateOfBirth.Should().Be(command.DateOfBirth);
         callbackAddedUser?.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         callbackAddedUser?.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
@@ -93,7 +97,9 @@ public class RegisterCommandHandlerTest
             "",
             "",
             "Example@Email.com",
-            "");
+            "",
+            null,
+            null);
 
         _userRepository.Setup(r => 
                 r.GetUserByEmail(command.Email.ToLower(), default))

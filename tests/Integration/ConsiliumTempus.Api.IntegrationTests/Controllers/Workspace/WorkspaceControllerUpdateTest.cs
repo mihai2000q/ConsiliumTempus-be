@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
 using Xunit.Abstractions;
 
@@ -47,7 +48,7 @@ public class WorkspaceControllerUpdateTest(
         var outcome = await Client.PutAsJsonAsync("api/workspaces", request);
 
         // Assert
-        await outcome.ValidateError(HttpStatusCode.NotFound, "Workspace could not be found");
+        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Workspace.NotFound.Description);
     }
 
     private async Task AssertSuccessfulRequest(UpdateWorkspaceRequest request, string email)

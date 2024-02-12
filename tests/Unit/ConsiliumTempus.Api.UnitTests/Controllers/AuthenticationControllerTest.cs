@@ -39,7 +39,9 @@ public class AuthenticationControllerTest
             "FirstName",
             "LastName",
             "Example@Email.com",
-            "Password123");
+            "Password123",
+            null, 
+            null);
 
         var result = new RegisterResult("This is the token for the registration");
 
@@ -70,7 +72,9 @@ public class AuthenticationControllerTest
             "FirstName",
             "LastName",
             "Example@Email.com",
-            "Password123");
+            "Password123",
+            null,
+            null);
 
         _mediator.Setup(m => m.Send(It.IsAny<RegisterCommand>(), default))
             .ReturnsAsync(Errors.User.DuplicateEmail);

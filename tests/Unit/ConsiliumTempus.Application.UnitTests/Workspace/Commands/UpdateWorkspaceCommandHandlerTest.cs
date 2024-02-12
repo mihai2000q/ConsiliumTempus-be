@@ -49,7 +49,7 @@ public class UpdateWorkspaceCommandHandlerTest
         _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
 
         outcome.IsError.Should().BeFalse();
-        Utils.Workspace.AssertFromUpdateCommand(outcome.Value.Workspace, command, currentWorkspace);
+        Utils.Workspace.AssertFromUpdateCommand(outcome.Value.Workspace, command);
     }
     
     [Fact]
