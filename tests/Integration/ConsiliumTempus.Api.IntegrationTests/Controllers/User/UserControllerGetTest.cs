@@ -12,7 +12,7 @@ public class UserControllerGetTest(
     : BaseIntegrationTest(factory, testOutputHelper)
 {
     [Fact]
-    public async Task WhenUpdateUserIsSuccessful_ThenReturnNewUser()
+    public async Task WhenGetUserIsSuccessful_ThenReturnNewUser()
     {
         // Arrange
         const string id = "10000000-0000-0000-0000-000000000000";
@@ -25,11 +25,14 @@ public class UserControllerGetTest(
             outcome, 
             "Michael", 
             "Jordan", 
-            "michaelj@gmail.com");
+            "michaelj@gmail.com",
+            id,
+            "Pro Basketball Player",
+            DateOnly.Parse("2000-12-23"));
     }
     
     [Fact]
-    public async Task WhenUpdateUserIsNotFound_ThenReturnNotFoundError()
+    public async Task WhenGetUserIsNotFound_ThenReturnNotFoundError()
     {
         // Arrange
         const string id = "90000000-0000-0000-0000-000000000000";

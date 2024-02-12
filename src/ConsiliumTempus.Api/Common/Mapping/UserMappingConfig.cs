@@ -36,6 +36,7 @@ public sealed class UserMappingConfig : IRegister
         config.NewConfig<UpdateUserRequest, UpdateUserCommand>();
         
         config.NewConfig<UpdateUserResult, UserDto>()
+            .Map(dest => dest, src => src.User)
             .Map(dest => dest.Id, src => src.User.Id.Value.ToString())
             .Map(dest => dest.FirstName, src => src.User.Name.First)
             .Map(dest => dest.LastName, src => src.User.Name.Last)
@@ -45,6 +46,7 @@ public sealed class UserMappingConfig : IRegister
     private static void DeleteMappings(TypeAdapterConfig config)
     {
         config.NewConfig<DeleteUserResult, UserDto>()
+            .Map(dest => dest, src => src.User)
             .Map(dest => dest.Id, src => src.User.Id.Value.ToString())
             .Map(dest => dest.FirstName, src => src.User.Name.First)
             .Map(dest => dest.LastName, src => src.User.Name.Last)

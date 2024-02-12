@@ -23,7 +23,9 @@ public class AuthenticationControllerTest(
             "First",
             "Last",
             "FirstLast@Example.com",
-            "Password123");
+            "Password123",
+            null,
+            null);
         
         // Act
         var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
@@ -48,7 +50,9 @@ public class AuthenticationControllerTest(
             "Michael",
             "Jordan",
             "MichaelJ@Gmail.com",
-            "MichaelJordan2");
+            "MichaelJordan2",
+            null,
+            null);
         
         // Act
         var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);

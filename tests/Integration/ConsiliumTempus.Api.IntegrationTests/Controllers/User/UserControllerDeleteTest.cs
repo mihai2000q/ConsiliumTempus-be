@@ -13,11 +13,11 @@ public class UserControllerDeleteTest(
     : BaseIntegrationTest(factory, testOutputHelper)
 {
     [Fact]
-    public async Task WhenUpdateUserIsSuccessful_ThenReturnNewUser()
+    public async Task WhenDeleteUserIsSuccessful_ThenReturnNewUser()
     {
         // Arrange
-        const string email = "michaelj@gmail.com";
-        const string id = "10000000-0000-0000-0000-000000000000";
+        const string email = "stephenc@gmail.com";
+        const string id = "40000000-0000-0000-0000-000000000000";
         
         // Act
         UseCustomToken(email);
@@ -26,13 +26,14 @@ public class UserControllerDeleteTest(
         // Assert
         await Utils.User.AssertDtoFromResponse(
             outcome,
-            "Michael",
-            "Jordan",
-            email);
+            "Stephen",
+            "Curry",
+            email,
+            id);
     }
     
     [Fact]
-    public async Task WhenUpdateUserIsNotOwner_ThenReturnForbiddenResponse()
+    public async Task WhenDeleteUserIsNotOwner_ThenReturnForbiddenResponse()
     {
         // Arrange
         const string id = "10000000-0000-0000-0000-000000000000";
@@ -46,7 +47,7 @@ public class UserControllerDeleteTest(
     }
     
     [Fact]
-    public async Task WhenUpdateUserIsNotFound_ThenReturnNotFoundError()
+    public async Task WhenDeleteUserIsNotFound_ThenReturnNotFoundError()
     {
         // Arrange
         const string id = "90000000-0000-0000-0000-000000000000";

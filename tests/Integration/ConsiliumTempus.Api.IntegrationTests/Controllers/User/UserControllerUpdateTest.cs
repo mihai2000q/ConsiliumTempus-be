@@ -19,14 +19,21 @@ public class UserControllerUpdateTest(
     {
         // Arrange
         const string email = "michaelj@gmail.com";
-        var request = GetRequest();
+        var request = GetRequest(role: "Software Developer");
         
         // Act
         UseCustomToken(email);
         var outcome = await Client.PutAsJsonAsync("api/users", request);
 
         // Assert
-        await Utils.User.AssertDtoFromResponse(outcome, request.FirstName!, request.LastName!, email);
+        await Utils.User.AssertDtoFromResponse(
+            outcome,
+            request.FirstName, 
+            request.LastName, 
+            email, 
+            request.Id.ToString(),
+            request.Role,
+            request.DateOfBirth);
     }
     
     [Fact]
@@ -56,11 +63,15 @@ public class UserControllerUpdateTest(
         await outcome.ValidateError(HttpStatusCode.NotFound, Errors.User.NotFound.Description);
     }
 
-    private static UpdateUserRequest GetRequest(string id = "10000000-0000-0000-0000-000000000000")
+    private static UpdateUserRequest GetRequest(
+        string id = "10000000-0000-0000-0000-000000000000",
+        string? role = null)
     {
         return new UpdateUserRequest(
             new Guid(id),
             "New First Name", 
-            "New Lastname");
+            "New Lastname",
+            role,
+            null);
     }
 }

@@ -14,12 +14,14 @@ internal static partial class Utils
             string firstName,
             string lastName,
             string email,
-            string? id = null)
+            string id,
+            string? role = null,
+            DateOnly? dateOfBirth = null)
         {
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<UserDto>();
-            AssertDto(content!, firstName, lastName, email, id);
+            AssertDto(content!, firstName, lastName, email, id, role, dateOfBirth);
         }
         
         internal static void AssertDto(
@@ -27,19 +29,16 @@ internal static partial class Utils
             string firstName,
             string lastName,
             string email,
-            string? id = null)
+            string id,
+            string? role = null,
+            DateOnly? dateOfBirth = null)
         {
-            if (id is null)
-            {
-                dto.Id.Should().NotBeNullOrWhiteSpace();
-            }
-            else
-            {
-                dto.Id.Should().Be(id);
-            }
+            dto.Id.Should().Be(id);
             dto.FirstName.Should().Be(firstName);
             dto.LastName.Should().Be(lastName);
             dto.Email.Should().Be(email);
+            dto.Role.Should().Be(role);
+            dto.DateOfBirth.Should().Be(dateOfBirth);
         }
     }
 }
