@@ -8,6 +8,7 @@ This is the **workspace** of the application. It holds basic data like its name 
 class Workspace
 {
     Workspace Create()
+    void Update()
     void AddUserMembership()
 }
 ```
@@ -29,3 +30,7 @@ For database design checkout the [Workspace Diagram](../diagrams/aggregates/Diag
 
 - The **Name** cannot be longer than 100 characters
 - The **Description** cannot be longer than 1000 characters
+
+### Domain Errors
+
+- **Not Found** when the workspace cannot be found

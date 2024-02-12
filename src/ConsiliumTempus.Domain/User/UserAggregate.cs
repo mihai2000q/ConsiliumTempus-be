@@ -19,48 +19,65 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
         Credentials credentials,
         Name name,
         DateTime createdDateTime,
-        DateTime updatedDateTime) : base(id)
+        DateTime updatedDateTime,
+        string? role,
+        DateOnly? dateOfBirth) : base(id)
     {
         Credentials = credentials;
         Name = name;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
+        Role = role;
+        DateOfBirth = dateOfBirth;
     }
 
     private readonly List<Membership> _memberships = [];
 
     public Credentials Credentials { get; private set; } = default!;
     public Name Name { get; private set; } = default!;
+    public string? Role { get; private set; }
+    public DateOnly? DateOfBirth { get; private set; }
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
 
     public static UserAggregate Create(
         Credentials credentials,
-        Name name)
+        Name name,
+        string? role = null,
+        DateOnly? dateOfBirth = null)
     {
         return new UserAggregate(
             UserId.CreateUnique(),
             credentials,
             name,
             DateTime.UtcNow,
-            DateTime.UtcNow);
+            DateTime.UtcNow,
+            role, 
+            dateOfBirth);
     }
     
     public static UserAggregate Register(
         Credentials credentials,
-        Name name)
+        Name name,
+        string? role,
+        DateOnly? dateOfBirth)
     {
-        var user = Create(credentials, name);
+        var user = Create(credentials, name, role, dateOfBirth);
 
         user.AddDomainEvent(new UserRegistered(user));
         
         return user;
     }
     
-    public void Update(Name name)
+    public void Update(
+        Name name,
+        string? role,
+        DateOnly? dateOfBirth)
     {
         Name = name;
+        Role = role;
+        DateOfBirth = dateOfBirth;
         UpdatedDateTime = DateTime.UtcNow;
     }
 
