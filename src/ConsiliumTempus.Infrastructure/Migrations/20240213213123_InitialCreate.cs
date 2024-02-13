@@ -73,6 +73,30 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Project",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    IsFavorite = table.Column<bool>(type: "bit", nullable: false),
+                    IsPrivate = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Project", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Project_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Membership",
                 columns: table => new
                 {
@@ -129,6 +153,81 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ProjectSprint",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectSprint", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectSprint_Project_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Project",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectSection",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    SprintId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectSection", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectSection_ProjectSprint_SprintId",
+                        column: x => x.SprintId,
+                        principalTable: "ProjectSprint",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectTask",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AsigneeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ReviewerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DueDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    SectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectTask", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectTask_ProjectSection_SectionId",
+                        column: x => x.SectionId,
+                        principalTable: "ProjectSection",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectTask_User_AsigneeId",
+                        column: x => x.AsigneeId,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProjectTask_User_ReviewerId",
+                        column: x => x.ReviewerId,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.InsertData(
                 table: "Permission",
                 columns: new[] { "Id", "Name" },
@@ -173,6 +272,36 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "WorkspaceRoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Project_WorkspaceId",
+                table: "Project",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectSection_SprintId",
+                table: "ProjectSection",
+                column: "SprintId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectSprint_ProjectId",
+                table: "ProjectSprint",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTask_AsigneeId",
+                table: "ProjectTask",
+                column: "AsigneeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTask_ReviewerId",
+                table: "ProjectTask",
+                column: "ReviewerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTask_SectionId",
+                table: "ProjectTask",
+                column: "SectionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
                 table: "User",
                 column: "Email",
@@ -201,19 +330,31 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "Membership");
 
             migrationBuilder.DropTable(
+                name: "ProjectTask");
+
+            migrationBuilder.DropTable(
                 name: "WorkspaceRoleHasPermission");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "ProjectSection");
 
             migrationBuilder.DropTable(
-                name: "Workspace");
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "Permission");
 
             migrationBuilder.DropTable(
                 name: "WorkspaceRole");
+
+            migrationBuilder.DropTable(
+                name: "ProjectSprint");
+
+            migrationBuilder.DropTable(
+                name: "Project");
+
+            migrationBuilder.DropTable(
+                name: "Workspace");
         }
     }
 }
