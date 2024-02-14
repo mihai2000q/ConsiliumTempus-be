@@ -29,6 +29,8 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
     public string Name { get; private set; } = string.Empty;
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
+    public DateOnly? StartDate { get; private set; }
+    public DateOnly? EndDate { get; private set; }
     public ProjectAggregate Project { get; init; } = default!;
     public IReadOnlyList<ProjectSection> Sections => _sections.AsReadOnly();
 

@@ -18,6 +18,8 @@ class ProjectSprint
   "name": "Sprint 1",
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
+  "startDate": "2020-01-01",
+  "endDate": "2022-12-12",
   "project": {},
   "sections": [{}]
 }
