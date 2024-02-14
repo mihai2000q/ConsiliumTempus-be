@@ -79,17 +79,39 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
         
         builder.Property(t => t.Description)
             .HasMaxLength(PropertiesValidation.ProjectTask.DescriptionMaximumLength);
-        
-        builder.HasOne(t => t.Section)
-            .WithMany(s => s.Tasks);
 
-        builder.HasOne(t => t.Asignee)
+        builder.HasOne(t => t.CreatedBy)
             .WithMany();
+        
+        builder.HasOne(t => t.Asignee)
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasOne(t => t.Reviewer)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(t => t.Section)
             .WithMany(s => s.Tasks);
+
+        builder.OwnsMany(t => t.Comments, ConfigureComments);
+    }
+
+    private static void ConfigureComments(OwnedNavigationBuilder<ProjectTask, ProjectTaskComment> builder)
+    {
+        builder.HasKey(c => c.Id);
+        builder.Property(c => c.Id)
+            .HasConversion(
+                id => id.Value,
+                value => ProjectTaskCommentId.Create(value));
+        
+        builder.Property(c => c.Message)
+            .HasMaxLength(PropertiesValidation.ProjectTaskComment.MessageMaximumLength);
+
+        builder.HasOne(c => c.CreatedBy)
+            .WithMany();
+
+        builder.HasOne(c => c.Task)
+            .WithMany(t => t.Comments);
     }
 }

@@ -314,6 +314,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.Property<DateTime>("CreatedDateTime")
                                 .HasColumnType("datetime2");
 
+                            b1.Property<DateTime?>("EndDate")
+                                .HasColumnType("datetime2");
+
                             b1.Property<string>("Name")
                                 .IsRequired()
                                 .HasMaxLength(100)
@@ -321,6 +324,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.Property<Guid>("ProjectId")
                                 .HasColumnType("uniqueidentifier");
+
+                            b1.Property<DateTime?>("StartDate")
+                                .HasColumnType("datetime2");
 
                             b1.Property<DateTime>("UpdatedDateTime")
                                 .HasColumnType("datetime2");
@@ -364,6 +370,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                             b3.Property<Guid?>("AsigneeId")
                                                 .HasColumnType("uniqueidentifier");
 
+                                            b3.Property<Guid>("CreatedById")
+                                                .HasColumnType("uniqueidentifier");
+
                                             b3.Property<DateTime>("CreatedDateTime")
                                                 .HasColumnType("datetime2");
 
@@ -374,6 +383,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                                             b3.Property<DateOnly?>("DueDate")
                                                 .HasColumnType("date");
+
+                                            b3.Property<TimeSpan?>("EstimatedDuration")
+                                                .HasColumnType("time");
 
                                             b3.Property<string>("Name")
                                                 .IsRequired()
@@ -393,6 +405,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                                             b3.HasIndex("AsigneeId");
 
+                                            b3.HasIndex("CreatedById");
+
                                             b3.HasIndex("ReviewerId");
 
                                             b3.HasIndex("SectionId");
@@ -401,16 +415,78 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                                             b3.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Asignee")
                                                 .WithMany()
-                                                .HasForeignKey("AsigneeId");
+                                                .HasForeignKey("AsigneeId")
+                                                .OnDelete(DeleteBehavior.Cascade);
+
+                                            b3.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                                                .WithMany()
+                                                .HasForeignKey("CreatedById")
+                                                .OnDelete(DeleteBehavior.Cascade)
+                                                .IsRequired();
 
                                             b3.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Reviewer")
                                                 .WithMany()
-                                                .HasForeignKey("ReviewerId");
+                                                .HasForeignKey("ReviewerId")
+                                                .OnDelete(DeleteBehavior.Cascade);
 
                                             b3.WithOwner("Section")
                                                 .HasForeignKey("SectionId");
 
+                                            b3.OwnsMany("ConsiliumTempus.Domain.Project.Entities.ProjectTaskComment", "Comments", b4 =>
+                                                {
+                                                    b4.Property<Guid>("Id")
+                                                        .HasColumnType("uniqueidentifier");
+
+                                                    b4.Property<Guid>("CreatedById")
+                                                        .HasColumnType("uniqueidentifier");
+
+                                                    b4.Property<DateTime>("CreatedDateTime")
+                                                        .HasColumnType("datetime2");
+
+                                                    b4.Property<DateOnly?>("Date")
+                                                        .HasColumnType("date");
+
+                                                    b4.Property<string>("Message")
+                                                        .IsRequired()
+                                                        .HasMaxLength(256)
+                                                        .HasColumnType("nvarchar(256)");
+
+                                                    b4.Property<Guid>("TaskId")
+                                                        .HasColumnType("uniqueidentifier");
+
+                                                    b4.Property<TimeSpan?>("TimeSpent")
+                                                        .HasColumnType("time");
+
+                                                    b4.Property<DateTime>("UpdatedDateTime")
+                                                        .HasColumnType("datetime2");
+
+                                                    b4.HasKey("Id");
+
+                                                    b4.HasIndex("CreatedById");
+
+                                                    b4.HasIndex("TaskId");
+
+                                                    b4.ToTable("ProjectTaskComment");
+
+                                                    b4.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                                                        .WithMany()
+                                                        .HasForeignKey("CreatedById")
+                                                        .OnDelete(DeleteBehavior.Cascade)
+                                                        .IsRequired();
+
+                                                    b4.WithOwner("Task")
+                                                        .HasForeignKey("TaskId");
+
+                                                    b4.Navigation("CreatedBy");
+
+                                                    b4.Navigation("Task");
+                                                });
+
                                             b3.Navigation("Asignee");
+
+                                            b3.Navigation("Comments");
+
+                                            b3.Navigation("CreatedBy");
 
                                             b3.Navigation("Reviewer");
 

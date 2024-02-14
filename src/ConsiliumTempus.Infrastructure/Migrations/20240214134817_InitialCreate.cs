@@ -161,6 +161,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -200,11 +202,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AsigneeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ReviewerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DueDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    EstimatedDuration = table.Column<TimeSpan>(type: "time", nullable: true),
                     SectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -220,12 +224,50 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_ProjectTask_User_AsigneeId",
                         column: x => x.AsigneeId,
                         principalTable: "User",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectTask_User_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProjectTask_User_ReviewerId",
                         column: x => x.ReviewerId,
                         principalTable: "User",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectTaskComment",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: true),
+                    TimeSpent = table.Column<TimeSpan>(type: "time", nullable: true),
+                    TaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectTaskComment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectTaskComment_ProjectTask_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "ProjectTask",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectTaskComment_User_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -292,6 +334,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "AsigneeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectTask_CreatedById",
+                table: "ProjectTask",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProjectTask_ReviewerId",
                 table: "ProjectTask",
                 column: "ReviewerId");
@@ -300,6 +347,16 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "IX_ProjectTask_SectionId",
                 table: "ProjectTask",
                 column: "SectionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTaskComment_CreatedById",
+                table: "ProjectTaskComment",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTaskComment_TaskId",
+                table: "ProjectTaskComment",
+                column: "TaskId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
@@ -330,22 +387,25 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "Membership");
 
             migrationBuilder.DropTable(
-                name: "ProjectTask");
+                name: "ProjectTaskComment");
 
             migrationBuilder.DropTable(
                 name: "WorkspaceRoleHasPermission");
 
             migrationBuilder.DropTable(
-                name: "ProjectSection");
-
-            migrationBuilder.DropTable(
-                name: "User");
+                name: "ProjectTask");
 
             migrationBuilder.DropTable(
                 name: "Permission");
 
             migrationBuilder.DropTable(
                 name: "WorkspaceRole");
+
+            migrationBuilder.DropTable(
+                name: "ProjectSection");
+
+            migrationBuilder.DropTable(
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "ProjectSprint");
