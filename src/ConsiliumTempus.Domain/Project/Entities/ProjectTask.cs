@@ -16,6 +16,7 @@ public sealed class ProjectTask : Entity<ProjectTaskId>, ITimestamps
     private ProjectTask(
         string name,
         string description,
+        bool isCompleted,
         UserAggregate createdBy,
         ProjectSection section,
         DateTime createdDateTime,
@@ -23,6 +24,7 @@ public sealed class ProjectTask : Entity<ProjectTaskId>, ITimestamps
     {
         Name = name;
         Description = description;
+        IsCompleted = isCompleted;
         CreatedBy = createdBy;
         Section = section;
         CreatedDateTime = createdDateTime;
@@ -33,6 +35,7 @@ public sealed class ProjectTask : Entity<ProjectTaskId>, ITimestamps
     
     public string Name { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
+    public bool IsCompleted { get; private set; }
     public UserAggregate CreatedBy { get; private set; } = default!;
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
@@ -40,7 +43,7 @@ public sealed class ProjectTask : Entity<ProjectTaskId>, ITimestamps
     public UserAggregate? Reviewer { get; private set; }
     public DateOnly? DueDate { get; private set; }
     public TimeSpan? EstimatedDuration { get; private set; }
-    public ProjectSection Section { get; init; } = default!;
+    public ProjectSection Section { get; private set; } = default!;
     public IReadOnlyList<ProjectTaskComment> Comments => _comments.AsReadOnly();
 
     public static ProjectTask Create(
@@ -52,6 +55,7 @@ public sealed class ProjectTask : Entity<ProjectTaskId>, ITimestamps
         return new ProjectTask(
             name,
             description,
+            false,
             createdBy,
             section,
             DateTime.UtcNow, 

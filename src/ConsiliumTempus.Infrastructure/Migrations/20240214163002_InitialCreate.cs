@@ -161,8 +161,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: true),
                     ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -202,6 +202,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),

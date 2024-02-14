@@ -314,8 +314,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.Property<DateTime>("CreatedDateTime")
                                 .HasColumnType("datetime2");
 
-                            b1.Property<DateTime?>("EndDate")
-                                .HasColumnType("datetime2");
+                            b1.Property<DateOnly?>("EndDate")
+                                .HasColumnType("date");
 
                             b1.Property<string>("Name")
                                 .IsRequired()
@@ -325,8 +325,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.Property<Guid>("ProjectId")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<DateTime?>("StartDate")
-                                .HasColumnType("datetime2");
+                            b1.Property<DateOnly?>("StartDate")
+                                .HasColumnType("date");
 
                             b1.Property<DateTime>("UpdatedDateTime")
                                 .HasColumnType("datetime2");
@@ -386,6 +386,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                                             b3.Property<TimeSpan?>("EstimatedDuration")
                                                 .HasColumnType("time");
+
+                                            b3.Property<bool>("IsCompleted")
+                                                .HasColumnType("bit");
 
                                             b3.Property<string>("Name")
                                                 .IsRequired()
