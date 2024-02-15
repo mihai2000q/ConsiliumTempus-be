@@ -10,10 +10,8 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 public sealed class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRepository, IUserProvider
 {
     public async Task<UserAggregate?> Get(UserId id, CancellationToken cancellationToken = default)
-    {   
-        return await dbContext.Users.SingleOrDefaultAsync(
-            u => u.Id == id, 
-            cancellationToken);
+    {
+        return await dbContext.Users.FindAsync([id], cancellationToken);
     }
 
     public async Task<UserAggregate?> GetUserByEmail(string email, CancellationToken cancellationToken = default)

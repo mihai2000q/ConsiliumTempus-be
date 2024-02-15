@@ -15,7 +15,8 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         return await dbContext.Workspaces.FindAsync([id], cancellationToken);
     }
 
-    public async Task<List<WorkspaceAggregate>> GetListForUser(UserAggregate user, CancellationToken cancellationToken = default)
+    public async Task<List<WorkspaceAggregate>> GetListForUser(UserAggregate user,
+        CancellationToken cancellationToken = default)
     {
         return await dbContext.Workspaces
             .Where(w => w.Memberships.Any(m => m.User == user))
