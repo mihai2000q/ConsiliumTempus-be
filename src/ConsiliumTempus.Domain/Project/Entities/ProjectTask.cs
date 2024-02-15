@@ -37,7 +37,7 @@ public sealed class ProjectTask : Entity<ProjectTaskId>, ITimestamps
     public string Name { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
     public bool IsCompleted { get; private set; }
-    public UserAggregate CreatedBy { get; private set; } = default!;
+    public UserAggregate CreatedBy { get; init; } = default!;
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
     public UserAggregate? Asignee { get; private set; }

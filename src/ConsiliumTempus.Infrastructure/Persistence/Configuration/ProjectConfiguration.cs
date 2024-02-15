@@ -81,15 +81,14 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
             .HasMaxLength(PropertiesValidation.ProjectTask.DescriptionMaximumLength);
 
         builder.HasOne(t => t.CreatedBy)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
         
         builder.HasOne(t => t.Asignee)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithMany();
         
         builder.HasOne(t => t.Reviewer)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithMany();
 
         builder.HasOne(t => t.Section)
             .WithMany(s => s.Tasks);
@@ -109,7 +108,8 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
             .HasMaxLength(PropertiesValidation.ProjectTaskComment.MessageMaximumLength);
 
         builder.HasOne(c => c.CreatedBy)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(c => c.Task)
             .WithMany(t => t.Comments);

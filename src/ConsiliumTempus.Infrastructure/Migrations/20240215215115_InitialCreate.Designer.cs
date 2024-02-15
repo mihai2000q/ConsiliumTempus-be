@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240214163002_InitialCreate")]
+    [Migration("20240215215115_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -79,6 +79,26 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             Id = 3,
                             Name = "DeleteWorkspace"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "CreateProject"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "ReadProject"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "UpdateProject"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "DeleteProject"
                         });
                 });
 
@@ -144,6 +164,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         },
                         new
                         {
+                            WorkspaceRoleId = 1,
+                            PermissionId = 5
+                        },
+                        new
+                        {
                             WorkspaceRoleId = 2,
                             PermissionId = 1
                         },
@@ -151,6 +176,16 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 2,
                             PermissionId = 2
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 5
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 6
                         },
                         new
                         {
@@ -166,6 +201,26 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 3,
                             PermissionId = 3
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 4
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 5
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 6
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 7
                         });
                 });
 
@@ -421,19 +476,17 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                                             b3.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Asignee")
                                                 .WithMany()
-                                                .HasForeignKey("AsigneeId")
-                                                .OnDelete(DeleteBehavior.Cascade);
+                                                .HasForeignKey("AsigneeId");
 
                                             b3.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
                                                 .WithMany()
                                                 .HasForeignKey("CreatedById")
-                                                .OnDelete(DeleteBehavior.Cascade)
+                                                .OnDelete(DeleteBehavior.NoAction)
                                                 .IsRequired();
 
                                             b3.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Reviewer")
                                                 .WithMany()
-                                                .HasForeignKey("ReviewerId")
-                                                .OnDelete(DeleteBehavior.Cascade);
+                                                .HasForeignKey("ReviewerId");
 
                                             b3.WithOwner("Section")
                                                 .HasForeignKey("SectionId");
@@ -477,7 +530,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                                     b4.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
                                                         .WithMany()
                                                         .HasForeignKey("CreatedById")
-                                                        .OnDelete(DeleteBehavior.Cascade)
+                                                        .OnDelete(DeleteBehavior.NoAction)
                                                         .IsRequired();
 
                                                     b4.WithOwner("Task")

@@ -4,5 +4,9 @@ public enum Permissions
 {
     ReadWorkspace,
     UpdateWorkspace,
-    DeleteWorkspace
+    DeleteWorkspace,
+    CreateProject,
+    ReadProject,
+    UpdateProject,
+    DeleteProject
 }

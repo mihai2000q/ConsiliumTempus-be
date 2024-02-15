@@ -26,7 +26,7 @@ public sealed class ProjectTaskComment : Entity<ProjectTaskCommentId>, ITimestam
     }
     
     public string Message { get; private set; } = string.Empty;
-    public UserAggregate CreatedBy { get; private set; } = default!;
+    public UserAggregate CreatedBy { get; init; } = default!;
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
     public DateOnly? Date { get; private set; }

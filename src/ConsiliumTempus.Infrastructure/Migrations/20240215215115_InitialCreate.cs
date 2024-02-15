@@ -225,20 +225,17 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_ProjectTask_User_AsigneeId",
                         column: x => x.AsigneeId,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ProjectTask_User_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ProjectTask_User_ReviewerId",
                         column: x => x.ReviewerId,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -267,8 +264,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_ProjectTaskComment_User_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -278,7 +274,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     { 1, "ReadWorkspace" },
                     { 2, "UpdateWorkspace" },
-                    { 3, "DeleteWorkspace" }
+                    { 3, "DeleteWorkspace" },
+                    { 4, "CreateProject" },
+                    { 5, "ReadProject" },
+                    { 6, "UpdateProject" },
+                    { 7, "DeleteProject" }
                 });
 
             migrationBuilder.InsertData(
@@ -297,11 +297,18 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 values: new object[,]
                 {
                     { 1, 1 },
+                    { 5, 1 },
                     { 1, 2 },
                     { 2, 2 },
+                    { 5, 2 },
+                    { 6, 2 },
                     { 1, 3 },
                     { 2, 3 },
-                    { 3, 3 }
+                    { 3, 3 },
+                    { 4, 3 },
+                    { 5, 3 },
+                    { 6, 3 },
+                    { 7, 3 }
                 });
 
             migrationBuilder.CreateIndex(

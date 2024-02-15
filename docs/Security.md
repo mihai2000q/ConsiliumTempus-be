@@ -53,6 +53,11 @@ The permissions will be classified on their respective component:
   - Read
   - Update
   - Delete
+- Project
+  - Read
+  - Create
+  - Update
+  - Delete
 
 ## Workspace Roles to Permissions
 
@@ -63,3 +68,7 @@ The Access Control List of the system is the following:
 | Read Workspace   | X    | X      | X     |
 | Update Workspace |      | X      | X     |
 | Delete Workspace |      |        | X     |
+| Create Project   |      |        | X     |
+| Read Project     | X    | X      | X     |
+| Update Project   |      | X      | X     |
+| Delete Project   |      |        | X     |
