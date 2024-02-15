@@ -12,6 +12,12 @@ internal static partial class Utils
 {
     internal static class Workspace
     {
+        internal static bool AssertId(WorkspaceId workspaceId, Guid expectedId)
+        {
+            workspaceId.Should().Be(WorkspaceId.Create(expectedId));
+            return true;
+        }
+        
         internal static bool AssertFromCreateCommand(
             WorkspaceAggregate workspace,
             CreateWorkspaceCommand command,
@@ -40,12 +46,6 @@ internal static partial class Utils
             workspace.Name.Should().Be(command.Name);
             workspace.Description.Should().Be(command.Description);
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-        }
-
-        internal static bool AssertWorkspaceId(WorkspaceId workspaceId, Guid expectedId)
-        {
-            workspaceId.Should().Be(WorkspaceId.Create(expectedId));
-            return true;
         }
 
         internal static void AssertDeleteResult(DeleteWorkspaceResult result, WorkspaceAggregate workspace)

@@ -42,7 +42,7 @@ public class SecurityTest
         // Assert
         _jwtTokenGenerator.Verify(j => j.GetUserIdFromToken(It.IsAny<string>()), Times.Once());
         _userRepository.Verify(u =>
-                u.Get(It.Is<UserId>(id => Utils.User.AssertUserId(id, plainUserId)), default),
+                u.Get(It.Is<UserId>(id => Utils.User.AssertId(id, plainUserId)), default),
             Times.Once());
 
         outcome.Should().Be(user);

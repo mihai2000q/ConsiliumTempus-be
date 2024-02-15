@@ -43,7 +43,7 @@ public class UpdateWorkspaceCommandHandlerTest
 
         // Assert
         _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertWorkspaceId(id, command.Id)), 
+                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.Id)), 
                     default),
                 Times.Once());
         _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
@@ -63,7 +63,7 @@ public class UpdateWorkspaceCommandHandlerTest
 
         // Assert
         _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertWorkspaceId(id, command.Id)), 
+                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.Id)), 
                     default),
             Times.Once());
         _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Never());

@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Events;
+using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -10,6 +11,12 @@ internal static partial class Utils
 {
     internal static class Project
     {
+        internal static bool AssertId(ProjectId projectId, Guid expectedId)
+        {
+            projectId.Should().Be(ProjectId.Create(expectedId));
+            return true;
+        }
+        
         internal static bool AssertFromCreateCommand(
             ProjectAggregate project, 
             CreateProjectCommand command,

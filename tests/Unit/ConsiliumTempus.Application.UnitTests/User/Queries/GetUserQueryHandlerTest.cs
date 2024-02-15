@@ -36,7 +36,7 @@ public class GetUserQueryHandlerTest
 
         // Assert
         _userRepository.Verify(u =>
-                u.Get(It.Is<UserId>(id => Utils.User.AssertUserId(id, query.Id.ToString())), 
+                u.Get(It.Is<UserId>(id => Utils.User.AssertId(id, query.Id.ToString())), 
                     default),
                 Times.Once());
 
@@ -55,7 +55,7 @@ public class GetUserQueryHandlerTest
 
         // Assert
         _userRepository.Verify(u =>
-                u.Get(It.Is<UserId>(id => Utils.User.AssertUserId(id, query.Id.ToString())), 
+                u.Get(It.Is<UserId>(id => Utils.User.AssertId(id, query.Id.ToString())), 
                     default),
             Times.Once());
 

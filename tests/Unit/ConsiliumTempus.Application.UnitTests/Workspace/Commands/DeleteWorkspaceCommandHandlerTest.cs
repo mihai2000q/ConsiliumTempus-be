@@ -41,7 +41,7 @@ public class DeleteWorkspaceCommandHandlerTest
 
         // Assert
         _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertWorkspaceId(id, command.Id)),
+                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.Id)),
                     default),
             Times.Once());
         _workspaceRepository.Verify(w => w.Remove(workspaceToDelete), Times.Once());
@@ -62,7 +62,7 @@ public class DeleteWorkspaceCommandHandlerTest
 
         // Assert
         _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertWorkspaceId(id, command.Id)),
+                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.Id)),
                     default),
             Times.Once());
         _workspaceRepository.Verify(w =>

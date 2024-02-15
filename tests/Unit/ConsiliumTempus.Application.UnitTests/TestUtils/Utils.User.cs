@@ -9,7 +9,7 @@ internal static partial class Utils
 {
     internal static class User
     {
-        internal static bool AssertUserId(UserId userId, string id)
+        internal static bool AssertId(UserId userId, string id)
         {
             userId.Should().Be(UserId.Create(id));
             return true;

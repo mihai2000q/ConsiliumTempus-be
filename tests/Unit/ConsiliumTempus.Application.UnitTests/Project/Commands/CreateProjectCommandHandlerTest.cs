@@ -59,7 +59,7 @@ public class CreateProjectCommandHandlerTest
 
         // Arrange
         _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertWorkspaceId(id, command.WorkspaceId)), 
+                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.WorkspaceId)), 
                     default),
             Times.Once);
         _security.Verify(s =>
@@ -92,7 +92,7 @@ public class CreateProjectCommandHandlerTest
 
         // Arrange
         _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertWorkspaceId(id, command.WorkspaceId)), 
+                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.WorkspaceId)), 
                     default),
             Times.Once);
         _security.Verify(s => s.GetUserFromToken(It.IsAny<string>(), default),

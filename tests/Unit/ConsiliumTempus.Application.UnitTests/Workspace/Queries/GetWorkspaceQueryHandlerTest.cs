@@ -38,7 +38,7 @@ public class GetWorkspaceQueryHandlerTest
         // Assert
         _workspaceRepository.Verify(w =>
                 w.Get(It.Is<WorkspaceId>(i => 
-                    Utils.Workspace.AssertWorkspaceId(i, query.Id)), default),
+                    Utils.Workspace.AssertId(i, query.Id)), default),
             Times.Once());
 
         outcome.IsError.Should().BeFalse();
@@ -57,7 +57,7 @@ public class GetWorkspaceQueryHandlerTest
         // Assert
         _workspaceRepository.Verify(w =>
                 w.Get(It.Is<WorkspaceId>(i =>
-                    Utils.Workspace.AssertWorkspaceId(i, query.Id)), default),
+                    Utils.Workspace.AssertId(i, query.Id)), default),
             Times.Once());
 
         outcome.ValidateError(Errors.Workspace.NotFound);
