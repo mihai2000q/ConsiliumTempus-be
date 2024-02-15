@@ -28,6 +28,7 @@ internal static partial class Utils
             workspace.Memberships[0].WorkspaceRole.Should().Be(WorkspaceRole.Admin);
             workspace.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            workspace.Projects.Should().BeEmpty();
             return true;
         }
         
@@ -60,6 +61,7 @@ internal static partial class Utils
             outcome.CreatedDateTime.Should().BeCloseTo(expected.CreatedDateTime, TimeSpan.FromMinutes(1));
             outcome.UpdatedDateTime.Should().BeCloseTo(expected.UpdatedDateTime, TimeSpan.FromMinutes(1));
             outcome.Memberships.Should().BeEquivalentTo(expected.Memberships);
+            outcome.Projects.Should().BeEquivalentTo(expected.Projects);
         }
     }
 }
