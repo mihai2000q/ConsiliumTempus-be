@@ -14,13 +14,14 @@ public sealed class ProjectTask : Entity<ProjectTaskId>, ITimestamps
     }
 
     private ProjectTask(
+        ProjectTaskId id,
         string name,
         string description,
         bool isCompleted,
         UserAggregate createdBy,
         ProjectSection section,
         DateTime createdDateTime,
-        DateTime updatedDateTime)
+        DateTime updatedDateTime) : base(id)
     {
         Name = name;
         Description = description;
@@ -53,6 +54,7 @@ public sealed class ProjectTask : Entity<ProjectTaskId>, ITimestamps
         ProjectSection section)
     {
         return new ProjectTask(
+            ProjectTaskId.CreateUnique(), 
             name,
             description,
             false,

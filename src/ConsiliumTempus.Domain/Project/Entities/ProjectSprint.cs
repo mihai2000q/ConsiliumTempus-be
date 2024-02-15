@@ -13,10 +13,11 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
     }
 
     private ProjectSprint(
+        ProjectSprintId id,
         string name,
         ProjectAggregate project,
         DateTime createdDateTime,
-        DateTime updatedDateTime)
+        DateTime updatedDateTime) : base(id)
     {
         Name = name;
         Project = project;
@@ -39,6 +40,7 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
         ProjectAggregate project)
     {
         return new ProjectSprint(
+            ProjectSprintId.CreateUnique(),
             name,
             project,
             DateTime.UtcNow, 

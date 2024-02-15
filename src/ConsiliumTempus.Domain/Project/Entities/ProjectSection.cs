@@ -12,8 +12,9 @@ public sealed class ProjectSection : Entity<ProjectSectionId>
     }
 
     private ProjectSection(
+        ProjectSectionId id,
         string name,
-        ProjectSprint sprint)
+        ProjectSprint sprint) : base(id)
     {
         Name = name;
         Sprint = sprint;
@@ -29,7 +30,10 @@ public sealed class ProjectSection : Entity<ProjectSectionId>
         string name,
         ProjectSprint sprint)
     {
-        return new ProjectSection(name, sprint);
+        return new ProjectSection(
+            ProjectSectionId.CreateUnique(), 
+            name, 
+            sprint);
     }
 
     public void AddTask(ProjectTask task)

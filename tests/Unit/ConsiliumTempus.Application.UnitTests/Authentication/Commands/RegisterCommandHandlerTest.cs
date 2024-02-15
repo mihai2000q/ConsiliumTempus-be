@@ -6,6 +6,7 @@ using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.User.Events;
 using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Authentication.Commands;
@@ -84,6 +85,10 @@ public class RegisterCommandHandlerTest
         callbackAddedUser?.DateOfBirth.Should().Be(command.DateOfBirth);
         callbackAddedUser?.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         callbackAddedUser?.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+
+        callbackAddedUser?.DomainEvents.Should().HaveCount(1);
+        callbackAddedUser?.DomainEvents[0].Should().BeOfType<UserRegistered>();
+        ((UserRegistered)callbackAddedUser?.DomainEvents[0]!).User.Should().Be(callbackAddedUser);
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(token);
