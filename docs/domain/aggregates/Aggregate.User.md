@@ -58,4 +58,4 @@ For database design, check out the [User Diagram](../diagrams/aggregates/Diagram
 
 ### Domain Events
 
-- **User Registered** when the user registers, it will automatically create a workspace with an admin membership
+- **User Registered** when the user registers, it will also create a workspace with an admin membership

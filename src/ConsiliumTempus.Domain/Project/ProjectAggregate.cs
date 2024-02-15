@@ -2,7 +2,9 @@
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project.Entities;
+using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.Project;
@@ -48,9 +50,10 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         string name,
         string description,
         bool isPrivate,
-        WorkspaceAggregate workspace)
+        WorkspaceAggregate workspace,
+        UserAggregate user)
     {
-        return new ProjectAggregate(
+        var project = new ProjectAggregate(
             ProjectId.CreateUnique(),
             name,
             description,
@@ -59,6 +62,10 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
             workspace,
             DateTime.UtcNow,
             DateTime.UtcNow);
+        
+        project.AddDomainEvent(new ProjectCreated(project, user));
+
+        return project;
     }
 
     public void AddSprint(ProjectSprint sprint)

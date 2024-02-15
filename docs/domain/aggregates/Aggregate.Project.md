@@ -43,3 +43,6 @@ For database design checkout the [Project Diagram](../diagrams/aggregates/Diagra
 ### Domain Errors
 
 - **Not Found** when the project cannot be found
+
+### Domain Events
+- **Project Created** when the project gets created, it will also create sprints, sections and tasks as examples for user 
