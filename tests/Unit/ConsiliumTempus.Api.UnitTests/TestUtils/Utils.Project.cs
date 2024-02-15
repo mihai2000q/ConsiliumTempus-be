@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Application.Project.Commands.Create;
+using ConsiliumTempus.Application.Project.Commands.Delete;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -14,6 +15,12 @@ internal static partial class Utils
             command.Description.Should().Be(request.Description);
             command.IsPrivate.Should().Be(request.IsPrivate);
             command.Token.Should().Be(token);
+            return true;
+        }
+        
+        internal static bool AssertDeleteCommand(DeleteProjectCommand command, Guid id)
+        {
+            command.Id.Should().Be(id);
             return true;
         }
     }   

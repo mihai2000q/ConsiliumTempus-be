@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Project.Create;
+using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -9,50 +9,46 @@ using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project;
 
-public class ProjectControllerCreateTest(
+public class ProjectControllerDeleteTest(
     ConsiliumTempusWebApplicationFactory factory,
     ITestOutputHelper testOutputHelper) 
     : BaseIntegrationTest(factory, testOutputHelper, "Project")
 {
     [Fact]
-    public async Task WhenProjectCreateWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task WhenProjectDeleteWithAdminRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulRequest("michaelj@gmail.com");
     }
     
     [Fact]
-    public async Task WhenProjectCreateWithMemberRole_ShouldReturnForbiddenResponse()
+    public async Task WhenProjectDeleteWithMemberRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse("stephenc@gmail.com");
     }
 
     [Fact]
-    public async Task WhenProjectCreateWithViewRole_ShouldReturnForbiddenResponse()
+    public async Task WhenProjectDeleteWithViewRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse("lebronj@gmail.com");
     }
 
     [Fact]
-    public async Task WhenProjectCreateWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task WhenProjectDeleteWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse("leom@gmail.com");
     }
 
     [Fact]
-    public async Task WhenProjectCreateFails_ShouldReturnWorkspaceNotFoundError()
+    public async Task WhenProjectDeleteFails_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = new CreateProjectRequest(
-            new Guid("90000000-0000-0000-0000-000000000000"), 
-            "Project Name",
-            "This is the project description",
-            true);
+        const string id = "20000000-0000-0000-0000-000000000000";
         
         // Act
-        var outcome = await Client.PostAsJsonAsync("api/projects", request);
+        var outcome = await Client.DeleteAsync($"api/projects/{id}");
 
         // Assert
-        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Workspace.NotFound.Description);
+        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Project.NotFound.Description);
     }
 
     private async Task AssertSuccessfulRequest(string email)
@@ -62,8 +58,8 @@ public class ProjectControllerCreateTest(
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
-        response!.Message.Should().Be("Project created successfully!");
+        var response = await outcome.Content.ReadFromJsonAsync<DeleteProjectResponse>();
+        response!.Message.Should().Be("Project has been deleted successfully!");
     }
     
     private async Task AssertForbiddenResponse(string email)
@@ -77,14 +73,10 @@ public class ProjectControllerCreateTest(
     private Task<HttpResponseMessage> ArrangeAndAct(string email)
     {
         // Arrange
-        var request = new CreateProjectRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"), 
-            "Project Name",
-            "This is the project description",
-            true);
+        const string id = "10000000-0000-0000-0000-000000000000";
         
         // Act
         UseCustomToken(email);
-        return Client.PostAsJsonAsync("api/projects", request);
+        return Client.DeleteAsync($"api/projects/{id}");
     }
 }

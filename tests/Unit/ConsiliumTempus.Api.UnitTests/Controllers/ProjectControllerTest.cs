@@ -1,8 +1,10 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Project.Create;
+using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.Create;
+using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Domain.Common.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -90,6 +92,56 @@ public class ProjectControllerTest
         _mediator.Verify(m =>
                 m.Send(It.Is<CreateProjectCommand>(
                         c => Utils.Project.AssertCreateCommand(c, request, token)),
+                    default),
+            Times.Once);
+        
+        outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
+    }
+
+    [Fact]
+    public async Task DeleteProject_WhenIsSuccessful_ShouldReturnSuccess()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        
+        var result = new DeleteProjectResult();
+        _mediator.Setup(m => m.Send(It.IsAny<DeleteProjectCommand>(), default))
+            .ReturnsAsync(result);
+        
+        // Act
+        var outcome = await _uut.Delete(id, default);
+
+        // Assert
+        _mediator.Verify(m =>
+                m.Send(It.Is<DeleteProjectCommand>(
+                        c => Utils.Project.AssertDeleteCommand(c, id)),
+                    default),
+            Times.Once);
+        
+        outcome.Should().BeOfType<OkObjectResult>();
+        ((OkObjectResult)outcome).Value.Should().BeOfType<DeleteProjectResponse>();
+
+        var response = ((OkObjectResult)outcome).Value as DeleteProjectResponse;
+        response!.Message.Should().Be(result.Message);
+    }
+    
+    [Fact]
+    public async Task DeleteProject_WhenItFails_ShouldReturnNotFoundError()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+
+        var error = Errors.Project.NotFound;
+        _mediator.Setup(m => m.Send(It.IsAny<DeleteProjectCommand>(), default))
+            .ReturnsAsync(error);
+        
+        // Act
+        var outcome = await _uut.Delete(id, default);
+
+        // Assert
+        _mediator.Verify(m =>
+                m.Send(It.Is<DeleteProjectCommand>(
+                        c => Utils.Project.AssertDeleteCommand(c, id)),
                     default),
             Times.Once);
         

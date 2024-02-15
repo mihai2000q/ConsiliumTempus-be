@@ -4,6 +4,9 @@
     * [Create](#create)
         * [Create Project Request](#create-project-request)
         * [Create Project Response](#create-project-response)
+    * [Delete](#delete)
+        * [Delete Project Request](#delete-project-request)
+        * [Delete Project Response](#delete-project-response)
 
 ## Project
 
@@ -34,4 +37,24 @@ Sends body data that the new workspace needs to be created.
 
 #### Create Project Response
 
-Returns a confirmation message that the project has been created.
+Returns a confirmation message that the project has been created successfully.
+
+
+### Delete
+
+Only admin users that are part of the workspace can delete a project
+([Delete Project Permission](../Security.md/#permissions)).
+
+```js
+DELETE {{host}}/api/projects/{id}
+```
+
+- **id** is a 36 characters strings
+
+#### Delete Project Request
+
+Sends the id of the workspace inside the route request.
+
+#### Delete Project Response
+
+Returns a confirmation message that the project has been deleted successfully.
