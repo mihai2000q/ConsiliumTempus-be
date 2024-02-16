@@ -33,6 +33,8 @@ public sealed class CreateProjectCommandHandler(
             workspace,
             user);
         await projectRepository.Add(project, cancellationToken);
+        
+        workspace.RefreshUpdatedDateTime();
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

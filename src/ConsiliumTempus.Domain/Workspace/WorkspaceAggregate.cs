@@ -57,6 +57,11 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         UpdatedDateTime = DateTime.UtcNow;
     }
 
+    public void RefreshUpdatedDateTime()
+    {
+        UpdatedDateTime = DateTime.UtcNow;
+    }
+
     public void AddUserMembership(Membership membership)
     {
         _memberships.Add(membership);

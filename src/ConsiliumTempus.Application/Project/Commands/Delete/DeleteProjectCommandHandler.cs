@@ -22,6 +22,8 @@ public sealed class DeleteProjectCommandHandler(
         
         projectRepository.Remove(project);
         
+        project.Workspace.RefreshUpdatedDateTime();
+        
         await unitOfWork.SaveChangesAsync(cancellationToken);
         
         return new DeleteProjectResult();

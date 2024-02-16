@@ -74,6 +74,8 @@ public class CreateProjectCommandHandlerTest
         
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new CreateProjectResult());
+
+        workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
     }
     
     [Fact]
