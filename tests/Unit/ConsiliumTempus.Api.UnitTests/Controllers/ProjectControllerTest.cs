@@ -19,7 +19,7 @@ public class ProjectControllerTest
     private readonly Mock<ISender> _mediator;
     private readonly Mock<HttpContext> _httpContext;
     private readonly ProjectController _uut;
-    
+
     public ProjectControllerTest()
     {
         var mapper = Utils.GetMapper<ProjectMappingConfig>();
@@ -37,7 +37,7 @@ public class ProjectControllerTest
     {
         // Arrange
         var request = new CreateProjectRequest(
-            Guid.NewGuid(), 
+            Guid.NewGuid(),
             "Project Name",
             "This is the project description",
             true);
@@ -49,7 +49,7 @@ public class ProjectControllerTest
         var result = new CreateProjectResult();
         _mediator.Setup(m => m.Send(It.IsAny<CreateProjectCommand>(), default))
             .ReturnsAsync(result);
-        
+
         // Act
         var outcome = await _uut.Create(request, default);
 
@@ -59,20 +59,20 @@ public class ProjectControllerTest
                         c => Utils.Project.AssertCreateCommand(c, request, token)),
                     default),
             Times.Once);
-        
+
         outcome.Should().BeOfType<OkObjectResult>();
         ((OkObjectResult)outcome).Value.Should().BeOfType<CreateProjectResponse>();
 
         var response = ((OkObjectResult)outcome).Value as CreateProjectResponse;
         response!.Message.Should().Be(result.Message);
     }
-    
+
     [Fact]
     public async Task CreateProject_WhenWorkspaceIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = new CreateProjectRequest(
-            Guid.NewGuid(), 
+            Guid.NewGuid(),
             "Project Name",
             "This is the project description",
             true);
@@ -84,7 +84,7 @@ public class ProjectControllerTest
         var error = Errors.Workspace.NotFound;
         _mediator.Setup(m => m.Send(It.IsAny<CreateProjectCommand>(), default))
             .ReturnsAsync(error);
-        
+
         // Act
         var outcome = await _uut.Create(request, default);
 
@@ -94,7 +94,7 @@ public class ProjectControllerTest
                         c => Utils.Project.AssertCreateCommand(c, request, token)),
                     default),
             Times.Once);
-        
+
         outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
     }
 
@@ -103,11 +103,11 @@ public class ProjectControllerTest
     {
         // Arrange
         var id = Guid.NewGuid();
-        
+
         var result = new DeleteProjectResult();
         _mediator.Setup(m => m.Send(It.IsAny<DeleteProjectCommand>(), default))
             .ReturnsAsync(result);
-        
+
         // Act
         var outcome = await _uut.Delete(id, default);
 
@@ -117,14 +117,14 @@ public class ProjectControllerTest
                         c => Utils.Project.AssertDeleteCommand(c, id)),
                     default),
             Times.Once);
-        
+
         outcome.Should().BeOfType<OkObjectResult>();
         ((OkObjectResult)outcome).Value.Should().BeOfType<DeleteProjectResponse>();
 
         var response = ((OkObjectResult)outcome).Value as DeleteProjectResponse;
         response!.Message.Should().Be(result.Message);
     }
-    
+
     [Fact]
     public async Task DeleteProject_WhenItFails_ShouldReturnNotFoundError()
     {
@@ -134,7 +134,7 @@ public class ProjectControllerTest
         var error = Errors.Project.NotFound;
         _mediator.Setup(m => m.Send(It.IsAny<DeleteProjectCommand>(), default))
             .ReturnsAsync(error);
-        
+
         // Act
         var outcome = await _uut.Delete(id, default);
 
@@ -144,7 +144,7 @@ public class ProjectControllerTest
                         c => Utils.Project.AssertDeleteCommand(c, id)),
                     default),
             Times.Once);
-        
+
         outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
     }
 }

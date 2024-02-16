@@ -16,9 +16,9 @@ internal static partial class Utils
             projectId.Should().Be(ProjectId.Create(expectedId));
             return true;
         }
-        
+
         internal static bool AssertFromCreateCommand(
-            ProjectAggregate project, 
+            ProjectAggregate project,
             CreateProjectCommand command,
             WorkspaceAggregate workspace,
             UserAggregate user)
@@ -32,12 +32,12 @@ internal static partial class Utils
             project.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             project.Workspace.Should().Be(workspace);
-            
+
             project.DomainEvents.Should().HaveCount(1);
             project.DomainEvents[0].Should().BeOfType<ProjectCreated>();
             ((ProjectCreated)project.DomainEvents[0]).Project.Should().Be(project);
             ((ProjectCreated)project.DomainEvents[0]).User.Should().Be(user);
-            
+
             return true;
         }
     }

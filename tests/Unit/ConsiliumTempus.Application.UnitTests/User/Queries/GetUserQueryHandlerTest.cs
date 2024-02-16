@@ -36,26 +36,26 @@ public class GetUserQueryHandlerTest
 
         // Assert
         _userRepository.Verify(u =>
-                u.Get(It.Is<UserId>(id => Utils.User.AssertId(id, query.Id.ToString())), 
+                u.Get(It.Is<UserId>(id => Utils.User.AssertId(id, query.Id.ToString())),
                     default),
-                Times.Once());
+            Times.Once());
 
         outcome.IsError.Should().BeFalse();
         Utils.User.AssertUser(outcome.Value, user);
     }
-    
+
     [Fact]
     public async Task WhenGetUserQueryIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = new GetUserQuery(Guid.NewGuid());
-        
+
         // Act
         var outcome = await _uut.Handle(query, default);
 
         // Assert
         _userRepository.Verify(u =>
-                u.Get(It.Is<UserId>(id => Utils.User.AssertId(id, query.Id.ToString())), 
+                u.Get(It.Is<UserId>(id => Utils.User.AssertId(id, query.Id.ToString())),
                     default),
             Times.Once());
 

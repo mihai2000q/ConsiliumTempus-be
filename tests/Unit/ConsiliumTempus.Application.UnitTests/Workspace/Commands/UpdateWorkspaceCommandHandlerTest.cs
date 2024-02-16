@@ -32,38 +32,38 @@ public class UpdateWorkspaceCommandHandlerTest
         _workspaceRepository.Setup(w =>
                 w.Get(It.IsAny<WorkspaceId>(), default))
             .ReturnsAsync(currentWorkspace);
-        
+
         var command = new UpdateWorkspaceCommand(
-            currentWorkspace.Id.Value, 
-            "New Name", 
+            currentWorkspace.Id.Value,
+            "New Name",
             "New Description");
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
         _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.Id)), 
+                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.Id)),
                     default),
-                Times.Once());
+            Times.Once());
         _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
 
         outcome.IsError.Should().BeFalse();
         Utils.Workspace.AssertFromUpdateCommand(outcome.Value.Workspace, command);
     }
-    
+
     [Fact]
     public async Task WhenUpdateWorkspaceIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = new UpdateWorkspaceCommand(Guid.NewGuid(), "New Name", "New Description");
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
         _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.Id)), 
+                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.Id)),
                     default),
             Times.Once());
         _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Never());

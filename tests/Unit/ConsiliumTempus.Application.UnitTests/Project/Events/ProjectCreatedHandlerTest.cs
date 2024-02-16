@@ -20,7 +20,7 @@ public class ProjectCreatedHandlerTest
         var workspace = Mock.Mock.Workspace.CreateMock();
         var project = Mock.Mock.Project.CreateMock(workspace, user);
         var notification = new ProjectCreated(project, user);
-        
+
         // Act
         await _uut.Handle(notification, default);
 
@@ -33,7 +33,7 @@ public class ProjectCreatedHandlerTest
         project.Sprints[0].EndDate.Should().BeNull();
         project.Sprints[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         project.Sprints[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-        
+
         project.Sprints[0].Sections.Should().HaveCount(Constants.ProjectSection.Names.Length);
         project.Sprints[0].Sections
             .ToList()

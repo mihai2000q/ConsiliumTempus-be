@@ -35,7 +35,7 @@ public class LoginQueryHandlerTest
         const string hashedPassword = "This is the has for Password123";
 
         var user = Mock.Mock.User.CreateMock(password: hashedPassword);
-        _userRepository.Setup(u => 
+        _userRepository.Setup(u =>
                 u.GetUserByEmail(query.Email.ToLower(), default))
             .ReturnsAsync(user);
 
@@ -50,11 +50,11 @@ public class LoginQueryHandlerTest
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _userRepository.Verify(u => 
-            u.GetUserByEmail(It.IsAny<string>(), default), 
+        _userRepository.Verify(u =>
+                u.GetUserByEmail(It.IsAny<string>(), default),
             Times.Once());
-        _jwtTokenGenerator.Verify(j => 
-            j.GenerateToken(It.IsAny<UserAggregate>()),
+        _jwtTokenGenerator.Verify(j =>
+                j.GenerateToken(It.IsAny<UserAggregate>()),
             Times.Once());
 
         outcome.IsError.Should().BeFalse();
@@ -73,8 +73,8 @@ public class LoginQueryHandlerTest
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _userRepository.Verify(u => 
-            u.GetUserByEmail(query.Email.ToLower(), default), 
+        _userRepository.Verify(u =>
+                u.GetUserByEmail(query.Email.ToLower(), default),
             Times.Once());
 
         outcome.IsError.Should().BeTrue();
@@ -104,7 +104,7 @@ public class LoginQueryHandlerTest
 
         // Assert
         _userRepository.Verify(u =>
-            u.GetUserByEmail(It.IsAny<string>(), default),
+                u.GetUserByEmail(It.IsAny<string>(), default),
             Times.Once());
 
         outcome.IsError.Should().BeTrue();

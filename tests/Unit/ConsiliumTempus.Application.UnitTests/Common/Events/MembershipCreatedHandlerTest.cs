@@ -10,7 +10,7 @@ public class MembershipCreatedHandlerTest
 
     private readonly Mock<IWorkspaceRoleRepository> _workspaceRoleRepository;
     private readonly MembershipCreatedHandler _uut;
-    
+
     public MembershipCreatedHandlerTest()
     {
         _workspaceRoleRepository = new Mock<IWorkspaceRoleRepository>();
@@ -25,12 +25,12 @@ public class MembershipCreatedHandlerTest
         // Arrange
         var membership = Mock.Mock.Membership.CreateMock();
         var domainEvent = new MembershipCreated(membership);
-        
+
         // Act
         await _uut.Handle(domainEvent, default);
 
         // Assert
-        _workspaceRoleRepository.Verify(w => w.Attach(membership.WorkspaceRole), 
+        _workspaceRoleRepository.Verify(w => w.Attach(membership.WorkspaceRole),
             Times.Once());
     }
 }

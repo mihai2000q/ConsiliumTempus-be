@@ -40,7 +40,7 @@ public class AuthenticationControllerTest
             "LastName",
             "Example@Email.com",
             "Password123",
-            null, 
+            null,
             null);
 
         var result = new RegisterResult("This is the token for the registration");

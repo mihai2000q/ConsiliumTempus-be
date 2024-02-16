@@ -44,7 +44,7 @@ public class DeleteProjectCommandHandlerTest
         // Assert
         _projectRepository.Verify(p =>
                 p.GetWithWorkspace(
-                    It.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)), 
+                    It.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)),
                     default),
             Times.Once);
         _projectRepository.Verify(p => p.Remove(
@@ -54,7 +54,7 @@ public class DeleteProjectCommandHandlerTest
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectResult());
-        
+
         workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
     }
 
@@ -70,7 +70,7 @@ public class DeleteProjectCommandHandlerTest
         // Assert
         _projectRepository.Verify(p =>
                 p.GetWithWorkspace(
-                    It.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)), 
+                    It.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)),
                     default),
             Times.Once);
         _projectRepository.Verify(p => p.Remove(It.IsAny<ProjectAggregate>()), Times.Never);

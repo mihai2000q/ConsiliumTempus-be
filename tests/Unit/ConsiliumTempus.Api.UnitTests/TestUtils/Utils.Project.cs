@@ -17,11 +17,11 @@ internal static partial class Utils
             command.Token.Should().Be(token);
             return true;
         }
-        
+
         internal static bool AssertDeleteCommand(DeleteProjectCommand command, Guid id)
         {
             command.Id.Should().Be(id);
             return true;
         }
-    }   
+    }
 }

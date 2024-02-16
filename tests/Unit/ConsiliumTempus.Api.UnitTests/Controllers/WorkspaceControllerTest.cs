@@ -49,9 +49,9 @@ public class WorkspaceControllerTest
         var outcome = await _uut.Get(request, default);
 
         // Assert
-        _mediator.Verify(m => 
-            m.Send(It.Is<GetWorkspaceQuery>(query => Utils.Workspace.AssertGetQuery(query, request)), 
-                default),
+        _mediator.Verify(m =>
+                m.Send(It.Is<GetWorkspaceQuery>(query => Utils.Workspace.AssertGetQuery(query, request)),
+                    default),
             Times.Once());
         Utils.Workspace.AssertDto(outcome, result);
     }
@@ -70,14 +70,14 @@ public class WorkspaceControllerTest
         var outcome = await _uut.Get(request, default);
 
         // Assert
-        _mediator.Verify(m => 
-                m.Send(It.Is<GetWorkspaceQuery>(query => Utils.Workspace.AssertGetQuery(query, request)), 
+        _mediator.Verify(m =>
+                m.Send(It.Is<GetWorkspaceQuery>(query => Utils.Workspace.AssertGetQuery(query, request)),
                     default),
             Times.Once());
-        
+
         outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
     }
-    
+
     [Fact]
     public async Task GetCollectionWorkspace_ShouldReturnCollectionOfWorkspaces()
     {
@@ -85,7 +85,7 @@ public class WorkspaceControllerTest
         const string token = "This-is-a-token";
         _httpContext.SetupGet(h => h.Request.Headers.Authorization)
             .Returns($"Bearer {token}");
-        
+
         var result = Mock.Mock.Workspace.CreateListMock();
         _mediator.Setup(m => m.Send(It.IsAny<GetCollectionWorkspaceQuery>(), default))
             .ReturnsAsync(result);
@@ -95,9 +95,9 @@ public class WorkspaceControllerTest
 
         // Assert
         _httpContext.VerifyGet(h => h.Request.Headers.Authorization, Times.Once());
-        _mediator.Verify(m => 
-                m.Send(It.Is<GetCollectionWorkspaceQuery>(query => 
-                        Utils.Workspace.AssertGetCollectionQuery(query, token)), 
+        _mediator.Verify(m =>
+                m.Send(It.Is<GetCollectionWorkspaceQuery>(query =>
+                        Utils.Workspace.AssertGetCollectionQuery(query, token)),
                     default),
             Times.Once());
         Utils.Workspace.AssertDtos(outcome, result);
@@ -131,13 +131,13 @@ public class WorkspaceControllerTest
 
         Utils.Workspace.AssertDto(outcome, result.Workspace);
     }
-    
+
     [Fact]
     public async Task DeleteWorkspace_WhenIsSuccessful_ShouldReturnWorkspace()
     {
         // Arrange
         var id = Guid.NewGuid();
-        
+
         var result = new DeleteWorkspaceResult(Mock.Mock.Workspace.CreateMock());
         _mediator.Setup(m => m.Send(It.IsAny<DeleteWorkspaceCommand>(), default))
             .ReturnsAsync(result);
@@ -146,10 +146,10 @@ public class WorkspaceControllerTest
         var outcome = await _uut.Delete(id, default);
 
         // Assert
-        _mediator.Verify(m => 
+        _mediator.Verify(m =>
                 m.Send(It.Is<DeleteWorkspaceCommand>(command => command.Id == id), default),
             Times.Once());
-        
+
         Utils.Workspace.AssertDto(outcome, result.Workspace);
     }
 
@@ -167,22 +167,22 @@ public class WorkspaceControllerTest
         var outcome = await _uut.Delete(id, default);
 
         // Assert
-        _mediator.Verify(m => 
+        _mediator.Verify(m =>
                 m.Send(It.Is<DeleteWorkspaceCommand>(command => command.Id == id), default),
             Times.Once());
-        
+
         outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
     }
-    
+
     [Fact]
     public async Task UpdateWorkspace_WhenIsSuccessful_ShouldReturnNewWorkspace()
     {
         // Arrange
         var request = new UpdateWorkspaceRequest(
-            Guid.NewGuid(), 
-            "New Name", 
+            Guid.NewGuid(),
+            "New Name",
             "New Description");
-        
+
         var result = new UpdateWorkspaceResult(Mock.Mock.Workspace.CreateMock());
         _mediator.Setup(m => m.Send(It.IsAny<UpdateWorkspaceCommand>(), default))
             .ReturnsAsync(result);
@@ -191,12 +191,12 @@ public class WorkspaceControllerTest
         var outcome = await _uut.Update(request, default);
 
         // Assert
-        _mediator.Verify(m => 
+        _mediator.Verify(m =>
                 m.Send(It.Is<UpdateWorkspaceCommand>(
-                        command => Utils.Workspace.AssertUpdateCommand(command, request)), 
+                        command => Utils.Workspace.AssertUpdateCommand(command, request)),
                     default),
             Times.Once());
-        
+
         Utils.Workspace.AssertDto(outcome, result.Workspace);
     }
 
@@ -205,8 +205,8 @@ public class WorkspaceControllerTest
     {
         // Arrange
         var request = new UpdateWorkspaceRequest(
-            Guid.NewGuid(), 
-            "New Name", 
+            Guid.NewGuid(),
+            "New Name",
             "New Description");
 
         var error = Errors.Workspace.NotFound;
@@ -217,12 +217,12 @@ public class WorkspaceControllerTest
         var outcome = await _uut.Update(request, default);
 
         // Assert
-        _mediator.Verify(m => 
+        _mediator.Verify(m =>
                 m.Send(It.Is<UpdateWorkspaceCommand>(
-                        command => Utils.Workspace.AssertUpdateCommand(command, request)), 
+                        command => Utils.Workspace.AssertUpdateCommand(command, request)),
                     default),
             Times.Once());
-        
+
         outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
     }
 }

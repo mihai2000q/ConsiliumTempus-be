@@ -17,7 +17,7 @@ internal static partial class Utils
             workspaceId.Should().Be(WorkspaceId.Create(expectedId));
             return true;
         }
-        
+
         internal static bool AssertFromCreateCommand(
             WorkspaceAggregate workspace,
             CreateWorkspaceCommand command,
@@ -37,7 +37,7 @@ internal static partial class Utils
             workspace.Projects.Should().BeEmpty();
             return true;
         }
-        
+
         internal static void AssertFromUpdateCommand(
             WorkspaceAggregate workspace,
             UpdateWorkspaceCommand command)

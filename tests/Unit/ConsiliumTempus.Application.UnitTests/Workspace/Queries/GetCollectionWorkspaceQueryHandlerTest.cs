@@ -11,7 +11,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
     private readonly Mock<ISecurity> _security;
     private readonly Mock<IWorkspaceRepository> _workspaceRepository;
     private readonly GetCollectionWorkspaceQueryHandler _uut;
-    
+
     public GetCollectionWorkspaceQueryHandlerTest()
     {
         _security = new Mock<ISecurity>();
@@ -34,7 +34,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
         var workspaces = Mock.Mock.Workspace.CreateListMock();
         _workspaceRepository.Setup(w => w.GetListForUser(user, default))
             .ReturnsAsync(workspaces);
-        
+
         // Act
         var outcome = await _uut.Handle(query, default);
 

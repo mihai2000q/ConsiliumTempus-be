@@ -11,7 +11,7 @@ internal static partial class Mock
         internal static ProjectAggregate CreateMock(WorkspaceAggregate workspace, UserAggregate user)
         {
             return ProjectAggregate.Create(
-                "Project Name", 
+                "Project Name",
                 "This is the project description",
                 true,
                 workspace,

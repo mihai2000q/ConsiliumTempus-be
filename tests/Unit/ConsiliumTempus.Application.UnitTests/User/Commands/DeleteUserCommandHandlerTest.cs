@@ -48,7 +48,7 @@ public class DeleteUserCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         Utils.User.AssertDeleteResult(outcome.Value, user);
     }
-    
+
     [Fact]
     public async Task WhenDeleteUserCommandFails_ShouldReturnNotFoundError()
     {

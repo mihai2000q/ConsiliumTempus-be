@@ -46,15 +46,15 @@ public class CreateWorkspaceCommandHandlerTest
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _security.Verify(s => 
-            s.GetUserFromToken(It.IsAny<string>(), default), 
+        _security.Verify(s =>
+                s.GetUserFromToken(It.IsAny<string>(), default),
             Times.Once());
         _workspaceRepository.Verify(w => w.Add(
-            It.Is<WorkspaceAggregate>(workspace =>
-                Utils.Workspace.AssertFromCreateCommand(workspace, command, user)), default), 
+                It.Is<WorkspaceAggregate>(workspace =>
+                    Utils.Workspace.AssertFromCreateCommand(workspace, command, user)), default),
             Times.Once());
-        _unitOfWork.Verify(u => 
-                u.SaveChangesAsync(default), 
+        _unitOfWork.Verify(u =>
+                u.SaveChangesAsync(default),
             Times.Once());
 
         Utils.Workspace.AssertFromCreateCommand(outcome.Workspace, command, user);

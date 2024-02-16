@@ -16,7 +16,7 @@ internal static partial class Utils
         }
 
         internal static void AssertFromUpdateCommand(
-            UpdateUserResult result, 
+            UpdateUserResult result,
             UpdateUserCommand command)
         {
             result.User.Id.Value.Should().Be(command.Id);
