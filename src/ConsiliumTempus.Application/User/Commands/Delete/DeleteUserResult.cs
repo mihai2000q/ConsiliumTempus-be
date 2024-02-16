@@ -1,5 +1,3 @@
-﻿using ConsiliumTempus.Domain.User;
+﻿namespace ConsiliumTempus.Application.User.Commands.Delete;
 
-namespace ConsiliumTempus.Application.User.Commands.Delete;
-
-public sealed record DeleteUserResult(UserAggregate User);
+public sealed record DeleteUserResult(string Message = "User has been deleted successfully!");

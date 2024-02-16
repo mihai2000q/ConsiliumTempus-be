@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Application.User.Commands.Delete;
-using ConsiliumTempus.Application.User.Commands.Update;
+﻿using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
 
@@ -25,11 +24,6 @@ internal static partial class Utils
             result.User.Role.Should().Be(command.Role);
             result.User.DateOfBirth.Should().Be(command.DateOfBirth);
             result.User.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-        }
-
-        internal static void AssertDeleteResult(DeleteUserResult result, UserAggregate expected)
-        {
-            AssertUser(result.User, expected);
         }
 
         internal static void AssertUser(UserAggregate outcome, UserAggregate expected)

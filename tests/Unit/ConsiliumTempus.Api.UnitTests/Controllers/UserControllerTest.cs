@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
+using ConsiliumTempus.Api.Contracts.User.Delete;
 using ConsiliumTempus.Api.Contracts.User.Get;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Controllers;
@@ -9,6 +10,7 @@ using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Domain.Common.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -140,7 +142,7 @@ public class UserControllerTest
         var id = Guid.NewGuid();
 
 
-        var result = new DeleteUserResult(Mock.Mock.User.CreateMock());
+        var result = new DeleteUserResult();
         _mediator.Setup(m => m.Send(It.IsAny<DeleteUserCommand>(), default))
             .ReturnsAsync(result);
 
@@ -154,7 +156,11 @@ public class UserControllerTest
                     default),
             Times.Once());
 
-        Utils.User.AssertDto(outcome, result.User);
+        outcome.Should().BeOfType<OkObjectResult>();
+        ((OkObjectResult)outcome).Value.Should().BeOfType<DeleteUserResponse>();
+
+        var response = ((OkObjectResult)outcome).Value as DeleteUserResponse;
+        response!.Message.Should().Be(result.Message);
     }
 
     [Fact]

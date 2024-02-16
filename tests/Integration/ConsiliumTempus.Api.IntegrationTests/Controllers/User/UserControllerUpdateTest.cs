@@ -26,6 +26,9 @@ public class UserControllerUpdateTest(
         var outcome = await Client.PutAsJsonAsync("api/users", request);
 
         // Assert
+        var updatedUser = DbContext.Users.AsEnumerable().Single(u => u.Id.Value == request.Id);
+        Utils.User.AssertUpdate(updatedUser, request);
+        
         await Utils.User.AssertDtoFromResponse(
             outcome,
             request.FirstName, 
@@ -47,6 +50,9 @@ public class UserControllerUpdateTest(
         var outcome = await Client.PutAsJsonAsync("api/users", request);
 
         // Assert
+        var updatedUser = DbContext.Users.AsEnumerable().Single(u => u.Id.Value == request.Id);
+        Utils.User.AssertNotUpdated(updatedUser, request);
+        
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
     
@@ -60,6 +66,8 @@ public class UserControllerUpdateTest(
         var outcome = await Client.PutAsJsonAsync("api/users", request);
 
         // Assert
+        DbContext.Users.AsEnumerable().SingleOrDefault(u => u.Id.Value == request.Id).Should().BeNull();
+        
         await outcome.ValidateError(HttpStatusCode.NotFound, Errors.User.NotFound.Description);
     }
 

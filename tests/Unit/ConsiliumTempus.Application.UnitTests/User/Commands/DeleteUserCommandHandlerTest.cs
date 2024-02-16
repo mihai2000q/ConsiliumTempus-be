@@ -46,7 +46,7 @@ public class DeleteUserCommandHandlerTest
         _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
 
         outcome.IsError.Should().BeFalse();
-        Utils.User.AssertDeleteResult(outcome.Value, user);
+        outcome.Value.Should().Be(new DeleteUserResult());
     }
 
     [Fact]
