@@ -48,14 +48,25 @@ public class ProjectControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/projects/{id}");
 
         // Assert
+        DbContext.Projects.Should().HaveCount(1);
+        DbContext.Projects.AsEnumerable()
+            .SingleOrDefault(p => p.Id.Value == new Guid(id)).Should().BeNull();
+        
         await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Project.NotFound.Description);
     }
 
     private async Task AssertSuccessfulRequest(string email)
     {
-        var outcome = await ArrangeAndAct(email);
+        // Arrange
+        const string id = "10000000-0000-0000-0000-000000000000";
+        
+        // Act
+        UseCustomToken(email);
+        var outcome = await Client.DeleteAsync($"api/projects/{id}");
 
         // Assert
+        DbContext.Projects.Should().BeEmpty();
+        
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<DeleteProjectResponse>();
@@ -64,19 +75,18 @@ public class ProjectControllerDeleteTest(
     
     private async Task AssertForbiddenResponse(string email)
     {
-        var outcome = await ArrangeAndAct(email);
-
-        // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-    }
-
-    private Task<HttpResponseMessage> ArrangeAndAct(string email)
-    {
         // Arrange
         const string id = "10000000-0000-0000-0000-000000000000";
         
         // Act
         UseCustomToken(email);
-        return Client.DeleteAsync($"api/projects/{id}");
+        var outcome = await Client.DeleteAsync($"api/projects/{id}");
+
+        // Assert
+        DbContext.Projects.Should().HaveCount(1);
+        DbContext.Projects.AsEnumerable()
+            .SingleOrDefault(p => p.Id.Value == new Guid(id)).Should().NotBeNull();
+        
+        outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 }

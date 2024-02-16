@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project;
@@ -15,7 +16,7 @@ public class ProjectControllerCreateTest(
     : BaseIntegrationTest(factory, testOutputHelper, "Project")
 {
     [Fact]
-    public async Task WhenProjectCreateWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task WhenProjectCreateWithAdminRole_ShouldCreateProjectReturnSuccessResponse()
     {
         await AssertSuccessfulRequest("michaelj@gmail.com");
     }
@@ -52,29 +53,13 @@ public class ProjectControllerCreateTest(
         var outcome = await Client.PostAsJsonAsync("api/projects", request);
 
         // Assert
+        DbContext.Projects.Should().HaveCount(1);
+        DbContext.Projects.SingleOrDefault(p => p.Name == request.Name).Should().BeNull();
+        
         await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Workspace.NotFound.Description);
     }
 
     private async Task AssertSuccessfulRequest(string email)
-    {
-        var outcome = await ArrangeAndAct(email);
-
-        // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
-        response!.Message.Should().Be("Project created successfully!");
-    }
-    
-    private async Task AssertForbiddenResponse(string email)
-    {
-        var outcome = await ArrangeAndAct(email);
-
-        // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-    }
-
-    private Task<HttpResponseMessage> ArrangeAndAct(string email)
     {
         // Arrange
         var request = new CreateProjectRequest(
@@ -85,6 +70,38 @@ public class ProjectControllerCreateTest(
         
         // Act
         UseCustomToken(email);
-        return Client.PostAsJsonAsync("api/projects", request);
+        var outcome = await Client.PostAsJsonAsync("api/projects", request);
+
+        // Assert
+        DbContext.Projects.Should().HaveCount(2);
+        var createdProject = DbContext.Projects
+            .Include(p => p.Workspace)
+            .Single(p => p.Name == request.Name);
+        Utils.Project.AssertCreation(createdProject, request);
+        
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
+        response!.Message.Should().Be("Project created successfully!");
+    }
+    
+    private async Task AssertForbiddenResponse(string email)
+    {
+        // Arrange
+        var request = new CreateProjectRequest(
+            new Guid("10000000-0000-0000-0000-000000000000"), 
+            "Project Name",
+            "This is the project description",
+            true);
+        
+        // Act
+        UseCustomToken(email);
+        var outcome = await Client.PostAsJsonAsync("api/projects", request);
+
+        // Assert
+        DbContext.Projects.Should().HaveCount(1);
+        DbContext.Projects.SingleOrDefault(p => p.Name == request.Name).Should().BeNull();
+        
+        outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 }
