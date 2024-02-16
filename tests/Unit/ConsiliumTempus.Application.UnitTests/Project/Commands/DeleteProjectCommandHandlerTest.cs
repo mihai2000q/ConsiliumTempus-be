@@ -35,7 +35,7 @@ public class DeleteProjectCommandHandlerTest
         var workspace = Mock.Mock.Workspace.CreateMock();
         var project = Mock.Mock.Project.CreateMock(workspace, user);
         _projectRepository.Setup(p =>
-                p.Get(It.IsAny<ProjectId>(), default))
+                p.GetWithWorkspace(It.IsAny<ProjectId>(), default))
             .ReturnsAsync(project);
 
         // Act
@@ -43,7 +43,9 @@ public class DeleteProjectCommandHandlerTest
 
         // Assert
         _projectRepository.Verify(p =>
-                p.Get(It.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)), default),
+                p.GetWithWorkspace(
+                    It.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)), 
+                    default),
             Times.Once);
         _projectRepository.Verify(p => p.Remove(
                 It.Is<ProjectAggregate>(pr => pr == project)),
@@ -67,7 +69,9 @@ public class DeleteProjectCommandHandlerTest
 
         // Assert
         _projectRepository.Verify(p =>
-                p.Get(It.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)), default),
+                p.GetWithWorkspace(
+                    It.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)), 
+                    default),
             Times.Once);
         _projectRepository.Verify(p => p.Remove(It.IsAny<ProjectAggregate>()), Times.Never);
         _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Never);
