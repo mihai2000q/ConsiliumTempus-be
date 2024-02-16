@@ -6,6 +6,8 @@ namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 public interface IProjectRepository
 {
     Task<ProjectAggregate?> Get(ProjectId projectId, CancellationToken cancellationToken = default);
+
+    Task<ProjectAggregate?> GetWithWorkspace(ProjectId id, CancellationToken cancellationToken = default);
     
     Task Add(ProjectAggregate project, CancellationToken cancellationToken = default);
 

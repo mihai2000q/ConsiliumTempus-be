@@ -16,7 +16,7 @@ public sealed class DeleteProjectCommandHandler(
         CancellationToken cancellationToken)
     {
         var id = ProjectId.Create(command.Id);
-        var project = await projectRepository.Get(id, cancellationToken);
+        var project = await projectRepository.GetWithWorkspace(id, cancellationToken);
 
         if (project is null) return Errors.Project.NotFound;
         
