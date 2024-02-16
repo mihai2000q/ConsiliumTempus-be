@@ -1,6 +1,9 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.Dto;
+using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Domain.User;
 using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -39,6 +42,19 @@ internal static partial class Utils
             dto.Email.Should().Be(email);
             dto.Role.Should().Be(role);
             dto.DateOfBirth.Should().Be(dateOfBirth);
+        }
+
+        internal static void AssertRegistration(
+            UserAggregate user,
+            RegisterRequest request)
+        {
+            user.Id.Value.Should().NotBeEmpty();
+            user.Name.First.Should().Be(request.FirstName.Capitalize());
+            user.Name.Last.Should().Be(request.LastName.Capitalize());
+            user.Credentials.Email.Should().Be(request.Email.ToLower());
+            user.Credentials.Password.Should().NotBeNullOrWhiteSpace().And.NotBe(request.Password);
+            user.Role.Should().Be(request.Role);
+            user.DateOfBirth.Should().Be(request.DateOfBirth);
         }
     }
 }

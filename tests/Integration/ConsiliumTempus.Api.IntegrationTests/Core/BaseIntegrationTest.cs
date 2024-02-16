@@ -14,7 +14,6 @@ namespace ConsiliumTempus.Api.IntegrationTests.Core;
 public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebApplicationFactory>, IAsyncLifetime
 {
     private readonly ITokenProvider _tokenProvider;
-    private readonly ConsiliumTempusDbContext _dbContext;
     private readonly Func<Task> _resetDatabase;
 
     private readonly string? _testDataDirectory;
@@ -23,6 +22,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
 
     protected readonly HttpClient Client;
     protected readonly ITestOutputHelper TestOutputHelper;
+    protected readonly ConsiliumTempusDbContext DbContext;
     protected readonly JwtSettings JwtSettings = new();
 
     protected BaseIntegrationTest(
@@ -32,12 +32,12 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         bool defaultUsers = true)
     {
         _tokenProvider = factory.Services.GetRequiredService<ITokenProvider>();
-        _dbContext = factory.Services.GetRequiredService<ConsiliumTempusDbContext>();
         _resetDatabase = factory.ResetDatabaseAsync;
         _testDataDirectory = testDataDirectory;
         _defaultUsers = defaultUsers;
         Client = factory.HttpClient;
         TestOutputHelper = testOutputHelper;
+        DbContext = factory.Services.GetRequiredService<ConsiliumTempusDbContext>();
         factory.Services.GetRequiredService<IConfiguration>()
             .Bind(JwtSettings.SectionName, JwtSettings);
     }
@@ -84,7 +84,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         TestOutputHelper.WriteLine($"Importing data from: {path}");
         foreach (var query in queries)
         {
-            await _dbContext.Database.ExecuteSqlRawAsync(query);
+            await DbContext.Database.ExecuteSqlRawAsync(query);
         }
         TestOutputHelper.WriteLine($"Finished importing data from: {path}\n");
     }
@@ -116,8 +116,8 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
     private JwtSecurityToken GetToken(string? email = null)
     {
         var user = email is null
-            ? _dbContext.Users.FirstOrDefault()
-            : _dbContext.Users.SingleOrDefault(u => u.Credentials.Email == email.ToLower());
+            ? DbContext.Users.FirstOrDefault()
+            : DbContext.Users.SingleOrDefault(u => u.Credentials.Email == email.ToLower());
 
         if (user is null) throw new Exception("There is no user with that email");
 
