@@ -74,9 +74,9 @@ public class ProjectControllerCreateTest(
 
         // Assert
         DbContext.Projects.Should().HaveCount(2);
-        var createdProject = DbContext.Projects
+        var createdProject = await DbContext.Projects
             .Include(p => p.Workspace)
-            .Single(p => p.Name == request.Name);
+            .SingleAsync(p => p.Name == request.Name);
         Utils.Project.AssertCreation(createdProject, request);
         
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
