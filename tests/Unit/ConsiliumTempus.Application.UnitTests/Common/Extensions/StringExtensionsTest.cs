@@ -1,25 +1,35 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.UnitTests.TestData.Common.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Common.Extensions;
 
 public class StringExtensionsTest
 {
-    [Fact]
-    public void TruncateAggregate_WhenValid_ShouldReturnTheStringWithoutAggregate()
+
+    [Theory]
+    [ClassData(typeof(Data.StringExtensions.GetValidTruncateAggregate))]
+    public void TruncateAggregate_WhenValid_ShouldReturnStringWithoutAggregate(string input, string expected)
     {
-        // Arrange
-        const string input1 = "WorkspaceAggregate";
-        const string input2 = "Workspace";
+        // Arrange - parameterized
 
         // Act
-        var outcome1 = input1.TruncateAggregate();
-        var outcome2 = input2.TruncateAggregate();
-        var outcome3 = "".TruncateAggregate();
+        var outcome1 = input.TruncateAggregate();
 
         // Assert
-        outcome1.Should().Be("Workspace");
-        outcome2.Should().Be("Workspace");
-        outcome3.Should().BeEmpty();
+        outcome1.Should().Be(expected);
+    }
+    
+    [Fact]
+    public void TruncateAggregate_WhenEmpty_ShouldReturnEmpty()
+    {
+        // Arrange
+        const string input = "";
+
+        // Act
+        var outcome = input.TruncateAggregate();
+
+        // Assert
+        outcome.Should().BeEmpty();
     }
 
     [Fact]
@@ -100,30 +110,30 @@ public class StringExtensionsTest
         outcome.Should().BeFalse();
     }
 
-    [Fact]
-    public void IsValidEmail_WhenStringIsValidEmail_ShouldReturnTrue()
+    [Theory]
+    [ClassData(typeof(Data.StringExtensions.GetValidEmails))]
+    public void IsValidEmail_WhenStringIsValidEmail_ShouldReturnTrue(string input)
     {
-        // Arrange
-        const string str = "Some@Example.com";
+        // Arrange - parameterized
 
         // Act
-        var outcome = str.IsValidEmail();
+        var outcome = input.IsValidEmail();
 
         // Assert
         outcome.Should().BeTrue();
     }
 
-    [Fact]
-    public void IsValidEmail_WhenStringIsNotValidEmail_ShouldReturnFalse()
+    [Theory]
+    [ClassData(typeof(Data.StringExtensions.GetInvalidEmails))]
+    public void IsValidEmail_WhenStringIsNotValidEmail_ShouldReturnFalse(string input)
     {
-        // Arrange
-        var input = new[] { "SomeExample", "Some@Example", "SomeExample.com" };
+        // Arrange - parameterized
 
         // Act
-        var outcome = input.Select(s => s.IsValidEmail());
+        var outcome = input.IsValidEmail();
 
         // Assert
-        outcome.Should().AllBeEquivalentTo(false);
+        outcome.Should().BeFalse();
     }
 
     [Fact]
@@ -152,17 +162,16 @@ public class StringExtensionsTest
         outcome.Should().Be("L");
     }
 
-    [Fact]
-    public void Capitalize_WhenLengthIsOver1_ShouldReturnCapitalizedWords()
+    [Theory]
+    [ClassData(typeof(Data.StringExtensions.GetCapitalizeStrings))]
+    public void Capitalize_WhenLengthIsOver1_ShouldReturnCapitalizedWords(string input, string expected)
     {
-        // Arrange
-        var inputs = new[] { "aNdReI", "mIchAel JaMES", "CHRISTIAN-MICHAEL" };
-        var expectedOutcomes = new[] { "Andrei", "Michael James", "Christian-Michael" };
+        // Arrange - parameterized
 
         // Act
-        var outcomes = inputs.Select(s => s.Capitalize());
+        var outcomes = input.Capitalize();
 
         // Assert
-        outcomes.Should().BeEquivalentTo(expectedOutcomes);
+        outcomes.Should().Be(expected);
     }
 }
