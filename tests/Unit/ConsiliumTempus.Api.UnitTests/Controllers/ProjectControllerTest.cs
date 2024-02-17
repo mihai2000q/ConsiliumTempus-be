@@ -6,9 +6,9 @@ using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Domain.Common.Errors;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -16,16 +16,16 @@ public class ProjectControllerTest
 {
     #region Setup
 
-    private readonly Mock<ISender> _mediator;
-    private readonly Mock<HttpContext> _httpContext;
+    private readonly ISender _mediator;
+    private readonly HttpContext _httpContext;
     private readonly ProjectController _uut;
 
     public ProjectControllerTest()
     {
         var mapper = Utils.GetMapper<ProjectMappingConfig>();
 
-        _mediator = new Mock<ISender>();
-        _uut = new ProjectController(mapper, _mediator.Object);
+        _mediator = Substitute.For<ISender>();
+        _uut = new ProjectController(mapper, _mediator);
 
         _httpContext = Utils.ResolveHttpContext(_uut);
     }
@@ -43,22 +43,24 @@ public class ProjectControllerTest
             true);
 
         const string token = "My-Token";
-        _httpContext.SetupGet(h => h.Request.Headers.Authorization)
-            .Returns($"Bearer {token}");
+        _httpContext.Request.Headers.Authorization
+            .Returns(new StringValues($"Bearer {token}"));
 
         var result = new CreateProjectResult();
-        _mediator.Setup(m => m.Send(It.IsAny<CreateProjectCommand>(), default))
-            .ReturnsAsync(result);
+        _mediator
+            .Send(Arg.Any<CreateProjectCommand>())
+            .Returns(result);
 
         // Act
         var outcome = await _uut.Create(request, default);
 
         // Assert
-        _mediator.Verify(m =>
-                m.Send(It.Is<CreateProjectCommand>(
-                        c => Utils.Project.AssertCreateCommand(c, request, token)),
-                    default),
-            Times.Once);
+        _httpContext.Received(1);
+        
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<CreateProjectCommand>(
+                command => Utils.Project.AssertCreateCommand(command, request, token)));
 
         outcome.Should().BeOfType<OkObjectResult>();
         ((OkObjectResult)outcome).Value.Should().BeOfType<CreateProjectResponse>();
@@ -78,24 +80,26 @@ public class ProjectControllerTest
             true);
 
         const string token = "My-Token";
-        _httpContext.SetupGet(h => h.Request.Headers.Authorization)
-            .Returns($"Bearer {token}");
+        _httpContext.Request.Headers.Authorization
+            .Returns(new StringValues($"Bearer {token}"));
 
         var error = Errors.Workspace.NotFound;
-        _mediator.Setup(m => m.Send(It.IsAny<CreateProjectCommand>(), default))
-            .ReturnsAsync(error);
+        _mediator
+            .Send(Arg.Any<CreateProjectCommand>())
+            .Returns(error);
 
         // Act
         var outcome = await _uut.Create(request, default);
 
         // Assert
-        _mediator.Verify(m =>
-                m.Send(It.Is<CreateProjectCommand>(
-                        c => Utils.Project.AssertCreateCommand(c, request, token)),
-                    default),
-            Times.Once);
+        _httpContext.Received(1);
+        
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<CreateProjectCommand>(
+                command => Utils.Project.AssertCreateCommand(command, request, token)));
 
-        outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
+        outcome.ValidateError(error);
     }
 
     [Fact]
@@ -105,18 +109,17 @@ public class ProjectControllerTest
         var id = Guid.NewGuid();
 
         var result = new DeleteProjectResult();
-        _mediator.Setup(m => m.Send(It.IsAny<DeleteProjectCommand>(), default))
-            .ReturnsAsync(result);
+        _mediator
+            .Send(Arg.Any<DeleteProjectCommand>())
+            .Returns(result);
 
         // Act
         var outcome = await _uut.Delete(id, default);
 
         // Assert
-        _mediator.Verify(m =>
-                m.Send(It.Is<DeleteProjectCommand>(
-                        c => Utils.Project.AssertDeleteCommand(c, id)),
-                    default),
-            Times.Once);
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, id)));
 
         outcome.Should().BeOfType<OkObjectResult>();
         ((OkObjectResult)outcome).Value.Should().BeOfType<DeleteProjectResponse>();
@@ -132,19 +135,18 @@ public class ProjectControllerTest
         var id = Guid.NewGuid();
 
         var error = Errors.Project.NotFound;
-        _mediator.Setup(m => m.Send(It.IsAny<DeleteProjectCommand>(), default))
-            .ReturnsAsync(error);
+        _mediator
+            .Send(Arg.Any<DeleteProjectCommand>())
+            .Returns(error);
 
         // Act
         var outcome = await _uut.Delete(id, default);
 
         // Assert
-        _mediator.Verify(m =>
-                m.Send(It.Is<DeleteProjectCommand>(
-                        c => Utils.Project.AssertDeleteCommand(c, id)),
-                    default),
-            Times.Once);
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, id)));
 
-        outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
+        outcome.ValidateError(error);
     }
 }

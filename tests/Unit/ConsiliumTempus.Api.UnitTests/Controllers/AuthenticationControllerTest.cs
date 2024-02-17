@@ -6,8 +6,6 @@ using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Application.Authentication.Queries.Login;
 using ConsiliumTempus.Domain.Common.Errors;
-using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
@@ -16,15 +14,15 @@ public class AuthenticationControllerTest
 {
     #region Setup
 
-    private readonly Mock<ISender> _mediator;
+    private readonly ISender _mediator;
     private readonly AuthenticationController _uut;
 
     public AuthenticationControllerTest()
     {
         var mapper = Utils.GetMapper<AuthenticationMappingConfig>();
 
-        _mediator = new Mock<ISender>();
-        _uut = new AuthenticationController(mapper, _mediator.Object);
+        _mediator = Substitute.For<ISender>();
+        _uut = new AuthenticationController(mapper, _mediator);
 
         Utils.ResolveHttpContext(_uut);
     }
@@ -44,18 +42,18 @@ public class AuthenticationControllerTest
             null);
 
         var result = new RegisterResult("This is the token for the registration");
-
-        _mediator.Setup(m => m.Send(It.IsAny<RegisterCommand>(), default))
-            .ReturnsAsync(result);
+        _mediator
+            .Send(Arg.Any<RegisterCommand>())
+            .Returns(result);
 
         // Act
         var outcome = await _uut.Register(request, default);
 
         // Assert
-        _mediator.Verify(m => m.Send(
-                It.Is<RegisterCommand>(command => Utils.Authentication.AssertRegisterCommand(command, request)),
-                default),
-            Times.Once());
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<RegisterCommand>(
+                command => Utils.Authentication.AssertRegisterCommand(command, request)));
 
         outcome.Should().BeOfType<OkObjectResult>();
         ((OkObjectResult)outcome).Value.Should().BeOfType<RegisterResponse>();
@@ -76,19 +74,21 @@ public class AuthenticationControllerTest
             null,
             null);
 
-        _mediator.Setup(m => m.Send(It.IsAny<RegisterCommand>(), default))
-            .ReturnsAsync(Errors.User.DuplicateEmail);
+        var error = Errors.User.DuplicateEmail;
+        _mediator
+            .Send(Arg.Any<RegisterCommand>())
+            .Returns(error);
 
         // Act
         var outcome = await _uut.Register(request, default);
 
         // Assert
-        _mediator.Verify(m => m.Send(
-                It.Is<RegisterCommand>(command => Utils.Authentication.AssertRegisterCommand(command, request)),
-                default),
-            Times.Once());
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<RegisterCommand>(
+                command => Utils.Authentication.AssertRegisterCommand(command, request)));
 
-        outcome.ValidateError(StatusCodes.Status409Conflict, "Email is already in use");
+        outcome.ValidateError(error);
     }
 
     [Fact]
@@ -100,17 +100,18 @@ public class AuthenticationControllerTest
             "Password123");
 
         var result = new LoginResult("This is the token");
-        _mediator.Setup(m => m.Send(It.IsAny<LoginQuery>(), default))
-            .ReturnsAsync(result);
+        _mediator
+            .Send(Arg.Any<LoginQuery>())
+            .Returns(result);
 
         // Act
         var outcome = await _uut.Login(request, default);
 
         // Assert
-        _mediator.Verify(m => m.Send(
-                It.Is<LoginQuery>(query => Utils.Authentication.AssertLoginQuery(query, request)),
-                default),
-            Times.Once());
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<LoginQuery>(
+                query => Utils.Authentication.AssertLoginQuery(query, request)));
 
         outcome.Should().BeOfType<OkObjectResult>();
         ((OkObjectResult)outcome).Value.Should().BeOfType<LoginResponse>();
@@ -126,19 +127,21 @@ public class AuthenticationControllerTest
         var request = new LoginRequest(
             "Some@Example.com",
             "Password123");
-
-        _mediator.Setup(m => m.Send(It.IsAny<LoginQuery>(), default))
-            .ReturnsAsync(Errors.Authentication.InvalidCredentials);
+        
+        var error = Errors.Authentication.InvalidCredentials;
+        _mediator
+            .Send(Arg.Any<LoginQuery>())
+            .Returns(error);
 
         // Act
         var outcome = await _uut.Login(request, default);
 
         // Assert
-        _mediator.Verify(m => m.Send(
-                It.Is<LoginQuery>(query => Utils.Authentication.AssertLoginQuery(query, request)),
-                default),
-            Times.Once());
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<LoginQuery>(
+                query => Utils.Authentication.AssertLoginQuery(query, request)));
 
-        outcome.ValidateError(StatusCodes.Status401Unauthorized, "Invalid Credentials");
+        outcome.ValidateError(error);
     }
 }
