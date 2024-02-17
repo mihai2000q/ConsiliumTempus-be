@@ -26,10 +26,10 @@ public class UserControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/users/{id}");
 
         // Assert
-        DbContext.Users.Should().HaveCount(5);
+        DbContext.Users.Should().HaveCount(4);
         DbContext.Users.AsEnumerable()
-            .SingleOrDefault(u => u.Id.Value.ToString() == id && u.Credentials.Email == email)
-            .Should().NotBeNull();
+            .SingleOrDefault(u => u.Id.Value.ToString() == id)
+            .Should().BeNull();
         
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -51,7 +51,7 @@ public class UserControllerDeleteTest(
         // Assert
         DbContext.Users.Should().HaveCount(5);
         DbContext.Users.AsEnumerable()
-            .SingleOrDefault(u => u.Id.Value.ToString() == id && u.Credentials.Email == email)
+            .SingleOrDefault(u => u.Id.Value.ToString() == id)
             .Should().NotBeNull();
         
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);

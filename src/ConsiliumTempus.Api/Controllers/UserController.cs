@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Common.Attributes;
+using ConsiliumTempus.Api.Contracts.User.Delete;
 using ConsiliumTempus.Api.Contracts.User.Get;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Dto;
@@ -46,7 +47,7 @@ public sealed class UserController(IMapper mapper, ISender mediator) : ApiContro
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            deleteResult => Ok(Mapper.Map<UserDto>(deleteResult)),
+            deleteResult => Ok(Mapper.Map<DeleteUserResponse>(deleteResult)),
             Problem
         );
     }

@@ -77,7 +77,7 @@ internal static partial class Utils
             user.Name.First.Should().NotBe(request.FirstName.Capitalize());
             user.Name.Last.Should().NotBe(request.LastName.Capitalize());
             user.Role.Should().NotBe(request.Role);
-            user.DateOfBirth.Should().NotBe(request.DateOfBirth);
+            user.DateOfBirth.Should().BeNull();
         }
     }
 }
