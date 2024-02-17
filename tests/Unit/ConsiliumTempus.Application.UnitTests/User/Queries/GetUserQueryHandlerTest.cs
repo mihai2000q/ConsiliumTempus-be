@@ -10,13 +10,13 @@ public class GetUserQueryHandlerTest
 {
     #region Setup
 
-    private readonly Mock<IUserRepository> _userRepository;
+    private readonly IUserRepository _userRepository;
     private readonly GetUserQueryHandler _uut;
 
     public GetUserQueryHandlerTest()
     {
-        _userRepository = new Mock<IUserRepository>();
-        _uut = new GetUserQueryHandler(_userRepository.Object);
+        _userRepository = Substitute.For<IUserRepository>();
+        _uut = new GetUserQueryHandler(_userRepository);
     }
 
     #endregion
@@ -28,17 +28,17 @@ public class GetUserQueryHandlerTest
         var query = new GetUserQuery(Guid.NewGuid());
 
         var user = Mock.Mock.User.CreateMock();
-        _userRepository.Setup(u => u.Get(It.IsAny<UserId>(), default))
-            .ReturnsAsync(user);
+        _userRepository
+            .Get(Arg.Any<UserId>())
+            .Returns(user);
 
         // Act
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _userRepository.Verify(u =>
-                u.Get(It.Is<UserId>(id => Utils.User.AssertId(id, query.Id.ToString())),
-                    default),
-            Times.Once());
+        await _userRepository
+            .Received(1)
+            .Get(Arg.Is<UserId>(id => Utils.User.AssertId(id, query.Id.ToString())));
 
         outcome.IsError.Should().BeFalse();
         Utils.User.AssertUser(outcome.Value, user);
@@ -54,10 +54,9 @@ public class GetUserQueryHandlerTest
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _userRepository.Verify(u =>
-                u.Get(It.Is<UserId>(id => Utils.User.AssertId(id, query.Id.ToString())),
-                    default),
-            Times.Once());
+        await _userRepository
+            .Received(1)
+            .Get(Arg.Is<UserId>(id => Utils.User.AssertId(id, query.Id.ToString())));
 
         outcome.ValidateError(Errors.User.NotFound);
     }

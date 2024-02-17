@@ -11,20 +11,20 @@ public class CreateWorkspaceCommandHandlerTest
 {
     #region Setup
 
-    private readonly Mock<ISecurity> _security;
-    private readonly Mock<IWorkspaceRepository> _workspaceRepository;
-    private readonly Mock<IUnitOfWork> _unitOfWork;
+    private readonly ISecurity _security;
+    private readonly IWorkspaceRepository _workspaceRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly CreateWorkspaceCommandHandler _uut;
 
     public CreateWorkspaceCommandHandlerTest()
     {
-        _security = new Mock<ISecurity>();
-        _workspaceRepository = new Mock<IWorkspaceRepository>();
-        _unitOfWork = new Mock<IUnitOfWork>();
+        _security = Substitute.For<ISecurity>();
+        _workspaceRepository = Substitute.For<IWorkspaceRepository>();
+        _unitOfWork = Substitute.For<IUnitOfWork>();
         _uut = new CreateWorkspaceCommandHandler(
-            _security.Object,
-            _workspaceRepository.Object,
-            _unitOfWork.Object);
+            _security,
+            _workspaceRepository,
+            _unitOfWork);
     }
 
     #endregion
@@ -39,23 +39,24 @@ public class CreateWorkspaceCommandHandlerTest
             "This is a token");
 
         var user = Mock.Mock.User.CreateMock();
-        _security.Setup(s => s.GetUserFromToken(command.Token, default))
-            .ReturnsAsync(user);
+        _security
+            .GetUserFromToken(command.Token)
+            .Returns(user);
 
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _security.Verify(s =>
-                s.GetUserFromToken(It.IsAny<string>(), default),
-            Times.Once());
-        _workspaceRepository.Verify(w => w.Add(
-                It.Is<WorkspaceAggregate>(workspace =>
-                    Utils.Workspace.AssertFromCreateCommand(workspace, command, user)), default),
-            Times.Once());
-        _unitOfWork.Verify(u =>
-                u.SaveChangesAsync(default),
-            Times.Once());
+        await _security
+            .Received(1)
+            .GetUserFromToken(Arg.Any<string>());
+        await _workspaceRepository
+            .Received(1)
+            .Add(Arg.Is<WorkspaceAggregate>(workspace =>
+                Utils.Workspace.AssertFromCreateCommand(workspace, command, user)));
+        await _unitOfWork
+            .Received(1)
+            .SaveChangesAsync();
 
         Utils.Workspace.AssertFromCreateCommand(outcome.Workspace, command, user);
     }

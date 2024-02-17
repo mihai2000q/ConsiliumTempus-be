@@ -8,13 +8,13 @@ public class MembershipCreatedHandlerTest
 {
     #region Setup
 
-    private readonly Mock<IWorkspaceRoleRepository> _workspaceRoleRepository;
+    private readonly IWorkspaceRoleRepository _workspaceRoleRepository;
     private readonly MembershipCreatedHandler _uut;
 
     public MembershipCreatedHandlerTest()
     {
-        _workspaceRoleRepository = new Mock<IWorkspaceRoleRepository>();
-        _uut = new MembershipCreatedHandler(_workspaceRoleRepository.Object);
+        _workspaceRoleRepository = Substitute.For<IWorkspaceRoleRepository>();
+        _uut = new MembershipCreatedHandler(_workspaceRoleRepository);
     }
 
     #endregion
@@ -30,7 +30,8 @@ public class MembershipCreatedHandlerTest
         await _uut.Handle(domainEvent, default);
 
         // Assert
-        _workspaceRoleRepository.Verify(w => w.Attach(membership.WorkspaceRole),
-            Times.Once());
+        _workspaceRoleRepository
+            .Received(1)
+            .Attach(membership.WorkspaceRole);
     }
 }

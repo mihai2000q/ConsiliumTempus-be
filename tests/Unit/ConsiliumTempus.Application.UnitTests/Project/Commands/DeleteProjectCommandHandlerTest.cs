@@ -12,15 +12,15 @@ public class DeleteProjectCommandHandlerTest
 {
     #region Setup
 
-    private readonly Mock<IProjectRepository> _projectRepository;
-    private readonly Mock<IUnitOfWork> _unitOfWork;
+    private readonly IProjectRepository _projectRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly DeleteProjectCommandHandler _uut;
 
     public DeleteProjectCommandHandlerTest()
     {
-        _projectRepository = new Mock<IProjectRepository>();
-        _unitOfWork = new Mock<IUnitOfWork>();
-        _uut = new DeleteProjectCommandHandler(_projectRepository.Object, _unitOfWork.Object);
+        _projectRepository = Substitute.For<IProjectRepository>();
+        _unitOfWork = Substitute.For<IUnitOfWork>();
+        _uut = new DeleteProjectCommandHandler(_projectRepository, _unitOfWork);
     }
 
     #endregion
@@ -34,23 +34,23 @@ public class DeleteProjectCommandHandlerTest
         var user = Mock.Mock.User.CreateMock();
         var workspace = Mock.Mock.Workspace.CreateMock();
         var project = Mock.Mock.Project.CreateMock(workspace, user);
-        _projectRepository.Setup(p =>
-                p.GetWithWorkspace(It.IsAny<ProjectId>(), default))
-            .ReturnsAsync(project);
-
+        _projectRepository
+            .GetWithWorkspace(Arg.Any<ProjectId>())
+            .Returns(project);
+        
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _projectRepository.Verify(p =>
-                p.GetWithWorkspace(
-                    It.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)),
-                    default),
-            Times.Once);
-        _projectRepository.Verify(p => p.Remove(
-                It.Is<ProjectAggregate>(pr => pr == project)),
-            Times.Once);
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once);
+        await _projectRepository
+            .Received(1)
+            .GetWithWorkspace(Arg.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)));
+        _projectRepository
+            .Received(1)
+            .Remove(Arg.Is<ProjectAggregate>(pr => pr == project));
+        await _unitOfWork
+            .Received(1)
+            .SaveChangesAsync();
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectResult());
@@ -68,13 +68,13 @@ public class DeleteProjectCommandHandlerTest
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _projectRepository.Verify(p =>
-                p.GetWithWorkspace(
-                    It.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)),
-                    default),
-            Times.Once);
-        _projectRepository.Verify(p => p.Remove(It.IsAny<ProjectAggregate>()), Times.Never);
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Never);
+        await _projectRepository
+            .Received(1)
+            .GetWithWorkspace(Arg.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)));
+        _projectRepository
+            .DidNotReceive()
+            .Remove(Arg.Any<ProjectAggregate>());
+        _unitOfWork.DidNotReceive();
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

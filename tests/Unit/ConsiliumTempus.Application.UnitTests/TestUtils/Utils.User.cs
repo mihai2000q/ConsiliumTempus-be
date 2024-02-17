@@ -1,6 +1,10 @@
-﻿using ConsiliumTempus.Application.User.Commands.Update;
+﻿using ConsiliumTempus.Application.Authentication.Commands.Register;
+using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.User.Events;
 using ConsiliumTempus.Domain.User.ValueObjects;
+using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -12,6 +16,23 @@ internal static partial class Utils
         {
             userId.Should().Be(UserId.Create(id));
             return true;
+        }
+
+        internal static void AssertFromRegisterCommand(UserAggregate user, RegisterCommand command, string password)
+        {
+            user.Id.Should().NotBeNull();
+            user.Name.First.Should().Be(command.FirstName.CapitalizeWord());
+            user.Name.Last.Should().Be(command.LastName.CapitalizeWord());
+            user.Credentials.Email.Should().Be(command.Email.ToLower());
+            user.Credentials.Password.Should().Be(password);
+            user.Role.Should().Be(command.Role);
+            user.DateOfBirth.Should().Be(command.DateOfBirth);
+            user.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+
+            user.DomainEvents.Should().HaveCount(1);
+            user.DomainEvents[0].Should().BeOfType<UserRegistered>();
+            ((UserRegistered)user.DomainEvents[0]).User.Should().Be(user);
         }
 
         internal static void AssertFromUpdateCommand(

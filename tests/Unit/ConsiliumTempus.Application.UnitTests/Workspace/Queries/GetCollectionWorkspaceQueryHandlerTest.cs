@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Security;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Queries;
 
@@ -8,15 +9,15 @@ public class GetCollectionWorkspaceQueryHandlerTest
 {
     #region Setup
 
-    private readonly Mock<ISecurity> _security;
-    private readonly Mock<IWorkspaceRepository> _workspaceRepository;
+    private readonly ISecurity _security;
+    private readonly IWorkspaceRepository _workspaceRepository;
     private readonly GetCollectionWorkspaceQueryHandler _uut;
 
     public GetCollectionWorkspaceQueryHandlerTest()
     {
-        _security = new Mock<ISecurity>();
-        _workspaceRepository = new Mock<IWorkspaceRepository>();
-        _uut = new GetCollectionWorkspaceQueryHandler(_workspaceRepository.Object, _security.Object);
+        _security = Substitute.For<ISecurity>();
+        _workspaceRepository = Substitute.For<IWorkspaceRepository>();
+        _uut = new GetCollectionWorkspaceQueryHandler(_workspaceRepository, _security);
     }
 
     #endregion
@@ -28,17 +29,26 @@ public class GetCollectionWorkspaceQueryHandlerTest
         var query = new GetCollectionWorkspaceQuery("This is a token");
 
         var user = Mock.Mock.User.CreateMock();
-        _security.Setup(s => s.GetUserFromToken(query.Token, default))
-            .ReturnsAsync(user);
+        _security
+            .GetUserFromToken(query.Token)
+            .Returns(user);
 
         var workspaces = Mock.Mock.Workspace.CreateListMock();
-        _workspaceRepository.Setup(w => w.GetListForUser(user, default))
-            .ReturnsAsync(workspaces);
+        _workspaceRepository
+            .GetListForUser(user)
+            .Returns(workspaces);
 
         // Act
         var outcome = await _uut.Handle(query, default);
 
         // Assert
+        await _security
+            .Received(1)
+            .GetUserFromToken(Arg.Any<string>());
+        await _workspaceRepository
+            .Received(1)
+            .GetListForUser(Arg.Any<UserAggregate>());
+        
         outcome.Should().BeEquivalentTo(workspaces);
     }
 }

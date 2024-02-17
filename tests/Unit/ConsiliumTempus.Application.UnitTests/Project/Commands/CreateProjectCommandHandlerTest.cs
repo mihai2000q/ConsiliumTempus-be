@@ -13,23 +13,23 @@ public class CreateProjectCommandHandlerTest
 {
     #region Setup
 
-    private readonly Mock<ISecurity> _security;
-    private readonly Mock<IWorkspaceRepository> _workspaceRepository;
-    private readonly Mock<IProjectRepository> _projectRepository;
-    private readonly Mock<IUnitOfWork> _unitOfWork;
+    private readonly ISecurity _security;
+    private readonly IWorkspaceRepository _workspaceRepository;
+    private readonly IProjectRepository _projectRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly CreateProjectCommandHandler _uut;
 
     public CreateProjectCommandHandlerTest()
     {
-        _security = new Mock<ISecurity>();
-        _workspaceRepository = new Mock<IWorkspaceRepository>();
-        _projectRepository = new Mock<IProjectRepository>();
-        _unitOfWork = new Mock<IUnitOfWork>();
+        _security = Substitute.For<ISecurity>();
+        _workspaceRepository = Substitute.For<IWorkspaceRepository>();
+        _projectRepository = Substitute.For<IProjectRepository>();
+        _unitOfWork = Substitute.For<IUnitOfWork>();
         _uut = new CreateProjectCommandHandler(
-            _security.Object,
-            _workspaceRepository.Object,
-            _projectRepository.Object,
-            _unitOfWork.Object);
+            _security,
+            _workspaceRepository,
+            _projectRepository,
+            _unitOfWork);
     }
 
     #endregion
@@ -46,31 +46,32 @@ public class CreateProjectCommandHandlerTest
             "This-is-a-token");
 
         var workspace = Mock.Mock.Workspace.CreateMock();
-        _workspaceRepository.Setup(w =>
-                w.Get(It.IsAny<WorkspaceId>(), default))
-            .ReturnsAsync(workspace);
-
+        _workspaceRepository
+            .Get(Arg.Any<WorkspaceId>())
+            .Returns(workspace);
+        
         var user = Mock.Mock.User.CreateMock();
-        _security.Setup(s => s.GetUserFromToken(It.IsAny<string>(), default))
-            .ReturnsAsync(user);
+        _security
+            .GetUserFromToken(Arg.Any<string>())
+            .Returns(user);
 
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Arrange
-        _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.WorkspaceId)),
-                    default),
-            Times.Once);
-        _security.Verify(s =>
-                s.GetUserFromToken(It.Is<string>(t => t == command.Token), default),
-            Times.Once);
-        _projectRepository.Verify(p => p.Add(
-                It.Is<ProjectAggregate>(project =>
-                    Utils.Project.AssertFromCreateCommand(project, command, workspace, user)),
-                default),
-            Times.Once);
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once);
+        await _workspaceRepository
+            .Received(1)
+            .Get(Arg.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.WorkspaceId)));
+        await _security
+            .Received(1)
+            .GetUserFromToken(Arg.Is<string>(token => token == command.Token));
+        await _projectRepository
+            .Received(1)
+            .Add(Arg.Is<ProjectAggregate>(project =>
+                Utils.Project.AssertFromCreateCommand(project, command, workspace, user)));
+        await _unitOfWork
+            .Received(1)
+            .SaveChangesAsync();
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new CreateProjectResult());
@@ -93,18 +94,13 @@ public class CreateProjectCommandHandlerTest
         var outcome = await _uut.Handle(command, default);
 
         // Arrange
-        _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.WorkspaceId)),
-                    default),
-            Times.Once);
-        _security.Verify(s => s.GetUserFromToken(It.IsAny<string>(), default),
-            Times.Never);
-        _projectRepository.Verify(p => p.Add(
-                It.IsAny<ProjectAggregate>(),
-                default),
-            Times.Never);
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Never);
-
+        await _workspaceRepository
+            .Received(1)
+            .Get(Arg.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.WorkspaceId)));
+        _security.DidNotReceive();
+        _projectRepository.DidNotReceive();
+        _unitOfWork.DidNotReceive();
+        
         outcome.ValidateError(Errors.Workspace.NotFound);
     }
 }
