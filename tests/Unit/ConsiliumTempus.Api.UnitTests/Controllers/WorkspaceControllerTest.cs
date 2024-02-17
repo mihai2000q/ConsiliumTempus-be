@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
+using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Controllers;
@@ -12,6 +13,7 @@ using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -138,7 +140,7 @@ public class WorkspaceControllerTest
         // Arrange
         var id = Guid.NewGuid();
 
-        var result = new DeleteWorkspaceResult(Mock.Mock.Workspace.CreateMock());
+        var result = new DeleteWorkspaceResult();
         _mediator.Setup(m => m.Send(It.IsAny<DeleteWorkspaceCommand>(), default))
             .ReturnsAsync(result);
 
@@ -150,7 +152,11 @@ public class WorkspaceControllerTest
                 m.Send(It.Is<DeleteWorkspaceCommand>(command => command.Id == id), default),
             Times.Once());
 
-        Utils.Workspace.AssertDto(outcome, result.Workspace);
+        outcome.Should().BeOfType<OkObjectResult>();
+        ((OkObjectResult)outcome).Value.Should().BeOfType<DeleteWorkspaceResponse>();
+
+        var response = ((OkObjectResult)outcome).Value as DeleteWorkspaceResponse;
+        response!.Message.Should().Be(result.Message);
     }
 
     [Fact]

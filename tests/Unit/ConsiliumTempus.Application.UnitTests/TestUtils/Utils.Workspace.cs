@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
-using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
@@ -46,11 +45,6 @@ internal static partial class Utils
             workspace.Name.Should().Be(command.Name);
             workspace.Description.Should().Be(command.Description);
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-        }
-
-        internal static void AssertDeleteResult(DeleteWorkspaceResult result, WorkspaceAggregate workspace)
-        {
-            AssertWorkspace(result.Workspace, workspace);
         }
 
         internal static void AssertWorkspace(WorkspaceAggregate outcome, WorkspaceAggregate expected)

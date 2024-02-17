@@ -48,7 +48,7 @@ public class DeleteWorkspaceCommandHandlerTest
         _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
 
         outcome.IsError.Should().BeFalse();
-        Utils.Workspace.AssertDeleteResult(outcome.Value, workspaceToDelete);
+        outcome.Value.Should().Be(new DeleteWorkspaceResult());
     }
 
     [Fact]

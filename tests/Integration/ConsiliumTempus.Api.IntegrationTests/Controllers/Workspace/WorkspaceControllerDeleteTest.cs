@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using System.Net.Http.Json;
+using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -46,33 +48,50 @@ public class WorkspaceControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
+        DbContext.Workspaces.Should().HaveCount(3);
+        DbContext.Workspaces.AsEnumerable()
+            .SingleOrDefault(w => w.Id.Value.ToString() == id)
+            .Should().BeNull();
+        
         await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Workspace.NotFound.Description);
     }
 
-    private async Task AssertSuccessfulRequest(string email, string id = "10000000-0000-0000-0000-000000000000")
+    private async Task AssertSuccessfulRequest(string email)
     {
-        // Arrange - parameters
+        // Arrange
+        const string id = "10000000-0000-0000-0000-000000000000";
 
         // Act
         UseCustomToken(email);
         var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
-        await Utils.Workspace.AssertDtoFromResponse(
-            outcome,
-            "Basketball",
-            "This is the Description of the first Workspace");
+        DbContext.Workspaces.Should().HaveCount(2);
+        DbContext.Workspaces.AsEnumerable()
+            .SingleOrDefault(w => w.Id.Value.ToString() == id)
+            .Should().BeNull();
+        
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var response = await outcome.Content.ReadFromJsonAsync<DeleteWorkspaceResponse>();
+        response!.Message.Should().Be("Workspace has been deleted successfully!");
     }
 
-    private async Task AssertForbiddenResponse(string email, string id = "10000000-0000-0000-0000-000000000000")
+    private async Task AssertForbiddenResponse(string email)
     {
-        // Arrange - parameters
+        // Arrange
+        const string id = "10000000-0000-0000-0000-000000000000";
 
         // Act
         UseCustomToken(email);
         var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
+        DbContext.Workspaces.Should().HaveCount(3);
+        DbContext.Workspaces.AsEnumerable()
+            .SingleOrDefault(w => w.Id.Value.ToString() == id)
+            .Should().NotBeNull();
+        
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 }

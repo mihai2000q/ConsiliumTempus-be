@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Api.Common.Attributes;
 using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
+using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Dto;
@@ -75,7 +76,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            deleteResult => Ok(Mapper.Map<WorkspaceDto>(deleteResult)),
+            deleteResult => Ok(Mapper.Map<DeleteWorkspaceResponse>(deleteResult)),
             Problem
         );
     }

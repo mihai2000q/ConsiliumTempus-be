@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
+using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Dto;
@@ -55,8 +56,6 @@ public sealed class WorkspaceMappingConfig : IRegister
 
     private static void DeleteMappings(TypeAdapterConfig config)
     {
-        config.NewConfig<DeleteWorkspaceResult, WorkspaceDto>()
-            .Map(dest => dest, src => src.Workspace)
-            .Map(dest => dest.Id, src => src.Workspace.Id.Value.ToString());
+        config.NewConfig<DeleteWorkspaceResult, DeleteWorkspaceResponse>();
     }
 }
