@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Events;
+using ConsiliumTempus.Domain.ProjectTask;
 using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Events;
@@ -20,7 +21,7 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
         var section = sprint.Sections[0];
         Constants.ProjectTask.Names
             .ToList()
-            .ForEach(name => section.AddTask(ProjectTask.Create(
+            .ForEach(name => section.AddTask(ProjectTaskAggregate.Create(
                 name, 
                 string.Empty, 
                 notification.User,

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Models;
 
-namespace ConsiliumTempus.Domain.Project.ValueObjects;
+namespace ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 
 public sealed class ProjectTaskCommentId : ValueObject
 {

@@ -1,19 +1,21 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.Project.Entities;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Domain.Project.Entities;
+namespace ConsiliumTempus.Domain.ProjectTask;
 
-public sealed class ProjectTask : Entity<ProjectTaskId>, ITimestamps
+public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
-    private ProjectTask()
+    private ProjectTaskAggregate()
     {
     }
 
-    private ProjectTask(
+    private ProjectTaskAggregate(
         ProjectTaskId id,
         string name,
         string description,
@@ -33,7 +35,7 @@ public sealed class ProjectTask : Entity<ProjectTaskId>, ITimestamps
     }
 
     private readonly List<ProjectTaskComment> _comments = [];
-    
+
     public string Name { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
     public bool IsCompleted { get; private set; }
@@ -47,20 +49,20 @@ public sealed class ProjectTask : Entity<ProjectTaskId>, ITimestamps
     public ProjectSection Section { get; private set; } = default!;
     public IReadOnlyList<ProjectTaskComment> Comments => _comments.AsReadOnly();
 
-    public static ProjectTask Create(
+    public static ProjectTaskAggregate Create(
         string name,
         string description,
         UserAggregate createdBy,
         ProjectSection section)
     {
-        return new ProjectTask(
-            ProjectTaskId.CreateUnique(), 
+        return new ProjectTaskAggregate(
+            ProjectTaskId.CreateUnique(),
             name,
             description,
             false,
             createdBy,
             section,
-            DateTime.UtcNow, 
+            DateTime.UtcNow,
             DateTime.UtcNow);
     }
 

@@ -37,6 +37,7 @@ The aggregates are:
 - [User Aggregate](domain/aggregates/Aggregate.User)
 - [Workspace Aggregate](domain/aggregates/Aggregate.Workspace)
 - [Project Aggregate](domain/aggregates/Aggregate.Project.md)
+- [Project Task Aggregate](domain/aggregates/Aggregate.ProjectTask.md)
 
 ## Entities
 

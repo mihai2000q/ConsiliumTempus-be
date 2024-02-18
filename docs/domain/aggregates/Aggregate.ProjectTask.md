@@ -1,4 +1,4 @@
-# Domain Entities
+# Domain Aggregates
 
 ## Project Task
 
@@ -30,9 +30,13 @@ class ProjectTask
 }
 ```
 
-For database design checkout the [Project Task Diagram](../../diagrams/entities/project/Diagram.ProjectTask.md).
+For database design checkout the [Project Task Diagram](../diagrams/aggregates/Diagram.ProjectTask.md).
 
 ### Properties Validation
 
 - The **Name** cannot be longer than 100 characters
 - The **Description** cannot be longer than 1000 characters
+
+### Entities
+
+- [Project Task Comment](../entities/project-task/Entity.ProjectTaskComment.md)

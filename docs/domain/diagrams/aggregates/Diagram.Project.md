@@ -9,9 +9,9 @@
   - The Sprint has a **One-to-Many** relationship with the 
     [Project Section](../../entities/project/Entity.ProjectSection.md) entity.
     - The Section has a **One-to-Many** relationship with the
-      [Project Task](../../entities/project/Entity.ProjectTask.md) entity.
+      [Project Task](../../aggregates/Aggregate.ProjectTask) entity.
       - The Task has a **One-to-Many** relationship with the 
-      [Project Task Comment](../../entities/project/Entity.ProjectTaskComment.md) entity.
+      [Project Task Comment](../../entities/project-task/Entity.ProjectTaskComment.md) entity.
 
 ### Diagram
 
