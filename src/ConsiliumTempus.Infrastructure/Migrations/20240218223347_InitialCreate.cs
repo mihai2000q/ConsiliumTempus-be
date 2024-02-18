@@ -230,7 +230,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_ProjectTask_User_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "User",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProjectTask_User_ReviewerId",
                         column: x => x.ReviewerId,
@@ -249,14 +250,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Date = table.Column<DateOnly>(type: "date", nullable: true),
                     TimeSpent = table.Column<TimeSpan>(type: "time", nullable: true),
-                    TaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    TaskAggregateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProjectTaskComment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProjectTaskComment_ProjectTask_TaskId",
-                        column: x => x.TaskId,
+                        name: "FK_ProjectTaskComment_ProjectTask_TaskAggregateId",
+                        column: x => x.TaskAggregateId,
                         principalTable: "ProjectTask",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -264,7 +265,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_ProjectTaskComment_User_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "User",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -362,9 +364,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectTaskComment_TaskId",
+                name: "IX_ProjectTaskComment_TaskAggregateId",
                 table: "ProjectTaskComment",
-                column: "TaskId");
+                column: "TaskAggregateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
