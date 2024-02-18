@@ -12,7 +12,7 @@ internal static partial class Utils
         internal static void AssertToken(string? token, JwtSettings jwtSettings, string email)
         {
             var handler = new JwtSecurityTokenHandler();
-            
+
             handler.CanReadToken(token).Should().BeTrue();
 
             var outcomeToken = handler.ReadJwtToken(token);
@@ -20,7 +20,7 @@ internal static partial class Utils
             outcomeToken.Audiences.Should().HaveCount(1);
             outcomeToken.Audiences.First().Should().Be(jwtSettings.Audience);
             outcomeToken.ValidTo.Should().BeCloseTo(DateTime.UtcNow.AddHours(jwtSettings.ExpiryHours), 1.Minutes());
-        
+
             // The 5 below and the 3 from above
             const int claimsSize = 5 + 3;
             outcomeToken.Claims.Should().HaveCount(claimsSize);
@@ -35,12 +35,12 @@ internal static partial class Utils
             outcomeToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Jti).Value
                 .Should().NotBeNullOrWhiteSpace();
         }
-        
-        internal static void AssertToken(string? token, JwtSettings jwtSettings, 
+
+        internal static void AssertToken(string? token, JwtSettings jwtSettings,
             string email, string firstName, string lastName)
         {
             var handler = new JwtSecurityTokenHandler();
-            
+
             handler.CanReadToken(token).Should().BeTrue();
 
             var outcomeToken = handler.ReadJwtToken(token);
@@ -48,7 +48,7 @@ internal static partial class Utils
             outcomeToken.Audiences.Should().HaveCount(1);
             outcomeToken.Audiences.First().Should().Be(jwtSettings.Audience);
             outcomeToken.ValidTo.Should().BeCloseTo(DateTime.UtcNow.AddHours(jwtSettings.ExpiryHours), 1.Minutes());
-        
+
             // The 5 below and the 3 from above
             const int claimsSize = 5 + 3;
             outcomeToken.Claims.Should().HaveCount(claimsSize);

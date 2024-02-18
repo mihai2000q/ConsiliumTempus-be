@@ -4,7 +4,10 @@ using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.User.ValueObjects;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User;
@@ -26,6 +29,9 @@ public class UserControllerUpdateTest(
         var outcome = await Client.PutAsJsonAsync("api/users", request);
 
         // Assert
+        /*var updatedUser = await GetUserById(request.Id);
+        Utils.User.AssertUpdate(updatedUser!, request);*/
+        
         await Utils.User.AssertDtoFromResponse(
             outcome,
             request.FirstName, 
@@ -47,6 +53,9 @@ public class UserControllerUpdateTest(
         var outcome = await Client.PutAsJsonAsync("api/users", request);
 
         // Assert
+        var updatedUser = await GetUserById(request.Id);
+        Utils.User.AssertNotUpdated(updatedUser!, request);
+        
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
     
@@ -60,6 +69,8 @@ public class UserControllerUpdateTest(
         var outcome = await Client.PutAsJsonAsync("api/users", request);
 
         // Assert
+        (await GetUserById(request.Id)).Should().BeNull();
+        
         await outcome.ValidateError(HttpStatusCode.NotFound, Errors.User.NotFound.Description);
     }
 
@@ -73,5 +84,10 @@ public class UserControllerUpdateTest(
             "New Lastname",
             role,
             null);
+    }
+
+    private async Task<UserAggregate?> GetUserById(Guid id)
+    {
+        return await DbContext.Users.SingleOrDefaultAsync(u => u.Id == UserId.Create(id));
     }
 }

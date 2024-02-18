@@ -24,6 +24,6 @@ public sealed class DeleteUserCommandHandler(
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new DeleteUserResult(user);
+        return new DeleteUserResult();
     }
 }

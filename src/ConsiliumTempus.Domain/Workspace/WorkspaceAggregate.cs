@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Workspace;
@@ -26,12 +27,14 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
     }
     
     private readonly List<Membership> _memberships = []; 
+    private readonly List<ProjectAggregate> _projects = []; 
     
     public string Name { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
     public DateTime CreatedDateTime { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
+    public IReadOnlyList<ProjectAggregate> Projects => _projects.AsReadOnly();
 
     public static WorkspaceAggregate Create(
         string name,
@@ -51,6 +54,11 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
     {
         if (name is not null) Name = name;
         if (description is not null) Description = description;
+        UpdatedDateTime = DateTime.UtcNow;
+    }
+
+    public void RefreshUpdatedDateTime()
+    {
         UpdatedDateTime = DateTime.UtcNow;
     }
 

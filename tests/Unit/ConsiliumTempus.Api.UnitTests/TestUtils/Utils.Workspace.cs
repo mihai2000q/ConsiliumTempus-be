@@ -22,7 +22,7 @@ internal static partial class Utils
             query.Id.Should().Be(request.Id);
             return true;
         }
-        
+
         internal static bool AssertGetCollectionQuery(
             GetCollectionWorkspaceQuery query,
             string token)
@@ -30,7 +30,7 @@ internal static partial class Utils
             query.Token.Should().Be(token);
             return true;
         }
-        
+
         internal static bool AssertCreateCommand(
             CreateWorkspaceCommand command,
             CreateWorkspaceRequest request,
@@ -41,7 +41,7 @@ internal static partial class Utils
             command.Token.Should().Be(token);
             return true;
         }
-        
+
         internal static bool AssertUpdateCommand(
             UpdateWorkspaceCommand command,
             UpdateWorkspaceRequest request)
@@ -63,7 +63,7 @@ internal static partial class Utils
 
             AssertDto(response!, workspace);
         }
-        
+
         internal static void AssertDtos(
             IActionResult outcome,
             IEnumerable<WorkspaceAggregate> workspaces)

@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
+using ConsiliumTempus.Api.Contracts.User.Delete;
 using ConsiliumTempus.Api.Contracts.User.Get;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Controllers;
@@ -7,8 +8,7 @@ using ConsiliumTempus.Application.User.Commands.Delete;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Domain.Common.Errors;
-using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -16,15 +16,15 @@ public class UserControllerTest
 {
     #region Setup
 
-    private readonly Mock<ISender> _mediator;
+    private readonly ISender _mediator;
     private readonly UserController _uut;
 
     public UserControllerTest()
     {
         var mapper = Utils.GetMapper<AuthenticationMappingConfig>();
 
-        _mediator = new Mock<ISender>();
-        _uut = new UserController(mapper, _mediator.Object);
+        _mediator = Substitute.For<ISender>();
+        _uut = new UserController(mapper, _mediator);
 
         Utils.ResolveHttpContext(_uut);
     }
@@ -38,18 +38,17 @@ public class UserControllerTest
         var request = new GetUserRequest();
 
         var user = Mock.Mock.User.CreateMock();
-        _mediator.Setup(m => m.Send(It.IsAny<GetUserQuery>(), default))
-            .ReturnsAsync(user);
+        _mediator
+            .Send(Arg.Any<GetUserQuery>())
+            .Returns(user);
 
         // Act
         var outcome = await _uut.Get(request, default);
 
         // Assert
-        _mediator.Verify(m =>
-                m.Send(It.Is<GetUserQuery>(
-                        query => Utils.User.AssertGetQuery(query, request)),
-                    default),
-            Times.Once());
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetUserQuery>(query => Utils.User.AssertGetQuery(query, request)));
 
         Utils.User.AssertDto(outcome, user);
     }
@@ -61,20 +60,19 @@ public class UserControllerTest
         var request = new GetUserRequest();
 
         var error = Errors.User.NotFound;
-        _mediator.Setup(m => m.Send(It.IsAny<GetUserQuery>(), default))
-            .ReturnsAsync(error);
+        _mediator
+            .Send(Arg.Any<GetUserQuery>())
+            .Returns(error);
 
         // Act
         var outcome = await _uut.Get(request, default);
 
         // Assert
-        _mediator.Verify(m =>
-                m.Send(It.Is<GetUserQuery>(
-                        query => Utils.User.AssertGetQuery(query, request)),
-                    default),
-            Times.Once());
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetUserQuery>(query => Utils.User.AssertGetQuery(query, request)));
 
-        outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
+        outcome.ValidateError(error);
     }
 
     [Fact]
@@ -89,18 +87,17 @@ public class UserControllerTest
             null);
 
         var result = new UpdateUserResult(Mock.Mock.User.CreateMock());
-        _mediator.Setup(m => m.Send(It.IsAny<UpdateUserCommand>(), default))
-            .ReturnsAsync(result);
+        _mediator
+            .Send(Arg.Any<UpdateUserCommand>())
+            .Returns(result);
 
         // Act
         var outcome = await _uut.Update(request, default);
 
         // Assert
-        _mediator.Verify(m =>
-                m.Send(It.Is<UpdateUserCommand>(
-                        command => Utils.User.AssertUpdateCommand(command, request)),
-                    default),
-            Times.Once());
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
 
         Utils.User.AssertDto(outcome, result.User);
     }
@@ -117,20 +114,19 @@ public class UserControllerTest
             null);
 
         var error = Errors.User.NotFound;
-        _mediator.Setup(m => m.Send(It.IsAny<UpdateUserCommand>(), default))
-            .ReturnsAsync(error);
+        _mediator
+            .Send(Arg.Any<UpdateUserCommand>())
+            .Returns(error);
 
         // Act
         var outcome = await _uut.Update(request, default);
 
         // Assert
-        _mediator.Verify(m =>
-                m.Send(It.Is<UpdateUserCommand>(
-                        command => Utils.User.AssertUpdateCommand(command, request)),
-                    default),
-            Times.Once());
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
 
-        outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
+        outcome.ValidateError(error);
     }
 
     [Fact]
@@ -140,21 +136,24 @@ public class UserControllerTest
         var id = Guid.NewGuid();
 
 
-        var result = new DeleteUserResult(Mock.Mock.User.CreateMock());
-        _mediator.Setup(m => m.Send(It.IsAny<DeleteUserCommand>(), default))
-            .ReturnsAsync(result);
+        var result = new DeleteUserResult();
+        _mediator
+            .Send(Arg.Any<DeleteUserCommand>())
+            .Returns(result);
 
         // Act
         var outcome = await _uut.Delete(id, default);
 
         // Assert
-        _mediator.Verify(m =>
-                m.Send(It.Is<DeleteUserCommand>(
-                        command => command.Id == id),
-                    default),
-            Times.Once());
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<DeleteUserCommand>(command => command.Id == id));
 
-        Utils.User.AssertDto(outcome, result.User);
+        outcome.Should().BeOfType<OkObjectResult>();
+        ((OkObjectResult)outcome).Value.Should().BeOfType<DeleteUserResponse>();
+
+        var response = ((OkObjectResult)outcome).Value as DeleteUserResponse;
+        response!.Message.Should().Be(result.Message);
     }
 
     [Fact]
@@ -164,19 +163,18 @@ public class UserControllerTest
         var id = Guid.NewGuid();
 
         var error = Errors.User.NotFound;
-        _mediator.Setup(m => m.Send(It.IsAny<DeleteUserCommand>(), default))
-            .ReturnsAsync(error);
+        _mediator
+            .Send(Arg.Any<DeleteUserCommand>())
+            .Returns(error);
 
         // Act
         var outcome = await _uut.Delete(id, default);
 
         // Assert
-        _mediator.Verify(m =>
-                m.Send(It.Is<DeleteUserCommand>(
-                        command => command.Id == id),
-                    default),
-            Times.Once());
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<DeleteUserCommand>(command => command.Id == id));
 
-        outcome.ValidateError(StatusCodes.Status404NotFound, error.Description);
+        outcome.ValidateError(error);
     }
 }

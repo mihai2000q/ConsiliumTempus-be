@@ -9,13 +9,13 @@ namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
 internal static partial class Utils
 {
-    internal static readonly Dictionary<HttpStatusCode, int> StatusCodesMap = new()
+    private static readonly Dictionary<HttpStatusCode, int> StatusCodesMap = new()
     {
         { HttpStatusCode.Unauthorized, StatusCodes.Status401Unauthorized },
         { HttpStatusCode.NotFound, StatusCodes.Status404NotFound },
         { HttpStatusCode.Conflict, StatusCodes.Status409Conflict }
     };
-    
+
     internal static async Task ValidateError(this HttpResponseMessage response, HttpStatusCode statusCode, string title)
     {
         response.StatusCode.Should().Be(statusCode);

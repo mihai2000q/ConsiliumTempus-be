@@ -2,6 +2,8 @@
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace;
@@ -23,6 +25,10 @@ public class WorkspaceControllerCreateTest(
         var outcome = await Client.PostAsJsonAsync("api/workspaces", request);
 
         // Assert
+        DbContext.Workspaces.Should().HaveCount(1);
+        var createdWorkspace = await DbContext.Workspaces.FirstAsync();
+        Utils.Workspace.AssertCreation(createdWorkspace, request);
+        
         await Utils.Workspace.AssertDtoFromResponse(outcome, request.Name, request.Description);
     }
 }

@@ -18,17 +18,17 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
         UserId id,
         Credentials credentials,
         Name name,
-        DateTime createdDateTime,
-        DateTime updatedDateTime,
         string? role,
-        DateOnly? dateOfBirth) : base(id)
+        DateOnly? dateOfBirth,
+        DateTime createdDateTime,
+        DateTime updatedDateTime) : base(id)
     {
         Credentials = credentials;
         Name = name;
-        CreatedDateTime = createdDateTime;
-        UpdatedDateTime = updatedDateTime;
         Role = role;
         DateOfBirth = dateOfBirth;
+        CreatedDateTime = createdDateTime;
+        UpdatedDateTime = updatedDateTime;
     }
 
     private readonly List<Membership> _memberships = [];
@@ -51,10 +51,10 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
             UserId.CreateUnique(),
             credentials,
             name,
+            role,
+            dateOfBirth,
             DateTime.UtcNow,
-            DateTime.UtcNow,
-            role, 
-            dateOfBirth);
+            DateTime.UtcNow);
     }
     
     public static UserAggregate Register(

@@ -9,17 +9,17 @@ public class LoginQueryHandlerTest
 {
     #region Setup
 
-    private readonly Mock<IJwtTokenGenerator> _jwtTokenGenerator;
-    private readonly Mock<IScrambler> _scrambler;
-    private readonly Mock<IUserRepository> _userRepository;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IScrambler _scrambler;
+    private readonly IUserRepository _userRepository;
     private readonly LoginQueryHandler _uut;
 
     public LoginQueryHandlerTest()
     {
-        _jwtTokenGenerator = new Mock<IJwtTokenGenerator>();
-        _scrambler = new Mock<IScrambler>();
-        _userRepository = new Mock<IUserRepository>();
-        _uut = new LoginQueryHandler(_userRepository.Object, _scrambler.Object, _jwtTokenGenerator.Object);
+        _jwtTokenGenerator = Substitute.For<IJwtTokenGenerator>();
+        _scrambler = Substitute.For<IScrambler>();
+        _userRepository = Substitute.For<IUserRepository>();
+        _uut = new LoginQueryHandler(_userRepository, _scrambler, _jwtTokenGenerator);
     }
 
     #endregion
@@ -31,34 +31,37 @@ public class LoginQueryHandlerTest
         var query = new LoginQuery(
             "Some@Example.com",
             "Password123");
+        
+        var user = Mock.Mock.User.CreateMock(password: "This is the pass for Password123");
+        _userRepository
+            .GetUserByEmail(query.Email.ToLower())
+            .Returns(user);
 
-        const string hashedPassword = "This is the has for Password123";
-
-        var user = Mock.Mock.User.CreateMock(password: hashedPassword);
-        _userRepository.Setup(u => 
-                u.GetUserByEmail(query.Email.ToLower(), default))
-            .ReturnsAsync(user);
-
-        _scrambler.Setup(s => s.VerifyPassword(query.Password, hashedPassword))
+        _scrambler
+            .VerifyPassword(query.Password, user.Credentials.Password)
             .Returns(true);
 
-        const string mockToken = "This is a token";
-        _jwtTokenGenerator.Setup(j => j.GenerateToken(user))
-            .Returns(mockToken);
+        const string token = "This is a token";
+        _jwtTokenGenerator
+            .GenerateToken(user)
+            .Returns(token);
 
         // Act
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _userRepository.Verify(u => 
-            u.GetUserByEmail(It.IsAny<string>(), default), 
-            Times.Once());
-        _jwtTokenGenerator.Verify(j => 
-            j.GenerateToken(It.IsAny<UserAggregate>()),
-            Times.Once());
+        await _userRepository
+            .Received(1)
+            .GetUserByEmail(Arg.Any<string>());
+        _scrambler
+            .Received(1)
+            .VerifyPassword(Arg.Any<string>(), Arg.Any<string>());
+        _jwtTokenGenerator
+            .Received(1)
+            .GenerateToken(Arg.Any<UserAggregate>());
 
         outcome.IsError.Should().BeFalse();
-        outcome.Value.Token.Should().Be(mockToken);
+        outcome.Value.Token.Should().Be(token);
     }
 
     [Fact]
@@ -73,9 +76,11 @@ public class LoginQueryHandlerTest
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _userRepository.Verify(u => 
-            u.GetUserByEmail(query.Email.ToLower(), default), 
-            Times.Once());
+        await _userRepository
+            .Received(1)
+            .GetUserByEmail(Arg.Any<string>());
+        _scrambler.DidNotReceive();
+        _jwtTokenGenerator.DidNotReceive();
 
         outcome.IsError.Should().BeTrue();
         outcome.Errors.Should().HaveCount(1);
@@ -93,19 +98,25 @@ public class LoginQueryHandlerTest
             "Password123");
 
         var user = Mock.Mock.User.CreateMock(query.Email);
-        _userRepository.Setup(u => u.GetUserByEmail(query.Email, default))
-            .ReturnsAsync(user);
+        _userRepository
+            .GetUserByEmail(query.Email.ToLower())
+            .Returns(user);
 
-        _scrambler.Setup(s => s.VerifyPassword(query.Password, It.IsAny<string>()))
+        _scrambler
+            .VerifyPassword(query.Password, user.Credentials.Password)
             .Returns(false);
 
         // Act
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _userRepository.Verify(u =>
-            u.GetUserByEmail(It.IsAny<string>(), default),
-            Times.Once());
+        await _userRepository
+            .Received(1)
+            .GetUserByEmail(Arg.Any<string>());
+        _scrambler
+            .Received(1)
+            .VerifyPassword(Arg.Any<string>(), Arg.Any<string>());
+        _jwtTokenGenerator.DidNotReceive();
 
         outcome.IsError.Should().BeTrue();
         outcome.Errors.Should().HaveCount(1);

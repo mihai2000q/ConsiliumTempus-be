@@ -12,7 +12,7 @@ internal static partial class Mock
         {
             return WorkspaceAggregate.Create(name, description);
         }
-        
+
         internal static List<WorkspaceAggregate> CreateListMock()
         {
             return Enumerable.Repeat(0, 5).Select(_ => CreateMock()).ToList();

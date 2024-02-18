@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.User.ValueObjects;
+﻿using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Authorization.Http;
 using ConsiliumTempus.Infrastructure.Authorization.Providers;
@@ -44,32 +45,54 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         HttpRequest request,
         IWorkspaceProvider workspaceProvider)
     {
-        var stringId = request.RouteValues["controller"] switch
+        var stringIdRes = await GetStringWorkspaceId(request);
+
+        if (string.IsNullOrWhiteSpace(stringIdRes.Value)) return null;
+        if (!Guid.TryParse(stringIdRes.Value, out var guidId)) return null;
+
+        var workspace = stringIdRes.Type switch
+        {
+            StringIdType.Project => await workspaceProvider.GetByProject(ProjectId.Create(guidId)),
+            _ => await workspaceProvider.Get(WorkspaceId.Create(guidId))
+        };
+
+        return workspace is null
+            ? new WorkspaceIdResponse(default!, true)
+            : new WorkspaceIdResponse(workspace.Id, false);
+    }
+
+    private static async Task<StringIdResponse> GetStringWorkspaceId(HttpRequest request)
+    {
+        return request.RouteValues["controller"] switch
         {
             ApiControllers.Workspace => request.Method switch
             {
-                HttpRequestType.GET => HttpRequestReader.GetStringIdFromRoute(request),
-                HttpRequestType.PUT => await HttpRequestReader.GetStringIdFromBody(request),
-                HttpRequestType.DELETE => HttpRequestReader.GetStringIdFromRoute(request),
-                _ => null
+                HttpRequestType.GET => new StringIdResponse(HttpRequestReader.GetStringIdFromRoute(request)),
+                HttpRequestType.PUT => new StringIdResponse(await HttpRequestReader.GetStringIdFromBody(request)),
+                HttpRequestType.DELETE => new StringIdResponse(HttpRequestReader.GetStringIdFromRoute(request)),
+                _ => new StringIdResponse(null)
             },
-            _ => null
+            ApiControllers.Project => request.Method switch
+            {
+                HttpRequestType.GET => new StringIdResponse(HttpRequestReader.GetStringIdFromRoute(request)),
+                HttpRequestType.POST => new StringIdResponse(
+                    await HttpRequestReader.GetPropertyFromBody(request, "workspaceId")),
+                HttpRequestType.DELETE => new StringIdResponse(
+                    HttpRequestReader.GetStringIdFromRoute(request),
+                    StringIdType.Project),
+                _ => new StringIdResponse(null)
+            },
+            _ => new StringIdResponse(null)
         };
-
-        if (string.IsNullOrWhiteSpace(stringId)) return null;
-        if (!Guid.TryParse(stringId, out var guidWorkspaceId)) return null;
-
-        var workspaceId = WorkspaceId.Create(guidWorkspaceId);
-        var workspace = await workspaceProvider.Get(workspaceId);
-
-        return workspace is null
-            ? new WorkspaceIdResponse(workspaceId, true)
-            : new WorkspaceIdResponse(workspaceId, false);
     }
 
-    private class WorkspaceIdResponse(WorkspaceId workspaceId, bool notFound)
+    private record WorkspaceIdResponse(WorkspaceId WorkspaceId, bool NotFound);
+
+    private record StringIdResponse(string? Value, StringIdType Type = StringIdType.Workspace);
+
+    private enum StringIdType
     {
-        internal WorkspaceId WorkspaceId { get; } = workspaceId;
-        internal bool NotFound { get; } = notFound;
+        Workspace,
+        Project
     }
 }

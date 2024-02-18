@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
-using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
@@ -12,6 +11,12 @@ internal static partial class Utils
 {
     internal static class Workspace
     {
+        internal static bool AssertId(WorkspaceId workspaceId, Guid expectedId)
+        {
+            workspaceId.Should().Be(WorkspaceId.Create(expectedId));
+            return true;
+        }
+
         internal static bool AssertFromCreateCommand(
             WorkspaceAggregate workspace,
             CreateWorkspaceCommand command,
@@ -28,9 +33,10 @@ internal static partial class Utils
             workspace.Memberships[0].WorkspaceRole.Should().Be(WorkspaceRole.Admin);
             workspace.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            workspace.Projects.Should().BeEmpty();
             return true;
         }
-        
+
         internal static void AssertFromUpdateCommand(
             WorkspaceAggregate workspace,
             UpdateWorkspaceCommand command)
@@ -41,17 +47,6 @@ internal static partial class Utils
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         }
 
-        internal static bool AssertWorkspaceId(WorkspaceId workspaceId, Guid expectedId)
-        {
-            workspaceId.Should().Be(WorkspaceId.Create(expectedId));
-            return true;
-        }
-
-        internal static void AssertDeleteResult(DeleteWorkspaceResult result, WorkspaceAggregate workspace)
-        {
-            AssertWorkspace(result.Workspace, workspace);
-        }
-
         internal static void AssertWorkspace(WorkspaceAggregate outcome, WorkspaceAggregate expected)
         {
             outcome.Id.Should().Be(expected.Id);
@@ -60,6 +55,7 @@ internal static partial class Utils
             outcome.CreatedDateTime.Should().BeCloseTo(expected.CreatedDateTime, TimeSpan.FromMinutes(1));
             outcome.UpdatedDateTime.Should().BeCloseTo(expected.UpdatedDateTime, TimeSpan.FromMinutes(1));
             outcome.Memberships.Should().BeEquivalentTo(expected.Memberships);
+            outcome.Projects.Should().BeEquivalentTo(expected.Projects);
         }
     }
 }

@@ -122,4 +122,4 @@ Sends the id of the workspace inside the route request.
 
 #### Delete Workspace Response
 
-Returns the workspace [Dto](dto/Dto.Workspace.md).
+Returns a confirmation message that the workspace has been deleted successfully.

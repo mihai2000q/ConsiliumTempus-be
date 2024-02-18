@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using System.Net.Http.Json;
+using ConsiliumTempus.Api.Contracts.User.Delete;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -13,7 +15,7 @@ public class UserControllerDeleteTest(
     : BaseIntegrationTest(factory, testOutputHelper)
 {
     [Fact]
-    public async Task WhenDeleteUserIsSuccessful_ThenReturnNewUser()
+    public async Task WhenDeleteUserIsSuccessful_ShouldDeleteAndReturnSuccessResponse()
     {
         // Arrange
         const string email = "stephenc@gmail.com";
@@ -24,30 +26,39 @@ public class UserControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/users/{id}");
 
         // Assert
-        await Utils.User.AssertDtoFromResponse(
-            outcome,
-            "Stephen",
-            "Curry",
-            email,
-            id);
+        DbContext.Users.Should().HaveCount(4);
+        DbContext.Users.AsEnumerable()
+            .SingleOrDefault(u => u.Id.Value.ToString() == id)
+            .Should().BeNull();
+        
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var response = await outcome.Content.ReadFromJsonAsync<DeleteUserResponse>();
+        response!.Message.Should().Be("User has been deleted successfully!");
     }
     
     [Fact]
-    public async Task WhenDeleteUserIsNotOwner_ThenReturnForbiddenResponse()
+    public async Task WhenDeleteUserIsNotOwner_ShouldReturnForbiddenResponse()
     {
         // Arrange
+        const string email = "stephenc@gmail.com";
         const string id = "10000000-0000-0000-0000-000000000000";
         
         // Act
-        UseCustomToken("stephenc@gmail.com");
+        UseCustomToken(email);
         var outcome = await Client.DeleteAsync($"api/users/{id}");
 
         // Assert
+        DbContext.Users.Should().HaveCount(5);
+        DbContext.Users.AsEnumerable()
+            .SingleOrDefault(u => u.Id.Value.ToString() == id)
+            .Should().NotBeNull();
+        
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
     
     [Fact]
-    public async Task WhenDeleteUserIsNotFound_ThenReturnNotFoundError()
+    public async Task WhenDeleteUserIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         const string id = "90000000-0000-0000-0000-000000000000";
@@ -56,6 +67,9 @@ public class UserControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/users/{id}");
 
         // Assert
+        DbContext.Users.Should().HaveCount(5);
+        DbContext.Users.AsEnumerable().SingleOrDefault(u => u.Id.Value.ToString() == id).Should().BeNull();
+        
         await outcome.ValidateError(HttpStatusCode.NotFound, Errors.User.NotFound.Description);
     }
 }

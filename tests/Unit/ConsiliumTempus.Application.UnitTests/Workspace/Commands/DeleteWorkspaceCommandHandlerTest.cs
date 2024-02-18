@@ -12,43 +12,46 @@ public class DeleteWorkspaceCommandHandlerTest
 {
     #region Setup
 
-    private readonly Mock<IWorkspaceRepository> _workspaceRepository;
-    private readonly Mock<IUnitOfWork> _unitOfWork;
+    private readonly IWorkspaceRepository _workspaceRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly DeleteWorkspaceCommandHandler _uut;
 
     public DeleteWorkspaceCommandHandlerTest()
     {
-        _workspaceRepository = new Mock<IWorkspaceRepository>();
-        _unitOfWork = new Mock<IUnitOfWork>();
-        _uut = new DeleteWorkspaceCommandHandler(_workspaceRepository.Object, _unitOfWork.Object);
+        _workspaceRepository = Substitute.For<IWorkspaceRepository>();
+        _unitOfWork = Substitute.For<IUnitOfWork>();
+        _uut = new DeleteWorkspaceCommandHandler(_workspaceRepository, _unitOfWork);
     }
 
     #endregion
 
     [Fact]
-    public async Task WhenDeleteWorkspaceHandleIsSuccessful_ShouldDeleteAndReturnWorkspace()
+    public async Task WhenDeleteWorkspaceHandleIsSuccessful_ShouldDeleteAndReturnDeleteResult()
     {
         // Arrange
         var command = new DeleteWorkspaceCommand(Guid.NewGuid());
 
-        var workspaceToDelete = Mock.Mock.Workspace.CreateMock();
-        _workspaceRepository.Setup(w =>
-                w.Get(It.IsAny<WorkspaceId>(), default))
-            .ReturnsAsync(workspaceToDelete);
+        var workspace = Mock.Mock.Workspace.CreateMock();
+        _workspaceRepository
+            .Get(Arg.Any<WorkspaceId>())
+            .Returns(workspace);
 
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertWorkspaceId(id, command.Id)),
-                    default),
-            Times.Once());
-        _workspaceRepository.Verify(w => w.Remove(workspaceToDelete), Times.Once());
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
+        await _workspaceRepository
+            .Received(1)
+            .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+        _workspaceRepository
+            .Received(1)
+            .Remove(Arg.Is<WorkspaceAggregate>(w => w == workspace));
+        await _unitOfWork
+            .Received(1)
+            .SaveChangesAsync();
 
         outcome.IsError.Should().BeFalse();
-        Utils.Workspace.AssertDeleteResult(outcome.Value, workspaceToDelete);
+        outcome.Value.Should().Be(new DeleteWorkspaceResult());
     }
 
     [Fact]
@@ -61,14 +64,13 @@ public class DeleteWorkspaceCommandHandlerTest
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertWorkspaceId(id, command.Id)),
-                    default),
-            Times.Once());
-        _workspaceRepository.Verify(w =>
-                w.Remove(It.IsAny<WorkspaceAggregate>()),
-            Times.Never);
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Never);
+        await _workspaceRepository
+            .Received(1)
+            .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+        _workspaceRepository
+            .DidNotReceive()
+            .Remove(Arg.Any<WorkspaceAggregate>());
+        _unitOfWork.DidNotReceive();
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

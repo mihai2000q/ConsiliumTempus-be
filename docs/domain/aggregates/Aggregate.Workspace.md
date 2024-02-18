@@ -10,6 +10,7 @@ class Workspace
     Workspace Create()
     void Update()
     void AddUserMembership()
+    void RefreshUpdatedDateTime()
 }
 ```
 

@@ -10,13 +10,13 @@ public class GetWorkspaceQueryHandlerTest
 {
     #region Setup
 
-    private readonly Mock<IWorkspaceRepository> _workspaceRepository;
+    private readonly IWorkspaceRepository _workspaceRepository;
     private readonly GetWorkspaceQueryHandler _uut;
 
     public GetWorkspaceQueryHandlerTest()
     {
-        _workspaceRepository = new Mock<IWorkspaceRepository>();
-        _uut = new GetWorkspaceQueryHandler(_workspaceRepository.Object);
+        _workspaceRepository = Substitute.For<IWorkspaceRepository>();
+        _uut = new GetWorkspaceQueryHandler(_workspaceRepository);
     }
 
     #endregion
@@ -28,18 +28,16 @@ public class GetWorkspaceQueryHandlerTest
         var query = new GetWorkspaceQuery(new Guid("00000000-0000-0000-0000-000000000000"));
 
         var workspace = Mock.Mock.Workspace.CreateMock();
-        _workspaceRepository.Setup(w =>
-                w.Get(It.IsAny<WorkspaceId>(), default))
-            .ReturnsAsync(workspace);
-
+        _workspaceRepository
+            .Get(Arg.Any<WorkspaceId>())
+            .Returns(workspace);
         // Act
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(i => 
-                    Utils.Workspace.AssertWorkspaceId(i, query.Id)), default),
-            Times.Once());
+        await _workspaceRepository
+            .Received(1)
+            .Get(Arg.Is<WorkspaceId>(id => query.Id == id.Value));
 
         outcome.IsError.Should().BeFalse();
         Utils.Workspace.AssertWorkspace(outcome.Value, workspace);
@@ -55,10 +53,9 @@ public class GetWorkspaceQueryHandlerTest
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(i =>
-                    Utils.Workspace.AssertWorkspaceId(i, query.Id)), default),
-            Times.Once());
+        await _workspaceRepository
+            .Received(1)
+            .Get(Arg.Is<WorkspaceId>(id => query.Id == id.Value));
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

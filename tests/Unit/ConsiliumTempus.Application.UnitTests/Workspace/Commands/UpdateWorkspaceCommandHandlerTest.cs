@@ -11,15 +11,15 @@ public class UpdateWorkspaceCommandHandlerTest
 {
     #region Setup
 
-    private readonly Mock<IWorkspaceRepository> _workspaceRepository;
-    private readonly Mock<IUnitOfWork> _unitOfWork;
+    private readonly IWorkspaceRepository _workspaceRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly UpdateWorkspaceCommandHandler _uut;
 
     public UpdateWorkspaceCommandHandlerTest()
     {
-        _workspaceRepository = new Mock<IWorkspaceRepository>();
-        _unitOfWork = new Mock<IUnitOfWork>();
-        _uut = new UpdateWorkspaceCommandHandler(_workspaceRepository.Object, _unitOfWork.Object);
+        _workspaceRepository = Substitute.For<IWorkspaceRepository>();
+        _unitOfWork = Substitute.For<IUnitOfWork>();
+        _uut = new UpdateWorkspaceCommandHandler(_workspaceRepository, _unitOfWork);
     }
 
     #endregion
@@ -28,46 +28,46 @@ public class UpdateWorkspaceCommandHandlerTest
     public async Task WhenUpdateWorkspaceIsSuccessful_ShouldUpdateAndReturnNewWorkspace()
     {
         // Arrange
-        var currentWorkspace = Mock.Mock.Workspace.CreateMock();
-        _workspaceRepository.Setup(w =>
-                w.Get(It.IsAny<WorkspaceId>(), default))
-            .ReturnsAsync(currentWorkspace);
-        
+        var workspace = Mock.Mock.Workspace.CreateMock();
+        _workspaceRepository
+            .Get(Arg.Any<WorkspaceId>())
+            .Returns(workspace);
+
         var command = new UpdateWorkspaceCommand(
-            currentWorkspace.Id.Value, 
-            "New Name", 
+            workspace.Id.Value,
+            "New Name",
             "New Description");
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertWorkspaceId(id, command.Id)), 
-                    default),
-                Times.Once());
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
+        await _workspaceRepository
+            .Received(1)
+            .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+        await _unitOfWork
+            .Received(1)
+            .SaveChangesAsync();
 
         outcome.IsError.Should().BeFalse();
         Utils.Workspace.AssertFromUpdateCommand(outcome.Value.Workspace, command);
     }
-    
+
     [Fact]
     public async Task WhenUpdateWorkspaceIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = new UpdateWorkspaceCommand(Guid.NewGuid(), "New Name", "New Description");
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _workspaceRepository.Verify(w =>
-                w.Get(It.Is<WorkspaceId>(id => Utils.Workspace.AssertWorkspaceId(id, command.Id)), 
-                    default),
-            Times.Once());
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Never());
-
+        await _workspaceRepository
+            .Received(1)
+            .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+        _unitOfWork.DidNotReceive();
+        
         outcome.ValidateError(Errors.Workspace.NotFound);
     }
 }

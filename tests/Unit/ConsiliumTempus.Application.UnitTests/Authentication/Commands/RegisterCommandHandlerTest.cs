@@ -1,12 +1,10 @@
 ﻿using ConsiliumTempus.Application.Authentication.Commands.Register;
-using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
-using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Authentication.Commands;
 
@@ -14,23 +12,23 @@ public class RegisterCommandHandlerTest
 {
     #region Setup
 
-    private readonly Mock<IJwtTokenGenerator> _jwtTokenGenerator;
-    private readonly Mock<IScrambler> _scrambler;
-    private readonly Mock<IUserRepository> _userRepository;
-    private readonly Mock<IUnitOfWork> _unitOfWork;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IScrambler _scrambler;
+    private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly RegisterCommandHandler _uut;
 
     public RegisterCommandHandlerTest()
     {
-        _jwtTokenGenerator = new Mock<IJwtTokenGenerator>();
-        _scrambler = new Mock<IScrambler>();
-        _userRepository = new Mock<IUserRepository>();
-        _unitOfWork = new Mock<IUnitOfWork>();
+        _jwtTokenGenerator = Substitute.For<IJwtTokenGenerator>();
+        _scrambler = Substitute.For<IScrambler>();
+        _userRepository = Substitute.For<IUserRepository>();
+        _unitOfWork = Substitute.For<IUnitOfWork>();
         _uut = new RegisterCommandHandler(
-            _jwtTokenGenerator.Object,
-            _scrambler.Object,
-            _userRepository.Object,
-            _unitOfWork.Object);
+            _jwtTokenGenerator,
+            _scrambler,
+            _userRepository,
+            _unitOfWork);
     }
 
     #endregion
@@ -47,43 +45,42 @@ public class RegisterCommandHandlerTest
             null,
             null);
 
+        UserAggregate createdUser = null!;
+        _userRepository
+            .When(u => u.Add(Arg.Any<UserAggregate>()))
+            .Do(user => createdUser = user.Arg<UserAggregate>());
+
+        UserAggregate userUsedForJwt = null!;
         const string token = "This is a token";
+        _jwtTokenGenerator
+            .GenerateToken(Arg.Any<UserAggregate>())
+            .Returns(token)
+            .AndDoes(user => userUsedForJwt = user.Arg<UserAggregate>());
+
         const string hashedPassword = "This is the hash password for Password123";
-
-        UserAggregate? callbackAddedUser = null;
-        UserAggregate? callbackUserUsedForJwt = null;
-        _userRepository.Setup(r =>
-                r.Add(It.IsAny<UserAggregate>(), default))
-            .Callback<UserAggregate, CancellationToken>((r, _) => callbackAddedUser = r);
-        _jwtTokenGenerator.Setup(j => j.GenerateToken(It.IsAny<UserAggregate>()))
-            .Callback<UserAggregate>(r => callbackUserUsedForJwt = r)
-            .Returns(token);
-
-        _scrambler.Setup(s => s.HashPassword(command.Password))
+        _scrambler
+            .HashPassword(command.Password)
             .Returns(hashedPassword);
 
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _userRepository.Verify(r =>
-            r.GetUserByEmail(It.IsAny<string>(), default), Times.Once());
-        _userRepository.Verify(r =>
-            r.Add(It.IsAny<UserAggregate>(), default), Times.Once());
-        _jwtTokenGenerator.Verify(j =>
-            j.GenerateToken(It.IsAny<UserAggregate>()), Times.Once());
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
+        await _userRepository
+            .Received(1)
+            .GetUserByEmail(Arg.Any<string>());
+        await _userRepository
+            .Received(1)
+            .Add(Arg.Any<UserAggregate>());
+        _jwtTokenGenerator
+            .Received(1)
+            .GenerateToken(Arg.Any<UserAggregate>());
+        await _unitOfWork
+            .Received(1)
+            .SaveChangesAsync();
 
-        callbackAddedUser.Should().Be(callbackUserUsedForJwt);
-        callbackAddedUser?.Id.Should().NotBeNull();
-        callbackAddedUser?.Name.First.Should().Be(command.FirstName.CapitalizeWord());
-        callbackAddedUser?.Name.Last.Should().Be(command.LastName.CapitalizeWord());
-        callbackAddedUser?.Credentials.Email.Should().Be(command.Email.ToLower());
-        callbackAddedUser?.Credentials.Password.Should().Be(hashedPassword);
-        callbackAddedUser?.Role.Should().Be(command.Role);
-        callbackAddedUser?.DateOfBirth.Should().Be(command.DateOfBirth);
-        callbackAddedUser?.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-        callbackAddedUser?.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        createdUser.Should().Be(userUsedForJwt);
+        Utils.User.AssertFromRegisterCommand(createdUser, command, hashedPassword);
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(token);
@@ -101,21 +98,20 @@ public class RegisterCommandHandlerTest
             null,
             null);
 
-        _userRepository.Setup(r => 
-                r.GetUserByEmail(command.Email.ToLower(), default))
-            .ReturnsAsync(Mock.Mock.User.CreateMock());
+        _userRepository
+            .GetUserByEmail(command.Email.ToLower())
+            .Returns(Mock.Mock.User.CreateMock());
 
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _userRepository.Verify(r => 
-            r.GetUserByEmail(It.IsAny<string>(), default), Times.Once());
-        _jwtTokenGenerator.Verify(j =>
-            j.GenerateToken(It.IsAny<UserAggregate>()), Times.Never());
-        _userRepository.Verify(r =>
-            r.Add(It.IsAny<UserAggregate>(), default), Times.Never());
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Never());
+        await _userRepository
+            .Received(1)
+            .GetUserByEmail(Arg.Any<string>());
+        _jwtTokenGenerator.DidNotReceive();
+        _userRepository.DidNotReceive();
+        _unitOfWork.DidNotReceive();
 
         outcome.ValidateError(Errors.User.DuplicateEmail);
     }

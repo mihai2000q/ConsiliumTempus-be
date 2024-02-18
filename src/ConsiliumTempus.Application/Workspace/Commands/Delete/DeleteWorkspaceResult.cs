@@ -1,6 +1,4 @@
-﻿using ConsiliumTempus.Domain.Workspace;
-
-namespace ConsiliumTempus.Application.Workspace.Commands.Delete;
+﻿namespace ConsiliumTempus.Application.Workspace.Commands.Delete;
 
 
-public sealed record DeleteWorkspaceResult(WorkspaceAggregate Workspace);
+public sealed record DeleteWorkspaceResult(string Message = "Workspace has been deleted successfully!");

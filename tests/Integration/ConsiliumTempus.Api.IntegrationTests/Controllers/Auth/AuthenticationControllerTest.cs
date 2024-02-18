@@ -16,7 +16,7 @@ public class AuthenticationControllerTest(
     : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
 {
     [Fact]
-    public async Task WhenRegisterIsSuccessful_ShouldReturnToken()
+    public async Task WhenRegisterIsSuccessful_ShouldAddNewUserAndReturnToken()
     {
         // Arrange
         var request = new RegisterRequest(
@@ -26,22 +26,26 @@ public class AuthenticationControllerTest(
             "Password123",
             null,
             null);
-        
+
         // Act
         var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
-    
+
         // Assert
+        DbContext.Users.Should().HaveCount(2);
+        var createdUser = DbContext.Users.Single(u => u.Credentials.Email == request.Email.ToLower());
+        Utils.User.AssertRegistration(createdUser, request);
+
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<RegisterResponse>();
         Utils.Auth.AssertToken(
             response?.Token,
-            JwtSettings, 
-            request.Email.ToLower(), 
-            request.FirstName.CapitalizeWord(), 
+            JwtSettings,
+            request.Email.ToLower(),
+            request.FirstName.CapitalizeWord(),
             request.LastName.CapitalizeWord());
     }
-    
+
     [Fact]
     public async Task WhenRegisterFails_ShouldReturnDuplicateEmailError()
     {
@@ -53,14 +57,17 @@ public class AuthenticationControllerTest(
             "MichaelJordan2",
             null,
             null);
-        
+
         // Act
         var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
-    
+
         // Assert
+        DbContext.Users.Should().HaveCount(1);
+        DbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower()).Should().NotBeNull();
+
         await outcome.ValidateError(HttpStatusCode.Conflict, "Email is already in use");
     }
-    
+
     [Fact]
     public async Task WhenLoginIsSuccessful_ShouldReturnToken()
     {
@@ -68,29 +75,48 @@ public class AuthenticationControllerTest(
         var request = new LoginRequest(
             "MichaelJ@Gmail.com",
             "MichaelJordan2");
-        
+
         // Act
         var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
-    
+
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        
+
         var response = await outcome.Content.ReadFromJsonAsync<LoginResponse>();
         Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email.ToLower());
     }
-    
+
     [Fact]
-    public async Task WhenLoginFails_ShouldReturnInvalidCredentialsError()
+    public async Task Login_WhenUserIsNotFound_ShouldReturnInvalidCredentialsError()
     {
         // Arrange
         var request = new LoginRequest(
             "FirstLast@Example.com",
             "Password123");
-        
+
         // Act
         var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
-    
+
         // Assert
+        DbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower()).Should().BeNull();
+
+        await outcome.ValidateError(HttpStatusCode.Unauthorized, "Invalid Credentials");
+    }
+
+    [Fact]
+    public async Task Login_WhenPasswordIsWrong_ShouldReturnInvalidCredentialsError()
+    {
+        // Arrange
+        var request = new LoginRequest(
+            "MichaelJ@Gmail.com",
+            "Password123");
+
+        // Act
+        var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
+
+        // Assert
+        DbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower()).Should().NotBeNull();
+
         await outcome.ValidateError(HttpStatusCode.Unauthorized, "Invalid Credentials");
     }
 }

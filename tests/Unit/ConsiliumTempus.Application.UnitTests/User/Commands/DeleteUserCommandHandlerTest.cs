@@ -12,43 +12,48 @@ public class DeleteUserCommandHandlerTest
 {
     #region Setup
 
-    private readonly Mock<IUserRepository> _userRepository;
-    private readonly Mock<IUnitOfWork> _unitOfWork;
+    private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly DeleteUserCommandHandler _uut;
 
     public DeleteUserCommandHandlerTest()
     {
-        _userRepository = new Mock<IUserRepository>();
-        _unitOfWork = new Mock<IUnitOfWork>();
-        _uut = new DeleteUserCommandHandler(_userRepository.Object, _unitOfWork.Object);
+        _userRepository = Substitute.For<IUserRepository>();
+        _unitOfWork = Substitute.For<IUnitOfWork>();
+        _uut = new DeleteUserCommandHandler(_userRepository, _unitOfWork);
     }
 
     #endregion
 
     [Fact]
-    public async Task WhenDeleteUserCommandIsSuccessful_ShouldReturnTheUser()
+    public async Task WhenDeleteUserCommandIsSuccessful_ShouldDeleteAndReturnDeleteResult()
     {
         // Arrange
         var command = new DeleteUserCommand(Guid.NewGuid());
 
         var user = Mock.Mock.User.CreateMock();
-        _userRepository.Setup(u => u.Get(It.IsAny<UserId>(), default))
-            .ReturnsAsync(user);
+        _userRepository
+            .Get(Arg.Any<UserId>())
+            .Returns(user);
 
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _userRepository.Verify(u =>
-                u.Get(It.Is<UserId>(id => id.Value == command.Id), default),
-            Times.Once());
-        _userRepository.Verify(u => u.Remove(user), Times.Once());
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
+        await _userRepository
+            .Received(1)
+            .Get(Arg.Is<UserId>(id => id.Value == command.Id));
+        _userRepository
+            .Received(1)
+            .Remove(user);
+        await _unitOfWork
+            .Received(1)
+            .SaveChangesAsync();
 
         outcome.IsError.Should().BeFalse();
-        Utils.User.AssertDeleteResult(outcome.Value, user);
+        outcome.Value.Should().Be(new DeleteUserResult());
     }
-    
+
     [Fact]
     public async Task WhenDeleteUserCommandFails_ShouldReturnNotFoundError()
     {
@@ -59,11 +64,13 @@ public class DeleteUserCommandHandlerTest
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _userRepository.Verify(u =>
-                u.Get(It.Is<UserId>(id => id.Value == command.Id), default),
-            Times.Once());
-        _userRepository.Verify(u => u.Remove(It.IsAny<UserAggregate>()), Times.Never);
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Never);
+        await _userRepository
+            .Received(1)
+            .Get(Arg.Is<UserId>(id => id.Value == command.Id));
+        _userRepository
+            .DidNotReceive()
+            .Remove(Arg.Any<UserAggregate>());
+        _unitOfWork.DidNotReceive();
 
         outcome.ValidateError(Errors.User.NotFound);
     }

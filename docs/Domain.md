@@ -36,6 +36,7 @@ The aggregates are:
 
 - [User Aggregate](domain/aggregates/Aggregate.User)
 - [Workspace Aggregate](domain/aggregates/Aggregate.Workspace)
+- [Project Aggregate](domain/aggregates/Aggregate.Project.md)
 
 ## Entities
 
@@ -93,6 +94,8 @@ except the primary key and direct relations), check below:
 - Aggregates
   - [User Diagram](domain/diagrams/aggregates/Diagram.User.md)
   - [Workspace Diagram](domain/diagrams/aggregates/Diagram.Workspace.md)
+  - [Project Diagram](domain/diagrams/aggregates/Diagram.Project.md)
 - Entities
+  - [Membership Diagram](domain/diagrams/entities/Diagram.Membership.md)
   - [Permission Diagram](domain/diagrams/entities/Diagram.Permission.md)
-  - [Permission Diagram](domain/diagrams/entities/Diagram.WorkspaceRole.md)
+  - [Workspace Role Diagram](domain/diagrams/entities/Diagram.WorkspaceRole.md)

@@ -10,16 +10,16 @@ namespace ConsiliumTempus.Application.UnitTests.User.Commands;
 public class UpdateUserCommandHandlerTest
 {
     #region Setup
-    
-    private readonly Mock<IUserRepository> _userRepository;
-    private readonly Mock<IUnitOfWork> _unitOfWork;
+
+    private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly UpdateUserCommandHandler _uut;
-    
+
     public UpdateUserCommandHandlerTest()
     {
-        _userRepository = new Mock<IUserRepository>();
-        _unitOfWork = new Mock<IUnitOfWork>();
-        _uut = new UpdateUserCommandHandler(_userRepository.Object, _unitOfWork.Object);
+        _userRepository = Substitute.For<IUserRepository>();
+        _unitOfWork = Substitute.For<IUnitOfWork>();
+        _uut = new UpdateUserCommandHandler(_userRepository, _unitOfWork);
     }
 
     #endregion
@@ -29,51 +29,52 @@ public class UpdateUserCommandHandlerTest
     {
         // Arrange
         var currentUser = Mock.Mock.User.CreateMock();
-        _userRepository.Setup(u => u.Get(It.IsAny<UserId>(), default))
-            .ReturnsAsync(currentUser);
-            
+        _userRepository
+            .Get(Arg.Any<UserId>())
+            .Returns(currentUser);
+
         var command = new UpdateUserCommand(
             currentUser.Id.Value,
             "New First Name",
             "New Last Name",
             "Footballer",
             null);
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _userRepository.Verify(w =>
-                w.Get(It.Is<UserId>(id => id.Value == command.Id), 
-                    default),
-            Times.Once());
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Once());
-        
+        await _userRepository
+            .Received(1)
+            .Get(Arg.Is<UserId>(id => id.Value == command.Id));
+        await _unitOfWork
+            .Received(1)
+            .SaveChangesAsync();
+
         outcome.IsError.Should().BeFalse();
         Utils.User.AssertFromUpdateCommand(outcome.Value, command);
     }
-    
+
     [Fact]
     public async Task WhenUpdateUserCommandIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = new UpdateUserCommand(
-            Guid.NewGuid(), 
+            Guid.NewGuid(),
             "New First Name",
             "New Last Name",
             null,
             null);
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _userRepository.Verify(w =>
-                w.Get(It.Is<UserId>(id => id.Value == command.Id), 
-                    default),
-            Times.Once());
-        _unitOfWork.Verify(u => u.SaveChangesAsync(default), Times.Never);
-        
+        await _userRepository
+            .Received(1)
+            .Get(Arg.Is<UserId>(id => id.Value == command.Id));
+        _unitOfWork.DidNotReceive();
+
         outcome.ValidateError(Errors.User.NotFound);
     }
 }

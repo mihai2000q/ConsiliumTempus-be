@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -14,8 +15,18 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
     {
         return await dbContext.Workspaces.FindAsync([id], cancellationToken);
     }
+    
+    public async Task<WorkspaceAggregate?> GetByProject(ProjectId id, CancellationToken cancellationToken = default)
+    {
+        var project = await dbContext.Projects
+            .Include(p => p.Workspace)
+            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
 
-    public async Task<List<WorkspaceAggregate>> GetListForUser(UserAggregate user, CancellationToken cancellationToken = default)
+        return project?.Workspace;
+    }
+
+    public async Task<List<WorkspaceAggregate>> GetListForUser(UserAggregate user,
+        CancellationToken cancellationToken = default)
     {
         return await dbContext.Workspaces
             .Where(w => w.Memberships.Any(m => m.User == user))

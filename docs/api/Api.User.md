@@ -80,4 +80,4 @@ Sends the id of the user inside the route request.
 
 #### Delete User Response
 
-Returns the user [Dto](dto/Dto.User.md).
+Returns a confirmation message that the user has been deleted successfully.

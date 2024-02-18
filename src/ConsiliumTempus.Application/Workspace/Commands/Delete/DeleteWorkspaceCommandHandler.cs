@@ -23,6 +23,6 @@ public sealed class DeleteWorkspaceCommandHandler(
         workspaceRepository.Remove(workspace);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new DeleteWorkspaceResult(workspace);
+        return new DeleteWorkspaceResult();
     }
 }

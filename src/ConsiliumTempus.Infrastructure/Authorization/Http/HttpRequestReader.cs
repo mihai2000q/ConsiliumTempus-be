@@ -5,20 +5,25 @@ namespace ConsiliumTempus.Infrastructure.Authorization.Http;
 
 internal static class HttpRequestReader
 {
-    internal static string? GetStringIdFromRoute(HttpRequest request)
+    internal static string? GetStringIdFromRoute(HttpRequest request, string property = "id")
     {
-        var id = (string?)request.RouteValues["id"];
+        var id = (string?)request.RouteValues[property];
 
         return !string.IsNullOrEmpty(id) ? id : null;
     }
 
-    internal static async Task<string?> GetStringIdFromBody(HttpRequest request)
+    internal static Task<string?> GetStringIdFromBody(HttpRequest request)
+    {
+        return GetPropertyFromBody(request, "id");
+    }
+
+    internal static async Task<string?> GetPropertyFromBody(HttpRequest request, string property)
     {
         request.EnableBuffering();
-        var body = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(request.Body);
+        var body = await JsonSerializer.DeserializeAsync<Dictionary<string, JsonElement>>(request.Body);
         request.Body.Position = 0;
         
-        var id = body?["id"] ?? "";
+        var id = body?[property].GetString() ?? "";
         return !string.IsNullOrEmpty(id) ? id : null;
     }
 }

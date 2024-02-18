@@ -17,7 +17,7 @@ internal static partial class Utils
             query.Id.Should().Be(request.Id);
             return true;
         }
-        
+
         internal static bool AssertUpdateCommand(UpdateUserCommand command, UpdateUserRequest request)
         {
             command.Id.Should().Be(request.Id);
@@ -27,7 +27,7 @@ internal static partial class Utils
             command.DateOfBirth.Should().Be(request.DateOfBirth);
             return true;
         }
-        
+
         internal static void AssertDto(IActionResult outcome, UserAggregate user)
         {
             outcome.Should().BeOfType<OkObjectResult>();
@@ -37,7 +37,7 @@ internal static partial class Utils
 
             AssertDto(response!, user);
         }
-        
+
         private static void AssertDto(UserDto dto, UserAggregate user)
         {
             dto.Id.Should().Be(user.Id.Value.ToString());
