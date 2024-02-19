@@ -1,5 +1,4 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
 using Xunit.Abstractions;

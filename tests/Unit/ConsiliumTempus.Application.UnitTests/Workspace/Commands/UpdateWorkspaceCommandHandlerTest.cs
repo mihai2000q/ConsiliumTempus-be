@@ -12,14 +12,12 @@ public class UpdateWorkspaceCommandHandlerTest
     #region Setup
 
     private readonly IWorkspaceRepository _workspaceRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly UpdateWorkspaceCommandHandler _uut;
 
     public UpdateWorkspaceCommandHandlerTest()
     {
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
-        _unitOfWork = Substitute.For<IUnitOfWork>();
-        _uut = new UpdateWorkspaceCommandHandler(_workspaceRepository, _unitOfWork);
+        _uut = new UpdateWorkspaceCommandHandler(_workspaceRepository);
     }
 
     #endregion
@@ -45,9 +43,6 @@ public class UpdateWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        await _unitOfWork
-            .Received(1)
-            .SaveChangesAsync();
 
         outcome.IsError.Should().BeFalse();
         Utils.Workspace.AssertFromUpdateCommand(outcome.Value.Workspace, command);
@@ -66,8 +61,7 @@ public class UpdateWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _unitOfWork.DidNotReceive();
-        
+
         outcome.ValidateError(Errors.Workspace.NotFound);
     }
 }

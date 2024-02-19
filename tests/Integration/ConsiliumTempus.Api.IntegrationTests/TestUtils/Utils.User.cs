@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.User;
 using FluentAssertions;
 
@@ -27,7 +28,7 @@ internal static partial class Utils
             var content = await response.Content.ReadFromJsonAsync<UserDto>();
             AssertDto(content!, firstName, lastName, email, id, role, dateOfBirth);
         }
-        
+
         internal static void AssertDto(
             UserDto dto,
             string firstName,
@@ -56,8 +57,14 @@ internal static partial class Utils
             user.Credentials.Password.Should().NotBeNullOrWhiteSpace().And.NotBe(request.Password);
             user.Role.Should().Be(request.Role);
             user.DateOfBirth.Should().Be(request.DateOfBirth);
+
+            user.Memberships.Should().HaveCount(1);
+            user.Memberships[0].User.Should().Be(user);
+            user.Memberships[0].Workspace.Name.Should().Be(Constants.Workspace.Name);
+            user.Memberships[0].Workspace.Description.Should().Be(Constants.Workspace.Description);
+            user.Memberships[0].Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         }
-        
+
         internal static void AssertUpdate(
             UserAggregate user,
             UpdateUserRequest request)
@@ -68,7 +75,7 @@ internal static partial class Utils
             user.Role.Should().Be(request.Role);
             user.DateOfBirth.Should().Be(request.DateOfBirth);
         }
-        
+
         internal static void AssertNotUpdated(
             UserAggregate user,
             UpdateUserRequest request)

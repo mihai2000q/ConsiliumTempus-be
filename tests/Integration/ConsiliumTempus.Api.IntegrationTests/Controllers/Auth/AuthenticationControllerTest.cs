@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth;
@@ -17,7 +18,7 @@ public class AuthenticationControllerTest(
     : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
 {
     [Fact]
-    public async Task WhenRegisterIsSuccessful_ShouldAddNewUserAndReturnToken()
+    public async Task Register_WhenIsSuccessful_ShouldAddNewUserAndReturnToken()
     {
         // Arrange
         var request = new RegisterRequest(
@@ -34,7 +35,10 @@ public class AuthenticationControllerTest(
         // Assert
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users.Should().HaveCount(2);
-        var createdUser = dbContext.Users.Single(u => u.Credentials.Email == request.Email.ToLower());
+        var createdUser = dbContext.Users
+            .Include(u => u.Memberships)
+            .ThenInclude(m => m.Workspace)
+            .Single(u => u.Credentials.Email == request.Email.ToLower());
         Utils.User.AssertRegistration(createdUser, request);
 
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -49,7 +53,7 @@ public class AuthenticationControllerTest(
     }
 
     [Fact]
-    public async Task WhenRegisterFails_ShouldReturnDuplicateEmailError()
+    public async Task Register_WhenItFails_ShouldReturnDuplicateEmailError()
     {
         // Arrange
         var request = new RegisterRequest(
@@ -72,7 +76,7 @@ public class AuthenticationControllerTest(
     }
 
     [Fact]
-    public async Task WhenLoginIsSuccessful_ShouldReturnToken()
+    public async Task Login_WhenIsSuccessful_ShouldReturnToken()
     {
         // Arrange
         var request = new LoginRequest(

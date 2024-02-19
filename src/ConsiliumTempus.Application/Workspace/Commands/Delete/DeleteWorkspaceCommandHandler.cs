@@ -7,9 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Delete;
 
-public sealed class DeleteWorkspaceCommandHandler(
-    IWorkspaceRepository workspaceRepository,
-    IUnitOfWork unitOfWork)
+public sealed class DeleteWorkspaceCommandHandler(IWorkspaceRepository workspaceRepository)
     : IRequestHandler<DeleteWorkspaceCommand, ErrorOr<DeleteWorkspaceResult>>
 {
     public async Task<ErrorOr<DeleteWorkspaceResult>> Handle(DeleteWorkspaceCommand command,
@@ -21,7 +19,6 @@ public sealed class DeleteWorkspaceCommandHandler(
         if (workspace is null) return Errors.Workspace.NotFound;
 
         workspaceRepository.Remove(workspace);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new DeleteWorkspaceResult();
     }

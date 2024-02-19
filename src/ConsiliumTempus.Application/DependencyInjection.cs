@@ -1,8 +1,7 @@
 ﻿using System.Reflection;
+using ConsiliumTempus.Application.Common.Behaviors;
 using ConsiliumTempus.Application.Common.Security;
-using ConsiliumTempus.Application.Common.Validation;
 using FluentValidation;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ConsiliumTempus.Application;
@@ -12,12 +11,13 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddMediatR(cfg =>
-            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        {
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 
-        services.AddScoped(
-            typeof(IPipelineBehavior<,>),
-            typeof(ValidationBehavior<,>));
-
+            cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            cfg.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
+        });
+        
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddScoped<ISecurity, Security>();

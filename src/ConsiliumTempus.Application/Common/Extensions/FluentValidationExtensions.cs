@@ -1,9 +1,8 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace ConsiliumTempus.Application.Common.Validation;
+namespace ConsiliumTempus.Application.Common.Extensions;
 
-public static class CustomValidators
+public static class FluentValidationExtensions
 {
     public static IRuleBuilderOptions<T, string> IsPassword<T>(this IRuleBuilder<T, string> ruleBuilder)
     {

@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Security;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
@@ -12,8 +11,7 @@ namespace ConsiliumTempus.Application.Project.Commands.Create;
 public sealed class CreateProjectCommandHandler(
     ISecurity security,
     IWorkspaceRepository workspaceRepository,
-    IProjectRepository projectRepository,
-    IUnitOfWork unitOfWork) 
+    IProjectRepository projectRepository) 
     : IRequestHandler<CreateProjectCommand, ErrorOr<CreateProjectResult>>
 {
     public async Task<ErrorOr<CreateProjectResult>> Handle(CreateProjectCommand command, 
@@ -35,9 +33,7 @@ public sealed class CreateProjectCommandHandler(
         await projectRepository.Add(project, cancellationToken);
         
         workspace.RefreshUpdatedDateTime();
-
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-
+        
         return new CreateProjectResult();
     }
 }

@@ -13,17 +13,20 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
         var sprint = ProjectSprint.Create(Constants.ProjectSprint.Name, notification.Project);
         notification.Project.AddSprint(sprint);
 
+        var count = 0;
         Constants.ProjectSection.Names
-            .Select(name => ProjectSection.Create(name, sprint))
+            .Select(name => ProjectSection.Create(name, count++, sprint))
             .ToList()
             .ForEach(section => sprint.AddSection(section));
 
+        count = 0;
         var section = sprint.Sections[0];
         Constants.ProjectTask.Names
             .ToList()
             .ForEach(name => section.AddTask(ProjectTaskAggregate.Create(
                 name, 
                 string.Empty, 
+                count++,
                 notification.User,
                 section)));
 

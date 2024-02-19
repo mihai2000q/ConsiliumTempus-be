@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Application.Common.Validation;
+using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 

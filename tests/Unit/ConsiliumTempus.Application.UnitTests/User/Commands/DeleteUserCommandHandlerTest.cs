@@ -13,14 +13,12 @@ public class DeleteUserCommandHandlerTest
     #region Setup
 
     private readonly IUserRepository _userRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly DeleteUserCommandHandler _uut;
 
     public DeleteUserCommandHandlerTest()
     {
         _userRepository = Substitute.For<IUserRepository>();
-        _unitOfWork = Substitute.For<IUnitOfWork>();
-        _uut = new DeleteUserCommandHandler(_userRepository, _unitOfWork);
+        _uut = new DeleteUserCommandHandler(_userRepository);
     }
 
     #endregion
@@ -46,10 +44,7 @@ public class DeleteUserCommandHandlerTest
         _userRepository
             .Received(1)
             .Remove(user);
-        await _unitOfWork
-            .Received(1)
-            .SaveChangesAsync();
-
+        
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteUserResult());
     }
@@ -70,7 +65,6 @@ public class DeleteUserCommandHandlerTest
         _userRepository
             .DidNotReceive()
             .Remove(Arg.Any<UserAggregate>());
-        _unitOfWork.DidNotReceive();
 
         outcome.ValidateError(Errors.User.NotFound);
     }
