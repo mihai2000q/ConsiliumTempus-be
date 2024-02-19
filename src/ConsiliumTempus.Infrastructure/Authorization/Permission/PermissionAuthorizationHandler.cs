@@ -89,7 +89,8 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             ApiControllers.ProjectSprint => request.Method switch
             {
                 HttpRequestType.POST => new StringIdResponse(
-                    await HttpRequestReader.GetPropertyFromBody(request, "projectId")),
+                    await HttpRequestReader.GetPropertyFromBody(request, "projectId"),
+                    StringIdType.Project),
                 HttpRequestType.PUT => new StringIdResponse(
                     await HttpRequestReader.GetPropertyFromBody(request, "id"), 
                     StringIdType.ProjectSprint),
