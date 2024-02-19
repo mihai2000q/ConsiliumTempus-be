@@ -53,7 +53,8 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
             .HasMaxLength(PropertiesValidation.ProjectTaskComment.MessageMaximumLength);
 
         builder.HasOne(c => c.CreatedBy)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(c => c.TaskAggregate)
             .WithMany(t => t.Comments);

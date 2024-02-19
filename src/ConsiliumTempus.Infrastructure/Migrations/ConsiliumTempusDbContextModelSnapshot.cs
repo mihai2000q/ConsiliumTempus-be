@@ -554,7 +554,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
                                 .WithMany()
                                 .HasForeignKey("CreatedById")
-                                .OnDelete(DeleteBehavior.Cascade)
+                                .OnDelete(DeleteBehavior.NoAction)
                                 .IsRequired();
 
                             b1.WithOwner("TaskAggregate")

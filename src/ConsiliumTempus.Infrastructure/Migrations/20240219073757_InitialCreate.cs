@@ -265,8 +265,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_ProjectTaskComment_User_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(

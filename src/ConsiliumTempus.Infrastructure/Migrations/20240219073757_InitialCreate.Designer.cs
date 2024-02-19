@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240218223347_InitialCreate")]
+    [Migration("20240219073757_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -557,7 +557,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
                                 .WithMany()
                                 .HasForeignKey("CreatedById")
-                                .OnDelete(DeleteBehavior.Cascade)
+                                .OnDelete(DeleteBehavior.NoAction)
                                 .IsRequired();
 
                             b1.WithOwner("TaskAggregate")
