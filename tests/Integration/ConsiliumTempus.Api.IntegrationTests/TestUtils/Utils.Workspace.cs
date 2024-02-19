@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
+using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Domain.Workspace;
 using FluentAssertions;
@@ -46,6 +47,20 @@ internal static partial class Utils
             workspace.Id.Value.Should().NotBeEmpty();
             workspace.Name.Should().Be(request.Name);
             workspace.Description.Should().Be(request.Description);
+        }
+
+        internal static void AssertUpdated(WorkspaceAggregate workspace, UpdateWorkspaceRequest request)
+        {
+            workspace.Id.Value.Should().Be(request.Id);
+            workspace.Name.Should().Be(request.Name);
+            workspace.Description.Should().Be(request.Description);
+        }
+        
+        internal static void AssertNotUpdated(WorkspaceAggregate workspace, UpdateWorkspaceRequest request)
+        {
+            workspace.Id.Value.Should().Be(request.Id);
+            workspace.Name.Should().NotBe(request.Name);
+            workspace.Description.Should().NotBe(request.Description);
         }
     }
 }

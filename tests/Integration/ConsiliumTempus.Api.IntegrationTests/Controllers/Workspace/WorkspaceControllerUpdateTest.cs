@@ -4,7 +4,10 @@ using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace;
@@ -48,6 +51,8 @@ public class WorkspaceControllerUpdateTest(
         var outcome = await Client.PutAsJsonAsync("api/workspaces", request);
 
         // Assert
+        (await GetWorkspaceById(request.Id)).Should().BeNull();
+        
         await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Workspace.NotFound.Description);
     }
 
@@ -60,6 +65,9 @@ public class WorkspaceControllerUpdateTest(
         var outcome = await Client.PutAsJsonAsync("api/workspaces", request);
 
         // Assert
+        var updatedWorkspace = await GetWorkspaceById(request.Id);
+        Utils.Workspace.AssertUpdated(updatedWorkspace!, request);
+        
         await Utils.Workspace.AssertDtoFromResponse(
             outcome, 
             request.Name!, 
@@ -75,6 +83,9 @@ public class WorkspaceControllerUpdateTest(
         var outcome = await Client.PutAsJsonAsync("api/workspaces", request);
 
         // Assert
+        var updatedWorkspace = await GetWorkspaceById(request.Id);
+        Utils.Workspace.AssertNotUpdated(updatedWorkspace!, request);
+        
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
@@ -84,5 +95,11 @@ public class WorkspaceControllerUpdateTest(
             new Guid(id),
             "Workspace New Name",
             "This is a new description");
+    }
+    
+    private async Task<WorkspaceAggregate?> GetWorkspaceById(Guid id)
+    {
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        return await dbContext.Workspaces.SingleOrDefaultAsync(u => u.Id == WorkspaceId.Create(id));
     }
 }

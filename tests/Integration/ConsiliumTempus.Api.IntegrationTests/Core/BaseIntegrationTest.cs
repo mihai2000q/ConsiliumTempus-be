@@ -21,8 +21,8 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
     private readonly bool _defaultUsers;
 
     protected readonly HttpClient Client;
+    protected readonly IDbContextFactory<ConsiliumTempusDbContext> DbContextFactory;
     protected readonly ITestOutputHelper TestOutputHelper;
-    protected readonly ConsiliumTempusDbContext DbContext;
     protected readonly JwtSettings JwtSettings = new();
 
     protected BaseIntegrationTest(
@@ -37,7 +37,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         _defaultUsers = defaultUsers;
         Client = factory.HttpClient;
         TestOutputHelper = testOutputHelper;
-        DbContext = factory.Services.GetRequiredService<ConsiliumTempusDbContext>();
+        DbContextFactory = factory.Services.GetRequiredService<IDbContextFactory<ConsiliumTempusDbContext>>();
         factory.Services.GetRequiredService<IConfiguration>()
             .Bind(JwtSettings.SectionName, JwtSettings);
     }
@@ -81,10 +81,11 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
         var rawQueries = await File.ReadAllLinesAsync(path);
         var queries = ParseQueries(rawQueries);
 
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
         TestOutputHelper.WriteLine($"Importing data from: {path}");
         foreach (var query in queries)
         {
-            await DbContext.Database.ExecuteSqlRawAsync(query);
+            await dbContext.Database.ExecuteSqlRawAsync(query);
         }
         TestOutputHelper.WriteLine($"Finished importing data from: {path}\n");
     }
@@ -115,9 +116,10 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
 
     private JwtSecurityToken GetToken(string? email = null)
     {
+        var dbContext = DbContextFactory.CreateDbContext();
         var user = email is null
-            ? DbContext.Users.FirstOrDefault()
-            : DbContext.Users.SingleOrDefault(u => u.Credentials.Email == email.ToLower());
+            ? dbContext.Users.FirstOrDefault()
+            : dbContext.Users.SingleOrDefault(u => u.Credentials.Email == email.ToLower());
 
         if (user is null) throw new Exception("There is no user with that email");
 

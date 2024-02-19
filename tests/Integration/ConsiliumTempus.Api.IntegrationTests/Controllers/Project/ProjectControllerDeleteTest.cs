@@ -48,8 +48,9 @@ public class ProjectControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/projects/{id}");
 
         // Assert
-        DbContext.Projects.Should().HaveCount(1);
-        DbContext.Projects.AsEnumerable()
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Projects.Should().HaveCount(1);
+        dbContext.Projects.AsEnumerable()
             .SingleOrDefault(p => p.Id.Value == new Guid(id)).Should().BeNull();
         
         await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Project.NotFound.Description);
@@ -65,7 +66,8 @@ public class ProjectControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/projects/{id}");
 
         // Assert
-        DbContext.Projects.Should().BeEmpty();
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Projects.Should().BeEmpty();
         
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -83,8 +85,9 @@ public class ProjectControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/projects/{id}");
 
         // Assert
-        DbContext.Projects.Should().HaveCount(1);
-        DbContext.Projects.AsEnumerable()
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Projects.Should().HaveCount(1);
+        dbContext.Projects.AsEnumerable()
             .SingleOrDefault(p => p.Id.Value == new Guid(id)).Should().NotBeNull();
         
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);

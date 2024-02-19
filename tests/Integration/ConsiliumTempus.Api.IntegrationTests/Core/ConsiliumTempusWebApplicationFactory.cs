@@ -37,7 +37,8 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
             services.RemoveAll(typeof(DbContextOptions<ConsiliumTempusDbContext>));
             services.AddDbContext<ConsiliumTempusDbContext>(options =>
                 options.UseSqlServer(_dbContainer.GetConnectionString()));
-
+            services.AddDbContextFactory<ConsiliumTempusDbContext>();
+            
             services.AddSingleton<ITokenProvider, TokenProvider>();
             
             services.AddAuthentication(auth =>

@@ -26,8 +26,9 @@ public class UserControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/users/{id}");
 
         // Assert
-        DbContext.Users.Should().HaveCount(4);
-        DbContext.Users.AsEnumerable()
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Users.Should().HaveCount(4);
+        dbContext.Users.AsEnumerable()
             .SingleOrDefault(u => u.Id.Value.ToString() == id)
             .Should().BeNull();
         
@@ -49,8 +50,9 @@ public class UserControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/users/{id}");
 
         // Assert
-        DbContext.Users.Should().HaveCount(5);
-        DbContext.Users.AsEnumerable()
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Users.Should().HaveCount(5);
+        dbContext.Users.AsEnumerable()
             .SingleOrDefault(u => u.Id.Value.ToString() == id)
             .Should().NotBeNull();
         
@@ -67,8 +69,9 @@ public class UserControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/users/{id}");
 
         // Assert
-        DbContext.Users.Should().HaveCount(5);
-        DbContext.Users.AsEnumerable().SingleOrDefault(u => u.Id.Value.ToString() == id).Should().BeNull();
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Users.Should().HaveCount(5);
+        dbContext.Users.AsEnumerable().SingleOrDefault(u => u.Id.Value.ToString() == id).Should().BeNull();
         
         await outcome.ValidateError(HttpStatusCode.NotFound, Errors.User.NotFound.Description);
     }

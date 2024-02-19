@@ -53,8 +53,9 @@ public class ProjectControllerCreateTest(
         var outcome = await Client.PostAsJsonAsync("api/projects", request);
 
         // Assert
-        DbContext.Projects.Should().HaveCount(1);
-        DbContext.Projects.SingleOrDefault(p => p.Name == request.Name).Should().BeNull();
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Projects.Should().HaveCount(1);
+        dbContext.Projects.SingleOrDefault(p => p.Name == request.Name).Should().BeNull();
         
         await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Workspace.NotFound.Description);
     }
@@ -73,8 +74,9 @@ public class ProjectControllerCreateTest(
         var outcome = await Client.PostAsJsonAsync("api/projects", request);
 
         // Assert
-        DbContext.Projects.Should().HaveCount(2);
-        var createdProject = await DbContext.Projects
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Projects.Should().HaveCount(2);
+        var createdProject = await dbContext.Projects
             .Include(p => p.Workspace)
             .SingleAsync(p => p.Name == request.Name);
         Utils.Project.AssertCreation(createdProject, request);
@@ -99,8 +101,9 @@ public class ProjectControllerCreateTest(
         var outcome = await Client.PostAsJsonAsync("api/projects", request);
 
         // Assert
-        DbContext.Projects.Should().HaveCount(1);
-        DbContext.Projects.SingleOrDefault(p => p.Name == request.Name).Should().BeNull();
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Projects.Should().HaveCount(1);
+        dbContext.Projects.SingleOrDefault(p => p.Name == request.Name).Should().BeNull();
         
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }

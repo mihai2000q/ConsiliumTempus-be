@@ -25,8 +25,9 @@ public class WorkspaceControllerCreateTest(
         var outcome = await Client.PostAsJsonAsync("api/workspaces", request);
 
         // Assert
-        DbContext.Workspaces.Should().HaveCount(1);
-        var createdWorkspace = await DbContext.Workspaces.FirstAsync();
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Workspaces.Should().HaveCount(1);
+        var createdWorkspace = await dbContext.Workspaces.FirstAsync();
         Utils.Workspace.AssertCreation(createdWorkspace, request);
         
         await Utils.Workspace.AssertDtoFromResponse(outcome, request.Name, request.Description);

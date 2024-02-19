@@ -48,8 +48,9 @@ public class WorkspaceControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
-        DbContext.Workspaces.Should().HaveCount(3);
-        DbContext.Workspaces.AsEnumerable()
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Workspaces.Should().HaveCount(3);
+        dbContext.Workspaces.AsEnumerable()
             .SingleOrDefault(w => w.Id.Value.ToString() == id)
             .Should().BeNull();
         
@@ -66,8 +67,9 @@ public class WorkspaceControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
-        DbContext.Workspaces.Should().HaveCount(2);
-        DbContext.Workspaces.AsEnumerable()
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Workspaces.Should().HaveCount(2);
+        dbContext.Workspaces.AsEnumerable()
             .SingleOrDefault(w => w.Id.Value.ToString() == id)
             .Should().BeNull();
         
@@ -87,8 +89,9 @@ public class WorkspaceControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
-        DbContext.Workspaces.Should().HaveCount(3);
-        DbContext.Workspaces.AsEnumerable()
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Workspaces.Should().HaveCount(3);
+        dbContext.Workspaces.AsEnumerable()
             .SingleOrDefault(w => w.Id.Value.ToString() == id)
             .Should().NotBeNull();
         

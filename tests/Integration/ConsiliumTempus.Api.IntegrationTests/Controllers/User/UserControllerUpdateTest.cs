@@ -29,8 +29,8 @@ public class UserControllerUpdateTest(
         var outcome = await Client.PutAsJsonAsync("api/users", request);
 
         // Assert
-        /*var updatedUser = await GetUserById(request.Id);
-        Utils.User.AssertUpdate(updatedUser!, request);*/
+        var updatedUser = await GetUserById(request.Id);
+        Utils.User.AssertUpdate(updatedUser!, request);
         
         await Utils.User.AssertDtoFromResponse(
             outcome,
@@ -88,6 +88,7 @@ public class UserControllerUpdateTest(
 
     private async Task<UserAggregate?> GetUserById(Guid id)
     {
-        return await DbContext.Users.SingleOrDefaultAsync(u => u.Id == UserId.Create(id));
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        return await dbContext.Users.SingleOrDefaultAsync(u => u.Id == UserId.Create(id));
     }
 }
