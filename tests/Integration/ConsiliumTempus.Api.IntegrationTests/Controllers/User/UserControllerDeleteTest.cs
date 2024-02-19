@@ -73,6 +73,6 @@ public class UserControllerDeleteTest(
         dbContext.Users.Should().HaveCount(5);
         dbContext.Users.AsEnumerable().SingleOrDefault(u => u.Id.Value.ToString() == id).Should().BeNull();
         
-        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.User.NotFound.Description);
+        await outcome.ValidateError(Errors.User.NotFound);
     }
 }

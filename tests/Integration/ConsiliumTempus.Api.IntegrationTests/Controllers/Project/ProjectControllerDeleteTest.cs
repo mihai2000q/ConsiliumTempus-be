@@ -15,7 +15,7 @@ public class ProjectControllerDeleteTest(
     : BaseIntegrationTest(factory, testOutputHelper, "Project")
 {
     [Fact]
-    public async Task WhenProjectDeleteWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task WhenProjectDeleteWithAdminRole_ShouldReturnDeleteAndSuccessResponse()
     {
         await AssertSuccessfulRequest("michaelj@gmail.com");
     }
@@ -53,7 +53,7 @@ public class ProjectControllerDeleteTest(
         dbContext.Projects.AsEnumerable()
             .SingleOrDefault(p => p.Id.Value == new Guid(id)).Should().BeNull();
         
-        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Project.NotFound.Description);
+        await outcome.ValidateError(Errors.Project.NotFound);
     }
 
     private async Task AssertSuccessfulRequest(string email)

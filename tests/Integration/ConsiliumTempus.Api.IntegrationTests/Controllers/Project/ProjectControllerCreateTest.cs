@@ -16,7 +16,7 @@ public class ProjectControllerCreateTest(
     : BaseIntegrationTest(factory, testOutputHelper, "Project")
 {
     [Fact]
-    public async Task WhenProjectCreateWithAdminRole_ShouldCreateProjectReturnSuccessResponse()
+    public async Task WhenProjectCreateWithAdminRole_ShouldCreateAndReturnSuccessResponse()
     {
         await AssertSuccessfulRequest("michaelj@gmail.com");
     }
@@ -57,7 +57,7 @@ public class ProjectControllerCreateTest(
         dbContext.Projects.Should().HaveCount(1);
         dbContext.Projects.SingleOrDefault(p => p.Name == request.Name).Should().BeNull();
         
-        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Workspace.NotFound.Description);
+        await outcome.ValidateError(Errors.Workspace.NotFound);
     }
 
     private async Task AssertSuccessfulRequest(string email)

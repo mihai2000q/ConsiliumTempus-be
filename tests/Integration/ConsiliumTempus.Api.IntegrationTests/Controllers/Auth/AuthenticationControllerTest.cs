@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
 using Xunit.Abstractions;
 
@@ -67,7 +68,7 @@ public class AuthenticationControllerTest(
         dbContext.Users.Should().HaveCount(1);
         dbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower()).Should().NotBeNull();
 
-        await outcome.ValidateError(HttpStatusCode.Conflict, "Email is already in use");
+        await outcome.ValidateError(Errors.User.DuplicateEmail);
     }
 
     [Fact]
@@ -101,9 +102,11 @@ public class AuthenticationControllerTest(
 
         // Assert
         var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower()).Should().BeNull();
+        dbContext.Users
+            .SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
+            .Should().BeNull();
 
-        await outcome.ValidateError(HttpStatusCode.Unauthorized, "Invalid Credentials");
+        await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
     }
 
     [Fact]
@@ -119,8 +122,10 @@ public class AuthenticationControllerTest(
 
         // Assert
         var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower()).Should().NotBeNull();
+        dbContext.Users
+            .SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
+            .Should().NotBeNull();
 
-        await outcome.ValidateError(HttpStatusCode.Unauthorized, "Invalid Credentials");
+        await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
     }
 }

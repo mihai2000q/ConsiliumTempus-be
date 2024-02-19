@@ -18,7 +18,7 @@ public class WorkspaceControllerUpdateTest(
     : BaseIntegrationTest(factory, testOutputHelper, "Workspace")
 {
     [Fact]
-    public async Task WhenWorkspaceUpdateWithAdminRole_ShouldReturnNewWorkspace()
+    public async Task WhenWorkspaceUpdateWithAdminRole_ShouldUpdateAndReturnNewWorkspace()
     {
         await AssertSuccessfulRequest(GetUpdateRequest(), "michaelj@gmail.com");
     }
@@ -53,7 +53,7 @@ public class WorkspaceControllerUpdateTest(
         // Assert
         (await GetWorkspaceById(request.Id)).Should().BeNull();
         
-        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Workspace.NotFound.Description);
+        await outcome.ValidateError(Errors.Workspace.NotFound);
     }
 
     private async Task AssertSuccessfulRequest(UpdateWorkspaceRequest request, string email)

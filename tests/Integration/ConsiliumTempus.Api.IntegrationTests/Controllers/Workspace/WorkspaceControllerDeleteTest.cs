@@ -15,7 +15,7 @@ public class WorkspaceControllerDeleteTest(
     : BaseIntegrationTest(factory, testOutputHelper, "Workspace")
 {
     [Fact]
-    public async Task WhenWorkspaceDeleteWithAdminRole_ShouldReturnWorkspace()
+    public async Task WhenWorkspaceDeleteWithAdminRole_ShouldDeleteAndReturnSuccessResponse()
     {
         await AssertSuccessfulRequest("michaelj@gmail.com");
     }
@@ -54,7 +54,7 @@ public class WorkspaceControllerDeleteTest(
             .SingleOrDefault(w => w.Id.Value.ToString() == id)
             .Should().BeNull();
         
-        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Workspace.NotFound.Description);
+        await outcome.ValidateError(Errors.Workspace.NotFound);
     }
 
     private async Task AssertSuccessfulRequest(string email)

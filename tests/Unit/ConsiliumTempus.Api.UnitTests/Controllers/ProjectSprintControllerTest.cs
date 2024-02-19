@@ -35,7 +35,7 @@ public class ProjectSprintControllerTest
         // Arrange
         var request = new CreateProjectSprintRequest(
             Guid.NewGuid(),
-            "Project Name",
+            "Project Sprint Name",
             null,
             null);
 
@@ -66,7 +66,7 @@ public class ProjectSprintControllerTest
         // Arrange
         var request = new CreateProjectSprintRequest(
             Guid.NewGuid(),
-            "Project Name",
+            "Project Sprint Name",
             null,
             null);
 

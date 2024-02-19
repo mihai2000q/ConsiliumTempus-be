@@ -18,7 +18,7 @@ public class UserControllerUpdateTest(
     : BaseIntegrationTest(factory, testOutputHelper)
 {
     [Fact]
-    public async Task WhenUpdateUserIsSuccessful_ThenReturnNewUser()
+    public async Task WhenUpdateUserIsSuccessful_ShouldUpdateAndReturnNewUser()
     {
         // Arrange
         const string email = "michaelj@gmail.com";
@@ -43,7 +43,7 @@ public class UserControllerUpdateTest(
     }
     
     [Fact]
-    public async Task WhenUpdateUserIsNotOwner_ThenReturnForbiddenResponse()
+    public async Task WhenUpdateUserIsNotOwner_ShouldReturnForbiddenResponse()
     {
         // Arrange
         var request = GetRequest();
@@ -60,7 +60,7 @@ public class UserControllerUpdateTest(
     }
     
     [Fact]
-    public async Task WhenUpdateUserIsNotFound_ThenReturnNotFoundError()
+    public async Task WhenUpdateUserIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = GetRequest("90000000-0000-0000-0000-000000000000");
@@ -71,7 +71,7 @@ public class UserControllerUpdateTest(
         // Assert
         (await GetUserById(request.Id)).Should().BeNull();
         
-        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.User.NotFound.Description);
+        await outcome.ValidateError(Errors.User.NotFound);
     }
 
     private static UpdateUserRequest GetRequest(

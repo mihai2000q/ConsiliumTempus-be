@@ -14,7 +14,7 @@ public class WorkspaceControllerCreateTest(
     : BaseIntegrationTest(factory, testOutputHelper)
 {
     [Fact]
-    public async Task WhenWorkspaceCreateIsSuccessful_ShouldReturnNewWorkspace()
+    public async Task WhenWorkspaceCreateIsSuccessful_ShouldCreateAndReturnNewWorkspace()
     {
         // Arrange
         var request = new CreateWorkspaceRequest(
