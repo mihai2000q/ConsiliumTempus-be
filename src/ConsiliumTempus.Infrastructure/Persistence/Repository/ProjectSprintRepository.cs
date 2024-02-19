@@ -10,7 +10,7 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
     public async Task<ProjectSprint?> GetWithProjectAndWorkspace(ProjectSprintId id,
         CancellationToken cancellationToken = default)
     {
-        return await dbContext.Set<ProjectSprint>().FindAsync([id], cancellationToken);
+        return await dbContext.ProjectSprints.FindAsync([id], cancellationToken);
     }
 
     public async Task Add(ProjectSprint sprint, CancellationToken cancellationToken = default)

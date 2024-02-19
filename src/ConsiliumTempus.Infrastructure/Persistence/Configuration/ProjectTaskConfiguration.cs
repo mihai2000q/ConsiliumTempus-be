@@ -43,6 +43,8 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
     
     private static void ConfigureComments(OwnedNavigationBuilder<ProjectTaskAggregate, ProjectTaskComment> builder)
     {
+        builder.ToTable(nameof(ProjectTaskComment));
+        
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id)
             .HasConversion(

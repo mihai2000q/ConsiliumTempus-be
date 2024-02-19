@@ -10,6 +10,8 @@ public sealed class ProjectSectionConfiguration : IEntityTypeConfiguration<Proje
 {
     public void Configure(EntityTypeBuilder<ProjectSection> builder)
     {
+        builder.ToTable(nameof(ProjectSection));
+        
         builder.HasKey(s => s.Id);
         builder.Property(s => s.Id)
             .HasConversion(

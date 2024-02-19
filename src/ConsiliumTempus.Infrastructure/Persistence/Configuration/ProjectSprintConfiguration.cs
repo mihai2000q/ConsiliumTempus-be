@@ -10,6 +10,8 @@ public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Projec
 {
     public void Configure(EntityTypeBuilder<ProjectSprint> builder)
     {
+        builder.ToTable(nameof(ProjectSprint));
+        
         builder.HasKey(s => s.Id);
         builder.Property(s => s.Id)
             .HasConversion(

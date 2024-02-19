@@ -273,7 +273,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("SprintId");
 
-                    b.ToTable("ProjectSection");
+                    b.ToTable("ProjectSection", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSprint", b =>
@@ -305,7 +305,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectSprint");
+                    b.ToTable("ProjectSprint", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>
@@ -584,7 +584,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.HasIndex("TaskAggregateId");
 
-                            b1.ToTable("ProjectTaskComment");
+                            b1.ToTable("ProjectTaskComment", (string)null);
 
                             b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
                                 .WithMany()

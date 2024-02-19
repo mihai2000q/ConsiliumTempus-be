@@ -27,8 +27,5 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
 
         builder.HasOne(p => p.Workspace)
             .WithMany(w => w.Projects);
-        
-        builder.HasMany(p => p.Sprints)
-            .WithOne(s => s.Project);
     }
 }
