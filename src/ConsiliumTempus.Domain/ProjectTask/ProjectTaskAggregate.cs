@@ -20,6 +20,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         string name,
         string description,
         bool isCompleted,
+        int order,
         UserAggregate createdBy,
         ProjectSection section,
         DateTime createdDateTime,
@@ -28,6 +29,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         Name = name;
         Description = description;
         IsCompleted = isCompleted;
+        Order = order;
         CreatedBy = createdBy;
         Section = section;
         CreatedDateTime = createdDateTime;
@@ -39,6 +41,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public string Name { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
     public bool IsCompleted { get; private set; }
+    public int Order { get; private set; }
     public UserAggregate CreatedBy { get; init; } = default!;
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
@@ -52,6 +55,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public static ProjectTaskAggregate Create(
         string name,
         string description,
+        int order,
         UserAggregate createdBy,
         ProjectSection section)
     {
@@ -60,6 +64,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             name,
             description,
             false,
+            order,
             createdBy,
             section,
             DateTime.UtcNow,

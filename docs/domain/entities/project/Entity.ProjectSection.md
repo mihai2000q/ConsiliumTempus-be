@@ -16,6 +16,7 @@ class ProjectSection
 {
   "id": { "value": "00000000-0000-0000-0000-000000000000" },
   "name": "Section 1",
+  "order": 0,
   "sprint": {},
   "tasks": [{}]
 }
