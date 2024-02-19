@@ -8,5 +8,8 @@ public enum Permissions
     CreateProject,
     ReadProject,
     UpdateProject,
-    DeleteProject
+    DeleteProject,
+    CreateProjectSprint,
+    DeleteProjectSprint,
+    UpdateProjectSprint
 }

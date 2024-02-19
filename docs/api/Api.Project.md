@@ -29,8 +29,8 @@ Sends body data that the new workspace needs to be created.
 ```json
 {
   "workspaceId": "10000000-0000-0000-0000-000000000000",
-  "name": "Workspace Name",
-  "description": "This is the description of the workspace",
+  "name": "Project Name",
+  "description": "This is the description of the project",
   "isPrivate": false
 }
 ```
@@ -53,7 +53,7 @@ DELETE {{host}}/api/projects/{id}
 
 #### Delete Project Request
 
-Sends the id of the workspace inside the route request.
+Sends the id of the sprint inside the route request.
 
 #### Delete Project Response
 
