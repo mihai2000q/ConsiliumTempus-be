@@ -1,6 +1,4 @@
-﻿using ConsiliumTempus.Api.Contracts.Project.Create;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
-using ConsiliumTempus.Domain.Project;
+﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
 using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;

@@ -7,9 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.User.Commands.Delete;
 
-public sealed class DeleteUserCommandHandler(
-    IUserRepository userRepository,
-    IUnitOfWork unitOfWork)
+public sealed class DeleteUserCommandHandler(IUserRepository userRepository)
     : IRequestHandler<DeleteUserCommand, ErrorOr<DeleteUserResult>>
 {
     public async Task<ErrorOr<DeleteUserResult>> Handle(DeleteUserCommand command,
@@ -21,9 +19,7 @@ public sealed class DeleteUserCommandHandler(
         if (user is null) return Errors.User.NotFound;
 
         userRepository.Remove(user);
-
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-
+        
         return new DeleteUserResult();
     }
 }

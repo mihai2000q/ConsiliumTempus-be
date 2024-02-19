@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Security;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
@@ -16,7 +15,6 @@ public class CreateProjectCommandHandlerTest
     private readonly ISecurity _security;
     private readonly IWorkspaceRepository _workspaceRepository;
     private readonly IProjectRepository _projectRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly CreateProjectCommandHandler _uut;
 
     public CreateProjectCommandHandlerTest()
@@ -24,12 +22,10 @@ public class CreateProjectCommandHandlerTest
         _security = Substitute.For<ISecurity>();
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
         _projectRepository = Substitute.For<IProjectRepository>();
-        _unitOfWork = Substitute.For<IUnitOfWork>();
         _uut = new CreateProjectCommandHandler(
             _security,
             _workspaceRepository,
-            _projectRepository,
-            _unitOfWork);
+            _projectRepository);
     }
 
     #endregion
@@ -69,9 +65,6 @@ public class CreateProjectCommandHandlerTest
             .Received(1)
             .Add(Arg.Is<ProjectAggregate>(project =>
                 Utils.Project.AssertFromCreateCommand(project, command, workspace, user)));
-        await _unitOfWork
-            .Received(1)
-            .SaveChangesAsync();
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new CreateProjectResult());
@@ -99,7 +92,6 @@ public class CreateProjectCommandHandlerTest
             .Get(Arg.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.WorkspaceId)));
         _security.DidNotReceive();
         _projectRepository.DidNotReceive();
-        _unitOfWork.DidNotReceive();
         
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

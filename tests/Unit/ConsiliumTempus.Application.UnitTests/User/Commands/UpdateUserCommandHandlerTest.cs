@@ -12,14 +12,12 @@ public class UpdateUserCommandHandlerTest
     #region Setup
 
     private readonly IUserRepository _userRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly UpdateUserCommandHandler _uut;
 
     public UpdateUserCommandHandlerTest()
     {
         _userRepository = Substitute.For<IUserRepository>();
-        _unitOfWork = Substitute.For<IUnitOfWork>();
-        _uut = new UpdateUserCommandHandler(_userRepository, _unitOfWork);
+        _uut = new UpdateUserCommandHandler(_userRepository);
     }
 
     #endregion
@@ -47,9 +45,6 @@ public class UpdateUserCommandHandlerTest
         await _userRepository
             .Received(1)
             .Get(Arg.Is<UserId>(id => id.Value == command.Id));
-        await _unitOfWork
-            .Received(1)
-            .SaveChangesAsync();
 
         outcome.IsError.Should().BeFalse();
         Utils.User.AssertFromUpdateCommand(outcome.Value, command);
@@ -73,7 +68,6 @@ public class UpdateUserCommandHandlerTest
         await _userRepository
             .Received(1)
             .Get(Arg.Is<UserId>(id => id.Value == command.Id));
-        _unitOfWork.DidNotReceive();
 
         outcome.ValidateError(Errors.User.NotFound);
     }

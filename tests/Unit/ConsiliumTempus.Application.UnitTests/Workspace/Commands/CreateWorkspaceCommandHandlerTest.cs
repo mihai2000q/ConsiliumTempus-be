@@ -13,18 +13,15 @@ public class CreateWorkspaceCommandHandlerTest
 
     private readonly ISecurity _security;
     private readonly IWorkspaceRepository _workspaceRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly CreateWorkspaceCommandHandler _uut;
 
     public CreateWorkspaceCommandHandlerTest()
     {
         _security = Substitute.For<ISecurity>();
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
-        _unitOfWork = Substitute.For<IUnitOfWork>();
         _uut = new CreateWorkspaceCommandHandler(
             _security,
-            _workspaceRepository,
-            _unitOfWork);
+            _workspaceRepository);
     }
 
     #endregion
@@ -54,9 +51,6 @@ public class CreateWorkspaceCommandHandlerTest
             .Received(1)
             .Add(Arg.Is<WorkspaceAggregate>(workspace =>
                 Utils.Workspace.AssertFromCreateCommand(workspace, command, user)));
-        await _unitOfWork
-            .Received(1)
-            .SaveChangesAsync();
 
         Utils.Workspace.AssertFromCreateCommand(outcome.Workspace, command, user);
     }

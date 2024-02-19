@@ -13,14 +13,12 @@ public class DeleteWorkspaceCommandHandlerTest
     #region Setup
 
     private readonly IWorkspaceRepository _workspaceRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly DeleteWorkspaceCommandHandler _uut;
 
     public DeleteWorkspaceCommandHandlerTest()
     {
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
-        _unitOfWork = Substitute.For<IUnitOfWork>();
-        _uut = new DeleteWorkspaceCommandHandler(_workspaceRepository, _unitOfWork);
+        _uut = new DeleteWorkspaceCommandHandler(_workspaceRepository);
     }
 
     #endregion
@@ -46,9 +44,6 @@ public class DeleteWorkspaceCommandHandlerTest
         _workspaceRepository
             .Received(1)
             .Remove(Arg.Is<WorkspaceAggregate>(w => w == workspace));
-        await _unitOfWork
-            .Received(1)
-            .SaveChangesAsync();
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteWorkspaceResult());
@@ -70,7 +65,6 @@ public class DeleteWorkspaceCommandHandlerTest
         _workspaceRepository
             .DidNotReceive()
             .Remove(Arg.Any<WorkspaceAggregate>());
-        _unitOfWork.DidNotReceive();
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ErrorOr;
@@ -7,9 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.Delete;
 
-public sealed class DeleteProjectCommandHandler(
-    IProjectRepository projectRepository,
-    IUnitOfWork unitOfWork)
+public sealed class DeleteProjectCommandHandler(IProjectRepository projectRepository)
     : IRequestHandler<DeleteProjectCommand, ErrorOr<DeleteProjectResult>>
 {
     public async Task<ErrorOr<DeleteProjectResult>> Handle(DeleteProjectCommand command, 
@@ -23,8 +20,6 @@ public sealed class DeleteProjectCommandHandler(
         projectRepository.Remove(project);
         
         project.Workspace.RefreshUpdatedDateTime();
-        
-        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         return new DeleteProjectResult();
     }

@@ -78,6 +78,9 @@ public class ProjectControllerCreateTest(
         dbContext.Projects.Should().HaveCount(2);
         var createdProject = await dbContext.Projects
             .Include(p => p.Workspace)
+            .Include(p => p.Sprints)
+            .ThenInclude(ps => ps.Sections.OrderBy(s => s.Order))
+            .ThenInclude(ps => ps.Tasks.OrderBy(t => t.Order))
             .SingleAsync(p => p.Name == request.Name);
         Utils.Project.AssertCreation(createdProject, request);
         

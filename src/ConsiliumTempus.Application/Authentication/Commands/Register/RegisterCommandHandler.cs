@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
@@ -13,8 +12,7 @@ namespace ConsiliumTempus.Application.Authentication.Commands.Register;
 public sealed class RegisterCommandHandler(
     IJwtTokenGenerator jwtTokenGenerator,
     IScrambler scrambler,
-    IUserRepository userRepository,
-    IUnitOfWork unitOfWork)
+    IUserRepository userRepository)
     : IRequestHandler<RegisterCommand, ErrorOr<RegisterResult>>
 {
     public async Task<ErrorOr<RegisterResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
@@ -33,7 +31,6 @@ public sealed class RegisterCommandHandler(
             command.Role,
             command.DateOfBirth);
         await userRepository.Add(user, cancellationToken);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         var token = jwtTokenGenerator.GenerateToken(user);
 

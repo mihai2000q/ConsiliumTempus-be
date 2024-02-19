@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -13,14 +12,12 @@ public class DeleteProjectCommandHandlerTest
     #region Setup
 
     private readonly IProjectRepository _projectRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly DeleteProjectCommandHandler _uut;
 
     public DeleteProjectCommandHandlerTest()
     {
         _projectRepository = Substitute.For<IProjectRepository>();
-        _unitOfWork = Substitute.For<IUnitOfWork>();
-        _uut = new DeleteProjectCommandHandler(_projectRepository, _unitOfWork);
+        _uut = new DeleteProjectCommandHandler(_projectRepository);
     }
 
     #endregion
@@ -46,9 +43,6 @@ public class DeleteProjectCommandHandlerTest
         _projectRepository
             .Received(1)
             .Remove(Arg.Is<ProjectAggregate>(pr => pr == project));
-        await _unitOfWork
-            .Received(1)
-            .SaveChangesAsync();
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectResult());
@@ -72,7 +66,6 @@ public class DeleteProjectCommandHandlerTest
         _projectRepository
             .DidNotReceive()
             .Remove(Arg.Any<ProjectAggregate>());
-        _unitOfWork.DidNotReceive();
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

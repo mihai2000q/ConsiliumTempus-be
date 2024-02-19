@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -15,7 +14,6 @@ public class RegisterCommandHandlerTest
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IScrambler _scrambler;
     private readonly IUserRepository _userRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly RegisterCommandHandler _uut;
 
     public RegisterCommandHandlerTest()
@@ -23,12 +21,10 @@ public class RegisterCommandHandlerTest
         _jwtTokenGenerator = Substitute.For<IJwtTokenGenerator>();
         _scrambler = Substitute.For<IScrambler>();
         _userRepository = Substitute.For<IUserRepository>();
-        _unitOfWork = Substitute.For<IUnitOfWork>();
         _uut = new RegisterCommandHandler(
             _jwtTokenGenerator,
             _scrambler,
-            _userRepository,
-            _unitOfWork);
+            _userRepository);
     }
 
     #endregion
@@ -75,9 +71,6 @@ public class RegisterCommandHandlerTest
         _jwtTokenGenerator
             .Received(1)
             .GenerateToken(Arg.Any<UserAggregate>());
-        await _unitOfWork
-            .Received(1)
-            .SaveChangesAsync();
 
         createdUser.Should().Be(userUsedForJwt);
         Utils.User.AssertFromRegisterCommand(createdUser, command, hashedPassword);
@@ -111,7 +104,6 @@ public class RegisterCommandHandlerTest
             .GetUserByEmail(Arg.Any<string>());
         _jwtTokenGenerator.DidNotReceive();
         _userRepository.DidNotReceive();
-        _unitOfWork.DidNotReceive();
 
         outcome.ValidateError(Errors.User.DuplicateEmail);
     }

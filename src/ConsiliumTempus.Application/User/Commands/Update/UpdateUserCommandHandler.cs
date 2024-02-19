@@ -8,9 +8,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.User.Commands.Update;
 
-public sealed class UpdateUserCommandHandler(
-    IUserRepository userRepository,
-    IUnitOfWork unitOfWork) 
+public sealed class UpdateUserCommandHandler(IUserRepository userRepository) 
     : IRequestHandler<UpdateUserCommand, ErrorOr<UpdateUserResult>>
 {
     public async Task<ErrorOr<UpdateUserResult>> Handle(UpdateUserCommand command, 
@@ -27,9 +25,7 @@ public sealed class UpdateUserCommandHandler(
                 command.LastName.Capitalize()),
             command.Role,
             command.DateOfBirth);
-
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-
+        
         return new UpdateUserResult(user);
     }
 }

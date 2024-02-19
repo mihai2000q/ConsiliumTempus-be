@@ -9,8 +9,7 @@ namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
 public sealed class CreateWorkspaceCommandHandler(
     ISecurity security,
-    IWorkspaceRepository workspaceRepository,
-    IUnitOfWork unitOfWork)
+    IWorkspaceRepository workspaceRepository)
     : IRequestHandler<CreateWorkspaceCommand, CreateWorkspaceResult>
 {
     public async Task<CreateWorkspaceResult> Handle(CreateWorkspaceCommand command,
@@ -25,9 +24,7 @@ public sealed class CreateWorkspaceCommandHandler(
 
         var membership = Membership.Create(user, workspace, WorkspaceRole.Admin);
         workspace.AddUserMembership(membership);
-
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-
+        
         return new CreateWorkspaceResult(workspace);
     }
 }
