@@ -34,12 +34,14 @@ public class ProjectCreatedHandlerTest
         project.Sprints[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         project.Sprints[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
+        var count = 0;
         project.Sprints[0].Sections.Should().HaveCount(Constants.ProjectSection.Names.Length);
         project.Sprints[0].Sections
             .ToList()
             .ForEach(section =>
             {
                 section.Id.Value.ToString().Should().NotBeNullOrWhiteSpace();
+                section.Order.Should().Be(count++);
                 section.Sprint.Should().Be(project.Sprints[0]);
             });
         project.Sprints[0].Sections
@@ -47,6 +49,7 @@ public class ProjectCreatedHandlerTest
             .ToList()
             .ForEach(x => x.First.Name.Should().Be(x.Second));
 
+        count = 0;
         project.Sprints[0].Sections[0].Tasks.Should().HaveCount(Constants.ProjectTask.Names.Length);
         project.Sprints[0].Sections[0].Tasks
             .Zip(Constants.ProjectTask.Names)
@@ -60,6 +63,7 @@ public class ProjectCreatedHandlerTest
                 task.Description.Should().BeEmpty();
                 task.IsCompleted.Should().BeFalse();
                 task.CreatedBy.Should().Be(user);
+                task.Order.Should().Be(count++);
                 task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
                 task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
                 task.Asignee.Should().BeNull();
