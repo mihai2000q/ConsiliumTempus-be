@@ -21,7 +21,7 @@ public class UserControllerTest
 
     public UserControllerTest()
     {
-        var mapper = Utils.GetMapper<AuthenticationMappingConfig>();
+        var mapper = Utils.GetMapper<UserMappingConfig>();
 
         _mediator = Substitute.For<ISender>();
         _uut = new UserController(mapper, _mediator);
