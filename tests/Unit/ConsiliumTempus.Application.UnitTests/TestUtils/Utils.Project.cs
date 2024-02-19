@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Project.Commands.Create;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.Project.ValueObjects;
@@ -23,7 +24,7 @@ internal static partial class Utils
             WorkspaceAggregate workspace,
             UserAggregate user)
         {
-            project.Id.Should().NotBeNull();
+            project.Id.Value.Should().NotBeEmpty();
             project.Name.Should().Be(command.Name);
             project.Description.Should().Be(command.Description);
             project.IsPrivate.Should().Be(command.IsPrivate);
@@ -37,6 +38,27 @@ internal static partial class Utils
             project.DomainEvents[0].Should().BeOfType<ProjectCreated>();
             ((ProjectCreated)project.DomainEvents[0]).Project.Should().Be(project);
             ((ProjectCreated)project.DomainEvents[0]).User.Should().Be(user);
+
+            return true;
+        }
+    }
+    
+    internal static class ProjectSprint
+    {
+        internal static bool AssertFromCreateCommand(
+            Domain.Project.Entities.ProjectSprint projectSprint,
+            CreateProjectSprintCommand command,
+            ProjectAggregate project)
+        {
+            projectSprint.Id.Value.Should().NotBeEmpty();
+            projectSprint.Name.Should().Be(command.Name);
+            projectSprint.StartDate.Should().Be(command.StartDate);
+            projectSprint.EndDate.Should().Be(command.EndDate);
+            projectSprint.Project.Should().Be(project);
+            projectSprint.Project
+                .UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            projectSprint.Project.Workspace
+                .UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
             return true;
         }

@@ -72,4 +72,10 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     {
         _sprints.Add(sprint);
     }
+
+    public void RefreshUpdatedDateTime()
+    {
+        UpdatedDateTime = DateTime.UtcNow;
+        Workspace.RefreshUpdatedDateTime();
+    }
 }

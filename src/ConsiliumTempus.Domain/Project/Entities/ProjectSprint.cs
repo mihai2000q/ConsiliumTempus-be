@@ -17,12 +17,16 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
         string name,
         ProjectAggregate project,
         DateTime createdDateTime,
-        DateTime updatedDateTime) : base(id)
+        DateTime updatedDateTime,
+        DateOnly? startDate = null,
+        DateOnly? endDate = null) : base(id)
     {
         Name = name;
         Project = project;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
+        StartDate = startDate;
+        EndDate = endDate;
     }
 
     private readonly List<ProjectSection> _sections = [];
@@ -37,14 +41,18 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
 
     public static ProjectSprint Create(
         string name,
-        ProjectAggregate project)
+        ProjectAggregate project,
+        DateOnly? startDate = null,
+        DateOnly? endDate = null)
     {
         return new ProjectSprint(
             ProjectSprintId.CreateUnique(),
             name,
             project,
             DateTime.UtcNow, 
-            DateTime.UtcNow);
+            DateTime.UtcNow,
+            startDate,
+            endDate);
     }
 
     public void AddSection(ProjectSection section)
