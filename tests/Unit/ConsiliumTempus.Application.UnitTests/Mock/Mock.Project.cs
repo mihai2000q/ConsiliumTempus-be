@@ -23,4 +23,16 @@ internal static partial class Mock
                 user);
         }
     }
+    
+    internal static class ProjectSprint
+    {
+        internal static Domain.Project.Entities.ProjectSprint CreateMock(ProjectAggregate? project = null)
+        {
+            project ??= Project.CreateMock();
+            
+            return Domain.Project.Entities.ProjectSprint.Create(
+                "Project Sprint Name",
+                project);
+        }
+    }
 }
