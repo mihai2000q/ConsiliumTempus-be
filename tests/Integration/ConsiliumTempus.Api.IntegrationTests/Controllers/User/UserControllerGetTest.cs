@@ -41,6 +41,6 @@ public class UserControllerGetTest(
         var outcome = await Client.GetAsync($"api/users/{id}");
 
         // Assert
-        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.User.NotFound.Description);
+        await outcome.ValidateError(Errors.User.NotFound);
     }
 }

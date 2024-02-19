@@ -96,6 +96,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             Id = 7,
                             Name = "DeleteProject"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "CreateProjectSprint"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "DeleteProjectSprint"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "UpdateProjectSprint"
                         });
                 });
 
@@ -186,6 +201,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         },
                         new
                         {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 10
+                        },
+                        new
+                        {
                             WorkspaceRoleId = 3,
                             PermissionId = 1
                         },
@@ -218,7 +238,74 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 3,
                             PermissionId = 7
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 8
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 10
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 9
                         });
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSection", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("SprintId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SprintId");
+
+                    b.ToTable("ProjectSection", (string)null);
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSprint", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateOnly?>("EndDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly?>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime>("UpdatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectSprint", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>
@@ -256,6 +343,61 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasIndex("WorkspaceId");
 
                     b.ToTable("Project", (string)null);
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.ProjectTaskAggregate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AsigneeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateOnly?>("DueDate")
+                        .HasColumnType("date");
+
+                    b.Property<TimeSpan?>("EstimatedDuration")
+                        .HasColumnType("time");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid?>("ReviewerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SectionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AsigneeId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ReviewerId");
+
+                    b.HasIndex("SectionId");
+
+                    b.ToTable("ProjectTask", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.User.UserAggregate", b =>
@@ -353,6 +495,28 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSection", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.Project.Entities.ProjectSprint", "Sprint")
+                        .WithMany("Sections")
+                        .HasForeignKey("SprintId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sprint");
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSprint", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")
+                        .WithMany("Sprints")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>
                 {
                     b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", "Workspace")
@@ -361,207 +525,90 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsMany("ConsiliumTempus.Domain.Project.Entities.ProjectSprint", "Sprints", b1 =>
+                    b.Navigation("Workspace");
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.ProjectTaskAggregate", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Asignee")
+                        .WithMany()
+                        .HasForeignKey("AsigneeId");
+
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Reviewer")
+                        .WithMany()
+                        .HasForeignKey("ReviewerId");
+
+                    b.HasOne("ConsiliumTempus.Domain.Project.Entities.ProjectSection", "Section")
+                        .WithMany("Tasks")
+                        .HasForeignKey("SectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsMany("ConsiliumTempus.Domain.ProjectTask.Entities.ProjectTaskComment", "Comments", b1 =>
                         {
                             b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid>("CreatedById")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<DateTime>("CreatedDateTime")
                                 .HasColumnType("datetime2");
 
-                            b1.Property<DateOnly?>("EndDate")
+                            b1.Property<DateOnly?>("Date")
                                 .HasColumnType("date");
 
-                            b1.Property<string>("Name")
+                            b1.Property<string>("Message")
                                 .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)");
+                                .HasMaxLength(256)
+                                .HasColumnType("nvarchar(256)");
 
-                            b1.Property<Guid>("ProjectId")
+                            b1.Property<Guid>("TaskAggregateId")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<DateOnly?>("StartDate")
-                                .HasColumnType("date");
+                            b1.Property<TimeSpan?>("TimeSpent")
+                                .HasColumnType("time");
 
                             b1.Property<DateTime>("UpdatedDateTime")
                                 .HasColumnType("datetime2");
 
                             b1.HasKey("Id");
 
-                            b1.HasIndex("ProjectId");
+                            b1.HasIndex("CreatedById");
 
-                            b1.ToTable("ProjectSprint");
+                            b1.HasIndex("TaskAggregateId");
 
-                            b1.WithOwner("Project")
-                                .HasForeignKey("ProjectId");
+                            b1.ToTable("ProjectTaskComment", (string)null);
 
-                            b1.OwnsMany("ConsiliumTempus.Domain.Project.Entities.ProjectSection", "Sections", b2 =>
-                                {
-                                    b2.Property<Guid>("Id")
-                                        .HasColumnType("uniqueidentifier");
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                                .WithMany()
+                                .HasForeignKey("CreatedById")
+                                .OnDelete(DeleteBehavior.NoAction)
+                                .IsRequired();
 
-                                    b2.Property<string>("Name")
-                                        .IsRequired()
-                                        .HasMaxLength(100)
-                                        .HasColumnType("nvarchar(100)");
+                            b1.WithOwner("TaskAggregate")
+                                .HasForeignKey("TaskAggregateId");
 
-                                    b2.Property<Guid>("SprintId")
-                                        .HasColumnType("uniqueidentifier");
+                            b1.Navigation("CreatedBy");
 
-                                    b2.HasKey("Id");
-
-                                    b2.HasIndex("SprintId");
-
-                                    b2.ToTable("ProjectSection");
-
-                                    b2.WithOwner("Sprint")
-                                        .HasForeignKey("SprintId");
-
-                                    b2.OwnsMany("ConsiliumTempus.Domain.Project.Entities.ProjectTask", "Tasks", b3 =>
-                                        {
-                                            b3.Property<Guid>("Id")
-                                                .HasColumnType("uniqueidentifier");
-
-                                            b3.Property<Guid?>("AsigneeId")
-                                                .HasColumnType("uniqueidentifier");
-
-                                            b3.Property<Guid>("CreatedById")
-                                                .HasColumnType("uniqueidentifier");
-
-                                            b3.Property<DateTime>("CreatedDateTime")
-                                                .HasColumnType("datetime2");
-
-                                            b3.Property<string>("Description")
-                                                .IsRequired()
-                                                .HasMaxLength(1000)
-                                                .HasColumnType("nvarchar(1000)");
-
-                                            b3.Property<DateOnly?>("DueDate")
-                                                .HasColumnType("date");
-
-                                            b3.Property<TimeSpan?>("EstimatedDuration")
-                                                .HasColumnType("time");
-
-                                            b3.Property<bool>("IsCompleted")
-                                                .HasColumnType("bit");
-
-                                            b3.Property<string>("Name")
-                                                .IsRequired()
-                                                .HasMaxLength(100)
-                                                .HasColumnType("nvarchar(100)");
-
-                                            b3.Property<Guid?>("ReviewerId")
-                                                .HasColumnType("uniqueidentifier");
-
-                                            b3.Property<Guid>("SectionId")
-                                                .HasColumnType("uniqueidentifier");
-
-                                            b3.Property<DateTime>("UpdatedDateTime")
-                                                .HasColumnType("datetime2");
-
-                                            b3.HasKey("Id");
-
-                                            b3.HasIndex("AsigneeId");
-
-                                            b3.HasIndex("CreatedById");
-
-                                            b3.HasIndex("ReviewerId");
-
-                                            b3.HasIndex("SectionId");
-
-                                            b3.ToTable("ProjectTask");
-
-                                            b3.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Asignee")
-                                                .WithMany()
-                                                .HasForeignKey("AsigneeId");
-
-                                            b3.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
-                                                .WithMany()
-                                                .HasForeignKey("CreatedById")
-                                                .OnDelete(DeleteBehavior.NoAction)
-                                                .IsRequired();
-
-                                            b3.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Reviewer")
-                                                .WithMany()
-                                                .HasForeignKey("ReviewerId");
-
-                                            b3.WithOwner("Section")
-                                                .HasForeignKey("SectionId");
-
-                                            b3.OwnsMany("ConsiliumTempus.Domain.Project.Entities.ProjectTaskComment", "Comments", b4 =>
-                                                {
-                                                    b4.Property<Guid>("Id")
-                                                        .HasColumnType("uniqueidentifier");
-
-                                                    b4.Property<Guid>("CreatedById")
-                                                        .HasColumnType("uniqueidentifier");
-
-                                                    b4.Property<DateTime>("CreatedDateTime")
-                                                        .HasColumnType("datetime2");
-
-                                                    b4.Property<DateOnly?>("Date")
-                                                        .HasColumnType("date");
-
-                                                    b4.Property<string>("Message")
-                                                        .IsRequired()
-                                                        .HasMaxLength(256)
-                                                        .HasColumnType("nvarchar(256)");
-
-                                                    b4.Property<Guid>("TaskId")
-                                                        .HasColumnType("uniqueidentifier");
-
-                                                    b4.Property<TimeSpan?>("TimeSpent")
-                                                        .HasColumnType("time");
-
-                                                    b4.Property<DateTime>("UpdatedDateTime")
-                                                        .HasColumnType("datetime2");
-
-                                                    b4.HasKey("Id");
-
-                                                    b4.HasIndex("CreatedById");
-
-                                                    b4.HasIndex("TaskId");
-
-                                                    b4.ToTable("ProjectTaskComment");
-
-                                                    b4.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
-                                                        .WithMany()
-                                                        .HasForeignKey("CreatedById")
-                                                        .OnDelete(DeleteBehavior.NoAction)
-                                                        .IsRequired();
-
-                                                    b4.WithOwner("Task")
-                                                        .HasForeignKey("TaskId");
-
-                                                    b4.Navigation("CreatedBy");
-
-                                                    b4.Navigation("Task");
-                                                });
-
-                                            b3.Navigation("Asignee");
-
-                                            b3.Navigation("Comments");
-
-                                            b3.Navigation("CreatedBy");
-
-                                            b3.Navigation("Reviewer");
-
-                                            b3.Navigation("Section");
-                                        });
-
-                                    b2.Navigation("Sprint");
-
-                                    b2.Navigation("Tasks");
-                                });
-
-                            b1.Navigation("Project");
-
-                            b1.Navigation("Sections");
+                            b1.Navigation("TaskAggregate");
                         });
 
-                    b.Navigation("Sprints");
+                    b.Navigation("Asignee");
 
-                    b.Navigation("Workspace");
+                    b.Navigation("Comments");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("Reviewer");
+
+                    b.Navigation("Section");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.User.UserAggregate", b =>
@@ -623,6 +670,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.Navigation("Name")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSection", b =>
+                {
+                    b.Navigation("Tasks");
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSprint", b =>
+                {
+                    b.Navigation("Sections");
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>
+                {
+                    b.Navigation("Sprints");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.User.UserAggregate", b =>

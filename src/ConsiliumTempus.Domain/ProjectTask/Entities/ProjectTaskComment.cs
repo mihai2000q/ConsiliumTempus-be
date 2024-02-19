@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Domain.Project.Entities;
+namespace ConsiliumTempus.Domain.ProjectTask.Entities;
 
 public sealed class ProjectTaskComment : Entity<ProjectTaskCommentId>, ITimestamps
 {
@@ -15,12 +15,12 @@ public sealed class ProjectTaskComment : Entity<ProjectTaskCommentId>, ITimestam
 
     private ProjectTaskComment(
         string message,
-        ProjectTask task,
+        ProjectTaskAggregate taskAggregate,
         DateTime createdDateTime,
         DateTime updatedDateTime)
     {
         Message = message;
-        Task = task;
+        TaskAggregate = taskAggregate;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
     }
@@ -31,15 +31,15 @@ public sealed class ProjectTaskComment : Entity<ProjectTaskCommentId>, ITimestam
     public DateTime UpdatedDateTime { get; private set; }
     public DateOnly? Date { get; private set; }
     public TimeSpan? TimeSpent { get; private set; }
-    public ProjectTask Task { get; init; } = default!;
+    public ProjectTaskAggregate TaskAggregate { get; init; } = default!;
 
     public static ProjectTaskComment Create(
         string message,
-        ProjectTask task)
+        ProjectTaskAggregate taskAggregate)
     {
         return new ProjectTaskComment(
             message,
-            task,
+            taskAggregate,
             DateTime.UtcNow, 
             DateTime.UtcNow);
     }

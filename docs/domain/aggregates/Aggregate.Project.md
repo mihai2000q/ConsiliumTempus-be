@@ -9,6 +9,7 @@ class Project
 {
     Project Create()
     void AddSprint()
+    void RefresUpdatedDateTime()
 }
 ```
 
@@ -32,8 +33,6 @@ For database design checkout the [Project Diagram](../diagrams/aggregates/Diagra
 
 - [Project Sprint](../entities/project/Entity.ProjectSprint.md)
 - [Project Section](../entities/project/Entity.ProjectSection.md)
-- [Project Task](../entities/project/Entity.ProjectTask.md)
-- [Project Task Comment](../entities/project/Entity.ProjectTaskComment.md)
 
 ### Properties Validation
 

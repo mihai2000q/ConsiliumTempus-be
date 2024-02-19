@@ -5,7 +5,7 @@
 ### Relationships
 
 - **Many-to-one** relationship with the [Project Sprint](../../../entities/project/Entity.ProjectSprint.md) entity.
-- **One-to-many** relationship with the [Project Task](../../../entities/project/Entity.ProjectTask.md) entity.
+- **One-to-many** relationship with the [Project Task](../../../aggregates/Aggregate.ProjectTask) entity.
 
 ### Diagram
 

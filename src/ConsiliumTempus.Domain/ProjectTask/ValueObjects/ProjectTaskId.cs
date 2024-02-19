@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Models;
 
-namespace ConsiliumTempus.Domain.Project.ValueObjects;
+namespace ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 
-public sealed class ProjectTaskId : ValueObject
+public sealed class ProjectTaskId : AggregateRootId<Guid>
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
     private ProjectTaskId()
@@ -15,7 +15,7 @@ public sealed class ProjectTaskId : ValueObject
         Value = value;
     }
 
-    public Guid Value { get; init; }
+    public override Guid Value { get; protected set; }
 
     public static ProjectTaskId CreateUnique()
     {

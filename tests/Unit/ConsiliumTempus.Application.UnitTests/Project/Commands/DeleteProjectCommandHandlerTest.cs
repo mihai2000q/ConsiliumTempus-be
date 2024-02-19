@@ -31,9 +31,7 @@ public class DeleteProjectCommandHandlerTest
         // Arrange
         var command = new DeleteProjectCommand(Guid.NewGuid());
 
-        var user = Mock.Mock.User.CreateMock();
-        var workspace = Mock.Mock.Workspace.CreateMock();
-        var project = Mock.Mock.Project.CreateMock(workspace, user);
+        var project = Mock.Mock.Project.CreateMock();
         _projectRepository
             .GetWithWorkspace(Arg.Any<ProjectId>())
             .Returns(project);
@@ -55,7 +53,7 @@ public class DeleteProjectCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectResult());
 
-        workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+        project.Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
     }
 
     [Fact]

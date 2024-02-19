@@ -68,5 +68,5 @@ jobs:
       run: dotnet build --no-restore
     
     - name: Test
-      run: dotnet test --verbosity normal --filter "FullyQualifiedName~IntegrationTests" --no-build -- xunit.parallelizeAssembly=true
+      run: dotnet test --verbosity normal --filter "FullyQualifiedName~IntegrationTests" --no-build -- xunit.maxParallelThreads=6
   

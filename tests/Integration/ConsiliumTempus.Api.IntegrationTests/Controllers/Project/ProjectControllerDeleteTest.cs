@@ -15,7 +15,7 @@ public class ProjectControllerDeleteTest(
     : BaseIntegrationTest(factory, testOutputHelper, "Project")
 {
     [Fact]
-    public async Task WhenProjectDeleteWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task WhenProjectDeleteWithAdminRole_ShouldReturnDeleteAndSuccessResponse()
     {
         await AssertSuccessfulRequest("michaelj@gmail.com");
     }
@@ -48,11 +48,12 @@ public class ProjectControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/projects/{id}");
 
         // Assert
-        DbContext.Projects.Should().HaveCount(1);
-        DbContext.Projects.AsEnumerable()
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Projects.Should().HaveCount(1);
+        dbContext.Projects.AsEnumerable()
             .SingleOrDefault(p => p.Id.Value == new Guid(id)).Should().BeNull();
         
-        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Project.NotFound.Description);
+        await outcome.ValidateError(Errors.Project.NotFound);
     }
 
     private async Task AssertSuccessfulRequest(string email)
@@ -65,7 +66,8 @@ public class ProjectControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/projects/{id}");
 
         // Assert
-        DbContext.Projects.Should().BeEmpty();
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Projects.Should().BeEmpty();
         
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -83,8 +85,9 @@ public class ProjectControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/projects/{id}");
 
         // Assert
-        DbContext.Projects.Should().HaveCount(1);
-        DbContext.Projects.AsEnumerable()
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Projects.Should().HaveCount(1);
+        dbContext.Projects.AsEnumerable()
             .SingleOrDefault(p => p.Id.Value == new Guid(id)).Should().NotBeNull();
         
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);

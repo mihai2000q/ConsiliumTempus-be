@@ -15,7 +15,7 @@ public class WorkspaceControllerDeleteTest(
     : BaseIntegrationTest(factory, testOutputHelper, "Workspace")
 {
     [Fact]
-    public async Task WhenWorkspaceDeleteWithAdminRole_ShouldReturnWorkspace()
+    public async Task WhenWorkspaceDeleteWithAdminRole_ShouldDeleteAndReturnSuccessResponse()
     {
         await AssertSuccessfulRequest("michaelj@gmail.com");
     }
@@ -48,12 +48,13 @@ public class WorkspaceControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
-        DbContext.Workspaces.Should().HaveCount(3);
-        DbContext.Workspaces.AsEnumerable()
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Workspaces.Should().HaveCount(3);
+        dbContext.Workspaces.AsEnumerable()
             .SingleOrDefault(w => w.Id.Value.ToString() == id)
             .Should().BeNull();
         
-        await outcome.ValidateError(HttpStatusCode.NotFound, Errors.Workspace.NotFound.Description);
+        await outcome.ValidateError(Errors.Workspace.NotFound);
     }
 
     private async Task AssertSuccessfulRequest(string email)
@@ -66,8 +67,9 @@ public class WorkspaceControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
-        DbContext.Workspaces.Should().HaveCount(2);
-        DbContext.Workspaces.AsEnumerable()
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Workspaces.Should().HaveCount(2);
+        dbContext.Workspaces.AsEnumerable()
             .SingleOrDefault(w => w.Id.Value.ToString() == id)
             .Should().BeNull();
         
@@ -87,8 +89,9 @@ public class WorkspaceControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
 
         // Assert
-        DbContext.Workspaces.Should().HaveCount(3);
-        DbContext.Workspaces.AsEnumerable()
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Workspaces.Should().HaveCount(3);
+        dbContext.Workspaces.AsEnumerable()
             .SingleOrDefault(w => w.Id.Value.ToString() == id)
             .Should().NotBeNull();
         

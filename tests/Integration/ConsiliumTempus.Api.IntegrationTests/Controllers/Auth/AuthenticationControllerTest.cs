@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
 using Xunit.Abstractions;
 
@@ -31,8 +32,9 @@ public class AuthenticationControllerTest(
         var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
 
         // Assert
-        DbContext.Users.Should().HaveCount(2);
-        var createdUser = DbContext.Users.Single(u => u.Credentials.Email == request.Email.ToLower());
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Users.Should().HaveCount(2);
+        var createdUser = dbContext.Users.Single(u => u.Credentials.Email == request.Email.ToLower());
         Utils.User.AssertRegistration(createdUser, request);
 
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -62,10 +64,11 @@ public class AuthenticationControllerTest(
         var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
 
         // Assert
-        DbContext.Users.Should().HaveCount(1);
-        DbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower()).Should().NotBeNull();
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Users.Should().HaveCount(1);
+        dbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower()).Should().NotBeNull();
 
-        await outcome.ValidateError(HttpStatusCode.Conflict, "Email is already in use");
+        await outcome.ValidateError(Errors.User.DuplicateEmail);
     }
 
     [Fact]
@@ -98,9 +101,12 @@ public class AuthenticationControllerTest(
         var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
 
         // Assert
-        DbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower()).Should().BeNull();
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Users
+            .SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
+            .Should().BeNull();
 
-        await outcome.ValidateError(HttpStatusCode.Unauthorized, "Invalid Credentials");
+        await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
     }
 
     [Fact]
@@ -115,8 +121,11 @@ public class AuthenticationControllerTest(
         var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
 
         // Assert
-        DbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower()).Should().NotBeNull();
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Users
+            .SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
+            .Should().NotBeNull();
 
-        await outcome.ValidateError(HttpStatusCode.Unauthorized, "Invalid Credentials");
+        await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
     }
 }

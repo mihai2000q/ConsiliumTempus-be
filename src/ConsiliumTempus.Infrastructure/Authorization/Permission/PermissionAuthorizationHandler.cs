@@ -53,6 +53,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         var workspace = stringIdRes.Type switch
         {
             StringIdType.Project => await workspaceProvider.GetByProject(ProjectId.Create(guidId)),
+            StringIdType.ProjectSprint => await workspaceProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
             _ => await workspaceProvider.Get(WorkspaceId.Create(guidId))
         };
 
@@ -80,6 +81,22 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
                 HttpRequestType.DELETE => new StringIdResponse(
                     HttpRequestReader.GetStringIdFromRoute(request),
                     StringIdType.Project),
+                HttpRequestType.PUT => new StringIdResponse(
+                    await HttpRequestReader.GetPropertyFromBody(request, "id"), 
+                    StringIdType.Project),
+                _ => new StringIdResponse(null)
+            },
+            ApiControllers.ProjectSprint => request.Method switch
+            {
+                HttpRequestType.POST => new StringIdResponse(
+                    await HttpRequestReader.GetPropertyFromBody(request, "projectId"),
+                    StringIdType.Project),
+                HttpRequestType.PUT => new StringIdResponse(
+                    await HttpRequestReader.GetPropertyFromBody(request, "id"), 
+                    StringIdType.ProjectSprint),
+                HttpRequestType.DELETE => new StringIdResponse(
+                    HttpRequestReader.GetStringIdFromRoute(request),
+                    StringIdType.ProjectSprint),
                 _ => new StringIdResponse(null)
             },
             _ => new StringIdResponse(null)
@@ -93,6 +110,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
     private enum StringIdType
     {
         Workspace,
-        Project
+        Project,
+        ProjectSprint
     }
 }
