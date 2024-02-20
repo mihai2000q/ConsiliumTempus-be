@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Validation;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -19,11 +20,23 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
                 id => id.Value,
                 value => ProjectId.Create(value));
         
-        builder.Property(p => p.Name)
+        builder.OwnsOne(p => p.Name)
+            .Property(n => n.Value)
+            .HasColumnName(nameof(Name))
             .HasMaxLength(PropertiesValidation.Project.NameMaximumLength);
         
-        builder.Property(p => p.Description)
+        builder.OwnsOne(p => p.Description)
+            .Property(d => d.Value)
+            .HasColumnName(nameof(Description))
             .HasMaxLength(PropertiesValidation.Project.DescriptionMaximumLength);
+
+        builder.OwnsOne(p => p.IsFavorite)
+            .Property(f => f.Value)
+            .HasColumnName(nameof(IsFavorite));
+        
+        builder.OwnsOne(p => p.IsPrivate)
+            .Property(p => p.Value)
+            .HasColumnName(nameof(IsPrivate));
 
         builder.HasOne(p => p.Workspace)
             .WithMany(w => w.Projects);

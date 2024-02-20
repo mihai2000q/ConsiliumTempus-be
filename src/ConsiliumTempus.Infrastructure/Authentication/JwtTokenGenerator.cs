@@ -23,8 +23,8 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
         {
             new Claim(JwtRegisteredClaimNames.Sub, userAggregate.Id.Value.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, userAggregate.Credentials.Email),
-            new Claim(JwtRegisteredClaimNames.GivenName, userAggregate.Name.First),
-            new Claim(JwtRegisteredClaimNames.FamilyName, userAggregate.Name.Last),
+            new Claim(JwtRegisteredClaimNames.GivenName, userAggregate.FirstName.Value),
+            new Claim(JwtRegisteredClaimNames.FamilyName, userAggregate.LastName.Value),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

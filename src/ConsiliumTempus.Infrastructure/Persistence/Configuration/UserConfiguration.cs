@@ -37,18 +37,19 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
                 .HasColumnName("Password");
         });
 
-        builder.OwnsOne(u => u.Name, nb =>
-        {
-            nb.Property(u => u.First)
-                .HasColumnName("FirstName")
-                .HasMaxLength(PropertiesValidation.User.FirstNameMaximumLength);
+        builder.OwnsOne(u => u.FirstName)
+            .Property(fn => fn.Value)
+            .HasColumnName(nameof(FirstName))
+            .HasMaxLength(PropertiesValidation.User.FirstNameMaximumLength);
 
-            nb.Property(u => u.Last)
-                .HasColumnName("LastName")
-                .HasMaxLength(PropertiesValidation.User.LastNameMaximumLength);
-        });
+        builder.OwnsOne(u => u.LastName)
+            .Property(ln => ln.Value)
+            .HasColumnName(nameof(LastName))
+            .HasMaxLength(PropertiesValidation.User.LastNameMaximumLength);
 
-        builder.Property(u => u.Role)
+        builder.OwnsOne(u => u.Role)
+            .Property(r => r.Value)
+            .HasColumnName(nameof(Role))
             .HasMaxLength(PropertiesValidation.User.RoleMaximumLength);
     }
 }

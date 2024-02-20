@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Validation;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -25,10 +26,14 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
                 id => id.Value,
                 value => WorkspaceId.Create(value));
 
-        builder.Property(w => w.Name)
+        builder.OwnsOne(w => w.Name)
+            .Property(n => n.Value)
+            .HasColumnName(nameof(Name))
             .HasMaxLength(PropertiesValidation.Workspace.NameMaximumLength);
 
-        builder.Property(w => w.Description)
+        builder.OwnsOne(w => w.Description)
+            .Property(d => d.Value)
+            .HasColumnName(nameof(Description))
             .HasMaxLength(PropertiesValidation.Workspace.DescriptionMaximumLength);
     }
 }
