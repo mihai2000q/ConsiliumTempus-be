@@ -8,10 +8,10 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.User.Commands.Update;
 
-public sealed class UpdateUserCommandHandler(IUserRepository userRepository) 
+public sealed class UpdateUserCommandHandler(IUserRepository userRepository)
     : IRequestHandler<UpdateUserCommand, ErrorOr<UpdateUserResult>>
 {
-    public async Task<ErrorOr<UpdateUserResult>> Handle(UpdateUserCommand command, 
+    public async Task<ErrorOr<UpdateUserResult>> Handle(UpdateUserCommand command,
         CancellationToken cancellationToken)
     {
         var userId = UserId.Create(command.Id);
@@ -20,12 +20,11 @@ public sealed class UpdateUserCommandHandler(IUserRepository userRepository)
         if (user is null) return Errors.User.NotFound;
 
         user.Update(
-            Name.Create(
-                command.FirstName.Capitalize(),
-                command.LastName.Capitalize()),
-            command.Role,
+            FirstName.Create(command.FirstName.Capitalize()),
+            LastName.Create(command.LastName.Capitalize()),
+            command.Role is null ? null : Role.Create(command.Role),
             command.DateOfBirth);
-        
+
         return new UpdateUserResult(user);
     }
 }

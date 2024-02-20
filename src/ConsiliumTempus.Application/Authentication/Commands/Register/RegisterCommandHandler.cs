@@ -25,10 +25,9 @@ public sealed class RegisterCommandHandler(
 
         var user = UserAggregate.Register(
             Credentials.Create(email, password),
-            Name.Create(
-                command.FirstName.Capitalize(),
-                command.LastName.Capitalize()),
-            command.Role,
+            FirstName.Create(command.FirstName.Capitalize()),
+            LastName.Create(command.LastName.Capitalize()),
+            command.Role is null ? null : Role.Create(command.Role),
             command.DateOfBirth);
         await userRepository.Add(user, cancellationToken);
 

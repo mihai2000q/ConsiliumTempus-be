@@ -13,18 +13,20 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
     private UserAggregate()
     {
     }
-    
+
     private UserAggregate(
         UserId id,
         Credentials credentials,
-        Name name,
-        string? role,
+        FirstName firstName,
+        LastName lastName,
+        Role? role,
         DateOnly? dateOfBirth,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
     {
         Credentials = credentials;
-        Name = name;
+        FirstName = firstName;
+        LastName = lastName;
         Role = role;
         DateOfBirth = dateOfBirth;
         CreatedDateTime = createdDateTime;
@@ -34,8 +36,9 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
     private readonly List<Membership> _memberships = [];
 
     public Credentials Credentials { get; private set; } = default!;
-    public Name Name { get; private set; } = default!;
-    public string? Role { get; private set; }
+    public FirstName FirstName { get; private set; } = default!;
+    public LastName LastName { get; private set; } = default!;
+    public Role? Role { get; private set; }
     public DateOnly? DateOfBirth { get; private set; }
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
@@ -43,39 +46,49 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
 
     public static UserAggregate Create(
         Credentials credentials,
-        Name name,
-        string? role = null,
+        FirstName firstName,
+        LastName lastName,
+        Role? role = null,
         DateOnly? dateOfBirth = null)
     {
         return new UserAggregate(
             UserId.CreateUnique(),
             credentials,
-            name,
+            firstName,
+            lastName,
             role,
             dateOfBirth,
             DateTime.UtcNow,
             DateTime.UtcNow);
     }
-    
+
     public static UserAggregate Register(
         Credentials credentials,
-        Name name,
-        string? role,
+        FirstName firstName,
+        LastName lastName,
+        Role? role,
         DateOnly? dateOfBirth)
     {
-        var user = Create(credentials, name, role, dateOfBirth);
+        var user = Create(
+            credentials,
+            firstName,
+            lastName,
+            role,
+            dateOfBirth);
 
         user.AddDomainEvent(new UserRegistered(user));
-        
+
         return user;
     }
-    
+
     public void Update(
-        Name name,
-        string? role,
+        FirstName firstName,
+        LastName lastName,
+        Role? role,
         DateOnly? dateOfBirth)
     {
-        Name = name;
+        FirstName = firstName;
+        LastName = lastName;
         Role = role;
         DateOfBirth = dateOfBirth;
         UpdatedDateTime = DateTime.UtcNow;
