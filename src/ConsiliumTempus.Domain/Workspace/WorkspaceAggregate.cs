@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Workspace;
@@ -15,8 +16,8 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
 
     private WorkspaceAggregate(
         WorkspaceId id,
-        string name,
-        string description,
+        Name name,
+        Description description,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
     {
@@ -25,35 +26,35 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
     }
-    
-    private readonly List<Membership> _memberships = []; 
-    private readonly List<ProjectAggregate> _projects = []; 
-    
-    public string Name { get; private set; } = string.Empty;
-    public string Description { get; private set; } = string.Empty;
+
+    private readonly List<Membership> _memberships = [];
+    private readonly List<ProjectAggregate> _projects = [];
+
+    public Name Name { get; private set; } = default!;
+    public Description Description { get; private set; } = default!;
     public DateTime CreatedDateTime { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
     public IReadOnlyList<ProjectAggregate> Projects => _projects.AsReadOnly();
 
     public static WorkspaceAggregate Create(
-        string name,
-        string description)
-    {   
+        Name name,
+        Description description)
+    {
         var workspace = new WorkspaceAggregate(
             WorkspaceId.CreateUnique(),
             name,
             description,
-            DateTime.UtcNow, 
+            DateTime.UtcNow,
             DateTime.UtcNow);
-        
+
         return workspace;
     }
 
-    public void Update(string? name, string? description)
+    public void Update(Name name, Description description)
     {
-        if (name is not null) Name = name;
-        if (description is not null) Description = description;
+        Name = name;
+        Description = description;
         UpdatedDateTime = DateTime.UtcNow;
     }
 

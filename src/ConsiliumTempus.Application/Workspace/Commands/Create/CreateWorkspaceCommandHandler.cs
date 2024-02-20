@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Security;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using MediatR;
 
@@ -18,13 +19,13 @@ public sealed class CreateWorkspaceCommandHandler(
         var user = await security.GetUserFromToken(command.Token, cancellationToken);
 
         var workspace = WorkspaceAggregate.Create(
-            command.Name,
-            command.Description);
+            Name.Create(command.Name),
+            Description.Create(command.Description));
         await workspaceRepository.Add(workspace, cancellationToken);
 
         var membership = Membership.Create(user, workspace, WorkspaceRole.Admin);
         workspace.AddUserMembership(membership);
-        
+
         return new CreateWorkspaceResult(workspace);
     }
 }
