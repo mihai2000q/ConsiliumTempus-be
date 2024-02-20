@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -20,7 +19,7 @@ public sealed class UpdateWorkspaceCommandHandler(IWorkspaceRepository workspace
 
         workspace.Update(
             Name.Create(command.Name),
-            Description.Create(command.Description);
+            Description.Create(command.Description));
 
         return new UpdateWorkspaceResult(workspace);
     }
