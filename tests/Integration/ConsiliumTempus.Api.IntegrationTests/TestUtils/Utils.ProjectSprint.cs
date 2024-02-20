@@ -11,7 +11,7 @@ internal static partial class Utils
             Domain.Project.Entities.ProjectSprint sprint,
             CreateProjectSprintRequest request)
         {
-            sprint.Name.Should().Be(request.Name);
+            sprint.Name.Value.Should().Be(request.Name);
             sprint.StartDate.Should().Be(request.StartDate);
             sprint.EndDate.Should().Be(request.EndDate);
             sprint.Project.Id.Value.Should().Be(request.ProjectId);

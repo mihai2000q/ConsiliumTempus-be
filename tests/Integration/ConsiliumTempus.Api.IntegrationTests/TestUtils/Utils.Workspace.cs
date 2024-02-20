@@ -45,22 +45,22 @@ internal static partial class Utils
         internal static void AssertCreation(WorkspaceAggregate workspace, CreateWorkspaceRequest request)
         {
             workspace.Id.Value.Should().NotBeEmpty();
-            workspace.Name.Should().Be(request.Name);
-            workspace.Description.Should().Be(request.Description);
+            workspace.Name.Value.Should().Be(request.Name);
+            workspace.Description.Value.Should().Be(request.Description);
         }
 
         internal static void AssertUpdated(WorkspaceAggregate workspace, UpdateWorkspaceRequest request)
         {
             workspace.Id.Value.Should().Be(request.Id);
-            workspace.Name.Should().Be(request.Name);
-            workspace.Description.Should().Be(request.Description);
+            workspace.Name.Value.Should().Be(request.Name);
+            workspace.Description.Value.Should().Be(request.Description);
         }
         
         internal static void AssertNotUpdated(WorkspaceAggregate workspace, UpdateWorkspaceRequest request)
         {
             workspace.Id.Value.Should().Be(request.Id);
-            workspace.Name.Should().NotBe(request.Name);
-            workspace.Description.Should().NotBe(request.Description);
+            workspace.Name.Value.Should().NotBe(request.Name);
+            workspace.Description.Value.Should().NotBe(request.Description);
         }
     }
 }

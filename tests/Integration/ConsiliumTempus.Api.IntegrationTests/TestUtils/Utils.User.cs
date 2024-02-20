@@ -51,17 +51,20 @@ internal static partial class Utils
             RegisterRequest request)
         {
             user.Id.Value.Should().NotBeEmpty();
-            user.Name.First.Should().Be(request.FirstName.Capitalize());
-            user.Name.Last.Should().Be(request.LastName.Capitalize());
+            user.FirstName.Value.Should().Be(request.FirstName.Capitalize());
+            user.LastName.Value.Should().Be(request.LastName.Capitalize());
             user.Credentials.Email.Should().Be(request.Email.ToLower());
             user.Credentials.Password.Should().NotBeNullOrWhiteSpace().And.NotBe(request.Password);
-            user.Role.Should().Be(request.Role);
+            if (request.Role is null)
+                user.Role.Should().BeNull();
+            else
+                user.Role!.Value.Should().Be(request.Role);
             user.DateOfBirth.Should().Be(request.DateOfBirth);
 
             user.Memberships.Should().HaveCount(1);
             user.Memberships[0].User.Should().Be(user);
-            user.Memberships[0].Workspace.Name.Should().Be(Constants.Workspace.Name);
-            user.Memberships[0].Workspace.Description.Should().Be(Constants.Workspace.Description);
+            user.Memberships[0].Workspace.Name.Value.Should().Be(Constants.Workspace.Name);
+            user.Memberships[0].Workspace.Description.Value.Should().Be(Constants.Workspace.Description);
             user.Memberships[0].Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         }
 
@@ -70,9 +73,12 @@ internal static partial class Utils
             UpdateUserRequest request)
         {
             user.Id.Value.Should().Be(request.Id);
-            user.Name.First.Should().Be(request.FirstName.Capitalize());
-            user.Name.Last.Should().Be(request.LastName.Capitalize());
-            user.Role.Should().Be(request.Role);
+            user.FirstName.Value.Should().Be(request.FirstName.Capitalize());
+            user.LastName.Value.Should().Be(request.LastName.Capitalize());
+            if (request.Role is null)
+                user.Role.Should().BeNull();
+            else
+                user.Role!.Value.Should().Be(request.Role);
             user.DateOfBirth.Should().Be(request.DateOfBirth);
         }
 
@@ -81,9 +87,9 @@ internal static partial class Utils
             UpdateUserRequest request)
         {
             user.Id.Value.Should().Be(request.Id);
-            user.Name.First.Should().NotBe(request.FirstName.Capitalize());
-            user.Name.Last.Should().NotBe(request.LastName.Capitalize());
-            user.Role.Should().NotBe(request.Role);
+            user.FirstName.Value.Should().NotBe(request.FirstName.Capitalize());
+            user.LastName.Value.Should().NotBe(request.LastName.Capitalize());
+            user.Role?.Value.Should().NotBe(request.Role);
             user.DateOfBirth.Should().NotBe(request.DateOfBirth);
         }
     }

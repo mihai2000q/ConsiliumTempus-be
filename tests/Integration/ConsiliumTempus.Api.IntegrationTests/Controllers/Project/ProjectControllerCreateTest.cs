@@ -55,7 +55,7 @@ public class ProjectControllerCreateTest(
         // Assert
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(1);
-        dbContext.Projects.SingleOrDefault(p => p.Name == request.Name).Should().BeNull();
+        dbContext.Projects.SingleOrDefault(p => p.Name.Value == request.Name).Should().BeNull();
         
         await outcome.ValidateError(Errors.Workspace.NotFound);
     }
@@ -79,9 +79,9 @@ public class ProjectControllerCreateTest(
         var createdProject = await dbContext.Projects
             .Include(p => p.Workspace)
             .Include(p => p.Sprints)
-            .ThenInclude(ps => ps.Sections.OrderBy(s => s.Order))
-            .ThenInclude(ps => ps.Tasks.OrderBy(t => t.Order))
-            .SingleAsync(p => p.Name == request.Name);
+            .ThenInclude(ps => ps.Sections.OrderBy(s => s.Order.Value))
+            .ThenInclude(ps => ps.Tasks.OrderBy(t => t.Order.Value))
+            .SingleAsync(p => p.Name.Value == request.Name);
         Utils.Project.AssertCreation(createdProject, request);
         
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -106,7 +106,7 @@ public class ProjectControllerCreateTest(
         // Assert
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(1);
-        dbContext.Projects.SingleOrDefault(p => p.Name == request.Name).Should().BeNull();
+        dbContext.Projects.SingleOrDefault(p => p.Name.Value == request.Name).Should().BeNull();
         
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }

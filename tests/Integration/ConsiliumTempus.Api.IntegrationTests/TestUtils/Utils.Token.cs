@@ -22,8 +22,8 @@ internal static partial class Utils
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Credentials.Email),
-                new Claim(JwtRegisteredClaimNames.GivenName, user.Name.First),
-                new Claim(JwtRegisteredClaimNames.FamilyName, user.Name.Last),
+                new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName.Value),
+                new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName.Value),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
