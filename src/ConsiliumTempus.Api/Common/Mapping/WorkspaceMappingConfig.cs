@@ -31,7 +31,9 @@ public sealed class WorkspaceMappingConfig : IRegister
         config.NewConfig<GetWorkspaceRequest, GetWorkspaceQuery>();
         
         config.NewConfig<WorkspaceAggregate, WorkspaceDto>()
-            .Map(dest => dest.Id, src => src.Id.Value.ToString());
+            .Map(dest => dest.Id, src => src.Id.Value.ToString())
+            .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.Description, src => src.Description.Value);
     }
     
     private static void CreateMappings(TypeAdapterConfig config)
@@ -42,7 +44,9 @@ public sealed class WorkspaceMappingConfig : IRegister
         
         config.NewConfig<CreateWorkspaceResult, WorkspaceDto>()
             .Map(dest => dest, src => src.Workspace)
-            .Map(dest => dest.Id, src => src.Workspace.Id.Value.ToString());
+            .Map(dest => dest.Id, src => src.Workspace.Id.Value.ToString())
+            .Map(dest => dest.Name, src => src.Workspace.Name.Value)
+            .Map(dest => dest.Description, src => src.Workspace.Description.Value);
     }
 
     private static void PutMappings(TypeAdapterConfig config)
@@ -51,7 +55,9 @@ public sealed class WorkspaceMappingConfig : IRegister
         
         config.NewConfig<UpdateWorkspaceResult, WorkspaceDto>()
             .Map(dest => dest, src => src.Workspace)
-            .Map(dest => dest.Id, src => src.Workspace.Id.Value.ToString());
+            .Map(dest => dest.Id, src => src.Workspace.Id.Value.ToString())
+            .Map(dest => dest.Name, src => src.Workspace.Name.Value)
+            .Map(dest => dest.Description, src => src.Workspace.Description.Value);
     }
 
     private static void DeleteMappings(TypeAdapterConfig config)

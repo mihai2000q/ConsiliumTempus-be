@@ -27,8 +27,8 @@ public sealed class UserMappingConfig : IRegister
         
         config.NewConfig<UserAggregate, UserDto>()
             .Map(dest => dest.Id, src => src.Id.Value.ToString())
-            .Map(dest => dest.FirstName, src => src.Name.First)
-            .Map(dest => dest.LastName, src => src.Name.Last)
+            .Map(dest => dest.FirstName, src => src.FirstName)
+            .Map(dest => dest.LastName, src => src.LastName)
             .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 
@@ -39,8 +39,8 @@ public sealed class UserMappingConfig : IRegister
         config.NewConfig<UpdateUserResult, UserDto>()
             .Map(dest => dest, src => src.User)
             .Map(dest => dest.Id, src => src.User.Id.Value.ToString())
-            .Map(dest => dest.FirstName, src => src.User.Name.First)
-            .Map(dest => dest.LastName, src => src.User.Name.Last)
+            .Map(dest => dest.FirstName, src => src.User.FirstName.Value)
+            .Map(dest => dest.LastName, src => src.User.LastName.Value)
             .Map(dest => dest.Email, src => src.User.Credentials.Email);
     }
     
