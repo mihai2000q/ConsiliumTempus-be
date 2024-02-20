@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.ProjectTask;
 
@@ -17,10 +19,10 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
 
     private ProjectTaskAggregate(
         ProjectTaskId id,
-        string name,
-        string description,
-        bool isCompleted,
-        int order,
+        Name name,
+        Description description,
+        IsCompleted isCompleted,
+        Order order,
         UserAggregate createdBy,
         ProjectSection section,
         DateTime createdDateTime,
@@ -38,10 +40,10 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
 
     private readonly List<ProjectTaskComment> _comments = [];
 
-    public string Name { get; private set; } = string.Empty;
-    public string Description { get; private set; } = string.Empty;
-    public bool IsCompleted { get; private set; }
-    public int Order { get; private set; }
+    public Name Name { get; private set; } = default!;
+    public Description Description { get; private set; } = default!;
+    public IsCompleted IsCompleted { get; private set; } = default!;
+    public Order Order { get; private set; } = default!;
     public UserAggregate CreatedBy { get; init; } = default!;
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
@@ -53,9 +55,9 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public IReadOnlyList<ProjectTaskComment> Comments => _comments.AsReadOnly();
 
     public static ProjectTaskAggregate Create(
-        string name,
-        string description,
-        int order,
+        Name name,
+        Description description,
+        Order order,
         UserAggregate createdBy,
         ProjectSection section)
     {
@@ -63,7 +65,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             ProjectTaskId.CreateUnique(),
             name,
             description,
-            false,
+            IsCompleted.Create(false),
             order,
             createdBy,
             section,
