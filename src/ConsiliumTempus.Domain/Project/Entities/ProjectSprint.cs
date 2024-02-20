@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Project.Entities;
@@ -14,7 +15,7 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
 
     private ProjectSprint(
         ProjectSprintId id,
-        string name,
+        Name name,
         ProjectAggregate project,
         DateTime createdDateTime,
         DateTime updatedDateTime,
@@ -31,7 +32,7 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
 
     private readonly List<ProjectSection> _sections = [];
 
-    public string Name { get; private set; } = string.Empty;
+    public Name Name { get; private set; } = default!;
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
     public DateOnly? StartDate { get; private set; }
@@ -40,7 +41,7 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
     public IReadOnlyList<ProjectSection> Sections => _sections.AsReadOnly();
 
     public static ProjectSprint Create(
-        string name,
+        Name name,
         ProjectAggregate project,
         DateOnly? startDate = null,
         DateOnly? endDate = null)
@@ -49,7 +50,7 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
             ProjectSprintId.CreateUnique(),
             name,
             project,
-            DateTime.UtcNow, 
+            DateTime.UtcNow,
             DateTime.UtcNow,
             startDate,
             endDate);

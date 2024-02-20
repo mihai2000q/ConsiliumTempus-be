@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.Project.ValueObjects;
@@ -15,13 +16,13 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     private ProjectAggregate()
     {
     }
-    
+
     private ProjectAggregate(
         ProjectId id,
-        string name,
-        string description,
-        bool isFavorite,
-        bool isPrivate,
+        Name name,
+        Description description,
+        IsFavorite isFavorite,
+        IsPrivate isPrivate,
         WorkspaceAggregate workspace,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
@@ -36,20 +37,20 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     }
 
     private readonly List<ProjectSprint> _sprints = [];
-    
-    public string Name { get; private set; } = string.Empty;
-    public string Description { get; private set; } = string.Empty;
-    public bool IsFavorite { get; private set; }
-    public bool IsPrivate { get; private set; }
+
+    public Name Name { get; private set; } = default!;
+    public Description Description { get; private set; } = default!;
+    public IsFavorite IsFavorite { get; private set; } = default!;
+    public IsPrivate IsPrivate { get; private set; } = default!;
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
     public WorkspaceAggregate Workspace { get; init; } = default!;
     public IReadOnlyList<ProjectSprint> Sprints => _sprints.AsReadOnly();
-    
+
     public static ProjectAggregate Create(
-        string name,
-        string description,
-        bool isPrivate,
+        Name name,
+        Description description,
+        IsPrivate isPrivate,
         WorkspaceAggregate workspace,
         UserAggregate user)
     {
@@ -57,12 +58,12 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
             ProjectId.CreateUnique(),
             name,
             description,
-            false,
+            IsFavorite.Create(false),
             isPrivate,
             workspace,
             DateTime.UtcNow,
             DateTime.UtcNow);
-        
+
         project.AddDomainEvent(new ProjectCreated(project, user));
 
         return project;

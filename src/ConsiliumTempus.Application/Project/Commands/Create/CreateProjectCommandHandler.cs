@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Security;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ErrorOr;
@@ -11,10 +12,10 @@ namespace ConsiliumTempus.Application.Project.Commands.Create;
 public sealed class CreateProjectCommandHandler(
     ISecurity security,
     IWorkspaceRepository workspaceRepository,
-    IProjectRepository projectRepository) 
+    IProjectRepository projectRepository)
     : IRequestHandler<CreateProjectCommand, ErrorOr<CreateProjectResult>>
 {
-    public async Task<ErrorOr<CreateProjectResult>> Handle(CreateProjectCommand command, 
+    public async Task<ErrorOr<CreateProjectResult>> Handle(CreateProjectCommand command,
         CancellationToken cancellationToken)
     {
         var workspaceId = WorkspaceId.Create(command.WorkspaceId);
@@ -23,17 +24,17 @@ public sealed class CreateProjectCommandHandler(
         if (workspace is null) return Errors.Workspace.NotFound;
 
         var user = await security.GetUserFromToken(command.Token, cancellationToken);
-        
+
         var project = ProjectAggregate.Create(
-            command.Name,
-            command.Description,
-            command.IsPrivate,
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            IsPrivate.Create(command.IsPrivate),
             workspace,
             user);
         await projectRepository.Add(project, cancellationToken);
-        
+
         workspace.RefreshUpdatedDateTime();
-        
+
         return new CreateProjectResult();
     }
 }
