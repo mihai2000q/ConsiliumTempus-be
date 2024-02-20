@@ -19,8 +19,8 @@ internal static partial class Utils
             membership.User.Should().Be(user);
             membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
             membership.Workspace.Id.Should().NotBeNull();
-            membership.Workspace.Name.Should().Be(workspaceName);
-            membership.Workspace.Description.Should().Be(workspaceDescription);
+            membership.Workspace.Name.Value.Should().Be(workspaceName);
+            membership.Workspace.Description.Value.Should().Be(workspaceDescription);
         }
     }
 }

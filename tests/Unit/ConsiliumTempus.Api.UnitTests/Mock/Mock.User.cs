@@ -11,7 +11,10 @@ internal static partial class Mock
             string email = "Some@example.com",
             string password = "Password123")
         {
-            return UserAggregate.Create(Credentials.Create(email, password), Name.Create("", ""));
+            return UserAggregate.Create(
+                Credentials.Create(email, password), 
+                FirstName.Create(""), 
+                LastName.Create(""));
         }
     }
 }

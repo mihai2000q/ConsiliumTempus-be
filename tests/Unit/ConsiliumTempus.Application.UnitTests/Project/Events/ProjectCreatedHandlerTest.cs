@@ -28,7 +28,7 @@ public class ProjectCreatedHandlerTest
         project.Sprints.Should().HaveCount(1);
         project.Sprints[0].Id.Value.ToString().Should().NotBeNullOrWhiteSpace();
         project.Sprints[0].Project.Should().Be(project);
-        project.Sprints[0].Name.Should().Be(Constants.ProjectSprint.Name);
+        project.Sprints[0].Name.Value.Should().Be(Constants.ProjectSprint.Name);
         project.Sprints[0].StartDate.Should().BeNull();
         project.Sprints[0].EndDate.Should().BeNull();
         project.Sprints[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
@@ -41,29 +41,29 @@ public class ProjectCreatedHandlerTest
             .ForEach(section =>
             {
                 section.Id.Value.ToString().Should().NotBeNullOrWhiteSpace();
-                section.Order.Should().Be(count++);
+                section.Order.Value.Should().Be(count++);
                 section.Sprint.Should().Be(project.Sprints[0]);
             });
         project.Sprints[0].Sections
             .Zip(Constants.ProjectSection.Names)
             .ToList()
-            .ForEach(x => x.First.Name.Should().Be(x.Second));
+            .ForEach(x => x.First.Name.Value.Should().Be(x.Second));
 
         count = 0;
         project.Sprints[0].Sections[0].Tasks.Should().HaveCount(Constants.ProjectTask.Names.Length);
         project.Sprints[0].Sections[0].Tasks
             .Zip(Constants.ProjectTask.Names)
             .ToList()
-            .ForEach(x => x.First.Name.Should().Be(x.Second));
+            .ForEach(x => x.First.Name.Value.Should().Be(x.Second));
         project.Sprints[0].Sections[0].Tasks
             .ToList()
             .ForEach(task =>
             {
                 task.Id.Value.ToString().Should().NotBeNullOrWhiteSpace();
-                task.Description.Should().BeEmpty();
-                task.IsCompleted.Should().BeFalse();
+                task.Description.Value.Should().BeEmpty();
+                task.IsCompleted.Value.Should().BeFalse();
                 task.CreatedBy.Should().Be(user);
-                task.Order.Should().Be(count++);
+                task.Order.Value.Should().Be(count++);
                 task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
                 task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
                 task.Asignee.Should().BeNull();

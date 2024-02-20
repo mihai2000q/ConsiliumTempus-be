@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Project;
+﻿using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -16,9 +17,9 @@ internal static partial class Mock
             user ??= User.CreateMock();
             
             return ProjectAggregate.Create(
-                "Project Name",
-                "This is the project description",
-                true,
+                Name.Create("Project Name"),
+                Description.Create("This is the project description"),
+                IsPrivate.Create(true),
                 workspace,
                 user);
         }
@@ -31,7 +32,7 @@ internal static partial class Mock
             project ??= Project.CreateMock();
             
             return Domain.Project.Entities.ProjectSprint.Create(
-                "Project Sprint Name",
+                Name.Create("Project Sprint Name"),
                 project);
         }
     }

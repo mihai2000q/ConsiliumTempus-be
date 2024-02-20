@@ -27,8 +27,8 @@ public sealed class UserMappingConfig : IRegister
         
         config.NewConfig<UserAggregate, UserDto>()
             .Map(dest => dest.Id, src => src.Id.Value.ToString())
-            .Map(dest => dest.FirstName, src => src.FirstName)
-            .Map(dest => dest.LastName, src => src.LastName)
+            .Map(dest => dest.FirstName, src => src.FirstName.Value)
+            .Map(dest => dest.LastName, src => src.LastName.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 

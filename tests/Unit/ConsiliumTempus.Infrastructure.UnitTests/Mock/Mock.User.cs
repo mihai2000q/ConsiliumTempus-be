@@ -9,9 +9,10 @@ internal static partial class Mock
     {
         public static UserAggregate CreateMock(
             Credentials credentials,
-            Name name)
+            FirstName firstName,
+            LastName lastName)
         {
-            return UserAggregate.Create(credentials, name);
+            return UserAggregate.Create(credentials, firstName, lastName);
         }
     }
 }
