@@ -59,7 +59,7 @@ public class CreateProjectCommandHandlerTest
         // Arrange
         await _workspaceRepository
             .Received(1)
-            .Get(Arg.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.WorkspaceId)));
+            .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));
         await _security
             .Received(1)
             .GetUserFromToken(Arg.Is<string>(token => token == command.Token));
@@ -91,7 +91,7 @@ public class CreateProjectCommandHandlerTest
         // Arrange
         await _workspaceRepository
             .Received(1)
-            .Get(Arg.Is<WorkspaceId>(id => Utils.Workspace.AssertId(id, command.WorkspaceId)));
+            .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));
         _security.DidNotReceive();
         _projectRepository.DidNotReceive();
         

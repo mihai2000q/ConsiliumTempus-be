@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
 
@@ -48,7 +47,7 @@ public class SecurityTest
             .GetUserIdFromToken(Arg.Any<string>());
         await _userRepository
             .Received(1)
-            .Get(Arg.Is<UserId>(id => Utils.User.AssertId(id, plainUserId)));
+            .Get(Arg.Is<UserId>(id => id.Value.ToString() == plainUserId));
         
         outcome.Should().Be(user);
     }

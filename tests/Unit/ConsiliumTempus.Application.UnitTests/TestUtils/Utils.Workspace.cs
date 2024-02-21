@@ -3,7 +3,6 @@ using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
-using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -11,12 +10,6 @@ internal static partial class Utils
 {
     internal static class Workspace
     {
-        internal static bool AssertId(WorkspaceId workspaceId, Guid expectedId)
-        {
-            workspaceId.Should().Be(WorkspaceId.Create(expectedId));
-            return true;
-        }
-
         internal static bool AssertFromCreateCommand(
             WorkspaceAggregate workspace,
             CreateWorkspaceCommand command,

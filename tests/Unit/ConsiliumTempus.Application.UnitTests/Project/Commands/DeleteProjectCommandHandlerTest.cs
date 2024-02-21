@@ -40,7 +40,7 @@ public class DeleteProjectCommandHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)));
+            .GetWithWorkspace(Arg.Is<ProjectId>(id => id.Value == command.Id));
         _projectRepository
             .Received(1)
             .Remove(Arg.Is<ProjectAggregate>(pr => pr == project));
@@ -63,7 +63,7 @@ public class DeleteProjectCommandHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectId>(id => Utils.Project.AssertId(id, command.Id)));
+            .GetWithWorkspace(Arg.Is<ProjectId>(id => id.Value == command.Id));
         _projectRepository
             .DidNotReceive()
             .Remove(Arg.Any<ProjectAggregate>());

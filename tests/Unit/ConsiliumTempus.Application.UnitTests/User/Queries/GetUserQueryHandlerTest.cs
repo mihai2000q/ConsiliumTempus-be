@@ -39,7 +39,7 @@ public class GetUserQueryHandlerTest
         // Assert
         await _userRepository
             .Received(1)
-            .Get(Arg.Is<UserId>(id => Utils.User.AssertId(id, query.Id.ToString())));
+            .Get(Arg.Is<UserId>(id => id.Value == query.Id));
 
         outcome.IsError.Should().BeFalse();
         Utils.User.AssertUser(outcome.Value, user);
@@ -57,7 +57,7 @@ public class GetUserQueryHandlerTest
         // Assert
         await _userRepository
             .Received(1)
-            .Get(Arg.Is<UserId>(id => Utils.User.AssertId(id, query.Id.ToString())));
+            .Get(Arg.Is<UserId>(id => id.Value == query.Id));
 
         outcome.ValidateError(Errors.User.NotFound);
     }

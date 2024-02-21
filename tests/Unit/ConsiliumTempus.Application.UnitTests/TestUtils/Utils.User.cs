@@ -3,7 +3,6 @@ using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.Events;
-using ConsiliumTempus.Domain.User.ValueObjects;
 using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
@@ -11,13 +10,7 @@ namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 internal static partial class Utils
 {
     internal static class User
-    {
-        internal static bool AssertId(UserId userId, string id)
-        {
-            userId.Should().Be(UserId.Create(id));
-            return true;
-        }
-
+    { 
         internal static void AssertFromRegisterCommand(UserAggregate user, RegisterCommand command, string password)
         {
             user.Id.Should().NotBeNull();
