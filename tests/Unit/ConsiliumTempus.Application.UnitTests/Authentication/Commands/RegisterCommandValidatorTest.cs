@@ -12,7 +12,7 @@ public class RegisterCommandValidatorTest
     #endregion
 
     [Theory]
-    [ClassData(typeof(Data.RegisterCommandValidator.GetValidCommands))]
+    [ClassData(typeof(RegisterCommandValidatorData.GetValidCommands))]
     public async Task WhenValid_ShouldReturnTrue(RegisterCommand command)
     {
         // Arrange - parameterized
@@ -25,12 +25,12 @@ public class RegisterCommandValidatorTest
     }
     
     [Theory]
-    [ClassData(typeof(Data.RegisterCommandValidator.GetInvalidFirstNameCommands))]
-    [ClassData(typeof(Data.RegisterCommandValidator.GetInvalidLastNameCommands))]
-    [ClassData(typeof(Data.RegisterCommandValidator.GetInvalidEmailCommands))]
-    [ClassData(typeof(Data.RegisterCommandValidator.GetInvalidPasswordCommands))]
-    [ClassData(typeof(Data.RegisterCommandValidator.GetInvalidRoleCommands))]
-    [ClassData(typeof(Data.RegisterCommandValidator.GetInvalidDateOfBirthCommands))]
+    [ClassData(typeof(RegisterCommandValidatorData.GetInvalidFirstNameCommands))]
+    [ClassData(typeof(RegisterCommandValidatorData.GetInvalidLastNameCommands))]
+    [ClassData(typeof(RegisterCommandValidatorData.GetInvalidEmailCommands))]
+    [ClassData(typeof(RegisterCommandValidatorData.GetInvalidPasswordCommands))]
+    [ClassData(typeof(RegisterCommandValidatorData.GetInvalidRoleCommands))]
+    [ClassData(typeof(RegisterCommandValidatorData.GetInvalidDateOfBirthCommands))]
     public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(RegisterCommand command, string property, int expectedErrors)
     {
         // Arrange - parameterized
