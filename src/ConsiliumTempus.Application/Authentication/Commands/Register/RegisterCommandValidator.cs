@@ -30,5 +30,8 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
 
         RuleFor(c => c.Role)
             .MaximumLength(PropertiesValidation.User.RoleMaximumLength);
+
+        RuleFor(c => c.DateOfBirth)
+            .LessThan(DateOnly.FromDateTime(DateTime.UtcNow));
     }
 }
