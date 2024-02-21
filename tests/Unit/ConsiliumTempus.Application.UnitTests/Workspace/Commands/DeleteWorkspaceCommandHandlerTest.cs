@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
+using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -28,7 +29,7 @@ public class DeleteWorkspaceCommandHandlerTest
         // Arrange
         var command = new DeleteWorkspaceCommand(Guid.NewGuid());
 
-        var workspace = Mock.Mock.Workspace.CreateMock();
+        var workspace = WorkspaceFactory.Create();
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);

@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Update;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User.ValueObjects;
 
@@ -25,7 +26,7 @@ public class UpdateUserCommandHandlerTest
     public async Task WhenUpdateUserCommandIsSuccessful_ShouldReturnNewUser()
     {
         // Arrange
-        var currentUser = Mock.Mock.User.CreateMock();
+        var currentUser = UserFactory.Create();
         _userRepository
             .Get(Arg.Any<UserId>())
             .Returns(currentUser);

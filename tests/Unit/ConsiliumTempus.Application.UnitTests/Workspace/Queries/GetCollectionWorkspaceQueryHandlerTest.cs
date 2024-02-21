@@ -1,6 +1,8 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Security;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Queries;
@@ -28,12 +30,12 @@ public class GetCollectionWorkspaceQueryHandlerTest
         // Arrange
         var query = new GetCollectionWorkspaceQuery("This is a token");
 
-        var user = Mock.Mock.User.CreateMock();
+        var user = UserFactory.Create();
         _security
             .GetUserFromToken(query.Token)
             .Returns(user);
 
-        var workspaces = Mock.Mock.Workspace.CreateListMock();
+        var workspaces = WorkspaceFactory.CreateList();
         _workspaceRepository
             .GetListForUser(user)
             .Returns(workspaces);

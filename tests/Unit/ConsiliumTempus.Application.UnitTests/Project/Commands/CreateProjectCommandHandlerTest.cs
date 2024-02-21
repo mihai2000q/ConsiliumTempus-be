@@ -2,6 +2,8 @@
 using ConsiliumTempus.Application.Common.Security;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
+using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -41,12 +43,12 @@ public class CreateProjectCommandHandlerTest
             true,
             "This-is-a-token");
 
-        var workspace = Mock.Mock.Workspace.CreateMock();
+        var workspace = WorkspaceFactory.Create();
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);
         
-        var user = Mock.Mock.User.CreateMock();
+        var user = UserFactory.Create();
         _security
             .GetUserFromToken(Arg.Any<string>())
             .Returns(user);

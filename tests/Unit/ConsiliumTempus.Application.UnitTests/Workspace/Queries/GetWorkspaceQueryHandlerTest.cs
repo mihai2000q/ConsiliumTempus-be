@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
@@ -27,7 +28,7 @@ public class GetWorkspaceQueryHandlerTest
         // Arrange
         var query = new GetWorkspaceQuery(new Guid("00000000-0000-0000-0000-000000000000"));
 
-        var workspace = Mock.Mock.Workspace.CreateMock();
+        var workspace = WorkspaceFactory.Create();
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);

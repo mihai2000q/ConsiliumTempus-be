@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
+using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
@@ -28,7 +29,7 @@ public class DeleteProjectCommandHandlerTest
         // Arrange
         var command = new DeleteProjectCommand(Guid.NewGuid());
 
-        var project = Mock.Mock.Project.CreateMock();
+        var project = ProjectFactory.Create();
         _projectRepository
             .GetWithWorkspace(Arg.Any<ProjectId>())
             .Returns(project);

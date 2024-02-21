@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
 
 namespace ConsiliumTempus.Application.UnitTests.Common.Security;
@@ -33,7 +34,7 @@ public class SecurityTest
             .GetUserIdFromToken(plainToken)
             .Returns(plainUserId);
 
-        var user = Mock.Mock.User.CreateMock();
+        var user = UserFactory.Create();
         _userRepository
             .Get(Arg.Any<UserId>())
             .Returns(user);

@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
+using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
@@ -31,7 +32,7 @@ public class DeleteProjectSprintCommandHandlerTest
         // Arrange
         var command = new DeleteProjectSprintCommand(Guid.NewGuid());
 
-        var projectSprint = Mock.Mock.ProjectSprint.CreateMock();
+        var projectSprint = ProjectSprintFactory.Create();
         _projectSprintRepository
             .GetWithProjectAndWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(projectSprint);

@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Common.Security;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Commands;
@@ -34,7 +35,7 @@ public class CreateWorkspaceCommandHandlerTest
             "This is a description",
             "This is a token");
 
-        var user = Mock.Mock.User.CreateMock();
+        var user = UserFactory.Create();
         _security
             .GetUserFromToken(command.Token)
             .Returns(user);

@@ -1,4 +1,6 @@
 ﻿using ConsiliumTempus.Application.Project.Events;
+using ConsiliumTempus.Common.UnitTests.Project;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project.Events;
 
@@ -16,9 +18,8 @@ public class ProjectCreatedHandlerTest
     public async Task WhenProjectCreatedIsSuccessful_ShouldAddMoreDataToTheProject()
     {
         // Arrange
-        var user = Mock.Mock.User.CreateMock();
-        var workspace = Mock.Mock.Workspace.CreateMock();
-        var project = Mock.Mock.Project.CreateMock(workspace, user);
+        var user = UserFactory.Create();
+        var project = ProjectFactory.Create(user: user);
         var notification = new ProjectCreated(project, user);
 
         // Act

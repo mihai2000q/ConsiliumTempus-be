@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Authentication.Events;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.User.Events;
 
@@ -17,7 +18,7 @@ public class UserRegisteredHandlerTest
     public async Task WhenUserRegisters_ShouldAddWorkspaceToUser()
     {
         // Arrange
-        var user = Mock.Mock.User.CreateMock();
+        var user = UserFactory.Create();
 
         // Act
         await _uut.Handle(new UserRegistered(user), default);

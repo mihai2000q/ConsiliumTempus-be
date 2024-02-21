@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
 
@@ -93,7 +94,7 @@ public class RegisterCommandHandlerTest
 
         _userRepository
             .GetUserByEmail(command.Email.ToLower())
-            .Returns(Mock.Mock.User.CreateMock());
+            .Returns(UserFactory.Create());
 
         // Act
         var outcome = await _uut.Handle(command, default);

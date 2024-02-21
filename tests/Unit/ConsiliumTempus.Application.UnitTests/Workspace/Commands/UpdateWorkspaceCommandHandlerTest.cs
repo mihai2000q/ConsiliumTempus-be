@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
@@ -25,7 +26,7 @@ public class UpdateWorkspaceCommandHandlerTest
     public async Task WhenUpdateWorkspaceIsSuccessful_ShouldUpdateAndReturnNewWorkspace()
     {
         // Arrange
-        var workspace = Mock.Mock.Workspace.CreateMock();
+        var workspace = WorkspaceFactory.Create();
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);

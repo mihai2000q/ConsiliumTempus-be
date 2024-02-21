@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Queries.Get;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User.ValueObjects;
 
@@ -27,7 +28,7 @@ public class GetUserQueryHandlerTest
         // Arrange
         var query = new GetUserQuery(Guid.NewGuid());
 
-        var user = Mock.Mock.User.CreateMock();
+        var user = UserFactory.Create();
         _userRepository
             .Get(Arg.Any<UserId>())
             .Returns(user);

@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Delete;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
@@ -28,7 +29,7 @@ public class DeleteUserCommandHandlerTest
         // Arrange
         var command = new DeleteUserCommand(Guid.NewGuid());
 
-        var user = Mock.Mock.User.CreateMock();
+        var user = UserFactory.Create();
         _userRepository
             .Get(Arg.Any<UserId>())
             .Returns(user);
