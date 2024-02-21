@@ -28,6 +28,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\src\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj"/>
         <ProjectReference Include="..\..\..\src\ConsiliumTempus.Infrastructure\ConsiliumTempus.Infrastructure.csproj"/>
+        <ProjectReference Include="..\ConsiliumTempus.Common.UnitTests\ConsiliumTempus.Common.UnitTests.csproj" />
     </ItemGroup>
 
 </Project>

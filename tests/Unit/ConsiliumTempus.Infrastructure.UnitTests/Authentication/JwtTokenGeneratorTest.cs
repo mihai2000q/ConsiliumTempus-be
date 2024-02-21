@@ -1,5 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Infrastructure.Authentication;
 using ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 using Microsoft.Extensions.Options;
@@ -37,12 +37,11 @@ public class JwtTokenGeneratorTest
     public void WhenGenerateToken_ShouldReturnNewToken()
     {
         // Arrange
-        var user = Mock.Mock.User.CreateMock(
-            Credentials.Create(
-                "FirstyLasty@Example.com",
-                "Password123"),
-            FirstName.Create("FirstName"),
-            LastName.Create("LastName"));
+        var user = UserFactory.Create(
+            "FirstyLasty@Example.com",
+            "Password123",
+            "FirstName",
+            "LastName");
         
         // Act
         var outcome = _uut.GenerateToken(user);
@@ -56,7 +55,7 @@ public class JwtTokenGeneratorTest
     {
         // Arrange
         var userId = Guid.NewGuid().ToString();
-        var token = Mock.Mock.Token.CreateMock((JwtRegisteredClaimNames.Sub, userId));
+        var token = Utils.CreateToken((JwtRegisteredClaimNames.Sub, userId));
 
         // Act
         var outcome = _uut.GetUserIdFromToken(token);

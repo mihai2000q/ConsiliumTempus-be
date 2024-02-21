@@ -10,6 +10,7 @@ using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,7 @@ public class WorkspaceControllerTest
         // Arrange
         var request = new GetWorkspaceRequest();
 
-        var result = Mock.Mock.Workspace.CreateMock();
+        var result = WorkspaceFactory.Create();
         _mediator
             .Send(Arg.Any<GetWorkspaceQuery>())
             .Returns(result);
@@ -89,7 +90,7 @@ public class WorkspaceControllerTest
         _httpContext.Request.Headers.Authorization
             .Returns(new StringValues($"Bearer {token}"));
 
-        var result = Mock.Mock.Workspace.CreateListMock();
+        var result = WorkspaceFactory.CreateList();
         _mediator
             .Send(Arg.Any<GetCollectionWorkspaceQuery>())
             .Returns(result);
@@ -121,7 +122,7 @@ public class WorkspaceControllerTest
         _httpContext.Request.Headers.Authorization
             .Returns(new StringValues($"Bearer {token}"));
 
-        var result = new CreateWorkspaceResult(Mock.Mock.Workspace.CreateMock(request.Name, request.Description));
+        var result = new CreateWorkspaceResult(WorkspaceFactory.Create(request.Name, request.Description));
         _mediator
             .Send(Arg.Any<CreateWorkspaceCommand>())
             .Returns(result);
@@ -197,7 +198,7 @@ public class WorkspaceControllerTest
             "New Name",
             "New Description");
 
-        var result = new UpdateWorkspaceResult(Mock.Mock.Workspace.CreateMock());
+        var result = new UpdateWorkspaceResult(WorkspaceFactory.Create());
         _mediator
             .Send(Arg.Any<UpdateWorkspaceCommand>())
             .Returns(result);

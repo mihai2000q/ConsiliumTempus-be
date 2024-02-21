@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Delete;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Application.User.Queries.Get;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,7 +38,7 @@ public class UserControllerTest
         // Arrange
         var request = new GetUserRequest();
 
-        var user = Mock.Mock.User.CreateMock();
+        var user = UserFactory.Create();
         _mediator
             .Send(Arg.Any<GetUserQuery>())
             .Returns(user);
@@ -86,7 +87,7 @@ public class UserControllerTest
             null,
             null);
 
-        var result = new UpdateUserResult(Mock.Mock.User.CreateMock());
+        var result = new UpdateUserResult(UserFactory.Create());
         _mediator
             .Send(Arg.Any<UpdateUserCommand>())
             .Returns(result);
