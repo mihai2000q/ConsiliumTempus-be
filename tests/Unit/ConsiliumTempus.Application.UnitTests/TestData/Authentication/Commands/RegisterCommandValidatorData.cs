@@ -10,6 +10,7 @@ internal static class RegisterCommandValidatorData
     {
         public GetValidCommands()
         {
+            Add(AuthenticationCommandFactory.CreateRegisterCommand());
             Add(new RegisterCommand(
                 "Michael",
                 "Jordan",

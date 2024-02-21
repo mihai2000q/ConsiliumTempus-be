@@ -5,7 +5,6 @@ using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
-using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.AspNetCore.Mvc;

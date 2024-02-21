@@ -10,6 +10,7 @@ internal static class LoginQueryValidatorData
     {
         public GetValidQueries()
         {
+            Add(AuthenticationQueryFactory.CreateLoginQuery());
             Add(new LoginQuery("MichaelJ@Gmail.com", "Password123"));
         }
     }

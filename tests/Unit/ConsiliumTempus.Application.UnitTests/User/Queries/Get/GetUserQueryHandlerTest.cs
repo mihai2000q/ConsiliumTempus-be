@@ -5,7 +5,7 @@ using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User.ValueObjects;
 
-namespace ConsiliumTempus.Application.UnitTests.User.Queries;
+namespace ConsiliumTempus.Application.UnitTests.User.Queries.Get;
 
 public class GetUserQueryHandlerTest
 {

@@ -1,9 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace ConsiliumTempus.Application.User.Queries.Get;
 
-[SuppressMessage("ReSharper", "UnusedType.Global")]
 public sealed class GetUserQueryValidator : AbstractValidator<GetUserQuery>
 {
     public GetUserQueryValidator()

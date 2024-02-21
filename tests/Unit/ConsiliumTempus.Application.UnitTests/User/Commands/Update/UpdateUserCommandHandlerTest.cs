@@ -1,38 +1,37 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
-using ConsiliumTempus.Application.User.Commands.Delete;
+using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
 
-namespace ConsiliumTempus.Application.UnitTests.User.Commands;
+namespace ConsiliumTempus.Application.UnitTests.User.Commands.Update;
 
-public class DeleteUserCommandHandlerTest
+public class UpdateUserCommandHandlerTest
 {
     #region Setup
 
     private readonly IUserRepository _userRepository;
-    private readonly DeleteUserCommandHandler _uut;
+    private readonly UpdateUserCommandHandler _uut;
 
-    public DeleteUserCommandHandlerTest()
+    public UpdateUserCommandHandlerTest()
     {
         _userRepository = Substitute.For<IUserRepository>();
-        _uut = new DeleteUserCommandHandler(_userRepository);
+        _uut = new UpdateUserCommandHandler(_userRepository);
     }
 
     #endregion
 
     [Fact]
-    public async Task WhenDeleteUserCommandIsSuccessful_ShouldDeleteAndReturnDeleteResult()
+    public async Task WhenUpdateUserCommandIsSuccessful_ShouldReturnNewUser()
     {
         // Arrange
-        var command = new DeleteUserCommand(Guid.NewGuid());
-
-        var user = UserFactory.Create();
+        var currentUser = UserFactory.Create();
         _userRepository
             .Get(Arg.Any<UserId>())
-            .Returns(user);
+            .Returns(currentUser);
+
+        var command = UserCommandFactory.CreateUpdateUserCommand(id: currentUser.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -41,19 +40,16 @@ public class DeleteUserCommandHandlerTest
         await _userRepository
             .Received(1)
             .Get(Arg.Is<UserId>(id => id.Value == command.Id));
-        _userRepository
-            .Received(1)
-            .Remove(user);
-        
+
         outcome.IsError.Should().BeFalse();
-        outcome.Value.Should().Be(new DeleteUserResult());
+        Utils.User.AssertFromUpdateCommand(outcome.Value, command);
     }
 
     [Fact]
-    public async Task WhenDeleteUserCommandFails_ShouldReturnNotFoundError()
+    public async Task WhenUpdateUserCommandIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var command = new DeleteUserCommand(Guid.NewGuid());
+        var command = UserCommandFactory.CreateUpdateUserCommand();
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -62,9 +58,6 @@ public class DeleteUserCommandHandlerTest
         await _userRepository
             .Received(1)
             .Get(Arg.Is<UserId>(id => id.Value == command.Id));
-        _userRepository
-            .DidNotReceive()
-            .Remove(Arg.Any<UserAggregate>());
 
         outcome.ValidateError(Errors.User.NotFound);
     }
