@@ -41,9 +41,8 @@ public class JwtTokenGeneratorTest
             Credentials.Create(
                 "FirstyLasty@Example.com",
                 "Password123"),
-            Name.Create(
-                "FirstName",
-                "LastName"));
+            FirstName.Create("FirstName"),
+            LastName.Create("LastName"));
         
         // Act
         var outcome = _uut.GenerateToken(user);

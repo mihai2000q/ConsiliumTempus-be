@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 
@@ -14,8 +15,8 @@ public sealed class ProjectSection : Entity<ProjectSectionId>
 
     private ProjectSection(
         ProjectSectionId id,
-        string name,
-        int order,
+        Name name,
+        Order order,
         ProjectSprint sprint) : base(id)
     {
         Name = name;
@@ -25,19 +26,19 @@ public sealed class ProjectSection : Entity<ProjectSectionId>
 
     private readonly List<ProjectTaskAggregate> _tasks = [];
 
-    public string Name { get; private set; } = string.Empty;
-    public int Order { get; private set; }
+    public Name Name { get; private set; } = default!;
+    public Order Order { get; private set; } = default!;
     public ProjectSprint Sprint { get; init; } = default!;
     public IReadOnlyList<ProjectTaskAggregate> Tasks => _tasks.AsReadOnly();
 
     public static ProjectSection Create(
-        string name,
-        int order,
+        Name name,
+        Order order,
         ProjectSprint sprint)
     {
         return new ProjectSection(
-            ProjectSectionId.CreateUnique(), 
-            name, 
+            ProjectSectionId.CreateUnique(),
+            name,
             order,
             sprint);
     }

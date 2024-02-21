@@ -17,18 +17,14 @@ class User
 
 ```json
 {
-  "id": {
-    "value": "00000000-0000-0000-0000-000000000000"
-  },
+  "id": { "value": "00000000-0000-0000-0000-000000000000"},
   "credentials": {
     "email": "user@gmail.com",
     "password": "$2a$13$R1tGdA1LDsVG.Ge95l42oOEPQ2Xl/VvgMTkiQOODlrM5hQpISv0qC"
   },
-  "name": {
-    "first": "Tiffany",
-    "last": "Doe"
-  },
-  "role": "Software Developer",
+  "firstName": { "value": "Tifanny" },
+  "lastName": { "value": "Doe" },
+  "role": { "value": "Software Developer" },
   "dateOfBirth": "2000-12-21",
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
@@ -40,8 +36,7 @@ For database design, check out the [User Diagram](../diagrams/aggregates/Diagram
 
 ### Value Objects
 
-- **Credentials**: it holds the email and password.
-- **Name**: it holds the first and last name.
+- **Credentials**, which holds the *Email* and *Password*
 
 ### Properties Validation
 

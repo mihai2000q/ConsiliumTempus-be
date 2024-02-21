@@ -22,8 +22,8 @@ internal static partial class Utils
             CreateWorkspaceCommand command,
             UserAggregate user)
         {
-            workspace.Name.Should().Be(command.Name);
-            workspace.Description.Should().Be(command.Description);
+            workspace.Name.Value.Should().Be(command.Name);
+            workspace.Description.Value.Should().Be(command.Description);
             workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.Memberships.Should().HaveCount(1);
@@ -42,8 +42,8 @@ internal static partial class Utils
             UpdateWorkspaceCommand command)
         {
             workspace.Id.Value.Should().Be(command.Id);
-            workspace.Name.Should().Be(command.Name);
-            workspace.Description.Should().Be(command.Description);
+            workspace.Name.Value.Should().Be(command.Name);
+            workspace.Description.Value.Should().Be(command.Description);
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         }
 

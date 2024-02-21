@@ -25,10 +25,10 @@ internal static partial class Utils
             UserAggregate user)
         {
             project.Id.Value.Should().NotBeEmpty();
-            project.Name.Should().Be(command.Name);
-            project.Description.Should().Be(command.Description);
-            project.IsPrivate.Should().Be(command.IsPrivate);
-            project.IsFavorite.Should().Be(false);
+            project.Name.Value.Should().Be(command.Name);
+            project.Description.Value.Should().Be(command.Description);
+            project.IsPrivate.Value.Should().Be(command.IsPrivate);
+            project.IsFavorite.Value.Should().Be(false);
             project.Sprints.Should().BeEmpty();
             project.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
@@ -51,7 +51,7 @@ internal static partial class Utils
             ProjectAggregate project)
         {
             projectSprint.Id.Value.Should().NotBeEmpty();
-            projectSprint.Name.Should().Be(command.Name);
+            projectSprint.Name.Value.Should().Be(command.Name);
             projectSprint.StartDate.Should().Be(command.StartDate);
             projectSprint.EndDate.Should().Be(command.EndDate);
             projectSprint.Project.Should().Be(project);

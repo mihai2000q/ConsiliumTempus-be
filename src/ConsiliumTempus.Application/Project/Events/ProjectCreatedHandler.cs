@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Constants;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -10,12 +11,14 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
 {
     public Task Handle(ProjectCreated notification, CancellationToken cancellationToken)
     {
-        var sprint = ProjectSprint.Create(Constants.ProjectSprint.Name, notification.Project);
+        var sprint = ProjectSprint.Create(
+            Name.Create(Constants.ProjectSprint.Name),
+            notification.Project);
         notification.Project.AddSprint(sprint);
 
         var count = 0;
         Constants.ProjectSection.Names
-            .Select(name => ProjectSection.Create(name, count++, sprint))
+            .Select(name => ProjectSection.Create(Name.Create(name), Order.Create(count++), sprint))
             .ToList()
             .ForEach(section => sprint.AddSection(section));
 
@@ -24,9 +27,9 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
         Constants.ProjectTask.Names
             .ToList()
             .ForEach(name => section.AddTask(ProjectTaskAggregate.Create(
-                name, 
-                string.Empty, 
-                count++,
+                Name.Create(name),
+                Description.Create(string.Empty),
+                Order.Create(count++),
                 notification.User,
                 section)));
 

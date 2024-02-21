@@ -27,9 +27,9 @@ internal static class Utils
         outcomeToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Email).Value
             .Should().Be(user.Credentials.Email);
         outcomeToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.GivenName).Value
-            .Should().Be(user.Name.First);
+            .Should().Be(user.FirstName.Value);
         outcomeToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.FamilyName).Value
-            .Should().Be(user.Name.Last);
+            .Should().Be(user.LastName.Value);
         outcomeToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Jti).Value
             .Should().HaveLength(Guid.NewGuid().ToString().Length);
     }

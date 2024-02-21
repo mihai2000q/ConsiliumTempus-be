@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Validation;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,9 @@ public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Projec
                 id => id.Value,
                 value => ProjectSprintId.Create(value));
         
-        builder.Property(s => s.Name)
+        builder.OwnsOne(s => s.Name)
+            .Property(n => n.Value)
+            .HasColumnName(nameof(Name))
             .HasMaxLength(PropertiesValidation.ProjectSprint.NameMaximumLength);
 
         builder.HasOne(s => s.Project)

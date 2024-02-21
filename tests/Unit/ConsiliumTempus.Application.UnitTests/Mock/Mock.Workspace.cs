@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Workspace;
+﻿using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Application.UnitTests.Mock;
 
@@ -10,7 +11,7 @@ internal static partial class Mock
             string name = "Workspace Name",
             string description = "This is the Workspace Description")
         {
-            return WorkspaceAggregate.Create(name, description);
+            return WorkspaceAggregate.Create(Name.Create(name), Description.Create(description));
         }
 
         internal static List<WorkspaceAggregate> CreateListMock()

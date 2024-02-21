@@ -90,7 +90,6 @@ PUT {{host}}/api/workspaces
 
 Sends body data that the new workspace needs to be updated.
 <br>
-All parameters are optional except the id.
 
 ```json
 {

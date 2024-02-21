@@ -61,7 +61,12 @@ Typically, the value objects will be flattened on the object before persisting i
 
 The value objects are:
 
-- Nothing atm.
+- **Description**, which encapsulates a string *Value*
+- **IsFavorite**, which encapsulates a boolean *Value*
+- **IsPrivate**, which encapsulates a boolean *Value*
+- **Message**, which encapsulates a string *Value*
+- **Name**, which encapsulates a string *Value*
+- **Order**, which encapsulates an int *Value* and it's used to achieve custom ordering
 
 ## Domain Errors
 
@@ -96,7 +101,13 @@ except the primary key and direct relations), check below:
   - [User Diagram](domain/diagrams/aggregates/Diagram.User.md)
   - [Workspace Diagram](domain/diagrams/aggregates/Diagram.Workspace.md)
   - [Project Diagram](domain/diagrams/aggregates/Diagram.Project.md)
+  - [Project Task Diagram](domain/diagrams/aggregates/Diagram.ProjectTask.md)
 - Entities
   - [Membership Diagram](domain/diagrams/entities/Diagram.Membership.md)
   - [Permission Diagram](domain/diagrams/entities/Diagram.Permission.md)
   - [Workspace Role Diagram](domain/diagrams/entities/Diagram.WorkspaceRole.md)
+  - Project Entities
+    - [Project Sprint Diagram](domain/diagrams/entities/project/Diagram.ProjectSprint.md)
+    - [Project Section Diagram](domain/diagrams/entities/project/Diagram.ProjectSection.md)
+  - Project Task Entities
+    - [Project Task Comment Diagram](domain/diagrams/entities/project-task/Diagram.ProjectTaskComment.md)

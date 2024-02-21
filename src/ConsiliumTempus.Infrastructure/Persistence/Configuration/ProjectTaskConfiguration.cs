@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Validation;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
@@ -20,11 +21,23 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
                 id => id.Value,
                 value => ProjectTaskId.Create(value));
         
-        builder.Property(t => t.Name)
+        builder.OwnsOne(t => t.Name)
+            .Property(n => n.Value)
+            .HasColumnName(nameof(Name))
             .HasMaxLength(PropertiesValidation.ProjectTask.NameMaximumLength);
         
-        builder.Property(t => t.Description)
+        builder.OwnsOne(t => t.Description)
+            .Property(d => d.Value)
+            .HasColumnName(nameof(Description))
             .HasMaxLength(PropertiesValidation.ProjectTask.DescriptionMaximumLength);
+
+        builder.OwnsOne(t => t.IsCompleted)
+            .Property(c => c.Value)
+            .HasColumnName(nameof(IsCompleted));
+        
+        builder.OwnsOne(t => t.Order)
+            .Property(o => o.Value)
+            .HasColumnName(nameof(Order));
 
         builder.HasOne(t => t.CreatedBy)
             .WithMany();
@@ -51,7 +64,9 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
                 id => id.Value,
                 value => ProjectTaskCommentId.Create(value));
         
-        builder.Property(c => c.Message)
+        builder.OwnsOne(c => c.Message)
+            .Property(m => m.Value)
+            .HasColumnName(nameof(Message))
             .HasMaxLength(PropertiesValidation.ProjectTaskComment.MessageMaximumLength);
 
         builder.HasOne(c => c.CreatedBy)

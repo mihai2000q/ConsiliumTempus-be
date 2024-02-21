@@ -11,9 +11,9 @@ internal static partial class Utils
     {
         internal static void AssertCreation(ProjectAggregate project, CreateProjectRequest request)
         {
-            project.Name.Should().Be(request.Name);
-            project.Description.Should().Be(request.Description);
-            project.IsPrivate.Should().Be(request.IsPrivate);
+            project.Name.Value.Should().Be(request.Name);
+            project.Description.Value.Should().Be(request.Description);
+            project.IsPrivate.Value.Should().Be(request.IsPrivate);
             project.Workspace.Id.Value.Should().Be(request.WorkspaceId);
 
             project.Sprints.Should().HaveCount(1);

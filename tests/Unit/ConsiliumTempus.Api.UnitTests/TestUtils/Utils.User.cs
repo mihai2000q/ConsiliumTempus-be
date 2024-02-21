@@ -41,10 +41,10 @@ internal static partial class Utils
         private static void AssertDto(UserDto dto, UserAggregate user)
         {
             dto.Id.Should().Be(user.Id.Value.ToString());
-            dto.FirstName.Should().Be(user.Name.First);
-            dto.LastName.Should().Be(user.Name.Last);
+            dto.FirstName.Should().Be(user.FirstName.Value);
+            dto.LastName.Should().Be(user.LastName.Value);
             dto.Email.Should().Be(user.Credentials.Email);
-            dto.Role.Should().Be(user.Role);
+            dto.Role.Should().Be(user.Role?.Value);
             dto.DateOfBirth.Should().Be(user.DateOfBirth);
         }
     }

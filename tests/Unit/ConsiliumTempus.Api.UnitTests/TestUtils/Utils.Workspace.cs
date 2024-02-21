@@ -80,8 +80,8 @@ internal static partial class Utils
         private static void AssertDto(WorkspaceDto dto, WorkspaceAggregate workspace)
         {
             dto.Id.Should().Be(workspace.Id.Value.ToString());
-            dto.Name.Should().Be(workspace.Name);
-            dto.Description.Should().Be(workspace.Description);
+            dto.Name.Should().Be(workspace.Name.Value);
+            dto.Description.Should().Be(workspace.Description.Value);
         }
     }
 }
