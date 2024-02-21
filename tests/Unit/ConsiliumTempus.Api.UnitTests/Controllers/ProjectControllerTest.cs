@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,11 +37,7 @@ public class ProjectControllerTest
     public async Task CreateProject_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
-        var request = new CreateProjectRequest(
-            Guid.NewGuid(),
-            "Project Name",
-            "This is the project description",
-            true);
+        var request = ProjectRequestFactory.CreateCreateProjectRequest();
 
         const string token = "My-Token";
         _httpContext.Request.Headers.Authorization
@@ -56,7 +53,7 @@ public class ProjectControllerTest
 
         // Assert
         _httpContext.Received(1);
-        
+
         await _mediator
             .Received(1)
             .Send(Arg.Is<CreateProjectCommand>(
@@ -73,11 +70,7 @@ public class ProjectControllerTest
     public async Task CreateProject_WhenWorkspaceIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = new CreateProjectRequest(
-            Guid.NewGuid(),
-            "Project Name",
-            "This is the project description",
-            true);
+        var request = ProjectRequestFactory.CreateCreateProjectRequest();
 
         const string token = "My-Token";
         _httpContext.Request.Headers.Authorization
@@ -93,7 +86,7 @@ public class ProjectControllerTest
 
         // Assert
         _httpContext.Received(1);
-        
+
         await _mediator
             .Received(1)
             .Send(Arg.Is<CreateProjectCommand>(

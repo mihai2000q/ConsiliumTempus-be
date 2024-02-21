@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\src\ConsiliumTempus.Api\ConsiliumTempus.Api.csproj" />
       <ProjectReference Include="..\..\..\src\ConsiliumTempus.Application\ConsiliumTempus.Application.csproj" />
       <ProjectReference Include="..\..\..\src\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj" />
     </ItemGroup>

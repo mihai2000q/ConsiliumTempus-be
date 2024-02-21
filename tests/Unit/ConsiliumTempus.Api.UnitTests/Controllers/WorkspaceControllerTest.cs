@@ -1,8 +1,5 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
-using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
-using ConsiliumTempus.Api.Contracts.Workspace.Get;
-using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
@@ -42,7 +39,7 @@ public class WorkspaceControllerTest
     public async Task GetWorkspace_WhenIsSuccessful_ShouldReturnWorkspace()
     {
         // Arrange
-        var request = new GetWorkspaceRequest();
+        var request = WorkspaceRequestFactory.CreateGetWorkspaceRequest();
 
         var result = WorkspaceFactory.Create();
         _mediator
@@ -56,7 +53,7 @@ public class WorkspaceControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<GetWorkspaceQuery>(query => Utils.Workspace.AssertGetQuery(query, request)));
-        
+
         Utils.Workspace.AssertDto(outcome, result);
     }
 
@@ -64,7 +61,7 @@ public class WorkspaceControllerTest
     public async Task GetWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = new GetWorkspaceRequest();
+        var request = WorkspaceRequestFactory.CreateGetWorkspaceRequest();
 
         var error = Errors.Workspace.NotFound;
         _mediator
@@ -101,12 +98,12 @@ public class WorkspaceControllerTest
         // Assert
         _httpContext
             .Received(1);
-        
+
         await _mediator
             .Received(1)
             .Send(Arg.Is<GetCollectionWorkspaceQuery>(
                 query => Utils.Workspace.AssertGetCollectionQuery(query, token)));
-        
+
         Utils.Workspace.AssertDtos(outcome, result);
     }
 
@@ -114,9 +111,7 @@ public class WorkspaceControllerTest
     public async Task WhenWorkspaceCreateIsSuccessful_ShouldReturnNewWorkspace()
     {
         // Arrange
-        var request = new CreateWorkspaceRequest(
-            "Workspace Name",
-            "Workspace Description that is very long");
+        var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
 
         const string token = "This-is-the-token";
         _httpContext.Request.Headers.Authorization
@@ -132,7 +127,7 @@ public class WorkspaceControllerTest
 
         // Assert
         _httpContext.Received(1);
-            
+
         await _mediator
             .Received(1)
             .Send(Arg.Is<CreateWorkspaceCommand>(
@@ -193,10 +188,7 @@ public class WorkspaceControllerTest
     public async Task UpdateWorkspace_WhenIsSuccessful_ShouldReturnNewWorkspace()
     {
         // Arrange
-        var request = new UpdateWorkspaceRequest(
-            Guid.NewGuid(),
-            "New Name",
-            "New Description");
+        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest();
 
         var result = new UpdateWorkspaceResult(WorkspaceFactory.Create());
         _mediator
@@ -219,10 +211,7 @@ public class WorkspaceControllerTest
     public async Task UpdateWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = new UpdateWorkspaceRequest(
-            Guid.NewGuid(),
-            "New Name",
-            "New Description");
+        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest();
 
         var error = Errors.Workspace.NotFound;
         _mediator

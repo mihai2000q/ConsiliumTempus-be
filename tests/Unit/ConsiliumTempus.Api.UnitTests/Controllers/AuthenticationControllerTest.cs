@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Application.Authentication.Queries.Login;
+using ConsiliumTempus.Common.UnitTests.Authentication;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,13 +34,7 @@ public class AuthenticationControllerTest
     public async Task WhenRegisterIsSuccessful_ShouldReturnRegisterResponse()
     {
         // Arrange
-        var request = new RegisterRequest(
-            "FirstName",
-            "LastName",
-            "Example@Email.com",
-            "Password123",
-            null,
-            null);
+        var request = AuthenticationRequestFactory.CreateRegisterRequest();
 
         var result = new RegisterResult("This is the token for the registration");
         _mediator
@@ -66,13 +61,7 @@ public class AuthenticationControllerTest
     public async Task WhenRegisterFails_ShouldReturnDuplicateEmailError()
     {
         // Arrange
-        var request = new RegisterRequest(
-            "FirstName",
-            "LastName",
-            "Example@Email.com",
-            "Password123",
-            null,
-            null);
+        var request = AuthenticationRequestFactory.CreateRegisterRequest();
 
         var error = Errors.User.DuplicateEmail;
         _mediator
@@ -95,9 +84,7 @@ public class AuthenticationControllerTest
     public async Task WhenLoginIsSuccessful_ShouldReturnLoginResponse()
     {
         // Arrange
-        var request = new LoginRequest(
-            "Some@Example.com",
-            "Password123");
+        var request = AuthenticationRequestFactory.CreateLoginRequest();
 
         var result = new LoginResult("This is the token");
         _mediator
@@ -124,9 +111,7 @@ public class AuthenticationControllerTest
     public async Task WhenLoginFails_ShouldReturnLoginResponse()
     {
         // Arrange
-        var request = new LoginRequest(
-            "Some@Example.com",
-            "Password123");
+        var request = AuthenticationRequestFactory.CreateLoginRequest();
         
         var error = Errors.Authentication.InvalidCredentials;
         _mediator

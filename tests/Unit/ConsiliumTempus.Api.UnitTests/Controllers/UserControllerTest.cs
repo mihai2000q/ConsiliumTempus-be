@@ -1,7 +1,5 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.User.Delete;
-using ConsiliumTempus.Api.Contracts.User.Get;
-using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Delete;
@@ -36,7 +34,7 @@ public class UserControllerTest
     public async Task GetUser_WhenIsSuccessful_ShouldReturnUser()
     {
         // Arrange
-        var request = new GetUserRequest();
+        var request = UserRequestFactory.CreateGetUserRequest();
 
         var user = UserFactory.Create();
         _mediator
@@ -58,7 +56,7 @@ public class UserControllerTest
     public async Task GetUser_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = new GetUserRequest();
+        var request = UserRequestFactory.CreateGetUserRequest();
 
         var error = Errors.User.NotFound;
         _mediator
@@ -80,12 +78,7 @@ public class UserControllerTest
     public async Task UpdateUser_WhenIsSuccessful_ShouldReturnNewUser()
     {
         // Arrange
-        var request = new UpdateUserRequest(
-            Guid.NewGuid(),
-            "New First Name",
-            "New Last Name",
-            null,
-            null);
+        var request = UserRequestFactory.CreateUpdateUserRequest();
 
         var result = new UpdateUserResult(UserFactory.Create());
         _mediator
@@ -107,12 +100,7 @@ public class UserControllerTest
     public async Task UpdateUser_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = new UpdateUserRequest(
-            Guid.NewGuid(),
-            "New First Name",
-            "New Last Name",
-            null,
-            null);
+        var request = UserRequestFactory.CreateUpdateUserRequest();
 
         var error = Errors.User.NotFound;
         _mediator
@@ -135,7 +123,6 @@ public class UserControllerTest
     {
         // Arrange
         var id = Guid.NewGuid();
-
 
         var result = new DeleteUserResult();
         _mediator
