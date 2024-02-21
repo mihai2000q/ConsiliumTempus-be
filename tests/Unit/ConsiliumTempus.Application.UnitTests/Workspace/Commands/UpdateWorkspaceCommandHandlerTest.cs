@@ -31,10 +31,7 @@ public class UpdateWorkspaceCommandHandlerTest
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
-        var command = new UpdateWorkspaceCommand(
-            workspace.Id.Value,
-            "New Name",
-            "New Description");
+        var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand(id: workspace.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -52,7 +49,7 @@ public class UpdateWorkspaceCommandHandlerTest
     public async Task WhenUpdateWorkspaceIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var command = new UpdateWorkspaceCommand(Guid.NewGuid(), "New Name", "New Description");
+        var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand();
 
         // Act
         var outcome = await _uut.Handle(command, default);

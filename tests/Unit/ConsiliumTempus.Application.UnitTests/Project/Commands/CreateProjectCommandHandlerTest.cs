@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Common.Security;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
+using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -36,18 +37,13 @@ public class CreateProjectCommandHandlerTest
     public async Task WhenCreateProjectIsSuccessful_ShouldCreateAndSaveProjectOnWorkspace()
     {
         // Arrange
-        var command = new CreateProjectCommand(
-            Guid.NewGuid(),
-            "Project Name",
-            "This is the project description",
-            true,
-            "This-is-a-token");
+        var command = ProjectCommandFactory.CreateCreateProjectCommand();
 
         var workspace = WorkspaceFactory.Create();
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);
-        
+
         var user = UserFactory.Create();
         _security
             .GetUserFromToken(Arg.Any<string>())
@@ -78,12 +74,7 @@ public class CreateProjectCommandHandlerTest
     public async Task WhenCreateProjectFails_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
-        var command = new CreateProjectCommand(
-            Guid.NewGuid(),
-            "Project Name",
-            "This is the project description",
-            true,
-            "This-is-a-token");
+        var command = ProjectCommandFactory.CreateCreateProjectCommand();
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -94,7 +85,7 @@ public class CreateProjectCommandHandlerTest
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));
         _security.DidNotReceive();
         _projectRepository.DidNotReceive();
-        
+
         outcome.ValidateError(Errors.Workspace.NotFound);
     }
 }

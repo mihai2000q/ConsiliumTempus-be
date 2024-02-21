@@ -3,6 +3,7 @@ using ConsiliumTempus.Application.Common.Security;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Commands;
@@ -30,10 +31,7 @@ public class CreateWorkspaceCommandHandlerTest
     public async Task WhenCreateWorkspaceIsSuccessful_ShouldAddUserAndReturnNewWorkspace()
     {
         // Arrange
-        var command = new CreateWorkspaceCommand(
-            "Workspace 1",
-            "This is a description",
-            "This is a token");
+        var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand();
 
         var user = UserFactory.Create();
         _security

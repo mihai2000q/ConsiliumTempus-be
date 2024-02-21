@@ -28,7 +28,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
     public async Task WhenGetCollectionWorkspace_ShouldReturnCollectionOfWorkspaces()
     {
         // Arrange
-        var query = new GetCollectionWorkspaceQuery("This is a token");
+        var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery();
 
         var user = UserFactory.Create();
         _security

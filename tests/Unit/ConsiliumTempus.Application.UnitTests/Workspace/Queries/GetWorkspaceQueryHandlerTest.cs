@@ -26,7 +26,7 @@ public class GetWorkspaceQueryHandlerTest
     public async Task HandleGetWorkspaceQuery_WhenIsSuccessful_ShouldReturnWorkspace()
     {
         // Arrange
-        var query = new GetWorkspaceQuery(new Guid("00000000-0000-0000-0000-000000000000"));
+        var query = WorkspaceQueryFactory.CreateGetWorkspaceQuery();
 
         var workspace = WorkspaceFactory.Create();
         _workspaceRepository
@@ -48,7 +48,7 @@ public class GetWorkspaceQueryHandlerTest
     public async Task HandleGetWorkspaceQuery_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var query = new GetWorkspaceQuery(new Guid("00000000-0000-0000-0000-000000000000"));
+        var query = WorkspaceQueryFactory.CreateGetWorkspaceQuery();
 
         // Act
         var outcome = await _uut.Handle(query, default);

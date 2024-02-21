@@ -31,12 +31,7 @@ public class UpdateUserCommandHandlerTest
             .Get(Arg.Any<UserId>())
             .Returns(currentUser);
 
-        var command = new UpdateUserCommand(
-            currentUser.Id.Value,
-            "New First Name",
-            "New Last Name",
-            "Footballer",
-            null);
+        var command = UserCommandFactory.CreateUpdateUserCommand(id: currentUser.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -54,12 +49,7 @@ public class UpdateUserCommandHandlerTest
     public async Task WhenUpdateUserCommandIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var command = new UpdateUserCommand(
-            Guid.NewGuid(),
-            "New First Name",
-            "New Last Name",
-            null,
-            null);
+        var command = UserCommandFactory.CreateUpdateUserCommand();
 
         // Act
         var outcome = await _uut.Handle(command, default);

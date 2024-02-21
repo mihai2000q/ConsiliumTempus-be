@@ -26,7 +26,7 @@ public class GetUserQueryHandlerTest
     public async Task WhenGetUserQueryIsSuccessful_ShouldReturnUser()
     {
         // Arrange
-        var query = new GetUserQuery(Guid.NewGuid());
+        var query = UserQueryFactory.CreateGetUserQuery();
 
         var user = UserFactory.Create();
         _userRepository
@@ -49,7 +49,7 @@ public class GetUserQueryHandlerTest
     public async Task WhenGetUserQueryIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var query = new GetUserQuery(Guid.NewGuid());
+        var query = UserQueryFactory.CreateGetUserQuery();
 
         // Act
         var outcome = await _uut.Handle(query, default);
