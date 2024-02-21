@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.UnitTests.TestData.User.Commands;
 using ConsiliumTempus.Application.User.Commands.Update;
+using ConsiliumTempus.Common.UnitTests.User;
 
 namespace ConsiliumTempus.Application.UnitTests.User.Commands.Update;
 
@@ -40,5 +41,20 @@ public class UpdateUserCommandValidatorTest
         outcome.IsValid.Should().BeFalse();
         outcome.Errors.Should().HaveCount(expectedErrors);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
+    }
+    
+    [Fact]
+    public async Task WhenIdIsInvalid_ShouldReturnFalse()
+    {
+        // Arrange
+        var command = UserCommandFactory.CreateUpdateUserCommand(id: Guid.Empty);
+        
+        // Act
+        var outcome = await _uut.ValidateAsync(command);
+
+        // Assert
+        outcome.IsValid.Should().BeFalse();
+        outcome.Errors.Should().HaveCount(1);
+        outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(nameof(command.Id)));
     }
 }

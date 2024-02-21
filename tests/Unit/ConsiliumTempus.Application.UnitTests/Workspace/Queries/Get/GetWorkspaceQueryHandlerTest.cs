@@ -5,7 +5,7 @@ using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
-namespace ConsiliumTempus.Application.UnitTests.Workspace.Queries;
+namespace ConsiliumTempus.Application.UnitTests.Workspace.Queries.Get;
 
 public class GetWorkspaceQueryHandlerTest
 {

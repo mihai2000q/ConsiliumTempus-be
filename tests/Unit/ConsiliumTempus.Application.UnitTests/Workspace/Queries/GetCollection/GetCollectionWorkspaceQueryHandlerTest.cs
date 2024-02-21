@@ -5,7 +5,7 @@ using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Application.UnitTests.Workspace.Queries;
+namespace ConsiliumTempus.Application.UnitTests.Workspace.Queries.GetCollection;
 
 public class GetCollectionWorkspaceQueryHandlerTest
 {

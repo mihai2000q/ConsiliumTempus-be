@@ -1,39 +1,38 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
-using ConsiliumTempus.Application.Workspace.Commands.Delete;
+using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
-namespace ConsiliumTempus.Application.UnitTests.Workspace.Commands;
+namespace ConsiliumTempus.Application.UnitTests.Workspace.Commands.Update;
 
-public class DeleteWorkspaceCommandHandlerTest
+public class UpdateWorkspaceCommandHandlerTest
 {
     #region Setup
 
     private readonly IWorkspaceRepository _workspaceRepository;
-    private readonly DeleteWorkspaceCommandHandler _uut;
+    private readonly UpdateWorkspaceCommandHandler _uut;
 
-    public DeleteWorkspaceCommandHandlerTest()
+    public UpdateWorkspaceCommandHandlerTest()
     {
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
-        _uut = new DeleteWorkspaceCommandHandler(_workspaceRepository);
+        _uut = new UpdateWorkspaceCommandHandler(_workspaceRepository);
     }
 
     #endregion
 
     [Fact]
-    public async Task WhenDeleteWorkspaceHandleIsSuccessful_ShouldDeleteAndReturnDeleteResult()
+    public async Task WhenUpdateWorkspaceIsSuccessful_ShouldUpdateAndReturnNewWorkspace()
     {
         // Arrange
-        var command = new DeleteWorkspaceCommand(Guid.NewGuid());
-
         var workspace = WorkspaceFactory.Create();
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
+        var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand(id: workspace.Id.Value);
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
@@ -41,19 +40,16 @@ public class DeleteWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _workspaceRepository
-            .Received(1)
-            .Remove(Arg.Is<WorkspaceAggregate>(w => w == workspace));
 
         outcome.IsError.Should().BeFalse();
-        outcome.Value.Should().Be(new DeleteWorkspaceResult());
+        Utils.Workspace.AssertFromUpdateCommand(outcome.Value.Workspace, command);
     }
 
     [Fact]
-    public async Task WhenDeleteWorkspaceHandleIsInvalid_ShouldReturnNotFoundError()
+    public async Task WhenUpdateWorkspaceIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var command = new DeleteWorkspaceCommand(Guid.NewGuid());
+        var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand();
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -62,9 +58,6 @@ public class DeleteWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _workspaceRepository
-            .DidNotReceive()
-            .Remove(Arg.Any<WorkspaceAggregate>());
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }
