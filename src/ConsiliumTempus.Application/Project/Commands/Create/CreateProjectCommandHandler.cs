@@ -1,5 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Security;
+using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
@@ -10,7 +10,7 @@ using MediatR;
 namespace ConsiliumTempus.Application.Project.Commands.Create;
 
 public sealed class CreateProjectCommandHandler(
-    ISecurity security,
+    ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository,
     IProjectRepository projectRepository)
     : IRequestHandler<CreateProjectCommand, ErrorOr<CreateProjectResult>>
@@ -23,7 +23,7 @@ public sealed class CreateProjectCommandHandler(
 
         if (workspace is null) return Errors.Workspace.NotFound;
 
-        var user = await security.GetUserFromToken(command.Token, cancellationToken);
+        var user = await currentUserProvider.GetCurrentUser(cancellationToken);
 
         var project = ProjectAggregate.Create(
             Name.Create(command.Name),

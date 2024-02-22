@@ -5,6 +5,4 @@ namespace ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
 public interface IJwtTokenGenerator
 {
     string GenerateToken(UserAggregate userAggregate);
-    
-    public string GetUserIdFromToken(string plainToken);
 }

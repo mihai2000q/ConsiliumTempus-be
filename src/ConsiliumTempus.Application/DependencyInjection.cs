@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using ConsiliumTempus.Application.Common.Behaviors;
-using ConsiliumTempus.Application.Common.Security;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,9 +18,7 @@ public static class DependencyInjection
         });
         
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-        services.AddScoped<ISecurity, Security>();
-
+        
         return services;
     }
 }

@@ -7,6 +7,5 @@ public sealed record CreateProjectCommand(
     Guid WorkspaceId,
     string Name,
     string Description,
-    bool IsPrivate,
-    string Token) 
+    bool IsPrivate) 
     : IRequest<ErrorOr<CreateProjectResult>>;

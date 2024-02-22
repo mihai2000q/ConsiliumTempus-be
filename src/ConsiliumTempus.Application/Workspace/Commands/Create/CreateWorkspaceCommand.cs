@@ -4,5 +4,4 @@ namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
 public sealed record CreateWorkspaceCommand(
     string Name,
-    string Description,
-    string Token) : IRequest<CreateWorkspaceResult>;
+    string Description) : IRequest<CreateWorkspaceResult>;
