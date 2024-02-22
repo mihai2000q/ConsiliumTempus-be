@@ -18,7 +18,7 @@ public class ProjectControllerDeleteTest(
     public async Task WhenProjectDeleteSucceeds_ShouldDeleteAndReturnSuccessResponse()
     {
         // Arrange
-        const string id = "10000000-0000-0000-0000-000000000";
+        const string id = "10000000-0000-0000-0000-000000000000";
         
         // Act
         var outcome = await Client.DeleteAsync($"api/projects/{id}");

@@ -33,14 +33,6 @@ public class AuthenticationControllerTest(
         var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
 
         // Assert
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Users.Should().HaveCount(2);
-        var createdUser = dbContext.Users
-            .Include(u => u.Memberships)
-            .ThenInclude(m => m.Workspace)
-            .Single(u => u.Credentials.Email == request.Email.ToLower());
-        Utils.User.AssertRegistration(createdUser, request);
-
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<RegisterResponse>();
@@ -50,6 +42,14 @@ public class AuthenticationControllerTest(
             request.Email.ToLower(),
             request.FirstName.CapitalizeWord(),
             request.LastName.CapitalizeWord());
+        
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Users.Should().HaveCount(2);
+        var createdUser = dbContext.Users
+            .Include(u => u.Memberships)
+            .ThenInclude(m => m.Workspace)
+            .Single(u => u.Credentials.Email == request.Email.ToLower());
+        Utils.User.AssertRegistration(createdUser, request);
     }
 
     [Fact]
@@ -68,11 +68,12 @@ public class AuthenticationControllerTest(
         var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
 
         // Assert
+        await outcome.ValidateError(Errors.User.DuplicateEmail);
+        
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users.Should().HaveCount(1);
-        dbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower()).Should().NotBeNull();
-
-        await outcome.ValidateError(Errors.User.DuplicateEmail);
+        dbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
+            .Should().NotBeNull();
     }
 
     [Fact]
@@ -105,12 +106,12 @@ public class AuthenticationControllerTest(
         var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
 
         // Assert
+        await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
+        
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users
             .SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
             .Should().BeNull();
-
-        await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
     }
 
     [Fact]
@@ -125,11 +126,11 @@ public class AuthenticationControllerTest(
         var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
 
         // Assert
+        await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
+        
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users
             .SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
             .Should().NotBeNull();
-
-        await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
     }
 }
