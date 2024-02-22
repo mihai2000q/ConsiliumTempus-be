@@ -95,7 +95,7 @@ public class ValidationBehaviorTest
     public async Task WhenValidatorIsNull_ShouldInvokeNextBehavior()
     {
         // Arrange
-        _uut = new();
+        _uut = new ValidationBehavior<CreateProjectCommand, ErrorOr<CreateProjectResult>>();
 
         var command = ProjectCommandFactory.CreateCreateProjectCommand();
 

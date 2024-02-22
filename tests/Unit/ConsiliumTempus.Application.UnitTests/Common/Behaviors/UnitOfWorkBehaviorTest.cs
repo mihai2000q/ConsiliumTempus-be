@@ -24,21 +24,21 @@ public class UnitOfWorkBehaviorTest
     public async Task WhenItIsCommandAndSuccessful_ShouldSaveChangesAndInvokeNextBehavior()
     {
         // Arrange
-        var _uut = new UnitOfWorkBehavior<CreateProjectCommand, ErrorOr<CreateProjectResult>>(_unitOfWork);
-        var _nextBehavior = Substitute.For<RequestHandlerDelegate<ErrorOr<CreateProjectResult>>>();
+        var uut = new UnitOfWorkBehavior<CreateProjectCommand, ErrorOr<CreateProjectResult>>(_unitOfWork);
+        var nextBehavior = Substitute.For<RequestHandlerDelegate<ErrorOr<CreateProjectResult>>>();
 
         var result = new CreateProjectResult();
-        _nextBehavior
+        nextBehavior
             .Invoke()
             .Returns(result);
 
         var command = ProjectCommandFactory.CreateCreateProjectCommand();
 
         // Act
-        var outcome = await _uut.Handle(command, _nextBehavior, default);
+        var outcome = await uut.Handle(command, nextBehavior, default);
 
         // Assert
-        await _nextBehavior
+        await nextBehavior
             .Received(1)
             .Invoke();
         await _unitOfWork
@@ -53,21 +53,21 @@ public class UnitOfWorkBehaviorTest
     public async Task WhenItIsCommandAndHasErrors_ShouldInvokeNextBehavior()
     {
         // Arrange
-        var _uut = new UnitOfWorkBehavior<CreateProjectCommand, ErrorOr<CreateProjectResult>>(_unitOfWork);
-        var _nextBehavior = Substitute.For<RequestHandlerDelegate<ErrorOr<CreateProjectResult>>>();
+        var uut = new UnitOfWorkBehavior<CreateProjectCommand, ErrorOr<CreateProjectResult>>(_unitOfWork);
+        var nextBehavior = Substitute.For<RequestHandlerDelegate<ErrorOr<CreateProjectResult>>>();
 
         var error = Errors.Workspace.NotFound;
-        _nextBehavior
+        nextBehavior
             .Invoke()
             .Returns(error);
 
         var command = ProjectCommandFactory.CreateCreateProjectCommand();
 
         // Act
-        var outcome = await _uut.Handle(command, _nextBehavior, default);
+        var outcome = await uut.Handle(command, nextBehavior, default);
 
         // Assert
-        await _nextBehavior
+        await nextBehavior
             .Received(1)
             .Invoke();
         _unitOfWork.DidNotReceive();
@@ -79,21 +79,21 @@ public class UnitOfWorkBehaviorTest
     public async Task WhenItIsCommandAndCannotHaveErrors_ShouldSaveAndInvokeNextBehavior()
     {
         // Arrange
-        var _uut = new UnitOfWorkBehavior<CreateWorkspaceCommand, CreateWorkspaceResult>(_unitOfWork);
-        var _nextBehavior = Substitute.For<RequestHandlerDelegate<CreateWorkspaceResult>>();
+        var uut = new UnitOfWorkBehavior<CreateWorkspaceCommand, CreateWorkspaceResult>(_unitOfWork);
+        var nextBehavior = Substitute.For<RequestHandlerDelegate<CreateWorkspaceResult>>();
 
         var result = new CreateWorkspaceResult(WorkspaceFactory.Create());
-        _nextBehavior
+        nextBehavior
             .Invoke()
             .Returns(result);
 
         var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand();
 
         // Act
-        var outcome = await _uut.Handle(command, _nextBehavior, default);
+        var outcome = await uut.Handle(command, nextBehavior, default);
 
         // Assert
-        await _nextBehavior
+        await nextBehavior
             .Received(1)
             .Invoke();
         await _unitOfWork
@@ -107,21 +107,21 @@ public class UnitOfWorkBehaviorTest
     public async Task WhenItIsNotCommand_ShouldInvokeNextBehavior()
     {
         // Arrange
-        var _uut = new UnitOfWorkBehavior<GetWorkspaceQuery, ErrorOr<WorkspaceAggregate>>(_unitOfWork);
-        var _nextBehavior = Substitute.For<RequestHandlerDelegate<ErrorOr<WorkspaceAggregate>>>();
+        var uut = new UnitOfWorkBehavior<GetWorkspaceQuery, ErrorOr<WorkspaceAggregate>>(_unitOfWork);
+        var nextBehavior = Substitute.For<RequestHandlerDelegate<ErrorOr<WorkspaceAggregate>>>();
 
         var workspace = WorkspaceFactory.Create();
-        _nextBehavior
+        nextBehavior
             .Invoke()
             .Returns(workspace);
 
         var query = WorkspaceQueryFactory.CreateGetWorkspaceQuery();
 
         // Act
-        var outcome = await _uut.Handle(query, _nextBehavior, default);
+        var outcome = await uut.Handle(query, nextBehavior, default);
 
         // Assert
-        await _nextBehavior
+        await nextBehavior
             .Received(1)
             .Invoke();
         _unitOfWork.DidNotReceive();

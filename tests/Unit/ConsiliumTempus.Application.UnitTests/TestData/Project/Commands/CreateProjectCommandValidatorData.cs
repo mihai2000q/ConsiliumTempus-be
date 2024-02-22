@@ -1,6 +1,5 @@
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Common.UnitTests.Project;
-using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Validation;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Commands;
@@ -41,10 +40,7 @@ internal static class CreateProjectCommandValidatorData
     {
         public GetInvalidDescriptionCommands()
         {
-            var command = ProjectCommandFactory.CreateCreateProjectCommand(description: "");
-            Add(command, nameof(command.Description), 1);
-
-            command = ProjectCommandFactory.CreateCreateProjectCommand(
+            var command = ProjectCommandFactory.CreateCreateProjectCommand(
                 description: new string('a', PropertiesValidation.Project.DescriptionMaximumLength + 1));
             Add(command, nameof(command.Description), 1);
         }

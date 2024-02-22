@@ -19,6 +19,6 @@ public sealed class CreateProjectCommandValidator : AbstractValidator<CreateProj
             .MaximumLength(PropertiesValidation.Project.DescriptionMaximumLength);
 
         RuleFor(c => c.IsPrivate)
-            .NotEmpty();
+            .NotNull();
     }
 }
