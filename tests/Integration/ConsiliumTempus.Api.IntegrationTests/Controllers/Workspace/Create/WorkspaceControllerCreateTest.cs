@@ -6,7 +6,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit.Abstractions;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Create;
 
 public class WorkspaceControllerCreateTest(
     ConsiliumTempusWebApplicationFactory factory,

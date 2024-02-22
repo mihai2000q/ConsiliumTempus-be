@@ -25,6 +25,7 @@ public class ProjectSprintControllerCreateValidationTest(
             null);
         
         // Act
+        UseCustomToken("michaelj@gmail.com");
         var outcome = await Client.PostAsJsonAsync("api/projects/sprints", request);
 
         // Assert
@@ -42,6 +43,7 @@ public class ProjectSprintControllerCreateValidationTest(
             null);
         
         // Act
+        UseCustomToken("michaelj@gmail.com");
         var outcome = await Client.PostAsJsonAsync("api/projects/sprints", request);
 
         // Assert

@@ -21,6 +21,7 @@ public class ProjectControllerDeleteTest(
         const string id = "10000000-0000-0000-0000-000000000000";
         
         // Act
+        UseCustomToken("michaelj@gmail.com");
         var outcome = await Client.DeleteAsync($"api/projects/{id}");
 
         // Assert

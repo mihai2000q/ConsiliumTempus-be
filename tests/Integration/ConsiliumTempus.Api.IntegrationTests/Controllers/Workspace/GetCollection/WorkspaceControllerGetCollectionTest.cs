@@ -6,7 +6,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using FluentAssertions;
 using Xunit.Abstractions;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.GetCollection;
 
 public class WorkspaceControllerGetCollectionTest(
     ConsiliumTempusWebApplicationFactory factory, 

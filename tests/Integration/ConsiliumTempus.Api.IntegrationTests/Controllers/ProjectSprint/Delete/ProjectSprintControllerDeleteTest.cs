@@ -21,6 +21,7 @@ public class ProjectSprintControllerDeleteTest(
         const string id = "20000000-0000-0000-0000-000000000000";
         
         // Act
+        UseCustomToken("michaelj@gmail.com");
         var outcome = await Client.DeleteAsync($"api/projects/sprints/{id}");
 
         // Assert
