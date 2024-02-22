@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using ConsiliumTempus.Domain.User;
-using ConsiliumTempus.Infrastructure.Authentication;
+using ConsiliumTempus.Infrastructure.Security.Authentication;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;

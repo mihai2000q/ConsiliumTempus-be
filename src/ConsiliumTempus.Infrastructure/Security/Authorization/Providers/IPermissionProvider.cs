@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
-namespace ConsiliumTempus.Infrastructure.Authorization.Providers;
+namespace ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 
 public interface IPermissionProvider
 {

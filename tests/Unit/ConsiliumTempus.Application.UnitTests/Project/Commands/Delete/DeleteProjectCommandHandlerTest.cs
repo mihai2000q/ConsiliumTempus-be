@@ -6,7 +6,7 @@ using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 
-namespace ConsiliumTempus.Application.UnitTests.Project.Commands;
+namespace ConsiliumTempus.Application.UnitTests.Project.Commands.Delete;
 
 public class DeleteProjectCommandHandlerTest
 {

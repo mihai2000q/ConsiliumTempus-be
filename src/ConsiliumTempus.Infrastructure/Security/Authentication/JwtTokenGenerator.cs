@@ -1,12 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using ConsiliumTempus.Application.Common.Interfaces.Authentication;
+using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
 using ConsiliumTempus.Domain.User;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ConsiliumTempus.Infrastructure.Authentication;
+namespace ConsiliumTempus.Infrastructure.Security.Authentication;
 
 public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTokenGenerator
 {

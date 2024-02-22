@@ -2,8 +2,8 @@
 using System.Net.Http.Headers;
 using ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using ConsiliumTempus.Infrastructure.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
+using ConsiliumTempus.Infrastructure.Security.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

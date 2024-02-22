@@ -1,4 +1,4 @@
-﻿namespace ConsiliumTempus.Infrastructure.Authentication;
+﻿namespace ConsiliumTempus.Infrastructure.Security.Authentication;
 
 public sealed class JwtSettings
 {

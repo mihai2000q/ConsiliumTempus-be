@@ -9,7 +9,7 @@ using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
-namespace ConsiliumTempus.Application.UnitTests.Project.Commands;
+namespace ConsiliumTempus.Application.UnitTests.Project.Commands.Create;
 
 public class CreateProjectCommandHandlerTest
 {

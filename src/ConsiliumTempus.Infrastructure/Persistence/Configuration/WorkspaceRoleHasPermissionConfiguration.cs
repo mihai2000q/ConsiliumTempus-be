@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Relations;
-using ConsiliumTempus.Infrastructure.Authorization;
+using ConsiliumTempus.Infrastructure.Security.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

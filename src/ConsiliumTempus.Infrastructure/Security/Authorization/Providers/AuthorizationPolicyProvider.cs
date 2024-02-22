@@ -1,11 +1,11 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
-using ConsiliumTempus.Infrastructure.Authorization.IsOwner;
-using ConsiliumTempus.Infrastructure.Authorization.Permission;
-using ConsiliumTempus.Infrastructure.Authorization.Token;
+using ConsiliumTempus.Infrastructure.Security.Authorization.IsOwner;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Token;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
-namespace ConsiliumTempus.Infrastructure.Authorization.Providers;
+namespace ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 
 public sealed class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
     : DefaultAuthorizationPolicyProvider(options)

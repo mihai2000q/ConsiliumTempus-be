@@ -1,13 +1,13 @@
 ﻿using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
-using ConsiliumTempus.Infrastructure.Authorization.Http;
-using ConsiliumTempus.Infrastructure.Authorization.Providers;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Http;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-namespace ConsiliumTempus.Infrastructure.Authorization.IsOwner;
+namespace ConsiliumTempus.Infrastructure.Security.Authorization.IsOwner;
 
 public sealed class IsOwnerAuthorizationHandler(IServiceScopeFactory serviceScopeFactory) 
     : AuthorizationHandler<IsOwnerRequirement>

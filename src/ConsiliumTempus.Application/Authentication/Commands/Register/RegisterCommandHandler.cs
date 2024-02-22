@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;

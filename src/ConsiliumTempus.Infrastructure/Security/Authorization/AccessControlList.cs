@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 
-namespace ConsiliumTempus.Infrastructure.Authorization;
+namespace ConsiliumTempus.Infrastructure.Security.Authorization;
 
 public static class AccessControlList
 {

@@ -1,5 +1,5 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Authentication;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
 

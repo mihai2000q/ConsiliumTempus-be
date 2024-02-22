@@ -1,8 +1,8 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
-using ConsiliumTempus.Infrastructure.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;

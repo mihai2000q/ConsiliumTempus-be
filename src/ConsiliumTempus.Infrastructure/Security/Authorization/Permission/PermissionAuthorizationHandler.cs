@@ -1,14 +1,14 @@
 ﻿using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
-using ConsiliumTempus.Infrastructure.Authorization.Http;
-using ConsiliumTempus.Infrastructure.Authorization.Providers;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Http;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-namespace ConsiliumTempus.Infrastructure.Authorization.Permission;
+namespace ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
 
 public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
     : AuthorizationHandler<PermissionRequirement>

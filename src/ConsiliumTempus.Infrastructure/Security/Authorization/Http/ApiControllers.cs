@@ -1,4 +1,4 @@
-﻿namespace ConsiliumTempus.Infrastructure.Authorization.Http;
+﻿namespace ConsiliumTempus.Infrastructure.Security.Authorization.Http;
 
 internal static class ApiControllers
 { 

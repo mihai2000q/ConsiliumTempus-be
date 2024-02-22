@@ -2,7 +2,7 @@
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
-namespace ConsiliumTempus.Infrastructure.Authorization.Providers;
+namespace ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 
 public interface IWorkspaceProvider
 {

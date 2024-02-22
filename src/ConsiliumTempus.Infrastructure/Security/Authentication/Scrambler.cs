@@ -1,7 +1,7 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Authentication;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
 using BC = BCrypt.Net;
 
-namespace ConsiliumTempus.Infrastructure.Authentication;
+namespace ConsiliumTempus.Infrastructure.Security.Authentication;
 
 public sealed class Scrambler : IScrambler
 {

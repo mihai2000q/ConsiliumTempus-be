@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace ConsiliumTempus.Infrastructure.Authorization.IsOwner;
+namespace ConsiliumTempus.Infrastructure.Security.Authorization.IsOwner;
 
 public sealed record IsOwnerRequirement : IAuthorizationRequirement;

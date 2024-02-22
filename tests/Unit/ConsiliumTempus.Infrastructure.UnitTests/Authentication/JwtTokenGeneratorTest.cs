@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using ConsiliumTempus.Common.UnitTests.User;
-using ConsiliumTempus.Infrastructure.Authentication;
+using ConsiliumTempus.Infrastructure.Security.Authentication;
 using ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 using Microsoft.Extensions.Options;
 

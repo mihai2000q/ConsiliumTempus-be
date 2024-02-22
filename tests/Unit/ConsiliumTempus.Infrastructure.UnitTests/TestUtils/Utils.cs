@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using ConsiliumTempus.Domain.User;
-using ConsiliumTempus.Infrastructure.Authentication;
+using ConsiliumTempus.Infrastructure.Security.Authentication;
 using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.TestUtils;

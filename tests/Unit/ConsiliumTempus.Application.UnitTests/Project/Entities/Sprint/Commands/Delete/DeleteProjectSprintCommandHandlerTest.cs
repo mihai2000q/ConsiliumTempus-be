@@ -7,7 +7,7 @@ using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 
-namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Commands;
+namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Commands.Delete;
 
 public class DeleteProjectSprintCommandHandlerTest
 {

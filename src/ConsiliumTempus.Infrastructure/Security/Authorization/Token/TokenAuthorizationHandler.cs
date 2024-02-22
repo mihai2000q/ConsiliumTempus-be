@@ -1,12 +1,12 @@
 ﻿using System.Security.Claims;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
-using ConsiliumTempus.Infrastructure.Authorization.Providers;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-namespace ConsiliumTempus.Infrastructure.Authorization.Token;
+namespace ConsiliumTempus.Infrastructure.Security.Authorization.Token;
 
 public sealed class TokenAuthorizationHandler(IServiceScopeFactory serviceScopeFactory) 
     : AuthorizationHandler<TokenRequirement>

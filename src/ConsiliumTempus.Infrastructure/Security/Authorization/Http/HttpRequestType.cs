@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace ConsiliumTempus.Infrastructure.Authorization.Http;
+namespace ConsiliumTempus.Infrastructure.Security.Authorization.Http;
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 internal static class HttpRequestType

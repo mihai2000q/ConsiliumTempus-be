@@ -1,5 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using ConsiliumTempus.Infrastructure.Authentication;
+using ConsiliumTempus.Infrastructure.Security.Authentication;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 
