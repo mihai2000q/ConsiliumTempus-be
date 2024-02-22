@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Api.Common.Attributes;
-using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Application.Project.Commands.Create;
@@ -17,10 +16,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
     [HttpPost]
     public async Task<IActionResult> Create(CreateProjectRequest request, CancellationToken cancellationToken)
     {
-        var token = GetToken();
-        var command = Mapper.From(request)
-            .AddParameters(ProjectMappingConfig.Token, token)
-            .AdaptToType<CreateProjectCommand>();
+        var command = Mapper.Map<CreateProjectCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
         
         return result.Match(

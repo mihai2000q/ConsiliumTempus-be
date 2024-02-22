@@ -15,18 +15,6 @@ public abstract class ApiController(IMapper mapper, ISender mediator) : Controll
 {
     protected readonly IMapper Mapper = mapper;
     protected readonly ISender Mediator = mediator;
-
-    protected string GetToken()
-    {
-        try
-        {
-            return HttpContext.Request.Headers.Authorization.First()!.Split(" ")[1];
-        }
-        catch (Exception e)
-        {
-            throw new Exception($"Could not read the Token: {e.Message}");
-        }
-    }
     
     protected IActionResult Problem(List<Error> errors)
     {
