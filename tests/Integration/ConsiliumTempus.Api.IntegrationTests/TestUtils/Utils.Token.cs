@@ -11,7 +11,7 @@ internal static partial class Utils
 {
     internal static class Token
     {
-        internal static JwtSecurityToken CreateMock(UserAggregate user, JwtSettings jwtSettings)
+        internal static JwtSecurityToken GenerateValidToken(UserAggregate user, JwtSettings jwtSettings)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(
@@ -37,7 +37,7 @@ internal static partial class Utils
             return securityToken;
         }
 
-        internal static JwtSecurityToken CreateInvalidToken(JwtSettings jwtSettings)
+        internal static JwtSecurityToken GenerateInvalidToken(JwtSettings jwtSettings)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(

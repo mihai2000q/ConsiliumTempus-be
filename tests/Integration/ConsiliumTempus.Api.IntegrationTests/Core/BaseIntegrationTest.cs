@@ -123,11 +123,11 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
 
         if (user is null) throw new Exception("There is no user with that email");
 
-        return Utils.Token.CreateMock(user, JwtSettings);
+        return Utils.Token.GenerateValidToken(user, JwtSettings);
     }
 
     private JwtSecurityToken GetInvalidToken()
     {
-        return Utils.Token.CreateInvalidToken(JwtSettings);
+        return Utils.Token.GenerateInvalidToken(JwtSettings);
     }
 }
