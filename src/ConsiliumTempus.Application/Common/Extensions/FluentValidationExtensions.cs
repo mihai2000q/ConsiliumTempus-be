@@ -21,7 +21,7 @@ public static class FluentValidationExtensions
         return ruleBuilder.Must(e => e.IsValidEmail())
             .WithMessage("'{PropertyName}' must be valid");
     }
-    
+
     public static IRuleBuilderOptions<T, DateOnly?> IsPastDate<T>(this IRuleBuilder<T, DateOnly?> ruleBuilder)
     {
         return ruleBuilder.LessThan(DateOnly.FromDateTime(DateTime.UtcNow));

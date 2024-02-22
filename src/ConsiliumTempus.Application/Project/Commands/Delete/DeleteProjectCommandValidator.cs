@@ -1,9 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace ConsiliumTempus.Application.Project.Commands.Delete;
 
-[SuppressMessage("ReSharper", "UnusedType.Global")]
 public sealed class DeleteProjectCommandValidator : AbstractValidator<DeleteProjectCommand>
 {
     public DeleteProjectCommandValidator()

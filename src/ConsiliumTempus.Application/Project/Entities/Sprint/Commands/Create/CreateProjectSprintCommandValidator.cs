@@ -1,10 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Validation;
+﻿using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 
-[SuppressMessage("ReSharper", "UnusedType.Global")]
 public sealed class CreateProjectSprintCommandValidator : AbstractValidator<CreateProjectSprintCommand>
 {
     public CreateProjectSprintCommandValidator()
