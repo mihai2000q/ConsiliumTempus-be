@@ -1,35 +1,37 @@
 ﻿using System.Net;
+using System.Net.Http.Json;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using FluentAssertions;
 using Xunit.Abstractions;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Delete;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Create;
 
-public class ProjectControllerDeleteAuthorizationTest(
+public class ProjectSprintControllerCreateAuthorizationTest(
     ConsiliumTempusWebApplicationFactory factory,
     ITestOutputHelper testOutputHelper) 
-    : BaseIntegrationTest(factory, testOutputHelper, "Project")
+    : BaseIntegrationTest(factory, testOutputHelper, "ProjectSprint")
 {
     [Fact]
-    public async Task WhenProjectDeleteWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task WhenProjectSprintCreateWithAdminRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulRequest("michaelj@gmail.com");
     }
     
     [Fact]
-    public async Task WhenProjectDeleteWithMemberRole_ShouldReturnForbiddenResponse()
+    public async Task WhenProjectSprintCreateWithMemberRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse("stephenc@gmail.com");
     }
 
     [Fact]
-    public async Task WhenProjectDeleteWithViewRole_ShouldReturnForbiddenResponse()
+    public async Task WhenProjectSprintCreateWithViewRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse("lebronj@gmail.com");
     }
 
     [Fact]
-    public async Task WhenProjectDeleteWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task WhenProjectSprintCreateWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse("leom@gmail.com");
     }
@@ -45,7 +47,7 @@ public class ProjectControllerDeleteAuthorizationTest(
     private async Task AssertForbiddenResponse(string email)
     {
         var outcome = await ArrangeAndAct(email);
-        
+
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -53,10 +55,14 @@ public class ProjectControllerDeleteAuthorizationTest(
     private async Task<HttpResponseMessage> ArrangeAndAct(string email)
     {
         // Arrange
-        const string id = "10000000-0000-0000-0000-000000000000";
+        var request = new CreateProjectSprintRequest(
+            new Guid("10000000-0000-0000-0000-000000000000"),
+            "Sprint 2",
+            null,
+            null);
         
         // Act
         UseCustomToken(email);
-        return await Client.DeleteAsync($"api/projects/{id}");
+        return await Client.PostAsJsonAsync("api/projects/sprints", request);
     }
 }

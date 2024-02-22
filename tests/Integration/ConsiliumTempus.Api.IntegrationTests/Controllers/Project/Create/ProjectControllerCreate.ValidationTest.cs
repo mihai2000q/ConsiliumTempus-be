@@ -14,7 +14,7 @@ public class ProjectControllerCreateValidationTest(
     : BaseIntegrationTest(factory, testOutputHelper, "Project")
 {
     [Fact]
-    public async Task WhenCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task WhenProjectCreateCommandIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = new CreateProjectRequest(
@@ -32,12 +32,12 @@ public class ProjectControllerCreateValidationTest(
     }
     
     [Fact]
-    public async Task WhenCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task WhenProjectCreateCommandIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = new CreateProjectRequest(
             Guid.Empty,
-            "",
+            string.Empty,
             "This is the project description",
             true);
 

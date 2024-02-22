@@ -3,33 +3,33 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using FluentAssertions;
 using Xunit.Abstractions;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Delete;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Delete;
 
-public class ProjectControllerDeleteAuthorizationTest(
+public class ProjectSprintControllerDeleteAuthorizationTest(
     ConsiliumTempusWebApplicationFactory factory,
     ITestOutputHelper testOutputHelper) 
-    : BaseIntegrationTest(factory, testOutputHelper, "Project")
+    : BaseIntegrationTest(factory, testOutputHelper, "ProjectSprint")
 {
     [Fact]
-    public async Task WhenProjectDeleteWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task WhenProjectSprintDeleteWithAdminRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulRequest("michaelj@gmail.com");
     }
     
     [Fact]
-    public async Task WhenProjectDeleteWithMemberRole_ShouldReturnForbiddenResponse()
+    public async Task WhenProjectSprintDeleteWithMemberRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse("stephenc@gmail.com");
     }
 
     [Fact]
-    public async Task WhenProjectDeleteWithViewRole_ShouldReturnForbiddenResponse()
+    public async Task WhenProjectSprintDeleteWithViewRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse("lebronj@gmail.com");
     }
 
     [Fact]
-    public async Task WhenProjectDeleteWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task WhenProjectSprintDeleteWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse("leom@gmail.com");
     }
@@ -45,7 +45,7 @@ public class ProjectControllerDeleteAuthorizationTest(
     private async Task AssertForbiddenResponse(string email)
     {
         var outcome = await ArrangeAndAct(email);
-        
+
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -57,6 +57,6 @@ public class ProjectControllerDeleteAuthorizationTest(
         
         // Act
         UseCustomToken(email);
-        return await Client.DeleteAsync($"api/projects/{id}");
+        return await Client.DeleteAsync($"api/projects/sprints/{id}");
     }
 }
