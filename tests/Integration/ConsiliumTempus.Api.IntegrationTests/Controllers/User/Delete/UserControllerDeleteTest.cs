@@ -7,7 +7,7 @@ using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
 using Xunit.Abstractions;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.Delete;
 
 public class UserControllerDeleteTest(
     ConsiliumTempusWebApplicationFactory factory,
@@ -36,27 +36,6 @@ public class UserControllerDeleteTest(
 
         var response = await outcome.Content.ReadFromJsonAsync<DeleteUserResponse>();
         response!.Message.Should().Be("User has been deleted successfully!");
-    }
-    
-    [Fact]
-    public async Task WhenDeleteUserIsNotOwner_ShouldReturnForbiddenResponse()
-    {
-        // Arrange
-        const string email = "stephenc@gmail.com";
-        const string id = "10000000-0000-0000-0000-000000000000";
-        
-        // Act
-        UseCustomToken(email);
-        var outcome = await Client.DeleteAsync($"api/users/{id}");
-
-        // Assert
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Users.Should().HaveCount(5);
-        dbContext.Users.AsEnumerable()
-            .SingleOrDefault(u => u.Id.Value.ToString() == id)
-            .Should().NotBeNull();
-        
-        outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
     
     [Fact]

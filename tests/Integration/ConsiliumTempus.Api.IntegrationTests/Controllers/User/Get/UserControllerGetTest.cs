@@ -3,7 +3,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
 using Xunit.Abstractions;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.Get;
 
 public class UserControllerGetTest(
     ConsiliumTempusWebApplicationFactory factory,

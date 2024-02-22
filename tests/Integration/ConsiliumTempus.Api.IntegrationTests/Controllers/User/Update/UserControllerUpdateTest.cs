@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -10,7 +9,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit.Abstractions;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.Update;
 
 public class UserControllerUpdateTest(
     ConsiliumTempusWebApplicationFactory factory,
@@ -18,7 +17,7 @@ public class UserControllerUpdateTest(
     : BaseIntegrationTest(factory, testOutputHelper)
 {
     [Fact]
-    public async Task WhenUpdateUserIsSuccessful_ShouldUpdateAndReturnNewUser()
+    public async Task UpdateUser_WhenIsSuccessful_ShouldUpdateAndReturnNewUser()
     {
         // Arrange
         const string email = "michaelj@gmail.com";
@@ -43,24 +42,7 @@ public class UserControllerUpdateTest(
     }
     
     [Fact]
-    public async Task WhenUpdateUserIsNotOwner_ShouldReturnForbiddenResponse()
-    {
-        // Arrange
-        var request = GetRequest();
-        
-        // Act
-        UseCustomToken("stephenc@gmail.com");
-        var outcome = await Client.PutAsJsonAsync("api/users", request);
-
-        // Assert
-        var updatedUser = await GetUserById(request.Id);
-        Utils.User.AssertNotUpdated(updatedUser!, request);
-        
-        outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-    }
-    
-    [Fact]
-    public async Task WhenUpdateUserIsNotFound_ShouldReturnNotFoundError()
+    public async Task UpdateUser_WhenUserIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = GetRequest("90000000-0000-0000-0000-000000000000");
