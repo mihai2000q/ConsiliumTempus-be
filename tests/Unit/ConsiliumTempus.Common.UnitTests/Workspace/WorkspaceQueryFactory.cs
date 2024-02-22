@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
-using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.Workspace;
 
@@ -11,8 +10,8 @@ public static class WorkspaceQueryFactory
         return new GetWorkspaceQuery(id ?? Guid.NewGuid());
     }
 
-    public static GetCollectionWorkspaceQuery CreateGetCollectionWorkspaceQuery(string token = Constants.Token)
+    public static GetCollectionWorkspaceQuery CreateGetCollectionWorkspaceQuery()
     {
-        return new GetCollectionWorkspaceQuery(token);
+        return new GetCollectionWorkspaceQuery();
     }
 }

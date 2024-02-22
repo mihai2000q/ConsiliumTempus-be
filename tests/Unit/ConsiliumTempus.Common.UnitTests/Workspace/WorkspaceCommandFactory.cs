@@ -8,13 +8,11 @@ public static class WorkspaceCommandFactory
 {
     public static CreateWorkspaceCommand CreateCreateWorkspaceCommand(
         string name = Constants.Workspace.Name,
-        string description = Constants.Workspace.Description,
-        string token = Constants.Token)
+        string description = Constants.Workspace.Description)
     {
         return new CreateWorkspaceCommand(
             name, 
-            description, 
-            token);
+            description);
     }
     
     public static UpdateWorkspaceCommand CreateUpdateWorkspaceCommand(

@@ -24,7 +24,7 @@ internal static partial class Utils
         return new Mapper(config);
     }
 
-    internal static HttpContext ResolveHttpContext(ApiController controller)
+    internal static void ResolveHttpContext(ApiController controller)
     {
         var httpContext = Substitute.For<HttpContext>();
         controller.ControllerContext.HttpContext = httpContext;
@@ -34,7 +34,6 @@ internal static partial class Utils
         httpContext
             .RequestServices
             .ReturnsNull();
-        return httpContext;
     }
 
     internal static void ValidateError(this IActionResult response, Error expectedError)

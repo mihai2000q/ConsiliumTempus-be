@@ -9,9 +9,7 @@ using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -20,7 +18,6 @@ public class WorkspaceControllerTest
     #region Setup
 
     private readonly ISender _mediator;
-    private readonly HttpContext _httpContext;
     private readonly WorkspaceController _uut;
 
     public WorkspaceControllerTest()
@@ -30,7 +27,7 @@ public class WorkspaceControllerTest
         _mediator = Substitute.For<ISender>();
         _uut = new WorkspaceController(mapper, _mediator);
 
-        _httpContext = Utils.ResolveHttpContext(_uut);
+        Utils.ResolveHttpContext(_uut);
     }
 
     #endregion
@@ -83,10 +80,6 @@ public class WorkspaceControllerTest
     public async Task GetCollectionWorkspace_ShouldReturnCollectionOfWorkspaces()
     {
         // Arrange
-        const string token = "This-is-a-token";
-        _httpContext.Request.Headers.Authorization
-            .Returns(new StringValues($"Bearer {token}"));
-
         var result = WorkspaceFactory.CreateList();
         _mediator
             .Send(Arg.Any<GetCollectionWorkspaceQuery>())
@@ -96,13 +89,9 @@ public class WorkspaceControllerTest
         var outcome = await _uut.GetCollection(default);
 
         // Assert
-        _httpContext
-            .Received(1);
-
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetCollectionWorkspaceQuery>(
-                query => Utils.Workspace.AssertGetCollectionQuery(query, token)));
+            .Send(Arg.Is<GetCollectionWorkspaceQuery>(query => Utils.Workspace.AssertGetCollectionQuery(query)));
 
         Utils.Workspace.AssertDtos(outcome, result);
     }
@@ -113,10 +102,6 @@ public class WorkspaceControllerTest
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
 
-        const string token = "This-is-the-token";
-        _httpContext.Request.Headers.Authorization
-            .Returns(new StringValues($"Bearer {token}"));
-
         var result = new CreateWorkspaceResult(WorkspaceFactory.Create(request.Name, request.Description));
         _mediator
             .Send(Arg.Any<CreateWorkspaceCommand>())
@@ -126,12 +111,10 @@ public class WorkspaceControllerTest
         var outcome = await _uut.Create(request, default);
 
         // Assert
-        _httpContext.Received(1);
-
         await _mediator
             .Received(1)
             .Send(Arg.Is<CreateWorkspaceCommand>(
-                command => Utils.Workspace.AssertCreateCommand(command, request, token)));
+                command => Utils.Workspace.AssertCreateCommand(command, request)));
 
         Utils.Workspace.AssertDto(outcome, result.Workspace);
     }

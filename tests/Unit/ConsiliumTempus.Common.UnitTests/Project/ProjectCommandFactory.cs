@@ -9,14 +9,12 @@ public static class ProjectCommandFactory
         Guid? workspaceId = null,
         string name = Constants.Project.Name,
         string description = Constants.Project.Description,
-        bool isPrivate = false,
-        string token = Constants.Token)
+        bool isPrivate = false)
     {
         return new CreateProjectCommand(
             workspaceId ?? Guid.NewGuid(), 
             name, 
             description, 
-            isPrivate, 
-            token);
+            isPrivate);
     }
 }

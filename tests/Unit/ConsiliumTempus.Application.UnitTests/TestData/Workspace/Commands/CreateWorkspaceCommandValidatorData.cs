@@ -13,8 +13,7 @@ public static class CreateWorkspaceCommandValidatorData
             Add(WorkspaceCommandFactory.CreateCreateWorkspaceCommand());
             Add(new CreateWorkspaceCommand(
                 "Basketball Team",
-                "This is the team's workspace",
-                "This-is-a-token"));
+                "This is the team's workspace"));
         }
     }
     

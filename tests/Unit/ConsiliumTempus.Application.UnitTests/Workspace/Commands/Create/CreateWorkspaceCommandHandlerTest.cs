@@ -1,5 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Security;
+using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Common.UnitTests.User;
@@ -12,16 +12,16 @@ public class CreateWorkspaceCommandHandlerTest
 {
     #region Setup
 
-    private readonly ISecurity _security;
+    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IWorkspaceRepository _workspaceRepository;
     private readonly CreateWorkspaceCommandHandler _uut;
 
     public CreateWorkspaceCommandHandlerTest()
     {
-        _security = Substitute.For<ISecurity>();
+        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
         _uut = new CreateWorkspaceCommandHandler(
-            _security,
+            _currentUserProvider,
             _workspaceRepository);
     }
 
@@ -34,17 +34,17 @@ public class CreateWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand();
 
         var user = UserFactory.Create();
-        _security
-            .GetUserFromToken(command.Token)
+        _currentUserProvider
+            .GetCurrentUser()
             .Returns(user);
 
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        await _security
+        await _currentUserProvider
             .Received(1)
-            .GetUserFromToken(Arg.Any<string>());
+            .GetCurrentUser();
         await _workspaceRepository
             .Received(1)
             .Add(Arg.Is<WorkspaceAggregate>(workspace =>

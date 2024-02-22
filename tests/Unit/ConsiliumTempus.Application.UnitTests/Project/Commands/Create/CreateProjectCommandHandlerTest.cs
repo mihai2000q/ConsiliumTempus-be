@@ -1,5 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Security;
+using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
@@ -15,18 +15,18 @@ public class CreateProjectCommandHandlerTest
 {
     #region Setup
 
-    private readonly ISecurity _security;
+    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IWorkspaceRepository _workspaceRepository;
     private readonly IProjectRepository _projectRepository;
     private readonly CreateProjectCommandHandler _uut;
 
     public CreateProjectCommandHandlerTest()
     {
-        _security = Substitute.For<ISecurity>();
+        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
         _projectRepository = Substitute.For<IProjectRepository>();
         _uut = new CreateProjectCommandHandler(
-            _security,
+            _currentUserProvider,
             _workspaceRepository,
             _projectRepository);
     }
@@ -45,8 +45,8 @@ public class CreateProjectCommandHandlerTest
             .Returns(workspace);
 
         var user = UserFactory.Create();
-        _security
-            .GetUserFromToken(Arg.Any<string>())
+        _currentUserProvider
+            .GetCurrentUser()
             .Returns(user);
 
         // Act
@@ -56,9 +56,9 @@ public class CreateProjectCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));
-        await _security
+        await _currentUserProvider
             .Received(1)
-            .GetUserFromToken(Arg.Is<string>(token => token == command.Token));
+            .GetCurrentUser();
         await _projectRepository
             .Received(1)
             .Add(Arg.Is<ProjectAggregate>(project =>
@@ -83,7 +83,7 @@ public class CreateProjectCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));
-        _security.DidNotReceive();
+        _currentUserProvider.DidNotReceive();
         _projectRepository.DidNotReceive();
 
         outcome.ValidateError(Errors.Workspace.NotFound);

@@ -1,5 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using ConsiliumTempus.Common.UnitTests.User;
+﻿using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
 using ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 using Microsoft.Extensions.Options;
@@ -48,19 +47,5 @@ public class JwtTokenGeneratorTest
 
         // Assert
         Utils.AssertToken(outcome, user, _jwtSettings);
-    }
-
-    [Fact]
-    public void GetUserIdFromToken_WhenIsValid_ShouldReturnTheUserId()
-    {
-        // Arrange
-        var userId = Guid.NewGuid().ToString();
-        var token = Utils.CreateToken((JwtRegisteredClaimNames.Sub, userId));
-
-        // Act
-        var outcome = _uut.GetUserIdFromToken(token);
-
-        // Assert
-        outcome.Should().Be(userId);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Security;
+using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
@@ -11,15 +11,15 @@ public class GetCollectionWorkspaceQueryHandlerTest
 {
     #region Setup
 
-    private readonly ISecurity _security;
+    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IWorkspaceRepository _workspaceRepository;
     private readonly GetCollectionWorkspaceQueryHandler _uut;
 
     public GetCollectionWorkspaceQueryHandlerTest()
     {
-        _security = Substitute.For<ISecurity>();
+        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
-        _uut = new GetCollectionWorkspaceQueryHandler(_workspaceRepository, _security);
+        _uut = new GetCollectionWorkspaceQueryHandler(_currentUserProvider, _workspaceRepository);
     }
 
     #endregion
@@ -31,8 +31,8 @@ public class GetCollectionWorkspaceQueryHandlerTest
         var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery();
 
         var user = UserFactory.Create();
-        _security
-            .GetUserFromToken(query.Token)
+        _currentUserProvider
+            .GetCurrentUser()
             .Returns(user);
 
         var workspaces = WorkspaceFactory.CreateList();
@@ -44,9 +44,9 @@ public class GetCollectionWorkspaceQueryHandlerTest
         var outcome = await _uut.Handle(query, default);
 
         // Assert
-        await _security
+        await _currentUserProvider
             .Received(1)
-            .GetUserFromToken(Arg.Any<string>());
+            .GetCurrentUser();
         await _workspaceRepository
             .Received(1)
             .GetListForUser(Arg.Any<UserAggregate>());
