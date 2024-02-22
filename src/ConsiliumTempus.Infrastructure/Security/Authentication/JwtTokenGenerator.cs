@@ -37,14 +37,4 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
 
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }
-
-    public string GetUserIdFromToken(string plainToken) =>
-        GetClaimFromToken(plainToken, JwtRegisteredClaimNames.Sub);
-    
-    private static string GetClaimFromToken(string plainToken, string claimType)
-    {
-        var token = new JwtSecurityTokenHandler().ReadJwtToken(plainToken);
-        var claim = token.Claims.Single(c => c.Type == claimType);
-        return claim.Value;
-    }
 }
