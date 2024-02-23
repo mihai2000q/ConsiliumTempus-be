@@ -18,7 +18,7 @@ public class WorkspaceControllerDeleteTest(
     public async Task WorkspaceDelete_WhenItSucceeds_ShouldDeleteAndReturnSuccessResponse()
     {
         // Arrange
-        const string id = "50000000-0000-0000-0000-000000000000";
+        const string id = "30000000-0000-0000-0000-000000000000";
 
         // Act
         UseCustomToken("michaelj@gmail.com");

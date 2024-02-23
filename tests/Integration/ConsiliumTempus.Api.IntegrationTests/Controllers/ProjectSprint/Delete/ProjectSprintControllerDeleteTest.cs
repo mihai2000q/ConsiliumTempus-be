@@ -18,20 +18,20 @@ public class ProjectSprintControllerDeleteTest(
     public async Task WhenProjectSprintDeleteSucceeds_ShouldDeleteAndReturnSuccessResponse()
     {
         // Arrange
-        const string id = "20000000-0000-0000-0000-000000000000";
+        const string id = "10000000-0000-0000-0000-000000000000";
         
         // Act
         UseCustomToken("michaelj@gmail.com");
         var outcome = await Client.DeleteAsync($"api/projects/sprints/{id}");
 
         // Assert
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.ProjectSprints.Should().BeEmpty();
-        
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<DeleteProjectSprintResponse>();
         response!.Message.Should().Be("Project Sprint has been deleted successfully!");
+        
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.ProjectSprints.Should().BeEmpty();
     }
 
     [Fact]
@@ -44,11 +44,11 @@ public class ProjectSprintControllerDeleteTest(
         var outcome = await Client.DeleteAsync($"api/projects/sprints/{id}");
 
         // Assert
+        await outcome.ValidateError(Errors.ProjectSprint.NotFound);
+        
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(1);
         dbContext.ProjectSprints.AsEnumerable()
             .SingleOrDefault(p => p.Id.Value == new Guid(id)).Should().BeNull();
-        
-        await outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }
 }
