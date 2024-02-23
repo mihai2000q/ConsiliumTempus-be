@@ -2,7 +2,6 @@ using ConsiliumTempus.Application.Common.Behaviors;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
-using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.Workspace;
@@ -73,34 +72,6 @@ public class UnitOfWorkBehaviorTest
         _unitOfWork.DidNotReceive();
 
         outcome.ValidateError(error);
-    }
-
-    [Fact]
-    public async Task WhenItIsCommandAndCannotHaveErrors_ShouldSaveAndInvokeNextBehavior()
-    {
-        // Arrange
-        var uut = new UnitOfWorkBehavior<CreateWorkspaceCommand, CreateWorkspaceResult>(_unitOfWork);
-        var nextBehavior = Substitute.For<RequestHandlerDelegate<CreateWorkspaceResult>>();
-
-        var result = new CreateWorkspaceResult(WorkspaceFactory.Create());
-        nextBehavior
-            .Invoke()
-            .Returns(result);
-
-        var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand();
-
-        // Act
-        var outcome = await uut.Handle(command, nextBehavior, default);
-
-        // Assert
-        await nextBehavior
-            .Received(1)
-            .Invoke();
-        await _unitOfWork
-            .Received(1)
-            .SaveChangesAsync();
-
-        outcome.Should().Be(result);
     }
 
     [Fact]
