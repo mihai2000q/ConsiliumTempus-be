@@ -11,8 +11,8 @@ public static class SetupConstants
     
     public const string Environment = "Testing";
     
-    public const string MockDirectoryPath = "../../../MockData/";
-    public const string DefaultUsersFilePath = "../../../MockData/User.sql";
+    public const string MockDirectoryPath = "../../../TestData/";
+    public const string DefaultUsersFilePath = "../../../TestData/User.sql";
 
     public static readonly Table[] TablesToIgnore = [
         nameof(Permission), nameof(WorkspaceRole), nameof(WorkspaceRoleHasPermission)
