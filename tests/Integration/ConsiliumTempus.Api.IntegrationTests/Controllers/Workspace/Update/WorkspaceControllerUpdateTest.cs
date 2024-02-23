@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace;
@@ -20,10 +20,8 @@ public class WorkspaceControllerUpdateTest(
     public async Task WorkspaceUpdate_WhenItSucceeds_ShouldUpdateAndReturnNewWorkspace()
     {
         // Arrange
-        var request = new UpdateWorkspaceRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"),
-            "Workspace New Name",
-            "This is a new description");
+        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(
+            id: new Guid("10000000-0000-0000-0000-000000000000"));
         
         // Act
         var outcome = await Client.PutAsJsonAsync("api/workspaces", request);
@@ -42,10 +40,8 @@ public class WorkspaceControllerUpdateTest(
     public async Task WhenWorkspaceUpdateFails_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = new UpdateWorkspaceRequest(
-            new Guid("90000000-0000-0000-0000-000000000000"),
-            "Workspace New Name",
-            "This is a new description");
+        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(
+            id: new Guid("90000000-0000-0000-0000-000000000000"));
         
         // Act
         var outcome = await Client.PutAsJsonAsync("api/workspaces", request);

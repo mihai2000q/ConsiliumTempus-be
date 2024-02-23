@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using FluentAssertions;
 using Xunit.Abstractions;
@@ -17,12 +17,8 @@ public class UserControllerUpdateValidationTest(
     public async Task UpdateUser_WhenCommandIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = new UpdateUserRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"),
-            "New First Name", 
-            "New Lastname",
-            "Software Developer",
-            null);
+        var request = UserRequestFactory.CreateUpdateUserRequest(
+            id: new Guid("10000000-0000-0000-0000-000000000000"));
         
         // Act
         UseCustomToken("michaelj@gmail.com");
@@ -36,12 +32,10 @@ public class UserControllerUpdateValidationTest(
     public async Task UpdateUser_WhenCommandIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
-        var request = new UpdateUserRequest(
-            Guid.Empty, 
-            "New First Name", 
-            "New Lastname",
-            new string('a', 1000),
-            null);
+        var request = UserRequestFactory.CreateUpdateUserRequest(
+            id: Guid.Empty, 
+            firstName: string.Empty, 
+            role: new string('a', 1000));
         
         // Act
         UseCustomToken("stephenc@gmail.com");

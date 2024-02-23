@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -21,13 +22,7 @@ public class AuthenticationControllerTest(
     public async Task Register_WhenIsSuccessful_ShouldAddNewUserAndReturnToken()
     {
         // Arrange
-        var request = new RegisterRequest(
-            "First",
-            "Last",
-            "FirstLast@Example.com",
-            "Password123",
-            null,
-            null);
+        var request = AuthenticationRequestFactory.CreateRegisterRequest(email: "FirstLast@Example.com");
 
         // Act
         var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
@@ -56,13 +51,7 @@ public class AuthenticationControllerTest(
     public async Task Register_WhenItFails_ShouldReturnDuplicateEmailError()
     {
         // Arrange
-        var request = new RegisterRequest(
-            "Michael",
-            "Jordan",
-            "MichaelJ@Gmail.com",
-            "MichaelJordan2",
-            null,
-            null);
+        var request = AuthenticationRequestFactory.CreateRegisterRequest(email: "MichaelJ@Gmail.com");
 
         // Act
         var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
@@ -80,9 +69,9 @@ public class AuthenticationControllerTest(
     public async Task Login_WhenIsSuccessful_ShouldReturnToken()
     {
         // Arrange
-        var request = new LoginRequest(
-            "MichaelJ@Gmail.com",
-            "MichaelJordan2");
+        var request = AuthenticationRequestFactory.CreateLoginRequest(
+            email: "MichaelJ@Gmail.com",
+            password: "MichaelJordan2");
 
         // Act
         var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
@@ -98,10 +87,8 @@ public class AuthenticationControllerTest(
     public async Task Login_WhenUserIsNotFound_ShouldReturnInvalidCredentialsError()
     {
         // Arrange
-        var request = new LoginRequest(
-            "FirstLast@Example.com",
-            "Password123");
-
+        var request = AuthenticationRequestFactory.CreateLoginRequest(email: "FirstLast@Example.com");
+        
         // Act
         var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
 
@@ -118,9 +105,9 @@ public class AuthenticationControllerTest(
     public async Task Login_WhenPasswordIsWrong_ShouldReturnInvalidCredentialsError()
     {
         // Arrange
-        var request = new LoginRequest(
-            "MichaelJ@Gmail.com",
-            "Password123");
+        var request = AuthenticationRequestFactory.CreateLoginRequest(
+            email: "MichaelJ@Gmail.com",
+            password: "Password123");
 
         // Act
         var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);

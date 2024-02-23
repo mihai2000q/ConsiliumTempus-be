@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using FluentAssertions;
 using Xunit.Abstractions;
 
@@ -16,12 +16,8 @@ public class UserControllerUpdateAuthorizationTest(
     public async Task UpdateUser_WhenUserIsOwner_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = new UpdateUserRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"),
-            "New First Name", 
-            "New Lastname",
-            "Software Developer",
-            null);
+        var request = UserRequestFactory.CreateUpdateUserRequest(
+            id: new Guid("10000000-0000-0000-0000-000000000000"));
         
         // Act
         UseCustomToken("michaelj@gmail.com");
@@ -35,12 +31,8 @@ public class UserControllerUpdateAuthorizationTest(
     public async Task UpdateUser_WhenUserIsNotOwner_ShouldReturnForbiddenResponse()
     {
         // Arrange
-        var request = new UpdateUserRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"),
-            "New First Name", 
-            "New Lastname",
-            null,
-            null);
+        var request = UserRequestFactory.CreateUpdateUserRequest(
+            id: new Guid("10000000-0000-0000-0000-000000000000"));
         
         // Act
         UseCustomToken("stephenc@gmail.com");

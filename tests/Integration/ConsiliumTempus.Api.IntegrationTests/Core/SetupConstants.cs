@@ -4,7 +4,7 @@ using Respawn.Graph;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
-public static class Constants
+public static class SetupConstants
 {
     public const string MsSqlImage = "mcr.microsoft.com/mssql/server:2022-latest";
     public const string DatabasePassword = "StrongPassword123";

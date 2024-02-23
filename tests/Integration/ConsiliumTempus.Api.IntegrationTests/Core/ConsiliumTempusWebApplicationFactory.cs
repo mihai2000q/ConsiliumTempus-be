@@ -20,8 +20,8 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
 {
     private readonly MsSqlContainer _dbContainer =
         new MsSqlBuilder()
-            .WithImage(Constants.MsSqlImage)
-            .WithPassword(Constants.DatabasePassword)
+            .WithImage(SetupConstants.MsSqlImage)
+            .WithPassword(SetupConstants.DatabasePassword)
             .Build();
 
     private DbConnection _dbConnection = null!;
@@ -31,7 +31,7 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment(Constants.Environment);
+        builder.UseEnvironment(SetupConstants.Environment);
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll(typeof(DbContextOptions<ConsiliumTempusDbContext>));
@@ -77,7 +77,7 @@ public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Progra
         {
             DbAdapter = DbAdapter.SqlServer,
             SchemasToInclude = ["dbo"],
-            TablesToIgnore = Constants.TablesToIgnore
+            TablesToIgnore = SetupConstants.TablesToIgnore
         });
     }
 

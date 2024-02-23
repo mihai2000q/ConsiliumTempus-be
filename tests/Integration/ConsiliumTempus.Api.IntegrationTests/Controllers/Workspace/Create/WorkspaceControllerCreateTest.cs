@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +17,7 @@ public class WorkspaceControllerCreateTest(
     public async Task WhenWorkspaceCreateIsSuccessful_ShouldCreateAndReturnNewWorkspace()
     {
         // Arrange
-        var request = new CreateWorkspaceRequest(
-            "My Workspace",
-            "This is your workspace where you can place projects");
+        var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
         
         // Act
         var outcome = await Client.PostAsJsonAsync("api/workspaces", request);

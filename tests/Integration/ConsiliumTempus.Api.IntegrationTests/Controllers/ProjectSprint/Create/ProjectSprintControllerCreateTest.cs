@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Project.Create;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
@@ -21,11 +21,8 @@ public class ProjectSprintControllerCreateTest(
     public async Task WhenProjectSprintCreateSucceeds_ShouldAddAndReturnSuccessResponse()
     {
         // Arrange
-        var request = new CreateProjectSprintRequest(
-            new Guid("20000000-0000-0000-0000-000000000000"),
-            "Sprint 2 - Qualify on Semi-Finals",
-            null,
-            null);
+        var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
+            new Guid("10000000-0000-0000-0000-000000000000"));
         
         // Act
         UseCustomToken("michaelj@gmail.com");
@@ -49,11 +46,8 @@ public class ProjectSprintControllerCreateTest(
     public async Task WhenProjectSprintCreateFails_ShouldReturnProjectNotFoundError()
     {
         // Arrange
-        var request = new CreateProjectSprintRequest(
-            new Guid("20000000-0000-0000-0000-000000000000"),
-            "Sprint 2 - Qualify on Semi-Finals",
-            null,
-            null);
+        var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
+            new Guid("20000000-0000-0000-0000-000000000000"));
         
         // Act
         var outcome = await Client.PostAsJsonAsync("api/projects/sprints", request);

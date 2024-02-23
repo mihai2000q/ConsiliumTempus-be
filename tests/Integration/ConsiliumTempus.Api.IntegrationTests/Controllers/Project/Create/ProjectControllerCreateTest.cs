@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
@@ -19,11 +20,8 @@ public class ProjectControllerCreateTest(
     public async Task WhenProjectCreateSucceeds_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
-        var request = new CreateProjectRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"),
-            "Project Name",
-            "This is the project description",
-            true);
+        var request = ProjectRequestFactory.CreateCreateProjectRequest(
+            new Guid("10000000-0000-0000-0000-000000000000"));
 
         // Act
         UseCustomToken("michaelj@gmail.com");
@@ -50,11 +48,8 @@ public class ProjectControllerCreateTest(
     public async Task WhenProjectCreateFails_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
-        var request = new CreateProjectRequest(
-            new Guid("90000000-0000-0000-0000-000000000000"),
-            "Project Name",
-            "This is the project description",
-            true);
+        var request = ProjectRequestFactory.CreateCreateProjectRequest(
+            new Guid("90000000-0000-0000-0000-000000000000"));
 
         // Act
         var outcome = await Client.PostAsJsonAsync("api/projects", request);

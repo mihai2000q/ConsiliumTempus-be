@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using FluentAssertions;
 using Xunit.Abstractions;
 
@@ -55,11 +55,8 @@ public class ProjectSprintControllerCreateAuthorizationTest(
     private async Task<HttpResponseMessage> ArrangeAndAct(string email)
     {
         // Arrange
-        var request = new CreateProjectSprintRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"),
-            "Sprint 2",
-            null,
-            null);
+        var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
+            new Guid("10000000-0000-0000-0000-000000000000"));
         
         // Act
         UseCustomToken(email);

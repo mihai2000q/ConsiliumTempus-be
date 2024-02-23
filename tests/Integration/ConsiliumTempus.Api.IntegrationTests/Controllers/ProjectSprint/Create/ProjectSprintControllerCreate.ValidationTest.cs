@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using FluentAssertions;
 using Xunit.Abstractions;
@@ -18,11 +18,8 @@ public class ProjectSprintControllerCreateValidationTest(
     public async Task WhenProjectSprintCreateCommandIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = new CreateProjectSprintRequest(
-            new Guid("20000000-0000-0000-0000-000000000000"),
-            "Sprint 2 - Qualify on Semi-Finals",
-            null,
-            null);
+        var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
+            new Guid("10000000-0000-0000-0000-000000000000"));
         
         // Act
         UseCustomToken("michaelj@gmail.com");
@@ -36,11 +33,9 @@ public class ProjectSprintControllerCreateValidationTest(
     public async Task WhenProjectSprintCreateCommandIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
-        var request = new CreateProjectSprintRequest(
-            Guid.Empty,
-            string.Empty,
-            null,
-            null);
+        var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
+            projectId: Guid.Empty, 
+            name: string.Empty);  
         
         // Act
         UseCustomToken("michaelj@gmail.com");

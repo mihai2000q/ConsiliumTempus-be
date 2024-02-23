@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using FluentAssertions;
 using Xunit.Abstractions;
 
@@ -55,11 +55,8 @@ public class ProjectControllerCreateAuthorizationTest(
     private async Task<HttpResponseMessage> ArrangeAndAct(string email)
     {
         // Arrange
-        var request = new CreateProjectRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"),
-            "Project Name",
-            "This is the project description",
-            true);
+        var request = ProjectRequestFactory.CreateCreateProjectRequest(
+            new Guid("10000000-0000-0000-0000-000000000000"));
 
         // Act
         UseCustomToken(email);

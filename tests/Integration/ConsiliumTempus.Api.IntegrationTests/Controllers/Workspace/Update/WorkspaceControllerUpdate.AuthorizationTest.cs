@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using FluentAssertions;
 using Xunit.Abstractions;
 
@@ -54,10 +54,8 @@ public class WorkspaceControllerUpdateAuthorizationTest(
     private async Task<HttpResponseMessage> ArrangeAndAct(string email)
     {
         // Arrange
-        var request = new UpdateWorkspaceRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"),
-            "Workspace New Name",
-            "This is a new description");
+        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(
+            id: new Guid("10000000-0000-0000-0000-000000000000"));
         
         // Act
         UseCustomToken(email);
