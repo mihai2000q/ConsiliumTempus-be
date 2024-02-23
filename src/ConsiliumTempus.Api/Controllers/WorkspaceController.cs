@@ -46,7 +46,10 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         var command = Mapper.Map<CreateWorkspaceCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
 
-        return Ok(Mapper.Map<WorkspaceDto>(result));
+        return result.Match(
+            createResult => Ok(Mapper.Map<WorkspaceDto>(createResult)),
+            Problem
+        );
     }
 
     [HasPermission(Permissions.UpdateWorkspace)]

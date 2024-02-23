@@ -50,6 +50,6 @@ public class CreateWorkspaceCommandHandlerTest
             .Add(Arg.Is<WorkspaceAggregate>(workspace =>
                 Utils.Workspace.AssertFromCreateCommand(workspace, command, user)));
 
-        Utils.Workspace.AssertFromCreateCommand(outcome.Workspace, command, user);
+        Utils.Workspace.AssertFromCreateCommand(outcome.Value.Workspace, command, user);
     }
 }
