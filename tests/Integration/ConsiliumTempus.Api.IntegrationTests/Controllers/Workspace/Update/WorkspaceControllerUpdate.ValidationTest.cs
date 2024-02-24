@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Update;
 
 public class WorkspaceControllerUpdateValidationTest(
-    ConsiliumTempusWebApplicationFactory factory,
+    WebAppFactory factory,
     ITestOutputHelper testOutputHelper) 
     : BaseIntegrationTest(factory, testOutputHelper, "Workspace")
 {

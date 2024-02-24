@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth;
 
 public class AuthenticationControllerValidationTest(
-    ConsiliumTempusWebApplicationFactory factory,
+    WebAppFactory factory,
     ITestOutputHelper testOutputHelper)
     : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
 {

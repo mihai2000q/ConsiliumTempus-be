@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Get;
 
 public class WorkspaceControllerGetTest(
-    ConsiliumTempusWebApplicationFactory factory,
+    WebAppFactory factory,
     ITestOutputHelper testOutputHelper)
     : BaseIntegrationTest(factory, testOutputHelper, "Workspace")
 {

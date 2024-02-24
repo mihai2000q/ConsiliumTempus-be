@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.Update;
 
 public class UserControllerUpdateAuthorizationTest(
-    ConsiliumTempusWebApplicationFactory factory,
+    WebAppFactory factory,
     ITestOutputHelper testOutputHelper) 
     : BaseIntegrationTest(factory, testOutputHelper)
 {

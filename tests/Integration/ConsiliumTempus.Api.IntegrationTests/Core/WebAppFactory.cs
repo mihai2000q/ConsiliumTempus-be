@@ -16,7 +16,7 @@ using Testcontainers.MsSql;
 namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-public class ConsiliumTempusWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly MsSqlContainer _dbContainer =
         new MsSqlBuilder()

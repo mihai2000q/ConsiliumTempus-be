@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
-public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebApplicationFactory>, IAsyncLifetime
+public abstract class BaseIntegrationTest : IClassFixture<WebAppFactory>, IAsyncLifetime
 {
     private readonly ITokenProvider _tokenProvider;
     private readonly Func<Task> _resetDatabase;
@@ -26,7 +26,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ConsiliumTempusWebAppl
     protected readonly JwtSettings JwtSettings = new();
 
     protected BaseIntegrationTest(
-        ConsiliumTempusWebApplicationFactory factory,
+        WebAppFactory factory,
         ITestOutputHelper testOutputHelper,
         string? testDataDirectory = null,
         bool defaultUsers = true)

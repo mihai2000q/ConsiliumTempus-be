@@ -14,7 +14,7 @@ using Xunit.Abstractions;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth;
 
 public class AuthenticationControllerTest(
-    ConsiliumTempusWebApplicationFactory factory,
+    WebAppFactory factory,
     ITestOutputHelper testOutputHelper)
     : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
 {

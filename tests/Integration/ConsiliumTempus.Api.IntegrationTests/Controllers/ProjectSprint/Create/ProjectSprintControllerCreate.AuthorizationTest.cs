@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Create;
 
 public class ProjectSprintControllerCreateAuthorizationTest(
-    ConsiliumTempusWebApplicationFactory factory,
+    WebAppFactory factory,
     ITestOutputHelper testOutputHelper) 
     : BaseIntegrationTest(factory, testOutputHelper, "ProjectSprint")
 {

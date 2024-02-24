@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Create;
 
 public class ProjectControllerCreateTest(
-    ConsiliumTempusWebApplicationFactory factory,
+    WebAppFactory factory,
     ITestOutputHelper testOutputHelper)
     : BaseIntegrationTest(factory, testOutputHelper, "Project")
 {

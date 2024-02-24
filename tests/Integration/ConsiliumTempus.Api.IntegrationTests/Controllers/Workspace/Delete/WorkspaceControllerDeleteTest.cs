@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Delete;
 
 public class WorkspaceControllerDeleteTest(
-    ConsiliumTempusWebApplicationFactory factory,
+    WebAppFactory factory,
     ITestOutputHelper testOutputHelper)
     : BaseIntegrationTest(factory, testOutputHelper, "Workspace")
 {

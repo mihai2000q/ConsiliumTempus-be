@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Delete;
 
 public class ProjectSprintControllerDeleteTest(
-    ConsiliumTempusWebApplicationFactory factory,
+    WebAppFactory factory,
     ITestOutputHelper testOutputHelper) 
     : BaseIntegrationTest(factory, testOutputHelper, "ProjectSprint")
 {
