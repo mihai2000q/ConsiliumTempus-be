@@ -27,8 +27,6 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     private DbConnection _dbConnection = null!;
     private Respawner _respawner = null!;
 
-    public HttpClient HttpClient { get; private set; } = null!;
-
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment(SetupConstants.Environment);
@@ -38,16 +36,16 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
             services.AddDbContext<ConsiliumTempusDbContext>(options =>
                 options.UseSqlServer(_dbContainer.GetConnectionString()));
             services.AddDbContextFactory<ConsiliumTempusDbContext>();
-            
+
             services.AddSingleton<ITokenProvider, TokenProvider>();
-            
+
             services.AddAuthentication(auth =>
                 {
                     auth.DefaultAuthenticateScheme = TestAuthHandler.AuthenticationSchema;
                     auth.DefaultChallengeScheme = TestAuthHandler.AuthenticationSchema;
                 })
                 .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-                    TestAuthHandler.AuthenticationSchema, 
+                    TestAuthHandler.AuthenticationSchema,
                     _ => { });
         });
     }
@@ -64,8 +62,7 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         using var scope = Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ConsiliumTempusDbContext>();
         await dbContext.Database.MigrateAsync();
-        
-        HttpClient = CreateClient();
+
         _dbConnection = new SqlConnection(_dbContainer.GetConnectionString());
         await InitializeRespawner();
     }

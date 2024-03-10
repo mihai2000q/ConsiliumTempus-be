@@ -17,7 +17,7 @@ public abstract class BaseIntegrationTest : IClassFixture<WebAppFactory>, IAsync
     private readonly Func<Task> _resetDatabase;
 
     private readonly string? _testDataDirectory;
-    private Func<string> GetTestDataDirectoryPath => () => SetupConstants.MockDirectoryPath + _testDataDirectory;
+    private Func<string> GetTestDataDirectoryPath => () => SetupConstants.TestDataDirectoryPath + _testDataDirectory;
     private readonly bool _defaultUsers;
 
     protected readonly HttpClient Client;
@@ -35,7 +35,7 @@ public abstract class BaseIntegrationTest : IClassFixture<WebAppFactory>, IAsync
         _resetDatabase = factory.ResetDatabaseAsync;
         _testDataDirectory = testDataDirectory;
         _defaultUsers = defaultUsers;
-        Client = factory.HttpClient;
+        Client = factory.CreateClient();
         TestOutputHelper = testOutputHelper;
         DbContextFactory = factory.Services.GetRequiredService<IDbContextFactory<ConsiliumTempusDbContext>>();
         factory.Services.GetRequiredService<IConfiguration>()
