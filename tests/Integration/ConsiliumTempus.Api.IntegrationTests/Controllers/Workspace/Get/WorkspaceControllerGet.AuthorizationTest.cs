@@ -58,7 +58,7 @@ public class WorkspaceControllerGetAuthorizationTest(
         const string id = "10000000-0000-0000-0000-000000000000";
 
         // Act
-        UseCustomToken(email);
-        return await Client.GetAsync($"api/workspaces/{id}");
+        Client.UseCustomToken(email);
+        return await Client.Get($"api/workspaces/{id}");
     }
 }

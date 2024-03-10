@@ -23,8 +23,8 @@ public class ProjectControllerCreateValidationTest(
             new Guid("10000000-0000-0000-0000-000000000000"));
 
         // Act
-        UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.PostAsJsonAsync("api/projects", request);
+        Client.UseCustomToken("michaelj@gmail.com");
+        var outcome = await Client.Post("api/projects", request);
         
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -37,8 +37,8 @@ public class ProjectControllerCreateValidationTest(
         var request = ProjectRequestFactory.CreateCreateProjectRequest(workspaceId: Guid.Empty, name: string.Empty);
 
         // Act
-        UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.PostAsJsonAsync("api/projects", request);
+        Client.UseCustomToken("michaelj@gmail.com");
+        var outcome = await Client.Post("api/projects", request);
         
         // Assert
         await outcome.ValidateValidationErrors();

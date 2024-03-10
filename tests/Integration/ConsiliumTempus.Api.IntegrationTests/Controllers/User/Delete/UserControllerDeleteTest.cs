@@ -24,8 +24,8 @@ public class UserControllerDeleteTest(
         const string id = "40000000-0000-0000-0000-000000000000";
         
         // Act
-        UseCustomToken(email);
-        var outcome = await Client.DeleteAsync($"api/users/{id}");
+        Client.UseCustomToken(email);
+        var outcome = await Client.Delete($"api/users/{id}");
 
         // Assert
         var dbContext = await DbContextFactory.CreateDbContextAsync();
@@ -47,7 +47,7 @@ public class UserControllerDeleteTest(
         const string id = "90000000-0000-0000-0000-000000000000";
         
         // Act
-        var outcome = await Client.DeleteAsync($"api/users/{id}");
+        var outcome = await Client.Delete($"api/users/{id}");
 
         // Assert
         var dbContext = await DbContextFactory.CreateDbContextAsync();

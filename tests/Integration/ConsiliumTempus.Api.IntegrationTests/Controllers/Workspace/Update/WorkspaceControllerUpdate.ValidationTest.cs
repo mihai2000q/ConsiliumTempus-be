@@ -23,8 +23,8 @@ public class WorkspaceControllerUpdateValidationTest(
             id: new Guid("10000000-0000-0000-0000-000000000000"));
         
         // Act
-        UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.PutAsJsonAsync("api/workspaces", request);
+        Client.UseCustomToken("michaelj@gmail.com");
+        var outcome = await Client.Put("api/workspaces", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -39,8 +39,8 @@ public class WorkspaceControllerUpdateValidationTest(
             name: string.Empty);
         
         // Act
-        UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.PutAsJsonAsync("api/workspaces", request);
+        Client.UseCustomToken("michaelj@gmail.com");
+        var outcome = await Client.Put("api/workspaces", request);
 
         // Assert
         await outcome.ValidateValidationErrors();

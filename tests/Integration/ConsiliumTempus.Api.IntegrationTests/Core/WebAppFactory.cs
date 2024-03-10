@@ -2,12 +2,14 @@
 using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
+using ConsiliumTempus.Infrastructure.Security.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Respawn;
@@ -65,6 +67,18 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
         _dbConnection = new SqlConnection(_dbContainer.GetConnectionString());
         await InitializeRespawner();
+    }
+
+    public AppHttpClient CreateAppClient()
+    {
+        using var scope = Services.CreateScope();
+
+        var tokenProvider = scope.ServiceProvider.GetRequiredService<ITokenProvider>();
+        var dbContextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<ConsiliumTempusDbContext>>();
+        var jwtSettings = new JwtSettings();
+        scope.ServiceProvider.GetRequiredService<IConfiguration>().Bind(JwtSettings.SectionName, jwtSettings);
+
+        return new AppHttpClient(CreateClient(), tokenProvider, dbContextFactory, jwtSettings);
     }
 
     private async Task InitializeRespawner()

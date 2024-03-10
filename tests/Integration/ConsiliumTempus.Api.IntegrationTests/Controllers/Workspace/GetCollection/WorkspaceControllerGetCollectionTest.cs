@@ -21,8 +21,8 @@ public class WorkspaceControllerGetCollectionTest(
         // Arrange
         
         // Act
-        UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.GetAsync("api/Workspaces");
+        Client.UseCustomToken("michaelj@gmail.com");
+        var outcome = await Client.Get("api/Workspaces");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);

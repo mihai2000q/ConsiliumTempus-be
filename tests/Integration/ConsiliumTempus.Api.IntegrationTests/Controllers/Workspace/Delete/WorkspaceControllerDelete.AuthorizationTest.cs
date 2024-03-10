@@ -58,7 +58,7 @@ public class WorkspaceControllerDeleteAuthorizationTest(
         const string id = "10000000-0000-0000-0000-000000000000";
 
         // Act
-        UseCustomToken(email);
-        return await Client.DeleteAsync($"api/workspaces/{id}");
+        Client.UseCustomToken(email);
+        return await Client.Delete($"api/workspaces/{id}");
     }
 }

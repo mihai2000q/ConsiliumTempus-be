@@ -28,8 +28,8 @@ public class UserControllerUpdateTest(
             role: "Software Developer");
         
         // Act
-        UseCustomToken(email);
-        var outcome = await Client.PutAsJsonAsync("api/users", request);
+        Client.UseCustomToken(email);
+        var outcome = await Client.Put("api/users", request);
 
         // Assert
         var updatedUser = await GetUserById(request.Id);
@@ -53,7 +53,7 @@ public class UserControllerUpdateTest(
             id: new Guid("90000000-0000-0000-0000-000000000000"));
         
         // Act
-        var outcome = await Client.PutAsJsonAsync("api/users", request);
+        var outcome = await Client.Put("api/users", request);
 
         // Assert
         (await GetUserById(request.Id)).Should().BeNull();

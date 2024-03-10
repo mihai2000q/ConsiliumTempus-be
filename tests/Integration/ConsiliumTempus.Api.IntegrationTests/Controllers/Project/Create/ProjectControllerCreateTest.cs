@@ -26,8 +26,8 @@ public class ProjectControllerCreateTest(
             new Guid("10000000-0000-0000-0000-000000000000"));
 
         // Act
-        UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.PostAsJsonAsync("api/projects", request);
+        Client.UseCustomToken("michaelj@gmail.com");
+        var outcome = await Client.Post("api/projects", request);
 
         // Assert
         var dbContext = await DbContextFactory.CreateDbContextAsync();
@@ -54,7 +54,7 @@ public class ProjectControllerCreateTest(
             new Guid("90000000-0000-0000-0000-000000000000"));
 
         // Act
-        var outcome = await Client.PostAsJsonAsync("api/projects", request);
+        var outcome = await Client.Post("api/projects", request);
 
         // Assert
         var dbContext = await DbContextFactory.CreateDbContextAsync();

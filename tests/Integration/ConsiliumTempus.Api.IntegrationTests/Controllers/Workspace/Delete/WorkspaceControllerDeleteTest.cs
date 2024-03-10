@@ -23,8 +23,8 @@ public class WorkspaceControllerDeleteTest(
         const string id = "30000000-0000-0000-0000-000000000000";
 
         // Act
-        UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
+        Client.UseCustomToken("michaelj@gmail.com");
+        var outcome = await Client.Delete($"api/workspaces/{id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -46,7 +46,7 @@ public class WorkspaceControllerDeleteTest(
         const string id = "50000000-0000-0000-0000-000000000000";
 
         // Act
-        var outcome = await Client.DeleteAsync($"api/workspaces/{id}");
+        var outcome = await Client.Delete($"api/workspaces/{id}");
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);

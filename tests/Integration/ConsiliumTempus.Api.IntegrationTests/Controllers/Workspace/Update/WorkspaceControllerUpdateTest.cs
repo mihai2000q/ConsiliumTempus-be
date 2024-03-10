@@ -26,7 +26,7 @@ public class WorkspaceControllerUpdateTest(
             id: new Guid("10000000-0000-0000-0000-000000000000"));
         
         // Act
-        var outcome = await Client.PutAsJsonAsync("api/workspaces", request);
+        var outcome = await Client.Put("api/workspaces", request);
 
         // Assert
         await Utils.Workspace.AssertDtoFromResponse(
@@ -46,7 +46,7 @@ public class WorkspaceControllerUpdateTest(
             id: new Guid("90000000-0000-0000-0000-000000000000"));
         
         // Act
-        var outcome = await Client.PutAsJsonAsync("api/workspaces", request);
+        var outcome = await Client.Put("api/workspaces", request);
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);

@@ -27,7 +27,7 @@ public class AuthenticationControllerTest(
         var request = AuthenticationRequestFactory.CreateRegisterRequest(email: "FirstLast@Example.com");
 
         // Act
-        var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
+        var outcome = await Client.Post("/api/auth/Register", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -56,7 +56,7 @@ public class AuthenticationControllerTest(
         var request = AuthenticationRequestFactory.CreateRegisterRequest(email: "MichaelJ@Gmail.com");
 
         // Act
-        var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
+        var outcome = await Client.Post("/api/auth/Register", request);
 
         // Assert
         await outcome.ValidateError(Errors.User.DuplicateEmail);
@@ -76,7 +76,7 @@ public class AuthenticationControllerTest(
             password: "MichaelJordan2");
 
         // Act
-        var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
+        var outcome = await Client.Post("/api/auth/Login", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -92,7 +92,7 @@ public class AuthenticationControllerTest(
         var request = AuthenticationRequestFactory.CreateLoginRequest(email: "FirstLast@Example.com");
         
         // Act
-        var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
+        var outcome = await Client.Post("/api/auth/Login", request);
 
         // Assert
         await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
@@ -112,7 +112,7 @@ public class AuthenticationControllerTest(
             password: "Password123");
 
         // Act
-        var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
+        var outcome = await Client.Post("/api/auth/Login", request);
 
         // Assert
         await outcome.ValidateError(Errors.Authentication.InvalidCredentials);

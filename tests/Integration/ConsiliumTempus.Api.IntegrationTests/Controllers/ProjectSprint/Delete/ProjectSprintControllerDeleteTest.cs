@@ -23,8 +23,8 @@ public class ProjectSprintControllerDeleteTest(
         const string id = "10000000-0000-0000-0000-000000000000";
         
         // Act
-        UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.DeleteAsync($"api/projects/sprints/{id}");
+        Client.UseCustomToken("michaelj@gmail.com");
+        var outcome = await Client.Delete($"api/projects/sprints/{id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -43,7 +43,7 @@ public class ProjectSprintControllerDeleteTest(
         const string id = "20000000-0000-0000-0000-000000000000";
         
         // Act
-        var outcome = await Client.DeleteAsync($"api/projects/sprints/{id}");
+        var outcome = await Client.Delete($"api/projects/sprints/{id}");
 
         // Assert
         await outcome.ValidateError(Errors.ProjectSprint.NotFound);

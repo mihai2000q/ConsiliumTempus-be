@@ -22,7 +22,7 @@ public class WorkspaceControllerCreateTest(
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
         
         // Act
-        var outcome = await Client.PostAsJsonAsync("api/workspaces", request);
+        var outcome = await Client.Post("api/workspaces", request);
 
         // Assert
         var dbContext = await DbContextFactory.CreateDbContextAsync();

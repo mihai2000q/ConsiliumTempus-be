@@ -25,7 +25,7 @@ public class AuthenticationControllerValidationTest(
             email: "FirstLast@Example.com");
 
         // Act
-        var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
+        var outcome = await Client.Post("/api/auth/Register", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -41,7 +41,7 @@ public class AuthenticationControllerValidationTest(
             email: "some wrong email");
 
         // Act
-        var outcome = await Client.PostAsJsonAsync("/api/auth/Register", request);
+        var outcome = await Client.Post("/api/auth/Register", request);
 
         // Assert
         await outcome.ValidateValidationErrors();
@@ -56,7 +56,7 @@ public class AuthenticationControllerValidationTest(
             password: "MichaelJordan2");
 
         // Act
-        var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
+        var outcome = await Client.Post("/api/auth/Login", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -69,7 +69,7 @@ public class AuthenticationControllerValidationTest(
         var request = AuthenticationRequestFactory.CreateLoginRequest(email: "no email");
 
         // Act
-        var outcome = await Client.PostAsJsonAsync("/api/auth/Login", request);
+        var outcome = await Client.Post("/api/auth/Login", request);
 
         // Assert
         await outcome.ValidateValidationErrors();

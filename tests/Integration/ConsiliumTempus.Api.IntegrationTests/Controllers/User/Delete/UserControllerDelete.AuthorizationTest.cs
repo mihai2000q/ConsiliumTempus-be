@@ -20,8 +20,8 @@ public class UserControllerDeleteAuthorizationTest(
         const string id = "40000000-0000-0000-0000-000000000000";
         
         // Act
-        UseCustomToken(email);
-        var outcome = await Client.DeleteAsync($"api/users/{id}");
+        Client.UseCustomToken(email);
+        var outcome = await Client.Delete($"api/users/{id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -35,8 +35,8 @@ public class UserControllerDeleteAuthorizationTest(
         const string id = "10000000-0000-0000-0000-000000000000";
         
         // Act
-        UseCustomToken(email);
-        var outcome = await Client.DeleteAsync($"api/users/{id}");
+        Client.UseCustomToken(email);
+        var outcome = await Client.Delete($"api/users/{id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);

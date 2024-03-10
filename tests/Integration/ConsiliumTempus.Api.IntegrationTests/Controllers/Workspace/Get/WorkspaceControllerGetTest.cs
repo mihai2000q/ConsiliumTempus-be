@@ -19,8 +19,8 @@ public class WorkspaceControllerGetTest(
         const string id = "10000000-0000-0000-0000-000000000000";
 
         // Act
-        UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.GetAsync($"api/workspaces/{id}");
+        Client.UseCustomToken("michaelj@gmail.com");
+        var outcome = await Client.Get($"api/workspaces/{id}");
 
         // Assert
         await Utils.Workspace.AssertDtoFromResponse(
@@ -36,7 +36,7 @@ public class WorkspaceControllerGetTest(
         const string id = "50000000-0000-0000-0000-000000000000";
 
         // Act
-        var outcome = await Client.GetAsync($"api/workspaces/{id}");
+        var outcome = await Client.Get($"api/workspaces/{id}");
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);

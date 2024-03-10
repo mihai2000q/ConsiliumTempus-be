@@ -19,7 +19,7 @@ public class UserControllerGetTest(
         const string id = "10000000-0000-0000-0000-000000000000";
         
         // Act
-        var outcome = await Client.GetAsync($"api/users/{id}");
+        var outcome = await Client.Get($"api/users/{id}");
 
         // Assert
         await Utils.User.AssertDtoFromResponse(
@@ -39,7 +39,7 @@ public class UserControllerGetTest(
         const string id = "90000000-0000-0000-0000-000000000000";
         
         // Act
-        var outcome = await Client.GetAsync($"api/users/{id}");
+        var outcome = await Client.Get($"api/users/{id}");
 
         // Assert
         await outcome.ValidateError(Errors.User.NotFound);

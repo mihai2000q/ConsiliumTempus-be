@@ -60,7 +60,7 @@ public class WorkspaceControllerUpdateAuthorizationTest(
             id: new Guid("10000000-0000-0000-0000-000000000000"));
         
         // Act
-        UseCustomToken(email);
-        return await Client.PutAsJsonAsync("api/workspaces", request);
+        Client.UseCustomToken(email);
+        return await Client.Put("api/workspaces", request);
     }
 }

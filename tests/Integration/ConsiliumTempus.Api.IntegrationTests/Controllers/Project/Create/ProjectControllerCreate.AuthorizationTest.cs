@@ -61,7 +61,7 @@ public class ProjectControllerCreateAuthorizationTest(
             new Guid("10000000-0000-0000-0000-000000000000"));
 
         // Act
-        UseCustomToken(email);
-        return await Client.PostAsJsonAsync("api/projects", request);
+        Client.UseCustomToken(email);
+        return await Client.Post("api/projects", request);
     }
 }

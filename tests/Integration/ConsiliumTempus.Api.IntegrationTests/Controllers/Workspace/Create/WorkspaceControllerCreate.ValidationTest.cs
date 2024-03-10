@@ -22,7 +22,7 @@ public class WorkspaceControllerCreateValidationTest(
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
         
         // Act
-        var outcome = await Client.PostAsJsonAsync("api/workspaces", request);
+        var outcome = await Client.Post("api/workspaces", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -37,7 +37,7 @@ public class WorkspaceControllerCreateValidationTest(
             description: new string('a', 2000));
         
         // Act
-        var outcome = await Client.PostAsJsonAsync("api/workspaces", request);
+        var outcome = await Client.Post("api/workspaces", request);
 
         // Assert
         await outcome.ValidateValidationErrors();
