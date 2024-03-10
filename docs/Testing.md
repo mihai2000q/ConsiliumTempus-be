@@ -162,6 +162,7 @@ The core components are:
 - Test Auth Handler
 
 Together, they provide all the functionalities to write Api Integration Tests.
+Also, keep in mind that a test should be part of a *Collection*.
 
 Unlike the other layers, the Api replaces the *SUT* variable component with the **Client**; 
 therefore, it does not need the *Setup* region either.
