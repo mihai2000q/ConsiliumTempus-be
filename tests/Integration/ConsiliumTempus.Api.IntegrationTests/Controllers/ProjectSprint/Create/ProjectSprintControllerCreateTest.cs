@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -11,6 +12,7 @@ using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Create;
 
+[Collection(nameof(ProjectSprintControllerCollection))]
 public class ProjectSprintControllerCreateTest(
     WebAppFactory factory,
     ITestOutputHelper testOutputHelper) 

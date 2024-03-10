@@ -1,10 +1,12 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
 using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.Get;
 
+[Collection(nameof(UserControllerCollection))]
 public class UserControllerGetTest(
     WebAppFactory factory,
     ITestOutputHelper testOutputHelper) 

@@ -2,12 +2,14 @@
 using System.Net.Http.Json;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using FluentAssertions;
 using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.GetCollection;
 
+[Collection(nameof(WorkspaceControllerCollection))]
 public class WorkspaceControllerGetCollectionTest(
     WebAppFactory factory, 
     ITestOutputHelper testOutputHelper)

@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using FluentAssertions;
@@ -8,6 +9,7 @@ using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Create;
 
+[Collection(nameof(WorkspaceControllerCollection))]
 public class WorkspaceControllerCreateTest(
     WebAppFactory factory,
     ITestOutputHelper testOutputHelper)

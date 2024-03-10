@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -11,6 +12,7 @@ using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.Update;
 
+[Collection(nameof(UserControllerCollection))]
 public class UserControllerUpdateTest(
     WebAppFactory factory,
     ITestOutputHelper testOutputHelper) 

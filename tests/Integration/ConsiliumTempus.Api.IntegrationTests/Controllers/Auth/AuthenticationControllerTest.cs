@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Application.Common.Extensions;
@@ -13,6 +14,7 @@ using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth;
 
+[Collection(nameof(AuthenticationControllerCollection))]
 public class AuthenticationControllerTest(
     WebAppFactory factory,
     ITestOutputHelper testOutputHelper)

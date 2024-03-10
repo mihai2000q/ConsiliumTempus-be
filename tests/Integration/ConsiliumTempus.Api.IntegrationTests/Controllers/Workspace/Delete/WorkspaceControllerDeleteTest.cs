@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
@@ -9,6 +10,7 @@ using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Delete;
 
+[Collection(nameof(WorkspaceControllerCollection))]
 public class WorkspaceControllerDeleteTest(
     WebAppFactory factory,
     ITestOutputHelper testOutputHelper)

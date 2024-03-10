@@ -1,10 +1,12 @@
 ﻿using System.Net;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using FluentAssertions;
 using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Delete;
 
+[Collection(nameof(WorkspaceControllerCollection))]
 public class WorkspaceControllerDeleteAuthorizationTest(
     WebAppFactory factory,
     ITestOutputHelper testOutputHelper)

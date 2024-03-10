@@ -1,12 +1,14 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using ConsiliumTempus.Api.IntegrationTests.Core;
+using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using FluentAssertions;
 using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Create;
 
+[Collection(nameof(ProjectSprintControllerCollection))]
 public class ProjectSprintControllerCreateAuthorizationTest(
     WebAppFactory factory,
     ITestOutputHelper testOutputHelper) 
