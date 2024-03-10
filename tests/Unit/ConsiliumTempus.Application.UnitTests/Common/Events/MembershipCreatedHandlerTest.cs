@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Events;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Domain.Common.Events;
 
 namespace ConsiliumTempus.Application.UnitTests.Common.Events;
@@ -23,7 +24,7 @@ public class MembershipCreatedHandlerTest
     public async Task WhenMembershipIsCreated_ShouldAttachTheWorkspaceRole()
     {
         // Arrange
-        var membership = Mock.Mock.Membership.CreateMock();
+        var membership = MembershipFactory.Create();
         var domainEvent = new MembershipCreated(membership);
 
         // Act

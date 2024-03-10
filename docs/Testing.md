@@ -5,9 +5,11 @@
 * [Integration Testing](#integration-testing)
   * [Coding Convention](#coding-convention-1)
   * [Api Integration](#api-integration)
-    * [Web Application Factory](#web-application-factory)
+    * [Web App Factory](#web-app-factory)
     * [Base Integration Test](#base-integration-test)
+    * [App Http Client](#app-http-client)
     * [Test Auth Handler](#test-auth-handler)
+    * [Collections](#collections)
 
 The backend of the application is tested using the **xUnit** framework. 
 The tests are divided into Unit and Integration Tests.
@@ -154,18 +156,20 @@ The Presentation Layer is exposed through REST, therefore; to test it thoroughly
 Inside the project, the **Core** directory contains the classes that are primordial for Api Integration Testing.
 <br>
 The core components are:
-- Web Application Factory
+- Web App Factory
 - Base Integration Test
+- App Http Client
 - Test Auth Handler
 
 Together, they provide all the functionalities to write Api Integration Tests.
+Also, keep in mind that a test should be part of a *Collection*.
 
 Unlike the other layers, the Api replaces the *SUT* variable component with the **Client**; 
 therefore, it does not need the *Setup* region either.
 
-#### Web Application Factory
+#### Web App Factory
 
-The **Web Application Factory** class creates a Docker Container with the following credentials, by default:
+The **Web App Factory** class creates a Docker Container per *Collection* with the following credentials, by default:
 - **password** = StrongPassword123 (can be changed inside the Constants class)
 - **username** = sa
 - **database name** = master
@@ -178,31 +182,36 @@ It also implements the Async Lifetime interface from the **xUnit Framework**
 which provides two methods for initialization and dispose.
 When initializing, it applies the following:
 - apply the migrations to the database
-- create a singleton HTTP Client
-- finally, create a database connection to start the **Respawner** 
+- create a database connection to start the **Respawner** 
 that will reset the state of the container after each running method
 
 #### Base Integration Test
 
 This class also implements the Async Lifetime so that it can reset the Database on disposing
 (which happens after each method runs).
-This class also borrows a singleton http client from the factory, 
-and initializes the Jwt Settings from the Testing configuration (`appsettings.Testing.json`).
+This class also instantiates the **App Http Client** and the Jwt Settings from the Testing configuration 
+(`appsettings.Testing.json`).
 The database is capable of reinitializing state, 
-therefore, inside the initialize task, it will add datasets from multiple sql files from within a directory.
+therefore, inside the initialize task method, 
+it will add datasets from multiple sql files from within the Test Data directory.
 The subclass will be able to mention the directory name
-if it wants a certain state of the database (only one dataset per test class).
-To add more datasets, go to the `MockData` package inside the project 
+if it wants a certain state of the database (generally only one dataset per test collection).
+To add more datasets, go to the `TestData` package inside the project 
 (do not add multi-line comments) and add a directory with as many sql files you need.
-Each sql file represents a table inside the database.
+Each sql file represents a table inside the database. 
+Also, make sure they are in the right order, so that the constraints apply.
 
 By default, inside the database there will be a dataset of Users 
 (can be deactivated per Test on the constructor parameters).
-Those Users can be modified inside the sole table inside the `MockData` directory (`User.sql`).
-The base class also provides a way to create custom tokens based on email. 
-To use a custom Token for each test method, make use of the method `UseCustomToken` and pass the email of the user.
+Those Users can be modified inside the sole table inside the `TestData` directory (`User.sql`).
 
 This class is intended to be extended for each test so that the **Client** and the **Docker Container** are initialized.
+
+#### App Http Client
+
+The **App Http Client** represents a wrapper class for the *Http Client* provided by dotnet core. 
+Besides wrapping, it also provides a way to create custom tokens based on email.
+To use a custom Token for each test method, make use of the method `UseCustomToken` and pass the email of the user.
 
 #### Test Auth Handler
 
@@ -213,4 +222,14 @@ However, those that require authorization will, typically, require a Token as we
 
 The Handler also makes use of the **Token Provider** interface, 
 that is injecting a singleton service which provides a custom token 
-(the method: *Use Custom Token* from the Base Integration Test class makes use of this provider).
+(the method: *Use Custom Token* from the App Http Client class makes use of this provider).
+
+#### Collections
+
+Each package of the integration tests is generally going to share the initial database state
+and then use **Respawner** to reinitialize the state. 
+More precise, the testing strategy is one container per collection. 
+To create a collection, go to `TestCollection` and add one that extends the `ICollectionFixture<WebAppFactory>`.
+
+Generally, for an integration test to work,
+it will need to be part of a *collection* and extend the *base integration test* class

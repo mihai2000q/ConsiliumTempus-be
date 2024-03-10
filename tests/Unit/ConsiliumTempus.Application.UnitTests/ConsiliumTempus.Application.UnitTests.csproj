@@ -26,6 +26,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\src\ConsiliumTempus.Application\ConsiliumTempus.Application.csproj"/>
+        <ProjectReference Include="..\ConsiliumTempus.Common.UnitTests\ConsiliumTempus.Common.UnitTests.csproj" />
     </ItemGroup>
 
 </Project>

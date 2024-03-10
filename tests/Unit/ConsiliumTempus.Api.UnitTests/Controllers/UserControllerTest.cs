@@ -1,12 +1,11 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.User.Delete;
-using ConsiliumTempus.Api.Contracts.User.Get;
-using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Delete;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Application.User.Queries.Get;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,9 +34,9 @@ public class UserControllerTest
     public async Task GetUser_WhenIsSuccessful_ShouldReturnUser()
     {
         // Arrange
-        var request = new GetUserRequest();
+        var request = UserRequestFactory.CreateGetUserRequest();
 
-        var user = Mock.Mock.User.CreateMock();
+        var user = UserFactory.Create();
         _mediator
             .Send(Arg.Any<GetUserQuery>())
             .Returns(user);
@@ -57,7 +56,7 @@ public class UserControllerTest
     public async Task GetUser_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = new GetUserRequest();
+        var request = UserRequestFactory.CreateGetUserRequest();
 
         var error = Errors.User.NotFound;
         _mediator
@@ -79,14 +78,9 @@ public class UserControllerTest
     public async Task UpdateUser_WhenIsSuccessful_ShouldReturnNewUser()
     {
         // Arrange
-        var request = new UpdateUserRequest(
-            Guid.NewGuid(),
-            "New First Name",
-            "New Last Name",
-            null,
-            null);
+        var request = UserRequestFactory.CreateUpdateUserRequest();
 
-        var result = new UpdateUserResult(Mock.Mock.User.CreateMock());
+        var result = new UpdateUserResult(UserFactory.Create());
         _mediator
             .Send(Arg.Any<UpdateUserCommand>())
             .Returns(result);
@@ -106,12 +100,7 @@ public class UserControllerTest
     public async Task UpdateUser_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = new UpdateUserRequest(
-            Guid.NewGuid(),
-            "New First Name",
-            "New Last Name",
-            null,
-            null);
+        var request = UserRequestFactory.CreateUpdateUserRequest();
 
         var error = Errors.User.NotFound;
         _mediator
@@ -134,7 +123,6 @@ public class UserControllerTest
     {
         // Arrange
         var id = Guid.NewGuid();
-
 
         var result = new DeleteUserResult();
         _mediator

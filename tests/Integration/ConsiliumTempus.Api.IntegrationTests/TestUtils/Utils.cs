@@ -35,4 +35,14 @@ internal static partial class Utils
         var errorCodes = error?.Extensions["errorCodes"] as JsonElement?;
         errorCodes?.ValueKind.Should().Be(JsonValueKind.Array);
     }
+
+    internal static async Task ValidateValidationErrors(this HttpResponseMessage response)
+    {
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        
+        var error = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        error?.Status.Should().Be(StatusCodes.Status400BadRequest);
+        var errorCodes = error?.Extensions["errors"] as JsonElement?;
+        errorCodes?.ValueKind.Should().Be(JsonValueKind.Object);
+    }
 }

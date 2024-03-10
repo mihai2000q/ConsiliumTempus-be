@@ -1,10 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Validation;
+﻿using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Update;
 
-[SuppressMessage("ReSharper", "UnusedType.Global")]
 public sealed class UpdateWorkspaceCommandValidator : AbstractValidator<UpdateWorkspaceCommand>
 {
     public UpdateWorkspaceCommandValidator()
@@ -13,9 +11,11 @@ public sealed class UpdateWorkspaceCommandValidator : AbstractValidator<UpdateWo
             .NotEmpty();
         
         RuleFor(c => c.Name)
+            .NotEmpty()
             .MaximumLength(PropertiesValidation.Workspace.NameMaximumLength);
         
         RuleFor(c => c.Description)
+            .NotNull()
             .MaximumLength(PropertiesValidation.Workspace.DescriptionMaximumLength);
     }
 }

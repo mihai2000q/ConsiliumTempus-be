@@ -16,8 +16,6 @@ namespace ConsiliumTempus.Api.Common.Mapping;
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed class WorkspaceMappingConfig : IRegister
 {
-    public const string Token = "token";
-    
     public void Register(TypeAdapterConfig config)
     {
         GetMappings(config);
@@ -38,9 +36,7 @@ public sealed class WorkspaceMappingConfig : IRegister
     
     private static void CreateMappings(TypeAdapterConfig config)
     {
-        config.NewConfig<CreateWorkspaceRequest, CreateWorkspaceCommand>()
-            .Map(dest => dest.Token, 
-                _ => MapContext.Current!.Parameters[Token]);
+        config.NewConfig<CreateWorkspaceRequest, CreateWorkspaceCommand>();
         
         config.NewConfig<CreateWorkspaceResult, WorkspaceDto>()
             .Map(dest => dest, src => src.Workspace)

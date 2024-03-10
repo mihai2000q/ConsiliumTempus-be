@@ -5,10 +5,9 @@ using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -17,7 +16,6 @@ public class ProjectControllerTest
     #region Setup
 
     private readonly ISender _mediator;
-    private readonly HttpContext _httpContext;
     private readonly ProjectController _uut;
 
     public ProjectControllerTest()
@@ -27,7 +25,7 @@ public class ProjectControllerTest
         _mediator = Substitute.For<ISender>();
         _uut = new ProjectController(mapper, _mediator);
 
-        _httpContext = Utils.ResolveHttpContext(_uut);
+        Utils.ResolveHttpContext(_uut);
     }
 
     #endregion
@@ -36,15 +34,7 @@ public class ProjectControllerTest
     public async Task CreateProject_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
-        var request = new CreateProjectRequest(
-            Guid.NewGuid(),
-            "Project Name",
-            "This is the project description",
-            true);
-
-        const string token = "My-Token";
-        _httpContext.Request.Headers.Authorization
-            .Returns(new StringValues($"Bearer {token}"));
+        var request = ProjectRequestFactory.CreateCreateProjectRequest();
 
         var result = new CreateProjectResult();
         _mediator
@@ -55,12 +45,9 @@ public class ProjectControllerTest
         var outcome = await _uut.Create(request, default);
 
         // Assert
-        _httpContext.Received(1);
-        
         await _mediator
             .Received(1)
-            .Send(Arg.Is<CreateProjectCommand>(
-                command => Utils.Project.AssertCreateCommand(command, request, token)));
+            .Send(Arg.Is<CreateProjectCommand>(command => Utils.Project.AssertCreateCommand(command, request)));
 
         outcome.Should().BeOfType<OkObjectResult>();
         ((OkObjectResult)outcome).Value.Should().BeOfType<CreateProjectResponse>();
@@ -73,15 +60,7 @@ public class ProjectControllerTest
     public async Task CreateProject_WhenWorkspaceIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = new CreateProjectRequest(
-            Guid.NewGuid(),
-            "Project Name",
-            "This is the project description",
-            true);
-
-        const string token = "My-Token";
-        _httpContext.Request.Headers.Authorization
-            .Returns(new StringValues($"Bearer {token}"));
+        var request = ProjectRequestFactory.CreateCreateProjectRequest();
 
         var error = Errors.Workspace.NotFound;
         _mediator
@@ -92,12 +71,9 @@ public class ProjectControllerTest
         var outcome = await _uut.Create(request, default);
 
         // Assert
-        _httpContext.Received(1);
-        
         await _mediator
             .Received(1)
-            .Send(Arg.Is<CreateProjectCommand>(
-                command => Utils.Project.AssertCreateCommand(command, request, token)));
+            .Send(Arg.Is<CreateProjectCommand>(command => Utils.Project.AssertCreateCommand(command, request)));
 
         outcome.ValidateError(error);
     }

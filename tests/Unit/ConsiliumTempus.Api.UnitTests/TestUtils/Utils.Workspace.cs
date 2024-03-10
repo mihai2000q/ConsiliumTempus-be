@@ -23,22 +23,15 @@ internal static partial class Utils
             return true;
         }
 
-        internal static bool AssertGetCollectionQuery(
-            GetCollectionWorkspaceQuery query,
-            string token)
+        internal static bool AssertGetCollectionQuery(GetCollectionWorkspaceQuery query)
         {
-            query.Token.Should().Be(token);
             return true;
         }
 
-        internal static bool AssertCreateCommand(
-            CreateWorkspaceCommand command,
-            CreateWorkspaceRequest request,
-            string token)
+        internal static bool AssertCreateCommand(CreateWorkspaceCommand command, CreateWorkspaceRequest request)
         {
             command.Name.Should().Be(request.Name);
             command.Description.Should().Be(request.Description);
-            command.Token.Should().Be(token);
             return true;
         }
 

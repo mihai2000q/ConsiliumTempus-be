@@ -7,7 +7,7 @@ public class StringExtensionsTest
 {
 
     [Theory]
-    [ClassData(typeof(Data.StringExtensions.GetValidTruncateAggregate))]
+    [ClassData(typeof(StringExtensionsData.GetValidTruncateAggregate))]
     public void TruncateAggregate_WhenValid_ShouldReturnStringWithoutAggregate(string input, string expected)
     {
         // Arrange - parameterized
@@ -111,7 +111,7 @@ public class StringExtensionsTest
     }
 
     [Theory]
-    [ClassData(typeof(Data.StringExtensions.GetValidEmails))]
+    [ClassData(typeof(StringExtensionsData.GetValidEmails))]
     public void IsValidEmail_WhenStringIsValidEmail_ShouldReturnTrue(string input)
     {
         // Arrange - parameterized
@@ -124,7 +124,7 @@ public class StringExtensionsTest
     }
 
     [Theory]
-    [ClassData(typeof(Data.StringExtensions.GetInvalidEmails))]
+    [ClassData(typeof(StringExtensionsData.GetInvalidEmails))]
     public void IsValidEmail_WhenStringIsNotValidEmail_ShouldReturnFalse(string input)
     {
         // Arrange - parameterized
@@ -163,7 +163,7 @@ public class StringExtensionsTest
     }
 
     [Theory]
-    [ClassData(typeof(Data.StringExtensions.GetCapitalizeStrings))]
+    [ClassData(typeof(StringExtensionsData.GetCapitalizeStrings))]
     public void Capitalize_WhenLengthIsOver1_ShouldReturnCapitalizedWords(string input, string expected)
     {
         // Arrange - parameterized

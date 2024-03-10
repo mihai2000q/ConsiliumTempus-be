@@ -7,6 +7,7 @@ namespace ConsiliumTempus.Application.Common.Behaviors;
 public sealed class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork) 
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
+    where TResponse : IErrorOr
 {
     public async Task<TResponse> Handle(
         TRequest request, 
@@ -17,10 +18,7 @@ public sealed class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOfWo
         
         var response = await next();
 
-        if (response is IErrorOr { IsError: false } || response is not IErrorOr)
-        {
-            await unitOfWork.SaveChangesAsync(cancellationToken);
-        }
+        if (!response.IsError) await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return response;
     }

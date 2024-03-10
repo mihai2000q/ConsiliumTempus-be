@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\src\ConsiliumTempus.Api\ConsiliumTempus.Api.csproj" />
+      <ProjectReference Include="..\..\..\src\ConsiliumTempus.Application\ConsiliumTempus.Application.csproj" />
+      <ProjectReference Include="..\..\..\src\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Project\Entities\" />
+    </ItemGroup>
+
+</Project>

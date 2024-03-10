@@ -1,10 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.User.Commands.Update;
 
-[SuppressMessage("ReSharper", "UnusedType.Global")]
 public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 {
     public UpdateUserCommandValidator()
@@ -22,5 +21,8 @@ public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCom
 
         RuleFor(c => c.Role)
             .MaximumLength(PropertiesValidation.User.RoleMaximumLength);
+        
+        RuleFor(c => c.DateOfBirth)
+            .IsPastDate();
     }
 }

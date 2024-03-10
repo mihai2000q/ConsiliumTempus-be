@@ -1,6 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using ConsiliumTempus.Domain.User.ValueObjects;
-using ConsiliumTempus.Infrastructure.Authentication;
+﻿using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Infrastructure.Security.Authentication;
 using ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 using Microsoft.Extensions.Options;
 
@@ -37,31 +36,16 @@ public class JwtTokenGeneratorTest
     public void WhenGenerateToken_ShouldReturnNewToken()
     {
         // Arrange
-        var user = Mock.Mock.User.CreateMock(
-            Credentials.Create(
-                "FirstyLasty@Example.com",
-                "Password123"),
-            FirstName.Create("FirstName"),
-            LastName.Create("LastName"));
+        var user = UserFactory.Create(
+            "FirstyLasty@Example.com",
+            "Password123",
+            "FirstName",
+            "LastName");
         
         // Act
         var outcome = _uut.GenerateToken(user);
 
         // Assert
         Utils.AssertToken(outcome, user, _jwtSettings);
-    }
-
-    [Fact]
-    public void GetUserIdFromToken_WhenIsValid_ShouldReturnTheUserId()
-    {
-        // Arrange
-        var userId = Guid.NewGuid().ToString();
-        var token = Mock.Mock.Token.CreateMock((JwtRegisteredClaimNames.Sub, userId));
-
-        // Act
-        var outcome = _uut.GetUserIdFromToken(token);
-
-        // Assert
-        outcome.Should().Be(userId);
     }
 }

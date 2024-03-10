@@ -1,6 +1,8 @@
 ﻿using ConsiliumTempus.Application.Authentication.Queries.Login;
-using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
+using ConsiliumTempus.Common.UnitTests.Authentication;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.UnitTests.Authentication.Queries;
@@ -28,11 +30,9 @@ public class LoginQueryHandlerTest
     public async Task WhenLoginIsSuccessful_ShouldQueryUserAndReturnNewToken()
     {
         // Arrange
-        var query = new LoginQuery(
-            "Some@Example.com",
-            "Password123");
-        
-        var user = Mock.Mock.User.CreateMock(password: "This is the pass for Password123");
+        var query = AuthenticationQueryFactory.CreateLoginQuery();
+
+        var user = UserFactory.Create(password: "This is the pass for Password123");
         _userRepository
             .GetUserByEmail(query.Email.ToLower())
             .Returns(user);
@@ -68,9 +68,7 @@ public class LoginQueryHandlerTest
     public async Task WhenLoginFailsDueToMissingUser_ShouldReturnInvalidCredentialsError()
     {
         // Arrange
-        var query = new LoginQuery(
-            "Some@Example.com",
-            "Password123");
+        var query = AuthenticationQueryFactory.CreateLoginQuery();
 
         // Act
         var outcome = await _uut.Handle(query, default);
@@ -93,11 +91,9 @@ public class LoginQueryHandlerTest
     public async Task WhenLoginFailsDueToWrongPassword_ShouldReturnInvalidCredentialsError()
     {
         // Arrange
-        var query = new LoginQuery(
-            "Some@Example.com",
-            "Password123");
+        var query = AuthenticationQueryFactory.CreateLoginQuery();
 
-        var user = Mock.Mock.User.CreateMock(query.Email);
+        var user = UserFactory.Create();
         _userRepository
             .GetUserByEmail(query.Email.ToLower())
             .Returns(user);

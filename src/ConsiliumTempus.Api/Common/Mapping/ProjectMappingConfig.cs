@@ -10,8 +10,6 @@ namespace ConsiliumTempus.Api.Common.Mapping;
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed class ProjectMappingConfig : IRegister
 {
-    public const string Token = "token";
-    
     public void Register(TypeAdapterConfig config)
     {
         CreateMappings(config);
@@ -20,9 +18,7 @@ public sealed class ProjectMappingConfig : IRegister
 
     private static void CreateMappings(TypeAdapterConfig config)
     {
-        config.NewConfig<CreateProjectRequest, CreateProjectCommand>()
-            .Map(dest => dest.Token, 
-                _ => MapContext.Current!.Parameters[Token]);
+        config.NewConfig<CreateProjectRequest, CreateProjectCommand>();
 
         config.NewConfig<CreateProjectResult, CreateProjectResponse>();
     }

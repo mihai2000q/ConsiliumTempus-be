@@ -1,11 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Application.Common.Extensions;
+﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.Authentication.Commands.Register;
 
-[SuppressMessage("ReSharper", "UnusedType.Global")]
 public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {
     public RegisterCommandValidator()
@@ -30,5 +28,8 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
 
         RuleFor(c => c.Role)
             .MaximumLength(PropertiesValidation.User.RoleMaximumLength);
+
+        RuleFor(c => c.DateOfBirth)
+            .IsPastDate();
     }
 }

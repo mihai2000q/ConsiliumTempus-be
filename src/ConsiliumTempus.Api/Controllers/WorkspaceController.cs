@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Api.Common.Attributes;
-using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
@@ -35,8 +34,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
     [HttpGet]
     public async Task<IActionResult> GetCollection(CancellationToken cancellationToken)
     {
-        var token = GetToken();
-        var query = new GetCollectionWorkspaceQuery(token);
+        var query = new GetCollectionWorkspaceQuery();
         var result = await Mediator.Send(query, cancellationToken);
 
         return Ok(result.Select(w => Mapper.Map<WorkspaceDto>(w)));
@@ -45,13 +43,13 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
     [HttpPost]
     public async Task<IActionResult> Create(CreateWorkspaceRequest request, CancellationToken cancellationToken)
     {
-        var token = GetToken();
-        var command = Mapper.From(request)
-            .AddParameters(WorkspaceMappingConfig.Token, token)
-            .AdaptToType<CreateWorkspaceCommand>();
+        var command = Mapper.Map<CreateWorkspaceCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
 
-        return Ok(Mapper.Map<WorkspaceDto>(result));
+        return result.Match(
+            createResult => Ok(Mapper.Map<WorkspaceDto>(createResult)),
+            Problem
+        );
     }
 
     [HasPermission(Permissions.UpdateWorkspace)]

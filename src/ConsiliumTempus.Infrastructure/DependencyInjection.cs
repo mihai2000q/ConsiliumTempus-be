@@ -1,16 +1,18 @@
 ﻿using System.Text;
-using ConsiliumTempus.Application.Common.Interfaces.Authentication;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Infrastructure.Authentication;
-using ConsiliumTempus.Infrastructure.Authorization.IsOwner;
-using ConsiliumTempus.Infrastructure.Authorization.Permission;
-using ConsiliumTempus.Infrastructure.Authorization.Providers;
-using ConsiliumTempus.Infrastructure.Authorization.Token;
+using ConsiliumTempus.Application.Common.Interfaces.Security;
+using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using ConsiliumTempus.Infrastructure.Persistence.Repository;
+using ConsiliumTempus.Infrastructure.Security;
+using ConsiliumTempus.Infrastructure.Security.Authentication;
+using ConsiliumTempus.Infrastructure.Security.Authorization.IsOwner;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -68,6 +70,8 @@ public static class DependencyInjection
     private static IServiceCollection AddAppAuthorization(this IServiceCollection services)
     {
         services.AddAuthorization();
+
+        services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 
         services.AddScoped<IWorkspaceProvider, WorkspaceRepository>();
         services.AddScoped<IPermissionProvider, PermissionRepository>();

@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Infrastructure.Authentication;
+﻿using ConsiliumTempus.Infrastructure.Security.Authentication;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.Authentication;
 

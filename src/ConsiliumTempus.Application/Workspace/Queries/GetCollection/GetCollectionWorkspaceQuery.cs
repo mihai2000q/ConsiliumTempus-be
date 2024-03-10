@@ -3,4 +3,4 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 
-public sealed record GetCollectionWorkspaceQuery(string Token) : IRequest<List<WorkspaceAggregate>>;
+public sealed record GetCollectionWorkspaceQuery : IRequest<List<WorkspaceAggregate>>;
