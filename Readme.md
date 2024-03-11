@@ -28,8 +28,8 @@ by following the next steps.
 
 #### Microsoft SDK
 
-This application is written in .NET 7.0; therefore, the developer requires the Microsoft SDK of that version. 
-If you do not have it already, please download it from here `https://dotnet.microsoft.com/en-us/download/dotnet/7.0` 
+This application is written in .NET 8.0; therefore, the developer requires the Microsoft SDK of that version. 
+If you do not have it already, please download it from here `https://dotnet.microsoft.com/en-us/download/dotnet/8.0` 
 (you may have to restart afterward).
 
 #### Docker
@@ -76,7 +76,7 @@ needed for the Database container initialization and appliance of the migrations
 Next, to sync up the Application with the Database, 
 go inside the `appsettings.Development.json` file (inside `src/ConsiliumTempus.Api`), 
 and change the *Server* parameter from **Localhost** to the container name, 
-which by default is **CT-Database**, and also the *Port* from **7123** to **1433**.
+which by default is **CT-Database**, and also the *Port* from **7133** to **1433**.
 
 Once you have the environment files setup, type in the following command:
 

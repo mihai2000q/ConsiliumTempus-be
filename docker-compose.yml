@@ -8,10 +8,11 @@ services:
       dockerfile: Dockerfile
     container_name: CT-Backend
     ports:
-      - "7124:80"
+      - "7124:${HTTP_PORT}"
     depends_on:
       - database
     environment:
+      - ASPNETCORE_HTTP_PORTS=${HTTP_PORT}
       # should be defined in Development Environment to allow loading dotnet user-secrets locally
       - ASPNETCORE_ENVIRONMENT=Development
     volumes:

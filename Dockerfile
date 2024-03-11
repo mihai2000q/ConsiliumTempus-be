@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 
 COPY . app/
 WORKDIR /app
@@ -6,7 +6,7 @@ WORKDIR /app
 RUN dotnet restore
 RUN dotnet publish -c Release --property:OutputPath=out --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 as runtime-env
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 as runtime-env
 
 COPY --from=build-env /app/src .
 
@@ -14,4 +14,4 @@ WORKDIR /ConsiliumTempus.Api/out/
 
 ENTRYPOINT ["dotnet", "ConsiliumTempus.Api.dll"]
 
-EXPOSE 80
+EXPOSE ${ASPNETCORE_HTTP_PORTS}
