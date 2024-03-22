@@ -35,7 +35,6 @@ internal static partial class Utils
             UpdateUserResult result,
             UpdateUserCommand command)
         {
-            result.User.Id.Value.Should().Be(command.Id);
             result.User.FirstName.Value.Should().Be(command.FirstName);
             result.User.LastName.Value.Should().Be(command.LastName);
             if (command.Role is null) 

@@ -8,9 +8,6 @@ public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCom
 {
     public UpdateUserCommandValidator()
     {
-        RuleFor(c => c.Id)
-            .NotEmpty();
-
         RuleFor(c => c.FirstName)
             .NotEmpty()
             .MaximumLength(PropertiesValidation.User.FirstNameMaximumLength);

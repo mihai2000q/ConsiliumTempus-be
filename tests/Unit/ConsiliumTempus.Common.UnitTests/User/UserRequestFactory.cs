@@ -16,14 +16,12 @@ public static class UserRequestFactory
     }
     
     public static UpdateUserRequest CreateUpdateUserRequest(
-        Guid? id = null,
         string firstName = Constants.User.FirstName,
         string lastName = Constants.User.LastName,
         string? role = null,
         DateOnly? dateOfBirth = null)
     {
         return new UpdateUserRequest(
-            id ?? Guid.NewGuid(), 
             firstName, 
             lastName, 
             role, 

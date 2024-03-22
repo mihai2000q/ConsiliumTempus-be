@@ -1,9 +1,7 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.User;
-using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.User.ValueObjects;
 
 namespace ConsiliumTempus.Application.UnitTests.User.Commands.Update;
 
@@ -11,13 +9,13 @@ public class UpdateUserCommandHandlerTest
 {
     #region Setup
 
-    private readonly IUserRepository _userRepository;
+    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly UpdateUserCommandHandler _uut;
 
     public UpdateUserCommandHandlerTest()
     {
-        _userRepository = Substitute.For<IUserRepository>();
-        _uut = new UpdateUserCommandHandler(_userRepository);
+        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
+        _uut = new UpdateUserCommandHandler(_currentUserProvider);
     }
 
     #endregion
@@ -27,38 +25,21 @@ public class UpdateUserCommandHandlerTest
     {
         // Arrange
         var currentUser = UserFactory.Create();
-        _userRepository
-            .Get(Arg.Any<UserId>())
+        _currentUserProvider
+            .GetCurrentUser()
             .Returns(currentUser);
 
-        var command = UserCommandFactory.CreateUpdateUserCommand(id: currentUser.Id.Value);
-
-        // Act
-        var outcome = await _uut.Handle(command, default);
-
-        // Assert
-        await _userRepository
-            .Received(1)
-            .Get(Arg.Is<UserId>(id => id.Value == command.Id));
-
-        outcome.IsError.Should().BeFalse();
-        Utils.User.AssertFromUpdateCommand(outcome.Value, command);
-    }
-
-    [Fact]
-    public async Task WhenUpdateUserCommandIsNotFound_ShouldReturnNotFoundError()
-    {
-        // Arrange
         var command = UserCommandFactory.CreateUpdateUserCommand();
 
         // Act
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        await _userRepository
+        await _currentUserProvider
             .Received(1)
-            .Get(Arg.Is<UserId>(id => id.Value == command.Id));
+            .GetCurrentUser();
 
-        outcome.ValidateError(Errors.User.NotFound);
+        outcome.IsError.Should().BeFalse();
+        Utils.User.AssertFromUpdateCommand(outcome.Value, command);
     }
 }

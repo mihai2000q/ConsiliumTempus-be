@@ -37,7 +37,8 @@ Returns the user [Dto](dto/Dto.User.md).
 
 ### Update
 
-Only the owner of this endpoint (the user in question) can update their data.
+Only the owner of this endpoint (the user in question) can update their data 
+(which is implicit, because the id is not passed, but read from the token).
 
 ```js
 PUT {{host}}/api/users
@@ -45,12 +46,11 @@ PUT {{host}}/api/users
 
 #### Update User Request
 
-Sends body data that the new workspace needs to be updated.
+Sends body data that the new user needs to be updated.
 <br>
 
 ```json
 {
-  "id": "00000000-0000-0000-0000-000000000000",
   "firstName": "New FirstName",
   "lastName": "New lastName",
   "role": null,
@@ -65,13 +65,11 @@ Returns the new user [Dto](dto/Dto.User.md).
 
 ### Delete
 
-Only the owner of this endpoint (the user in question) can update their data.
+Only the owner can update their data (which is implicit, because the id is not passed, but read from the token).
 
 ```js
-DELETE {{host}}/api/users/{id}
+DELETE {{host}}/api/users
 ```
-
-- **id** is a 36 characters strings
 
 #### Delete User Request
 

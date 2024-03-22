@@ -1,8 +1,0 @@
-﻿using ConsiliumTempus.Domain.Common.Enums;
-using Microsoft.AspNetCore.Authorization;
-
-namespace ConsiliumTempus.Api.Common.Attributes;
-
-public sealed class IsOwnerAttribute(Validate policy = Validate.IsOwner)
-    : AuthorizeAttribute(policy.ToString());
-

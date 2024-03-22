@@ -9,7 +9,6 @@ using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using ConsiliumTempus.Infrastructure.Persistence.Repository;
 using ConsiliumTempus.Infrastructure.Security;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
-using ConsiliumTempus.Infrastructure.Security.Authorization.IsOwner;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Token;
@@ -79,7 +78,6 @@ public static class DependencyInjection
         services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
         services.AddSingleton<IAuthorizationHandler, TokenAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
-        services.AddSingleton<IAuthorizationHandler, IsOwnerAuthorizationHandler>();
         
         return services;
     }

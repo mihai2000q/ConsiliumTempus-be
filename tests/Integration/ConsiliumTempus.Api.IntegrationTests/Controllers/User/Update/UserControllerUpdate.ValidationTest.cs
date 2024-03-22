@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestFactory;
@@ -19,8 +18,7 @@ public class UserControllerUpdateValidationTest(
     public async Task UpdateUser_WhenCommandIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = UserRequestFactory.CreateUpdateUserRequest(
-            id: new Guid("10000000-0000-0000-0000-000000000000"));
+        var request = UserRequestFactory.CreateUpdateUserRequest();
         
         // Act
         Client.UseCustomToken("michaelj@gmail.com");
@@ -35,7 +33,6 @@ public class UserControllerUpdateValidationTest(
     {
         // Arrange
         var request = UserRequestFactory.CreateUpdateUserRequest(
-            id: Guid.Empty, 
             firstName: string.Empty, 
             role: new string('a', 1000));
         

@@ -12,7 +12,6 @@ internal static class UpdateUserCommandValidatorData
         {
             Add(UserCommandFactory.CreateUpdateUserCommand());
             Add(new UpdateUserCommand(
-                Guid.NewGuid(),
                 "new Michael",
                 "jackson or Jordan?",
                 "Pro Singer and Basketball Player",
