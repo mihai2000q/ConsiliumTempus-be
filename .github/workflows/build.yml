@@ -11,5 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    steps:
     - name: Build
       uses: ./.github/workflows/build-action
