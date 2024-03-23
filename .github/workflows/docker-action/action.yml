@@ -7,7 +7,7 @@ runs:
   steps:
   - name: Add JWT Settings Secret Key
     run: |
-      sed -i "s/\"SecretKey\": \"\"/\"SecretKey\": \"${{ secrets.SUPER_SECRET_JWT_KEY }}\"/g" ./src/ConsiliumTempus.Api/appsettings.json
+      sed -i "s/\"SecretKey\": \"\"/\"SecretKey\": \"${{ secret-key }}\"/g" ./src/ConsiliumTempus.Api/appsettings.json
 
   - name: Copy Environment File (.env)
     run: cp .env.dev .env
