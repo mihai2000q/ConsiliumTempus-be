@@ -13,10 +13,10 @@ services:
       - database
     environment:
       - ASPNETCORE_HTTP_PORTS=${HTTP_PORT}
-      # should be defined in Development Environment to allow loading dotnet user-secrets locally
+      # # should be defined in Development Environment to allow loading dotnet user-secrets locally
       # - ASPNETCORE_ENVIRONMENT=Development
-    volumes:
-      # map the dotnet user-secret folder
+    # volumes:
+      # # map the dotnet user-secret folder
       # - $APPDATA/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
   database:
