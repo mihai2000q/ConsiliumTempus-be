@@ -2,7 +2,7 @@ name: Testing 🧪
 
 on:
   workflow_run:
-    workflows: ["Build"]
+    workflows: [Build]
     types:  
       - completed
 
