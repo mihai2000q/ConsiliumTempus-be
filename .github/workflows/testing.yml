@@ -50,7 +50,7 @@ jobs:
     
     - name: Setup Docker Environment
       uses: ./.github/workflows/docker-action
-      env: 
+      with: 
         secret-key: ${{ secrets.SUPER_SECRET_JWT_KEY }}
 
     - name: Install Node Dependencies
