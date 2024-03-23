@@ -12,12 +12,12 @@ jobs:
   
   unit-testing:
     runs-on: ubuntu-latest
-    name: Unit Testing 🍇
+    name: Unit Testing
     steps:
     - uses: actions/checkout@v3
 
     - name: Build
-      uses: ./github/workflows/build
+      uses: ./.github/workflows/build
 
     - name: Test
       run: dotnet test --verbosity normal --filter "FullyQualifiedName~UnitTests" --no-build  $BUILD_OUTPUT_PATH
