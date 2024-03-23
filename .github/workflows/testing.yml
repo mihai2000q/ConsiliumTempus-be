@@ -48,19 +48,13 @@ jobs:
       with:
         node-version: lts/*
     
-    # - name: Setup Docker Environment
-    #   uses: ./.github/workflows/docker-action
-    
-    - name: Change Workspace Directory
-      run: cd ./tests/e2e
-
-    - name: current dic
-      run: pwd
+    - name: Setup Docker Environment
+      uses: ./.github/workflows/docker-action
 
     - name: Install Node Dependencies
+      working-directory: ./tests/e2e
       run: npm ci
 
     - name: Install Playwright Browsers
+      working-directory: ./tests/e2e
       run: npx playwright install --with-deps
-
-    
