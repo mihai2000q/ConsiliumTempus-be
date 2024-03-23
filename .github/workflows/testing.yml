@@ -48,24 +48,14 @@ jobs:
       with:
         node-version: lts/*
     
-    - name: Add JWT Settings Secret Key
-      run: |
-        sed -i "s/\"SecretKey\": \"\"/\"SecretKey\": \"${{ secrets.SUPER_SECRET_JWT_KEY }}\"/g" ./src/ConsiliumTempus.Api/appsettings.json
-
-    - name: Copy Environment File (.env)
-      run: cp .env.dev .env
-
-    - name: Run Docker Containers
-      run: docker compose -f docker-compose-prod.yml up -d
-
-    - name: Permission on all scripts
-      run: chmod +x ./scripts/*.sh
-
-    - name: Apply Database Migrations to the Docker Container
-      run: ./scripts/apply-migration-to-database.sh
+    # - name: Setup Docker Environment
+    #   uses: ./.github/workflows/docker-action
     
     - name: Change Workspace Directory
-      run: cd tests/e2e
+      run: cd ./tests/e2e
+
+    - name: current dic
+      run: pwd
 
     - name: Install Node Dependencies
       run: npm ci
