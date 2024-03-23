@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Security;
+using ConsiliumTempus.Application.UnitTests.TestData.User.Commands;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.User;
@@ -19,18 +20,17 @@ public class UpdateUserCommandHandlerTest
     }
 
     #endregion
-
-    [Fact]
-    public async Task WhenUpdateUserCommandIsSuccessful_ShouldReturnNewUser()
+    
+    [Theory]
+    [ClassData(typeof(UpdateUserCommandHandlerData.GetCommands))]
+    public async Task WhenUpdateUserCommandIsSuccessful_ShouldReturnNewUser(UpdateUserCommand command)
     {
         // Arrange
         var currentUser = UserFactory.Create();
         _currentUserProvider
             .GetCurrentUser()
             .Returns(currentUser);
-
-        var command = UserCommandFactory.CreateUpdateUserCommand();
-
+        
         // Act
         var outcome = await _uut.Handle(command, default);
 

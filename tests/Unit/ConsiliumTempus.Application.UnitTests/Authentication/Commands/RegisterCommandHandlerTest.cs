@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
+using ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Authentication;
 using ConsiliumTempus.Common.UnitTests.User;
@@ -31,12 +32,11 @@ public class RegisterCommandHandlerTest
 
     #endregion
 
-    [Fact]
-    public async Task WhenRegisterIsSuccessful_ShouldCreateUserAndReturnNewToken()
+    [Theory]
+    [ClassData(typeof(RegisterCommandHandlerData.GetCommands))]
+    public async Task WhenRegisterIsSuccessful_ShouldCreateUserAndReturnNewToken(RegisterCommand command)
     {
         // Arrange
-        var command = AuthenticationCommandFactory.CreateRegisterCommand();
-
         UserAggregate createdUser = null!;
         _userRepository
             .When(u => u.Add(Arg.Any<UserAggregate>()))

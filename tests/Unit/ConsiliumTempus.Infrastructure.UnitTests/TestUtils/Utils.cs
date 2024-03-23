@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
 using FluentAssertions.Extensions;
@@ -8,15 +7,6 @@ namespace ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 
 internal static class Utils
 {
-    public static string CreateToken(params (string, string)[] claims)
-    {
-        var tokenClaims = claims.Select(c => new Claim(c.Item1, c.Item2)).ToArray();
-
-        var securityToken = new JwtSecurityToken(claims: tokenClaims);
-
-        return new JwtSecurityTokenHandler().WriteToken(securityToken);
-    }
-    
     internal static void AssertToken(string token, UserAggregate user, JwtSettings jwtSettings)
     {
         var handler = new JwtSecurityTokenHandler();
