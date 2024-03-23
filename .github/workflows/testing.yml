@@ -9,16 +9,11 @@ on:
 jobs:
   
   unit-test:
-    name: Unit Testing
-    
     uses: ./.github/workflows/build.yml
     with:
       test-env: UnitTests
   
   integration-test:
-    name: Integration Testing
-    timeout-minutes: 15
-
     uses: ./.github/workflows/build.yml
     with:
-      test-env: UnitTests
+      test-env: IntegrationTests
