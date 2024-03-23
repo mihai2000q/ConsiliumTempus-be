@@ -1,7 +1,11 @@
 name: Build 🔨
 
 on:
-  workflow_call:
+  workflow_call: 
+    inputs:
+      test-env:
+        type: string
+        required: true
   push:
     branches: [ "develop" ]
   pull_request:
@@ -24,3 +28,6 @@ jobs:
       
     - name: Build app
       run: dotnet build --no-restore
+    
+    - name: Test
+      run: dotnet test --verbosity normal --filter "FullyQualifiedName~${{ test-env }}" --no-build

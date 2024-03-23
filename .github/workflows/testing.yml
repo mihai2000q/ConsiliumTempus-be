@@ -9,18 +9,16 @@ on:
 jobs:
   
   unit-test:
-    uses: ./.github/workflows/build.yml
     name: Unit Testing
-
-    steps:
-    - name: Test
-      run: dotnet test --verbosity normal --filter "FullyQualifiedName~UnitTests" --no-build -- xunit.parallelizeAssembly=true
+    
+    uses: ./.github/workflows/build.yml
+    with:
+      test-env: UnitTests
   
   integration-test:
-    uses: ./.github/workflows/build.yml
     name: Integration Testing
     timeout-minutes: 15
 
-    steps:   
-    - name: Test
-      run: dotnet test --verbosity normal --filter "FullyQualifiedName~IntegrationTests" --no-build
+    uses: ./.github/workflows/build.yml
+    with:
+      test-env: UnitTests
