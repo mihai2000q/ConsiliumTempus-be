@@ -1,0 +1,26 @@
+name: Testing 🧪
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  
+  unit-test:
+    name: Unit Testing
+    uses: ./.github/workflows/build.yml
+
+    steps:
+    - name: Test
+      run: dotnet test --verbosity normal --filter "FullyQualifiedName~UnitTests" --no-build -- xunit.parallelizeAssembly=true
+  
+  integration-test:
+    name: Integration Testing
+    uses: ./.github/workflows/build.yml
+    timeout-minutes: 15
+
+    steps:   
+    - name: Test
+      run: dotnet test --verbosity normal --filter "FullyQualifiedName~IntegrationTests" --no-build
