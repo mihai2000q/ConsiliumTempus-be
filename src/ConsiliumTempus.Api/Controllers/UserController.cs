@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Api.Common.Attributes;
-using ConsiliumTempus.Api.Contracts.User.Delete;
+﻿using ConsiliumTempus.Api.Contracts.User.Delete;
 using ConsiliumTempus.Api.Contracts.User.Get;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Dto;
@@ -26,7 +25,6 @@ public sealed class UserController(IMapper mapper, ISender mediator) : ApiContro
         );
     }
     
-    [IsOwner]
     [HttpPut]
     public async Task<IActionResult> Update(UpdateUserRequest request, CancellationToken cancellationToken)
     {
@@ -39,11 +37,10 @@ public sealed class UserController(IMapper mapper, ISender mediator) : ApiContro
         );
     }
     
-    [IsOwner]
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    [HttpDelete]
+    public async Task<IActionResult> Delete(CancellationToken cancellationToken)
     {
-        var command = new DeleteUserCommand(id);
+        var command = new DeleteUserCommand();
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(

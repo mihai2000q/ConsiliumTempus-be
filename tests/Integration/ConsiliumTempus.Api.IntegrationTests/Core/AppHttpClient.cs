@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -35,9 +36,11 @@ public class AppHttpClient(
         return client.DeleteAsync(requestUri);
     }
     
-    public void UseCustomToken(string? email = null)
+    public UserId UseCustomToken(string? email = null)
     {
-        UseToken(GetToken(email));
+        var res = GetToken(email);
+        UseToken(res.Item1);
+        return res.Item2;
     }
 
     public void UseInvalidToken()
@@ -54,7 +57,7 @@ public class AppHttpClient(
             Utils.Token.SecurityTokenToStringToken(securityToken));
     }
 
-    private JwtSecurityToken GetToken(string? email = null)
+    private (JwtSecurityToken, UserId) GetToken(string? email = null)
     {
         var dbContext = dbContextFactory.CreateDbContext();
         var user = email is null
@@ -63,7 +66,7 @@ public class AppHttpClient(
 
         if (user is null) throw new Exception("There is no user with that email");
 
-        return Utils.Token.GenerateValidToken(user, jwtSettings);
+        return (Utils.Token.GenerateValidToken(user, jwtSettings), user.Id);
     }
 
     private JwtSecurityToken GetInvalidToken()

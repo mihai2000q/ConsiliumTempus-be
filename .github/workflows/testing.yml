@@ -1,0 +1,62 @@
+name: Testing 🧪
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  
+  unit-testing:
+    runs-on: ubuntu-latest
+    name: Unit Testing
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+
+    - name: Build
+      uses: ./.github/workflows/build-action
+
+    - name: Test
+      run: dotnet test --verbosity normal --filter "FullyQualifiedName~UnitTests" --no-build
+
+  integration-testing:
+    runs-on: ubuntu-latest
+    name: Integration Testing
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+
+    - name: Build
+      uses: ./.github/workflows/build-action
+
+    - name: Test
+      run: dotnet test --verbosity normal --filter "FullyQualifiedName~IntegrationTests" --no-build
+    
+  end-to-end-testing:
+    runs-on: ubuntu-latest
+    name: End To End Testing
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+    
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    
+    - name: Setup Docker Environment
+      uses: ./.github/workflows/docker-action
+      with: 
+        secret-key: ${{ secrets.SUPER_SECRET_JWT_KEY }}
+
+    - name: Install Node Dependencies
+      working-directory: ./tests/e2e
+      run: npm ci
+
+    - name: Install Playwright Browsers
+      working-directory: ./tests/e2e
+      run: npx playwright install --with-deps

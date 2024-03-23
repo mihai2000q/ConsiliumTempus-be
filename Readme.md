@@ -50,8 +50,8 @@ dotnet user-secrets set --project ./src/ConsiliumTempus.Api "JwtSettings:SecretK
 ```
 
 The above command injects the secret key: *"This-is-a-Super-Duper-Secret-Key-Example"* 
-into the .NET configuration files of the Api, `appsettings.json` and `appsettings.Development.json`, 
-into the **"JwtSettings"** JSON object right inside the **SecretKey** Property 
+into the .NET development configuration file of the Api, `appsettings.Development.json`, 
+into the **JwtSettings** JSON object right inside the **SecretKey** Property 
 (Note: if the name of the object, or the property shall change, the user-secret should too).
 
 To make sure that the dotnet user secrets are all setup type in the terminal, the following command:
@@ -62,8 +62,8 @@ dotnet user-secrets list --project ./src/ConsiliumTempus.Api
 
 The above command should list out one secret key used for the Jwt Token Generator Settings.
 
-To be noted that for the production environment, another key is going to be randomly written and 
-encrypted using an official encrypting algorithm, as the dotnet user-secrets feature is used ONLY for development.
+To be noted that for the production environment, you have to provide your own key inside the `appsettings.json`, 
+as the dotnet user-secrets feature is used only and only for development.
 
 ### Docker Containers
 
@@ -76,7 +76,8 @@ needed for the Database container initialization and appliance of the migrations
 Next, to sync up the Application with the Database, 
 go inside the `appsettings.Development.json` file (inside `src/ConsiliumTempus.Api`), 
 and change the *Server* parameter from **Localhost** to the container name, 
-which by default is **CT-Database**, and also the *Port* from **7133** to **1433**.
+which by default is **CT-Database**, and also the *Port* from **7133** to **1433**
+(similarly with `appsettings.json`).
 
 Once you have the environment files setup, type in the following command:
 
@@ -87,11 +88,11 @@ docker compose up -d
 This command will open up two containers: one for the database and the other for the application,
 which is running by default in development mode.
 
-To finalize the database setup, run the `apply-migration-to-database.sh` shell script inside the *scripts* folder. 
+To finalize the database setup, run the `apply-migration-to-database.sh`. 
 <br>
 This script will also install the necessary tools for that purpose.
 
-To enable the production mode in Docker, the `docker-compose.yml` should be changed (however, that does not work at the moment).
+To enable the production mode in Docker, run the `docker-compose-prod.yml` should be changed.
 
 ### Local Development
 

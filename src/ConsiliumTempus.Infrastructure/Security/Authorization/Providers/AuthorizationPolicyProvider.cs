@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
-using ConsiliumTempus.Infrastructure.Security.Authorization.IsOwner;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Token;
 using Microsoft.AspNetCore.Authorization;
@@ -20,9 +19,7 @@ public sealed class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> o
 
         builder = policyName == Validate.Token.ToString()
             ? builder.AddRequirements(new TokenRequirement())
-            : policyName == Validate.IsOwner.ToString()
-                ? builder.AddRequirements(new IsOwnerRequirement())
-                : builder.AddRequirements(new PermissionRequirement(policyName));
+            : builder.AddRequirements(new PermissionRequirement(policyName));
 
         return builder.Build();
     }

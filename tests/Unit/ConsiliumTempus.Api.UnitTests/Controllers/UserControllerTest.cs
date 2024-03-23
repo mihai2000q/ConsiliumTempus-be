@@ -130,39 +130,17 @@ public class UserControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(id, default);
+        var outcome = await _uut.Delete(default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<DeleteUserCommand>(command => command.Id == id));
+            .Send(Arg.Is<DeleteUserCommand>(command => command == new DeleteUserCommand()));
 
         outcome.Should().BeOfType<OkObjectResult>();
         ((OkObjectResult)outcome).Value.Should().BeOfType<DeleteUserResponse>();
 
         var response = ((OkObjectResult)outcome).Value as DeleteUserResponse;
         response!.Message.Should().Be(result.Message);
-    }
-
-    [Fact]
-    public async Task DeleteUser_WhenIsNotFound_ShouldReturnNotFoundError()
-    {
-        // Arrange
-        var id = Guid.NewGuid();
-
-        var error = Errors.User.NotFound;
-        _mediator
-            .Send(Arg.Any<DeleteUserCommand>())
-            .Returns(error);
-
-        // Act
-        var outcome = await _uut.Delete(id, default);
-
-        // Assert
-        await _mediator
-            .Received(1)
-            .Send(Arg.Is<DeleteUserCommand>(command => command.Id == id));
-
-        outcome.ValidateError(error);
     }
 }

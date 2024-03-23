@@ -20,7 +20,6 @@ internal static partial class Utils
 
         internal static bool AssertUpdateCommand(UpdateUserCommand command, UpdateUserRequest request)
         {
-            command.Id.Should().Be(request.Id);
             command.FirstName.Should().Be(request.FirstName);
             command.LastName.Should().Be(request.LastName);
             command.Role.Should().Be(request.Role);

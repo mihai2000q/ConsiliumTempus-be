@@ -19,14 +19,13 @@ internal static partial class Utils
             string firstName,
             string lastName,
             string email,
-            string id,
             string? role = null,
             DateOnly? dateOfBirth = null)
         {
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<UserDto>();
-            AssertDto(content!, firstName, lastName, email, id, role, dateOfBirth);
+            AssertDto(content!, firstName, lastName, email, role, dateOfBirth);
         }
 
         internal static void AssertDto(
@@ -34,11 +33,9 @@ internal static partial class Utils
             string firstName,
             string lastName,
             string email,
-            string id,
             string? role = null,
             DateOnly? dateOfBirth = null)
         {
-            dto.Id.Should().Be(id);
             dto.FirstName.Should().Be(firstName);
             dto.LastName.Should().Be(lastName);
             dto.Email.Should().Be(email);
@@ -72,7 +69,6 @@ internal static partial class Utils
             UserAggregate user,
             UpdateUserRequest request)
         {
-            user.Id.Value.Should().Be(request.Id);
             user.FirstName.Value.Should().Be(request.FirstName.Capitalize());
             user.LastName.Value.Should().Be(request.LastName.Capitalize());
             if (request.Role is null)
@@ -80,17 +76,6 @@ internal static partial class Utils
             else
                 user.Role!.Value.Should().Be(request.Role);
             user.DateOfBirth.Should().Be(request.DateOfBirth);
-        }
-
-        internal static void AssertNotUpdated(
-            UserAggregate user,
-            UpdateUserRequest request)
-        {
-            user.Id.Value.Should().Be(request.Id);
-            user.FirstName.Value.Should().NotBe(request.FirstName.Capitalize());
-            user.LastName.Value.Should().NotBe(request.LastName.Capitalize());
-            user.Role?.Value.Should().NotBe(request.Role);
-            user.DateOfBirth.Should().NotBe(request.DateOfBirth);
         }
     }
 }

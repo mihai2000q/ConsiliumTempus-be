@@ -36,7 +36,7 @@ Sends data needed to create the user in body.
 {
   "firstName": "Firsty",
   "lastName": "Lasty",
-  "email": "FirstLasty@example.com",
+  "email": "FirstyLasty@example.com",
   "password": "password123",
   "role": "Software Developer",
   "dateOfBirth": "2000-12-21"

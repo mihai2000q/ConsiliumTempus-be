@@ -27,7 +27,6 @@ public class UserControllerGetTest(
             "Michael", 
             "Jordan", 
             "michaelj@gmail.com",
-            id,
             "Pro Basketball Player",
             DateOnly.Parse("2000-12-23"));
     }
