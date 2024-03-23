@@ -3,7 +3,6 @@ name: Build .Net App
 description: 'Action for building a .NET web app'
 
 runs:
-  runs-on: ubuntu-latest
   using: "composite"
   steps:
   - uses: actions/checkout@v3
