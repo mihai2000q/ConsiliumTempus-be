@@ -9,20 +9,18 @@ on:
 jobs:
   
   unit-test:
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/build.yml
     name: Unit Testing
 
     steps:
-    - uses: ./.github/workflows/build.yml
     - name: Test
       run: dotnet test --verbosity normal --filter "FullyQualifiedName~UnitTests" --no-build -- xunit.parallelizeAssembly=true
   
   integration-test:
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/build.yml
     name: Integration Testing
     timeout-minutes: 15
 
     steps:   
-    - uses: ./.github/workflows/build.yml
     - name: Test
       run: dotnet test --verbosity normal --filter "FullyQualifiedName~IntegrationTests" --no-build
