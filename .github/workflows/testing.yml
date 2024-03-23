@@ -15,6 +15,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Use Build Output
+      run: echo "Using build output from ${{ github.event.workflow_run.head_commit.id }}"
       env:
         BUILD_OUTPUT_PATH: ${{fromJson(needs.Build.outputs.build_output)}}
 
