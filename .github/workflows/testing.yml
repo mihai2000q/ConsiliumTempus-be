@@ -49,7 +49,7 @@ jobs:
         node-version: lts/*
     
     - name: Add JWT Settings Secret Key
-      run: sed -i "s/\"SecretKey\": \"\"/\"SecretKey\": \"${{ serets.SUPER_SECRET_JWT_KEY }}\"/g"
+      run: sed -i "s/\"SecretKey\"\:: \"\"/\"SecretKey\"\:: \"${{ serets.SUPER_SECRET_JWT_KEY }}\"/g"
 
     - name: check
       run: echo ${{ serets.SUPER_SECRET_JWT_KEY }}
