@@ -14,8 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Unit Testing
     steps:
-    - uses: actions/checkout@v3
-
     - name: Build
       uses: ./.github/workflows/build-action
 
@@ -26,8 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Integration Testing
     steps:
-    - uses: actions/checkout@v3
-
     - name: Build
       uses: ./.github/workflows/build-action
 
