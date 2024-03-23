@@ -1,18 +1,17 @@
-name: Testing 🧪
+name: Something
 
 on:
   workflow_run:
     workflows: [Build]
-    types:  
-      - completed
+    types: [completed]
 
 jobs:
   
-  unit-testing:
+  is-it:
     runs-on: ubuntu-latest
-    name: Unit Testing 🍇
+    name: Is it running 🍇
     steps:
     - uses: actions/checkout@v3
 
     - name: Use it
-      run: echo "ceva sa vad daca merge"
+      run: echo "ceva sa vad daca merge pe bune ca nu inteleg"
