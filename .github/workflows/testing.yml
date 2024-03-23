@@ -17,7 +17,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Build
-      uses: ./.github/workflows/build
+      uses: ./.github/workflows/build-action
 
     - name: Test
       run: dotnet test --verbosity normal --filter "FullyQualifiedName~UnitTests" --no-build  $BUILD_OUTPUT_PATH
