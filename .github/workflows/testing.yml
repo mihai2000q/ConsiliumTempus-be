@@ -58,6 +58,9 @@ jobs:
     - name: Run Docker Containers
       run: docker compose -f docker-compose-prod.yml up -d
 
+    - name: Permission on all scripts
+      run: chmod +x ./scripts/*.sh
+
     - name: Apply Database Migrations to the Docker Container
       run: ./scripts/apply-migration-to-database.sh
     
