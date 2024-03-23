@@ -7,7 +7,7 @@ tools=$( dotnet tool list --global )
 if [[ $tools != *"dotnet-ef"* ]] 
 then
     echo "Installing Dotnet Entity Framework Tool..."
-    dotnet tool install --global dotnet-ef --version 8.0.2
+    dotnet tool install --global dotnet-ef --version 8.0.3
 else
     echo "Dotnet Entity Framework Tool already installed!"
 fi
