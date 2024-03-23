@@ -1,10 +1,12 @@
 name: Testing 🧪
 
 on:
-  workflow_run:
-    workflows: [Build]
-    types:  
-      - completed
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
 
 jobs:
   
@@ -14,5 +16,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Use it
-      run: echo "ceva sa vad daca merge"
+    - name: Download build artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: build-output
+        path: ./
+
+    - name: Test
+      run: dotnet test --verbosity normal --filter "FullyQualifiedName~UnitTests" --no-build  $BUILD_OUTPUT_PATH
