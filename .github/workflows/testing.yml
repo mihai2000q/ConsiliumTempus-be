@@ -9,6 +9,7 @@ on:
 jobs:
   
   unit-test:
+    runs-on: ubuntu-latest
     name: Unit Testing
 
     steps:
@@ -17,6 +18,7 @@ jobs:
       run: dotnet test --verbosity normal --filter "FullyQualifiedName~UnitTests" --no-build -- xunit.parallelizeAssembly=true
   
   integration-test:
+    runs-on: ubuntu-latest
     name: Integration Testing
     timeout-minutes: 15
 
