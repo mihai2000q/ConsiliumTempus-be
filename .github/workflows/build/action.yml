@@ -1,5 +1,7 @@
 name: Build 🔨
 
+description: 'Action for building a .NET web app'
+
 on:
   push:
     branches:
