@@ -1,0 +1,23 @@
+name: Testing 🧪
+
+on:
+  workflow_run:
+    workflows: ["Build 🔨"]
+    types:  
+      - completed
+
+jobs:
+  
+  unit-testing:
+    runs-on: ubuntu-latest
+    name: Unit Testing 🍇
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Build Output
+      env:
+        BUILD_OUTPUT_PATH: ${{fromJson(needs.Build.outputs.build_output)}}
+
+    - name: Test
+      run: dotnet test --verbosity normal --filter "FullyQualifiedName~UnitTests" --no-build  $BUILD_OUTPUT_PATH
+      run: dotnet test
