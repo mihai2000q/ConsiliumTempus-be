@@ -9,11 +9,11 @@ on:
 jobs:
   
   unit-test:
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/build.yaml
     with:
       test-env: UnitTests
   
   integration-test:
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/build.yaml
     with:
       test-env: IntegrationTests
