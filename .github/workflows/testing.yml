@@ -49,7 +49,7 @@ jobs:
         node-version: lts/*
     
     - name: Setup Docker Environment
-      run: ./.github/workflows/docker-action
+      uses: ./.github/workflows/docker-action
     
     - name: Change Workspace Directory
       run: cd tests/e2e
