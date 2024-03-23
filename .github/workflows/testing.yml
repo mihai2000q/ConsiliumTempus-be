@@ -56,10 +56,10 @@ jobs:
       run: cp .env.dev .env
 
     - name: Run Docker Containers
-      run: docker compose up -d
+      run: docker compose -f docker-compose-prod.yml up -d
 
     - name: Apply Database Migrations to the Docker Container
-      run: ./scripts/apply-migration-to-database
+      run: ./scripts/apply-migration-to-database.sh
     
     - name: Change Workspace Directory
       run: cd tests/e2e
