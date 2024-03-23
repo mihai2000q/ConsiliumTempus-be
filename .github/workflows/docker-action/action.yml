@@ -1,0 +1,30 @@
+name: Setup Docker Environment
+
+description: 'Action for setting up the Docker Environment'
+
+runs:
+  using: 'composite'
+  steps:
+  - name: Add JWT Settings Secret Key
+    shell: bash
+    run: sed -i "s/\"SecretKey\": \"\"/\"SecretKey\": \"${{ serets.SUPER_SECRET_JWT_KEY }}\"/g"
+
+  - name: check
+    shell: bash
+    run: echo ${{ serets.SUPER_SECRET_JWT_KEY }}
+
+  - name: check2
+    shell: bash
+    run: cat ./src/ConsiliumTempus.Api/appsettings.json
+
+  - name: Copy Environment File (.env)
+    shell: bash
+    run: cp .env.dev .env
+
+  - name: Run Docker Containers
+    shell: bash
+    run: docker compose up -d
+
+  - name: Apply Database Migrations to the Docker Container
+    shell: bash
+    run: ./scripts/apply-migration-to-database

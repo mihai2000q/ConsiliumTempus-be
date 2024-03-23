@@ -29,9 +29,35 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
-      
+
     - name: Build
       uses: ./.github/workflows/build-action
 
     - name: Test
       run: dotnet test --verbosity normal --filter "FullyQualifiedName~IntegrationTests" --no-build
+    
+  end-to-end-testing:
+    runs-on: ubuntu-latest
+    name: End To End Testing
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+    
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    
+    - name: Setup Docker Environment
+      run: ./.github/workflows/docker-action
+    
+    - name: Change Workspace Directory
+      run: cd tests/e2e
+
+    - name: Install Node Dependencies
+      run: npm ci
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
+    
