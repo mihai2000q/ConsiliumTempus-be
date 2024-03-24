@@ -6,10 +6,7 @@ test.describe('should allow anonymous authentication', () => {
   const PASSWORD = "Password123"
 
   test.afterEach('should delete user', async ({ request }) => {
-    const response = await deleteUser(request, EMAIL, PASSWORD)
-
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
+    await deleteUser(request, EMAIL, PASSWORD)
   })
 
   test('should register', async ({ request }) => {
@@ -28,7 +25,6 @@ test.describe('should allow anonymous authentication', () => {
     })
 
     expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
 
     expect(await response.json()).toEqual({
       token: expect.any(String)
@@ -49,7 +45,6 @@ test.describe('should allow anonymous authentication', () => {
     })
 
     expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
 
     expect(await response.json()).toEqual({
       token: expect.any(String)

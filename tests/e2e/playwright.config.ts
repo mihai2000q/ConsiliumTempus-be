@@ -14,10 +14,7 @@ export default defineConfig({
   workers: 1,
   reporter: 'html',
   use: {
-    baseURL: `http://127.0.0.1:${process.env.API_PORT}`,
-    extraHTTPHeaders: {
-      'Authorization': `token ${process.env.API_TOKEN}`
-    }
+    baseURL: `http://127.0.0.1:${process.env.API_PORT}`
   },
 
   projects: [
