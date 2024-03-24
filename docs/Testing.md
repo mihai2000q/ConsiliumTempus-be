@@ -10,6 +10,7 @@
     * [App Http Client](#app-http-client)
     * [Test Auth Handler](#test-auth-handler)
     * [Collections](#collections)
+* [End-To-End Testing](#end-to-end-testing)
 
 The backend of the application is tested using the **xUnit** framework. 
 The tests are divided into Unit and Integration Tests.
@@ -233,3 +234,69 @@ To create a collection, go to `TestCollection` and add one that extends the `ICo
 
 Generally, for an integration test to work,
 it will need to be part of a *collection* and extend the *base integration test* class
+
+
+## End-To-End Testing
+
+For this type of testing, it has been decided to make use of **Playwright** using **Typescript**.
+
+### Get Started
+
+#### Docker Environment
+
+To make sure that the developer can write e2e tests,
+first they have to make sure their docker environment works accordingly.
+(alternatively, they can change the configuration inside `playwright.config.ts`).
+
+To do that, follow the instructions inside the [Readme](../Readme.md/#docker-containers) file.
+
+For Recapitulation purposes:
+- create a secret key
+- create a `.env` file
+- open the containers (`docker compose up -d`)
+- apply the migration to the database
+
+#### Node Environment
+
+Make sure Node.js is installed on the system, 
+then proceed to install all the dependencies inside the `tests/e2e` directory:
+
+```sh
+npm ci
+```
+
+Playwright uses its own browsers to run the tests; therefore, those should be installed as following:
+
+```sh
+npx playwright install --with-deps
+```
+
+Finally, the tests can be run either via the IDE, or the command line:
+
+```sh
+npx playwright test
+```
+
+They can also be run with the `--ui` flag to enable the UI Mode, 
+which enables the developer to sort of _"time-travel"_, debug, enable watch mode, see live changes and more.
+
+### Conventions
+
+Normally, to write e2e tests, all that is needed is the documentation for requests, responses, and endpoint examples.
+Additionally, the tests are structured exactly like the docs, i.e., auth test or user test 
+(also, for playwright to work, the name should be followed by **.spec**, resulting in: **auth.spec**).
+
+To be noted that most of the tests will follow a happy-path scenario,
+as everything else has been already covered inside both Unit and Integration Testing.
+
+### Misc
+
+#### Custom Matchers
+
+To write custom matchers, simply go to `utils/matchers.ts` and add another function inside the object **expect**.
+Also, add the function inside the Matchers interface inside the `global.d.ts` file.
+
+#### Utils
+
+A way to use a custom token has been provided inside the `utils/utils.ts`. 
+It is recommended to use it with the spread operator (...) inside the **options** object of the request.

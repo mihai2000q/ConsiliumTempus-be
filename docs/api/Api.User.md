@@ -4,11 +4,12 @@
   * [Get](#get)
     * [Get User Request](#get-user-request)
     * [Get User Response](#get-user-response)
+  * [Get Id](#get-id)
+    * [Get User Id Response](#get-user-id-response)
   * [Update](#update)
     * [Update User Request](#update-user-request)
     * [Update User Response](#update-user-response)
   * [Delete](#delete)
-    * [Delete User Request](#delete-user-request)
     * [Delete User Response](#delete-user-response)
 
 ## User
@@ -33,6 +34,19 @@ Sends the id of the user inside the route request.
 #### Get User Response
 
 Returns the user [Dto](dto/Dto.User.md).
+
+
+### Get Id
+
+Anyone logged in can read the data of another user.
+
+```js
+GET {{host}}/api/users/id
+```
+
+#### Get User Id Response
+
+Returns the user id.
 
 
 ### Update
@@ -70,10 +84,6 @@ Only the owner can update their data (which is implicit, because the id is not p
 ```js
 DELETE {{host}}/api/users
 ```
-
-#### Delete User Request
-
-Sends the id of the user inside the route request.
 
 #### Delete User Response
 
