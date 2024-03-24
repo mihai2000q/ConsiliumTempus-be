@@ -21,4 +21,9 @@ public static class UserFactory
             role is null ? null : Role.Create(role),
             dateOfBirth);
     }
+
+    public static UserId CreateId(Guid? id = null)
+    {
+        return UserId.Create(id ?? Guid.NewGuid());
+    }
 }
