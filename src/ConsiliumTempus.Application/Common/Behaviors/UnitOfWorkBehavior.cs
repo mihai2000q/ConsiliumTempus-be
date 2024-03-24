@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
+﻿using System.Transactions;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence;
 using ErrorOr;
 using MediatR;
 
@@ -15,11 +16,15 @@ public sealed class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOfWo
         CancellationToken cancellationToken)
     {
         if (IsNotCommand()) return await next();
+
+        using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         
         var response = await next();
 
         if (!response.IsError) await unitOfWork.SaveChangesAsync(cancellationToken);
 
+        transactionScope.Complete();
+        
         return response;
     }
 

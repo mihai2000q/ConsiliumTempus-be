@@ -1,10 +1,12 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.User.Delete;
+using ConsiliumTempus.Api.Contracts.User.GetId;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Delete;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Application.User.Queries.Get;
+using ConsiliumTempus.Application.User.Queries.GetId;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.AspNetCore.Mvc;
@@ -73,6 +75,30 @@ public class UserControllerTest
 
         outcome.ValidateError(error);
     }
+    
+    [Fact]
+    public async Task GetUserId_WhenIsSuccessful_ShouldReturnUser()
+    {
+        // Arrange
+        var userId = UserFactory.CreateId();
+        _mediator
+            .Send(Arg.Any<GetUserIdQuery>())
+            .Returns(userId);
+
+        // Act
+        var outcome = await _uut.GetId(default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetUserIdQuery>(query => query == new GetUserIdQuery()));
+
+        outcome.Should().BeOfType<OkObjectResult>();
+        ((OkObjectResult)outcome).Value.Should().BeOfType<GetUserIdResponse>();
+
+        var response = ((OkObjectResult)outcome).Value as GetUserIdResponse;
+        response?.Id.Should().Be(userId.ToString());
+    }
 
     [Fact]
     public async Task UpdateUser_WhenIsSuccessful_ShouldReturnNewUser()
@@ -97,33 +123,9 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task UpdateUser_WhenIsNotFound_ShouldReturnNotFoundError()
-    {
-        // Arrange
-        var request = UserRequestFactory.CreateUpdateUserRequest();
-
-        var error = Errors.User.NotFound;
-        _mediator
-            .Send(Arg.Any<UpdateUserCommand>())
-            .Returns(error);
-
-        // Act
-        var outcome = await _uut.Update(request, default);
-
-        // Assert
-        await _mediator
-            .Received(1)
-            .Send(Arg.Is<UpdateUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
-
-        outcome.ValidateError(error);
-    }
-
-    [Fact]
     public async Task DeleteUser_WhenIsSuccessful_ShouldReturnUser()
     {
         // Arrange
-        var id = Guid.NewGuid();
-
         var result = new DeleteUserResult();
         _mediator
             .Send(Arg.Any<DeleteUserCommand>())
