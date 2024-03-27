@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Common.UnitTests.Authentication;
 
-namespace ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands;
+namespace ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands.Register;
 
 internal static class RegisterCommandHandlerData
 {

@@ -1,36 +1,45 @@
-﻿using ConsiliumTempus.Application.Authentication.Queries.Login;
+﻿using ConsiliumTempus.Application.Authentication.Commands.Login;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
+using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Authentication;
 using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Application.UnitTests.Authentication.Queries;
+namespace ConsiliumTempus.Application.UnitTests.Authentication.Commands.Login;
 
-public class LoginQueryHandlerTest
+public class LoginCommandHandlerTest
 {
     #region Setup
 
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IScrambler _scrambler;
     private readonly IUserRepository _userRepository;
-    private readonly LoginQueryHandler _uut;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly LoginCommandHandler _uut;
 
-    public LoginQueryHandlerTest()
+    public LoginCommandHandlerTest()
     {
         _jwtTokenGenerator = Substitute.For<IJwtTokenGenerator>();
         _scrambler = Substitute.For<IScrambler>();
         _userRepository = Substitute.For<IUserRepository>();
-        _uut = new LoginQueryHandler(_userRepository, _scrambler, _jwtTokenGenerator);
+        _refreshTokenRepository = Substitute.For<IRefreshTokenRepository>();
+        _uut = new LoginCommandHandler(
+            _userRepository, 
+            _refreshTokenRepository, 
+            _scrambler, 
+            _jwtTokenGenerator);
     }
 
     #endregion
 
     [Fact]
-    public async Task WhenLoginIsSuccessful_ShouldQueryUserAndReturnNewToken()
+    public async Task WhenLoginIsSuccessful_ShouldQueryUserAndReturnNewTokens()
     {
         // Arrange
-        var query = AuthenticationQueryFactory.CreateLoginQuery();
+        var query = AuthenticationCommandFactory.CreateLoginCommand();
 
         var user = UserFactory.Create(password: "This is the pass for Password123");
         _userRepository
@@ -46,6 +55,11 @@ public class LoginQueryHandlerTest
             .GenerateToken(user)
             .Returns(token);
 
+        const string jwtId = "this is the id of the token";
+        _jwtTokenGenerator
+            .GetJwtIdFromToken(token)
+            .Returns(jwtId);
+
         // Act
         var outcome = await _uut.Handle(query, default);
 
@@ -59,16 +73,24 @@ public class LoginQueryHandlerTest
         _jwtTokenGenerator
             .Received(1)
             .GenerateToken(Arg.Any<UserAggregate>());
+        _jwtTokenGenerator
+            .Received(1)
+            .GetJwtIdFromToken(Arg.Any<string>());
+        await _refreshTokenRepository
+            .Received(1)
+            .Add(Arg.Is<RefreshToken>(rt => 
+                Utils.RefreshToken.AssertCreation(rt, jwtId, user)));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(token);
+        outcome.Value.RefreshToken.Should().NotBeNullOrWhiteSpace().And.HaveLength(36);
     }
 
     [Fact]
     public async Task WhenLoginFailsDueToMissingUser_ShouldReturnInvalidCredentialsError()
     {
         // Arrange
-        var query = AuthenticationQueryFactory.CreateLoginQuery();
+        var query = AuthenticationCommandFactory.CreateLoginCommand();
 
         // Act
         var outcome = await _uut.Handle(query, default);
@@ -80,18 +102,14 @@ public class LoginQueryHandlerTest
         _scrambler.DidNotReceive();
         _jwtTokenGenerator.DidNotReceive();
 
-        outcome.IsError.Should().BeTrue();
-        outcome.Errors.Should().HaveCount(1);
-        outcome.FirstError.Type.Should().Be(ErrorType.Unauthorized);
-        outcome.FirstError.Code.Should().Be("Authentication.InvalidCredentials");
-        outcome.FirstError.Description.Should().Be("Invalid Credentials");
+        outcome.ValidateError(Errors.Authentication.InvalidCredentials);
     }
 
     [Fact]
     public async Task WhenLoginFailsDueToWrongPassword_ShouldReturnInvalidCredentialsError()
     {
         // Arrange
-        var query = AuthenticationQueryFactory.CreateLoginQuery();
+        var query = AuthenticationCommandFactory.CreateLoginCommand();
 
         var user = UserFactory.Create();
         _userRepository
@@ -114,10 +132,6 @@ public class LoginQueryHandlerTest
             .VerifyPassword(Arg.Any<string>(), Arg.Any<string>());
         _jwtTokenGenerator.DidNotReceive();
 
-        outcome.IsError.Should().BeTrue();
-        outcome.Errors.Should().HaveCount(1);
-        outcome.FirstError.Type.Should().Be(ErrorType.Unauthorized);
-        outcome.FirstError.Code.Should().Be("Authentication.InvalidCredentials");
-        outcome.FirstError.Description.Should().Be("Invalid Credentials");
+        outcome.ValidateError(Errors.Authentication.InvalidCredentials);
     }
 }

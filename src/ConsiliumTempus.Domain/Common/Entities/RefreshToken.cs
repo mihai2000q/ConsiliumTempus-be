@@ -49,7 +49,7 @@ public sealed class RefreshToken : Entity<Guid>, ITimestamps
         return new RefreshToken(
             new Guid(token),
             new Guid(jwtId),
-            DateTime.UtcNow.AddMonths(1),
+            DateTime.UtcNow.AddDays(7),
             false,
             0,
             user,

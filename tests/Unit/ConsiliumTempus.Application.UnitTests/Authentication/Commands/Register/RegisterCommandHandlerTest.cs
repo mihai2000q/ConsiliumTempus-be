@@ -2,13 +2,15 @@
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
 using ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands;
+using ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands.Register;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Authentication;
 using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Application.UnitTests.Authentication.Commands;
+namespace ConsiliumTempus.Application.UnitTests.Authentication.Commands.Register;
 
 public class RegisterCommandHandlerTest
 {
@@ -17,6 +19,7 @@ public class RegisterCommandHandlerTest
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IScrambler _scrambler;
     private readonly IUserRepository _userRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly RegisterCommandHandler _uut;
 
     public RegisterCommandHandlerTest()
@@ -24,10 +27,12 @@ public class RegisterCommandHandlerTest
         _jwtTokenGenerator = Substitute.For<IJwtTokenGenerator>();
         _scrambler = Substitute.For<IScrambler>();
         _userRepository = Substitute.For<IUserRepository>();
+        _refreshTokenRepository = Substitute.For<IRefreshTokenRepository>();
         _uut = new RegisterCommandHandler(
             _jwtTokenGenerator,
             _scrambler,
-            _userRepository);
+            _userRepository,
+            _refreshTokenRepository);
     }
 
     #endregion
@@ -42,17 +47,22 @@ public class RegisterCommandHandlerTest
             .When(u => u.Add(Arg.Any<UserAggregate>()))
             .Do(user => createdUser = user.Arg<UserAggregate>());
 
+        const string hashedPassword = "This is the hash password for Password123";
+        _scrambler
+            .HashPassword(command.Password)
+            .Returns(hashedPassword);
+        
         UserAggregate userUsedForJwt = null!;
         const string token = "This is a token";
         _jwtTokenGenerator
             .GenerateToken(Arg.Any<UserAggregate>())
             .Returns(token)
             .AndDoes(user => userUsedForJwt = user.Arg<UserAggregate>());
-
-        const string hashedPassword = "This is the hash password for Password123";
-        _scrambler
-            .HashPassword(command.Password)
-            .Returns(hashedPassword);
+        
+        const string jwtId = "this is the id of the token";
+        _jwtTokenGenerator
+            .GetJwtIdFromToken(token)
+            .Returns(jwtId);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -67,12 +77,20 @@ public class RegisterCommandHandlerTest
         _jwtTokenGenerator
             .Received(1)
             .GenerateToken(Arg.Any<UserAggregate>());
+        _jwtTokenGenerator
+            .Received(1)
+            .GetJwtIdFromToken(Arg.Any<string>());
+        await _refreshTokenRepository
+            .Received(1)
+            .Add(Arg.Is<RefreshToken>(rt => 
+                Utils.RefreshToken.AssertCreation(rt, jwtId, createdUser)));
 
         createdUser.Should().Be(userUsedForJwt);
         Utils.User.AssertFromRegisterCommand(createdUser, command, hashedPassword);
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(token);
+        outcome.Value.RefreshToken.Should().NotBeNullOrWhiteSpace().And.HaveLength(36);
     }
 
     [Fact]

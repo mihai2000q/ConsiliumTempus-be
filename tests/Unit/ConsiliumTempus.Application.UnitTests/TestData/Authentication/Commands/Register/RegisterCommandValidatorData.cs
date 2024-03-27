@@ -2,7 +2,7 @@
 using ConsiliumTempus.Common.UnitTests.Authentication;
 using ConsiliumTempus.Domain.Common.Validation;
 
-namespace ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands;
+namespace ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands.Register;
 
 internal static class RegisterCommandValidatorData
 {
