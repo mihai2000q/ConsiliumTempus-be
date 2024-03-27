@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Authentication.Login;
+using ConsiliumTempus.Api.Contracts.Authentication.Refresh;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
@@ -28,5 +29,12 @@ public static class AuthenticationRequestFactory
         string password = Constants.User.Password)
     {
         return new LoginRequest(email, password);
+    }
+    
+    public static RefreshRequest CreateRefreshRequest(
+        string token = Constants.Auth.Token, 
+        string refreshToken = Constants.Auth.RefreshToken)
+    {
+        return new RefreshRequest(token, refreshToken);
     }
 }

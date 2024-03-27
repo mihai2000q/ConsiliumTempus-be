@@ -1,9 +1,11 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Authentication.Login;
+using ConsiliumTempus.Api.Contracts.Authentication.Refresh;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Authentication.Commands.Login;
+using ConsiliumTempus.Application.Authentication.Commands.Refresh;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Common.UnitTests.Authentication;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -29,7 +31,7 @@ public class AuthenticationControllerTest
     }
 
     #endregion
-
+    
     [Fact]
     public async Task WhenRegisterIsSuccessful_ShouldReturnRegisterResponse()
     {
@@ -99,7 +101,7 @@ public class AuthenticationControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<LoginCommand>(
-                query => Utils.Authentication.AssertLoginQuery(query, request)));
+                query => Utils.Authentication.AssertLoginCommand(query, request)));
 
         outcome.Should().BeOfType<OkObjectResult>();
         ((OkObjectResult)outcome).Value.Should().BeOfType<LoginResponse>();
@@ -127,7 +129,57 @@ public class AuthenticationControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<LoginCommand>(
-                query => Utils.Authentication.AssertLoginQuery(query, request)));
+                query => Utils.Authentication.AssertLoginCommand(query, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task WhenRefreshIsSuccessful_ShouldReturnRefreshResponse()
+    {
+        // Arrange
+        var request = AuthenticationRequestFactory.CreateRefreshRequest();
+
+        var result = new RefreshResult("access token");
+        _mediator
+            .Send(Arg.Any<RefreshCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.Refresh(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<RefreshCommand>(
+                command => Utils.Authentication.AssertRefreshCommand(command, request)));
+
+        outcome.Should().BeOfType<OkObjectResult>();
+        ((OkObjectResult)outcome).Value.Should().BeOfType<RefreshResponse>();
+
+        var response = ((OkObjectResult)outcome).Value as RefreshResponse;
+        response?.Token.Should().Be(result.Token);
+    }
+    
+    [Fact]
+    public async Task WhenRefreshFails_ShouldReturnInvalidTokensError()
+    {
+        // Arrange
+        var request = AuthenticationRequestFactory.CreateRefreshRequest();
+
+        var error = Errors.Authentication.InvalidTokens;
+        _mediator
+            .Send(Arg.Any<RefreshCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.Refresh(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<RefreshCommand>(
+                command => Utils.Authentication.AssertRefreshCommand(command, request)));
 
         outcome.ValidateError(error);
     }

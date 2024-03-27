@@ -16,13 +16,7 @@ public sealed class AuthenticationMappingConfig : IRegister
     {
         RegisterMappings(config);
         LoginMappings(config);
-    }
-
-    private static void RefreshTokenMappings(TypeAdapterConfig config)
-    {
-        config.NewConfig<RefreshRequest, RefreshCommand>();
-        
-        config.NewConfig<RefreshResult, RefreshResponse>();
+        RefreshTokenMappings(config);
     }
 
     private static void RegisterMappings(TypeAdapterConfig config)
@@ -37,5 +31,12 @@ public sealed class AuthenticationMappingConfig : IRegister
         config.NewConfig<LoginRequest, LoginCommand>();
 
         config.NewConfig<LoginResult, LoginResponse>();
+    }
+    
+    private static void RefreshTokenMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<RefreshRequest, RefreshCommand>();
+        
+        config.NewConfig<RefreshResult, RefreshResponse>();
     }
 }
