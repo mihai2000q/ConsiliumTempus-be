@@ -61,9 +61,4 @@ public sealed class RefreshToken : Entity<Guid>, ITimestamps
         UsedTimes++;
         UpdatedDateTime = DateTime.UtcNow;
     }
-
-    public void Invalidate()
-    {
-        Invalidated = true;
-    }
 }

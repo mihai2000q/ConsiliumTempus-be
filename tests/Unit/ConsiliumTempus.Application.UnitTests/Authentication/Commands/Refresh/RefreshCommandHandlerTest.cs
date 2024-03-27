@@ -7,6 +7,7 @@ using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
+using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Authentication.Commands.Refresh;
 
@@ -85,6 +86,9 @@ public class RefreshCommandHandlerTest
         
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(token);
+
+        refreshToken.UsedTimes.Should().Be(1);
+        refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
     }
     
     [Fact]
