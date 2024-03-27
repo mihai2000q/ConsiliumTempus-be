@@ -61,6 +61,7 @@ public static class DependencyInjection
             });
         
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddSingleton<IJwtTokenValidator, JwtTokenValidator>();
         services.AddSingleton<IScrambler, Scrambler>();
 
         return services;
@@ -115,5 +116,6 @@ public static class DependencyInjection
         services.AddScoped<IWorkspaceRoleRepository, WorkspaceRoleRepository>();
         services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<IProjectSprintRepository, ProjectSprintRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
     }
 }

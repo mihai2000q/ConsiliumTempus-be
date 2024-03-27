@@ -37,4 +37,13 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
 
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }
+
+    public string GetJwtIdFromToken(string token)
+    {
+        return new JwtSecurityTokenHandler()
+            .ReadJwtToken(token)
+            .Claims
+            .Single(c => c.Type == JwtRegisteredClaimNames.Jti)
+            .Value;
+    }
 }
