@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
@@ -12,7 +13,8 @@ namespace ConsiliumTempus.Application.Authentication.Commands.Register;
 public sealed class RegisterCommandHandler(
     IJwtTokenGenerator jwtTokenGenerator,
     IScrambler scrambler,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    IRefreshTokenRepository refreshTokenRepository)
     : IRequestHandler<RegisterCommand, ErrorOr<RegisterResult>>
 {
     public async Task<ErrorOr<RegisterResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
@@ -32,7 +34,10 @@ public sealed class RegisterCommandHandler(
         await userRepository.Add(user, cancellationToken);
 
         var token = jwtTokenGenerator.GenerateToken(user);
+        var jwtId = jwtTokenGenerator.GetJwtIdFromToken(token);
+        var refreshToken = RefreshToken.Create(token, jwtId, user);
+        await refreshTokenRepository.Add(refreshToken, cancellationToken);
 
-        return new RegisterResult(token);
+        return new RegisterResult(token, refreshToken.Value);
     }
 }
