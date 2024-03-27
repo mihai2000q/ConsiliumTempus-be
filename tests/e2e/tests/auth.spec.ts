@@ -27,7 +27,8 @@ test.describe('should allow anonymous authentication', () => {
     expect(response.ok()).toBeTruthy()
 
     expect(await response.json()).toEqual({
-      token: expect.any(String)
+      token: expect.any(String),
+      refreshToken: expect.any(String)
     })
   })
 
@@ -47,7 +48,8 @@ test.describe('should allow anonymous authentication', () => {
     expect(response.ok()).toBeTruthy()
 
     expect(await response.json()).toEqual({
-      token: expect.any(String)
+      token: expect.any(String),
+      refreshToken: expect.any(String)
     })
   })
 })
