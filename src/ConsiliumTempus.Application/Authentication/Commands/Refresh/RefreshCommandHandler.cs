@@ -12,13 +12,13 @@ public sealed class RefreshCommandHandler(
     IRefreshTokenRepository refreshTokenRepository)
     : IRequestHandler<RefreshCommand, ErrorOr<RefreshResult>>
 {
-    public async Task<ErrorOr<RefreshResult>> Handle(RefreshCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<RefreshResult>> Handle(RefreshCommand command, CancellationToken cancellationToken)
     {
-        if (!await jwtTokenValidator.ValidateAccessToken(request.Token)) return Errors.Authentication.InvalidTokens;
+        if (!await jwtTokenValidator.ValidateAccessToken(command.Token)) return Errors.Authentication.InvalidTokens;
 
-        var refreshToken = await refreshTokenRepository.Get(request.RefreshToken, cancellationToken);
+        var refreshToken = await refreshTokenRepository.Get(command.RefreshToken, cancellationToken);
 
-        if (!jwtTokenValidator.ValidateRefreshToken(refreshToken, jwtTokenGenerator.GetJwtIdFromToken(request.Token)))
+        if (!jwtTokenValidator.ValidateRefreshToken(refreshToken, jwtTokenGenerator.GetJwtIdFromToken(command.Token)))
             return Errors.Authentication.InvalidTokens;
 
         var token = jwtTokenGenerator.GenerateToken(refreshToken!.User);

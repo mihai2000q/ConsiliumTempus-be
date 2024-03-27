@@ -6,18 +6,18 @@ namespace ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands
 
 internal static class LoginCommandValidatorData
 {
-    internal class GetValidQueries : TheoryData<LoginCommand>
+    internal class GetValidCommands : TheoryData<LoginCommand>
     {
-        public GetValidQueries()
+        public GetValidCommands()
         {
             Add(AuthenticationCommandFactory.CreateLoginCommand());
             Add(new LoginCommand("MichaelJ@Gmail.com", "Password123"));
         }
     }
     
-    internal class GetInvalidEmailQueries : TheoryData<LoginCommand, string, int>
+    internal class GetInvalidEmailCommands : TheoryData<LoginCommand, string, int>
     {
-        public GetInvalidEmailQueries()
+        public GetInvalidEmailCommands()
         {
             var query = AuthenticationCommandFactory.CreateLoginCommand(email: "");
             Add(query, nameof(query.Email), 2);
@@ -31,9 +31,9 @@ internal static class LoginCommandValidatorData
         }
     }
     
-    internal class GetInvalidPasswordQueries : TheoryData<LoginCommand, string, int>
+    internal class GetInvalidPasswordCommands : TheoryData<LoginCommand, string, int>
     {
-        public GetInvalidPasswordQueries()
+        public GetInvalidPasswordCommands()
         {
             var query = AuthenticationCommandFactory.CreateLoginCommand(password: "");
             Add(query, nameof(query.Password), 5);

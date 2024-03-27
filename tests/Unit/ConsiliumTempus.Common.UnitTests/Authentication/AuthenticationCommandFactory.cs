@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Authentication.Commands.Login;
+using ConsiliumTempus.Application.Authentication.Commands.Refresh;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
@@ -28,5 +29,12 @@ public static class AuthenticationCommandFactory
         string password = Constants.User.Password)
     {
         return new LoginCommand(email, password);
+    }
+    
+    public static RefreshCommand CreateRefreshCommand(
+        string token = Constants.Auth.Token, 
+        string refreshToken = Constants.Auth.RefreshToken)
+    {
+        return new RefreshCommand(token, refreshToken);
     }
 }
