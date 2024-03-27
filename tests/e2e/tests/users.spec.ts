@@ -59,6 +59,24 @@ test.describe('should allow operations on the user entity', () => {
     await deleteUser(request)
   })
 
+  test('should get current user', async ({ request }) => {
+    const response = await request.get('api/users/current', useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toEqual({
+      id: expect.any(String),
+      firstName: FIRSTNAME,
+      lastName: LASTNAME,
+      email: EMAIL,
+      role: ROLE,
+      dateOfBirth: DATE_OF_BIRTH
+    })
+
+    // cleanup
+    await deleteUser(request)
+  })
+
   test.skip('should update user', async ({ request }) => {
     const body = {
       firstName: "Michelle",

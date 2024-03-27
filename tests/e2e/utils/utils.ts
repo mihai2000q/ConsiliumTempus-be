@@ -18,7 +18,7 @@ export function useToken(
 }
 
 export async function getUserId(request: APIRequestContext) {
-  const response = await request.get('api/users/id', {
+  const response = await request.get('api/users/current', {
     headers: {
       'Authorization': `Bearer ${process.env.API_TOKEN}`
     }
