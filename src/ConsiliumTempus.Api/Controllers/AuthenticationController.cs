@@ -1,6 +1,8 @@
 ﻿using ConsiliumTempus.Api.Contracts.Authentication.Login;
+using ConsiliumTempus.Api.Contracts.Authentication.Refresh;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Application.Authentication.Commands.Login;
+using ConsiliumTempus.Application.Authentication.Commands.Refresh;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
 using MapsterMapper;
 using MediatR;
@@ -13,6 +15,18 @@ namespace ConsiliumTempus.Api.Controllers;
 [AllowAnonymous]
 public sealed class AuthenticationController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
+    [HttpGet("Refresh")]
+    public async Task<IActionResult> Refresh(RefreshRequest request, CancellationToken cancellationToken)
+    {
+        var query = Mapper.Map<RefreshCommand>(request);
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return result.Match(
+            refreshResult => Ok(Mapper.Map<RefreshResponse>(refreshResult)),
+            Problem
+        );
+    }
+    
     [HttpPost("Register")]
     public async Task<IActionResult> Register(RegisterRequest request, CancellationToken cancellationToken)
     {
