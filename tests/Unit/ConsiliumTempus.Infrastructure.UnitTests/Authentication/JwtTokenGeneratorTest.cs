@@ -18,7 +18,7 @@ public class JwtTokenGeneratorTest
         {
             SecretKey = "This-Is-My-Secret-Duper-Key-And-I-Like-It",
             Audience = "Audience",
-            ExpiryHours = 24,
+            ExpiryMinutes = 7,
             Issuer = "Issuer"
         };
 
