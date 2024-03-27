@@ -9,7 +9,7 @@ test.describe('should allow anonymous authentication', () => {
     await deleteUser(request, EMAIL, PASSWORD)
   })
 
-  test('should register', async ({ request }) => {
+  test('should register and return tokens', async ({ request }) => {
     const response = await request.post('api/auth/register', {
       headers: {
         'Authorization': ''
@@ -32,7 +32,7 @@ test.describe('should allow anonymous authentication', () => {
     })
   })
 
-  test('should login and return token', async ({ request }) => {
+  test('should login and return tokens', async ({ request }) => {
     await registerUser(request, EMAIL, PASSWORD)
 
     const response = await request.post('api/auth/login', {

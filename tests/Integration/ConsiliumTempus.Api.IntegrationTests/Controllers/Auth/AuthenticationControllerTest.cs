@@ -22,7 +22,7 @@ public class AuthenticationControllerTest(
     : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
 {
     [Fact]
-    public async Task Register_WhenIsSuccessful_ShouldAddNewUserAndReturnToken()
+    public async Task Register_WhenIsSuccessful_ShouldAddNewUserCreateRefreshTokenAndReturnTokens()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRegisterRequest(email: "FirstLast@Example.com");
@@ -77,7 +77,7 @@ public class AuthenticationControllerTest(
     }
 
     [Fact]
-    public async Task Login_WhenIsSuccessful_ShouldReturnToken()
+    public async Task Login_WhenIsSuccessful_ShouldCreateRefreshTokenAndReturnTokens()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateLoginRequest(
