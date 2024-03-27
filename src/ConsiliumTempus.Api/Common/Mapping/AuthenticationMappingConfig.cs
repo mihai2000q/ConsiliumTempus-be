@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
+using ConsiliumTempus.Application.Authentication.Commands.Login;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
-using ConsiliumTempus.Application.Authentication.Queries.Login;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
@@ -25,7 +25,7 @@ public sealed class AuthenticationMappingConfig : IRegister
 
     private static void LoginMappings(TypeAdapterConfig config)
     {
-        config.NewConfig<LoginRequest, LoginQuery>();
+        config.NewConfig<LoginRequest, LoginCommand>();
 
         config.NewConfig<LoginResult, LoginResponse>();
     }
