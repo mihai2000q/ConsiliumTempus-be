@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Api;
+using ConsiliumTempus.Api.Common.Cors;
 using ConsiliumTempus.Application;
 using ConsiliumTempus.Infrastructure;
 
@@ -17,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 {
     app.UseHttpsRedirection();
+    app.UseCors(CorsPolicies.Frontend.Policy);
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
