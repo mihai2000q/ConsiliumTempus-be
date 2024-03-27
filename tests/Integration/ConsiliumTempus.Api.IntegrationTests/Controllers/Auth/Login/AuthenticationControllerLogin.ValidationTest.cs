@@ -6,39 +6,37 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using FluentAssertions;
 using Xunit.Abstractions;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Login;
 
 [Collection(nameof(AuthenticationControllerCollection))]
-public class AuthenticationControllerValidationTest(
+public class AuthenticationControllerLoginValidationTest(
     WebAppFactory factory,
     ITestOutputHelper testOutputHelper)
     : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
 {
-    
-
-    
-
     [Fact]
-    public async Task Refresh_WhenCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task Login_WhenCommandIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = AuthenticationRequestFactory.CreateRefreshRequest();
+        var request = AuthenticationRequestFactory.CreateLoginRequest(
+            email: "MichaelJ@Gmail.com",
+            password: "MichaelJordan2");
 
         // Act
-        var outcome = await Client.Post("/api/auth/Refresh", request);
+        var outcome = await Client.Post("/api/auth/Login", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     [Fact]
-    public async Task Refresh_WhenCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task Login_WhenCommandIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
-        var request = AuthenticationRequestFactory.CreateRefreshRequest(token: "");
+        var request = AuthenticationRequestFactory.CreateLoginRequest(email: "no email");
 
         // Act
-        var outcome = await Client.Post("/api/auth/Refresh", request);
+        var outcome = await Client.Post("/api/auth/Login", request);
 
         // Assert
         await outcome.ValidateValidationErrors();
