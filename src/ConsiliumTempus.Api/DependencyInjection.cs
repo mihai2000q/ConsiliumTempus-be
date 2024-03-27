@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using ConsiliumTempus.Api.Common.Cors;
 using ConsiliumTempus.Api.Common.Errors;
 using Mapster;
 using MapsterMapper;
@@ -14,6 +15,7 @@ public static class DependencyInjection
         services.AddHttpContextAccessor()
             .AddMappings()
             .AddSingleton<ProblemDetailsFactory, ConsiliumTempusProblemDetailsFactory>()
+            .AddCorsPolicies()
             .AddControllers();
     }
 
@@ -36,6 +38,21 @@ public static class DependencyInjection
 
         services.AddSingleton(config);
         services.AddScoped<IMapper, ServiceMapper>();
+        return services;
+    }
+    
+    private static IServiceCollection AddCorsPolicies(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy(CorsPolicies.Frontend.Policy, policy =>
+            {
+                policy
+                    .WithOrigins(CorsPolicies.Frontend.Origin)
+                    //.WithHeaders(CorsPolicies.Frontend.Headers)
+                    .AllowAnyHeader();
+            });
+        });
         return services;
     }
 }
