@@ -13,7 +13,7 @@ public class UserControllerGetTest(
     : BaseIntegrationTest(factory, testOutputHelper)
 {
     [Fact]
-    public async Task WhenGetUserIsSuccessful_ThenReturnNewUser()
+    public async Task WhenGetUserIsSuccessful_ThenReturnUser()
     {
         // Arrange
         const string id = "10000000-0000-0000-0000-000000000000";

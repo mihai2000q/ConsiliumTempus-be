@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.User.Commands.Delete;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Application.User.Queries.Get;
+using ConsiliumTempus.Application.User.Queries.GetCurrent;
 using ConsiliumTempus.Application.User.Queries.GetId;
 using MapsterMapper;
 using MediatR;
@@ -35,6 +36,18 @@ public sealed class UserController(IMapper mapper, ISender mediator) : ApiContro
         
         return result.Match(
             getIdResult => Ok(Mapper.Map<GetUserIdResponse>(getIdResult)),
+            Problem
+        );
+    }
+
+    [HttpGet("current")]
+    public async Task<IActionResult> GetCurrent(CancellationToken cancellationToken)
+    {
+        var query = new GetCurrentUserQuery();
+        var result = await Mediator.Send(query, cancellationToken);
+        
+        return result.Match(
+            getCurrentResult => Ok(Mapper.Map<UserDto>(getCurrentResult)),
             Problem
         );
     }

@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Delete;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Application.User.Queries.Get;
+using ConsiliumTempus.Application.User.Queries.GetCurrent;
 using ConsiliumTempus.Application.User.Queries.GetId;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -77,7 +78,7 @@ public class UserControllerTest
     }
     
     [Fact]
-    public async Task GetUserId_WhenIsSuccessful_ShouldReturnUser()
+    public async Task GetUserId_WhenIsSuccessful_ShouldReturnUserId()
     {
         // Arrange
         var userId = UserFactory.CreateId();
@@ -98,6 +99,26 @@ public class UserControllerTest
 
         var response = ((OkObjectResult)outcome).Value as GetUserIdResponse;
         response?.Id.Should().Be(userId.ToString());
+    }
+    
+    [Fact]
+    public async Task GetCurrent_WhenIsSuccessful_ShouldReturnCurrentUser()
+    {
+        // Arrange
+        var user = UserFactory.Create();
+        _mediator
+            .Send(Arg.Any<GetCurrentUserQuery>())
+            .Returns(user);
+
+        // Act
+        var outcome = await _uut.GetCurrent(default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCurrentUserQuery>(query => query == new GetCurrentUserQuery()));
+
+        Utils.User.AssertDto(outcome, user);
     }
 
     [Fact]
