@@ -55,11 +55,16 @@ public class LoginCommandHandlerTest
             .GenerateToken(user)
             .Returns(token);
 
-        const string jwtId = "this is the id of the token";
+        var jwtId = new Guid().ToString();
         _jwtTokenGenerator
             .GetJwtIdFromToken(token)
             .Returns(jwtId);
 
+        RefreshToken refreshToken = null!;
+        _refreshTokenRepository
+            .When(r => r.Add(Arg.Any<RefreshToken>()))
+            .Do(rt => refreshToken = rt.Arg<RefreshToken>());
+        
         // Act
         var outcome = await _uut.Handle(query, default);
 
@@ -78,12 +83,13 @@ public class LoginCommandHandlerTest
             .GetJwtIdFromToken(Arg.Any<string>());
         await _refreshTokenRepository
             .Received(1)
-            .Add(Arg.Is<RefreshToken>(rt => 
-                Utils.RefreshToken.AssertCreation(rt, jwtId, user)));
+            .Add(Arg.Any<RefreshToken>());
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(token);
-        outcome.Value.RefreshToken.Should().NotBeNullOrWhiteSpace().And.HaveLength(36);
+        
+        Utils.RefreshToken.AssertCreation(refreshToken, jwtId, user);
+        outcome.Value.RefreshToken.Should().Be(refreshToken.Value);
     }
 
     [Fact]

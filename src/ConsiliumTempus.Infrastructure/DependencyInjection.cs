@@ -61,7 +61,7 @@ public static class DependencyInjection
             });
         
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-        services.AddSingleton<IJwtTokenValidator, JwtTokenValidator>();
+        services.AddScoped<IJwtTokenValidator, JwtTokenValidator>();
         services.AddSingleton<IScrambler, Scrambler>();
 
         return services;
@@ -70,9 +70,7 @@ public static class DependencyInjection
     private static IServiceCollection AddAppAuthorization(this IServiceCollection services)
     {
         services.AddAuthorization();
-
-        services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
-
+        
         services.AddScoped<IWorkspaceProvider, WorkspaceRepository>();
         services.AddScoped<IPermissionProvider, PermissionRepository>();
         services.AddScoped<IUserProvider, UserRepository>();
@@ -97,6 +95,7 @@ public static class DependencyInjection
                           $"Encrypt=false"));
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
         services.AddInterceptors()
             .AddRepositories();
     }

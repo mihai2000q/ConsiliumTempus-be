@@ -24,7 +24,7 @@ public sealed class LoginCommandHandler(
 
         var token = jwtTokenGenerator.GenerateToken(user);
         var jwtId = jwtTokenGenerator.GetJwtIdFromToken(token);
-        var refreshToken = RefreshToken.Create(token, jwtId, user);
+        var refreshToken = RefreshToken.Create(jwtId, user);
         await refreshTokenRepository.Add(refreshToken, cancellationToken);
         
         return new LoginResult(token, refreshToken.Value);

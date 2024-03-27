@@ -7,6 +7,7 @@ using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.User;
 using FluentAssertions;
+using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
@@ -57,12 +58,15 @@ internal static partial class Utils
             else
                 user.Role!.Value.Should().Be(request.Role);
             user.DateOfBirth.Should().Be(request.DateOfBirth);
+            user.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
             user.Memberships.Should().HaveCount(1);
             user.Memberships[0].User.Should().Be(user);
             user.Memberships[0].Workspace.Name.Value.Should().Be(Constants.Workspace.Name);
             user.Memberships[0].Workspace.Description.Value.Should().Be(Constants.Workspace.Description);
             user.Memberships[0].Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            user.Memberships[0].Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         }
 
         internal static void AssertUpdate(
@@ -76,6 +80,7 @@ internal static partial class Utils
             else
                 user.Role!.Value.Should().Be(request.Role);
             user.DateOfBirth.Should().Be(request.DateOfBirth);
+            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
     }
 }

@@ -59,10 +59,15 @@ public class RegisterCommandHandlerTest
             .Returns(token)
             .AndDoes(user => userUsedForJwt = user.Arg<UserAggregate>());
         
-        const string jwtId = "this is the id of the token";
+        var jwtId = new Guid().ToString();
         _jwtTokenGenerator
             .GetJwtIdFromToken(token)
             .Returns(jwtId);
+
+        RefreshToken refreshToken = null!;
+        _refreshTokenRepository
+            .When(r => r.Add(Arg.Any<RefreshToken>()))
+            .Do(rt => refreshToken = rt.Arg<RefreshToken>());
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -82,15 +87,16 @@ public class RegisterCommandHandlerTest
             .GetJwtIdFromToken(Arg.Any<string>());
         await _refreshTokenRepository
             .Received(1)
-            .Add(Arg.Is<RefreshToken>(rt => 
-                Utils.RefreshToken.AssertCreation(rt, jwtId, createdUser)));
+            .Add(Arg.Any<RefreshToken>());
 
         createdUser.Should().Be(userUsedForJwt);
         Utils.User.AssertFromRegisterCommand(createdUser, command, hashedPassword);
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(token);
-        outcome.Value.RefreshToken.Should().NotBeNullOrWhiteSpace().And.HaveLength(36);
+
+        Utils.RefreshToken.AssertCreation(refreshToken, jwtId, createdUser);
+        outcome.Value.RefreshToken.Should().Be(refreshToken.Value);
     }
 
     [Fact]

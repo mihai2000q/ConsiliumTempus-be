@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestFactory;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,14 @@ public class AuthenticationControllerTest(
             .ThenInclude(m => m.Workspace)
             .Single(u => u.Credentials.Email == request.Email.ToLower());
         Utils.User.AssertRegistration(createdUser, request);
+
+        dbContext.Set<RefreshToken>().Should().HaveCount(1);
+        var refreshToken = await dbContext.Set<RefreshToken>().SingleAsync();
+        Utils.RefreshToken.AssertCreation(
+            refreshToken, 
+            response?.RefreshToken, 
+            response?.Token, 
+            createdUser);
     }
 
     [Fact]
@@ -83,6 +92,16 @@ public class AuthenticationControllerTest(
 
         var response = await outcome.Content.ReadFromJsonAsync<LoginResponse>();
         Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email.ToLower());
+        
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Set<RefreshToken>().Should().HaveCount(1);
+        var refreshToken = await dbContext.Set<RefreshToken>().SingleAsync();
+        var user = await dbContext.Users.SingleAsync(u => u.Credentials.Email == request.Email.ToLower());
+        Utils.RefreshToken.AssertCreation(
+            refreshToken, 
+            response?.RefreshToken, 
+            response?.Token, 
+            user);
     }
 
     [Fact]

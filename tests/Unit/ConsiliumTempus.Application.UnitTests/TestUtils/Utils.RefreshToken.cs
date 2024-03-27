@@ -6,7 +6,7 @@ internal static partial class Utils
 {
     internal static class RefreshToken
     {
-        internal static bool AssertCreation(
+        internal static void AssertCreation(
             Domain.Common.Entities.RefreshToken refreshToken,
             string jwtId,
             UserAggregate user)
@@ -19,8 +19,6 @@ internal static partial class Utils
             refreshToken.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             refreshToken.User.Should().Be(user);
-            
-            return true;
         }
     }
 }

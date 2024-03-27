@@ -30,7 +30,7 @@ internal static partial class Utils
             var securityToken = new JwtSecurityToken(
                 jwtSettings.Issuer,
                 jwtSettings.Audience,
-                expires: DateTime.UtcNow.AddHours(jwtSettings.ExpiryHours),
+                expires: DateTime.UtcNow.AddMinutes(jwtSettings.ExpiryMinutes),
                 claims: claims,
                 signingCredentials: signingCredentials);
 
@@ -56,7 +56,7 @@ internal static partial class Utils
             var securityToken = new JwtSecurityToken(
                 jwtSettings.Issuer,
                 jwtSettings.Audience,
-                expires: DateTime.UtcNow.AddHours(jwtSettings.ExpiryHours),
+                expires: DateTime.UtcNow.AddMinutes(jwtSettings.ExpiryMinutes),
                 claims: claims,
                 signingCredentials: signingCredentials);
 

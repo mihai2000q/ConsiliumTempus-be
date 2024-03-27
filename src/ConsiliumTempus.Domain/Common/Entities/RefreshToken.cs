@@ -13,14 +13,14 @@ public sealed class RefreshToken : Entity<Guid>, ITimestamps
     }
 
     private RefreshToken(
-        Guid token,
+        Guid id,
         Guid jwtId,
         DateTime expiryDate,
         bool invalidated,
         long usedTimes,
         UserAggregate user,
         DateTime createdDateTime,
-        DateTime updatedDateTime) : base(token)
+        DateTime updatedDateTime) : base(id)
     {
         JwtId = jwtId;
         ExpiryDate = expiryDate;
@@ -42,12 +42,11 @@ public sealed class RefreshToken : Entity<Guid>, ITimestamps
     public string Value => Id.ToString();
 
     public static RefreshToken Create(
-        string token,
         string jwtId,
         UserAggregate user)
     {
         return new RefreshToken(
-            new Guid(token),
+            Guid.NewGuid(),
             new Guid(jwtId),
             DateTime.UtcNow.AddDays(7),
             false,
