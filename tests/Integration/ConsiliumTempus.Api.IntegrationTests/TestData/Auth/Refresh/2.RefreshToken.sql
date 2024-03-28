@@ -1,5 +1,5 @@
 ﻿INSERT INTO RefreshToken
-    (Id, JwtId, ExpiryDate, Invalidated, UsedTimes, CreatedDateTime, UpdatedDateTime, UserId)
+    (Id, JwtId, ExpiryDateTime, IsInvalidated, UsedTimes, CreatedDateTime, UpdatedDateTime, UserId)
 VALUES 
     ('10000000-0000-0000-0000-000000000096', '90000000-9000-0000-0000-900000000000',
      DATEADD(DAY, 1, GETUTCDATE()), 0, 0, '2023-11-21 20:50:51', '2023-11-23 12:00:00', 
