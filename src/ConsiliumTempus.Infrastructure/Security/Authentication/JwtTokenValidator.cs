@@ -21,8 +21,8 @@ public sealed class JwtTokenValidator(
     public bool ValidateRefreshToken(RefreshToken? refreshToken, string jwtId)
     {
         return refreshToken is not null &&
-               DateTime.UtcNow <= refreshToken.ExpiryDate &&
-               !refreshToken.Invalidated &&
+               DateTime.UtcNow <= refreshToken.ExpiryDateTime &&
+               !refreshToken.IsInvalidated &&
                refreshToken.JwtId.ToString() == jwtId;
     }
     

@@ -16,11 +16,11 @@ public static class RefreshTokenFactory
             jwtId ?? Guid.NewGuid().ToString(),
             user ?? UserFactory.Create());
         
-        typeof(RefreshToken).GetProperty(nameof(refreshToken.Invalidated))
+        typeof(RefreshToken).GetProperty(nameof(refreshToken.IsInvalidated))
             ?.SetValue(refreshToken, invalidated);
 
         expiryDate ??= DateTime.UtcNow.AddDays(7);
-        typeof(RefreshToken).GetProperty(nameof(refreshToken.ExpiryDate))
+        typeof(RefreshToken).GetProperty(nameof(refreshToken.ExpiryDateTime))
             ?.SetValue(refreshToken, expiryDate);
 
         return refreshToken;

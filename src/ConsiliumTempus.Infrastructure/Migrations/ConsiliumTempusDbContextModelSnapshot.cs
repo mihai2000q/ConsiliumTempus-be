@@ -122,10 +122,10 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ExpiryDate")
+                    b.Property<DateTime>("ExpiryDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Invalidated")
+                    b.Property<bool>("IsInvalidated")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("JwtId")

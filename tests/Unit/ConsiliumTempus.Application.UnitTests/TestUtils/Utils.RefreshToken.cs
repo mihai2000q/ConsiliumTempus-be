@@ -13,8 +13,8 @@ internal static partial class Utils
         {
             refreshToken.Value.Should().NotBeNullOrWhiteSpace().And.HaveLength(36);
             refreshToken.JwtId.ToString().Should().Be(jwtId);
-            refreshToken.ExpiryDate.Should().BeCloseTo(DateTime.UtcNow.AddDays(7), TimeSpan.FromMinutes(1));
-            refreshToken.Invalidated.Should().BeFalse();
+            refreshToken.ExpiryDateTime.Should().BeCloseTo(DateTime.UtcNow.AddDays(7), TimeSpan.FromMinutes(1));
+            refreshToken.IsInvalidated.Should().BeFalse();
             refreshToken.UsedTimes.Should().Be(0);
             refreshToken.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));

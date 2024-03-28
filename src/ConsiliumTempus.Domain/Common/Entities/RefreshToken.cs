@@ -15,16 +15,16 @@ public sealed class RefreshToken : Entity<Guid>, ITimestamps
     private RefreshToken(
         Guid id,
         Guid jwtId,
-        DateTime expiryDate,
-        bool invalidated,
+        DateTime expiryDateTime,
+        bool isInvalidated,
         long usedTimes,
         UserAggregate user,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
     {
         JwtId = jwtId;
-        ExpiryDate = expiryDate;
-        Invalidated = invalidated;
+        ExpiryDateTime = expiryDateTime;
+        IsInvalidated = isInvalidated;
         UsedTimes = usedTimes;
         User = user;
         CreatedDateTime = createdDateTime;
@@ -32,8 +32,8 @@ public sealed class RefreshToken : Entity<Guid>, ITimestamps
     }
 
     public Guid JwtId { get; init; }
-    public DateTime ExpiryDate { get; init; }
-    public bool Invalidated { get; private set; }
+    public DateTime ExpiryDateTime { get; init; }
+    public bool IsInvalidated { get; private set; }
     public long UsedTimes { get; private set; }
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
