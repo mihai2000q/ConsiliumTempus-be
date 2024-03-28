@@ -3,4 +3,4 @@
 namespace ConsiliumTempus.Api.Contracts.Authentication.Register;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-public sealed record RegisterResponse(string Token);
+public sealed record RegisterResponse(string Token, string RefreshToken);

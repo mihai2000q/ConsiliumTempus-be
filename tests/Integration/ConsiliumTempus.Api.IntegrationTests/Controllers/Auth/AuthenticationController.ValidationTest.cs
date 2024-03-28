@@ -12,63 +12,29 @@ namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth;
 public class AuthenticationControllerValidationTest(
     WebAppFactory factory,
     ITestOutputHelper testOutputHelper)
-    : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
+    : BaseIntegrationTest(factory, testOutputHelper, "Auth/Refresh", false)
 {
     [Fact]
-    public async Task Register_WhenCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task Refresh_WhenCommandIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = AuthenticationRequestFactory.CreateRegisterRequest(
-            firstName: "First", 
-            lastName: "Last", 
-            email: "FirstLast@Example.com");
+        var request = AuthenticationRequestFactory.CreateRefreshRequest();
 
         // Act
-        var outcome = await Client.Post("/api/auth/Register", request);
+        var outcome = await Client.Post("/api/auth/Refresh", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]
-    public async Task Register_WhenCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task Refresh_WhenCommandIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
-        var request = AuthenticationRequestFactory.CreateRegisterRequest(
-            firstName: string.Empty,
-            lastName: string.Empty,
-            email: "some wrong email");
+        var request = AuthenticationRequestFactory.CreateRefreshRequest(token: "");
 
         // Act
-        var outcome = await Client.Post("/api/auth/Register", request);
-
-        // Assert
-        await outcome.ValidateValidationErrors();
-    }
-
-    [Fact]
-    public async Task Login_WhenQueryIsValid_ShouldReturnToken()
-    {
-        // Arrange
-        var request = AuthenticationRequestFactory.CreateLoginRequest(
-            email: "MichaelJ@Gmail.com",
-            password: "MichaelJordan2");
-
-        // Act
-        var outcome = await Client.Post("/api/auth/Login", request);
-
-        // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-    }
-
-    [Fact]
-    public async Task Login_WhenQueryIsValid_ShouldReturnInvalidCredentialsError()
-    {
-        // Arrange
-        var request = AuthenticationRequestFactory.CreateLoginRequest(email: "no email");
-
-        // Act
-        var outcome = await Client.Post("/api/auth/Login", request);
+        var outcome = await Client.Post("/api/auth/Refresh", request);
 
         // Assert
         await outcome.ValidateValidationErrors();

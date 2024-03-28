@@ -15,8 +15,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
     public string GenerateToken(UserAggregate userAggregate)
     {
         var signingCredentials = new SigningCredentials(
-            new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
             SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
@@ -29,12 +28,21 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
         };
 
         var securityToken = new JwtSecurityToken(
-            _jwtSettings.Issuer,
-            _jwtSettings.Audience,
-            expires: DateTime.UtcNow.AddHours(_jwtSettings.ExpiryHours),
+            issuer: _jwtSettings.Issuer,
+            audience: _jwtSettings.Audience,
+            expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
             claims: claims,
             signingCredentials: signingCredentials);
 
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
+    }
+
+    public string GetJwtIdFromToken(string token)
+    {
+        return new JwtSecurityTokenHandler()
+            .ReadJwtToken(token)
+            .Claims
+            .Single(c => c.Type == JwtRegisteredClaimNames.Jti)
+            .Value;
     }
 }

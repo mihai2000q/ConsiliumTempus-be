@@ -1,7 +1,9 @@
 ﻿using ConsiliumTempus.Api.Contracts.Authentication.Login;
+using ConsiliumTempus.Api.Contracts.Authentication.Refresh;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
+using ConsiliumTempus.Application.Authentication.Commands.Login;
+using ConsiliumTempus.Application.Authentication.Commands.Refresh;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
-using ConsiliumTempus.Application.Authentication.Queries.Login;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -28,11 +30,23 @@ public sealed class AuthenticationController(IMapper mapper, ISender mediator) :
     [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginRequest request, CancellationToken cancellationToken)
     {
-        var query = Mapper.Map<LoginQuery>(request);
+        var query = Mapper.Map<LoginCommand>(request);
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
             loginResult => Ok(Mapper.Map<LoginResponse>(loginResult)),
+            Problem
+        );
+    }
+    
+    [HttpPost("Refresh")]
+    public async Task<IActionResult> Refresh(RefreshRequest request, CancellationToken cancellationToken)
+    {
+        var query = Mapper.Map<RefreshCommand>(request);
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return result.Match(
+            refreshResult => Ok(Mapper.Map<RefreshResponse>(refreshResult)),
             Problem
         );
     }

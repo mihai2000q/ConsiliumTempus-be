@@ -163,7 +163,7 @@ It will return an Invalid Credentials Error, however, now you know that you have
 ## Testing
 
 The backend of the application is tested using the **xUnit** framework. 
-The tests are divided into Unit and Integration Tests.
+The tests are divided into Unit, Integration and End-To-End Tests.
 <br> 
 For more information, check out the documentation on [Testing](docs/Testing.md).
 

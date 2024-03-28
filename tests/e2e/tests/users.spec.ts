@@ -11,15 +11,16 @@ test.describe('should allow operations on the user entity', () => {
   const DATE_OF_BIRTH = "2000-12-21"
 
   test.beforeEach('should register and create token', async ({ request }) => {
-    process.env.API_TOKEN = await registerUser(
-      request,
-      EMAIL,
-      PASSWORD,
-      FIRSTNAME,
-      LASTNAME,
-      ROLE,
-      DATE_OF_BIRTH
-    )
+    process.env.API_TOKEN = (await registerUser(
+        request,
+        EMAIL,
+        PASSWORD,
+        FIRSTNAME,
+        LASTNAME,
+        ROLE,
+        DATE_OF_BIRTH
+      )
+    ).token
   })
 
   test('should get user', async ({ request }) => {

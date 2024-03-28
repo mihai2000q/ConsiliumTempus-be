@@ -50,6 +50,7 @@ The entities are:
 
 - [Membership](domain/entities/Entity.Membership.md)
 - [Permission](domain/entities/Entity.Permission.md)
+- [Refresh Token](domain/entities/Entity.RefreshToken.md)
 - [Workspace Role](domain/entities/Entity.WorkspaceRole.md)
 
 ## Value Objects
@@ -66,7 +67,7 @@ The value objects are:
 - **IsPrivate**, which encapsulates a boolean *Value*
 - **Message**, which encapsulates a string *Value*
 - **Name**, which encapsulates a string *Value*
-- **Order**, which encapsulates an int *Value* and it's used to achieve custom ordering
+- **Order**, which encapsulates an int *Value,* and it's used to achieve custom ordering
 
 ## Domain Errors
 
@@ -74,6 +75,7 @@ These errors are not tied to any aggregate, therefore notable and only used in t
 
 - Authentication
   - **Invalid Credentials** when, upon authentication, the credentials are invalid
+  - **Invalid Tokens** when, upon refreshing the token, either the access or refresh token is invalid
 
 ## Enums
 

@@ -54,7 +54,7 @@ export async function registerUser(
 
   expect(res.ok()).toBeTruthy()
 
-  return (await res.json()).token as string
+  return await res.json()
 }
 
 export async function deleteUser(
@@ -62,14 +62,15 @@ export async function deleteUser(
   email: String = EMAIL,
   password: String = PASSWORD
 ) {
-  const token = process.env.API_TOKEN == undefined ? await loginUser(request, email, password) : process.env.API_TOKEN
+  const tokens = await loginUser(request, email, password)
+  const token = process.env.API_TOKEN == undefined ? tokens.token : process.env.API_TOKEN
 
   const res = await request.delete('api/users', useToken(token))
 
   expect(res.ok()).toBeTruthy()
 }
 
-async function loginUser(
+export async function loginUser(
   request: APIRequestContext,
   email: String = EMAIL,
   password: String = PASSWORD
@@ -86,5 +87,5 @@ async function loginUser(
 
   expect(res.ok()).toBeTruthy()
 
-  return (await res.json()).token as string
+  return await res.json()
 }

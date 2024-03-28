@@ -7,18 +7,23 @@
     - [Login](#login)
         - [Login Request](#login-request)
         - [Login Response](#login-response)
+    - [Refresh](#refresh)
+        - [Refresh Request](#refresh-request)
+        - [Refresh Response](#refresh-response)
 
 ## Auth
 
 To use the application, the user should first register. 
-When registering, a **User** will be created. 
-After that, the user can login, where a token will be created. 
-This token holds sensitive data. 
+When registering, a **User** will be created and an _Access Token_ will be returned as a result.
+Alternatively, if the user already exists, use their credentials to login and get a new token.
 The developer can test 
-whether the token generator worked accordingly by grabbing the token hash and decode it on [jwt.io](https://jwt.io). 
+whether the generated token worked accordingly by grabbing the token hash and decode it on [jwt.io](https://jwt.io).
 See the example below:
 
 ![Decoded Jwt Token](../images/api/auth-jwt-token.png)
+
+Also, the token is short-lived; therefore, when it expires, it can be refreshed using the _Refresh Token_, 
+which has a long lifetime.
 
 ### Register
 
@@ -45,7 +50,7 @@ Sends data needed to create the user in body.
 
 #### Register Response
 
-Returns a token about the newly created user.
+Returns an access token and a refresh token.
 
 ```js
 200 OK
@@ -53,7 +58,8 @@ Returns a token about the newly created user.
 
 ```json
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzQyM2NkMS0wNGY1LTQ5ZjAtOWY1OS0yOGVjNDk1YjllNzAiLCJlbWFpbCI6IkZpcnN0TGFzdHlAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoiRmlyc3R5IiwiZmFtaWx5X25hbWUiOiJMYXN0eSIsImp0aSI6ImQzZWJlOTExLWFmNDktNDE3OC1iZmVmLWEwODljMDg5ZGI5ZSIsImV4cCI6MTcwMTIwMjQyNSwiaXNzIjoiQ29uc2lsaXVtVGVtcHVzIiwiYXVkIjoiQ29uc2lsaXVtVGVtcHVzIn0.KqiE-eQqyd-VtfMJB3x9dNW2wR6_TrkGpGZ-ZyxxPWI"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzQyM2NkMS0wNGY1LTQ5ZjAtOWY1OS0yOGVjNDk1YjllNzAiLCJlbWFpbCI6IkZpcnN0TGFzdHlAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoiRmlyc3R5IiwiZmFtaWx5X25hbWUiOiJMYXN0eSIsImp0aSI6ImQzZWJlOTExLWFmNDktNDE3OC1iZmVmLWEwODljMDg5ZGI5ZSIsImV4cCI6MTcwMTIwMjQyNSwiaXNzIjoiQ29uc2lsaXVtVGVtcHVzIiwiYXVkIjoiQ29uc2lsaXVtVGVtcHVzIn0.KqiE-eQqyd-VtfMJB3x9dNW2wR6_TrkGpGZ-ZyxxPWI",
+  "refreshToken": "88882448-bd63-4731-8a05-f6333b6d22e2"
 }
 ```
 
@@ -72,14 +78,14 @@ Sends credentials of user in body.
 
 ```json
 {
-    "email": "FirstLasty@example.com",
-    "password": "password123"
+  "email": "FirstLasty@example.com",
+  "password": "password123"
 }
 ```
 
 #### Login Response
 
-Returns token based on the user information.
+Returns an access token and a refresh token.
 
 ```js
 200 OK
@@ -87,6 +93,41 @@ Returns token based on the user information.
 
 ```json
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzQyM2NkMS0wNGY1LTQ5ZjAtOWY1OS0yOGVjNDk1YjllNzAiLCJlbWFpbCI6IkZpcnN0TGFzdHlAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoiRmlyc3R5IiwiZmFtaWx5X25hbWUiOiJMYXN0eSIsImp0aSI6ImQzZWJlOTExLWFmNDktNDE3OC1iZmVmLWEwODljMDg5ZGI5ZSIsImV4cCI6MTcwMTIwMjQyNSwiaXNzIjoiQ29uc2lsaXVtVGVtcHVzIiwiYXVkIjoiQ29uc2lsaXVtVGVtcHVzIn0.KqiE-eQqyd-VtfMJB3x9dNW2wR6_TrkGpGZ-ZyxxPWI"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzQyM2NkMS0wNGY1LTQ5ZjAtOWY1OS0yOGVjNDk1YjllNzAiLCJlbWFpbCI6IkZpcnN0TGFzdHlAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoiRmlyc3R5IiwiZmFtaWx5X25hbWUiOiJMYXN0eSIsImp0aSI6ImQzZWJlOTExLWFmNDktNDE3OC1iZmVmLWEwODljMDg5ZGI5ZSIsImV4cCI6MTcwMTIwMjQyNSwiaXNzIjoiQ29uc2lsaXVtVGVtcHVzIiwiYXVkIjoiQ29uc2lsaXVtVGVtcHVzIn0.KqiE-eQqyd-VtfMJB3x9dNW2wR6_TrkGpGZ-ZyxxPWI",
+  "refreshToken": "88882448-bd63-4731-8a05-f6333b6d22e2"
+}
+```
+
+
+### Refresh
+
+Anyone can refresh their token.
+
+```js
+POST {{host}}/api/auth/refresh
+```
+
+#### Refresh Request
+
+Sends access and refresh tokens in body.
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzQyM2NkMS0wNGY1LTQ5ZjAtOWY1OS0yOGVjNDk1YjllNzAiLCJlbWFpbCI6IkZpcnN0TGFzdHlAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoiRmlyc3R5IiwiZmFtaWx5X25hbWUiOiJMYXN0eSIsImp0aSI6ImQzZWJlOTExLWFmNDktNDE3OC1iZmVmLWEwODljMDg5ZGI5ZSIsImV4cCI6MTcwMTIwMjQyNSwiaXNzIjoiQ29uc2lsaXVtVGVtcHVzIiwiYXVkIjoiQ29uc2lsaXVtVGVtcHVzIn0.KqiE-eQqyd-VtfMJB3x9dNW2wR6_TrkGpGZ-ZyxxPWI",
+  "refreshToken": "88882448-bd63-4731-8a05-f6333b6d22e2"
+}
+```
+
+#### Refresh Response
+
+Returns new access token.
+
+```js
+200 OK
+```
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzQyM2NkMS0wNGY1LTQ5ZjAtOWY1OS0yOGVjNDk1YjllNzAiLCJlbWFpbCI6IkZpcnN0TGFzdHlAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoiRmlyc3R5IiwiZmFtaWx5X25hbWUiOiJMYXN0eSIsImp0aSI6ImQzZWJlOTExLWFmNDktNDE3OC1iZmVmLWEwODljMDg5ZGI5ZSIsImV4cCI6MTcwMTIwMjQyNSwiaXNzIjoiQ29uc2lsaXVtVGVtcHVzIiwiYXVkIjoiQ29uc2lsaXVtVGVtcHVzIn0.KqiE-eQqyd-VtfMJB3x9dNW2wR6_TrkGpGZ-ZyxxPWI"
 }
 ```

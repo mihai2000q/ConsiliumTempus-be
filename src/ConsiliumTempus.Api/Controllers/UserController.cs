@@ -28,7 +28,7 @@ public sealed class UserController(IMapper mapper, ISender mediator) : ApiContro
         );
     }
 
-    [HttpGet("id")]
+    [HttpGet("Id")]
     public async Task<IActionResult> GetId(CancellationToken cancellationToken)
     {
         var query = new GetUserIdQuery();
@@ -40,7 +40,7 @@ public sealed class UserController(IMapper mapper, ISender mediator) : ApiContro
         );
     }
 
-    [HttpGet("current")]
+    [HttpGet("Current")]
     public async Task<IActionResult> GetCurrent(CancellationToken cancellationToken)
     {
         var query = new GetCurrentUserQuery();
