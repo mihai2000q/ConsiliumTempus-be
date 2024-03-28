@@ -6,6 +6,7 @@
 
 - **Many-to-many** relationship with the [Workspace](../../aggregates/Aggregate.Workspace.md) aggregate
 (through the **Many-to-one** relationship with the [Membership](../../entities/Entity.Membership.md) entity).
+- **One-to-many** relationship with the [Refresh Token](../../entities/Entity.RefreshToken.md) entity.
 
 ### Diagram
 
