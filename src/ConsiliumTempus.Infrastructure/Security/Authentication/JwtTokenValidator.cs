@@ -1,16 +1,23 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authentication;
 
-public sealed class JwtTokenValidator(IUserProvider userProvider) : IJwtTokenValidator
+public sealed class JwtTokenValidator(
+    IOptions<JwtSettings> jwtOptions,
+    IUserProvider userProvider) : IJwtTokenValidator
 {
+    private readonly JwtSettings _jwtSettings = jwtOptions.Value;
+    
     public bool ValidateRefreshToken(RefreshToken? refreshToken, string jwtId)
     {
         return refreshToken is not null &&
@@ -22,15 +29,22 @@ public sealed class JwtTokenValidator(IUserProvider userProvider) : IJwtTokenVal
     public async Task<bool> ValidateAccessToken(string token)
     {
         var jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
-        // also check validation parameters i.e., issuer, audience etc
+
+        if (jwtSecurityToken.Issuer != _jwtSettings.Issuer ||
+            jwtSecurityToken.Audiences.Single() != _jwtSettings.Audience ||
+            jwtSecurityToken.SignatureAlgorithm != SecurityAlgorithms.HmacSha256)
+        {
+            return false;
+        }
+        
         var claims = jwtSecurityToken.Claims.ToArray();
         var sub = GetClaim(claims, JwtRegisteredClaimNames.Sub);
 
         if (!Guid.TryParse(sub, out var userId)) return false;
 
         var user = await userProvider.Get(UserId.Create(userId));
-        
-        return user is not null && 
+
+        return user is not null &&
                AreClaimsValid(claims, user);
     }
     

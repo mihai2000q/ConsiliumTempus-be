@@ -5,7 +5,7 @@ using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 
-internal static class Utils
+internal static partial class Utils
 {
     internal static void AssertToken(string token, UserAggregate user, JwtSettings jwtSettings)
     {

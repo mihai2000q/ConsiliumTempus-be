@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Common.UnitTests.TestConstants;
-using ConsiliumTempus.Common.UnitTests.User;
+﻿using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 
@@ -9,10 +8,21 @@ public static class RefreshTokenFactory
 {
     public static RefreshToken Create(
         string? jwtId = null,
-        UserAggregate? user = null)
+        UserAggregate? user = null,
+        bool invalidated = false,
+        DateTime? expiryDate = null)
     {
-        return RefreshToken.Create(
+        var refreshToken = RefreshToken.Create(
             jwtId ?? Guid.NewGuid().ToString(),
             user ?? UserFactory.Create());
+        
+        typeof(RefreshToken).GetProperty(nameof(refreshToken.Invalidated))
+            ?.SetValue(refreshToken, invalidated);
+
+        expiryDate ??= DateTime.UtcNow.AddDays(7);
+        typeof(RefreshToken).GetProperty(nameof(refreshToken.ExpiryDate))
+            ?.SetValue(refreshToken, expiryDate);
+
+        return refreshToken;
     }
 }

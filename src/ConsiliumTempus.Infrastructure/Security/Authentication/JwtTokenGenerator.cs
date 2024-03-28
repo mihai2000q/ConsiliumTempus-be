@@ -15,8 +15,7 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
     public string GenerateToken(UserAggregate userAggregate)
     {
         var signingCredentials = new SigningCredentials(
-            new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
             SecurityAlgorithms.HmacSha256);
 
         var claims = new[]

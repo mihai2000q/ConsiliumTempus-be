@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Infrastructure.Security.Authentication;
 
-namespace ConsiliumTempus.Infrastructure.UnitTests.Authentication;
+namespace ConsiliumTempus.Infrastructure.UnitTests.Security.Authentication;
 
 public class ScramblerTest
 {
