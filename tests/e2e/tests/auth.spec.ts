@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { deleteUser, loginUser, registerUser } from "../utils/utils";
+import { deleteUser, registerUser } from "../utils/utils";
 
 test.describe('should allow anonymous authentication', () => {
   const EMAIL = "michaeljordan@example.com"
@@ -7,26 +7,6 @@ test.describe('should allow anonymous authentication', () => {
 
   test.afterEach('should delete user', async ({ request }) => {
     await deleteUser(request, EMAIL, PASSWORD)
-  })
-
-  test('should refresh token', async ({ request }) => {
-    const tokens = await loginUser(request, EMAIL, PASSWORD)
-
-    const response = await request.post('api/auth/refresh', {
-      headers: {
-        'Authorization': ''
-      },
-      data: {
-        token: tokens.token,
-        refreshToken: tokens.refreshToken
-      }
-    })
-
-    expect(response.ok()).toBeTruthy()
-
-    expect(await response.json()).toEqual({
-      token: expect.any(String)
-    })
   })
 
   test('should register and return tokens', async ({ request }) => {
@@ -70,6 +50,26 @@ test.describe('should allow anonymous authentication', () => {
     expect(await response.json()).toEqual({
       token: expect.any(String),
       refreshToken: expect.any(String)
+    })
+  })
+
+  test('should refresh token', async ({ request }) => {
+    const tokens = await registerUser(request, EMAIL, PASSWORD)
+
+    const response = await request.post('api/auth/refresh', {
+      headers: {
+        'Authorization': ''
+      },
+      data: {
+        token: tokens.token,
+        refreshToken: tokens.refreshToken
+      }
+    })
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toEqual({
+      token: expect.any(String)
     })
   })
 })

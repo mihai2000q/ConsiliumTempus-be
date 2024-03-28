@@ -54,7 +54,7 @@ export async function registerUser(
 
   expect(res.ok()).toBeTruthy()
 
-  return (await res.json()).token as string
+  return await res.json()
 }
 
 export async function deleteUser(

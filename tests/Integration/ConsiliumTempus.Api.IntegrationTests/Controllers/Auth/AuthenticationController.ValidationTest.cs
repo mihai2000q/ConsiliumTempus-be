@@ -12,12 +12,8 @@ namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth;
 public class AuthenticationControllerValidationTest(
     WebAppFactory factory,
     ITestOutputHelper testOutputHelper)
-    : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
+    : BaseIntegrationTest(factory, testOutputHelper, "Auth/Refresh", false)
 {
-    
-
-    
-
     [Fact]
     public async Task Refresh_WhenCommandIsValid_ShouldReturnSuccessResponse()
     {
@@ -30,7 +26,7 @@ public class AuthenticationControllerValidationTest(
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     [Fact]
     public async Task Refresh_WhenCommandIsInvalid_ShouldReturnValidationErrors()
     {
