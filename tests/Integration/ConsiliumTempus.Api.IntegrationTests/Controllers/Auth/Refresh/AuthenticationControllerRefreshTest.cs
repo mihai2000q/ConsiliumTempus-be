@@ -3,29 +3,30 @@ using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Refresh;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestConstants;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory.Request;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Refresh;
 
 [Collection(nameof(AuthenticationControllerCollection))]
-public class AuthenticationControllerRefreshTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper)
-    : BaseIntegrationTest(factory, testOutputHelper, "Auth/Refresh", false)
+public class AuthenticationControllerRefreshTest(WebAppFactory factory)
+    : BaseIntegrationTest(factory, new AuthData(), false)
 {
     [Fact]
     public async Task Refresh_WhenItIsSuccessful_ShouldReturnNewTokens()
     {
         // Arrange
-        var request = AuthenticationRequestFactory.CreateRefreshRequest();
+        var refreshTokenRequest = AuthData.RefreshTokens.First();
+        var token = Utils.Token.GenerateValidToken(refreshTokenRequest.User, JwtSettings, refreshTokenRequest.JwtId.ToString());
+        var request = AuthenticationRequestFactory.CreateRefreshRequest(
+            refreshTokenRequest.Value,
+            Utils.Token.SecurityTokenToStringToken(token));
 
         // Act
         var outcome = await Client.Post("/api/auth/Refresh", request);
@@ -37,9 +38,7 @@ public class AuthenticationControllerRefreshTest(
         Utils.Auth.AssertToken(
             response?.Token, 
             JwtSettings, 
-            "michaelj@gmail.com",
-            "Michael",
-            "Jordan");
+            refreshTokenRequest.User);
 
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         var refreshToken = await dbContext.Set<RefreshToken>()
@@ -50,10 +49,31 @@ public class AuthenticationControllerRefreshTest(
     }
     
     [Fact]
-    public async Task Refresh_WhenAccessTokenIsInvalid_ShouldReturnInvalidTokensError()
+    public async Task Refresh_WhenAccessTokenIsInvalidDueToJwtSettings_ShouldReturnInvalidTokensError()
     {
         // Arrange
-        var request = AuthenticationRequestFactory.CreateRefreshRequest(token: Constants.InvalidToken);
+        var refreshToken = AuthData.RefreshTokens[0].Value;
+        var token = Utils.Token.GenerateInvalidToken();
+        var request = AuthenticationRequestFactory.CreateRefreshRequest(
+            refreshToken, 
+            Utils.Token.SecurityTokenToStringToken(token));
+
+        // Act
+        var outcome = await Client.Post("/api/auth/Refresh", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.Authentication.InvalidTokens);
+    }
+    
+    [Fact]
+    public async Task Refresh_WhenAccessTokenIsInvalidDueToClaims_ShouldReturnInvalidTokensError()
+    {
+        // Arrange
+        var refreshToken = AuthData.RefreshTokens[0].Value;
+        var token = Utils.Token.GenerateInvalidToken(JwtSettings);
+        var request = AuthenticationRequestFactory.CreateRefreshRequest(
+            refreshToken, 
+            Utils.Token.SecurityTokenToStringToken(token));
 
         // Act
         var outcome = await Client.Post("/api/auth/Refresh", request);
@@ -66,8 +86,11 @@ public class AuthenticationControllerRefreshTest(
     public async Task Refresh_WhenRefreshTokenIsInvalidated_ShouldReturnInvalidTokensError()
     {
         // Arrange
+        var refreshToken = AuthData.RefreshTokens[1];
+        var token = Utils.Token.GenerateValidToken(refreshToken.User, JwtSettings, refreshToken.JwtId.ToString());
         var request = AuthenticationRequestFactory.CreateRefreshRequest(
-            refreshToken: "10000000-0000-0000-0000-000000000097");
+            refreshToken.Value,
+            Utils.Token.SecurityTokenToStringToken(token));
 
         // Act
         var outcome = await Client.Post("/api/auth/Refresh", request);
@@ -80,8 +103,11 @@ public class AuthenticationControllerRefreshTest(
     public async Task Refresh_WhenRefreshTokenIsExpired_ShouldReturnInvalidTokensError()
     {
         // Arrange
+        var refreshToken = AuthData.RefreshTokens[2];
+        var token = Utils.Token.GenerateValidToken(refreshToken.User, JwtSettings, refreshToken.JwtId.ToString());
         var request = AuthenticationRequestFactory.CreateRefreshRequest(
-            refreshToken: "10000000-0000-0000-0000-000000000098");
+            refreshToken.Value,
+            Utils.Token.SecurityTokenToStringToken(token));
 
         // Act
         var outcome = await Client.Post("/api/auth/Refresh", request);
@@ -94,8 +120,11 @@ public class AuthenticationControllerRefreshTest(
     public async Task Refresh_WhenRefreshTokenJwtIdIsWrong_ShouldReturnInvalidTokensError()
     {
         // Arrange
+        var refreshToken = AuthData.RefreshTokens[3];
+        var token = Utils.Token.GenerateValidToken(refreshToken.User, JwtSettings);
         var request = AuthenticationRequestFactory.CreateRefreshRequest(
-            refreshToken: "10000000-0000-0000-0000-000000000099");
+            refreshToken.Value,
+            Utils.Token.SecurityTokenToStringToken(token));
 
         // Act
         var outcome = await Client.Post("/api/auth/Refresh", request);

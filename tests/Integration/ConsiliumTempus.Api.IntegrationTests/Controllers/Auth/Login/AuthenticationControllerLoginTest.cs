@@ -3,29 +3,27 @@ using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Api.IntegrationTests.TestFactory.Request;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Login;
 
 [Collection(nameof(AuthenticationControllerCollection))]
-public class AuthenticationControllerLoginTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper)
-    : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
+public class AuthenticationControllerLoginTest(WebAppFactory factory)
+    : BaseIntegrationTest(factory, new AuthData(), false)
 {
     [Fact]
     public async Task Login_WhenIsSuccessful_ShouldCreateRefreshTokenAndReturnTokens()
     {
         // Arrange
+        var user = AuthData.Users.First();
         var request = AuthenticationRequestFactory.CreateLoginRequest(
-            email: "MichaelJ@Gmail.com",
-            password: "MichaelJordan2");
+            email: user.Credentials.Email);
 
         // Act
         var outcome = await Client.Post("/api/auth/Login", request);
@@ -34,12 +32,15 @@ public class AuthenticationControllerLoginTest(
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<LoginResponse>();
-        Utils.Auth.AssertToken(response?.Token, JwtSettings, request.Email.ToLower());
+        Utils.Auth.AssertToken(response?.Token, JwtSettings, user);
         
         var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Set<RefreshToken>().Should().HaveCount(1);
-        var refreshToken = await dbContext.Set<RefreshToken>().SingleAsync();
-        var user = await dbContext.Users.SingleAsync(u => u.Credentials.Email == request.Email.ToLower());
+        dbContext.Set<RefreshToken>().Should().HaveCount(AuthData.RefreshTokens.Length + 1);
+        var refreshToken = await dbContext.Set<RefreshToken>()
+            .Include(rt => rt.User)
+            .Where(rt => rt.User == user)
+            .OrderBy(rt => rt.CreatedDateTime)
+            .LastAsync();
         Utils.RefreshToken.AssertCreation(
             refreshToken, 
             response?.RefreshToken, 
@@ -63,6 +64,8 @@ public class AuthenticationControllerLoginTest(
         dbContext.Users
             .SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
             .Should().BeNull();
+        
+        dbContext.Set<RefreshToken>().Should().HaveCount(AuthData.RefreshTokens.Length);
     }
 
     [Fact]
@@ -70,7 +73,7 @@ public class AuthenticationControllerLoginTest(
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateLoginRequest(
-            email: "MichaelJ@Gmail.com",
+            email: AuthData.Users.First().Credentials.Email,
             password: "Password123");
 
         // Act
@@ -83,5 +86,7 @@ public class AuthenticationControllerLoginTest(
         dbContext.Users
             .SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
             .Should().NotBeNull();
+        
+        dbContext.Set<RefreshToken>().Should().HaveCount(AuthData.RefreshTokens.Length);
     }
 }

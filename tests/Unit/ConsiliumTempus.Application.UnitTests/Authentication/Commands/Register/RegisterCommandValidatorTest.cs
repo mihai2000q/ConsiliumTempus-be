@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Authentication.Commands.Register;
-using ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands;
 using ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands.Register;
 
 namespace ConsiliumTempus.Application.UnitTests.Authentication.Commands.Register;

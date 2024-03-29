@@ -1,7 +1,6 @@
 ﻿using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
-using ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands;
 using ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands.Register;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Authentication;

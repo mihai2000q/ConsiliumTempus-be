@@ -11,7 +11,7 @@ internal static partial class Utils
 {
     internal static class Token
     {
-        internal static JwtSecurityToken GenerateValidToken(UserAggregate user, JwtSettings jwtSettings)
+        internal static JwtSecurityToken GenerateValidToken(UserAggregate user, JwtSettings jwtSettings, string? jti = null)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(
@@ -24,7 +24,7 @@ internal static partial class Utils
                 new Claim(JwtRegisteredClaimNames.Email, user.Credentials.Email),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName.Value),
                 new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName.Value),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, jti ?? Guid.NewGuid().ToString())
             };
 
             var securityToken = new JwtSecurityToken(
@@ -37,11 +37,11 @@ internal static partial class Utils
             return securityToken;
         }
 
-        internal static JwtSecurityToken GenerateInvalidToken(JwtSettings jwtSettings)
+        internal static JwtSecurityToken GenerateInvalidToken(JwtSettings? jwtSettings = null)
         {
             var signingCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                    jwtSettings?.SecretKey ?? string.Join("", Enumerable.Repeat('a', 1000)))),
                 SecurityAlgorithms.HmacSha256);
             
             var claims = new[]
@@ -54,9 +54,9 @@ internal static partial class Utils
             };
 
             var securityToken = new JwtSecurityToken(
-                jwtSettings.Issuer,
-                jwtSettings.Audience,
-                expires: DateTime.UtcNow.AddMinutes(jwtSettings.ExpiryMinutes),
+                issuer: jwtSettings?.Issuer ?? "randomIssuer",
+                audience: jwtSettings?.Audience ?? "randomAudience",
+                expires: DateTime.UtcNow.AddMinutes(jwtSettings?.ExpiryMinutes ?? 0),
                 claims: claims,
                 signingCredentials: signingCredentials);
 
