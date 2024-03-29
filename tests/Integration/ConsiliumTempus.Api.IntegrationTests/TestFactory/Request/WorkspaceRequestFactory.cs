@@ -3,7 +3,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.IntegrationTests.TestConstants;
 
-namespace ConsiliumTempus.Api.IntegrationTests.TestFactory;
+namespace ConsiliumTempus.Api.IntegrationTests.TestFactory.Request;
 
 public static class WorkspaceRequestFactory
 {

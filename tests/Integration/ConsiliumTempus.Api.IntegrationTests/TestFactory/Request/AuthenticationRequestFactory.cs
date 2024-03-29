@@ -3,7 +3,7 @@ using ConsiliumTempus.Api.Contracts.Authentication.Refresh;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.IntegrationTests.TestConstants;
 
-namespace ConsiliumTempus.Api.IntegrationTests.TestFactory;
+namespace ConsiliumTempus.Api.IntegrationTests.TestFactory.Request;
 
 public static class AuthenticationRequestFactory
 {
@@ -32,8 +32,8 @@ public static class AuthenticationRequestFactory
     }
     
     public static RefreshRequest CreateRefreshRequest(
-        string token = Constants.Token, 
-        string refreshToken = Constants.RefreshToken)
+        string refreshToken,
+        string token)
     {
         return new RefreshRequest(token, refreshToken);
     }

@@ -2,7 +2,7 @@
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.IntegrationTests.TestConstants;
 
-namespace ConsiliumTempus.Api.IntegrationTests.TestFactory;
+namespace ConsiliumTempus.Api.IntegrationTests.TestFactory.Request;
 
 public static class UserRequestFactory
 {
