@@ -3,33 +3,28 @@ using ConsiliumTempus.Infrastructure.Security.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
 public abstract class BaseIntegrationTest : IAsyncLifetime
 {
+    private readonly ITestData? _testData;
     private readonly Func<Task> _resetDatabase;
-    private readonly string? _testDataDirectory;
-    private Func<string> GetTestDataDirectoryPath => () => SetupConstants.TestDataDirectoryPath + _testDataDirectory;
     private readonly bool _defaultUsers;
 
-    protected readonly ITestOutputHelper TestOutputHelper;
     protected readonly AppHttpClient Client;
     protected readonly IDbContextFactory<ConsiliumTempusDbContext> DbContextFactory;
     protected readonly JwtSettings JwtSettings = new();
 
     protected BaseIntegrationTest(
         WebAppFactory factory,
-        ITestOutputHelper testOutputHelper,
-        string? testDataDirectory = null,
+        ITestData? testData = null,
         bool defaultUsers = true)
     {
         _resetDatabase = factory.ResetDatabaseAsync;
-        _testDataDirectory = testDataDirectory;
+        _testData = testData;
         _defaultUsers = defaultUsers;
         Client = factory.CreateAppClient();
-        TestOutputHelper = testOutputHelper;
         DbContextFactory = factory.Services.GetRequiredService<IDbContextFactory<ConsiliumTempusDbContext>>();
         factory.Services.GetRequiredService<IConfiguration>().Bind(JwtSettings.SectionName, JwtSettings);
     }
@@ -38,18 +33,12 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
     {
         if (_defaultUsers)
         {
-            await AddTestData(SetupConstants.DefaultUsersFilePath);
+            // ReSharper disable once CoVariantArrayConversion
+            await AddTestData([DefaultUsers.Users]);
             Client.UseCustomToken();
         }
 
-        if (_testDataDirectory != null)
-        {
-            var files = Directory.GetFiles(GetTestDataDirectoryPath()).Order();
-            foreach (var file in files)
-            {
-                await AddTestData(file);
-            }
-        }
+        if (_testData != null) await AddTestData(_testData.GetDataCollections());
     }
 
     public async Task DisposeAsync()
@@ -57,27 +46,13 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
         await _resetDatabase();
     }
 
-    private async Task AddTestData(string path)
+    private async Task AddTestData(IEnumerable<object[]> data)
     {
-        var rawQueries = await File.ReadAllLinesAsync(path);
-        var queries = ParseQueries(rawQueries);
-
         var dbContext = await DbContextFactory.CreateDbContextAsync();
-        TestOutputHelper.WriteLine($"Importing data from: {path}");
-        foreach (var query in queries)
+        foreach (var d in data)
         {
-            await dbContext.Database.ExecuteSqlRawAsync(query);
+            await dbContext.AddRangeAsync(d);
         }
-        TestOutputHelper.WriteLine($"Finished importing data from: {path}\n");
-    }
-
-    private static IEnumerable<string> ParseQueries(IEnumerable<string> rawQueries)
-    {
-        return rawQueries.Where(line => !line.TrimStart().StartsWith("--"))
-            .Select(l => l.Trim())
-            .Aggregate((curr, next) => curr + next)
-            .Split(";")
-            .Where(line => !string.IsNullOrWhiteSpace(line))
-            .Select(q => q + ";");
+        await dbContext.SaveChangesAsync();
     }
 }

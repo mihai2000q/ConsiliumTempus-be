@@ -34,7 +34,7 @@ There is exactly one test class for each important class, excluding POJOs
 The name of the test **class** will be the class under testing followed by the suffix "Test." 
 <br>
 The name of the **variable** component under testing is going to be called **uut** (Unit Under Testing).  
-The name of the test **methods** can be _T1_T2_, where _T1_ is the scenario we are testing,
+The name of the test **methods** can be _T1_T2_, where _T1_ is the scenario that is being tested,
 and _T2_ is the expected outcome. 
 <br>
 _T1_T2_T3_ is also accepted, where *T1* is the method/component under test, 
@@ -48,7 +48,7 @@ Inside each method there will be **3 stages**:
 - Assert—make all the necessary assertions to see if the outcome is the one desired
 (up to the developer to choose what is relevant)
 
-For example, if we are unit testing the Register Command Handler, take a look at the code below:
+For example, if the Register Command Handler is being unit tested, take a look at the code below:
 
 ```csharp
 public class RegisterCommandHandlerTest
@@ -105,7 +105,7 @@ The name of the test **class** will be the class under testing followed by the s
 (the project already mentions that it is an integration Test). 
 <br>
 The name of the **variable** component under testing is going to be called **sut** (System Under Testing).  
-The name of the test **methods** can be _T1_T2_, where _T1_ is the scenario we are testing,
+The name of the test **methods** can be _T1_T2_, where _T1_ is the scenario that is being tested,
 and _T2_ is the expected outcome. 
 <br>
 _T1_T2_T3_ is also accepted, where *T1* is the method/component under test, 
@@ -120,7 +120,7 @@ Inside each method there will be **3 stages**:
 (up to the developer to choose what is relevant)
 
 
-For example, if we are testing the Register Command Handler, take a look at the code below:
+For example, if the Register Command Handler is being integration tested, take a look at the code below:
 
 ```csharp
 public class RegisterCommandHandlerTest
@@ -152,7 +152,7 @@ public class RegisterCommandHandlerTest
 
 ### Api Integration
 
-The Presentation Layer is exposed through REST, therefore; to test it thoroughly, an HTTP Client is needed.
+The **Presentation Layer** is exposed through REST, therefore; to test it thoroughly, an HTTP Client is needed.
 
 Inside the project, the **Core** directory contains the classes that are primordial for Api Integration Testing.
 <br>
@@ -161,6 +161,7 @@ The core components are:
 - Base Integration Test
 - App Http Client
 - Test Auth Handler
+- ITestData
 
 Together, they provide all the functionalities to write Api Integration Tests.
 Also, keep in mind that a test should be part of a *Collection*.
@@ -194,19 +195,20 @@ This class also instantiates the **App Http Client** and the Jwt Settings from t
 (`appsettings.Testing.json`).
 The database is capable of reinitializing state, 
 therefore, inside the initialize task method, 
-it will add datasets from multiple sql files from within the Test Data directory.
-The subclass will be able to mention the directory name
-if it wants a certain state of the database (generally only one dataset per test collection).
+it will add datasets from one class that implements **ITestData** interface, 
+that should be coming from the Test Data package.
+Inside the implementation of **ITestData** one can return multiple datasets
+that will be then split and imported inside the Database (generally only one dataset per test collection).
 To add more datasets, go to the `TestData` package inside the project 
-(do not add multi-line comments) and add a directory with as many sql files you need.
-Each sql file represents a table inside the database. 
-Also, make sure they are in the right order, so that the constraints apply.
+create a class that imports the above-mentioned interface, and return collections of objects. 
+Each collection represents one table.
 
 By default, inside the database there will be a dataset of Users 
 (can be deactivated per Test on the constructor parameters).
-Those Users can be modified inside the sole table inside the `TestData` directory (`User.sql`).
+Those Users can be modified inside the `Core` directory, inside the `DefaultUsers` class.
 
-This class is intended to be extended for each test so that the **Client** and the **Docker Container** are initialized.
+The **Base Integration Test** class is intended 
+to be extended for each test so that the **Client** and the **Docker Container** are properly initialized.
 
 #### App Http Client
 
@@ -233,7 +235,7 @@ More precise, the testing strategy is one container per collection.
 To create a collection, go to `TestCollection` and add one that extends the `ICollectionFixture<WebAppFactory>`.
 
 Generally, for an integration test to work,
-it will need to be part of a *collection* and extend the *base integration test* class
+it will need to be part of a *Collection* and extend the *Base Integration Test* class
 
 
 ## End-To-End Testing
