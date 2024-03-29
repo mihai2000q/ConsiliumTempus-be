@@ -1,9 +1,9 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Api.IntegrationTests.TestFactory.Domain;
+namespace ConsiliumTempus.Common.IntegrationTests.Common.Entities;
 
-internal static class RefreshTokenFactory
+public static class RefreshTokenFactory
 {
     public static RefreshToken Create(
         Guid jwtId,

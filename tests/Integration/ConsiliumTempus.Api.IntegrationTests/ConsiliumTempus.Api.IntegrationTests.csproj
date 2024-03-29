@@ -29,6 +29,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\src\ConsiliumTempus.Api\ConsiliumTempus.Api.csproj" />
+      <ProjectReference Include="..\ConsiliumTempus.Common.IntegrationTests\ConsiliumTempus.Common.IntegrationTests.csproj" />
     </ItemGroup>
 
 </Project>

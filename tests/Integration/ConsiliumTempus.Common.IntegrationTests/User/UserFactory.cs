@@ -1,9 +1,9 @@
 ﻿using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
 
-namespace ConsiliumTempus.Api.IntegrationTests.TestFactory.Domain;
+namespace ConsiliumTempus.Common.IntegrationTests.User;
 
-internal static class UserFactory
+public static class UserFactory
 {
     public static UserAggregate Create(
         string email,

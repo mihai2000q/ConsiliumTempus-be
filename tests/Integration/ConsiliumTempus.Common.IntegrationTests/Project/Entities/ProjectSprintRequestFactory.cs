@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
-using ConsiliumTempus.Api.IntegrationTests.TestConstants;
+using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
-namespace ConsiliumTempus.Api.IntegrationTests.TestFactory.Request;
+namespace ConsiliumTempus.Common.IntegrationTests.Project.Entities;
 
 public static class ProjectSprintRequestFactory
 {

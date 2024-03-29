@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Api.IntegrationTests.TestFactory.Domain;
+﻿using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Core;

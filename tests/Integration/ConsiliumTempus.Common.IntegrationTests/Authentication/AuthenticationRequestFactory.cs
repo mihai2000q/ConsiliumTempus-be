@@ -1,9 +1,9 @@
 ﻿using ConsiliumTempus.Api.Contracts.Authentication.Login;
 using ConsiliumTempus.Api.Contracts.Authentication.Refresh;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
-using ConsiliumTempus.Api.IntegrationTests.TestConstants;
+using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
-namespace ConsiliumTempus.Api.IntegrationTests.TestFactory.Request;
+namespace ConsiliumTempus.Common.IntegrationTests.Authentication;
 
 public static class AuthenticationRequestFactory
 {

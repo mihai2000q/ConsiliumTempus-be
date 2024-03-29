@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace ConsiliumTempus.Api.IntegrationTests.TestFactory;
+namespace ConsiliumTempus.Common.IntegrationTests;
 
 internal static class DomainFactory
 {

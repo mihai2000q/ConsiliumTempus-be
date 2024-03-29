@@ -1,4 +1,4 @@
-﻿namespace ConsiliumTempus.Api.IntegrationTests.TestConstants;
+﻿namespace ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
 internal static partial class Constants
 {

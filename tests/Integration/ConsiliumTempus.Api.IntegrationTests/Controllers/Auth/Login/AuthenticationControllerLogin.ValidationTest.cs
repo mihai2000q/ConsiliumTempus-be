@@ -2,8 +2,8 @@
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory.Request;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Common.IntegrationTests.Authentication;
 using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Login;
