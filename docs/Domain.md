@@ -81,7 +81,6 @@ These errors are not tied to any aggregate, therefore notable and only used in t
 
 The enums defined in the Domain of the application are:
 - **Permissions**, which are used on the Presentation Layer for Authorization
-- **Validate**, to validate the token
 
 ## Relations
 
@@ -105,6 +104,7 @@ except the primary key and direct relations), check below:
   - [Project Diagram](domain/diagrams/aggregates/Diagram.Project.md)
   - [Project Task Diagram](domain/diagrams/aggregates/Diagram.ProjectTask.md)
 - Entities
+  - [Refresh Token Diagram](domain/diagrams/entities/Diagram.RefreshToken.md)
   - [Membership Diagram](domain/diagrams/entities/Diagram.Membership.md)
   - [Permission Diagram](domain/diagrams/entities/Diagram.Permission.md)
   - [Workspace Role Diagram](domain/diagrams/entities/Diagram.WorkspaceRole.md)
