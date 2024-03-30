@@ -53,7 +53,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .Received(1)
             .GetListForUser(Arg.Any<UserAggregate>());
         
-        outcome.Should().BeEquivalentTo(workspaces);
+        outcome.Value.Should().BeEquivalentTo(workspaces);
     }
     
     [Fact]
