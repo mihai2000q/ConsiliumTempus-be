@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 
-public class TokenProvider : ITokenProvider
+public class TokenProvider
 {
     private JwtSecurityToken? _token;
     
