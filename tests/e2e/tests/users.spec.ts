@@ -78,7 +78,7 @@ test.describe('should allow operations on the user entity', () => {
     await deleteUser(request)
   })
 
-  test.skip('should update user', async ({ request }) => {
+  test('should update user', async ({ request }) => {
     const body = {
       firstName: "Michelle",
       lastName: "Moron",

@@ -49,9 +49,7 @@ public sealed class JwtTokenValidator(
     
     private static bool AreClaimsValid(Claim[] claims, UserAggregate user)
     {
-        return GetClaim(claims, JwtRegisteredClaimNames.GivenName) == user.FirstName.Value &&
-               GetClaim(claims, JwtRegisteredClaimNames.FamilyName) == user.LastName.Value &&
-               GetClaim(claims, JwtRegisteredClaimNames.Email) == user.Credentials.Email &&
+        return GetClaim(claims, JwtRegisteredClaimNames.Email) == user.Credentials.Email &&
                GetClaim(claims, JwtRegisteredClaimNames.Jti)?.Length == 36;
     }
     
