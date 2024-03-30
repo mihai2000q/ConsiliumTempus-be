@@ -25,7 +25,6 @@ the controller will return status code 403)
 otherwise the user should make use of the *Allow Anonymous* attribute
 - it injects the mapper and the mediator
 - it contains a solution to returning validation problems, conflicts, etc.
-- it provides a way to grab the token from the Headers of the Request
 
 ## Authentication
 
@@ -35,14 +34,12 @@ One way to add one inside Postman is to go to the *Authorization* tab and under 
 - and **Payload** which should include the following:
   - **sub**, the user id of an existing user
   - **email** of the user
-  - **given_name** (first name) of the user
-  - **family_name** (last name) of the user
   - **jti**, the id of the token
   - **exp**, the expiration date in ms
   - **iss** (Issuer) of the application (can be found in the Jwt Settings inside the `appsettings.json`)
   - **aud** (Audience) of the application (can be found in the Jwt Settings inside the `appsettings.json`)
 
-**NOTICE**: The claims are case-sensitive, therefore, they should match with the database data 
+**NOTICE**: The claims are case-sensitive, therefore, they should match with the database data.
 
 An example can be found below: 
 (for a better view of the payload check the Api Auth [documentation](api/Api.Auth.md/#auth))
@@ -65,8 +62,10 @@ have a route similar to its name and have the methods in the following order:
 
 Below, you will find complete documentation on each Controller of the Api Layer:
 - [Authentication](api/Api.Auth.md)
-- [Workspace](api/Api.Workspace.md)
+- [Project](api/Api.Project.md)
+- [Project Sprint](api/Api.ProjectSprint.md)
 - [User](api/Api.User.md)
+- [Workspace](api/Api.Workspace.md)
 
 ## Dto
 
@@ -74,4 +73,5 @@ A **Data Transfer Object** (Dto)
 is usually an aggregate that has undergone mapping so that it can be sent as an Api Response. 
 
 A full list of these Dtos can be found below:
+- [User](api/dto/Dto.User.md)
 - [Workspace](api/dto/Dto.Workspace.md)
