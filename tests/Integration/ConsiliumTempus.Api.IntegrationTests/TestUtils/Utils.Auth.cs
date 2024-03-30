@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
-using FluentAssertions;
 using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;

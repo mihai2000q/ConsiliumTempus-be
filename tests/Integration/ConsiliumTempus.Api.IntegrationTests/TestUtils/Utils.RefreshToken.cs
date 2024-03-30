@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using ConsiliumTempus.Domain.User;
-using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 

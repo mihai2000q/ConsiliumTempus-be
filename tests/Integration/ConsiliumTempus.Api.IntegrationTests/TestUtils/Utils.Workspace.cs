@@ -1,10 +1,8 @@
-﻿using System.Net;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Domain.Workspace;
-using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
