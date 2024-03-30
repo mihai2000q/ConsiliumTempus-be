@@ -1,16 +1,14 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Authentication;
-using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Refresh;
 
 [Collection(nameof(AuthenticationControllerCollection))]
 public class AuthenticationControllerRefreshValidationTest(WebAppFactory factory)
-    : BaseIntegrationTest(factory, new AuthData(), false)
+    : BaseIntegrationTest(factory, new AuthData(), true)
 {
     [Fact]
     public async Task Refresh_WhenCommandIsValid_ShouldReturnSuccessResponse()

@@ -8,7 +8,7 @@ namespace ConsiliumTempus.Api.IntegrationTests.TestData;
 
 internal class AuthData : ITestData
 {
-    public IEnumerable<object[]> GetDataCollections()
+    public IEnumerable<IEnumerable<object>> GetDataCollections()
     {
         return 
         [

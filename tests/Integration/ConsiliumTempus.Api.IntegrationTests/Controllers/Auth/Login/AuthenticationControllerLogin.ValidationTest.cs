@@ -1,16 +1,14 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Authentication;
-using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Login;
 
 [Collection(nameof(AuthenticationControllerCollection))]
 public class AuthenticationControllerLoginValidationTest(WebAppFactory factory)
-    : BaseIntegrationTest(factory, new AuthData(), false)
+    : BaseIntegrationTest(factory, new AuthData(), true)
 {
     [Fact]
     public async Task Login_WhenCommandIsValid_ShouldReturnSuccessResponse()

@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Refresh;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -8,7 +7,6 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Authentication;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
-using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +14,7 @@ namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Refresh;
 
 [Collection(nameof(AuthenticationControllerCollection))]
 public class AuthenticationControllerRefreshTest(WebAppFactory factory)
-    : BaseIntegrationTest(factory, new AuthData(), false)
+    : BaseIntegrationTest(factory, new AuthData(), true)
 {
     [Fact]
     public async Task Refresh_WhenItIsSuccessful_ShouldReturnNewTokens()
