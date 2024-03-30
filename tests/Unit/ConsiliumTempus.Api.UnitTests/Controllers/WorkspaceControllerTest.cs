@@ -77,7 +77,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task GetCollectionWorkspace_ShouldReturnCollectionOfWorkspaces()
+    public async Task GetCollectionWorkspace_WhenIsSuccessful_ShouldReturnCollectionOfWorkspaces()
     {
         // Arrange
         var result = WorkspaceFactory.CreateList();
@@ -95,9 +95,29 @@ public class WorkspaceControllerTest
 
         Utils.Workspace.AssertDtos(outcome, result);
     }
+    
+    [Fact]
+    public async Task GetCollectionWorkspace_WhenItFails_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var error = Errors.User.NotFound;
+        _mediator
+            .Send(Arg.Any<GetCollectionWorkspaceQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetCollection(default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCollectionWorkspaceQuery>(query => Utils.Workspace.AssertGetCollectionQuery(query)));
+
+        outcome.ValidateError(error);
+    }
 
     [Fact]
-    public async Task WhenWorkspaceCreateIsSuccessful_ShouldReturnNewWorkspace()
+    public async Task CreateWorkspace_WhenIsSuccessful_ShouldReturnNewWorkspace()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
@@ -117,6 +137,29 @@ public class WorkspaceControllerTest
                 command => Utils.Workspace.AssertCreateCommand(command, request)));
 
         Utils.Workspace.AssertDto(outcome, result.Workspace);
+    }
+    
+    [Fact]
+    public async Task CreateWorkspace_WhenItFails_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
+
+        var error = Errors.User.NotFound;
+        _mediator
+            .Send(Arg.Any<CreateWorkspaceCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.Create(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<CreateWorkspaceCommand>(
+                command => Utils.Workspace.AssertCreateCommand(command, request)));
+
+        outcome.ValidateError(error);
     }
 
     [Fact]

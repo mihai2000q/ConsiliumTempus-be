@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using ErrorOr;
@@ -17,6 +18,8 @@ public sealed class CreateWorkspaceCommandHandler(
         CancellationToken cancellationToken)
     {
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
+        
+        if (user is null) return Errors.User.NotFound;
 
         var workspace = WorkspaceAggregate.Create(
             Name.Create(command.Name),

@@ -34,7 +34,7 @@ public class CreateProjectCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenCreateProjectIsSuccessful_ShouldCreateAndSaveProjectOnWorkspace()
+    public async Task CreateProjectCommand_WhenIsSuccessful_ShouldCreateAndSaveProjectOnWorkspace()
     {
         // Arrange
         var command = ProjectCommandFactory.CreateCreateProjectCommand();
@@ -71,7 +71,7 @@ public class CreateProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task WhenCreateProjectFails_ShouldReturnWorkspaceNotFoundError()
+    public async Task CreateProjectCommand_WhenWorkspaceIsNull_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
         var command = ProjectCommandFactory.CreateCreateProjectCommand();

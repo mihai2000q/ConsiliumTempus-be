@@ -1,6 +1,8 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace;
+using ErrorOr;
 using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Queries.GetCollection;
@@ -8,13 +10,15 @@ namespace ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 public sealed class GetCollectionWorkspaceQueryHandler(
     ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository)
-    : IRequestHandler<GetCollectionWorkspaceQuery, List<WorkspaceAggregate>>
+    : IRequestHandler<GetCollectionWorkspaceQuery, ErrorOr<List<WorkspaceAggregate>>>
 {
-    public async Task<List<WorkspaceAggregate>> Handle(GetCollectionWorkspaceQuery workspaceQuery, 
+    public async Task<ErrorOr<List<WorkspaceAggregate>>> Handle(GetCollectionWorkspaceQuery workspaceQuery, 
         CancellationToken cancellationToken)
     {
+        var user = await currentUserProvider.GetCurrentUser(cancellationToken);
+        if (user is null) return Errors.User.NotFound;
         return await workspaceRepository.GetListForUser(
-            await currentUserProvider.GetCurrentUser(cancellationToken),
+            user,
             cancellationToken);
     }
 }

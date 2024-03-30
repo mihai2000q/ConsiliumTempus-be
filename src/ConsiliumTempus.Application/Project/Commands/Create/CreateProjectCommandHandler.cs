@@ -24,13 +24,13 @@ public sealed class CreateProjectCommandHandler(
         if (workspace is null) return Errors.Workspace.NotFound;
 
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
-
+        
         var project = ProjectAggregate.Create(
             Name.Create(command.Name),
             Description.Create(command.Description),
             IsPrivate.Create(command.IsPrivate),
             workspace,
-            user);
+            user!);
         await projectRepository.Add(project, cancellationToken);
 
         workspace.RefreshUpdatedDateTime();
