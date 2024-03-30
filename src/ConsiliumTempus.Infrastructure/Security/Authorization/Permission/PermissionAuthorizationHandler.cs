@@ -17,7 +17,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         AuthorizationHandlerContext context,
         PermissionRequirement requirement)
     {
-        var jwtUserId = context.User.Claims.First(x => x.Type == JwtRegisteredClaimNames.Sub).Value;
+        var jwtUserId = context.User.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Sub).Value;
 
         using var scope = serviceScopeFactory.CreateScope();
         var permissionProvider = scope.ServiceProvider.GetRequiredService<IPermissionProvider>();

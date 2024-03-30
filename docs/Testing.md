@@ -201,11 +201,7 @@ Inside the implementation of **ITestData** one can return multiple datasets
 that will be then split and imported inside the Database (generally only one dataset per test collection).
 To add more datasets, go to the `TestData` package inside the project 
 create a class that imports the above-mentioned interface, and return collections of objects. 
-Each collection represents one table.
-
-By default, inside the database there will be a dataset of Users 
-(can be deactivated per Test on the constructor parameters).
-Those Users can be modified inside the `Core` directory, inside the `DefaultUsers` class.
+Each collection represents one table, and each test must have a dataset.
 
 The **Base Integration Test** class is intended 
 to be extended for each test so that the **Client** and the **Docker Container** are properly initialized.

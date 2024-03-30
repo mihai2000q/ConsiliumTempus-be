@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
 public class AppHttpClient(
     HttpClient client,
-    ITokenProvider tokenProvider,
+    TokenProvider tokenProvider,
     IDbContextFactory<ConsiliumTempusDbContext> dbContextFactory,
     JwtSettings jwtSettings)
 {
@@ -36,11 +36,9 @@ public class AppHttpClient(
         return client.DeleteAsync(requestUri);
     }
     
-    public UserId UseCustomToken(string? email = null)
+    public void UseCustomToken(UserAggregate? user = null)
     {
-        var res = GetToken(email);
-        UseToken(res.Item1);
-        return res.Item2;
+        UseToken(GetToken(user));
     }
 
     public void UseInvalidToken()
@@ -57,16 +55,11 @@ public class AppHttpClient(
             Utils.Token.SecurityTokenToStringToken(securityToken));
     }
 
-    private (JwtSecurityToken, UserId) GetToken(string? email = null)
+    private JwtSecurityToken GetToken(UserAggregate? user = null)
     {
         var dbContext = dbContextFactory.CreateDbContext();
-        var user = email is null
-            ? dbContext.Users.FirstOrDefault()
-            : dbContext.Users.SingleOrDefault(u => u.Credentials.Email == email.ToLower());
-
-        if (user is null) throw new Exception("There is no user with that email");
-
-        return (Utils.Token.GenerateValidToken(user, jwtSettings), user.Id);
+        user ??= dbContext.Users.First();
+        return Utils.Token.GenerateValidToken(user, jwtSettings);
     }
 
     private JwtSecurityToken GetInvalidToken()

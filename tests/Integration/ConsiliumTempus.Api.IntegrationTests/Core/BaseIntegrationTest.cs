@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Infrastructure.Persistence.Database;
+﻿using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,9 +9,9 @@ namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
 public abstract class BaseIntegrationTest : IAsyncLifetime
 {
-    private readonly ITestData? _testData;
+    private readonly ITestData _testData;
     private readonly Func<Task> _resetDatabase;
-    private readonly bool _defaultUsers;
+    private readonly bool _isAnonymous;
 
     protected readonly AppHttpClient Client;
     protected readonly IDbContextFactory<ConsiliumTempusDbContext> DbContextFactory;
@@ -18,12 +19,12 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
 
     protected BaseIntegrationTest(
         WebAppFactory factory,
-        ITestData? testData = null,
-        bool defaultUsers = true)
+        ITestData testData,
+        bool isAnonymous = false)
     {
         _resetDatabase = factory.ResetDatabaseAsync;
         _testData = testData;
-        _defaultUsers = defaultUsers;
+        _isAnonymous = isAnonymous;
         Client = factory.CreateAppClient();
         DbContextFactory = factory.Services.GetRequiredService<IDbContextFactory<ConsiliumTempusDbContext>>();
         factory.Services.GetRequiredService<IConfiguration>().Bind(JwtSettings.SectionName, JwtSettings);
@@ -31,14 +32,9 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        if (_defaultUsers)
-        {
-            // ReSharper disable once CoVariantArrayConversion
-            await AddTestData([DefaultUsers.Users]);
-            Client.UseCustomToken();
-        }
+        await AddTestData(_testData.GetDataCollections());
 
-        if (_testData != null) await AddTestData(_testData.GetDataCollections());
+        if (!_isAnonymous) Client.UseCustomToken();
     }
 
     public async Task DisposeAsync()
@@ -46,12 +42,13 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
         await _resetDatabase();
     }
 
-    private async Task AddTestData(IEnumerable<object[]> data)
+    private async Task AddTestData(IEnumerable<IEnumerable<object>> data)
     {
         var dbContext = await DbContextFactory.CreateDbContextAsync();
-        foreach (var d in data)
+        foreach (var d in data.SelectMany(x => x))
         {
-            await dbContext.AddRangeAsync(d);
+            if (d is Membership membership) dbContext.Attach(membership.WorkspaceRole);
+            await dbContext.AddAsync(d);
         }
         await dbContext.SaveChangesAsync();
     }

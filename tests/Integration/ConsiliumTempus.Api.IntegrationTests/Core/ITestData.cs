@@ -2,5 +2,5 @@
 
 public interface ITestData
 {
-    internal IEnumerable<object[]> GetDataCollections();
+    IEnumerable<IEnumerable<object>> GetDataCollections();
 }
