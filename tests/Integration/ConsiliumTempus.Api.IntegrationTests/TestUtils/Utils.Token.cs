@@ -14,16 +14,13 @@ internal static partial class Utils
         internal static JwtSecurityToken GenerateValidToken(UserAggregate user, JwtSettings jwtSettings, string? jti = null)
         {
             var signingCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
                 SecurityAlgorithms.HmacSha256);
             
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Credentials.Email),
-                new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName.Value),
-                new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName.Value),
                 new Claim(JwtRegisteredClaimNames.Jti, jti ?? Guid.NewGuid().ToString())
             };
 
@@ -39,9 +36,9 @@ internal static partial class Utils
 
         internal static JwtSecurityToken GenerateInvalidToken(JwtSettings? jwtSettings = null)
         {
+            var secretKey = jwtSettings?.SecretKey ?? string.Join("", Enumerable.Repeat('a', 1000));
             var signingCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                    jwtSettings?.SecretKey ?? string.Join("", Enumerable.Repeat('a', 1000)))),
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
                 SecurityAlgorithms.HmacSha256);
             
             var claims = new[]

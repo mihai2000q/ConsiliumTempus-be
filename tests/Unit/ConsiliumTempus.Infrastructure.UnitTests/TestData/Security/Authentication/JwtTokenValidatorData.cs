@@ -47,12 +47,6 @@ internal static class JwtTokenValidatorData
             var token = Utils.Token.GenerateToken(_jwtSettings, user, email: "");
             Add(token, user);
             
-            token = Utils.Token.GenerateToken(_jwtSettings, user, givenName: "");
-            Add(token, user);
-            
-            token = Utils.Token.GenerateToken(_jwtSettings, user, familyName: "");
-            Add(token, user);
-            
             token = Utils.Token.GenerateToken(_jwtSettings, user, jti: "");
             Add(token, user);
         }

@@ -20,8 +20,6 @@ internal static partial class Utils
             string? audience = null,
             string? sub = null,
             string? email = null,
-            string? givenName = null,
-            string? familyName = null,
             string? jti = null)
         {
             user ??= UserFactory.Create();
@@ -34,8 +32,6 @@ internal static partial class Utils
             {
                 new Claim(JwtRegisteredClaimNames.Sub, sub ?? user.Id.Value.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, email ?? user.Credentials.Email),
-                new Claim(JwtRegisteredClaimNames.GivenName, givenName ?? user.FirstName.Value),
-                new Claim(JwtRegisteredClaimNames.FamilyName, familyName ?? user.LastName.Value),
                 new Claim(JwtRegisteredClaimNames.Jti, jti ?? Guid.NewGuid().ToString())
             };
 
