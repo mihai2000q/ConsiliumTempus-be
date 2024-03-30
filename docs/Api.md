@@ -31,7 +31,7 @@ otherwise the user should make use of the *Allow Anonymous* attribute
 
 The developer shall provide a token for endpoints that do not allow anonymous requests.
 One way to add one inside Postman is to go to the *Authorization* tab and under the type *JWT Bearer* add the following:
-- **Secret Key**, defined in the [Get Started](../Readme.md/#dotnet-user-secrets) chapter 
+- **Secret Key**, defined in the [Get Started](../README.md/#dotnet-user-secrets) chapter 
 - and **Payload** which should include the following:
   - **sub**, the user id of an existing user
   - **email** of the user
