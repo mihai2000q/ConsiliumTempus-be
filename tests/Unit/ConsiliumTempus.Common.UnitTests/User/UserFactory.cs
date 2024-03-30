@@ -14,7 +14,7 @@ public static class UserFactory
         string? role = null,
         DateOnly? dateOfBirth = null)
     {
-        return UserAggregate.Create(
+        return UserAggregate.Register(
             Credentials.Create(email, password), 
             FirstName.Create(firstName),
             LastName.Create(lastName),

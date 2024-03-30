@@ -8,7 +8,6 @@ It holds sensitive data like the hashed *password* or *email* and personal data 
 ```csharp
 class User
 {
-    User Create()
     User Register()
     void Update()
     void AddWorkspaceMembership()

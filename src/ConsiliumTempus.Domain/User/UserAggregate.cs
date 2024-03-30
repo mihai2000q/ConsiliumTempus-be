@@ -44,14 +44,14 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
     public DateTime UpdatedDateTime { get; private set; }
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
 
-    public static UserAggregate Create(
+    public static UserAggregate Register(
         Credentials credentials,
         FirstName firstName,
         LastName lastName,
-        Role? role = null,
-        DateOnly? dateOfBirth = null)
+        Role? role,
+        DateOnly? dateOfBirth)
     {
-        return new UserAggregate(
+        var user = new UserAggregate(
             UserId.CreateUnique(),
             credentials,
             firstName,
@@ -60,21 +60,6 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
             dateOfBirth,
             DateTime.UtcNow,
             DateTime.UtcNow);
-    }
-
-    public static UserAggregate Register(
-        Credentials credentials,
-        FirstName firstName,
-        LastName lastName,
-        Role? role,
-        DateOnly? dateOfBirth)
-    {
-        var user = Create(
-            credentials,
-            firstName,
-            lastName,
-            role,
-            dateOfBirth);
 
         user.AddDomainEvent(new UserRegistered(user));
 
