@@ -43,7 +43,22 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task WhenProjectCreateFails_ShouldReturnWorkspaceNotFoundError()
+    public async Task CreateProject_WhenUserIsNotFound_ShouldReturnForbiddenResponse()
+    {
+        // Arrange
+        var workspaceId = ProjectData.Workspaces.First().Id.Value;
+        var request = ProjectRequestFactory.CreateCreateProjectRequest(workspaceId);
+
+        // Act
+        Client.UseInvalidToken();
+        var outcome = await Client.Post("api/projects", request);
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+    
+    [Fact]
+    public async Task CreateProject_WhenWorkspaceIsNotFound_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateCreateProjectRequest(Guid.NewGuid());

@@ -11,7 +11,6 @@ using ConsiliumTempus.Infrastructure.Security;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
-using ConsiliumTempus.Infrastructure.Security.Authorization.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -75,7 +74,6 @@ public static class DependencyInjection
         services.AddScoped<IPermissionProvider, PermissionRepository>();
         services.AddScoped<IUserProvider, UserRepository>();
         services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
-        services.AddSingleton<IAuthorizationHandler, TokenAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
         return services;

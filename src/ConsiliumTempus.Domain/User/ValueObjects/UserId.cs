@@ -21,11 +21,6 @@ public sealed class UserId : AggregateRootId<Guid>
     {
         return new UserId(Guid.NewGuid());
     }
-    
-    public static UserId Create(string value)
-    {
-        return Create(new Guid(value));
-    }
 
     public static UserId Create(Guid value)
     {

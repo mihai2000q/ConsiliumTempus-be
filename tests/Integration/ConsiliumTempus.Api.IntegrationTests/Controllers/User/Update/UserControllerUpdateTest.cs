@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.User;
+using ConsiliumTempus.Domain.Common.Errors;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.Update;
 
@@ -29,5 +30,19 @@ public class UserControllerUpdateTest(WebAppFactory factory)
         Utils.User.AssertUpdate(updatedUser!, request);
 
         await Utils.User.AssertDtoFromResponse(outcome, updatedUser!);
+    }
+    
+    [Fact]
+    public async Task UpdateUser_WhenItFails_ShouldReturnNotFoundError()
+    {
+        // Arrange
+        var request = UserRequestFactory.CreateUpdateUserRequest();
+
+        // Act
+        Client.UseInvalidToken();
+        var outcome = await Client.Put("api/users", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.User.NotFound);
     }
 }

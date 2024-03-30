@@ -37,7 +37,11 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         var query = new GetCollectionWorkspaceQuery();
         var result = await Mediator.Send(query, cancellationToken);
 
-        return Ok(result.Select(w => Mapper.Map<WorkspaceDto>(w)));
+        return result.Match(
+            getCollectionResult => 
+                Ok(Mapper.Map<IEnumerable<WorkspaceDto>>(getCollectionResult)),
+            Problem
+        );
     }
 
     [HttpPost]

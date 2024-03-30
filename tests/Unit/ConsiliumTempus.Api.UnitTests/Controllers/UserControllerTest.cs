@@ -94,6 +94,28 @@ public class UserControllerTest
 
         Utils.User.AssertDto(outcome, user);
     }
+    
+    [Fact]
+    public async Task GetCurrent_WhenItFails_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var request = UserRequestFactory.CreateUpdateUserRequest();
+
+        var error = Errors.User.NotFound;
+        _mediator
+            .Send(Arg.Any<GetCurrentUserQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetCurrent(default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCurrentUserQuery>(query => query == new GetCurrentUserQuery()));
+
+        outcome.ValidateError(error);
+    }
 
     [Fact]
     public async Task UpdateUser_WhenIsSuccessful_ShouldReturnNewUser()
@@ -115,6 +137,28 @@ public class UserControllerTest
             .Send(Arg.Is<UpdateUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
 
         Utils.User.AssertDto(outcome, result.User);
+    }
+    
+    [Fact]
+    public async Task UpdateUser_WhenItFails_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var request = UserRequestFactory.CreateUpdateUserRequest();
+
+        var error = Errors.User.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdateUserCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.Update(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
+
+        outcome.ValidateError(error);
     }
 
     [Fact]
@@ -139,5 +183,25 @@ public class UserControllerTest
 
         var response = ((OkObjectResult)outcome).Value as DeleteUserResponse;
         response!.Message.Should().Be(result.Message);
+    }
+    
+    [Fact]
+    public async Task DeleteUser_WhenItFails_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var error = Errors.User.NotFound;
+        _mediator
+            .Send(Arg.Any<DeleteUserCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.Delete(default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<DeleteUserCommand>(command => command == new DeleteUserCommand()));
+
+        outcome.ValidateError(error);
     }
 }

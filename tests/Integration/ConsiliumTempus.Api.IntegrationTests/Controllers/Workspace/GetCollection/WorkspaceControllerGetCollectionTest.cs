@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Domain.Common.Errors;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.GetCollection;
 
@@ -12,7 +13,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WhenWorkspaceGetCollectionForUser_ShouldReturnAllTheWorkspacesForUser()
+    public async Task WhenWorkspaceGetCollectionForUserIsSuccessful_ShouldReturnAllTheWorkspacesForUser()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
@@ -33,5 +34,18 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         {
             Utils.Workspace.AssertDto(x.First, x.Second);
         }
+    }
+    
+    [Fact]
+    public async Task WhenWorkspaceGetCollectionForUserFails_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        
+        // Act
+        Client.UseInvalidToken();
+        var outcome = await Client.Get("api/Workspaces");
+
+        // Assert
+        await outcome.ValidateError(Errors.User.NotFound);
     }
 }

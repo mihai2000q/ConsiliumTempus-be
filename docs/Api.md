@@ -20,8 +20,8 @@ The template Api Controller resolves the following:
 where **controller** is the name of the controller 
 (i.e., for a User Controller the route would be `{{host}}/api/users`)
 - it adds a layer of authorization before accessing the controller endpoint (if the user is not authorized, 
-the controller will return status code 403)
-- it validates the token by default (see below for a valid token), 
+  the controller will return status code 403)
+- it seeks authorization via a token by default (see below for a valid token),
 otherwise the user should make use of the *Allow Anonymous* attribute
 - it injects the mapper and the mediator
 - it contains a solution to returning validation problems, conflicts, etc.

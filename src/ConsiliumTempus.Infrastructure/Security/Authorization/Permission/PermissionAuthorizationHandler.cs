@@ -17,7 +17,9 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         AuthorizationHandlerContext context,
         PermissionRequirement requirement)
     {
-        var jwtUserId = context.User.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Sub).Value;
+        var subUserId = context.User.Claims
+            .SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
+        if (subUserId is null || !Guid.TryParse(subUserId, out var guidUserId)) return;
 
         using var scope = serviceScopeFactory.CreateScope();
         var permissionProvider = scope.ServiceProvider.GetRequiredService<IPermissionProvider>();
@@ -26,8 +28,8 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
 
         var request = httpContextAccessor.HttpContext?.Request;
         if (request is null) return;
-
-        var userId = UserId.Create(jwtUserId);
+        
+        var userId = UserId.Create(guidUserId);
         var res = await GetWorkspaceId(request, workspaceProvider);
         if (res is null) return;
         if (res.NotFound)

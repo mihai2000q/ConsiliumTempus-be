@@ -134,7 +134,7 @@ public class RefreshCommandHandlerTest
             .Received(1)
             .GetJwtIdFromToken(Arg.Any<string>());
         _jwtTokenGenerator
-            .Received(0)
+            .DidNotReceive()
             .GenerateToken(Arg.Any<UserAggregate>());
         
         outcome.ValidateError(Errors.Authentication.InvalidTokens);
@@ -159,11 +159,11 @@ public class RefreshCommandHandlerTest
             .ValidateAccessToken(Arg.Any<string>());
         
         _jwtTokenValidator
-            .Received(0)
+            .DidNotReceive()
             .ValidateRefreshToken(Arg.Any<RefreshToken?>(), Arg.Any<string>());
 
-        _refreshTokenRepository.Received(0);
-        _jwtTokenGenerator.Received(0);
+        _refreshTokenRepository.DidNotReceive();
+        _jwtTokenGenerator.DidNotReceive();
         
         outcome.ValidateError(Errors.Authentication.InvalidTokens);
     }

@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
+using ConsiliumTempus.Domain.Common.Errors;
 using ErrorOr;
 using MediatR;
 
@@ -14,6 +15,8 @@ public sealed class DeleteUserCommandHandler(
         CancellationToken cancellationToken)
     {
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
+
+        if (user is null) return Errors.User.NotFound;
         
         userRepository.Remove(user);
         

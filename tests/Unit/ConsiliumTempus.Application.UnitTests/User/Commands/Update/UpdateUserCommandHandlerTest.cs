@@ -3,6 +3,7 @@ using ConsiliumTempus.Application.UnitTests.TestData.User.Commands;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Common.Errors;
 
 namespace ConsiliumTempus.Application.UnitTests.User.Commands.Update;
 
@@ -41,5 +42,22 @@ public class UpdateUserCommandHandlerTest
 
         outcome.IsError.Should().BeFalse();
         Utils.User.AssertFromUpdateCommand(outcome.Value, command);
+    }
+    
+    [Fact]
+    public async Task WhenUpdateUserCommandFails_ShouldReturnNotFoundError()
+    {
+        // Arrange
+        var command = UserCommandFactory.CreateUpdateUserCommand();
+        
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Assert
+        await _currentUserProvider
+            .Received(1)
+            .GetCurrentUser();
+
+        outcome.ValidateError(Errors.User.NotFound);
     }
 }

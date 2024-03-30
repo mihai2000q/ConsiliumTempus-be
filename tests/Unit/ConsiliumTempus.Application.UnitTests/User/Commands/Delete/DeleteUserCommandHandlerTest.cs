@@ -1,7 +1,9 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
+using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Delete;
 using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Common.Errors;
 
 namespace ConsiliumTempus.Application.UnitTests.User.Commands.Delete;
 
@@ -46,5 +48,23 @@ public class DeleteUserCommandHandlerTest
         
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteUserResult());
+    }
+    
+    [Fact]
+    public async Task WhenDeleteUserCommandFails_ShouldReturnNotFoundError()
+    {
+        // Arrange
+        var command = new DeleteUserCommand();
+
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Assert
+        await _currentUserProvider
+            .Received(1)
+            .GetCurrentUser();
+        _userRepository.DidNotReceive();
+        
+        outcome.ValidateError(Errors.User.NotFound);
     }
 }

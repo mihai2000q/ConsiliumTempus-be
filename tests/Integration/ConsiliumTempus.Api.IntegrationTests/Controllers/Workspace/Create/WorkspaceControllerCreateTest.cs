@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
+using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Create;
@@ -30,5 +31,22 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
         Utils.Workspace.AssertCreation(createdWorkspace, request);
         
         await Utils.Workspace.AssertDtoFromResponse(outcome, createdWorkspace);
+    }
+    
+    [Fact]
+    public async Task WhenWorkspaceCreateFails_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
+        
+        // Act
+        Client.UseInvalidToken();
+        var outcome = await Client.Post("api/workspaces", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.User.NotFound);
+
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length);
     }
 }
