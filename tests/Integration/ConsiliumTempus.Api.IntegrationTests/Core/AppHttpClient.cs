@@ -40,6 +40,11 @@ public class AppHttpClient(
     {
         UseToken(GetToken(user));
     }
+
+    public void UseInvalidToken()
+    {
+        UseToken(GetInvalidToken());
+    }
     
     
     private void UseToken(JwtSecurityToken securityToken)
@@ -55,5 +60,10 @@ public class AppHttpClient(
         var dbContext = dbContextFactory.CreateDbContext();
         user ??= dbContext.Users.First();
         return Utils.Token.GenerateValidToken(user, jwtSettings);
+    }
+
+    private JwtSecurityToken GetInvalidToken()
+    {
+        return Utils.Token.GenerateInvalidToken(jwtSettings);
     }
 }
