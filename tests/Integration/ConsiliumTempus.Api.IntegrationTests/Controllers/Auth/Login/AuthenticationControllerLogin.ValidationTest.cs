@@ -1,26 +1,20 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using FluentAssertions;
-using Xunit.Abstractions;
+using ConsiliumTempus.Common.IntegrationTests.Authentication;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Login;
 
 [Collection(nameof(AuthenticationControllerCollection))]
-public class AuthenticationControllerLoginValidationTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper)
-    : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
+public class AuthenticationControllerLoginValidationTest(WebAppFactory factory)
+    : BaseIntegrationTest(factory, new AuthData(), true)
 {
     [Fact]
     public async Task Login_WhenCommandIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = AuthenticationRequestFactory.CreateLoginRequest(
-            email: "MichaelJ@Gmail.com",
-            password: "MichaelJordan2");
+        var request = AuthenticationRequestFactory.CreateLoginRequest();
 
         // Act
         var outcome = await Client.Post("/api/auth/Login", request);

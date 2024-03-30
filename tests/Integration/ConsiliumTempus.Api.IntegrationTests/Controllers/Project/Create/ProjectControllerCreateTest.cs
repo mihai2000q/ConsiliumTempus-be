@@ -1,37 +1,38 @@
-﻿using System.Net;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Create;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerCreateTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper)
-    : BaseIntegrationTest(factory, testOutputHelper, "Project")
+public class ProjectControllerCreateTest(WebAppFactory factory)
+    : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
     public async Task WhenProjectCreateSucceeds_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
-        var request = ProjectRequestFactory.CreateCreateProjectRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"));
+        var workspaceId = ProjectData.Workspaces.First().Id.Value;
+        var request = ProjectRequestFactory.CreateCreateProjectRequest(workspaceId);
 
         // Act
-        Client.UseCustomToken("michaelj@gmail.com");
+        Client.UseCustomToken(ProjectData.Users.First());
         var outcome = await Client.Post("api/projects", request);
 
         // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
+        response!.Message.Should().Be("Project created successfully!");
+        
         var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Projects.Should().HaveCount(2);
+        dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length + 1);
         var createdProject = await dbContext.Projects
             .Include(p => p.Workspace)
             .Include(p => p.Sprints)
@@ -39,28 +40,22 @@ public class ProjectControllerCreateTest(
             .ThenInclude(ps => ps.Tasks.OrderBy(t => t.Order.Value))
             .SingleAsync(p => p.Name.Value == request.Name);
         Utils.Project.AssertCreation(createdProject, request);
-
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
-        response!.Message.Should().Be("Project created successfully!");
     }
 
     [Fact]
     public async Task WhenProjectCreateFails_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
-        var request = ProjectRequestFactory.CreateCreateProjectRequest(
-            new Guid("90000000-0000-0000-0000-000000000000"));
+        var request = ProjectRequestFactory.CreateCreateProjectRequest(Guid.NewGuid());
 
         // Act
         var outcome = await Client.Post("api/projects", request);
 
         // Assert
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Projects.Should().HaveCount(1);
-        dbContext.Projects.SingleOrDefault(p => p.Name.Value == request.Name).Should().BeNull();
-
         await outcome.ValidateError(Errors.Workspace.NotFound);
+        
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length);
+        dbContext.Projects.SingleOrDefault(p => p.Name.Value == request.Name).Should().BeNull();
     }
 }

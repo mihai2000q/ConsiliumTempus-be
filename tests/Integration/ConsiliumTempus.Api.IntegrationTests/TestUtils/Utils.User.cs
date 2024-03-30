@@ -1,12 +1,10 @@
-﻿using System.Net;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.User;
-using FluentAssertions;
 using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -17,31 +15,15 @@ internal static partial class Utils
     {
         internal static async Task AssertDtoFromResponse(
             HttpResponseMessage response,
-            string firstName,
-            string lastName,
-            string email,
-            string? role = null,
-            DateOnly? dateOfBirth = null)
+            UserAggregate user)
         {
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var content = await response.Content.ReadFromJsonAsync<UserDto>();
-            AssertDto(content!, firstName, lastName, email, role, dateOfBirth);
-        }
-
-        internal static void AssertDto(
-            UserDto dto,
-            string firstName,
-            string lastName,
-            string email,
-            string? role = null,
-            DateOnly? dateOfBirth = null)
-        {
-            dto.FirstName.Should().Be(firstName);
-            dto.LastName.Should().Be(lastName);
-            dto.Email.Should().Be(email);
-            dto.Role.Should().Be(role);
-            dto.DateOfBirth.Should().Be(dateOfBirth);
+            var dto = await response.Content.ReadFromJsonAsync<UserDto>();
+            dto!.Id.Should().Be(user.Id.ToString());
+            dto.FirstName.Should().Be(user.FirstName.Value);
+            dto.LastName.Should().Be(user.LastName.Value);
+            dto.Email.Should().Be(user.Credentials.Email);
+            dto.Role.Should().Be(user.Role?.Value);
+            dto.DateOfBirth.Should().Be(user.DateOfBirth);
         }
 
         internal static void AssertRegistration(

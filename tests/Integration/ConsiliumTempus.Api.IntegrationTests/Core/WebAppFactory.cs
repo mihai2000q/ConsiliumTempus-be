@@ -39,7 +39,7 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
                 options.UseSqlServer(_dbContainer.GetConnectionString()));
             services.AddDbContextFactory<ConsiliumTempusDbContext>();
 
-            services.AddSingleton<ITokenProvider, TokenProvider>();
+            services.AddSingleton<TokenProvider>();
 
             services.AddAuthentication(auth =>
                 {
@@ -73,7 +73,7 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         using var scope = Services.CreateScope();
 
-        var tokenProvider = scope.ServiceProvider.GetRequiredService<ITokenProvider>();
+        var tokenProvider = scope.ServiceProvider.GetRequiredService<TokenProvider>();
         var dbContextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<ConsiliumTempusDbContext>>();
         var jwtSettings = new JwtSettings();
         scope.ServiceProvider.GetRequiredService<IConfiguration>().Bind(JwtSettings.SectionName, jwtSettings);

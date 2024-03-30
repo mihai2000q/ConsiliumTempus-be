@@ -1,66 +1,63 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
-using FluentAssertions;
-using Xunit.Abstractions;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Common.IntegrationTests.Project;
+using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Create;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerCreateAuthorizationTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper)
-    : BaseIntegrationTest(factory, testOutputHelper, "Project")
+public class ProjectControllerCreateAuthorizationTest(WebAppFactory factory)
+    : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
     public async Task WhenProjectCreateWithAdminRole_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulRequest("michaelj@gmail.com");
+        await AssertSuccessfulRequest(ProjectData.Users[0]);
     }
 
     [Fact]
     public async Task WhenProjectCreateWithMemberRole_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenResponse("stephenc@gmail.com");
+        await AssertForbiddenResponse(ProjectData.Users[3]);
     }
 
     [Fact]
     public async Task WhenProjectCreateWithViewRole_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenResponse("lebronj@gmail.com");
+        await AssertForbiddenResponse(ProjectData.Users[4]);
     }
 
     [Fact]
     public async Task WhenProjectCreateWithoutMembership_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenResponse("leom@gmail.com");
+        await AssertForbiddenResponse(ProjectData.Users[1]);
     }
 
-    private async Task AssertSuccessfulRequest(string email)
+    private async Task AssertSuccessfulRequest(UserAggregate user)
     {
-        var outcome = await ArrangeAndAct(email);
+        var outcome = await ArrangeAndAct(user);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-    private async Task AssertForbiddenResponse(string email)
+    private async Task AssertForbiddenResponse(UserAggregate user)
     {
-        var outcome = await ArrangeAndAct(email);
+        var outcome = await ArrangeAndAct(user);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    private async Task<HttpResponseMessage> ArrangeAndAct(string email)
+    private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
     {
         // Arrange
-        var request = ProjectRequestFactory.CreateCreateProjectRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"));
+        var workspaceId = ProjectData.Workspaces.First().Id.Value;
+        var request = ProjectRequestFactory.CreateCreateProjectRequest(workspaceId);
 
         // Act
-        Client.UseCustomToken(email);
+        Client.UseCustomToken(user);
         return await Client.Post("api/projects", request);
     }
 }

@@ -1,64 +1,61 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using FluentAssertions;
-using Xunit.Abstractions;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Delete;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerDeleteAuthorizationTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper)
-    : BaseIntegrationTest(factory, testOutputHelper, "Workspace")
+public class WorkspaceControllerDeleteAuthorizationTest(WebAppFactory factory)
+    : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
     public async Task WhenWorkspaceDeleteWithAdminRole_ShouldDeleteAndReturnSuccessResponse()
     {
-        await AssertSuccessfulRequest("michaelj@gmail.com");
+        await AssertSuccessfulRequest(WorkspaceData.Users[0]);
     }
 
     [Fact]
     public async Task WhenWorkspaceDeleteWithMemberRole_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenResponse("stephenc@gmail.com");
+        await AssertForbiddenResponse(WorkspaceData.Users[3]);
     }
 
     [Fact]
     public async Task WhenWorkspaceDeleteWithViewRole_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenResponse("lebronj@gmail.com");
+        await AssertForbiddenResponse(WorkspaceData.Users[4]);
     }
 
     [Fact]
     public async Task WhenWorkspaceDeleteWithoutMembership_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenResponse("leom@gmail.com");
+        await AssertForbiddenResponse(WorkspaceData.Users[1]);
     }
 
-    private async Task AssertSuccessfulRequest(string email)
+    private async Task AssertSuccessfulRequest(UserAggregate user)
     {
-        var outcome = await ArrangeAndAct(email);
+        var outcome = await ArrangeAndAct(user);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-    private async Task AssertForbiddenResponse(string email)
+    private async Task AssertForbiddenResponse(UserAggregate user)
     {
-        var outcome = await ArrangeAndAct(email);
+        var outcome = await ArrangeAndAct(user);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    private async Task<HttpResponseMessage> ArrangeAndAct(string email)
+    private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
     {
         // Arrange
-        const string id = "10000000-0000-0000-0000-000000000000";
+        var workspace = WorkspaceData.Workspaces.First();
 
         // Act
-        Client.UseCustomToken(email);
-        return await Client.Delete($"api/workspaces/{id}");
+        Client.UseCustomToken(user);
+        return await Client.Delete($"api/workspaces/{workspace.Id}");
     }
 }

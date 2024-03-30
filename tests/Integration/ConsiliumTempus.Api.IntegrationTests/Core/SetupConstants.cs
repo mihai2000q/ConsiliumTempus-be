@@ -11,9 +11,6 @@ public static class SetupConstants
     
     public const string Environment = "Testing";
     
-    public const string TestDataDirectoryPath = "../../../TestData/";
-    public const string DefaultUsersFilePath = "../../../TestData/User.sql";
-
     public static readonly Table[] TablesToIgnore = [
         nameof(Permission), nameof(WorkspaceRole), nameof(WorkspaceRoleHasPermission)
     ];

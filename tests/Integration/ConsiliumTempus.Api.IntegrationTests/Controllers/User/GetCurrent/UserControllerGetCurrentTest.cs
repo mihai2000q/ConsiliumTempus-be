@@ -1,33 +1,26 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.GetCurrent;
 
 [Collection(nameof(UserControllerCollection))]
-public class UserControllerGetCurrentTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper) 
-    : BaseIntegrationTest(factory, testOutputHelper)
+public class UserControllerGetCurrentTest(WebAppFactory factory) 
+    : BaseIntegrationTest(factory, new UserData())
 {
     [Fact]
     public async Task WhenGetCurrentUserIsSuccessful_ThenReturnCurrentUser()
     {
         // Arrange
-        const string email = "michaelj@gmail.com";
+        var user = UserData.Users.First();
         
         // Act
-        Client.UseCustomToken(email);
+        Client.UseCustomToken(user);
         var outcome = await Client.Get("api/users/current");
 
         // Assert
-        await Utils.User.AssertDtoFromResponse(
-            outcome, 
-            "Michael", 
-            "Jordan", 
-            email,
-            "Pro Basketball Player",
-            DateOnly.Parse("2000-12-23"));
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        await Utils.User.AssertDtoFromResponse(outcome, user);
     }
 }

@@ -1,29 +1,25 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using FluentAssertions;
-using Xunit.Abstractions;
+using ConsiliumTempus.Common.IntegrationTests.Project.Entities;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Create;
 
 [Collection(nameof(ProjectSprintControllerCollection))]
-public class ProjectSprintControllerCreateValidationTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper) 
-    : BaseIntegrationTest(factory, testOutputHelper, "ProjectSprint")
+public class ProjectSprintControllerCreateValidationTest(WebAppFactory factory) 
+    : BaseIntegrationTest(factory, new ProjectSprintData())
 {
     
     [Fact]
     public async Task WhenProjectSprintCreateCommandIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"));
+        var project = ProjectSprintData.Projects.First();
+        var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(project.Id.Value);
         
         // Act
-        Client.UseCustomToken("michaelj@gmail.com");
+        Client.UseCustomToken(ProjectSprintData.Users.First());
         var outcome = await Client.Post("api/projects/sprints", request);
 
         // Assert
@@ -39,7 +35,6 @@ public class ProjectSprintControllerCreateValidationTest(
             name: string.Empty);  
         
         // Act
-        Client.UseCustomToken("michaelj@gmail.com");
         var outcome = await Client.Post("api/projects/sprints", request);
 
         // Assert

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 namespace ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 
 public class TestAuthHandler(
-    ITokenProvider tokenProvider,
+    TokenProvider tokenProvider,
     IOptionsMonitor<AuthenticationSchemeOptions> options,
     ILoggerFactory logger,
     UrlEncoder encoder)

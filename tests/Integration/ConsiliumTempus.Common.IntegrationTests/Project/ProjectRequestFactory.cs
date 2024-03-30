@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
-using ConsiliumTempus.Api.IntegrationTests.TestConstants;
+using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
-namespace ConsiliumTempus.Api.IntegrationTests.TestFactory;
+namespace ConsiliumTempus.Common.IntegrationTests.Project;
 
 public static class ProjectRequestFactory
 {

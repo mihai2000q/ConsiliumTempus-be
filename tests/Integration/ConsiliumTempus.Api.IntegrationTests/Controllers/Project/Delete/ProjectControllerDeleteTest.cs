@@ -1,30 +1,26 @@
-﻿using System.Net;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
-using FluentAssertions;
-using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Delete;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerDeleteTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper) 
-    : BaseIntegrationTest(factory, testOutputHelper, "Project")
+public class ProjectControllerDeleteTest(WebAppFactory factory) 
+    : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
     public async Task WhenProjectDeleteSucceeds_ShouldDeleteAndReturnSuccessResponse()
     {
         // Arrange
-        const string id = "10000000-0000-0000-0000-000000000000";
+        var project = ProjectData.Projects.First();
         
         // Act
-        Client.UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.Delete($"api/projects/{id}");
+        Client.UseCustomToken(ProjectData.Users.First());
+        var outcome = await Client.Delete($"api/projects/{project.Id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -33,14 +29,14 @@ public class ProjectControllerDeleteTest(
         response!.Message.Should().Be("Project has been deleted successfully!");
         
         var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Projects.Should().BeEmpty();
+        dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length - 1);
     }
 
     [Fact]
     public async Task WhenProjectDeleteFails_ShouldReturnNotFoundError()
     {
         // Arrange
-        const string id = "20000000-0000-0000-0000-000000000000";
+        var id = Guid.NewGuid();
         
         // Act
         var outcome = await Client.Delete($"api/projects/{id}");
@@ -49,8 +45,8 @@ public class ProjectControllerDeleteTest(
         await outcome.ValidateError(Errors.Project.NotFound);
         
         var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Projects.Should().HaveCount(1);
+        dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length);
         dbContext.Projects.AsEnumerable()
-            .SingleOrDefault(p => p.Id.Value == new Guid(id)).Should().BeNull();
+            .SingleOrDefault(p => p.Id.Value == id).Should().BeNull();
     }
 }

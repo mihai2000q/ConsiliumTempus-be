@@ -1,18 +1,14 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using FluentAssertions;
-using Xunit.Abstractions;
+using ConsiliumTempus.Common.IntegrationTests.Authentication;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Register;
 
 [Collection(nameof(AuthenticationControllerCollection))]
-public class AuthenticationControllerRegisterValidationTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper)
-    : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
+public class AuthenticationControllerRegisterValidationTest(WebAppFactory factory)
+    : BaseIntegrationTest(factory, new AuthData(), true)
 {
     [Fact]
     public async Task Register_WhenCommandIsValid_ShouldReturnSuccessResponse()

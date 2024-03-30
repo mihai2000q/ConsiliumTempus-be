@@ -59,7 +59,7 @@ public static class DependencyInjection
                 };
                 options.MapInboundClaims = false;
             });
-        
+
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IJwtTokenValidator, JwtTokenValidator>();
         services.AddSingleton<IScrambler, Scrambler>();
@@ -70,14 +70,14 @@ public static class DependencyInjection
     private static IServiceCollection AddAppAuthorization(this IServiceCollection services)
     {
         services.AddAuthorization();
-        
+
         services.AddScoped<IWorkspaceProvider, WorkspaceRepository>();
         services.AddScoped<IPermissionProvider, PermissionRepository>();
         services.AddScoped<IUserProvider, UserRepository>();
         services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
         services.AddSingleton<IAuthorizationHandler, TokenAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
-        
+
         return services;
     }
 
@@ -86,13 +86,13 @@ public static class DependencyInjection
         var databaseSettings = new DatabaseSettings();
         configuration.Bind(DatabaseSettings.SectionName, databaseSettings);
 
-        services.AddDbContext<ConsiliumTempusDbContext>(options => options
-            .UseSqlServer($"" +
-                          $"Server={databaseSettings.Server},{databaseSettings.Port};" +
-                          $"Database={databaseSettings.Name};" +
-                          $"User Id={databaseSettings.User};" +
-                          $"Password={databaseSettings.Password};" +
-                          $"Encrypt=false"));
+        services.AddDbContext<ConsiliumTempusDbContext>(options =>
+            options.UseSqlServer($"" +
+                                 $"Server={databaseSettings.Server},{databaseSettings.Port};" +
+                                 $"Database={databaseSettings.Name};" +
+                                 $"User Id={databaseSettings.User};" +
+                                 $"Password={databaseSettings.Password};" +
+                                 $"Encrypt=false"));
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();

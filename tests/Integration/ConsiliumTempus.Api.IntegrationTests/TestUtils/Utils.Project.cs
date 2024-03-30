@@ -1,7 +1,6 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
-using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 

@@ -1,18 +1,14 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using FluentAssertions;
-using Xunit.Abstractions;
+using ConsiliumTempus.Common.IntegrationTests.Workspace;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Create;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerCreateValidationTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper)
-    : BaseIntegrationTest(factory, testOutputHelper)
+public class WorkspaceControllerCreateValidationTest(WebAppFactory factory)
+    : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
     public async Task WorkspaceCreate_WhenCommandIsValid_ShouldReturnSuccessResponse()

@@ -1,24 +1,19 @@
-﻿using System.Net;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Common.IntegrationTests.Authentication;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Register;
 
 [Collection(nameof(AuthenticationControllerCollection))]
-public class AuthenticationControllerRegisterTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper)
-    : BaseIntegrationTest(factory, testOutputHelper, "Auth", false)
+public class AuthenticationControllerRegisterTest(WebAppFactory factory)
+    : BaseIntegrationTest(factory, new AuthData(), true)
 {
     [Fact]
     public async Task Register_WhenIsSuccessful_ShouldAddNewUserCreateRefreshTokenAndReturnTokens()
@@ -32,46 +27,55 @@ public class AuthenticationControllerRegisterTest(
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
+        // assert registered user in db
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Users.Should().HaveCount(AuthData.Users.Length + 1);
+        var user = dbContext.Users
+            .Include(u => u.Memberships)
+            .ThenInclude(m => m.Workspace)
+            .Single(u => u.Credentials.Email == request.Email.ToLower());
+        Utils.User.AssertRegistration(user, request);
+        
+        // assert returned access token
         var response = await outcome.Content.ReadFromJsonAsync<RegisterResponse>();
         Utils.Auth.AssertToken(
             response?.Token,
             JwtSettings,
-            request.Email.ToLower(),
-            request.FirstName.CapitalizeWord(),
-            request.LastName.CapitalizeWord());
-        
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Users.Should().HaveCount(2);
-        var createdUser = dbContext.Users
-            .Include(u => u.Memberships)
-            .ThenInclude(m => m.Workspace)
-            .Single(u => u.Credentials.Email == request.Email.ToLower());
-        Utils.User.AssertRegistration(createdUser, request);
+            user);
 
-        dbContext.Set<RefreshToken>().Should().HaveCount(1);
-        var refreshToken = await dbContext.Set<RefreshToken>().SingleAsync();
+        // assert created refresh token in db
+        dbContext.Set<RefreshToken>().Should().HaveCount(AuthData.RefreshTokens.Length + 1);
+        var refreshToken = await dbContext.Set<RefreshToken>()
+            .Where(rt => rt.User == user)
+            .OrderBy(rt => rt.CreatedDateTime)
+            .LastAsync();
         Utils.RefreshToken.AssertCreation(
             refreshToken, 
             response?.RefreshToken, 
             response?.Token, 
-            createdUser);
+            user);
     }
 
     [Fact]
     public async Task Register_WhenItFails_ShouldReturnDuplicateEmailError()
     {
         // Arrange
-        var request = AuthenticationRequestFactory.CreateRegisterRequest(email: "MichaelJ@Gmail.com");
+        var request = AuthenticationRequestFactory.CreateRegisterRequest(email: AuthData.Users.First().Credentials.Email);
 
         // Act
         var outcome = await Client.Post("/api/auth/Register", request);
 
         // Assert
+        // assert returned error
         await outcome.ValidateError(Errors.User.DuplicateEmail);
         
+        // assert users in db
         var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Users.Should().HaveCount(1);
+        dbContext.Users.Should().HaveCount(AuthData.Users.Length);
         dbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
             .Should().NotBeNull();
+        
+        // assert refreshTokens in db
+        dbContext.Set<RefreshToken>().Should().HaveCount(AuthData.RefreshTokens.Length);
     }
 }

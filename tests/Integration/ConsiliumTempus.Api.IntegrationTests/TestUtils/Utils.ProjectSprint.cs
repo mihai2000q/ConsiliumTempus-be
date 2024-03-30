@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
-using FluentAssertions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 

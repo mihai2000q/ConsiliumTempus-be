@@ -1,48 +1,44 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Update;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerUpdateTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper) 
-    : BaseIntegrationTest(factory, testOutputHelper, "Workspace")
+public class WorkspaceControllerUpdateTest(WebAppFactory factory) 
+    : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
     public async Task WorkspaceUpdate_WhenItSucceeds_ShouldUpdateAndReturnNewWorkspace()
     {
         // Arrange
-        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(
-            id: new Guid("10000000-0000-0000-0000-000000000000"));
+        var workspace = WorkspaceData.Workspaces.First();
+        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: workspace.Id.Value);
         
         // Act
+        Client.UseCustomToken(WorkspaceData.Users.First());
         var outcome = await Client.Put("api/workspaces", request);
 
         // Assert
-        await Utils.Workspace.AssertDtoFromResponse(
-            outcome, 
-            request.Name, 
-            request.Description);
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         
         var updatedWorkspace = await GetWorkspaceById(request.Id);
         Utils.Workspace.AssertUpdated(updatedWorkspace!, request);
+        
+        await Utils.Workspace.AssertDtoFromResponse(outcome, updatedWorkspace!);
     }
     
     [Fact]
     public async Task WhenWorkspaceUpdateFails_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(
-            id: new Guid("90000000-0000-0000-0000-000000000000"));
+        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: Guid.NewGuid());
         
         // Act
         var outcome = await Client.Put("api/workspaces", request);

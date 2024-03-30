@@ -1,64 +1,61 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using FluentAssertions;
-using Xunit.Abstractions;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Delete;
 
 [Collection(nameof(ProjectSprintControllerCollection))]
-public class ProjectSprintControllerDeleteAuthorizationTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper) 
-    : BaseIntegrationTest(factory, testOutputHelper, "ProjectSprint")
+public class ProjectSprintControllerDeleteAuthorizationTest(WebAppFactory factory) 
+    : BaseIntegrationTest(factory, new ProjectSprintData())
 {
     [Fact]
     public async Task WhenProjectSprintDeleteWithAdminRole_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulRequest("michaelj@gmail.com");
+        await AssertSuccessfulRequest(ProjectSprintData.Users[0]);
     }
     
     [Fact]
     public async Task WhenProjectSprintDeleteWithMemberRole_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenResponse("stephenc@gmail.com");
+        await AssertForbiddenResponse(ProjectSprintData.Users[3]);
     }
 
     [Fact]
     public async Task WhenProjectSprintDeleteWithViewRole_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenResponse("lebronj@gmail.com");
+        await AssertForbiddenResponse(ProjectSprintData.Users[4]);
     }
 
     [Fact]
     public async Task WhenProjectSprintDeleteWithoutMembership_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenResponse("leom@gmail.com");
+        await AssertForbiddenResponse(ProjectSprintData.Users[1]);
     }
 
-    private async Task AssertSuccessfulRequest(string email)
+    private async Task AssertSuccessfulRequest(UserAggregate user)
     {
-        var outcome = await ArrangeAndAct(email);
+        var outcome = await ArrangeAndAct(user);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
     
-    private async Task AssertForbiddenResponse(string email)
+    private async Task AssertForbiddenResponse(UserAggregate user)
     {
-        var outcome = await ArrangeAndAct(email);
+        var outcome = await ArrangeAndAct(user);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    private async Task<HttpResponseMessage> ArrangeAndAct(string email)
+    private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
     {
         // Arrange
-        const string id = "10000000-0000-0000-0000-000000000000";
+        var sprint = ProjectSprintData.ProjectSprints.First();
         
         // Act
-        Client.UseCustomToken(email);
-        return await Client.Delete($"api/projects/sprints/{id}");
+        Client.UseCustomToken(user);
+        return await Client.Delete($"api/projects/sprints/{sprint.Id.Value}");
     }
 }
