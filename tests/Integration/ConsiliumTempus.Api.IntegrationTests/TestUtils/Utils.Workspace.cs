@@ -12,32 +12,19 @@ internal static partial class Utils
     {
         internal static async Task AssertDtoFromResponse(
             HttpResponseMessage response,
-            string name,
-            string description,
-            string? id = null)
+            WorkspaceAggregate workspace)
         {
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var content = await response.Content.ReadFromJsonAsync<WorkspaceDto>();
-            AssertDto(content!, name, description, id);
+            var dto = await response.Content.ReadFromJsonAsync<WorkspaceDto>();
+            AssertDto(dto!, workspace);
         }
 
         internal static void AssertDto(
             WorkspaceDto dto,
-            string name,
-            string description,
-            string? id = null)
+            WorkspaceAggregate workspace)
         {
-            if (id is null)
-            {
-                dto.Id.Should().NotBeNullOrWhiteSpace();
-            }
-            else
-            {
-                dto.Id.Should().Be(id);
-            }
-            dto.Name.Should().Be(name);
-            dto.Description.Should().Be(description);
+            dto!.Id.Should().Be(workspace.Id.ToString());
+            dto.Name.Should().Be(workspace.Name.Value);
+            dto.Description.Should().Be(workspace.Description.Value);
         }
 
         internal static void AssertCreation(WorkspaceAggregate workspace, CreateWorkspaceRequest request)

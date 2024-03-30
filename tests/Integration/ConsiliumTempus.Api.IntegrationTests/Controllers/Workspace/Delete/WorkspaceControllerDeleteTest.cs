@@ -1,30 +1,26 @@
-﻿using System.Net;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Errors;
-using FluentAssertions;
-using Xunit.Abstractions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Delete;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerDeleteTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper)
-    : BaseIntegrationTest(factory, testOutputHelper, "Workspace")
+public class WorkspaceControllerDeleteTest(WebAppFactory factory)
+    : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
     public async Task WorkspaceDelete_WhenItSucceeds_ShouldDeleteAndReturnSuccessResponse()
     {
         // Arrange
-        const string id = "30000000-0000-0000-0000-000000000000";
+        var workspace = WorkspaceData.Workspaces[2];
 
         // Act
-        Client.UseCustomToken("michaelj@gmail.com");
-        var outcome = await Client.Delete($"api/workspaces/{id}");
+        Client.UseCustomToken(WorkspaceData.Users[0]);
+        var outcome = await Client.Delete($"api/workspaces/{workspace.Id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -33,9 +29,8 @@ public class WorkspaceControllerDeleteTest(
         response!.Message.Should().Be("Workspace has been deleted successfully!");
         
         var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Workspaces.Should().HaveCount(2);
-        dbContext.Workspaces.AsEnumerable()
-            .SingleOrDefault(w => w.Id.Value.ToString() == id)
+        dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length - 1);
+        (await dbContext.Workspaces.FindAsync(workspace.Id))
             .Should().BeNull();
     }
 
@@ -43,7 +38,7 @@ public class WorkspaceControllerDeleteTest(
     public async Task WhenWorkspaceDeleteFails_ShouldReturnNotFoundError()
     {
         // Arrange
-        const string id = "50000000-0000-0000-0000-000000000000";
+        var id = Guid.NewGuid();
 
         // Act
         var outcome = await Client.Delete($"api/workspaces/{id}");
@@ -52,9 +47,9 @@ public class WorkspaceControllerDeleteTest(
         await outcome.ValidateError(Errors.Workspace.NotFound);
         
         var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Workspaces.Should().HaveCount(3);
+        dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length);
         dbContext.Workspaces.AsEnumerable()
-            .SingleOrDefault(w => w.Id.Value.ToString() == id)
+            .SingleOrDefault(w => w.Id.Value == id)
             .Should().BeNull();
     }
 }

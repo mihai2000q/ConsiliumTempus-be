@@ -1,65 +1,62 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
-using FluentAssertions;
-using Xunit.Abstractions;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Common.IntegrationTests.Workspace;
+using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Update;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerUpdateAuthorizationTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper) 
-    : BaseIntegrationTest(factory, testOutputHelper, "Workspace")
+public class WorkspaceControllerUpdateAuthorizationTest(WebAppFactory factory) 
+    : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
     public async Task WhenWorkspaceUpdateWithAdminRole_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulRequest("michaelj@gmail.com");
+        await AssertSuccessfulRequest(WorkspaceData.Users[0]);
     }
     
     [Fact]
     public async Task WhenWorkspaceUpdateWithMemberRole_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulRequest("stephenc@gmail.com");
+        await AssertSuccessfulRequest(WorkspaceData.Users[3]);
     }
     
     [Fact]
     public async Task WhenWorkspaceUpdateWithViewRole_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenRequest("lebronj@gmail.com");
+        await AssertForbiddenRequest(WorkspaceData.Users[4]);
     }
     
     [Fact]
     public async Task WhenWorkspaceUpdateWithoutMembership_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenRequest("leom@gmail.com");
+        await AssertForbiddenRequest(WorkspaceData.Users[1]);
     }
-    private async Task AssertSuccessfulRequest(string email)
+    private async Task AssertSuccessfulRequest(UserAggregate user)
     {
-        var outcome = await ArrangeAndAct(email);
+        var outcome = await ArrangeAndAct(user);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-    private async Task AssertForbiddenRequest(string email)
+    private async Task AssertForbiddenRequest(UserAggregate user)
     {
-        var outcome = await ArrangeAndAct(email);
+        var outcome = await ArrangeAndAct(user);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    private async Task<HttpResponseMessage> ArrangeAndAct(string email)
+    private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
     {
         // Arrange
-        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(
-            id: new Guid("10000000-0000-0000-0000-000000000000"));
+        var workspace = WorkspaceData.Workspaces.First();
+        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: workspace.Id.Value);
         
         // Act
-        Client.UseCustomToken(email);
+        Client.UseCustomToken(user);
         return await Client.Put("api/workspaces", request);
     }
 }
