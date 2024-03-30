@@ -1,18 +1,14 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using FluentAssertions;
-using Xunit.Abstractions;
+using ConsiliumTempus.Common.IntegrationTests.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.Update;
 
 [Collection(nameof(UserControllerCollection))]
-public class UserControllerUpdateValidationTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper) 
-    : BaseIntegrationTest(factory, testOutputHelper)
+public class UserControllerUpdateValidationTest(WebAppFactory factory) 
+    : BaseIntegrationTest(factory, new UserData())
 {
     [Fact]
     public async Task UpdateUser_WhenCommandIsValid_ShouldReturnSuccessResponse()
@@ -21,7 +17,6 @@ public class UserControllerUpdateValidationTest(
         var request = UserRequestFactory.CreateUpdateUserRequest();
         
         // Act
-        Client.UseCustomToken("michaelj@gmail.com");
         var outcome = await Client.Put("api/users", request);
 
         // Assert
@@ -37,7 +32,6 @@ public class UserControllerUpdateValidationTest(
             role: new string('a', 1000));
         
         // Act
-        Client.UseCustomToken("stephenc@gmail.com");
         var outcome = await Client.Put("api/users", request);
 
         // Assert
