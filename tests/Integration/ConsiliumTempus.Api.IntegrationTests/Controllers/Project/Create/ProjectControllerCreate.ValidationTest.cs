@@ -1,28 +1,24 @@
-﻿using System.Net;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
-using ConsiliumTempus.Api.IntegrationTests.TestFactory;
+using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using FluentAssertions;
-using Xunit.Abstractions;
+using ConsiliumTempus.Common.IntegrationTests.Project;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Create;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerCreateValidationTest(
-    WebAppFactory factory,
-    ITestOutputHelper testOutputHelper) 
-    : BaseIntegrationTest(factory, testOutputHelper, "Project")
+public class ProjectControllerCreateValidationTest(WebAppFactory factory) 
+    : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
     public async Task WhenProjectCreateCommandIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = ProjectRequestFactory.CreateCreateProjectRequest(
-            new Guid("10000000-0000-0000-0000-000000000000"));
+        var workspaceId = ProjectData.Workspaces.First().Id.Value;
+        var request = ProjectRequestFactory.CreateCreateProjectRequest(workspaceId);
 
         // Act
-        Client.UseCustomToken("michaelj@gmail.com");
+        Client.UseCustomToken(ProjectData.Users.First());
         var outcome = await Client.Post("api/projects", request);
         
         // Assert
@@ -33,10 +29,11 @@ public class ProjectControllerCreateValidationTest(
     public async Task WhenProjectCreateCommandIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
-        var request = ProjectRequestFactory.CreateCreateProjectRequest(workspaceId: Guid.Empty, name: string.Empty);
+        var request = ProjectRequestFactory.CreateCreateProjectRequest(
+            workspaceId: Guid.Empty,
+            name: string.Empty);
 
         // Act
-        Client.UseCustomToken("michaelj@gmail.com");
         var outcome = await Client.Post("api/projects", request);
         
         // Assert
