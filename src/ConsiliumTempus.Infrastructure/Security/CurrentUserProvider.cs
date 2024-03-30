@@ -12,12 +12,13 @@ public class CurrentUserProvider(
     IUserRepository userRepository) 
     : ICurrentUserProvider
 {
-    public async Task<UserAggregate> GetCurrentUser(CancellationToken cancellationToken = default)
+    public async Task<UserAggregate?> GetCurrentUser(CancellationToken cancellationToken = default)
     {
-        var jwtUserId = httpContextAccessor.HttpContext!.User.Claims
-            .Single(x => x.Type == JwtRegisteredClaimNames.Sub).Value;
-        var userId = UserId.Create(jwtUserId);
+        var subUserId = httpContextAccessor.HttpContext!.User.Claims
+            .SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
+        if (subUserId is null || !Guid.TryParse(subUserId, out var guidUserId)) return null;
+        var userId = UserId.Create(guidUserId);
         var user = await userRepository.Get(userId, cancellationToken);
-        return user!;
+        return user;
     }
 }
