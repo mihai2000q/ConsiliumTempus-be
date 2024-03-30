@@ -1,13 +1,11 @@
 ﻿using ConsiliumTempus.Api.Contracts.User.Delete;
 using ConsiliumTempus.Api.Contracts.User.Get;
-using ConsiliumTempus.Api.Contracts.User.GetId;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.User.Commands.Delete;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Application.User.Queries.GetCurrent;
-using ConsiliumTempus.Application.User.Queries.GetId;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -24,18 +22,6 @@ public sealed class UserController(IMapper mapper, ISender mediator) : ApiContro
 
         return result.Match(
             getResult => Ok(Mapper.Map<UserDto>(getResult)),
-            Problem
-        );
-    }
-
-    [HttpGet("Id")]
-    public async Task<IActionResult> GetId(CancellationToken cancellationToken)
-    {
-        var query = new GetUserIdQuery();
-        var result = await Mediator.Send(query, cancellationToken);
-        
-        return result.Match(
-            getIdResult => Ok(Mapper.Map<GetUserIdResponse>(getIdResult)),
             Problem
         );
     }

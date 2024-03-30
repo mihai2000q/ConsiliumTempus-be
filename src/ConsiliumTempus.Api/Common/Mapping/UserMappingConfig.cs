@@ -1,14 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Api.Contracts.User.Delete;
 using ConsiliumTempus.Api.Contracts.User.Get;
-using ConsiliumTempus.Api.Contracts.User.GetId;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.User.Commands.Delete;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Domain.User;
-using ConsiliumTempus.Domain.User.ValueObjects;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
@@ -34,9 +32,6 @@ public sealed class UserMappingConfig : IRegister
             .Map(dest => dest.LastName, src => src.LastName.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email)
             .Map(dest => dest.Role, src => src.Role!.Value);
-
-        config.NewConfig<UserId, GetUserIdResponse>()
-            .Map(dest => dest.Id, src => src.ToString());
     }
 
     private static void PutMappings(TypeAdapterConfig config)

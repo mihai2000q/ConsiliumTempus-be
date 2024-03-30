@@ -1,13 +1,11 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.User.Delete;
-using ConsiliumTempus.Api.Contracts.User.GetId;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Delete;
 using ConsiliumTempus.Application.User.Commands.Update;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Application.User.Queries.GetCurrent;
-using ConsiliumTempus.Application.User.Queries.GetId;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.AspNetCore.Mvc;
@@ -75,30 +73,6 @@ public class UserControllerTest
             .Send(Arg.Is<GetUserQuery>(query => Utils.User.AssertGetQuery(query, request)));
 
         outcome.ValidateError(error);
-    }
-    
-    [Fact]
-    public async Task GetUserId_WhenIsSuccessful_ShouldReturnUserId()
-    {
-        // Arrange
-        var userId = UserFactory.CreateId();
-        _mediator
-            .Send(Arg.Any<GetUserIdQuery>())
-            .Returns(userId);
-
-        // Act
-        var outcome = await _uut.GetId(default);
-
-        // Assert
-        await _mediator
-            .Received(1)
-            .Send(Arg.Is<GetUserIdQuery>(query => query == new GetUserIdQuery()));
-
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<GetUserIdResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as GetUserIdResponse;
-        response?.Id.Should().Be(userId.ToString());
     }
     
     [Fact]

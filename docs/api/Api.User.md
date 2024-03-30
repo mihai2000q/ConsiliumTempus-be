@@ -4,8 +4,8 @@
   * [Get](#get)
     * [Get User Request](#get-user-request)
     * [Get User Response](#get-user-response)
-  * [Get Id](#get-id)
-    * [Get User Id Response](#get-user-id-response)
+  * [Get Current](#get-current)
+    * [Get Current Response](#get-current-response)
   * [Update](#update)
     * [Update User Request](#update-user-request)
     * [Update User Response](#update-user-response)
@@ -36,17 +36,17 @@ Sends the id of the user inside the route request.
 Returns the user [Dto](dto/Dto.User.md).
 
 
-### Get Id
+### Get Current
 
-Anyone logged in can read the data of another user.
+Returns the current user based on the token provided.
 
 ```js
 GET {{host}}/api/users/id
 ```
 
-#### Get User Id Response
+#### Get Current Response
 
-Returns the user id.
+Returns the current user [Dto](dto/Dto.User.md).
 
 
 ### Update
