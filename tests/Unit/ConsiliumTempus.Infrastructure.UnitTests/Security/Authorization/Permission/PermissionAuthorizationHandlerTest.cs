@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.Security.Authorization.Permission;
 
@@ -97,14 +98,17 @@ public class PermissionAuthorizationHandlerTest
         ]));
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
-        _httpContextAccessor.HttpContext
-            .Returns((HttpContext?)null);
+        _httpContextAccessor
+            .HttpContext
+            .ReturnsNull();
         
         // Act
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.Received(1);
+        _ = _httpContextAccessor
+            .Received(1)
+            .HttpContext;
         _workspaceProvider.DidNotReceive();
         _permissionProvider.DidNotReceive();
         
@@ -126,7 +130,9 @@ public class PermissionAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.Received(1);
+        _ = _httpContextAccessor
+            .Received(1)
+            .HttpContext;
         _workspaceProvider.DidNotReceive();
         _permissionProvider.DidNotReceive();
         
@@ -155,7 +161,9 @@ public class PermissionAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.Received(1);
+        _ = _httpContextAccessor
+            .Received(2)
+            .HttpContext;
         _workspaceProvider.DidNotReceive();
         _permissionProvider.DidNotReceive();
         
@@ -186,7 +194,9 @@ public class PermissionAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.Received(1);
+        _ = _httpContextAccessor
+            .Received(2)
+            .HttpContext;
         _workspaceProvider.DidNotReceive();
         _permissionProvider.DidNotReceive();
         
@@ -215,7 +225,9 @@ public class PermissionAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.Received(1);
+        _ = _httpContextAccessor
+            .Received(2)
+            .HttpContext;
         _workspaceProvider.DidNotReceive();
         _permissionProvider.DidNotReceive();
         
@@ -246,7 +258,9 @@ public class PermissionAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.Received(1);
+        _ = _httpContextAccessor
+            .Received(2)
+            .HttpContext;
         _workspaceProvider.DidNotReceive();
         _permissionProvider.DidNotReceive();
         
@@ -277,7 +291,9 @@ public class PermissionAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.Received(1);
+        _ = _httpContextAccessor
+            .Received(2)
+            .HttpContext;
         _workspaceProvider.DidNotReceive();
         _permissionProvider.DidNotReceive();
         
@@ -324,7 +340,9 @@ public class PermissionAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.Received(1);
+        _ = _httpContextAccessor
+            .Received(2)
+            .HttpContext;
 
         switch (provider)
         {
@@ -408,7 +426,9 @@ public class PermissionAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.Received(1);
+        _ = _httpContextAccessor
+            .Received(2)
+            .HttpContext;
 
         switch (provider)
         {
@@ -429,7 +449,6 @@ public class PermissionAuthorizationHandlerTest
                 break;
             default: throw new Exception();
         }
-        _workspaceProvider.Received(1);
 
         await _permissionProvider
             .Received(1)
@@ -498,7 +517,9 @@ public class PermissionAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.Received(1);
+        _ = _httpContextAccessor
+            .Received(2)
+            .HttpContext;
 
         switch (provider)
         {
@@ -519,7 +540,6 @@ public class PermissionAuthorizationHandlerTest
                 break;
             default: throw new Exception();
         }
-        _workspaceProvider.Received(1);
 
         await _permissionProvider
             .Received(1)
