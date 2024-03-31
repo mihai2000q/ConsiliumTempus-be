@@ -22,8 +22,11 @@ internal static class HttpRequestReader
         request.EnableBuffering();
         var body = await JsonSerializer.DeserializeAsync<Dictionary<string, JsonElement>>(request.Body);
         request.Body.Position = 0;
-        
-        var id = body?[property].GetString() ?? "";
+
+        if (body is null) return null;
+        if (!body.TryGetValue(property, out var jsonElement)) return null;
+        if (jsonElement.ValueKind != JsonValueKind.String) return null;
+        var id = jsonElement.GetString();
         return !string.IsNullOrEmpty(id) ? id : null;
     }
 }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace ConsiliumTempus.Infrastructure.Persistence.Database;
 
 public sealed class ConsiliumTempusDbContext(
-    PublishDomainEventInterceptor publishDomainEventInterceptor,
+    PublishDomainEventsInterceptor publishDomainEventsInterceptor,
     DbContextOptions<ConsiliumTempusDbContext> options)
     : DbContext(options)
 {
@@ -37,7 +37,7 @@ public sealed class ConsiliumTempusDbContext(
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.AddInterceptors(publishDomainEventInterceptor);
+        optionsBuilder.AddInterceptors(publishDomainEventsInterceptor);
         base.OnConfiguring(optionsBuilder);
     }
 }

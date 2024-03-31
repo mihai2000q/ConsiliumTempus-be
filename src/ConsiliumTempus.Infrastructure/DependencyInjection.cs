@@ -100,7 +100,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddInterceptors(this IServiceCollection services)
     {
-        services.AddScoped<PublishDomainEventInterceptor>();
+        services.AddScoped<PublishDomainEventsInterceptor>();
 
         return services;
     }
