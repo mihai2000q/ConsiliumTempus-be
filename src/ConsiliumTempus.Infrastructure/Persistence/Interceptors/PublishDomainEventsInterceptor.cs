@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 
-public sealed class PublishDomainEventInterceptor(IPublisher mediator) : SaveChangesInterceptor
+public sealed class PublishDomainEventsInterceptor(IPublisher mediator) : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,
@@ -29,16 +29,16 @@ public sealed class PublishDomainEventInterceptor(IPublisher mediator) : SaveCha
         if (dbContext is null) return;
 
         List<IHasDomainEvents> entitiesWithDomainEvents;
-        // loop for domain events within domain events
+        // Loop for domain events within domain events
         do
         {
-            // Get hold of all the various entities
+            // Get hold of all the entities
             entitiesWithDomainEvents = dbContext.ChangeTracker.Entries<IHasDomainEvents>()
-                .Where(entry => entry.Entity.DomainEvents.Any())
                 .Select(entry => entry.Entity)
+                .Where(entry => entry.DomainEvents.Any())
                 .ToList();
 
-            // Get hold of all the various domain events
+            // Get hold of all the domain events
             var domainEvents = entitiesWithDomainEvents
                 .SelectMany(entry => entry.DomainEvents)
                 .ToList();
