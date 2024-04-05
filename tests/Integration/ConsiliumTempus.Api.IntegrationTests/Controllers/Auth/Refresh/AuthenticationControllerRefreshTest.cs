@@ -7,7 +7,6 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Authentication;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
-using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Refresh;
@@ -20,10 +19,10 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
     public async Task Refresh_WhenItIsSuccessful_ShouldReturnNewTokens()
     {
         // Arrange
-        var refreshTokenRequest = AuthData.RefreshTokens.First();
-        var token = Utils.Token.GenerateValidToken(refreshTokenRequest.User, JwtSettings, refreshTokenRequest.JwtId.ToString());
+        var refreshToken = AuthData.RefreshTokens.First();
+        var token = Utils.Token.GenerateValidToken(refreshToken.User, JwtSettings, refreshToken.JwtId.ToString());
         var request = AuthenticationRequestFactory.CreateRefreshRequest(
-            refreshTokenRequest.Value,
+            refreshToken.Value,
             Utils.Token.SecurityTokenToStringToken(token));
 
         // Act
@@ -34,16 +33,15 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<RefreshResponse>();
         
         Utils.Auth.AssertToken(
-            response?.Token, 
+            response!.Token, 
             JwtSettings, 
-            refreshTokenRequest.User);
+            refreshToken.User);
 
         var dbContext = await DbContextFactory.CreateDbContextAsync();
-        var refreshToken = await dbContext.Set<RefreshToken>()
+        var updatedRefreshToken = await dbContext.Set<RefreshToken>()
             .SingleAsync(rt => rt.Id.ToString() == request.RefreshToken);
 
-        refreshToken.UsedTimes.Should().Be(1);
-        refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        Utils.RefreshToken.AssertUpdate(refreshToken, updatedRefreshToken, response.Token);
     }
     
     [Fact]

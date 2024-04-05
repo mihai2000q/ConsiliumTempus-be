@@ -31,7 +31,7 @@ public sealed class RefreshToken : Entity<Guid>, ITimestamps
         UpdatedDateTime = updatedDateTime;
     }
 
-    public Guid JwtId { get; init; }
+    public Guid JwtId { get; private set; }
     public DateTime ExpiryDateTime { get; init; }
     public bool IsInvalidated { get; private set; }
     public long UsedTimes { get; private set; }
@@ -56,8 +56,9 @@ public sealed class RefreshToken : Entity<Guid>, ITimestamps
             DateTime.UtcNow);
     }
 
-    public void UpdateUsage()
+    public void UpdateUsage(Guid jwtId)
     {
+        JwtId = jwtId;
         UsedTimes++;
         UpdatedDateTime = DateTime.UtcNow;
     }

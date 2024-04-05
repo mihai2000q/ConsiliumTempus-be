@@ -20,5 +20,17 @@ internal static partial class Utils
             refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             refreshToken.User.Should().Be(user);
         }
+        
+        internal static void AssertUpdate(
+            Domain.Common.Entities.RefreshToken refreshToken,
+            string jwtId,
+            long usedTimes = 1)
+        {
+            refreshToken.Value.Should().NotBeNullOrWhiteSpace().And.HaveLength(36);
+            refreshToken.JwtId.ToString().Should().Be(jwtId);
+            refreshToken.IsInvalidated.Should().BeFalse();
+            refreshToken.UsedTimes.Should().Be(usedTimes);
+            refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+        }
     }
 }

@@ -7,7 +7,6 @@ using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
-using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Authentication.Commands.Refresh;
 
@@ -61,6 +60,11 @@ public class RefreshCommandHandlerTest
         _jwtTokenGenerator
             .GenerateToken(refreshToken.User)
             .Returns(token);
+
+        var newJwtId = Guid.NewGuid().ToString();
+        _jwtTokenGenerator
+            .GetJwtIdFromToken(token)
+            .Returns(newJwtId);
         
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -78,7 +82,7 @@ public class RefreshCommandHandlerTest
             .Get(Arg.Any<string>());
         
         _jwtTokenGenerator
-            .Received(1)
+            .Received(2)
             .GetJwtIdFromToken(Arg.Any<string>());
         _jwtTokenGenerator
             .Received(1)
@@ -87,8 +91,7 @@ public class RefreshCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(token);
 
-        refreshToken.UsedTimes.Should().Be(1);
-        refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        Utils.RefreshToken.AssertUpdate(refreshToken, newJwtId);
     }
     
     [Fact]
