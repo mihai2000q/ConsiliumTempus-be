@@ -29,7 +29,7 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         
         var updatedWorkspace = await GetWorkspaceById(request.Id);
-        Utils.Workspace.AssertUpdated(updatedWorkspace!, request);
+        Utils.Workspace.AssertUpdated(workspace, updatedWorkspace!, request);
         
         await Utils.Workspace.AssertDtoFromResponse(outcome, updatedWorkspace!);
     }

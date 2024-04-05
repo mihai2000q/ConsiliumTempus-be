@@ -27,7 +27,7 @@ public class UserControllerUpdateTest(WebAppFactory factory)
 
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedUser = await dbContext.Users.FindAsync(user.Id);
-        Utils.User.AssertUpdate(updatedUser!, request);
+        Utils.User.AssertUpdate(user, updatedUser!, request);
 
         await Utils.User.AssertDtoFromResponse(outcome, updatedUser!);
     }

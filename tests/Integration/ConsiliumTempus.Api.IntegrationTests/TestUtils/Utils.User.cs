@@ -53,16 +53,23 @@ internal static partial class Utils
 
         internal static void AssertUpdate(
             UserAggregate user,
+            UserAggregate newUser,
             UpdateUserRequest request)
         {
-            user.FirstName.Value.Should().Be(request.FirstName.Capitalize());
-            user.LastName.Value.Should().Be(request.LastName.Capitalize());
+            // unchanged
+            newUser.Id.Should().Be(user.Id);
+            newUser.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newUser.Credentials.Should().Be(user.Credentials);
+            
+            // changed
+            newUser.FirstName.Value.Should().Be(request.FirstName.Capitalize());
+            newUser.LastName.Value.Should().Be(request.LastName.Capitalize());
             if (request.Role is null)
-                user.Role.Should().BeNull();
+                newUser.Role.Should().BeNull();
             else
-                user.Role!.Value.Should().Be(request.Role);
-            user.DateOfBirth.Should().Be(request.DateOfBirth);
-            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+                newUser.Role!.Value.Should().Be(request.Role);
+            newUser.DateOfBirth.Should().Be(request.DateOfBirth);
+            newUser.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
     }
 }
