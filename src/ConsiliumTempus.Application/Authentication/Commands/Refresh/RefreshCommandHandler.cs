@@ -23,7 +23,7 @@ public sealed class RefreshCommandHandler(
 
         var token = jwtTokenGenerator.GenerateToken(refreshToken!.User);
 
-        refreshToken.UpdateUsage();
+        refreshToken.UpdateUsage(new Guid(jwtTokenGenerator.GetJwtIdFromToken(token)));
 
         return new RefreshResult(token);
     }

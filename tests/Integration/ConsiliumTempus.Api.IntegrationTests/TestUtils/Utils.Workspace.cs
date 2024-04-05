@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Domain.Workspace;
+using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
@@ -22,7 +23,7 @@ internal static partial class Utils
             WorkspaceDto dto,
             WorkspaceAggregate workspace)
         {
-            dto!.Id.Should().Be(workspace.Id.ToString());
+            dto.Id.Should().Be(workspace.Id.ToString());
             dto.Name.Should().Be(workspace.Name.Value);
             dto.Description.Should().Be(workspace.Description.Value);
         }
@@ -34,18 +35,19 @@ internal static partial class Utils
             workspace.Description.Value.Should().Be(request.Description);
         }
 
-        internal static void AssertUpdated(WorkspaceAggregate workspace, UpdateWorkspaceRequest request)
+        internal static void AssertUpdated(
+            WorkspaceAggregate workspace, 
+            WorkspaceAggregate newWorkspace, 
+            UpdateWorkspaceRequest request)
         {
-            workspace.Id.Value.Should().Be(request.Id);
-            workspace.Name.Value.Should().Be(request.Name);
-            workspace.Description.Value.Should().Be(request.Description);
-        }
-        
-        internal static void AssertNotUpdated(WorkspaceAggregate workspace, UpdateWorkspaceRequest request)
-        {
-            workspace.Id.Value.Should().Be(request.Id);
-            workspace.Name.Value.Should().NotBe(request.Name);
-            workspace.Description.Value.Should().NotBe(request.Description);
+            // unchanged
+            newWorkspace.CreatedDateTime.Should().Be(workspace.CreatedDateTime);
+            
+            // changed
+            newWorkspace.Id.Value.Should().Be(request.Id);
+            newWorkspace.Name.Value.Should().Be(request.Name);
+            newWorkspace.Description.Value.Should().Be(request.Description);
+            newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
     }
 }
