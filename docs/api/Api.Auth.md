@@ -104,7 +104,7 @@ Returns an access token and a refresh token.
 Anyone can refresh their token.
 
 ```js
-POST {{host}}/api/auth/refresh
+PUT {{host}}/api/auth/refresh
 ```
 
 #### Refresh Request

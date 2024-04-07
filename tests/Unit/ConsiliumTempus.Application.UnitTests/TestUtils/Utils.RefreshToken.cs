@@ -15,7 +15,7 @@ internal static partial class Utils
             refreshToken.JwtId.ToString().Should().Be(jwtId);
             refreshToken.ExpiryDateTime.Should().BeCloseTo(DateTime.UtcNow.AddDays(7), TimeSpan.FromMinutes(1));
             refreshToken.IsInvalidated.Should().BeFalse();
-            refreshToken.UsedTimes.Should().Be(0);
+            refreshToken.RefreshTimes.Should().Be(0);
             refreshToken.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             refreshToken.User.Should().Be(user);
@@ -29,7 +29,7 @@ internal static partial class Utils
             refreshToken.Value.Should().NotBeNullOrWhiteSpace().And.HaveLength(36);
             refreshToken.JwtId.ToString().Should().Be(jwtId);
             refreshToken.IsInvalidated.Should().BeFalse();
-            refreshToken.UsedTimes.Should().Be(usedTimes);
+            refreshToken.RefreshTimes.Should().Be(usedTimes);
             refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         }
     }

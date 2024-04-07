@@ -56,7 +56,7 @@ test.describe('should allow anonymous authentication', () => {
   test('should refresh token', async ({ request }) => {
     const tokens = await registerUser(request, EMAIL, PASSWORD)
 
-    const response = await request.post('api/auth/refresh', {
+    const response = await request.put('api/auth/refresh', {
       headers: {
         'Authorization': ''
       },

@@ -25,7 +25,7 @@ internal static partial class Utils
                 .Should()
                 .Be(accessToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
             refreshToken.User.Should().Be(user);
-            refreshToken.UsedTimes.Should().Be(0);
+            refreshToken.RefreshTimes.Should().Be(0);
         }
         
         internal static void AssertUpdate(
@@ -49,7 +49,7 @@ internal static partial class Utils
             newRefreshToken.JwtId.ToString()
                 .Should()
                 .Be(accessToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
-            newRefreshToken.UsedTimes.Should().Be(1);
+            newRefreshToken.RefreshTimes.Should().Be(1);
             newRefreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
     }

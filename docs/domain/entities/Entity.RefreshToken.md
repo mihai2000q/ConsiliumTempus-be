@@ -8,7 +8,7 @@ This entity represents the refresh token to get a new access token.
 class RefreshToken 
 {
     RefreshToken Create()
-    void UpdateUsage()
+    void Refresh()
 }
 ```
 

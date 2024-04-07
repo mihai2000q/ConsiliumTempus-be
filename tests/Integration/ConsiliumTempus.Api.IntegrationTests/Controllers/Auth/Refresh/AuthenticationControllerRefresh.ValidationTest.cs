@@ -21,7 +21,7 @@ public class AuthenticationControllerRefreshValidationTest(WebAppFactory factory
             Utils.Token.SecurityTokenToStringToken(token));
 
         // Act
-        var outcome = await Client.Post("/api/auth/Refresh", request);
+        var outcome = await Client.Put("/api/auth/Refresh", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -34,7 +34,7 @@ public class AuthenticationControllerRefreshValidationTest(WebAppFactory factory
         var request = AuthenticationRequestFactory.CreateRefreshRequest(refreshToken: "", token: "");
 
         // Act
-        var outcome = await Client.Post("/api/auth/Refresh", request);
+        var outcome = await Client.Put("/api/auth/Refresh", request);
 
         // Assert
         await outcome.ValidateValidationErrors();
