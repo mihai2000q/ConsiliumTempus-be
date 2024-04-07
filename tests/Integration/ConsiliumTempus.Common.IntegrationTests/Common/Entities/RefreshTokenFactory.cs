@@ -10,7 +10,7 @@ public static class RefreshTokenFactory
         UserAggregate user,
         DateTime? expiryDateTime = null,
         bool isInvalidated = false,
-        long usedTimes = 0,
+        long refreshTimes = 0,
         DateTime? createdDateTime = null,
         DateTime? updatedDateTime = null)
     {
@@ -20,7 +20,7 @@ public static class RefreshTokenFactory
         DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.JwtId), jwtId);
         DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.ExpiryDateTime), expiryDateTime ?? DateTime.UtcNow.AddDays(7));
         DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.IsInvalidated), isInvalidated);
-        DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.UsedTimes), usedTimes);
+        DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.RefreshTimes), refreshTimes);
         DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.User), user);

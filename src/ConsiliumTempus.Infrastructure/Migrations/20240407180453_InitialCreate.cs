@@ -80,7 +80,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     JwtId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ExpiryDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsInvalidated = table.Column<bool>(type: "bit", nullable: false),
-                    UsedTimes = table.Column<long>(type: "bigint", nullable: false),
+                    RefreshTimes = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)

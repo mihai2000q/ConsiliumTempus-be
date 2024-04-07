@@ -136,11 +136,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<Guid>("JwtId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<long>("RefreshTimes")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<long>("UsedTimes")
-                        .HasColumnType("bigint");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");

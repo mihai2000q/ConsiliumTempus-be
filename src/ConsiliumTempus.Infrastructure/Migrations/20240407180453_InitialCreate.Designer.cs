@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240407173453_InitialCreate")]
+    [Migration("20240407180453_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -139,11 +139,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<Guid>("JwtId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<long>("RefreshTimes")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<long>("UsedTimes")
-                        .HasColumnType("bigint");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
