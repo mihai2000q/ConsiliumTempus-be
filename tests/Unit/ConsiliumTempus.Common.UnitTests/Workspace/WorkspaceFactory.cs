@@ -15,8 +15,11 @@ public static class WorkspaceFactory
             Description.Create(description));
     }
     
-    public static List<WorkspaceAggregate> CreateList()
+    public static List<WorkspaceAggregate> CreateList(int count = 5)
     {
-        return Enumerable.Repeat(0, 5).Select(_ => Create()).ToList();
+        return Enumerable
+            .Repeat(0, count)
+            .Select(_ => Create())
+            .ToList();
     }
 }
