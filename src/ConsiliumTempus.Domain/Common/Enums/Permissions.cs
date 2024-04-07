@@ -7,6 +7,7 @@ public enum Permissions
     DeleteWorkspace,
     CreateProject,
     ReadProject,
+    ReadCollectionProject,
     UpdateProject,
     DeleteProject,
     CreateProjectSprint,

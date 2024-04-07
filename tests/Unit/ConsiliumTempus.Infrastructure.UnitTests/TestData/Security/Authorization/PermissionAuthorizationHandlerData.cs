@@ -4,63 +4,77 @@ namespace ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorizati
 
 public static class PermissionAuthorizationHandlerData
 {
-    internal class GetPermissionWithRouteValues : TheoryData<Permissions>
+    internal class GetPermissions : TheoryData<Permissions, RequestLocation>
     {
-        public GetPermissionWithRouteValues()
+        public GetPermissions()
         {
-            Add(Permissions.ReadWorkspace);
-            Add(Permissions.ReadProject);
-            Add(Permissions.DeleteWorkspace);
-            Add(Permissions.DeleteProject);
-            Add(Permissions.DeleteProjectSprint);
+            Add(Permissions.ReadWorkspace, RequestLocation.Route);
+            Add(Permissions.UpdateWorkspace, RequestLocation.Body);
+            Add(Permissions.DeleteWorkspace, RequestLocation.Route);
+
+            Add(Permissions.CreateProject, RequestLocation.Body);
+            Add(Permissions.ReadProject, RequestLocation.Route);
+            Add(Permissions.ReadCollectionProject, RequestLocation.Query);
+            Add(Permissions.UpdateProject, RequestLocation.Body);
+            Add(Permissions.DeleteProject, RequestLocation.Route);
+
+            Add(Permissions.CreateProjectSprint, RequestLocation.Body);
+            Add(Permissions.UpdateProjectSprint, RequestLocation.Body);
+            Add(Permissions.DeleteProjectSprint, RequestLocation.Route);
         }
     }
     
-    internal class GetPermissionWithBody : TheoryData<Permissions>
+    internal class GetPermissionsWithId : TheoryData<Permissions, RequestLocation, string?>
     {
-        public GetPermissionWithBody()
+        public GetPermissionsWithId()
         {
-            Add(Permissions.CreateProject);
-            Add(Permissions.CreateProjectSprint);
-            Add(Permissions.UpdateWorkspace);
-            Add(Permissions.UpdateProject);
-            Add(Permissions.UpdateProjectSprint);
+            Add(Permissions.ReadWorkspace, RequestLocation.Route, null);
+            Add(Permissions.UpdateWorkspace, RequestLocation.Body, null);
+            Add(Permissions.DeleteWorkspace, RequestLocation.Route, null);
+
+            Add(Permissions.CreateProject, RequestLocation.Body, "workspaceId");
+            Add(Permissions.ReadProject, RequestLocation.Route, null);
+            Add(Permissions.ReadCollectionProject, RequestLocation.Query, "workspaceId");
+            Add(Permissions.UpdateProject, RequestLocation.Body, null);
+            Add(Permissions.DeleteProject, RequestLocation.Route, null);
+
+            Add(Permissions.CreateProjectSprint, RequestLocation.Body, "projectId");
+            Add(Permissions.UpdateProjectSprint, RequestLocation.Body, null);
+            Add(Permissions.DeleteProjectSprint, RequestLocation.Route, null);
         }
     }
     
-    internal class GetPermissionWithBodyAndId : TheoryData<Permissions, string>
+    internal class GetPermissionsWithIdAndType : TheoryData<Permissions, RequestLocation, string?, StringIdType>
     {
-        public GetPermissionWithBodyAndId()
+        public GetPermissionsWithIdAndType()
         {
-            Add(Permissions.CreateProject, "workspaceId");
-            Add(Permissions.CreateProjectSprint, "id");
-            Add(Permissions.UpdateWorkspace, "id");
-            Add(Permissions.UpdateProject, "id");
-            Add(Permissions.UpdateProjectSprint, "projectId");
-        }
-    }
-    
-    internal class GetPermissionWithWorkspaceId : TheoryData<Permissions, string?, bool, StringIdType>
-    {
-        public GetPermissionWithWorkspaceId()
-        {
-            Add(Permissions.CreateProject, "workspaceId", true, StringIdType.Workspace);
-            Add(Permissions.CreateProjectSprint, "projectId", true, StringIdType.Project);
-            Add(Permissions.ReadWorkspace, null, false, StringIdType.Workspace);
-            Add(Permissions.UpdateWorkspace, null, true, StringIdType.Workspace);
-            Add(Permissions.ReadProject, null, false, StringIdType.Project);
-            Add(Permissions.UpdateProject, null, true, StringIdType.Project);
-            Add(Permissions.UpdateProjectSprint, null, true, StringIdType.ProjectSprint);
-            Add(Permissions.DeleteWorkspace, null, false, StringIdType.Workspace);
-            Add(Permissions.DeleteProject, null, false, StringIdType.Project);
-            Add(Permissions.DeleteProjectSprint, null, false, StringIdType.ProjectSprint);
+            Add(Permissions.ReadWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
+            Add(Permissions.UpdateWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
+            Add(Permissions.DeleteWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
+
+            Add(Permissions.CreateProject, RequestLocation.Body, "workspaceId", StringIdType.Workspace);
+            Add(Permissions.ReadProject, RequestLocation.Route, null, StringIdType.Project);
+            Add(Permissions.ReadCollectionProject, RequestLocation.Query, "workspaceId", StringIdType.Workspace);
+            Add(Permissions.UpdateProject, RequestLocation.Body, null, StringIdType.Project);
+            Add(Permissions.DeleteProject, RequestLocation.Route, null, StringIdType.Project);
+
+            Add(Permissions.CreateProjectSprint, RequestLocation.Body, "projectId", StringIdType.Project);
+            Add(Permissions.UpdateProjectSprint, RequestLocation.Body, null, StringIdType.ProjectSprint);
+            Add(Permissions.DeleteProjectSprint, RequestLocation.Route, null, StringIdType.ProjectSprint);
         }
     }
 
     public enum StringIdType
     {
-        Workspace, 
-        Project, 
+        Workspace,
+        Project,
         ProjectSprint
+    }
+
+    public enum RequestLocation
+    {
+        Route,
+        Query,
+        Body
     }
 }

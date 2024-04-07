@@ -18,6 +18,8 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         AuthorizationHandlerContext context,
         PermissionRequirement requirement)
     {
+        if (!Enum.TryParse<Permissions>(requirement.Permission, out var permission)) return;
+
         var subUserId = context.User.Claims
             .SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
         if (subUserId is null || !Guid.TryParse(subUserId, out var guidUserId)) return;
@@ -30,47 +32,47 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         var request = httpContextAccessor.HttpContext?.Request;
         if (request is null) return;
         
-        var userId = UserId.Create(guidUserId);
-        var res = await GetWorkspaceId(request, workspaceProvider, requirement.Permission);
-        if (res is null) return;
-        if (res.NotFound)
+        var workspaceId = await GetWorkspaceId(request, workspaceProvider, permission);
+        if (workspaceId is null)
         {
-            context.Succeed(requirement); // let the system return the not found error
+            context.Succeed(requirement); // let the system return the not found or validation error 
         }
         else
         {
-            var permissions = await permissionProvider.GetPermissions(userId, res.WorkspaceId);
+            var userId = UserId.Create(guidUserId);
+            var permissions = await permissionProvider.GetPermissions(userId, workspaceId);
             if (permissions.Contains(requirement.Permission)) context.Succeed(requirement);
         }
     }
 
-    private static async Task<WorkspaceIdResponse?> GetWorkspaceId(
+    /// <summary>
+    /// Get Workspace id from query, route or body of the request or related entity and
+    /// return it or null when the workspace was either not found, or there is a validation error
+    /// </summary>
+    private static async Task<WorkspaceId?> GetWorkspaceId(
         HttpRequest request,
         IWorkspaceProvider workspaceProvider,
-        string permission)
+        Permissions permission)
     {
-        if (!Enum.TryParse<Permissions>(permission, out var enumPermission)) return null;
-        var stringId = await GetStringId(request, enumPermission);
+        var stringId = await GetStringId(request, permission);
 
         if (string.IsNullOrWhiteSpace(stringId)) return null;
         if (!Guid.TryParse(stringId, out var guidId)) return null;
 
-        var workspace = enumPermission switch
+        var workspace = permission switch
         {
             Permissions.ReadProject or
             Permissions.UpdateProject or
-            Permissions.DeleteProject or
+            Permissions.DeleteProject or 
             Permissions.CreateProjectSprint => await workspaceProvider.GetByProject(ProjectId.Create(guidId)),
-            
+
             Permissions.UpdateProjectSprint or
             Permissions.DeleteProjectSprint => await workspaceProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
-            
+
             _ => await workspaceProvider.Get(WorkspaceId.Create(guidId)),
         };
 
-        return workspace is null
-            ? new WorkspaceIdResponse(default!, true)
-            : new WorkspaceIdResponse(workspace.Id, false);
+        return workspace?.Id;
     }
 
     private static async Task<string?> GetStringId(HttpRequest request, Permissions permission)
@@ -80,18 +82,17 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.ReadWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.UpdateWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
-            
+
             Permissions.CreateProject => await HttpRequestReader.GetPropertyFromBody(request, "workspaceId"),
             Permissions.ReadProject => HttpRequestReader.GetStringIdFromRoute(request),
+            Permissions.ReadCollectionProject => HttpRequestReader.GetStringIdFromQuery(request, "workspaceId"),
             Permissions.UpdateProject => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProject => HttpRequestReader.GetStringIdFromRoute(request),
-            
+
             Permissions.CreateProjectSprint => await HttpRequestReader.GetPropertyFromBody(request, "projectId"),
             Permissions.UpdateProjectSprint => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),
             _ => throw new ArgumentOutOfRangeException(nameof(permission))
         };
     }
-
-    private record WorkspaceIdResponse(WorkspaceId WorkspaceId, bool NotFound);
 }
