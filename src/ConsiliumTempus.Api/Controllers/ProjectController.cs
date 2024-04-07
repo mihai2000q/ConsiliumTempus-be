@@ -2,9 +2,11 @@
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
+using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
+using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 using ConsiliumTempus.Domain.Common.Enums;
 using MapsterMapper;
 using MediatR;
@@ -23,6 +25,20 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         return result.Match(
             getCollectionForUserResult => 
                 Ok(Mapper.Map<GetCollectionProjectForUserResponse>(getCollectionForUserResult)),
+            Problem
+        );
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetCollectionForWorkspace(GetCollectionProjectForWorkspaceRequest request, 
+        CancellationToken cancellationToken)
+    {
+        var query = Mapper.Map<GetCollectionProjectForWorkspaceQuery>(request);
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return result.Match(
+            getCollectionForWorkspaceResult => 
+                Ok(Mapper.Map<GetCollectionProjectForWorkspaceResponse>(getCollectionForWorkspaceResult)),
             Problem
         );
     }

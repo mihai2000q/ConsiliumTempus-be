@@ -1,10 +1,12 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
+using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
+using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 using ConsiliumTempus.Domain.Project;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
@@ -19,6 +21,23 @@ internal static partial class Utils
         {
             projectResponse.Id.Should().Be(project.Id.Value);
             projectResponse.Name.Should().Be(project.Name.Value);
+        }
+        
+        internal static void AssertProjectResponse(
+            GetCollectionProjectForWorkspaceResponse.ProjectResponse projectResponse, 
+            ProjectAggregate project)
+        {
+            projectResponse.Id.Should().Be(project.Id.Value);
+            projectResponse.Name.Should().Be(project.Name.Value);
+            projectResponse.Description.Should().Be(project.Description.Value);
+        }
+        
+        internal static bool AssertGetCollectionProjectForWorkspaceQuery(
+            GetCollectionProjectForWorkspaceQuery query, 
+            GetCollectionProjectForWorkspaceRequest request)
+        {
+            query.WorkspaceId.Should().Be(request.WorkspaceId);
+            return true;
         }
         
         internal static bool AssertCreateCommand(CreateProjectCommand command, CreateProjectRequest request)
