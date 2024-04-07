@@ -61,10 +61,10 @@ internal class ProjectData : ITestData
             "This is the Description of the first Workspace"),
         WorkspaceFactory.Create(
             "Football",
-            "This is the Description of the second Workspace"),
+            "This is the Description of the second Workspace, football related"),
         WorkspaceFactory.Create(
             "Michael Group",
-            "This is the Description of the third Workspace")
+            "This is the Description of the third Workspace, only Michael's Group")
     ];
 
     public static Membership[] Memberships { get; } =
@@ -101,6 +101,11 @@ internal class ProjectData : ITestData
             Workspaces[0],
             "Win NBA",
             "This is an elaborate plan to win NBA",
+            true),
+        ProjectFactory.Create(
+            Workspaces[1],
+            "Win Champions League",
+            "Just an idea on how to win the football league",
             true)
     ];
 }

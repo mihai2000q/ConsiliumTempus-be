@@ -1,9 +1,11 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
+using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
+using ConsiliumTempus.Domain.Project;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -11,6 +13,14 @@ internal static partial class Utils
 {
     internal static class Project
     {
+        internal static void AssertProjectResponse(
+            GetCollectionProjectForUserResponse.ProjectResponse projectResponse, 
+            ProjectAggregate project)
+        {
+            projectResponse.Id.Should().Be(project.Id.Value);
+            projectResponse.Name.Should().Be(project.Name.Value);
+        }
+        
         internal static bool AssertCreateCommand(CreateProjectCommand command, CreateProjectRequest request)
         {
             command.WorkspaceId.Should().Be(request.WorkspaceId);

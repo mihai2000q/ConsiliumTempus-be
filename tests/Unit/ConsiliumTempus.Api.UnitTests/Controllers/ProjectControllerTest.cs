@@ -1,10 +1,12 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
+using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +31,51 @@ public class ProjectControllerTest
     }
 
     #endregion
+    
+    [Fact]
+    public async Task GetCollectionForUser_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var result = new GetCollectionProjectForUserResult(ProjectFactory.CreateList());
+        _mediator
+            .Send(Arg.Any<GetCollectionProjectForUserQuery>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.GetCollectionForUser(default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(new GetCollectionProjectForUserQuery());
+
+        outcome.Should().BeOfType<OkObjectResult>();
+        ((OkObjectResult)outcome).Value.Should().BeOfType<GetCollectionProjectForUserResponse>();
+
+        var response = ((OkObjectResult)outcome).Value as GetCollectionProjectForUserResponse;
+        response!.Projects.Zip(result.Projects)
+            .Should().AllSatisfy(p => Utils.Project.AssertProjectResponse(p.First, p.Second));
+    }
+    
+    [Fact]
+    public async Task GetCollectionForUser_WhenFails_ShouldUserNotFoundError()
+    {
+        // Arrange
+        var error = Errors.User.NotFound;
+        _mediator
+            .Send(Arg.Any<GetCollectionProjectForUserQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetCollectionForUser(default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(new GetCollectionProjectForUserQuery());
+        
+        outcome.ValidateError(error);
+    }
 
     [Fact]
     public async Task CreateProject_WhenIsSuccessful_ShouldReturnResponse()
