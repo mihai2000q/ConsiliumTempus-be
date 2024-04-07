@@ -39,7 +39,7 @@ public sealed class AuthenticationController(IMapper mapper, ISender mediator) :
         );
     }
     
-    [HttpPost("Refresh")]
+    [HttpPut("Refresh")]
     public async Task<IActionResult> Refresh(RefreshRequest request, CancellationToken cancellationToken)
     {
         var query = Mapper.Map<RefreshCommand>(request);
