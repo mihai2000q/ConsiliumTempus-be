@@ -13,6 +13,33 @@
 This is the controller that takes care of creating, reading, updating and deleting a Project.
 
 
+### Get Collection For User
+
+Anyone logged in can fetch the projects that they are part of.
+
+```js
+GET {{host}}/api/projects/user
+```
+
+#### Get Collection For User Response
+
+Returns wrapped up projects' ids and names.
+
+```json
+{
+  "projects": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "name": "Project Name 1"
+    },
+    {
+      "id": "20000000-0000-0000-0000-000000000000",
+      "name": "Project Name 2"
+    }
+  ]
+}
+```
+
 ### Create
 
 Only admin users that are part of the workspace can create a project
