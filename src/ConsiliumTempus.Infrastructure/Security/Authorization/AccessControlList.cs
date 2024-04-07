@@ -5,21 +5,26 @@ namespace ConsiliumTempus.Infrastructure.Security.Authorization;
 
 public static class AccessControlList
 {
-    private static readonly List<Permissions> ViewPermissions = [
+    private static readonly List<Permissions> ViewPermissions =
+    [
         Permissions.ReadWorkspace,
-        Permissions.ReadProject
+        Permissions.ReadProject, Permissions.ReadCollectionProject
     ];
-    private static readonly List<Permissions> MemberPermissions = [
+
+    private static readonly List<Permissions> MemberPermissions =
+    [
         Permissions.ReadWorkspace, Permissions.UpdateWorkspace,
-        Permissions.ReadProject, Permissions.UpdateProject,
+        Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject,
         Permissions.UpdateProjectSprint
     ];
-    private static readonly List<Permissions> AdminPermissions = [
+
+    private static readonly List<Permissions> AdminPermissions =
+    [
         Permissions.ReadWorkspace, Permissions.UpdateWorkspace, Permissions.DeleteWorkspace,
-        Permissions.CreateProject, Permissions.ReadProject, Permissions.UpdateProject, Permissions.DeleteProject,
+        Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject, Permissions.DeleteProject,
         Permissions.CreateProjectSprint, Permissions.UpdateProjectSprint, Permissions.DeleteProjectSprint
     ];
-    
+
     public static readonly Dictionary<WorkspaceRole, List<Permissions>> RoleHasPermissions = new()
     {
         { WorkspaceRole.View, ViewPermissions },

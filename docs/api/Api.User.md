@@ -61,7 +61,6 @@ PUT {{host}}/api/users
 #### Update User Request
 
 Sends body data that the new user needs to be updated.
-<br>
 
 ```json
 {

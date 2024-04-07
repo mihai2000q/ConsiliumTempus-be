@@ -15,9 +15,7 @@ public sealed class GetCollectionProjectForUserQueryHandler(
         CancellationToken cancellationToken)
     {
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
-
         if (user is null) return Errors.User.NotFound;
-
         return new GetCollectionProjectForUserResult(
             await projectRepository.GetListForUser(user.Id, cancellationToken));
     }

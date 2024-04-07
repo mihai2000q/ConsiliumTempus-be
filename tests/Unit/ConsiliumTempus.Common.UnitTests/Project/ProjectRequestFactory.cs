@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
+using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.Project;
@@ -16,5 +17,14 @@ public static class ProjectRequestFactory
             name,
             description,
             isPrivate);
+    }
+
+    public static GetCollectionProjectForWorkspaceRequest CreateGetCollectionProjectForWorkspaceRequest(
+        Guid? workspaceId = null)
+    {
+        return new GetCollectionProjectForWorkspaceRequest
+        {
+            WorkspaceId = workspaceId ?? Guid.NewGuid()
+        };
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
+using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
 
@@ -15,6 +16,15 @@ internal static partial class Utils
         {
             projectResponse.Id.Should().Be(project.Id.Value);
             projectResponse.Name.Should().Be(project.Name.Value);
+        }
+        
+        internal static void AssertResponse(
+            GetCollectionProjectForWorkspaceResponse.ProjectResponse projectResponse,
+            ProjectAggregate project)
+        {
+            projectResponse.Id.Should().Be(project.Id.Value);
+            projectResponse.Name.Should().Be(project.Name.Value);
+            projectResponse.Description.Should().Be(project.Description.Value);
         }
         
         internal static void AssertCreation(ProjectAggregate project, CreateProjectRequest request)
