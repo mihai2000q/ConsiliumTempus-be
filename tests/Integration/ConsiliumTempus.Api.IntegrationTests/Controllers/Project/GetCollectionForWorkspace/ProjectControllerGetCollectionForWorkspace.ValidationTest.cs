@@ -19,7 +19,7 @@ public class ProjectControllerGetCollectionForWorkspaceValidationTest(WebAppFact
 
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
-        var outcome = await Client.Get($"api/projects?workspaceId={request.WorkspaceId}");
+        var outcome = await Client.Get($"api/projects/workspace?workspaceId={request.WorkspaceId}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -32,7 +32,7 @@ public class ProjectControllerGetCollectionForWorkspaceValidationTest(WebAppFact
         var request = ProjectRequestFactory.CreateGetCollectionProjectForWorkspaceRequest(Guid.Empty);
         
         // Act
-        var outcome = await Client.Get($"api/projects?workspaceId={request.WorkspaceId}");
+        var outcome = await Client.Get($"api/projects/workspace?workspaceId={request.WorkspaceId}");
 
         // Assert
         await outcome.ValidateValidationErrors();

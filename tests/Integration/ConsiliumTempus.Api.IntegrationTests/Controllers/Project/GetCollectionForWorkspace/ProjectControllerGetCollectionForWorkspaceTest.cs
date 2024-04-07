@@ -22,7 +22,7 @@ public class ProjectControllerGetCollectionForWorkspaceTest(WebAppFactory factor
         
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
-        var outcome = await Client.Get($"api/projects?workspaceId={request.WorkspaceId}");
+        var outcome = await Client.Get($"api/projects/workspace?workspaceId={request.WorkspaceId}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -40,7 +40,7 @@ public class ProjectControllerGetCollectionForWorkspaceTest(WebAppFactory factor
         var request = ProjectRequestFactory.CreateGetCollectionProjectForWorkspaceRequest();
         
         // Act
-        var outcome = await Client.Get($"api/projects?workspaceId={request.WorkspaceId}");
+        var outcome = await Client.Get($"api/projects/workspace?workspaceId={request.WorkspaceId}");
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);

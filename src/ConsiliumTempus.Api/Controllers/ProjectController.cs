@@ -29,7 +29,8 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
     
-    [HttpGet]
+    [HasPermission(Permissions.ReadCollectionProject)]
+    [HttpGet("workspace")]
     public async Task<IActionResult> GetCollectionForWorkspace(GetCollectionProjectForWorkspaceRequest request, 
         CancellationToken cancellationToken)
     {
