@@ -30,7 +30,6 @@ test.describe('should allow operations on the user entity', () => {
     expect(response.ok()).toBeTruthy()
 
     expect(await response.json()).toEqual({
-      id: userId,
       firstName: FIRSTNAME,
       lastName: LASTNAME,
       email: EMAIL,
@@ -47,6 +46,7 @@ test.describe('should allow operations on the user entity', () => {
     expect(response.ok()).toBeTruthy()
 
     expect(await response.json()).toEqual({
+      id: expect.any(String),
       firstName: FIRSTNAME,
       lastName: LASTNAME,
       email: EMAIL,
