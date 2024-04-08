@@ -1,9 +1,10 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.User.Delete;
+using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.Delete;
-using ConsiliumTempus.Application.User.Commands.Update;
+using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Application.User.Queries.GetCurrent;
 using ConsiliumTempus.Common.UnitTests.User;
@@ -50,7 +51,7 @@ public class UserControllerTest
             .Received(1)
             .Send(Arg.Is<GetUserQuery>(query => Utils.User.AssertGetQuery(query, request)));
 
-        Utils.User.AssertDto(outcome, user);
+        Utils.User.AssertGetUser(outcome, user);
     }
 
     [Fact]
@@ -92,15 +93,13 @@ public class UserControllerTest
             .Received(1)
             .Send(Arg.Is<GetCurrentUserQuery>(query => query == new GetCurrentUserQuery()));
 
-        Utils.User.AssertDto(outcome, user);
+        Utils.User.AssertGetCurrentUser(outcome, user);
     }
     
     [Fact]
     public async Task GetCurrent_WhenItFails_ShouldReturnUserNotFoundError()
     {
         // Arrange
-        var request = UserRequestFactory.CreateUpdateUserRequest();
-
         var error = Errors.User.NotFound;
         _mediator
             .Send(Arg.Any<GetCurrentUserQuery>())
@@ -118,45 +117,49 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task UpdateUser_WhenIsSuccessful_ShouldReturnNewUser()
+    public async Task UpdateCurrentUser_WhenIsSuccessful_ShouldReturnNewUser()
     {
         // Arrange
-        var request = UserRequestFactory.CreateUpdateUserRequest();
+        var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
 
-        var result = new UpdateUserResult(UserFactory.Create());
+        var result = new UpdateCurrentUserResult();
         _mediator
-            .Send(Arg.Any<UpdateUserCommand>())
+            .Send(Arg.Any<UpdateCurrentUserCommand>())
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.UpdateCurrent(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<UpdateUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
+            .Send(Arg.Is<UpdateCurrentUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
 
-        Utils.User.AssertDto(outcome, result.User);
+        outcome.Should().BeOfType<OkObjectResult>();
+        ((OkObjectResult)outcome).Value.Should().BeOfType<UpdateCurrentUserResponse>();
+
+        var response = ((OkObjectResult)outcome).Value as UpdateCurrentUserResponse;
+        response!.Message.Should().Be(result.Message);
     }
     
     [Fact]
-    public async Task UpdateUser_WhenItFails_ShouldReturnUserNotFoundError()
+    public async Task UpdateCurrentUser_WhenItFails_ShouldReturnUserNotFoundError()
     {
         // Arrange
-        var request = UserRequestFactory.CreateUpdateUserRequest();
+        var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
 
         var error = Errors.User.NotFound;
         _mediator
-            .Send(Arg.Any<UpdateUserCommand>())
+            .Send(Arg.Any<UpdateCurrentUserCommand>())
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.UpdateCurrent(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<UpdateUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
+            .Send(Arg.Is<UpdateCurrentUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
 
         outcome.ValidateError(error);
     }

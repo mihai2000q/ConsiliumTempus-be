@@ -5,12 +5,12 @@ using ConsiliumTempus.Domain.User.ValueObjects;
 using ErrorOr;
 using MediatR;
 
-namespace ConsiliumTempus.Application.User.Commands.Update;
+namespace ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 
-public sealed class UpdateUserCommandHandler(ICurrentUserProvider currentUserProvider)
-    : IRequestHandler<UpdateUserCommand, ErrorOr<UpdateUserResult>>
+public sealed class UpdateCurrentUserCommandHandler(ICurrentUserProvider currentUserProvider)
+    : IRequestHandler<UpdateCurrentUserCommand, ErrorOr<UpdateCurrentUserResult>>
 {
-    public async Task<ErrorOr<UpdateUserResult>> Handle(UpdateUserCommand command,
+    public async Task<ErrorOr<UpdateCurrentUserResult>> Handle(UpdateCurrentUserCommand command,
         CancellationToken cancellationToken)
     {
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
@@ -23,6 +23,6 @@ public sealed class UpdateUserCommandHandler(ICurrentUserProvider currentUserPro
             command.Role is null ? null : Role.Create(command.Role),
             command.DateOfBirth);
 
-        return new UpdateUserResult(user);
+        return new UpdateCurrentUserResult();
     }
 }

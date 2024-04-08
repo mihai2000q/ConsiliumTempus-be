@@ -1,5 +1,7 @@
 ﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Register;
+using ConsiliumTempus.Api.Contracts.User.Get;
+using ConsiliumTempus.Api.Contracts.User.GetCurrent;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Common.Extensions;
@@ -13,13 +15,23 @@ internal static partial class Utils
 {
     internal static class User
     {
-        internal static async Task AssertDtoFromResponse(
+        internal static async Task AssertGetResponse(
             HttpResponseMessage response,
             UserAggregate user)
         {
-            var dto = await response.Content.ReadFromJsonAsync<UserDto>();
-            dto!.Id.Should().Be(user.Id.ToString());
-            dto.FirstName.Should().Be(user.FirstName.Value);
+            var dto = await response.Content.ReadFromJsonAsync<GetUserResponse>();
+            dto!.FirstName.Should().Be(user.FirstName.Value);
+            dto.LastName.Should().Be(user.LastName.Value);
+            dto.Email.Should().Be(user.Credentials.Email);
+            dto.Role.Should().Be(user.Role?.Value);
+        }
+        
+        internal static async Task AssertGetCurrentResponse(
+            HttpResponseMessage response,
+            UserAggregate user)
+        {
+            var dto = await response.Content.ReadFromJsonAsync<GetCurrentUserResponse>();
+            dto!.FirstName.Should().Be(user.FirstName.Value);
             dto.LastName.Should().Be(user.LastName.Value);
             dto.Email.Should().Be(user.Credentials.Email);
             dto.Role.Should().Be(user.Role?.Value);
@@ -54,7 +66,7 @@ internal static partial class Utils
         internal static void AssertUpdate(
             UserAggregate user,
             UserAggregate newUser,
-            UpdateUserRequest request)
+            UpdateCurrentUserRequest request)
         {
             // unchanged
             newUser.Id.Should().Be(user.Id);

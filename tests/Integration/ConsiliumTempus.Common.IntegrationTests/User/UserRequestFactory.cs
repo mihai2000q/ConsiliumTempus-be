@@ -15,13 +15,13 @@ public static class UserRequestFactory
         };
     }
     
-    public static UpdateUserRequest CreateUpdateUserRequest(
+    public static UpdateCurrentUserRequest CreateUpdateCurrentUserRequest(
         string firstName = Constants.User.FirstName,
         string lastName = Constants.User.LastName,
         string? role = null,
         DateOnly? dateOfBirth = null)
     {
-        return new UpdateUserRequest(
+        return new UpdateCurrentUserRequest(
             firstName, 
             lastName, 
             role, 

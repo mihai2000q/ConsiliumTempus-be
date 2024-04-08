@@ -1,17 +1,17 @@
-﻿using ConsiliumTempus.Application.User.Commands.Update;
+﻿using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Validation;
 
-namespace ConsiliumTempus.Application.UnitTests.TestData.User.Commands;
+namespace ConsiliumTempus.Application.UnitTests.TestData.User.Commands.UpdateCurrent;
 
-internal static class UpdateUserCommandValidatorData
+internal static class UpdateCurrentUserCommandValidatorData
 {
-    internal class GetValidCommands : TheoryData<UpdateUserCommand>
+    internal class GetValidCommands : TheoryData<UpdateCurrentUserCommand>
     {
         public GetValidCommands()
         {
             Add(UserCommandFactory.CreateUpdateUserCommand());
-            Add(new UpdateUserCommand(
+            Add(new UpdateCurrentUserCommand(
                 "new Michael",
                 "jackson or Jordan?",
                 "Pro Singer and Basketball Player",
@@ -19,7 +19,7 @@ internal static class UpdateUserCommandValidatorData
         }
     }
     
-    internal class GetInvalidFirstNameCommands : TheoryData<UpdateUserCommand, string, int>
+    internal class GetInvalidFirstNameCommands : TheoryData<UpdateCurrentUserCommand, string, int>
     {
         public GetInvalidFirstNameCommands()
         {
@@ -32,7 +32,7 @@ internal static class UpdateUserCommandValidatorData
         }
     }
 
-    internal class GetInvalidLastNameCommands : TheoryData<UpdateUserCommand, string, int>
+    internal class GetInvalidLastNameCommands : TheoryData<UpdateCurrentUserCommand, string, int>
     {
         public GetInvalidLastNameCommands()
         {
@@ -45,7 +45,7 @@ internal static class UpdateUserCommandValidatorData
         }
     }
 
-    internal class GetInvalidRoleCommands : TheoryData<UpdateUserCommand, string, int>
+    internal class GetInvalidRoleCommands : TheoryData<UpdateCurrentUserCommand, string, int>
     {
         public GetInvalidRoleCommands()
         {
@@ -55,7 +55,7 @@ internal static class UpdateUserCommandValidatorData
         }
     }
 
-    internal class GetInvalidDateOfBirthCommands : TheoryData<UpdateUserCommand, string, int>
+    internal class GetInvalidDateOfBirthCommands : TheoryData<UpdateCurrentUserCommand, string, int>
     {
         public GetInvalidDateOfBirthCommands()
         {

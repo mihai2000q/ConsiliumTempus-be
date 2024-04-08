@@ -1,30 +1,31 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.UnitTests.TestData.User.Commands;
+using ConsiliumTempus.Application.UnitTests.TestData.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
-using ConsiliumTempus.Application.User.Commands.Update;
+using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 
 namespace ConsiliumTempus.Application.UnitTests.User.Commands.Update;
 
-public class UpdateUserCommandHandlerTest
+public class UpdateCurrentUserCommandHandlerTest
 {
     #region Setup
 
     private readonly ICurrentUserProvider _currentUserProvider;
-    private readonly UpdateUserCommandHandler _uut;
+    private readonly UpdateCurrentUserCommandHandler _uut;
 
-    public UpdateUserCommandHandlerTest()
+    public UpdateCurrentUserCommandHandlerTest()
     {
         _currentUserProvider = Substitute.For<ICurrentUserProvider>();
-        _uut = new UpdateUserCommandHandler(_currentUserProvider);
+        _uut = new UpdateCurrentUserCommandHandler(_currentUserProvider);
     }
 
     #endregion
     
     [Theory]
-    [ClassData(typeof(UpdateUserCommandHandlerData.GetCommands))]
-    public async Task WhenUpdateUserCommandIsSuccessful_ShouldReturnNewUser(UpdateUserCommand command)
+    [ClassData(typeof(UpdateCurrentUserCommandHandlerData.GetCommands))]
+    public async Task WhenUpdateCurrentUserCommandIsSuccessful_ShouldReturnSuccessResponse(UpdateCurrentUserCommand command)
     {
         // Arrange
         var currentUser = UserFactory.Create();
@@ -41,11 +42,12 @@ public class UpdateUserCommandHandlerTest
             .GetCurrentUser();
 
         outcome.IsError.Should().BeFalse();
-        Utils.User.AssertFromUpdateCommand(outcome.Value, command);
+        outcome.Value.Should().Be(new UpdateCurrentUserResult());
+        Utils.User.AssertUpdate(currentUser, command);
     }
     
     [Fact]
-    public async Task WhenUpdateUserCommandFails_ShouldReturnNotFoundError()
+    public async Task WhenUpdateCurrentUserCommandFails_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = UserCommandFactory.CreateUpdateUserCommand();

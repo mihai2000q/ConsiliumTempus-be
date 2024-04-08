@@ -1,6 +1,6 @@
 import { expect } from '../utils/matchers';
 import { test } from "@playwright/test";
-import { deleteUser, getUserId, registerUser, useToken } from "../utils/utils";
+import { deleteUser, getCurrentUser, getUserId, registerUser, useToken } from "../utils/utils";
 
 test.describe('should allow operations on the user entity', () => {
   const EMAIL = "michaeljordan@example.com"
@@ -35,8 +35,7 @@ test.describe('should allow operations on the user entity', () => {
       firstName: FIRSTNAME,
       lastName: LASTNAME,
       email: EMAIL,
-      role: ROLE,
-      dateOfBirth: DATE_OF_BIRTH
+      role: ROLE
     })
 
     // cleanup
@@ -61,7 +60,7 @@ test.describe('should allow operations on the user entity', () => {
     await deleteUser(request)
   })
 
-  test('should update user', async ({ request }) => {
+  test('should update current user', async ({ request }) => {
     const body = {
       firstName: "Michelle",
       lastName: "Moron",
@@ -77,10 +76,14 @@ test.describe('should allow operations on the user entity', () => {
     expect(response.ok()).toBeTruthy()
 
     expect(await response.json()).toEqual({
-      id: expect.any(String),
+      message: expect.any(String)
+    })
+
+    const newUser = await getCurrentUser(request)
+
+    expect(newUser).toEqual({
       firstName: body.firstName,
       lastName: body.lastName,
-      email: EMAIL,
       role: body.role,
       dateOfBirth: body.dateOfBirth
     })

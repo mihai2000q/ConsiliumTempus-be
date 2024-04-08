@@ -22,7 +22,7 @@ public class UserControllerGetCurrentTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        await Utils.User.AssertDtoFromResponse(outcome, user);
+        await Utils.User.AssertGetCurrentResponse(outcome, user);
     }
     
     [Fact]

@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Application.User.Commands.Update;
+using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.Events;
 using FluentAssertions.Extensions;
@@ -31,18 +31,18 @@ internal static partial class Utils
             ((UserRegistered)user.DomainEvents[0]).User.Should().Be(user);
         }
 
-        internal static void AssertFromUpdateCommand(
-            UpdateUserResult result,
-            UpdateUserCommand command)
+        internal static void AssertUpdate(
+            UserAggregate user,
+            UpdateCurrentUserCommand command)
         {
-            result.User.FirstName.Value.Should().Be(command.FirstName);
-            result.User.LastName.Value.Should().Be(command.LastName);
+            user.FirstName.Value.Should().Be(command.FirstName);
+            user.LastName.Value.Should().Be(command.LastName);
             if (command.Role is null) 
-                result.User.Role.Should().BeNull();
+                user.Role.Should().BeNull();
             else
-                result.User.Role!.Value.Should().Be(command.Role);
-            result.User.DateOfBirth.Should().Be(command.DateOfBirth);
-            result.User.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+                user.Role!.Value.Should().Be(command.Role);
+            user.DateOfBirth.Should().Be(command.DateOfBirth);
+            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         }
 
         internal static void AssertUser(UserAggregate outcome, UserAggregate expected)

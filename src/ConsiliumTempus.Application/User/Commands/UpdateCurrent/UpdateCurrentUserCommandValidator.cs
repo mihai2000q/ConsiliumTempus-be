@@ -2,11 +2,11 @@
 using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 
-namespace ConsiliumTempus.Application.User.Commands.Update;
+namespace ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 
-public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
+public sealed class UpdateCurrentUserCommandValidator : AbstractValidator<UpdateCurrentUserCommand>
 {
-    public UpdateUserCommandValidator()
+    public UpdateCurrentUserCommandValidator()
     {
         RuleFor(c => c.FirstName)
             .NotEmpty()
