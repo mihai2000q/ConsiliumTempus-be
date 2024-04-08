@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Project.Create;
+﻿using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Domain.Common.Constants;

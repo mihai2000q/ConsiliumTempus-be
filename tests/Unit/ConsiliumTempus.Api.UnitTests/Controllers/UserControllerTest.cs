@@ -1,5 +1,7 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.User.Delete;
+using ConsiliumTempus.Api.Contracts.User.Get;
+using ConsiliumTempus.Api.Contracts.User.GetCurrent;
 using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
@@ -9,7 +11,6 @@ using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Application.User.Queries.GetCurrent;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -51,7 +52,8 @@ public class UserControllerTest
             .Received(1)
             .Send(Arg.Is<GetUserQuery>(query => Utils.User.AssertGetQuery(query, request)));
 
-        Utils.User.AssertGetUser(outcome, user);
+        var response = outcome.ToResponse<GetUserResponse>();
+        Utils.User.AssertGetUser(response, user);
     }
 
     [Fact]
@@ -93,7 +95,8 @@ public class UserControllerTest
             .Received(1)
             .Send(Arg.Is<GetCurrentUserQuery>(query => query == new GetCurrentUserQuery()));
 
-        Utils.User.AssertGetCurrentUser(outcome, user);
+        var response = outcome.ToResponse<GetCurrentUserResponse>();
+        Utils.User.AssertGetCurrentUser(response, user);
     }
     
     [Fact]
@@ -117,7 +120,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task UpdateCurrentUser_WhenIsSuccessful_ShouldReturnNewUser()
+    public async Task UpdateCurrentUser_WhenIsSuccessful_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
@@ -134,12 +137,9 @@ public class UserControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<UpdateCurrentUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
-
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<UpdateCurrentUserResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as UpdateCurrentUserResponse;
-        response!.Message.Should().Be(result.Message);
+        
+        var response = outcome.ToResponse<UpdateCurrentUserResponse>();
+        response.Message.Should().Be(result.Message);
     }
     
     [Fact]
@@ -165,7 +165,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task DeleteUser_WhenIsSuccessful_ShouldReturnUser()
+    public async Task DeleteUser_WhenIsSuccessful_ShouldReturnSuccessResponse()
     {
         // Arrange
         var result = new DeleteUserResult();
@@ -180,12 +180,9 @@ public class UserControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteUserCommand>(command => command == new DeleteUserCommand()));
-
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<DeleteUserResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as DeleteUserResponse;
-        response!.Message.Should().Be(result.Message);
+        
+        var response = outcome.ToResponse<DeleteUserResponse>();
+        response.Message.Should().Be(result.Message);
     }
     
     [Fact]

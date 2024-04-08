@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Workspace.Create;
+﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;

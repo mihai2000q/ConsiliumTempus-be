@@ -7,7 +7,6 @@ using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -50,11 +49,8 @@ public class ProjectSprintControllerTest
             .Send(Arg.Is<CreateProjectSprintCommand>(
                 command => Utils.ProjectSprint.AssertCreateCommand(command, request)));
 
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<CreateProjectSprintResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as CreateProjectSprintResponse;
-        response!.Message.Should().Be(result.Message);
+        var response = outcome.ToResponse<CreateProjectSprintResponse>();
+        response.Message.Should().Be(result.Message);
     }
 
     [Fact]
@@ -99,12 +95,9 @@ public class ProjectSprintControllerTest
             .Received(1)
             .Send(Arg.Is<DeleteProjectSprintCommand>(command => 
                 Utils.ProjectSprint.AssertDeleteCommand(command, id)));
-
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<DeleteProjectSprintResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as DeleteProjectSprintResponse;
-        response!.Message.Should().Be(result.Message);
+        
+        var response = outcome.ToResponse<DeleteProjectSprintResponse>();
+        response.Message.Should().Be(result.Message);
     }
 
     [Fact]

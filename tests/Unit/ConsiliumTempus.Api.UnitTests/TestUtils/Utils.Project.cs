@@ -9,7 +9,6 @@ using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 using ConsiliumTempus.Domain.Project;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -18,27 +17,19 @@ internal static partial class Utils
     internal static class Project
     {
         internal static void AssertGetCollectionForWorkspaceResponse(
-            IActionResult response, 
+            GetCollectionProjectForWorkspaceResponse response, 
             GetCollectionProjectForWorkspaceResult result)
         {
-            response.Should().BeOfType<OkObjectResult>();
-            ((OkObjectResult)response).Value.Should().BeOfType<GetCollectionProjectForWorkspaceResponse>();
-
-            var r = ((OkObjectResult)response).Value as GetCollectionProjectForWorkspaceResponse;
-            r!.Projects
+            response.Projects
                 .Zip(result.Projects)
                 .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
         }
         
         internal static void AssertGetCollectionForUserResponse(
-            IActionResult outcome, 
+            GetCollectionProjectForUserResponse response, 
             GetCollectionProjectForUserResult result)
         {
-            outcome.Should().BeOfType<OkObjectResult>();
-            ((OkObjectResult)outcome).Value.Should().BeOfType<GetCollectionProjectForUserResponse>();
-
-            var response = ((OkObjectResult)outcome).Value as GetCollectionProjectForUserResponse;
-            response!.Projects
+            response.Projects
                 .Zip(result.Projects)
                 .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
         }

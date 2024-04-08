@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using System.Net.Http.Json;
+using ConsiliumTempus.Api.Contracts.User.Get;
+using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -21,7 +23,8 @@ public class UserControllerGetTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        await Utils.User.AssertGetResponse(outcome, user);
+        var response = await outcome.Content.ReadFromJsonAsync<GetUserResponse>();
+        Utils.User.AssertGetResponse(response!, user);
     }
     
     [Fact]

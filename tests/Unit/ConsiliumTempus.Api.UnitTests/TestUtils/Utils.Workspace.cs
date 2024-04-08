@@ -7,7 +7,6 @@ using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.Workspace;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -47,28 +46,18 @@ internal static partial class Utils
         }
 
         internal static void AssertGetResponse(
-            IActionResult outcome,
+            GetWorkspaceResponse response,
             WorkspaceAggregate workspace)
         {
-            outcome.Should().BeOfType<OkObjectResult>();
-            ((OkObjectResult)outcome).Value.Should().BeOfType<GetWorkspaceResponse>();
-
-            var response = ((OkObjectResult)outcome).Value as GetWorkspaceResponse;
-            
-            response!.Name.Should().Be(workspace.Name.Value);
+            response.Name.Should().Be(workspace.Name.Value);
             response.Description.Should().Be(workspace.Description.Value);
         }
         
         internal static void AssertGetCollectionResponse(
-            IActionResult outcome,
+            GetCollectionWorkspaceResponse response,
             GetCollectionWorkspaceResult result)
         {
-            outcome.Should().BeOfType<OkObjectResult>();
-            ((OkObjectResult)outcome).Value.Should().BeOfType<GetCollectionWorkspaceResponse>();
-
-            var response = ((OkObjectResult)outcome).Value as GetCollectionWorkspaceResponse;
-            
-            response!.Workspaces
+            response.Workspaces
                 .Zip(result.Workspaces)
                 .Should().AllSatisfy(p => AssertWorkspaceResponse(p.First, p.Second));
         }

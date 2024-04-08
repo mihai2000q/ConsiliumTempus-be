@@ -1,6 +1,8 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
+using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
+using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.Create;
@@ -9,7 +11,6 @@ using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -52,7 +53,8 @@ public class ProjectControllerTest
             .Send(Arg.Is<GetCollectionProjectForWorkspaceQuery>(q => 
                 Utils.Project.AssertGetCollectionProjectForWorkspaceQuery(q, request)));
 
-        Utils.Project.AssertGetCollectionForWorkspaceResponse(outcome, result);
+        var response = outcome.ToResponse<GetCollectionProjectForWorkspaceResponse>();
+        Utils.Project.AssertGetCollectionForWorkspaceResponse(response, result);
     }
     
     [Fact]
@@ -95,7 +97,8 @@ public class ProjectControllerTest
             .Received(1)
             .Send(new GetCollectionProjectForUserQuery());
 
-        Utils.Project.AssertGetCollectionForUserResponse(outcome, result);
+        var response = outcome.ToResponse<GetCollectionProjectForUserResponse>();
+        Utils.Project.AssertGetCollectionForUserResponse(response, result);
     }
     
     [Fact]
@@ -136,12 +139,9 @@ public class ProjectControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<CreateProjectCommand>(command => Utils.Project.AssertCreateCommand(command, request)));
-
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<CreateProjectResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as CreateProjectResponse;
-        response!.Message.Should().Be(result.Message);
+        
+        var response = outcome.ToResponse<CreateProjectResponse>();
+        response.Message.Should().Be(result.Message);
     }
 
     [Fact]
@@ -184,12 +184,9 @@ public class ProjectControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, id)));
-
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<DeleteProjectResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as DeleteProjectResponse;
-        response!.Message.Should().Be(result.Message);
+        
+        var response = outcome.ToResponse<DeleteProjectResponse>();
+        response.Message.Should().Be(result.Message);
     }
 
     [Fact]

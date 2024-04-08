@@ -45,4 +45,12 @@ internal static partial class Utils
         error?.Status.Should().Be(StatusCodesMap[expectedError.Type]);
         error?.Title.Should().Be(expectedError.Description);
     }
+
+    internal static T ToResponse<T>(this IActionResult outcome)
+    {
+        outcome.Should().BeOfType<OkObjectResult>();
+        ((OkObjectResult)outcome).Value.Should().BeOfType<T>();
+
+        return (T)((OkObjectResult)outcome).Value!;
+    }
 }

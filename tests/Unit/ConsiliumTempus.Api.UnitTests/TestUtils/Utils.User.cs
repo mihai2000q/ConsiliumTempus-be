@@ -4,7 +4,6 @@ using ConsiliumTempus.Api.Contracts.User.Update;
 using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Domain.User;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -17,6 +16,23 @@ internal static partial class Utils
             query.Id.Should().Be(request.Id);
             return true;
         }
+        
+        internal static void AssertGetUser(GetUserResponse response, UserAggregate user)
+        {
+            response.FirstName.Should().Be(user.FirstName.Value);
+            response.LastName.Should().Be(user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
+            response.Role.Should().Be(user.Role?.Value);
+        }
+
+        internal static void AssertGetCurrentUser(GetCurrentUserResponse response, UserAggregate user)
+        {
+            response.FirstName.Should().Be(user.FirstName.Value);
+            response.LastName.Should().Be(user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
+            response.Role.Should().Be(user.Role?.Value);
+            response.DateOfBirth.Should().Be(user.DateOfBirth);
+        }
 
         internal static bool AssertUpdateCommand(UpdateCurrentUserCommand command, UpdateCurrentUserRequest request)
         {
@@ -25,33 +41,6 @@ internal static partial class Utils
             command.Role.Should().Be(request.Role);
             command.DateOfBirth.Should().Be(request.DateOfBirth);
             return true;
-        }
-        
-        internal static void AssertGetUser(IActionResult response, UserAggregate user)
-        {
-            response.Should().BeOfType<OkObjectResult>();
-            ((OkObjectResult)response).Value.Should().BeOfType<GetUserResponse>();
-
-            var userResponse = ((OkObjectResult)response).Value as GetUserResponse;
-            
-            userResponse!.FirstName.Should().Be(user.FirstName.Value);
-            userResponse.LastName.Should().Be(user.LastName.Value);
-            userResponse.Email.Should().Be(user.Credentials.Email);
-            userResponse.Role.Should().Be(user.Role?.Value);
-        }
-
-        internal static void AssertGetCurrentUser(IActionResult response, UserAggregate user)
-        {
-            response.Should().BeOfType<OkObjectResult>();
-            ((OkObjectResult)response).Value.Should().BeOfType<GetCurrentUserResponse>();
-
-            var userResponse = ((OkObjectResult)response).Value as GetCurrentUserResponse;
-            
-            userResponse!.FirstName.Should().Be(user.FirstName.Value);
-            userResponse.LastName.Should().Be(user.LastName.Value);
-            userResponse.Email.Should().Be(user.Credentials.Email);
-            userResponse.Role.Should().Be(user.Role?.Value);
-            userResponse.DateOfBirth.Should().Be(user.DateOfBirth);
         }
     }
 }
