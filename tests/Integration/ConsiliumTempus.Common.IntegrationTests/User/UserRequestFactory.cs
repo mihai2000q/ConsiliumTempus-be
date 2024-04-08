@@ -1,5 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.User.Get;
-using ConsiliumTempus.Api.Contracts.User.Update;
+using ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
 namespace ConsiliumTempus.Common.IntegrationTests.User;

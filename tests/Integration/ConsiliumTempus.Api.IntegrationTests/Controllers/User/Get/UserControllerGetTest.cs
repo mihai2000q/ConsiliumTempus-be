@@ -13,7 +13,7 @@ public class UserControllerGetTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new UserData())
 {
     [Fact]
-    public async Task WhenGetUserIsSuccessful_ThenReturnUser()
+    public async Task GetUser_WhenIsSuccessful_ShouldReturnUser()
     {
         // Arrange
         var user = UserData.Users.First();
@@ -28,7 +28,7 @@ public class UserControllerGetTest(WebAppFactory factory)
     }
     
     [Fact]
-    public async Task WhenGetUserIsNotFound_ThenReturnNotFoundError()
+    public async Task GetUser_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var id = Guid.NewGuid().ToString();

@@ -15,7 +15,7 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WhenWorkspaceCreateIsSuccessful_ShouldCreateAndReturnNewWorkspace()
+    public async Task WhenWorkspaceCreateIsSuccessful_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();

@@ -92,8 +92,8 @@ test.describe('should allow operations on the user entity', () => {
     await deleteUser(request)
   })
 
-  test('should delete user', async ({ request }) => {
-    const response = await request.delete('api/users', useToken())
+  test('should delete current user', async ({ request }) => {
+    const response = await request.delete('api/users/current', useToken())
 
     expect(response.ok()).toBeTruthy()
 

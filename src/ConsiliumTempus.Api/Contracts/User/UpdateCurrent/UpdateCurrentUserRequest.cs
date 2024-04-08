@@ -1,4 +1,4 @@
-﻿namespace ConsiliumTempus.Api.Contracts.User.Update;
+﻿namespace ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
 
 public sealed record UpdateCurrentUserRequest(
     string FirstName,

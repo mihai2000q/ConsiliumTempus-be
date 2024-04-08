@@ -5,7 +5,7 @@ using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 
-namespace ConsiliumTempus.Application.UnitTests.User.Commands.Update;
+namespace ConsiliumTempus.Application.UnitTests.User.Commands.UpdateCurrent;
 
 public class UpdateCurrentUserCommandHandlerTest
 {

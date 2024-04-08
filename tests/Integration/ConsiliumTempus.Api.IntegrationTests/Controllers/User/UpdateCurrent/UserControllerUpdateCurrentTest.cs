@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.User.Update;
+using ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
@@ -14,7 +14,7 @@ public class UserControllerUpdateCurrentTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new UserData())
 {
     [Fact]
-    public async Task UpdateCurrentUser_WhenIsSuccessful_ShouldUpdateAndReturnNewUser()
+    public async Task UpdateCurrentUser_WhenIsSuccessful_ShouldUpdateAndReturnSuccessResponse()
     {
         // Arrange
         var user = UserData.Users.First();

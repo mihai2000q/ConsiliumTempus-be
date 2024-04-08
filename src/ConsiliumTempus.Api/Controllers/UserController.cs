@@ -1,8 +1,8 @@
-﻿using ConsiliumTempus.Api.Contracts.User.Delete;
+﻿using ConsiliumTempus.Api.Contracts.User.DeleteCurrent;
 using ConsiliumTempus.Api.Contracts.User.Get;
 using ConsiliumTempus.Api.Contracts.User.GetCurrent;
-using ConsiliumTempus.Api.Contracts.User.Update;
-using ConsiliumTempus.Application.User.Commands.Delete;
+using ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
+using ConsiliumTempus.Application.User.Commands.DeleteCurrent;
 using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Application.User.Queries.GetCurrent;
@@ -50,14 +50,14 @@ public sealed class UserController(IMapper mapper, ISender mediator) : ApiContro
         );
     }
     
-    [HttpDelete]
-    public async Task<IActionResult> Delete(CancellationToken cancellationToken)
+    [HttpDelete("Current")]
+    public async Task<IActionResult> DeleteCurrent(CancellationToken cancellationToken)
     {
-        var command = new DeleteUserCommand();
+        var command = new DeleteCurrentUserCommand();
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            deleteResult => Ok(Mapper.Map<DeleteUserResponse>(deleteResult)),
+            deleteResult => Ok(Mapper.Map<DeleteCurrentUserResponse>(deleteResult)),
             Problem
         );
     }

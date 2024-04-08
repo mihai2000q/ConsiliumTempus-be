@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Application.UnitTests.TestData.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 
-namespace ConsiliumTempus.Application.UnitTests.User.Commands.Update;
+namespace ConsiliumTempus.Application.UnitTests.User.Commands.UpdateCurrent;
 
 public class UpdateCurrentUserCommandValidatorTest
 {

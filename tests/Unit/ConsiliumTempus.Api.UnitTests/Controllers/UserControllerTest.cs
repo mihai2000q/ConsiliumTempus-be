@@ -1,11 +1,11 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
-using ConsiliumTempus.Api.Contracts.User.Delete;
+using ConsiliumTempus.Api.Contracts.User.DeleteCurrent;
 using ConsiliumTempus.Api.Contracts.User.Get;
 using ConsiliumTempus.Api.Contracts.User.GetCurrent;
-using ConsiliumTempus.Api.Contracts.User.Update;
+using ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
-using ConsiliumTempus.Application.User.Commands.Delete;
+using ConsiliumTempus.Application.User.Commands.DeleteCurrent;
 using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Application.User.Queries.GetCurrent;
@@ -168,20 +168,20 @@ public class UserControllerTest
     public async Task DeleteUser_WhenIsSuccessful_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var result = new DeleteUserResult();
+        var result = new DeleteCurrentUserResult();
         _mediator
-            .Send(Arg.Any<DeleteUserCommand>())
+            .Send(Arg.Any<DeleteCurrentUserCommand>())
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(default);
+        var outcome = await _uut.DeleteCurrent(default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<DeleteUserCommand>(command => command == new DeleteUserCommand()));
+            .Send(Arg.Is<DeleteCurrentUserCommand>(command => command == new DeleteCurrentUserCommand()));
         
-        var response = outcome.ToResponse<DeleteUserResponse>();
+        var response = outcome.ToResponse<DeleteCurrentUserResponse>();
         response.Message.Should().Be(result.Message);
     }
     
@@ -191,16 +191,16 @@ public class UserControllerTest
         // Arrange
         var error = Errors.User.NotFound;
         _mediator
-            .Send(Arg.Any<DeleteUserCommand>())
+            .Send(Arg.Any<DeleteCurrentUserCommand>())
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(default);
+        var outcome = await _uut.DeleteCurrent(default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<DeleteUserCommand>(command => command == new DeleteUserCommand()));
+            .Send(Arg.Is<DeleteCurrentUserCommand>(command => command == new DeleteCurrentUserCommand()));
 
         outcome.ValidateError(error);
     }

@@ -13,7 +13,7 @@ public class WorkspaceControllerGetTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WorkspaceGet_WhenItSucceeds_ShouldReturnDto()
+    public async Task WorkspaceGet_WhenItSucceeds_ShouldReturnWorkspace()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();

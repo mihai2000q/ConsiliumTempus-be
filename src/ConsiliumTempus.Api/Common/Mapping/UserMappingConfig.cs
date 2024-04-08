@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Api.Contracts.User.Delete;
+using ConsiliumTempus.Api.Contracts.User.DeleteCurrent;
 using ConsiliumTempus.Api.Contracts.User.Get;
 using ConsiliumTempus.Api.Contracts.User.GetCurrent;
-using ConsiliumTempus.Api.Contracts.User.Update;
-using ConsiliumTempus.Application.User.Commands.Delete;
+using ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
+using ConsiliumTempus.Application.User.Commands.DeleteCurrent;
 using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Domain.User;
@@ -54,6 +54,6 @@ public sealed class UserMappingConfig : IRegister
     
     private static void DeleteMappings(TypeAdapterConfig config)
     {
-        config.NewConfig<DeleteUserResult, DeleteUserResponse>();
+        config.NewConfig<DeleteCurrentUserResult, DeleteCurrentUserResponse>();
     }
 }

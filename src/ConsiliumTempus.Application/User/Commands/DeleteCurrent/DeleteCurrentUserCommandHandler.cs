@@ -4,14 +4,14 @@ using ConsiliumTempus.Domain.Common.Errors;
 using ErrorOr;
 using MediatR;
 
-namespace ConsiliumTempus.Application.User.Commands.Delete;
+namespace ConsiliumTempus.Application.User.Commands.DeleteCurrent;
 
-public sealed class DeleteUserCommandHandler(
+public sealed class DeleteCurrentUserCommandHandler(
     IUserRepository userRepository, 
     ICurrentUserProvider currentUserProvider)
-    : IRequestHandler<DeleteUserCommand, ErrorOr<DeleteUserResult>>
+    : IRequestHandler<DeleteCurrentUserCommand, ErrorOr<DeleteCurrentUserResult>>
 {
-    public async Task<ErrorOr<DeleteUserResult>> Handle(DeleteUserCommand command,
+    public async Task<ErrorOr<DeleteCurrentUserResult>> Handle(DeleteCurrentUserCommand command,
         CancellationToken cancellationToken)
     {
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
@@ -20,6 +20,6 @@ public sealed class DeleteUserCommandHandler(
         
         userRepository.Remove(user);
         
-        return new DeleteUserResult();
+        return new DeleteCurrentUserResult();
     }
 }

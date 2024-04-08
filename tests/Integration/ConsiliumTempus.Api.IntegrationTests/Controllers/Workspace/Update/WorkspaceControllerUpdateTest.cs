@@ -17,7 +17,7 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WorkspaceUpdate_WhenItSucceeds_ShouldUpdateAndReturnNewWorkspace()
+    public async Task WorkspaceUpdate_WhenItSucceeds_ShouldUpdateAndReturnSuccessResponse()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();

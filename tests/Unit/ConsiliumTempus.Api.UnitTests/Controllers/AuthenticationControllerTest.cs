@@ -128,7 +128,7 @@ public class AuthenticationControllerTest
     }
     
     [Fact]
-    public async Task WhenRefreshIsSuccessful_ShouldReturnRefreshResponse()
+    public async Task WhenRefreshIsSuccessful_ShouldReturnAccessToken()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRefreshRequest();
