@@ -77,7 +77,7 @@ export async function deleteUser(
   const tokens = await loginUser(request, email, password)
   const token = process.env.API_TOKEN == undefined ? tokens.token : process.env.API_TOKEN
 
-  const res = await request.delete('api/users', useToken(token))
+  const res = await request.delete('api/users/current', useToken(token))
 
   expect(res.ok()).toBeTruthy()
 }
