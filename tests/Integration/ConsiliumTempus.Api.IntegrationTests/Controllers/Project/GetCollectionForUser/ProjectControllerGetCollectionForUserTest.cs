@@ -24,12 +24,11 @@ public class ProjectControllerGetCollectionForUserTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectForUserResponse>();
-        response!.Projects
-            .Zip(ProjectData.Projects
-                .Where(p => p.Workspace.Memberships.Any(m => m.User == user)))
-            .Should().AllSatisfy(p => Utils.Project.AssertResponse(p.First, p.Second));
+        Utils.Project.AssertGetCollectionForUserResponse(
+            response!,
+            ProjectData.Projects
+                .Where(p => p.Workspace.Memberships.Any(m => m.User == user)));
     }
 
     [Fact]

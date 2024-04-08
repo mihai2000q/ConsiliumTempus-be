@@ -1,9 +1,9 @@
-﻿using ConsiliumTempus.Api.Contracts.User.Delete;
+﻿using ConsiliumTempus.Api.Contracts.User.DeleteCurrent;
 using ConsiliumTempus.Api.Contracts.User.Get;
-using ConsiliumTempus.Api.Contracts.User.Update;
-using ConsiliumTempus.Api.Dto;
-using ConsiliumTempus.Application.User.Commands.Delete;
-using ConsiliumTempus.Application.User.Commands.Update;
+using ConsiliumTempus.Api.Contracts.User.GetCurrent;
+using ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
+using ConsiliumTempus.Application.User.Commands.DeleteCurrent;
+using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Application.User.Queries.GetCurrent;
 using MapsterMapper;
@@ -21,7 +21,7 @@ public sealed class UserController(IMapper mapper, ISender mediator) : ApiContro
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
-            getResult => Ok(Mapper.Map<UserDto>(getResult)),
+            getResult => Ok(Mapper.Map<GetUserResponse>(getResult)),
             Problem
         );
     }
@@ -33,31 +33,31 @@ public sealed class UserController(IMapper mapper, ISender mediator) : ApiContro
         var result = await Mediator.Send(query, cancellationToken);
         
         return result.Match(
-            getCurrentResult => Ok(Mapper.Map<UserDto>(getCurrentResult)),
+            getCurrentResult => Ok(Mapper.Map<GetCurrentUserResponse>(getCurrentResult)),
             Problem
         );
     }
     
-    [HttpPut]
-    public async Task<IActionResult> Update(UpdateUserRequest request, CancellationToken cancellationToken)
+    [HttpPut("Current")]
+    public async Task<IActionResult> UpdateCurrent(UpdateCurrentUserRequest request, CancellationToken cancellationToken)
     {
-        var command = Mapper.Map<UpdateUserCommand>(request);
+        var command = Mapper.Map<UpdateCurrentUserCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            updateResult => Ok(Mapper.Map<UserDto>(updateResult)),
+            updateResult => Ok(Mapper.Map<UpdateCurrentUserResponse>(updateResult)),
             Problem
         );
     }
     
-    [HttpDelete]
-    public async Task<IActionResult> Delete(CancellationToken cancellationToken)
+    [HttpDelete("Current")]
+    public async Task<IActionResult> DeleteCurrent(CancellationToken cancellationToken)
     {
-        var command = new DeleteUserCommand();
+        var command = new DeleteCurrentUserCommand();
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            deleteResult => Ok(Mapper.Map<DeleteUserResponse>(deleteResult)),
+            deleteResult => Ok(Mapper.Map<DeleteCurrentUserResponse>(deleteResult)),
             Problem
         );
     }

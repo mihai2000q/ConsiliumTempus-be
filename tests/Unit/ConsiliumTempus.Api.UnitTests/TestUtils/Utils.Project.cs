@@ -6,6 +6,7 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
+using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 using ConsiliumTempus.Domain.Project;
 
@@ -15,21 +16,22 @@ internal static partial class Utils
 {
     internal static class Project
     {
-        internal static void AssertProjectResponse(
-            GetCollectionProjectForUserResponse.ProjectResponse projectResponse, 
-            ProjectAggregate project)
+        internal static void AssertGetCollectionForWorkspaceResponse(
+            GetCollectionProjectForWorkspaceResponse response, 
+            GetCollectionProjectForWorkspaceResult result)
         {
-            projectResponse.Id.Should().Be(project.Id.Value);
-            projectResponse.Name.Should().Be(project.Name.Value);
+            response.Projects
+                .Zip(result.Projects)
+                .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
         }
         
-        internal static void AssertProjectResponse(
-            GetCollectionProjectForWorkspaceResponse.ProjectResponse projectResponse, 
-            ProjectAggregate project)
+        internal static void AssertGetCollectionForUserResponse(
+            GetCollectionProjectForUserResponse response, 
+            GetCollectionProjectForUserResult result)
         {
-            projectResponse.Id.Should().Be(project.Id.Value);
-            projectResponse.Name.Should().Be(project.Name.Value);
-            projectResponse.Description.Should().Be(project.Description.Value);
+            response.Projects
+                .Zip(result.Projects)
+                .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
         }
         
         internal static bool AssertGetCollectionProjectForWorkspaceQuery(
@@ -53,6 +55,23 @@ internal static partial class Utils
         {
             command.Id.Should().Be(id);
             return true;
+        }
+        
+        private static void AssertProjectResponse(
+            GetCollectionProjectForUserResponse.ProjectResponse projectResponse, 
+            ProjectAggregate project)
+        {
+            projectResponse.Id.Should().Be(project.Id.Value);
+            projectResponse.Name.Should().Be(project.Name.Value);
+        }
+        
+        private static void AssertProjectResponse(
+            GetCollectionProjectForWorkspaceResponse.ProjectResponse projectResponse, 
+            ProjectAggregate project)
+        {
+            projectResponse.Id.Should().Be(project.Id.Value);
+            projectResponse.Name.Should().Be(project.Name.Value);
+            projectResponse.Description.Should().Be(project.Description.Value);
         }
     }
     

@@ -37,7 +37,14 @@ Sends the id of the object inside the route request.
 
 #### Get Workspace Response
 
-Returns the workspace [Dto](dto/Dto.Workspace.md).
+Returns the workspace data.
+
+```json
+{
+  "name": "Workspace Name",
+  "description": "This is the description of the workspace"
+}
+```
 
 
 ### Get Collection
@@ -50,7 +57,24 @@ GET {{host}}/api/workspaces
 
 #### Get Collection Workspace Response
 
-Returns the workspaces [Dtos](dto/Dto.Workspace.md).
+Returns the workspaces.
+
+```json
+{
+  "workspaces": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "name": "Workspace 1",
+      "description": "This is the first workspace"
+    },
+    {
+      "id": "20000000-0000-0000-0000-000000000000",
+      "name": "Workspace 2",
+      "description": "This is the second workspace"
+    }
+  ]
+}
+```
 
 
 ### Create
@@ -74,7 +98,7 @@ Sends body data that the new workspace needs to be created.
 
 #### Create Workspace Response
 
-Returns the newly created workspace [Dto](dto/Dto.Workspace.md).
+Returns a confirmation message that the workspace has been created successfully.
 
 
 ### Update
@@ -101,7 +125,7 @@ Sends body data that the new workspace needs to be updated.
 
 #### Update Workspace Response
 
-Returns the new workspace [Dto](dto/Dto.Workspace.md).
+Returns a confirmation message that the workspace has been updated successfully.
 
 
 ### Delete

@@ -1,14 +1,16 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
-using ConsiliumTempus.Api.Contracts.User.Delete;
+using ConsiliumTempus.Api.Contracts.User.DeleteCurrent;
+using ConsiliumTempus.Api.Contracts.User.Get;
+using ConsiliumTempus.Api.Contracts.User.GetCurrent;
+using ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
-using ConsiliumTempus.Application.User.Commands.Delete;
-using ConsiliumTempus.Application.User.Commands.Update;
+using ConsiliumTempus.Application.User.Commands.DeleteCurrent;
+using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Application.User.Queries.GetCurrent;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -50,7 +52,8 @@ public class UserControllerTest
             .Received(1)
             .Send(Arg.Is<GetUserQuery>(query => Utils.User.AssertGetQuery(query, request)));
 
-        Utils.User.AssertDto(outcome, user);
+        var response = outcome.ToResponse<GetUserResponse>();
+        Utils.User.AssertGetUser(response, user);
     }
 
     [Fact]
@@ -92,15 +95,14 @@ public class UserControllerTest
             .Received(1)
             .Send(Arg.Is<GetCurrentUserQuery>(query => query == new GetCurrentUserQuery()));
 
-        Utils.User.AssertDto(outcome, user);
+        var response = outcome.ToResponse<GetCurrentUserResponse>();
+        Utils.User.AssertGetCurrentUser(response, user);
     }
     
     [Fact]
     public async Task GetCurrent_WhenItFails_ShouldReturnUserNotFoundError()
     {
         // Arrange
-        var request = UserRequestFactory.CreateUpdateUserRequest();
-
         var error = Errors.User.NotFound;
         _mediator
             .Send(Arg.Any<GetCurrentUserQuery>())
@@ -118,71 +120,69 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task UpdateUser_WhenIsSuccessful_ShouldReturnNewUser()
+    public async Task UpdateCurrentUser_WhenIsSuccessful_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = UserRequestFactory.CreateUpdateUserRequest();
+        var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
 
-        var result = new UpdateUserResult(UserFactory.Create());
+        var result = new UpdateCurrentUserResult();
         _mediator
-            .Send(Arg.Any<UpdateUserCommand>())
+            .Send(Arg.Any<UpdateCurrentUserCommand>())
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.UpdateCurrent(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<UpdateUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
-
-        Utils.User.AssertDto(outcome, result.User);
+            .Send(Arg.Is<UpdateCurrentUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
+        
+        var response = outcome.ToResponse<UpdateCurrentUserResponse>();
+        response.Message.Should().Be(result.Message);
     }
     
     [Fact]
-    public async Task UpdateUser_WhenItFails_ShouldReturnUserNotFoundError()
+    public async Task UpdateCurrentUser_WhenItFails_ShouldReturnUserNotFoundError()
     {
         // Arrange
-        var request = UserRequestFactory.CreateUpdateUserRequest();
+        var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
 
         var error = Errors.User.NotFound;
         _mediator
-            .Send(Arg.Any<UpdateUserCommand>())
+            .Send(Arg.Any<UpdateCurrentUserCommand>())
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.UpdateCurrent(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<UpdateUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
+            .Send(Arg.Is<UpdateCurrentUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
 
         outcome.ValidateError(error);
     }
 
     [Fact]
-    public async Task DeleteUser_WhenIsSuccessful_ShouldReturnUser()
+    public async Task DeleteUser_WhenIsSuccessful_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var result = new DeleteUserResult();
+        var result = new DeleteCurrentUserResult();
         _mediator
-            .Send(Arg.Any<DeleteUserCommand>())
+            .Send(Arg.Any<DeleteCurrentUserCommand>())
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(default);
+        var outcome = await _uut.DeleteCurrent(default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<DeleteUserCommand>(command => command == new DeleteUserCommand()));
-
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<DeleteUserResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as DeleteUserResponse;
-        response!.Message.Should().Be(result.Message);
+            .Send(Arg.Is<DeleteCurrentUserCommand>(command => command == new DeleteCurrentUserCommand()));
+        
+        var response = outcome.ToResponse<DeleteCurrentUserResponse>();
+        response.Message.Should().Be(result.Message);
     }
     
     [Fact]
@@ -191,16 +191,16 @@ public class UserControllerTest
         // Arrange
         var error = Errors.User.NotFound;
         _mediator
-            .Send(Arg.Any<DeleteUserCommand>())
+            .Send(Arg.Any<DeleteCurrentUserCommand>())
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(default);
+        var outcome = await _uut.DeleteCurrent(default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<DeleteUserCommand>(command => command == new DeleteUserCommand()));
+            .Send(Arg.Is<DeleteCurrentUserCommand>(command => command == new DeleteCurrentUserCommand()));
 
         outcome.ValidateError(error);
     }

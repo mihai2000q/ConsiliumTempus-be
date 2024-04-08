@@ -42,7 +42,7 @@ public class UpdateWorkspaceCommandHandlerTest
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
-        Utils.Workspace.AssertFromUpdateCommand(outcome.Value.Workspace, command);
+        outcome.Value.Should().Be(new UpdateWorkspaceResult());
     }
 
     [Fact]

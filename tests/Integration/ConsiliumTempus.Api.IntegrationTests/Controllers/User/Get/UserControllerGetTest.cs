@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using System.Net.Http.Json;
+using ConsiliumTempus.Api.Contracts.User.Get;
+using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -11,7 +13,7 @@ public class UserControllerGetTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new UserData())
 {
     [Fact]
-    public async Task WhenGetUserIsSuccessful_ThenReturnUser()
+    public async Task GetUser_WhenIsSuccessful_ShouldReturnUser()
     {
         // Arrange
         var user = UserData.Users.First();
@@ -21,11 +23,12 @@ public class UserControllerGetTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        await Utils.User.AssertDtoFromResponse(outcome, user);
+        var response = await outcome.Content.ReadFromJsonAsync<GetUserResponse>();
+        Utils.User.AssertGetResponse(response!, user);
     }
     
     [Fact]
-    public async Task WhenGetUserIsNotFound_ThenReturnNotFoundError()
+    public async Task GetUser_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var id = Guid.NewGuid().ToString();

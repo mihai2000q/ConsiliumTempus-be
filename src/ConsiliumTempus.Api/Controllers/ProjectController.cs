@@ -16,7 +16,7 @@ namespace ConsiliumTempus.Api.Controllers;
 
 public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
-    [HttpGet("user")]
+    [HttpGet("User")]
     public async Task<IActionResult> GetCollectionForUser(CancellationToken cancellationToken)
     {
         var query = new GetCollectionProjectForUserQuery();
@@ -30,7 +30,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
     }
     
     [HasPermission(Permissions.ReadCollectionProject)]
-    [HttpGet("workspace")]
+    [HttpGet("Workspace")]
     public async Task<IActionResult> GetCollectionForWorkspace(GetCollectionProjectForWorkspaceRequest request, 
         CancellationToken cancellationToken)
     {

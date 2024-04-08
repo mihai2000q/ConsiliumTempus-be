@@ -6,9 +6,9 @@
     * [Get User Response](#get-user-response)
   * [Get Current](#get-current)
     * [Get Current Response](#get-current-response)
-  * [Update](#update)
-    * [Update User Request](#update-user-request)
-    * [Update User Response](#update-user-response)
+  * [Update Current](#update)
+    * [Update Current User Request](#update-user-request)
+    * [Update Current User Response](#update-user-response)
   * [Delete](#delete)
     * [Delete User Response](#delete-user-response)
 
@@ -33,7 +33,17 @@ Sends the id of the user inside the route request.
 
 #### Get User Response
 
-Returns the user [Dto](dto/Dto.User.md).
+Returns the user data.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "firstName": "Firsty",
+  "lastName": "Lasty",
+  "email": "firstylasty@gmail.com",
+  "role": "Software Developer"
+}
+```
 
 
 ### Get Current
@@ -46,7 +56,18 @@ GET {{host}}/api/users/id
 
 #### Get Current Response
 
-Returns the current user [Dto](dto/Dto.User.md).
+Returns the current user data.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "firstName": "Firsty",
+  "lastName": "Lasty",
+  "email": "firstylasty@gmail.com",
+  "role": "Software Developer",
+  "dateOfBirth": "2000-12-23"
+}
+```
 
 
 ### Update

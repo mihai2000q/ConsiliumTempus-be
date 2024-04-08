@@ -1,7 +1,5 @@
 ﻿using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 using ConsiliumTempus.Application.UnitTests.TestData.Project.Queries.GetCollectionForWorkspace;
-using ConsiliumTempus.Application.User.Commands.Update;
-using ConsiliumTempus.Common.UnitTests.Project;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Queries.GetCollectionForWorkspace;
 

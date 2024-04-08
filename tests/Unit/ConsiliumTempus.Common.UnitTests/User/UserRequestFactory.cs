@@ -1,5 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.User.Get;
-using ConsiliumTempus.Api.Contracts.User.Update;
+using ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.User;
@@ -15,13 +15,13 @@ public static class UserRequestFactory
         };
     }
     
-    public static UpdateUserRequest CreateUpdateUserRequest(
+    public static UpdateCurrentUserRequest CreateUpdateCurrentUserRequest(
         string firstName = Constants.User.FirstName,
         string lastName = Constants.User.LastName,
         string? role = null,
         DateOnly? dateOfBirth = null)
     {
-        return new UpdateUserRequest(
+        return new UpdateCurrentUserRequest(
             firstName, 
             lastName, 
             role, 

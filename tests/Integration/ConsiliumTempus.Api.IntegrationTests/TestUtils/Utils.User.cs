@@ -1,7 +1,7 @@
-﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Authentication.Register;
-using ConsiliumTempus.Api.Contracts.User.Update;
-using ConsiliumTempus.Api.Dto;
+﻿using ConsiliumTempus.Api.Contracts.Authentication.Register;
+using ConsiliumTempus.Api.Contracts.User.Get;
+using ConsiliumTempus.Api.Contracts.User.GetCurrent;
+using ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
 using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.User;
@@ -13,17 +13,26 @@ internal static partial class Utils
 {
     internal static class User
     {
-        internal static async Task AssertDtoFromResponse(
-            HttpResponseMessage response,
+        internal static void AssertGetResponse(
+            GetUserResponse response,
             UserAggregate user)
         {
-            var dto = await response.Content.ReadFromJsonAsync<UserDto>();
-            dto!.Id.Should().Be(user.Id.ToString());
-            dto.FirstName.Should().Be(user.FirstName.Value);
-            dto.LastName.Should().Be(user.LastName.Value);
-            dto.Email.Should().Be(user.Credentials.Email);
-            dto.Role.Should().Be(user.Role?.Value);
-            dto.DateOfBirth.Should().Be(user.DateOfBirth);
+            response.FirstName.Should().Be(user.FirstName.Value);
+            response.LastName.Should().Be(user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
+            response.Role.Should().Be(user.Role?.Value);
+        }
+        
+        internal static void AssertGetCurrentResponse(
+            GetCurrentUserResponse response,
+            UserAggregate user)
+        {
+            response.Id.Should().Be(user.Id.Value);
+            response.FirstName.Should().Be(user.FirstName.Value);
+            response.LastName.Should().Be(user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
+            response.Role.Should().Be(user.Role?.Value);
+            response.DateOfBirth.Should().Be(user.DateOfBirth);
         }
 
         internal static void AssertRegistration(
@@ -54,7 +63,7 @@ internal static partial class Utils
         internal static void AssertUpdate(
             UserAggregate user,
             UserAggregate newUser,
-            UpdateUserRequest request)
+            UpdateCurrentUserRequest request)
         {
             // unchanged
             newUser.Id.Should().Be(user.Id);

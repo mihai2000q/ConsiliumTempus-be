@@ -1,10 +1,9 @@
 ﻿using ConsiliumTempus.Api.Contracts.User.Get;
-using ConsiliumTempus.Api.Contracts.User.Update;
-using ConsiliumTempus.Api.Dto;
-using ConsiliumTempus.Application.User.Commands.Update;
+using ConsiliumTempus.Api.Contracts.User.GetCurrent;
+using ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
+using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Domain.User;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -17,34 +16,31 @@ internal static partial class Utils
             query.Id.Should().Be(request.Id);
             return true;
         }
+        
+        internal static void AssertGetUser(GetUserResponse response, UserAggregate user)
+        {
+            response.FirstName.Should().Be(user.FirstName.Value);
+            response.LastName.Should().Be(user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
+            response.Role.Should().Be(user.Role?.Value);
+        }
 
-        internal static bool AssertUpdateCommand(UpdateUserCommand command, UpdateUserRequest request)
+        internal static void AssertGetCurrentUser(GetCurrentUserResponse response, UserAggregate user)
+        {
+            response.FirstName.Should().Be(user.FirstName.Value);
+            response.LastName.Should().Be(user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
+            response.Role.Should().Be(user.Role?.Value);
+            response.DateOfBirth.Should().Be(user.DateOfBirth);
+        }
+
+        internal static bool AssertUpdateCommand(UpdateCurrentUserCommand command, UpdateCurrentUserRequest request)
         {
             command.FirstName.Should().Be(request.FirstName);
             command.LastName.Should().Be(request.LastName);
             command.Role.Should().Be(request.Role);
             command.DateOfBirth.Should().Be(request.DateOfBirth);
             return true;
-        }
-
-        internal static void AssertDto(IActionResult outcome, UserAggregate user)
-        {
-            outcome.Should().BeOfType<OkObjectResult>();
-            ((OkObjectResult)outcome).Value.Should().BeOfType<UserDto>();
-
-            var response = ((OkObjectResult)outcome).Value as UserDto;
-
-            AssertDto(response!, user);
-        }
-
-        private static void AssertDto(UserDto dto, UserAggregate user)
-        {
-            dto.Id.Should().Be(user.Id.Value.ToString());
-            dto.FirstName.Should().Be(user.FirstName.Value);
-            dto.LastName.Should().Be(user.LastName.Value);
-            dto.Email.Should().Be(user.Credentials.Email);
-            dto.Role.Should().Be(user.Role?.Value);
-            dto.DateOfBirth.Should().Be(user.DateOfBirth);
         }
     }
 }

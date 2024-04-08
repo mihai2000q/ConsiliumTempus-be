@@ -2,8 +2,8 @@
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
-using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
@@ -26,7 +26,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
-            getResult => Ok(Mapper.Map<WorkspaceDto>(getResult)),
+            getResult => Ok(Mapper.Map<GetWorkspaceResponse>(getResult)),
             Problem
         );
     }
@@ -39,7 +39,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
         return result.Match(
             getCollectionResult => 
-                Ok(Mapper.Map<IEnumerable<WorkspaceDto>>(getCollectionResult)),
+                Ok(Mapper.Map<GetCollectionWorkspaceResponse>(getCollectionResult)),
             Problem
         );
     }
@@ -51,7 +51,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            createResult => Ok(Mapper.Map<WorkspaceDto>(createResult)),
+            createResult => Ok(Mapper.Map<CreateWorkspaceResponse>(createResult)),
             Problem
         );
     }
@@ -65,7 +65,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            updateResult => Ok(Mapper.Map<WorkspaceDto>(updateResult)),
+            updateResult => Ok(Mapper.Map<UpdateWorkspaceResponse>(updateResult)),
             Problem
         );
     }

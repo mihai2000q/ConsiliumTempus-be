@@ -17,6 +17,18 @@ export function useToken(
   }
 }
 
+export async function getCurrentUser(request: APIRequestContext) {
+  const response = await request.get('api/users/current', {
+    headers: {
+      'Authorization': `Bearer ${process.env.API_TOKEN}`
+    }
+  })
+
+  expect(response.ok()).toBeTruthy()
+
+  return await response.json()
+}
+
 export async function getUserId(request: APIRequestContext) {
   const response = await request.get('api/users/current', {
     headers: {
@@ -65,7 +77,7 @@ export async function deleteUser(
   const tokens = await loginUser(request, email, password)
   const token = process.env.API_TOKEN == undefined ? tokens.token : process.env.API_TOKEN
 
-  const res = await request.delete('api/users', useToken(token))
+  const res = await request.delete('api/users/current', useToken(token))
 
   expect(res.ok()).toBeTruthy()
 }

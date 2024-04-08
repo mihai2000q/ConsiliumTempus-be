@@ -10,21 +10,22 @@ internal static partial class Utils
 {
     internal static class Project
     {
-        internal static void AssertResponse(
-            GetCollectionProjectForUserResponse.ProjectResponse projectResponse,
-            ProjectAggregate project)
+        internal static void AssertGetCollectionForUserResponse(
+            GetCollectionProjectForUserResponse response,
+            IEnumerable<ProjectAggregate> projects)
         {
-            projectResponse.Id.Should().Be(project.Id.Value);
-            projectResponse.Name.Should().Be(project.Name.Value);
+            response.Projects
+                .Zip(projects)
+                .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
         }
         
-        internal static void AssertResponse(
-            GetCollectionProjectForWorkspaceResponse.ProjectResponse projectResponse,
-            ProjectAggregate project)
+        internal static void AssertGetCollectionForWorkspaceResponse(
+            GetCollectionProjectForWorkspaceResponse response,
+            IEnumerable<ProjectAggregate> projects)
         {
-            projectResponse.Id.Should().Be(project.Id.Value);
-            projectResponse.Name.Should().Be(project.Name.Value);
-            projectResponse.Description.Should().Be(project.Description.Value);
+            response.Projects
+                .Zip(projects)
+                .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
         }
         
         internal static void AssertCreation(ProjectAggregate project, CreateProjectRequest request)
@@ -38,6 +39,23 @@ internal static partial class Utils
             project.Sprints[0].Sections.Should().HaveCount(Constants.ProjectSection.Names.Length);
             project.Sprints[0].Sections[0].Tasks
                 .Should().HaveCount(Constants.ProjectTask.Names.Length);
+        }
+        
+        private static void AssertResponse(
+            GetCollectionProjectForUserResponse.ProjectResponse projectResponse,
+            ProjectAggregate project)
+        {
+            projectResponse.Id.Should().Be(project.Id.Value);
+            projectResponse.Name.Should().Be(project.Name.Value);
+        }
+        
+        private static void AssertResponse(
+            GetCollectionProjectForWorkspaceResponse.ProjectResponse projectResponse,
+            ProjectAggregate project)
+        {
+            projectResponse.Id.Should().Be(project.Id.Value);
+            projectResponse.Name.Should().Be(project.Name.Value);
+            projectResponse.Description.Should().Be(project.Description.Value);
         }
     }
 }

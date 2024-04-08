@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using System.Net.Http.Json;
+using ConsiliumTempus.Api.Contracts.Workspace.Create;
+using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -13,7 +15,7 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WhenWorkspaceCreateIsSuccessful_ShouldCreateAndReturnNewWorkspace()
+    public async Task WhenWorkspaceCreateIsSuccessful_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
@@ -23,14 +25,14 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-
+        var response = await outcome.Content.ReadFromJsonAsync<CreateWorkspaceResponse>();
+        response!.Message.Should().Be("Workspace has been created successfully!");
+        
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length + 1);
         var createdWorkspace = await dbContext.Workspaces
             .SingleAsync(w => w.Name.Value == request.Name);
         Utils.Workspace.AssertCreation(createdWorkspace, request);
-        
-        await Utils.Workspace.AssertDtoFromResponse(outcome, createdWorkspace);
     }
     
     [Fact]

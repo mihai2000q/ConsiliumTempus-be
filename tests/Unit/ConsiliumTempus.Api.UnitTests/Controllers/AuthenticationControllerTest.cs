@@ -9,7 +9,6 @@ using ConsiliumTempus.Application.Authentication.Commands.Refresh;
 using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Common.UnitTests.Authentication;
 using ConsiliumTempus.Domain.Common.Errors;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -51,13 +50,10 @@ public class AuthenticationControllerTest
             .Received(1)
             .Send(Arg.Is<RegisterCommand>(
                 command => Utils.Authentication.AssertRegisterCommand(command, request)));
-
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<RegisterResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as RegisterResponse;
-        response?.Token.Should().Be(result.Token);
-        response?.RefreshToken.Should().Be(result.RefreshToken);
+        
+        var response = outcome.ToResponse<RegisterResponse>();
+        response.Token.Should().Be(result.Token);
+        response.RefreshToken.Should().Be(result.RefreshToken);
     }
 
     [Fact]
@@ -103,12 +99,9 @@ public class AuthenticationControllerTest
             .Send(Arg.Is<LoginCommand>(
                 query => Utils.Authentication.AssertLoginCommand(query, request)));
 
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<LoginResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as LoginResponse;
-        response?.Token.Should().Be(result.Token);
-        response?.RefreshToken.Should().Be(result.RefreshToken);
+        var response = outcome.ToResponse<LoginResponse>();
+        response.Token.Should().Be(result.Token);
+        response.RefreshToken.Should().Be(result.RefreshToken);
     }
 
     [Fact]
@@ -135,7 +128,7 @@ public class AuthenticationControllerTest
     }
     
     [Fact]
-    public async Task WhenRefreshIsSuccessful_ShouldReturnRefreshResponse()
+    public async Task WhenRefreshIsSuccessful_ShouldReturnAccessToken()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRefreshRequest();
@@ -153,12 +146,9 @@ public class AuthenticationControllerTest
             .Received(1)
             .Send(Arg.Is<RefreshCommand>(
                 command => Utils.Authentication.AssertRefreshCommand(command, request)));
-
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<RefreshResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as RefreshResponse;
-        response?.Token.Should().Be(result.Token);
+        
+        var response = outcome.ToResponse<RefreshResponse>();
+        response.Token.Should().Be(result.Token);
     }
     
     [Fact]

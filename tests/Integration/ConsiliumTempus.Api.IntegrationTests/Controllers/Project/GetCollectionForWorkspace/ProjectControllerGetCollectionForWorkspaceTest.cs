@@ -26,11 +26,11 @@ public class ProjectControllerGetCollectionForWorkspaceTest(WebAppFactory factor
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectForWorkspaceResponse>();
-        response!.Projects
-            .Zip(ProjectData.Projects.Where(p => p.Workspace.Id.Value == request.WorkspaceId))
-            .Should().AllSatisfy(p => Utils.Project.AssertResponse(p.First, p.Second));
+        Utils.Project.AssertGetCollectionForWorkspaceResponse(
+            response!,
+            ProjectData.Projects
+                .Where(p => p.Workspace.Id.Value == request.WorkspaceId));
     }
 
     [Fact]

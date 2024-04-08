@@ -1,5 +1,9 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
+using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
+using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
@@ -9,7 +13,6 @@ using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -51,7 +54,8 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<GetWorkspaceQuery>(query => Utils.Workspace.AssertGetQuery(query, request)));
 
-        Utils.Workspace.AssertDto(outcome, result);
+        var response = outcome.ToResponse<GetWorkspaceResponse>();
+        Utils.Workspace.AssertGetResponse(response, result);
     }
 
     [Fact]
@@ -80,7 +84,7 @@ public class WorkspaceControllerTest
     public async Task GetCollectionWorkspace_WhenIsSuccessful_ShouldReturnCollectionOfWorkspaces()
     {
         // Arrange
-        var result = WorkspaceFactory.CreateList();
+        var result = new GetCollectionWorkspaceResult(WorkspaceFactory.CreateList());
         _mediator
             .Send(Arg.Any<GetCollectionWorkspaceQuery>())
             .Returns(result);
@@ -93,7 +97,8 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<GetCollectionWorkspaceQuery>(query => Utils.Workspace.AssertGetCollectionQuery(query)));
 
-        Utils.Workspace.AssertDtos(outcome, result);
+        var response = outcome.ToResponse<GetCollectionWorkspaceResponse>();
+        Utils.Workspace.AssertGetCollectionResponse(response, result);
     }
     
     [Fact]
@@ -117,12 +122,12 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task CreateWorkspace_WhenIsSuccessful_ShouldReturnNewWorkspace()
+    public async Task CreateWorkspace_WhenIsSuccessful_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
 
-        var result = new CreateWorkspaceResult(WorkspaceFactory.Create(request.Name, request.Description));
+        var result = new CreateWorkspaceResult();
         _mediator
             .Send(Arg.Any<CreateWorkspaceCommand>())
             .Returns(result);
@@ -135,8 +140,9 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<CreateWorkspaceCommand>(
                 command => Utils.Workspace.AssertCreateCommand(command, request)));
-
-        Utils.Workspace.AssertDto(outcome, result.Workspace);
+        
+        var response = outcome.ToResponse<CreateWorkspaceResponse>();
+        response.Message.Should().Be(result.Message);
     }
     
     [Fact]
@@ -163,7 +169,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task DeleteWorkspace_WhenIsSuccessful_ShouldReturnWorkspace()
+    public async Task DeleteWorkspace_WhenIsSuccessful_ShouldReturnSuccessResponse()
     {
         // Arrange
         var id = Guid.NewGuid();
@@ -180,12 +186,9 @@ public class WorkspaceControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteWorkspaceCommand>(command => command.Id == id));
-
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<DeleteWorkspaceResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as DeleteWorkspaceResponse;
-        response!.Message.Should().Be(result.Message);
+        
+        var response = outcome.ToResponse<DeleteWorkspaceResponse>();
+        response.Message.Should().Be(result.Message);
     }
 
     [Fact]
@@ -211,12 +214,12 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task UpdateWorkspace_WhenIsSuccessful_ShouldReturnNewWorkspace()
+    public async Task UpdateWorkspace_WhenIsSuccessful_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest();
 
-        var result = new UpdateWorkspaceResult(WorkspaceFactory.Create());
+        var result = new UpdateWorkspaceResult();
         _mediator
             .Send(Arg.Any<UpdateWorkspaceCommand>())
             .Returns(result);
@@ -229,8 +232,9 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<UpdateWorkspaceCommand>(
                 command => Utils.Workspace.AssertUpdateCommand(command, request)));
-
-        Utils.Workspace.AssertDto(outcome, result.Workspace);
+        
+        var response = outcome.ToResponse<UpdateWorkspaceResponse>();
+        response.Message.Should().Be(result.Message);
     }
 
     [Fact]

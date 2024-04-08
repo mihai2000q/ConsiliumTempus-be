@@ -21,6 +21,6 @@ public sealed class UpdateWorkspaceCommandHandler(IWorkspaceRepository workspace
             Name.Create(command.Name),
             Description.Create(command.Description));
 
-        return new UpdateWorkspaceResult(workspace);
+        return new UpdateWorkspaceResult();
     }
 }
