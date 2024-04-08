@@ -25,7 +25,6 @@ test.describe('should allow operations on the user entity', () => {
 
   test('should get user', async ({ request }) => {
     const userId = await getUserId(request)
-
     const response = await request.get(`api/users/${userId}`, useToken())
 
     expect(response.ok()).toBeTruthy()
@@ -48,7 +47,6 @@ test.describe('should allow operations on the user entity', () => {
     expect(response.ok()).toBeTruthy()
 
     expect(await response.json()).toEqual({
-      id: expect.any(String),
       firstName: FIRSTNAME,
       lastName: LASTNAME,
       email: EMAIL,
@@ -82,8 +80,10 @@ test.describe('should allow operations on the user entity', () => {
     const newUser = await getCurrentUser(request)
 
     expect(newUser).toEqual({
+      id: expect.any(String),
       firstName: body.firstName,
       lastName: body.lastName,
+      email: EMAIL,
       role: body.role,
       dateOfBirth: body.dateOfBirth
     })

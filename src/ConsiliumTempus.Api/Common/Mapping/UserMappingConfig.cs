@@ -38,6 +38,7 @@ public sealed class UserMappingConfig : IRegister
     {
         config.NewConfig<UserAggregate, GetCurrentUserResponse>()
             .IgnoreNullValues(true)
+            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.FirstName, src => src.FirstName.Value)
             .Map(dest => dest.LastName, src => src.LastName.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email)
