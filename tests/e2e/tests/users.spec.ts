@@ -23,6 +23,10 @@ test.describe('should allow operations on the user entity', () => {
     ).token
   })
 
+  test.afterEach('should delete user', async ({ request }) => {
+    await deleteUser(request)
+  })
+
   test('should get user', async ({ request }) => {
     const userId = await getUserId(request)
     const response = await request.get(`api/users/${userId}`, useToken())
@@ -35,9 +39,6 @@ test.describe('should allow operations on the user entity', () => {
       email: EMAIL,
       role: ROLE
     })
-
-    // cleanup
-    await deleteUser(request)
   })
 
   test('should get current user', async ({ request }) => {
@@ -53,9 +54,6 @@ test.describe('should allow operations on the user entity', () => {
       role: ROLE,
       dateOfBirth: DATE_OF_BIRTH
     })
-
-    // cleanup
-    await deleteUser(request)
   })
 
   test('should update current user', async ({ request }) => {
@@ -87,12 +85,13 @@ test.describe('should allow operations on the user entity', () => {
       role: body.role,
       dateOfBirth: body.dateOfBirth
     })
-
-    // cleanup
-    await deleteUser(request)
   })
+})
 
+test.describe('should allow removal of the user entity', () => {
   test('should delete current user', async ({ request }) => {
+    process.env.API_TOKEN = (await registerUser(request)).token
+
     const response = await request.delete('api/users/current', useToken())
 
     expect(response.ok()).toBeTruthy()
@@ -100,5 +99,8 @@ test.describe('should allow operations on the user entity', () => {
     expect(await response.json()).toEqual({
       message: expect.any(String)
     })
+
+    const getCurrentUserResponse = await request.get('/api/users/current', useToken())
+    expect(getCurrentUserResponse.ok()).toBeFalsy()
   })
 })
