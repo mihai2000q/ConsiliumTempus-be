@@ -49,6 +49,7 @@ public static class DependencyInjection
             {
                 policy
                     .WithOrigins(CorsPolicies.Frontend.Origin)
+                    .WithMethods(CorsPolicies.Frontend.Methods)
                     //.WithHeaders(CorsPolicies.Frontend.Headers)
                     .AllowAnyHeader();
             });
