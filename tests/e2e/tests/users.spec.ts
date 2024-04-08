@@ -68,9 +68,9 @@ test.describe('should allow operations on the user entity', () => {
       dateOfBirth: null
     }
 
-    const response = await request.put('api/users', {
+    const response = await request.put('api/users/current', {
       ...useToken(),
-      data: { ...body }
+      data: body
     })
 
     expect(response.ok()).toBeTruthy()

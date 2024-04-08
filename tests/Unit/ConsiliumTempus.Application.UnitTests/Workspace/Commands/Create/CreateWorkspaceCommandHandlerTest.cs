@@ -4,7 +4,9 @@ using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Commands.Create;
 
@@ -28,7 +30,7 @@ public class CreateWorkspaceCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenCreateWorkspaceIsSuccessful_ShouldAddUserAndReturnNewWorkspace()
+    public async Task WhenCreateWorkspaceIsSuccessful_ShouldAddWorkspaceAndReturnResponse()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand();
@@ -50,6 +52,29 @@ public class CreateWorkspaceCommandHandlerTest
             .Add(Arg.Is<WorkspaceAggregate>(workspace =>
                 Utils.Workspace.AssertFromCreateCommand(workspace, command, user)));
 
-        Utils.Workspace.AssertFromCreateCommand(outcome.Value.Workspace, command, user);
+        outcome.IsError.Should().BeFalse();
+        outcome.Value.Should().Be(new CreateWorkspaceResult());
+    }
+    
+    [Fact]
+    public async Task WhenCreateWorkspaceFails_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand();
+
+        _currentUserProvider
+            .GetCurrentUser()
+            .ReturnsNull();
+
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Assert
+        await _currentUserProvider
+            .Received(1)
+            .GetCurrentUser();
+        _workspaceRepository.DidNotReceive();
+
+        outcome.ValidateError(Errors.User.NotFound);
     }
 }

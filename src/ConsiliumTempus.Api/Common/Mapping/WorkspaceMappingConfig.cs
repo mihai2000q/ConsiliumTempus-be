@@ -2,12 +2,13 @@
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
-using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.Workspace;
 using Mapster;
 
@@ -19,6 +20,7 @@ public sealed class WorkspaceMappingConfig : IRegister
     public void Register(TypeAdapterConfig config)
     {
         GetMappings(config);
+        GetCollectionMappings(config);
         CreateMappings(config);
         PutMappings(config);
         DeleteMappings(config);
@@ -28,8 +30,17 @@ public sealed class WorkspaceMappingConfig : IRegister
     {
         config.NewConfig<GetWorkspaceRequest, GetWorkspaceQuery>();
         
-        config.NewConfig<WorkspaceAggregate, WorkspaceDto>()
-            .Map(dest => dest.Id, src => src.Id.Value.ToString())
+        config.NewConfig<WorkspaceAggregate, GetWorkspaceResponse>()
+            .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.Description, src => src.Description.Value);
+    }
+    
+    private static void GetCollectionMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<GetCollectionWorkspaceResult, GetCollectionWorkspaceResponse>();
+        
+        config.NewConfig<WorkspaceAggregate, GetCollectionWorkspaceResponse.WorkspaceResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value);
     }
@@ -37,23 +48,15 @@ public sealed class WorkspaceMappingConfig : IRegister
     private static void CreateMappings(TypeAdapterConfig config)
     {
         config.NewConfig<CreateWorkspaceRequest, CreateWorkspaceCommand>();
-        
-        config.NewConfig<CreateWorkspaceResult, WorkspaceDto>()
-            .Map(dest => dest, src => src.Workspace)
-            .Map(dest => dest.Id, src => src.Workspace.Id.Value.ToString())
-            .Map(dest => dest.Name, src => src.Workspace.Name.Value)
-            .Map(dest => dest.Description, src => src.Workspace.Description.Value);
+
+        config.NewConfig<CreateWorkspaceResult, CreateWorkspaceResponse>();
     }
 
     private static void PutMappings(TypeAdapterConfig config)
     {
         config.NewConfig<UpdateWorkspaceRequest, UpdateWorkspaceCommand>();
-        
-        config.NewConfig<UpdateWorkspaceResult, WorkspaceDto>()
-            .Map(dest => dest, src => src.Workspace)
-            .Map(dest => dest.Id, src => src.Workspace.Id.Value.ToString())
-            .Map(dest => dest.Name, src => src.Workspace.Name.Value)
-            .Map(dest => dest.Description, src => src.Workspace.Description.Value);
+
+        config.NewConfig<UpdateWorkspaceResult, UpdateWorkspaceResponse>();
     }
 
     private static void DeleteMappings(TypeAdapterConfig config)

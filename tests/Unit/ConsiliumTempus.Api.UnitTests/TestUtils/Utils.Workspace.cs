@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
-using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
@@ -25,6 +25,7 @@ internal static partial class Utils
 
         internal static bool AssertGetCollectionQuery(GetCollectionWorkspaceQuery query)
         {
+            query.Should().Be(new GetCollectionWorkspaceQuery());
             return true;
         }
 
@@ -45,36 +46,40 @@ internal static partial class Utils
             return true;
         }
 
-        internal static void AssertDto(
+        internal static void AssertGetResponse(
             IActionResult outcome,
             WorkspaceAggregate workspace)
         {
             outcome.Should().BeOfType<OkObjectResult>();
-            ((OkObjectResult)outcome).Value.Should().BeOfType<WorkspaceDto>();
+            ((OkObjectResult)outcome).Value.Should().BeOfType<GetWorkspaceResponse>();
 
-            var response = ((OkObjectResult)outcome).Value as WorkspaceDto;
-
-            AssertDto(response!, workspace);
+            var response = ((OkObjectResult)outcome).Value as GetWorkspaceResponse;
+            
+            response!.Name.Should().Be(workspace.Name.Value);
+            response.Description.Should().Be(workspace.Description.Value);
         }
-
-        internal static void AssertDtos(
+        
+        internal static void AssertGetCollectionResponse(
             IActionResult outcome,
-            IEnumerable<WorkspaceAggregate> workspaces)
+            GetCollectionWorkspaceResult result)
         {
             outcome.Should().BeOfType<OkObjectResult>();
+            ((OkObjectResult)outcome).Value.Should().BeOfType<GetCollectionWorkspaceResponse>();
 
-            var response = ((OkObjectResult)outcome).Value as IEnumerable<WorkspaceDto>;
-
-            response!.Zip(workspaces)
-                .ToList()
-                .ForEach(x => AssertDto(x.First, x.Second));
+            var response = ((OkObjectResult)outcome).Value as GetCollectionWorkspaceResponse;
+            
+            response!.Workspaces
+                .Zip(result.Workspaces)
+                .Should().AllSatisfy(p => AssertWorkspaceResponse(p.First, p.Second));
         }
 
-        private static void AssertDto(WorkspaceDto dto, WorkspaceAggregate workspace)
+        private static void AssertWorkspaceResponse(
+            GetCollectionWorkspaceResponse.WorkspaceResponse response,
+            WorkspaceAggregate workspace)
         {
-            dto.Id.Should().Be(workspace.Id.Value.ToString());
-            dto.Name.Should().Be(workspace.Name.Value);
-            dto.Description.Should().Be(workspace.Description.Value);
+            response.Id.Should().Be(workspace.Id.Value.ToString());
+            response.Name.Should().Be(workspace.Name.Value);
+            response.Description.Should().Be(workspace.Description.Value);
         }
     }
 }

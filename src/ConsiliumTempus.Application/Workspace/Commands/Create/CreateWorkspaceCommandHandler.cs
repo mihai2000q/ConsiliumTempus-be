@@ -29,6 +29,6 @@ public sealed class CreateWorkspaceCommandHandler(
         var membership = Membership.Create(user, workspace, WorkspaceRole.Admin);
         workspace.AddUserMembership(membership);
 
-        return new CreateWorkspaceResult(workspace);
+        return new CreateWorkspaceResult();
     }
 }

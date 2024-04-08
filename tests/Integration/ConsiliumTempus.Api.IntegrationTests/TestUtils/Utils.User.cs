@@ -3,7 +3,6 @@ using ConsiliumTempus.Api.Contracts.Authentication.Register;
 using ConsiliumTempus.Api.Contracts.User.Get;
 using ConsiliumTempus.Api.Contracts.User.GetCurrent;
 using ConsiliumTempus.Api.Contracts.User.Update;
-using ConsiliumTempus.Api.Dto;
 using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.User;

@@ -1,5 +1,3 @@
-﻿using ConsiliumTempus.Domain.Workspace;
+﻿namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
-namespace ConsiliumTempus.Application.Workspace.Commands.Create;
-
-public sealed record CreateWorkspaceResult(WorkspaceAggregate Workspace);
+public sealed record CreateWorkspaceResult(string Message = "Workspace has been created successfully!");

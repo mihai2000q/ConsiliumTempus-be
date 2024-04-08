@@ -1,5 +1,7 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
+using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
+using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
@@ -51,7 +53,7 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<GetWorkspaceQuery>(query => Utils.Workspace.AssertGetQuery(query, request)));
 
-        Utils.Workspace.AssertDto(outcome, result);
+        Utils.Workspace.AssertGetResponse(outcome, result);
     }
 
     [Fact]
@@ -80,7 +82,7 @@ public class WorkspaceControllerTest
     public async Task GetCollectionWorkspace_WhenIsSuccessful_ShouldReturnCollectionOfWorkspaces()
     {
         // Arrange
-        var result = WorkspaceFactory.CreateList();
+        var result = new GetCollectionWorkspaceResult(WorkspaceFactory.CreateList());
         _mediator
             .Send(Arg.Any<GetCollectionWorkspaceQuery>())
             .Returns(result);
@@ -93,7 +95,7 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<GetCollectionWorkspaceQuery>(query => Utils.Workspace.AssertGetCollectionQuery(query)));
 
-        Utils.Workspace.AssertDtos(outcome, result);
+        Utils.Workspace.AssertGetCollectionResponse(outcome, result);
     }
     
     [Fact]
@@ -122,7 +124,7 @@ public class WorkspaceControllerTest
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
 
-        var result = new CreateWorkspaceResult(WorkspaceFactory.Create(request.Name, request.Description));
+        var result = new CreateWorkspaceResult();
         _mediator
             .Send(Arg.Any<CreateWorkspaceCommand>())
             .Returns(result);
@@ -136,7 +138,11 @@ public class WorkspaceControllerTest
             .Send(Arg.Is<CreateWorkspaceCommand>(
                 command => Utils.Workspace.AssertCreateCommand(command, request)));
 
-        Utils.Workspace.AssertDto(outcome, result.Workspace);
+        outcome.Should().BeOfType<OkObjectResult>();
+        ((OkObjectResult)outcome).Value.Should().BeOfType<CreateWorkspaceResponse>();
+
+        var response = ((OkObjectResult)outcome).Value as CreateWorkspaceResponse;
+        response!.Message.Should().Be(result.Message);
     }
     
     [Fact]
@@ -216,7 +222,7 @@ public class WorkspaceControllerTest
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest();
 
-        var result = new UpdateWorkspaceResult(WorkspaceFactory.Create());
+        var result = new UpdateWorkspaceResult();
         _mediator
             .Send(Arg.Any<UpdateWorkspaceCommand>())
             .Returns(result);
@@ -230,7 +236,11 @@ public class WorkspaceControllerTest
             .Send(Arg.Is<UpdateWorkspaceCommand>(
                 command => Utils.Workspace.AssertUpdateCommand(command, request)));
 
-        Utils.Workspace.AssertDto(outcome, result.Workspace);
+        outcome.Should().BeOfType<OkObjectResult>();
+        ((OkObjectResult)outcome).Value.Should().BeOfType<UpdateWorkspaceResponse>();
+
+        var response = ((OkObjectResult)outcome).Value as UpdateWorkspaceResponse;
+        response!.Message.Should().Be(result.Message);
     }
 
     [Fact]

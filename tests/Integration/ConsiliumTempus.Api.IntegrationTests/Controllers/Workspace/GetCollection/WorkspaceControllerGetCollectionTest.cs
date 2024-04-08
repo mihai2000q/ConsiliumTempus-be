@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Dto;
+using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
@@ -27,13 +27,8 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var content = await outcome.Content.ReadFromJsonAsync<List<WorkspaceDto>>();
-        content.Should().HaveCount(workspaces.Count);
-        foreach (var x in content!.OrderBy(c => c.Name).Zip(workspaces))
-        {
-            Utils.Workspace.AssertDto(x.First, x.Second);
-        }
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
+        Utils.Workspace.AssertGetCollectionResponse(response!, workspaces);
     }
     
     [Fact]

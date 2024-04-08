@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using System.Net.Http.Json;
+using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -22,8 +24,8 @@ public class WorkspaceControllerGetTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        await Utils.Workspace.AssertDtoFromResponse(outcome, workspace);
+        var response = await outcome.Content.ReadFromJsonAsync<GetWorkspaceResponse>();
+        Utils.Workspace.AssertGetResponse(response!, workspace);
     }
 
     [Fact]

@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace ConsiliumTempus.Api.Dto;
+namespace ConsiliumTempus.Api.Contracts.Workspace.Get;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-public sealed record WorkspaceDto(
-    string Id,
+public sealed record GetWorkspaceResponse(
     string Name,
     string Description);

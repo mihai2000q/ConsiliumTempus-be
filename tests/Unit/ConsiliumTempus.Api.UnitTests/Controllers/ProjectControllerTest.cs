@@ -1,8 +1,6 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.Create;
@@ -54,12 +52,7 @@ public class ProjectControllerTest
             .Send(Arg.Is<GetCollectionProjectForWorkspaceQuery>(q => 
                 Utils.Project.AssertGetCollectionProjectForWorkspaceQuery(q, request)));
 
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<GetCollectionProjectForWorkspaceResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as GetCollectionProjectForWorkspaceResponse;
-        response!.Projects.Zip(result.Projects)
-            .Should().AllSatisfy(p => Utils.Project.AssertProjectResponse(p.First, p.Second));
+        Utils.Project.AssertGetCollectionForWorkspaceResponse(outcome, result);
     }
     
     [Fact]
@@ -102,12 +95,7 @@ public class ProjectControllerTest
             .Received(1)
             .Send(new GetCollectionProjectForUserQuery());
 
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<GetCollectionProjectForUserResponse>();
-
-        var response = ((OkObjectResult)outcome).Value as GetCollectionProjectForUserResponse;
-        response!.Projects.Zip(result.Projects)
-            .Should().AllSatisfy(p => Utils.Project.AssertProjectResponse(p.First, p.Second));
+        Utils.Project.AssertGetCollectionForUserResponse(outcome, result);
     }
     
     [Fact]

@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using System.Net.Http.Json;
+using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -27,11 +29,11 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<UpdateWorkspaceResponse>();
+        response!.Message.Should().Be("Workspace has been updated successfully!");
         
         var updatedWorkspace = await GetWorkspaceById(request.Id);
         Utils.Workspace.AssertUpdated(workspace, updatedWorkspace!, request);
-        
-        await Utils.Workspace.AssertDtoFromResponse(outcome, updatedWorkspace!);
     }
     
     [Fact]

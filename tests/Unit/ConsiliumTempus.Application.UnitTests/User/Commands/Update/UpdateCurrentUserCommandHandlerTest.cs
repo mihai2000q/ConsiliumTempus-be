@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Security;
-using ConsiliumTempus.Application.UnitTests.TestData.User.Commands;
 using ConsiliumTempus.Application.UnitTests.TestData.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
