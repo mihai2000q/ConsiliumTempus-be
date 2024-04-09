@@ -18,9 +18,11 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
     public async Task WhenWorkspaceCreateIsSuccessful_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
+        var user = WorkspaceData.Users.First();
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
         
         // Act
+        Client.UseCustomToken(user);
         var outcome = await Client.Post("api/workspaces", request);
 
         // Assert
@@ -31,8 +33,11 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length + 1);
         var createdWorkspace = await dbContext.Workspaces
+            .Include(w => w.Owner)
+            .Include(w => w.Memberships)
+            .ThenInclude(m => m.User)
             .SingleAsync(w => w.Name.Value == request.Name);
-        Utils.Workspace.AssertCreation(createdWorkspace, request);
+        Utils.Workspace.AssertCreation(createdWorkspace, request, user);
     }
     
     [Fact]

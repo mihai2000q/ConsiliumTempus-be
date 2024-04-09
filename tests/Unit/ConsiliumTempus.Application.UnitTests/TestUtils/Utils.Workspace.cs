@@ -17,6 +17,8 @@ internal static partial class Utils
         {
             workspace.Name.Value.Should().Be(command.Name);
             workspace.Description.Value.Should().Be(command.Description);
+            workspace.Owner.Should().Be(user);
+            workspace.IsUserWorkspace.Value.Should().Be(false);
             workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.Memberships.Should().HaveCount(1);
