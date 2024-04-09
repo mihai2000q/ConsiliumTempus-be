@@ -56,7 +56,7 @@ public class DeleteWorkspaceCommandHandlerTest
         // Arrange
         var command = new DeleteWorkspaceCommand(Guid.NewGuid());
         
-        var workspace = WorkspaceFactory.Create(isUserWorkspace: true);
+        var workspace = WorkspaceFactory.Create(isPersonal: true);
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);

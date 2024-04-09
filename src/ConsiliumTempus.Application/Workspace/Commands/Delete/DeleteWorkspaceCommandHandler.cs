@@ -16,7 +16,7 @@ public sealed class DeleteWorkspaceCommandHandler(IWorkspaceRepository workspace
         var workspace = await workspaceRepository.Get(workspaceId, cancellationToken);
 
         if (workspace is null) return Errors.Workspace.NotFound;
-        if (workspace.IsUserWorkspace.Value) return Errors.Workspace.UserWorkspace;
+        if (workspace.IsPersonal.Value) return Errors.Workspace.UserWorkspace;
 
         workspaceRepository.Remove(workspace);
 

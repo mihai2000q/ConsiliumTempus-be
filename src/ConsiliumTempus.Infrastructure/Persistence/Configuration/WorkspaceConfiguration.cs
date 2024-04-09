@@ -36,9 +36,9 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
             .HasColumnName(nameof(Description))
             .HasMaxLength(PropertiesValidation.Workspace.DescriptionMaximumLength);
 
-        builder.OwnsOne(w => w.IsUserWorkspace)
+        builder.OwnsOne(w => w.IsPersonal)
             .Property(n => n.Value)
-            .HasColumnName(nameof(IsUserWorkspace));
+            .HasColumnName(nameof(IsPersonal));
         
         builder.HasOne(w => w.Owner)
             .WithMany()

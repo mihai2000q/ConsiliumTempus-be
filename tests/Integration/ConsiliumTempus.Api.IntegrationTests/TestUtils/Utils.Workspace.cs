@@ -41,7 +41,7 @@ internal static partial class Utils
             workspace.Name.Value.Should().Be(request.Name);
             workspace.Description.Value.Should().Be(request.Description);
             workspace.Owner.Should().Be(user);
-            workspace.IsUserWorkspace.Value.Should().Be(false);
+            workspace.IsPersonal.Value.Should().Be(false);
             workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 

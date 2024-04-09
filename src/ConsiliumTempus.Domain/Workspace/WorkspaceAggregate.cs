@@ -20,14 +20,14 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         Name name,
         Description description,
         UserAggregate owner,
-        IsUserWorkspace isUserWorkspace,
+        IsPersonal isPersonal,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
     {
         Name = name;
         Description = description;
         Owner = owner;
-        IsUserWorkspace = isUserWorkspace;
+        IsPersonal = isPersonal;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
     }
@@ -37,7 +37,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
-    public IsUserWorkspace IsUserWorkspace { get; private set; } = default!;
+    public IsPersonal IsPersonal { get; private set; } = default!;
     public UserAggregate Owner { get; private set; } = default!;
     public DateTime CreatedDateTime { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
@@ -48,14 +48,14 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         Name name,
         Description description,
         UserAggregate owner,
-        IsUserWorkspace isUserWorkspace)
+        IsPersonal isPersonal)
     {
         var workspace = new WorkspaceAggregate(
             WorkspaceId.CreateUnique(),
             name,
             description,
             owner,
-            isUserWorkspace,
+            isPersonal,
             DateTime.UtcNow,
             DateTime.UtcNow);
 
@@ -84,9 +84,9 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         Owner = owner;
     }
     
-    public void UpdateIsUserWorkspace(IsUserWorkspace isUserWorkspace)
+    public void UpdateIsPersonal(IsPersonal isPersonal)
     {
-        IsUserWorkspace = isUserWorkspace;
+        IsPersonal = isPersonal;
     }
 
 }

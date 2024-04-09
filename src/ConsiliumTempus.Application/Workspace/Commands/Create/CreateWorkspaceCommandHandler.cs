@@ -26,7 +26,7 @@ public sealed class CreateWorkspaceCommandHandler(
             Name.Create(command.Name),
             Description.Create(command.Description),
             user,
-            IsUserWorkspace.Create(false));
+            IsPersonal.Create(false));
         await workspaceRepository.Add(workspace, cancellationToken);
 
         var membership = Membership.Create(user, workspace, WorkspaceRole.Admin);

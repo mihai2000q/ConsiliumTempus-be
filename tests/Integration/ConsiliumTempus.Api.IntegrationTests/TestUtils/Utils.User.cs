@@ -61,7 +61,7 @@ internal static partial class Utils
             user.Memberships[0].Workspace.Name.Value.Should().Be(Constants.Workspace.Name);
             user.Memberships[0].Workspace.Description.Value.Should().Be(Constants.Workspace.Description);
             user.Memberships[0].Workspace.Owner.Should().Be(user);
-            user.Memberships[0].Workspace.IsUserWorkspace.Value.Should().Be(true);
+            user.Memberships[0].Workspace.IsPersonal.Value.Should().Be(true);
             user.Memberships[0].Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             user.Memberships[0].Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         }

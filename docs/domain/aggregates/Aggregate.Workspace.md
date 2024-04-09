@@ -12,7 +12,7 @@ class Workspace
     void AddUserMembership()
     void RefreshUpdatedDateTime()
     void TransferOwnership()
-    void UpdateIsUserWorkspace()
+    void UpdateIsPersonal()
 }
 ```
 
@@ -22,7 +22,7 @@ class Workspace
   "name": { "value": "Workspace 1" },
   "description": { "value": "This is the description of the workspace" },
   "owner": {},
-  "isUserWorkspace": { "value": true },
+  "isPersonal": { "value": true },
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
   "memberships": [{}]
@@ -39,11 +39,11 @@ For database design checkout the [Workspace Diagram](../diagrams/aggregates/Diag
 ### Domain Errors
 
 - **Not Found** when the workspace cannot be found
-- **User Workspace** when the workspace is user workspace
+- **Personal Workspace** when the workspace is personal
 
 ### Value Objects
 
-- **IsUserWorkspace** which encapsulates a boolean *Value*, 
+- **IsPersonal** which encapsulates a boolean *Value*, 
 and it's used to determine whether the workspace is made to be the primary place for a user. 
-(One user must have exactly one workspace where they are owners, and it is a user workspace, 
-otherwise they can be part of other people's UserWorkspaces, but they can't be owners).
+(One user must have exactly one workspace where they are owners, and it is a personal workspace, 
+otherwise they can be part of other people's personal workspaces, but they can't be owners).

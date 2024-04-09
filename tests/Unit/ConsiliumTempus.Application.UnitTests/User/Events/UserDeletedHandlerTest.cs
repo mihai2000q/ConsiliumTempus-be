@@ -68,7 +68,7 @@ public class UserDeletedHandlerTest
         preservedWorkspaces.Should().AllSatisfy(w =>
         {
             w.Owner.Should().NotBe(user);
-            w.IsUserWorkspace.Value.Should().BeFalse();
+            w.IsPersonal.Value.Should().BeFalse();
             
             var oldWorkspace = ownerWorkspaces.Single(x => x.Id == w.Id);
             var newAdminOwner = oldWorkspace.Memberships

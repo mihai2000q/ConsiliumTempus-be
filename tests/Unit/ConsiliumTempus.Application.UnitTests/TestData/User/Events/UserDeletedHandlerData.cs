@@ -22,14 +22,14 @@ internal static class UserDeletedHandlerData
             var workspaceWithMembers = WorkspaceFactory.Create(owner: user);
             workspaceWithMembers.AddUserMembership(MembershipFactory.Create());
             
-            var userWorkspaceWithMembers = WorkspaceFactory.Create(owner: user, isUserWorkspace: true);
+            var userWorkspaceWithMembers = WorkspaceFactory.Create(owner: user, isPersonal: true);
             userWorkspaceWithMembers.AddUserMembership(MembershipFactory.Create());
             
             var workspaces = new List<WorkspaceAggregate>
             {
                 WorkspaceFactory.Create(),
                 WorkspaceFactory.Create(owner: user),
-                WorkspaceFactory.Create(owner: user, isUserWorkspace: true),
+                WorkspaceFactory.Create(owner: user, isPersonal: true),
                 workspaceWithAdminMembers,
                 workspaceWithMembers,
                 userWorkspaceWithMembers

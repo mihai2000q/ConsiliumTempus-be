@@ -29,7 +29,7 @@ public sealed class UserDeletedHandler(IWorkspaceRepository workspaceRepository)
                 var newOwner = newOwnerAdmin ?? workspace.Memberships.First(m => m.User != notification.User);
                 if (newOwnerAdmin is null) newOwner.UpdateWorkspaceRole(WorkspaceRole.Admin);
                 workspace.TransferOwnership(newOwner.User);
-                workspace.UpdateIsUserWorkspace(IsUserWorkspace.Create(false));
+                workspace.UpdateIsPersonal(IsPersonal.Create(false));
             }
         }
     }

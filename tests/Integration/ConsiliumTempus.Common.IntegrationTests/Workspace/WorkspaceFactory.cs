@@ -12,7 +12,7 @@ public static class WorkspaceFactory
         UserAggregate owner,
         string name = Constants.Workspace.Name,
         string description = Constants.Workspace.Description,
-        bool isUserWorkspace = false,
+        bool isPersonal = false,
         DateTime? createdDateTime = null,
         DateTime? updatedDateTime = null)
     {
@@ -22,7 +22,7 @@ public static class WorkspaceFactory
         DomainFactory.SetProperty(ref workspace, nameof(workspace.Name), Name.Create(name));
         DomainFactory.SetProperty(ref workspace, nameof(workspace.Description), Description.Create(description));
         DomainFactory.SetProperty(ref workspace, nameof(workspace.Owner), owner);
-        DomainFactory.SetProperty(ref workspace, nameof(workspace.IsUserWorkspace), IsUserWorkspace.Create(isUserWorkspace));
+        DomainFactory.SetProperty(ref workspace, nameof(workspace.IsPersonal), IsPersonal.Create(isPersonal));
         DomainFactory.SetProperty(ref workspace, nameof(workspace.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref workspace, nameof(workspace.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
 

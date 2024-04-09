@@ -61,7 +61,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
             .AllSatisfy(w =>
             {
                 w.Owner.Should().NotBe(user);
-                w.IsUserWorkspace.Value.Should().BeFalse();
+                w.IsPersonal.Value.Should().BeFalse();
                 
                 var oldWorkspace = preservedWorkspaces.Single(x => x.Id == w.Id);
                 var newOwnerAdmin = oldWorkspace.Memberships
