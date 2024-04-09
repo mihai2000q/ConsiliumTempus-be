@@ -11,6 +11,8 @@ class Workspace
     void Update()
     void AddUserMembership()
     void RefreshUpdatedDateTime()
+    void TransferOwnership()
+    void UpdateIsUserWorkspace()
 }
 ```
 

@@ -37,8 +37,8 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
-    public IsUserWorkspace IsUserWorkspace { get; init; } = default!;
-    public UserAggregate Owner { get; init; } = default!;
+    public IsUserWorkspace IsUserWorkspace { get; private set; } = default!;
+    public UserAggregate Owner { get; private set; } = default!;
     public DateTime CreatedDateTime { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
@@ -78,4 +78,15 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
     {
         _memberships.Add(membership);
     }
+
+    public void TransferOwnership(UserAggregate owner)
+    {
+        Owner = owner;
+    }
+    
+    public void UpdateIsUserWorkspace(IsUserWorkspace isUserWorkspace)
+    {
+        IsUserWorkspace = isUserWorkspace;
+    }
+
 }

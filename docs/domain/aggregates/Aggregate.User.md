@@ -52,4 +52,6 @@ For database design, check out the [User Diagram](../diagrams/aggregates/Diagram
 
 ### Domain Events
 
-- **User Registered** when the user registers, it will also create a workspace with an admin membership
+- **User Registered** when the user registers, it will also create a user workspace with an admin membership
+- **User Deleted** when the user is deleted, it will also delete workspaces where he was alone, 
+or transfer ownership on workspaces and promote the new owner to Admin, if necessary 

@@ -33,8 +33,8 @@ public sealed class Membership : Entity<(UserId, WorkspaceId)>, ITimestamps
     public UserAggregate User { get; init; } = null!;
     public WorkspaceAggregate Workspace { get; init; } = null!;
     public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; init; }
-    public WorkspaceRole WorkspaceRole { get; init; } = null!;
+    public DateTime UpdatedDateTime { get; private set; }
+    public WorkspaceRole WorkspaceRole { get; private set; } = null!;
 
     public static Membership Create(
         UserAggregate user,
@@ -51,5 +51,11 @@ public sealed class Membership : Entity<(UserId, WorkspaceId)>, ITimestamps
         membership.AddDomainEvent(new MembershipCreated(membership));
         
         return membership;
+    }
+
+    public void UpdateWorkspaceRole(WorkspaceRole role)
+    {
+        WorkspaceRole = role;
+        UpdatedDateTime = DateTime.UtcNow;
     }
 }

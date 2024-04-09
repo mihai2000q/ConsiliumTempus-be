@@ -10,6 +10,7 @@ In addition, it also persists the timestamps and the role of the user inside the
 class Membership 
 {
     Membership Create()
+    void UpdateWorkspaceRole()
 }
 ```
 
