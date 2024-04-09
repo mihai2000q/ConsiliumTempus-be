@@ -100,8 +100,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_Workspace_User_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240409124331_InitialCreate")]
+    [Migration("20240409130810_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -982,7 +982,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.OwnsOne("ConsiliumTempus.Domain.Workspace.ValueObjects.IsUserWorkspace", "IsUserWorkspace", b1 =>

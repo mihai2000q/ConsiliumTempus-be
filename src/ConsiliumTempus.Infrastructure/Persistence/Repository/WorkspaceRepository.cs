@@ -44,6 +44,17 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .Where(w => w.Memberships.Any(m => m.User == user))
             .ToListAsync(cancellationToken);
     }
+    
+    public async Task<List<WorkspaceAggregate>> GetListForUserWithMemberships(UserAggregate user,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Workspaces
+            .Include(w => w.Owner)
+            .Include(w => w.Memberships)
+            .ThenInclude(m => m.User)
+            .Where(w => w.Memberships.Any(m => m.User == user))
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task Add(WorkspaceAggregate workspaceAggregate, CancellationToken cancellationToken = default)
     {
