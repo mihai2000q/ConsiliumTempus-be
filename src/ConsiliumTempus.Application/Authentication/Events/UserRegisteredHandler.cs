@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.User.Events;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using MediatR;
 using Constants = ConsiliumTempus.Domain.Common.Constants.Constants;
 
@@ -13,7 +14,9 @@ public sealed class UserRegisteredHandler : INotificationHandler<UserRegistered>
     {
         var workspace = WorkspaceAggregate.Create(
             Name.Create(Constants.Workspace.Name),
-            Description.Create(Constants.Workspace.Description));
+            Description.Create(Constants.Workspace.Description),
+            notification.User,
+            IsUserWorkspace.Create(true));
 
         var membership = Membership.Create(notification.User, workspace, WorkspaceRole.Admin);
         notification.User.AddWorkspaceMembership(membership);
