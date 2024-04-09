@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Events;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.User;
@@ -41,16 +40,12 @@ public sealed class Membership : Entity<(UserId, WorkspaceId)>, ITimestamps
         WorkspaceAggregate workspace,
         WorkspaceRole workspaceRole)
     {
-        var membership = new Membership(
+        return new Membership(
             user, 
             workspace,
             DateTime.UtcNow, 
             DateTime.UtcNow, 
             workspaceRole);
-
-        membership.AddDomainEvent(new MembershipCreated(membership));
-        
-        return membership;
     }
 
     public void UpdateWorkspaceRole(WorkspaceRole role)

@@ -25,8 +25,3 @@ class Membership
 ```
 
 For database design, check out the [Membership Diagram](../diagrams/entities/Diagram.Membership.md).
-
-## Domain Event
-
-- **Membership Created** when the membership gets created, 
-it will automatically attach the enum role to the Database Context (so that it does not throw a duplicate key error).
