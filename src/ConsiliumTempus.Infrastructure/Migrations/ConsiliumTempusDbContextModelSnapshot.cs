@@ -443,12 +443,17 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Workspace", (string)null);
                 });
@@ -971,6 +976,29 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", b =>
                 {
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Workspace.ValueObjects.IsUserWorkspace", "IsUserWorkspace", b1 =>
+                        {
+                            b1.Property<Guid>("WorkspaceAggregateId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<bool>("Value")
+                                .HasColumnType("bit")
+                                .HasColumnName("IsUserWorkspace");
+
+                            b1.HasKey("WorkspaceAggregateId");
+
+                            b1.ToTable("Workspace");
+
+                            b1.WithOwner()
+                                .HasForeignKey("WorkspaceAggregateId");
+                        });
+
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b1 =>
                         {
                             b1.Property<Guid>("WorkspaceAggregateId")
@@ -1012,8 +1040,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Navigation("Description")
                         .IsRequired();
 
+                    b.Navigation("IsUserWorkspace")
+                        .IsRequired();
+
                     b.Navigation("Name")
                         .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSection", b =>
