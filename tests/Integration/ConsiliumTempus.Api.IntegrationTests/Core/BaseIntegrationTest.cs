@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Domain.Common.Entities;
-using ConsiliumTempus.Infrastructure.Persistence.Database;
+﻿using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,7 +46,6 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         foreach (var d in data.SelectMany(x => x))
         {
-            if (d is Membership membership) dbContext.Attach(membership.WorkspaceRole);
             await dbContext.AddAsync(d);
         }
         await dbContext.SaveChangesAsync();

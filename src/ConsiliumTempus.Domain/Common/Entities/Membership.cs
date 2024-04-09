@@ -29,6 +29,7 @@ public sealed class Membership : Entity<(UserId, WorkspaceId)>, ITimestamps
         WorkspaceRole = workspaceRole;
     }
     
+    public override (UserId, WorkspaceId) Id => new (User.Id, Workspace.Id);
     public UserAggregate User { get; init; } = null!;
     public WorkspaceAggregate Workspace { get; init; } = null!;
     public DateTime CreatedDateTime { get; init; }

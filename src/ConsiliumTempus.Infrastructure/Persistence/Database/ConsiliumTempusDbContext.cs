@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Interfaces;
+﻿using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.User;
@@ -9,11 +10,23 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Database;
 
-public sealed class ConsiliumTempusDbContext(
-    PublishDomainEventsInterceptor publishDomainEventsInterceptor,
-    DbContextOptions<ConsiliumTempusDbContext> options)
-    : DbContext(options)
+public sealed class ConsiliumTempusDbContext : DbContext
 {
+    private readonly PublishDomainEventsInterceptor _publishDomainEventsInterceptor;
+
+    public ConsiliumTempusDbContext(
+        PublishDomainEventsInterceptor publishDomainEventsInterceptor,
+        DbContextOptions<ConsiliumTempusDbContext> options) 
+        : base(options)
+    {
+        _publishDomainEventsInterceptor = publishDomainEventsInterceptor;
+        foreach (var workspaceRole in WorkspaceRole.GetValues())
+        {
+            Set<WorkspaceRole>().Attach(workspaceRole);
+        }
+        SaveChanges();
+    }
+
     public DbSet<ProjectAggregate> Projects { get; init; } = null!;
     public DbSet<ProjectSprint> ProjectSprints { get; init; } = null!;
     public DbSet<UserAggregate> Users { get; init; } = null!;
@@ -37,7 +50,7 @@ public sealed class ConsiliumTempusDbContext(
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.AddInterceptors(publishDomainEventsInterceptor);
+        optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor);
         base.OnConfiguring(optionsBuilder);
     }
 }

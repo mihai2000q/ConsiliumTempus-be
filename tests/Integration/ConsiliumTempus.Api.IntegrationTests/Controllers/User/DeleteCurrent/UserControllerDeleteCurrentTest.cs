@@ -39,21 +39,23 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
         
         // assert user deleted event
         // assert 
-        var currentUserWorkspaces = user.Memberships.Select(m => m.Workspace).ToList();
-        var preservedWorkspaces = currentUserWorkspaces
+        var emptyWorkspaces = user.Memberships
+            .Select(m => m.Workspace)
+            .Where(w => w.Memberships.Count == 1)
+            .ToList();
+        dbContext.Workspaces.Should().HaveCount(UserData.Workspaces.Length - emptyWorkspaces.Count);
+        
+        var preservedWorkspaces = user.Memberships
+            .Select(m => m.Workspace)
             .Where(w => w.Memberships.Count > 1)
             .ToList();
-        
-        dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length - preservedWorkspaces.Count);
-        
         var newPreservedWorkspaces = dbContext.Workspaces
             .Include(w => w.Memberships)
             .ThenInclude(m => m.User)
             .Include(w => w.Memberships)
             .ThenInclude(m => m.WorkspaceRole)
             .Include(w => w.Owner)
-            .Where(w => 
-                preservedWorkspaces.Any(x => x.Id == w.Id))
+            .Where(w => preservedWorkspaces.Contains(w))
             .ToList();
         
         newPreservedWorkspaces
@@ -68,7 +70,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
                     .FirstOrDefault(m => m.WorkspaceRole.Equals(WorkspaceRole.Admin) && m.User != user);
                 if (newOwnerAdmin is not null)
                 {
-                    w.Owner.Id.Should().Be(newOwnerAdmin.Id);
+                    w.Owner.Id.Should().Be(newOwnerAdmin.User.Id);
                 }
                 else
                 {

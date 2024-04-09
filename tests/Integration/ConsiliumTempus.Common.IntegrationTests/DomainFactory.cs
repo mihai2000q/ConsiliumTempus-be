@@ -21,11 +21,11 @@ internal static class DomainFactory
         else
         {
             propertyInfo.DeclaringType?.GetRuntimeFields()
-                .Single(f => f.Name == GetBackingFieldName(propertyName))
-                .SetValue(obj, newProperty); 
+                .SingleOrDefault(f => f.Name == GetBackingFieldName(propertyName))
+                ?.SetValue(obj, newProperty);
         }
     }
-    
+
     private static ConstructorInfo? GetDefaultPrivateConstructor<T>()
     {
         return typeof(T).GetConstructor(
@@ -34,7 +34,7 @@ internal static class DomainFactory
             Type.EmptyTypes,
             null);
     }
-    
+
     private const string Prefix = "<";
     private const string Suffix = ">k__BackingField";
 
