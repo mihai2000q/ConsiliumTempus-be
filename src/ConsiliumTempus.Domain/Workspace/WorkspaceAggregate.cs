@@ -3,6 +3,7 @@ using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Workspace;
@@ -18,11 +19,15 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         WorkspaceId id,
         Name name,
         Description description,
+        UserAggregate owner,
+        IsUserWorkspace isUserWorkspace,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
     {
         Name = name;
         Description = description;
+        Owner = owner;
+        IsUserWorkspace = isUserWorkspace;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
     }
@@ -32,6 +37,8 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
+    public IsUserWorkspace IsUserWorkspace { get; init; } = default!;
+    public UserAggregate Owner { get; init; } = default!;
     public DateTime CreatedDateTime { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
@@ -39,12 +46,16 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
 
     public static WorkspaceAggregate Create(
         Name name,
-        Description description)
+        Description description,
+        UserAggregate owner,
+        IsUserWorkspace isUserWorkspace)
     {
         var workspace = new WorkspaceAggregate(
             WorkspaceId.CreateUnique(),
             name,
             description,
+            owner,
+            isUserWorkspace,
             DateTime.UtcNow,
             DateTime.UtcNow);
 

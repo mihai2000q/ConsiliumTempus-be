@@ -19,6 +19,8 @@ class Workspace
   "id": { "value": "00000000-0000-0000-0000-000000000000" },
   "name": { "value": "Workspace 1" },
   "description": { "value": "This is the description of the workspace" },
+  "owner": {},
+  "isUserWorkspace": { "value": true },
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
   "memberships": [{}]
@@ -35,3 +37,10 @@ For database design checkout the [Workspace Diagram](../diagrams/aggregates/Diag
 ### Domain Errors
 
 - **Not Found** when the workspace cannot be found
+
+### Value Objects
+
+- **IsUserWorkspace** which encapsulates a boolean *Value*, 
+and it's used to determine whether the workspace is made to be the primary place for a user. 
+(One user must have exactly one workspace where they are owners, and it is a user workspace, 
+otherwise they can be part of other people's UserWorkspaces, but they can't be owners).
