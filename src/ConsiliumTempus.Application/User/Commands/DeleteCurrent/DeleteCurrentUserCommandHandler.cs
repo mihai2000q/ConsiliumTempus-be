@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.User.Events;
 using ErrorOr;
 using MediatR;
 
@@ -19,6 +20,7 @@ public sealed class DeleteCurrentUserCommandHandler(
         if (user is null) return Errors.User.NotFound;
         
         userRepository.Remove(user);
+        user.AddDomainEvent(new UserDeleted(user));
         
         return new DeleteCurrentUserResult();
     }
