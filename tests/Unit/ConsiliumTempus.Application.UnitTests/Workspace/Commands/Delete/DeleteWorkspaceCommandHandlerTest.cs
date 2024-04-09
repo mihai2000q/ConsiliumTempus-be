@@ -5,6 +5,7 @@ using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Commands.Delete;
 
@@ -24,7 +25,7 @@ public class DeleteWorkspaceCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenDeleteWorkspaceHandleIsSuccessful_ShouldDeleteAndReturnDeleteResult()
+    public async Task DeleteWorkspace_WhenIsSuccessful_ShouldDeleteAndReturnDeleteResult()
     {
         // Arrange
         var command = new DeleteWorkspaceCommand(Guid.NewGuid());
@@ -48,13 +49,42 @@ public class DeleteWorkspaceCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteWorkspaceResult());
     }
+    
+    [Fact]
+    public async Task DeleteWorkspace_WhenWorkspaceIsUserWorkspace_ShouldReturnUserWorkspaceError()
+    {
+        // Arrange
+        var command = new DeleteWorkspaceCommand(Guid.NewGuid());
+        
+        var workspace = WorkspaceFactory.Create(isUserWorkspace: true);
+        _workspaceRepository
+            .Get(Arg.Any<WorkspaceId>())
+            .Returns(workspace);
+
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Assert
+        await _workspaceRepository
+            .Received(1)
+            .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+        _workspaceRepository
+            .DidNotReceive()
+            .Remove(Arg.Any<WorkspaceAggregate>());
+
+        outcome.ValidateError(Errors.Workspace.UserWorkspace);
+    }
 
     [Fact]
-    public async Task WhenDeleteWorkspaceHandleIsInvalid_ShouldReturnNotFoundError()
+    public async Task DeleteWorkspace_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = new DeleteWorkspaceCommand(Guid.NewGuid());
 
+        _workspaceRepository
+            .Get(Arg.Any<WorkspaceId>())
+            .ReturnsNull();
+        
         // Act
         var outcome = await _uut.Handle(command, default);
 

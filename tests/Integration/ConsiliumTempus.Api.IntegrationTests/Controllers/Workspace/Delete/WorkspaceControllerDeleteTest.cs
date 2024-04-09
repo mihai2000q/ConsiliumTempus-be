@@ -16,6 +16,28 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
     public async Task WorkspaceDelete_WhenItSucceeds_ShouldDeleteAndReturnSuccessResponse()
     {
         // Arrange
+        var workspace = WorkspaceData.Workspaces[0];
+
+        // Act
+        Client.UseCustomToken(WorkspaceData.Users[0]);
+        var outcome = await Client.Delete($"api/workspaces/{workspace.Id}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var response = await outcome.Content.ReadFromJsonAsync<DeleteWorkspaceResponse>();
+        response!.Message.Should().Be("Workspace has been deleted successfully!");
+
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length - 1);
+        (await dbContext.Workspaces.FindAsync(workspace.Id))
+            .Should().BeNull();
+    }
+
+    [Fact]
+    public async Task WorkspaceDelete_WhenWorkspaceIsUserWorkspace_ShouldReturnUserWorkspaceError()
+    {
+        // Arrange
         var workspace = WorkspaceData.Workspaces[2];
 
         // Act
@@ -27,7 +49,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
 
         var response = await outcome.Content.ReadFromJsonAsync<DeleteWorkspaceResponse>();
         response!.Message.Should().Be("Workspace has been deleted successfully!");
-        
+
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length - 1);
         (await dbContext.Workspaces.FindAsync(workspace.Id))
@@ -35,7 +57,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task WhenWorkspaceDeleteFails_ShouldReturnNotFoundError()
+    public async Task WorkspaceDelete_WhenWorkspaceIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var id = Guid.NewGuid();
@@ -45,7 +67,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);
-        
+
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length);
         dbContext.Workspaces.AsEnumerable()

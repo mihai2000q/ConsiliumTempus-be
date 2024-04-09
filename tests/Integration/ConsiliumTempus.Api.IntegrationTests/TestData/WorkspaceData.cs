@@ -54,14 +54,18 @@ internal class WorkspaceData : ITestData
     public static WorkspaceAggregate[] Workspaces { get; } =
     [
         WorkspaceFactory.Create(
+            Users[0],
             "Basketball",
             "This is the Description of the first Workspace"),
         WorkspaceFactory.Create(
+            Users[1],
             "Football",
             "This is the Description of the second Workspace"),
         WorkspaceFactory.Create(
+            Users[0],
             "Michael Group",
-            "This is the Description of the third Workspace"),
+            "This is the Description of the third Workspace",
+            true),
     ];
 
     public static Membership[] Memberships { get; } =

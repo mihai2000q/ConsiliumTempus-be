@@ -37,6 +37,7 @@ For database design checkout the [Workspace Diagram](../diagrams/aggregates/Diag
 ### Domain Errors
 
 - **Not Found** when the workspace cannot be found
+- **User Workspace** when the workspace is user workspace
 
 ### Value Objects
 
