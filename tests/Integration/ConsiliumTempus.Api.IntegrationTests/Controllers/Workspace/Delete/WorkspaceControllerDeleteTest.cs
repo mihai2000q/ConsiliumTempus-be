@@ -45,15 +45,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
         var outcome = await Client.Delete($"api/workspaces/{workspace.Id}");
 
         // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var response = await outcome.Content.ReadFromJsonAsync<DeleteWorkspaceResponse>();
-        response!.Message.Should().Be("Workspace has been deleted successfully!");
-
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length - 1);
-        (await dbContext.Workspaces.FindAsync(workspace.Id))
-            .Should().BeNull();
+        await outcome.ValidateError(Errors.Workspace.UserWorkspace);
     }
 
     [Fact]

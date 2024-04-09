@@ -36,6 +36,8 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
             .Include(w => w.Owner)
             .Include(w => w.Memberships)
             .ThenInclude(m => m.User)
+            .Include(w => w.Memberships)
+            .ThenInclude(m => m.WorkspaceRole)
             .SingleAsync(w => w.Name.Value == request.Name);
         Utils.Workspace.AssertCreation(createdWorkspace, request, user);
     }

@@ -12,14 +12,14 @@ public static class WorkspaceFactory
     public static WorkspaceAggregate Create(
         string name = Constants.Workspace.Name,
         string description = Constants.Workspace.Description,
-        UserAggregate? user = null,
+        UserAggregate? owner = null,
         bool isUserWorkspace = false)
     {
-        user ??= UserFactory.Create();
+        owner ??= UserFactory.Create();
         return WorkspaceAggregate.Create(
             Name.Create(name), 
             Description.Create(description),
-            user,
+            owner,
             IsUserWorkspace.Create(isUserWorkspace));
     }
     

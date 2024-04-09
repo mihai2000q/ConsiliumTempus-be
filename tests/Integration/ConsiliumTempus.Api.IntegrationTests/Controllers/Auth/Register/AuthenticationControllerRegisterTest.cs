@@ -34,6 +34,8 @@ public class AuthenticationControllerRegisterTest(WebAppFactory factory)
             .Include(u => u.Memberships)
             .ThenInclude(m => m.Workspace)
             .ThenInclude(w => w.Owner)
+            .Include(u => u.Memberships)
+            .ThenInclude(m => m.WorkspaceRole)
             .Single(u => u.Credentials.Email == request.Email.ToLower());
         Utils.User.AssertRegistration(user, request);
         
