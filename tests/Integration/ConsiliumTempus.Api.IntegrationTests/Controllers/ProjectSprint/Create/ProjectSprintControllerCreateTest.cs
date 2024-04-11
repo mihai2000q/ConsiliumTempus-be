@@ -32,7 +32,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
         response!.Message.Should().Be("Project Sprint created successfully!");
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
         var createdProject = await dbContext.ProjectSprints
             .Include(p => p.Project)
@@ -50,7 +50,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         var outcome = await Client.Post("api/projects/sprints", request);
 
         // Assert
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length);
         dbContext.ProjectSprints.SingleOrDefault(p => p.Name.Value == request.Name)
             .Should().BeNull();

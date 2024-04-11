@@ -53,7 +53,7 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
     
     private async Task<WorkspaceAggregate?> GetWorkspaceById(Guid id)
     {
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         return await dbContext.Workspaces.SingleOrDefaultAsync(u => u.Id == WorkspaceId.Create(id));
     }
 }

@@ -31,7 +31,7 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
         response!.Message.Should().Be("Project created successfully!");
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length + 1);
         var createdProject = await dbContext.Projects
             .Include(p => p.Workspace)
@@ -69,7 +69,7 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length);
         dbContext.Projects.SingleOrDefault(p => p.Name.Value == request.Name).Should().BeNull();
     }

@@ -28,7 +28,7 @@ public class AuthenticationControllerRegisterTest(WebAppFactory factory)
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         // assert registered user in db
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users.Should().HaveCount(AuthData.Users.Length + 1);
         var user = dbContext.Users
             .Include(u => u.Memberships)
@@ -73,7 +73,7 @@ public class AuthenticationControllerRegisterTest(WebAppFactory factory)
         await outcome.ValidateError(Errors.User.DuplicateEmail);
         
         // assert users in db
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users.Should().HaveCount(AuthData.Users.Length);
         dbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
             .Should().NotBeNull();

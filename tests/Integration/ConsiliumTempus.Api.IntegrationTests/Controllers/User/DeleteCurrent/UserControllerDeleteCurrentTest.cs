@@ -32,7 +32,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
         response!.Message.Should().Be("User has been deleted successfully!");
         
         // assert user deleted
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users.Should().HaveCount(UserData.Users.Length - 1);
         (await dbContext.Users.FindAsync(user.Id))
             .Should().BeNull();
@@ -95,7 +95,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.User.NotFound);
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users.Should().HaveCount(UserData.Users.Length);
     }
 }

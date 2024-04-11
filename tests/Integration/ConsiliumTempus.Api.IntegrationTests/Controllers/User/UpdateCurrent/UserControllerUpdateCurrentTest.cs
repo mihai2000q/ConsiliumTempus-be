@@ -29,7 +29,7 @@ public class UserControllerUpdateCurrentTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<UpdateCurrentUserResponse>();
         response!.Message.Should().Be("Current user has been updated successfully!");
 
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedUser = await dbContext.Users.FindAsync(user.Id);
         Utils.User.AssertUpdate(user, updatedUser!, request);
     }

@@ -12,11 +12,6 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
 {
     public void Configure(EntityTypeBuilder<WorkspaceAggregate> builder)
     {
-        ConfigureWorkspacesTable(builder);
-    }
-
-    private static void ConfigureWorkspacesTable(EntityTypeBuilder<WorkspaceAggregate> builder)
-    {
         builder.ToTable(nameof(WorkspaceAggregate).TruncateAggregate());
 
         builder.HasIndex(w => w.Id);

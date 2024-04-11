@@ -28,7 +28,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<DeleteWorkspaceResponse>();
         response!.Message.Should().Be("Workspace has been deleted successfully!");
 
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length - 1);
         (await dbContext.Workspaces.FindAsync(workspace.Id))
             .Should().BeNull();
@@ -60,7 +60,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);
 
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length);
         dbContext.Workspaces.AsEnumerable()
             .SingleOrDefault(w => w.Id.Value == id)

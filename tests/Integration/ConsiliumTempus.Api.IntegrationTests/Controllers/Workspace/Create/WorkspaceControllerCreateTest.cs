@@ -30,7 +30,7 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<CreateWorkspaceResponse>();
         response!.Message.Should().Be("Workspace has been created successfully!");
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length + 1);
         var createdWorkspace = await dbContext.Workspaces
             .Include(w => w.Owner)
@@ -55,7 +55,7 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.User.NotFound);
 
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length);
     }
 }

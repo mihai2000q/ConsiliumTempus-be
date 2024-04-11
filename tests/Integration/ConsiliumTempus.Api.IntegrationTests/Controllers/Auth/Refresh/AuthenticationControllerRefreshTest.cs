@@ -37,7 +37,7 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
             JwtSettings, 
             refreshToken.User);
 
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedRefreshToken = await dbContext.Set<RefreshToken>()
             .SingleAsync(rt => rt.Id.ToString() == request.RefreshToken);
 

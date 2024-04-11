@@ -43,7 +43,7 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
 
     private async Task AddTestData(IEnumerable<IEnumerable<object>> data)
     {
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         foreach (var d in data.SelectMany(x => x))
         {
             await dbContext.AddAsync(d);
