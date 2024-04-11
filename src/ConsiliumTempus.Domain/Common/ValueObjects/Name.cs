@@ -5,7 +5,7 @@ namespace ConsiliumTempus.Domain.Common.ValueObjects;
 
 public sealed class Name : ValueObject
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private Name()
     {
     }

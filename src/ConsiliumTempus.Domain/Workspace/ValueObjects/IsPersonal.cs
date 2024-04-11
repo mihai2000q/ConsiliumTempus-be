@@ -5,7 +5,7 @@ namespace ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 public class IsPersonal : ValueObject
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private IsPersonal()
     {
     }

@@ -9,7 +9,7 @@ namespace ConsiliumTempus.Domain.User;
 
 public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private UserAggregate()
     {
     }

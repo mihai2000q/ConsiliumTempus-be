@@ -8,7 +8,7 @@ namespace ConsiliumTempus.Domain.Project.Entities;
 
 public sealed class ProjectSection : Entity<ProjectSectionId>
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectSection()
     {
     }

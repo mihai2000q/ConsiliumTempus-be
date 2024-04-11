@@ -5,7 +5,7 @@ namespace ConsiliumTempus.Domain.Common.Entities;
 
 public sealed class Permission : Entity<int>
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used for EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private Permission()
     {
     }

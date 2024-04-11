@@ -12,7 +12,7 @@ namespace ConsiliumTempus.Domain.Project;
 
 public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestamps
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectAggregate()
     {
     }

@@ -11,7 +11,7 @@ namespace ConsiliumTempus.Domain.ProjectTask;
 
 public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, ITimestamps
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectTaskAggregate()
     {
     }

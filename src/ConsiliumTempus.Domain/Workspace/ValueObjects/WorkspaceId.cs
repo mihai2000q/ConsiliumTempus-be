@@ -5,7 +5,7 @@ namespace ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 public sealed class WorkspaceId : AggregateRootId<Guid>
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private WorkspaceId()
     {
     }

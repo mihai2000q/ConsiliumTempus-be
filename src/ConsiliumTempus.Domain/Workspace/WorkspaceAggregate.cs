@@ -10,7 +10,7 @@ namespace ConsiliumTempus.Domain.Workspace;
 
 public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private WorkspaceAggregate()
     {
     }
