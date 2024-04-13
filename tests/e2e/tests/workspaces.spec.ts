@@ -4,7 +4,7 @@ import { expect } from "../utils/matchers";
 import { createWorkspace, getWorkspaces } from "../utils/workspaces.utils";
 import { deleteUser, registerUser } from "../utils/users.utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
-import UpdateWorkspaceRequest from "../types/requests/project/UpdateWorkspaceRequest";
+import UpdateWorkspaceRequest from "../types/requests/workspace/UpdateWorkspaceRequest";
 
 test.describe('should allow operations on the workspace entity', () => {
 
@@ -24,7 +24,7 @@ test.describe('should allow operations on the workspace entity', () => {
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    expect(await response.json()).toStrictEqual({
       name: workspace.name,
       description: workspace.description,
     })
@@ -36,7 +36,7 @@ test.describe('should allow operations on the workspace entity', () => {
     expect(response.ok()).toBeTruthy()
 
     const json = await response.json()
-    expect(json).toEqual({
+    expect(json).toStrictEqual({
       workspaces: expect.arrayContaining([
         {
           id: expect.any(String),
@@ -60,12 +60,12 @@ test.describe('should allow operations on the workspace entity', () => {
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    expect(await response.json()).toStrictEqual({
       message: expect.any(String)
     })
 
     const workspaces = await getWorkspaces(request)
-    expect(workspaces).toEqual(expect.arrayContaining([
+    expect(workspaces).toStrictEqual(expect.arrayContaining([
       {
         id: expect.any(String),
         name: body.name,
@@ -93,13 +93,13 @@ test.describe('should allow operations on the workspace entity', () => {
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    expect(await response.json()).toStrictEqual({
       message: expect.any(String)
     })
 
     const newWorkspaces = await getWorkspaces(request)
-    expect(newWorkspaces).not.toEqual(expect.arrayContaining([workspace]))
-    expect(newWorkspaces).toEqual(expect.arrayContaining([
+    expect(newWorkspaces).not.toStrictEqual(expect.arrayContaining([workspace]))
+    expect(newWorkspaces).toStrictEqual(expect.arrayContaining([
       {
         id: body.id,
         name: body.name,
@@ -115,16 +115,16 @@ test.describe('should allow operations on the workspace entity', () => {
     }
     const workspace = await createWorkspace(request, body)
 
-    const response = await request.delete(`/api/workspaces/${workspace}`, useToken())
+    const response = await request.delete(`/api/workspaces/${workspace.id}`, useToken())
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    expect(await response.json()).toStrictEqual({
       message: expect.any(String)
     })
 
     const newWorkspaces = await getWorkspaces(request)
-    expect(newWorkspaces).not.toEqual(expect.arrayContaining([workspace]))
+    expect(newWorkspaces).not.toStrictEqual(expect.arrayContaining([workspace]))
   })
 
 })

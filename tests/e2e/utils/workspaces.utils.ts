@@ -1,6 +1,5 @@
 import { APIRequestContext, expect } from "@playwright/test";
 import { useToken } from "./utils";
-import Workspace from "../types/models/Workspace";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
 
 export async function getPersonalWorkspace(request: APIRequestContext) {
@@ -30,5 +29,5 @@ export async function createWorkspace(
   })
   expect(response.ok()).toBeTruthy()
 
-  return (await getWorkspaces(request)).filter((w: Workspace) => w.name === body.name)[0]
+  return (await getWorkspaces(request)).filter((w: { name: string }) => w.name === body.name)[0]
 }
