@@ -9,7 +9,7 @@ namespace ConsiliumTempus.Domain.ProjectTask.Entities;
 
 public sealed class ProjectTaskComment : Entity<ProjectTaskCommentId>, ITimestamps
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectTaskComment()
     {
     }

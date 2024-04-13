@@ -28,7 +28,7 @@ public class ProjectControllerDeleteTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<DeleteProjectResponse>();
         response!.Message.Should().Be("Project has been deleted successfully!");
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length - 1);
     }
 
@@ -44,7 +44,7 @@ public class ProjectControllerDeleteTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Project.NotFound);
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length);
         dbContext.Projects.AsEnumerable()
             .SingleOrDefault(p => p.Id.Value == id).Should().BeNull();

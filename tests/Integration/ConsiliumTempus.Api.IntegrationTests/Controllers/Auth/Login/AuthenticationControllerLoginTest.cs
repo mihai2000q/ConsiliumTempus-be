@@ -32,7 +32,7 @@ public class AuthenticationControllerLoginTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<LoginResponse>();
         Utils.Auth.AssertToken(response?.Token, JwtSettings, user);
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Set<RefreshToken>().Should().HaveCount(AuthData.RefreshTokens.Length + 1);
         var refreshToken = await dbContext.Set<RefreshToken>()
             .Include(rt => rt.User)
@@ -58,7 +58,7 @@ public class AuthenticationControllerLoginTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users
             .SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
             .Should().BeNull();
@@ -80,7 +80,7 @@ public class AuthenticationControllerLoginTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users
             .SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
             .Should().NotBeNull();

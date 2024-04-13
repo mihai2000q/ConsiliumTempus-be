@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.User.GetCurrent;
 using ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
 using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Constants;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using FluentAssertions.Extensions;
 
@@ -54,8 +55,13 @@ internal static partial class Utils
 
             user.Memberships.Should().HaveCount(1);
             user.Memberships[0].User.Should().Be(user);
+            user.Memberships[0].WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+            user.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            user.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             user.Memberships[0].Workspace.Name.Value.Should().Be(Constants.Workspace.Name);
             user.Memberships[0].Workspace.Description.Value.Should().Be(Constants.Workspace.Description);
+            user.Memberships[0].Workspace.Owner.Should().Be(user);
+            user.Memberships[0].Workspace.IsPersonal.Value.Should().Be(true);
             user.Memberships[0].Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             user.Memberships[0].Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         }

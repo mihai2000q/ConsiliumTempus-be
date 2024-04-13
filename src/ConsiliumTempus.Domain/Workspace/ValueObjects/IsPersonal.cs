@@ -3,28 +3,23 @@ using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Domain.Workspace.ValueObjects;
 
-public sealed class WorkspaceId : AggregateRootId<Guid>
+public class IsPersonal : ValueObject
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
-    private WorkspaceId()
+    private IsPersonal()
     {
     }
 
-    private WorkspaceId(Guid value)
+    private IsPersonal(bool value)
     {
         Value = value;
     }
 
-    public override Guid Value { get; protected set; }
+    public bool Value { get; }
 
-    public static WorkspaceId CreateUnique()
+    public static IsPersonal Create(bool value)
     {
-        return new WorkspaceId(Guid.NewGuid());
-    }
-
-    public static WorkspaceId Create(Guid value)
-    {
-        return new WorkspaceId(value);
+        return new IsPersonal(value);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

@@ -4,6 +4,7 @@ using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ErrorOr;
 using MediatR;
 
@@ -23,7 +24,9 @@ public sealed class CreateWorkspaceCommandHandler(
 
         var workspace = WorkspaceAggregate.Create(
             Name.Create(command.Name),
-            Description.Create(command.Description));
+            Description.Create(command.Description),
+            user,
+            IsPersonal.Create(false));
         await workspaceRepository.Add(workspace, cancellationToken);
 
         var membership = Membership.Create(user, workspace, WorkspaceRole.Admin);

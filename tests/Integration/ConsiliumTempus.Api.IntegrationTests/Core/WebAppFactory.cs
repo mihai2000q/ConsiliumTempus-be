@@ -62,7 +62,7 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         await _dbContainer.StartAsync();
         // apply migrations to Test Database
         using var scope = Services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ConsiliumTempusDbContext>();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<ConsiliumTempusDbContext>();
         await dbContext.Database.MigrateAsync();
 
         _dbConnection = new SqlConnection(_dbContainer.GetConnectionString());

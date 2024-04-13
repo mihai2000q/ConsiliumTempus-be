@@ -8,7 +8,7 @@ namespace ConsiliumTempus.Domain.Project.Entities;
 
 public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectSprint()
     {
     }

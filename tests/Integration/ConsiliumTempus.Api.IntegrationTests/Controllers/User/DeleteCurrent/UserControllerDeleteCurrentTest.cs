@@ -4,7 +4,10 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
+using FluentAssertions.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.DeleteCurrent;
 
@@ -13,7 +16,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new UserData())
 {
     [Fact]
-    public async Task WhenDeleteCurrentUserIsSuccessful_ShouldDeleteAndReturnSuccessResponse()
+    public async Task WhenDeleteCurrentUserIsSuccessful_ShouldDeleteUserRelatedDataAndReturnSuccessResponse()
     {
         // Arrange
         var user = UserData.Users.First();
@@ -28,10 +31,55 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<DeleteCurrentUserResponse>();
         response!.Message.Should().Be("User has been deleted successfully!");
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        // assert user deleted
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users.Should().HaveCount(UserData.Users.Length - 1);
         (await dbContext.Users.FindAsync(user.Id))
             .Should().BeNull();
+        
+        // assert user deleted event
+        // assert 
+        var emptyWorkspaces = user.Memberships
+            .Select(m => m.Workspace)
+            .Where(w => w.Memberships.Count == 1)
+            .ToList();
+        dbContext.Workspaces.Should().HaveCount(UserData.Workspaces.Length - emptyWorkspaces.Count);
+        
+        var preservedWorkspaces = user.Memberships
+            .Select(m => m.Workspace)
+            .Where(w => w.Memberships.Count > 1)
+            .ToList();
+        var newPreservedWorkspaces = dbContext.Workspaces
+            .Include(w => w.Memberships)
+            .ThenInclude(m => m.User)
+            .Include(w => w.Memberships)
+            .Include(w => w.Owner)
+            .Where(w => preservedWorkspaces.Contains(w))
+            .ToList();
+        
+        newPreservedWorkspaces
+            .Should()
+            .AllSatisfy(w =>
+            {
+                w.Owner.Should().NotBe(user);
+                w.IsPersonal.Value.Should().BeFalse();
+                
+                var oldWorkspace = preservedWorkspaces.Single(x => x.Id == w.Id);
+                var newOwnerAdmin = oldWorkspace.Memberships
+                    .FirstOrDefault(m => m.WorkspaceRole.Equals(WorkspaceRole.Admin) && m.User != user);
+                if (newOwnerAdmin is not null)
+                {
+                    w.Owner.Id.Should().Be(newOwnerAdmin.User.Id);
+                }
+                else
+                {
+                    var newOwnerMembership = oldWorkspace.Memberships.First(m => m.User != user);
+                    newOwnerMembership.WorkspaceRole.Should().NotBe(WorkspaceRole.Admin);
+                    var newOwner = w.Memberships.Single(m => m.Id == newOwnerMembership.Id);
+                    newOwner.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+                    newOwner.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+                }
+            });
     }
     
     [Fact]
@@ -46,7 +94,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.User.NotFound);
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users.Should().HaveCount(UserData.Users.Length);
     }
 }

@@ -28,7 +28,7 @@ public class ProjectSprintControllerDeleteTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<DeleteProjectSprintResponse>();
         response!.Message.Should().Be("Project Sprint has been deleted successfully!");
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length - 1);
         (await dbContext.ProjectSprints.FindAsync(sprint.Id))
             .Should().BeNull();
@@ -46,7 +46,7 @@ public class ProjectSprintControllerDeleteTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.ProjectSprint.NotFound);
         
-        var dbContext = await DbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length);
         dbContext.ProjectSprints.AsEnumerable()
             .SingleOrDefault(p => p.Id.Value == id)

@@ -10,6 +10,7 @@ In addition, it also persists the timestamps and the role of the user inside the
 class Membership 
 {
     Membership Create()
+    void UpdateWorkspaceRole()
 }
 ```
 
@@ -19,13 +20,8 @@ class Membership
   "workspace": {},
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
-  "workspaceRole": {}
+  "workspaceRoleId": 2
 }
 ```
 
 For database design, check out the [Membership Diagram](../diagrams/entities/Diagram.Membership.md).
-
-## Domain Event
-
-- **Membership Created** when the membership gets created, 
-it will automatically attach the enum role to the Database Context (so that it does not throw a duplicate key error).

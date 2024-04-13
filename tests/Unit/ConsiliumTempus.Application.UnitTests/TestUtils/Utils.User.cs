@@ -31,7 +31,7 @@ internal static partial class Utils
             ((UserRegistered)user.DomainEvents[0]).User.Should().Be(user);
         }
 
-        internal static void AssertUpdate(
+        internal static void AssertFromUpdateCurrentCommand(
             UserAggregate user,
             UpdateCurrentUserCommand command)
         {

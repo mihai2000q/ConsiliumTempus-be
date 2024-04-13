@@ -42,7 +42,7 @@ public class UpdateCurrentUserCommandHandlerTest
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateCurrentUserResult());
-        Utils.User.AssertUpdate(currentUser, command);
+        Utils.User.AssertFromUpdateCurrentCommand(currentUser, command);
     }
     
     [Fact]

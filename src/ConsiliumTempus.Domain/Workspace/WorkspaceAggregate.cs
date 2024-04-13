@@ -3,13 +3,14 @@ using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Workspace;
 
 public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private WorkspaceAggregate()
     {
     }
@@ -18,11 +19,15 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         WorkspaceId id,
         Name name,
         Description description,
+        UserAggregate owner,
+        IsPersonal isPersonal,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
     {
         Name = name;
         Description = description;
+        Owner = owner;
+        IsPersonal = isPersonal;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
     }
@@ -32,6 +37,8 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
+    public IsPersonal IsPersonal { get; private set; } = default!;
+    public UserAggregate Owner { get; private set; } = default!;
     public DateTime CreatedDateTime { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
@@ -39,12 +46,16 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
 
     public static WorkspaceAggregate Create(
         Name name,
-        Description description)
+        Description description,
+        UserAggregate owner,
+        IsPersonal isPersonal)
     {
         var workspace = new WorkspaceAggregate(
             WorkspaceId.CreateUnique(),
             name,
             description,
+            owner,
+            isPersonal,
             DateTime.UtcNow,
             DateTime.UtcNow);
 
@@ -67,4 +78,15 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
     {
         _memberships.Add(membership);
     }
+
+    public void TransferOwnership(UserAggregate owner)
+    {
+        Owner = owner;
+    }
+    
+    public void UpdateIsPersonal(IsPersonal isPersonal)
+    {
+        IsPersonal = isPersonal;
+    }
+
 }

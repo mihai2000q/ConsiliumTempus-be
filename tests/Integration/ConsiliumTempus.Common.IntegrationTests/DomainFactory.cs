@@ -21,11 +21,18 @@ internal static class DomainFactory
         else
         {
             propertyInfo.DeclaringType?.GetRuntimeFields()
-                .Single(f => f.Name == GetBackingFieldName(propertyName))
-                .SetValue(obj, newProperty); 
+                .SingleOrDefault(f => f.Name == propertyName.ToObjectBackingField())
+                ?.SetValue(obj, newProperty);
         }
     }
-    
+
+    internal static void SetField<T>(ref T obj, string fieldName, object? newField)
+    {
+        typeof(T)
+            .GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
+            ?.SetValue(obj, newField);
+    }
+
     private static ConstructorInfo? GetDefaultPrivateConstructor<T>()
     {
         return typeof(T).GetConstructor(
@@ -34,9 +41,7 @@ internal static class DomainFactory
             Type.EmptyTypes,
             null);
     }
-    
-    private const string Prefix = "<";
-    private const string Suffix = ">k__BackingField";
 
-    private static string GetBackingFieldName(string propertyName) => $"{Prefix}{propertyName}{Suffix}";
+    private static string ToObjectBackingField(this string propertyName) =>
+        $"<{propertyName}>k__BackingField";
 }

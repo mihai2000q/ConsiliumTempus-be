@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Entities;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -21,9 +22,16 @@ public sealed class MembershipConfiguration : IEntityTypeConfiguration<Membershi
         builder.HasOne(m => m.Workspace)
             .WithMany(w => w.Memberships)
             .HasForeignKey(nameof(WorkspaceId));
-
-        builder.HasOne(m => m.WorkspaceRole)
-            .WithMany();
+        
+        builder.HasOne<WorkspaceRole>()
+            .WithMany()
+            .HasForeignKey(nameof(Membership.WorkspaceRole).ToIdBackingField())
+            .IsRequired();
+        
+        builder.Property(nameof(Membership.WorkspaceRole).ToIdBackingField())
+            .HasColumnName(nameof(Membership.WorkspaceRole).ToId());
+        
+        builder.Ignore(m => m.WorkspaceRole);
         
         builder.HasKey(nameof(UserId), nameof(WorkspaceId));
     }
