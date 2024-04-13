@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
+using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
@@ -18,7 +19,7 @@ internal static partial class Utils
                 .Zip(projects)
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
         }
-        
+
         internal static void AssertGetCollectionForWorkspaceResponse(
             GetCollectionProjectForWorkspaceResponse response,
             IEnumerable<ProjectAggregate> projects)
@@ -27,20 +28,26 @@ internal static partial class Utils
                 .Zip(projects)
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
         }
-        
+
         internal static void AssertCreation(ProjectAggregate project, CreateProjectRequest request)
         {
             project.Name.Value.Should().Be(request.Name);
             project.Description.Value.Should().Be(request.Description);
+            project.IsFavorite.Value.Should().Be(false);
             project.IsPrivate.Value.Should().Be(request.IsPrivate);
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            project.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            
             project.Workspace.Id.Value.Should().Be(request.WorkspaceId);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
             project.Sprints.Should().HaveCount(1);
             project.Sprints[0].Sections.Should().HaveCount(Constants.ProjectSection.Names.Length);
             project.Sprints[0].Sections[0].Tasks
                 .Should().HaveCount(Constants.ProjectTask.Names.Length);
         }
-        
+
         private static void AssertResponse(
             GetCollectionProjectForUserResponse.ProjectResponse projectResponse,
             ProjectAggregate project)
@@ -48,7 +55,7 @@ internal static partial class Utils
             projectResponse.Id.Should().Be(project.Id.Value);
             projectResponse.Name.Should().Be(project.Name.Value);
         }
-        
+
         private static void AssertResponse(
             GetCollectionProjectForWorkspaceResponse.ProjectResponse projectResponse,
             ProjectAggregate project)

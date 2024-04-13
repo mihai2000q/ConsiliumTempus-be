@@ -21,6 +21,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         Description description,
         UserAggregate owner,
         IsPersonal isPersonal,
+        DateTime lastActivity,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
     {
@@ -28,6 +29,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         Description = description;
         Owner = owner;
         IsPersonal = isPersonal;
+        LastActivity = lastActivity;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
     }
@@ -39,7 +41,8 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
     public Description Description { get; private set; } = default!;
     public IsPersonal IsPersonal { get; private set; } = default!;
     public UserAggregate Owner { get; private set; } = default!;
-    public DateTime CreatedDateTime { get; private set; }
+    public DateTime LastActivity { get; private set; }
+    public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
     public IReadOnlyList<ProjectAggregate> Projects => _projects.AsReadOnly();
@@ -56,6 +59,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
             description,
             owner,
             isPersonal,
+            DateTime.UtcNow, 
             DateTime.UtcNow,
             DateTime.UtcNow);
 
@@ -66,12 +70,13 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
     {
         Name = name;
         Description = description;
+        LastActivity = DateTime.UtcNow;
         UpdatedDateTime = DateTime.UtcNow;
     }
 
-    public void RefreshUpdatedDateTime()
+    public void RefreshActivity()
     {
-        UpdatedDateTime = DateTime.UtcNow;
+        LastActivity = DateTime.UtcNow;
     }
 
     public void AddUserMembership(Membership membership)

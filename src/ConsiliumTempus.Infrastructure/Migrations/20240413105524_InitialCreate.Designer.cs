@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240413100558_InitialCreate")]
+    [Migration("20240413105524_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -363,6 +363,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("LastActivity")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("datetime2");
 
@@ -445,6 +448,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastActivity")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("OwnerId")

@@ -29,7 +29,7 @@ public sealed class CreateProjectSprintCommandHandler(
             command.EndDate);
         await projectSprintRepository.Add(projectSprint, cancellationToken);
 
-        project.RefreshUpdatedDateTime();
+        project.RefreshActivity();
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

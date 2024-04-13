@@ -13,6 +13,7 @@ public static class WorkspaceFactory
         string name = Constants.Workspace.Name,
         string description = Constants.Workspace.Description,
         bool isPersonal = false,
+        DateTime? lastActivity = null,
         DateTime? createdDateTime = null,
         DateTime? updatedDateTime = null)
     {
@@ -23,6 +24,7 @@ public static class WorkspaceFactory
         DomainFactory.SetProperty(ref workspace, nameof(workspace.Description), Description.Create(description));
         DomainFactory.SetProperty(ref workspace, nameof(workspace.Owner), owner);
         DomainFactory.SetProperty(ref workspace, nameof(workspace.IsPersonal), IsPersonal.Create(isPersonal));
+        DomainFactory.SetProperty(ref workspace, nameof(workspace.LastActivity), lastActivity ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref workspace, nameof(workspace.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref workspace, nameof(workspace.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
 
