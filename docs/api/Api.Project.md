@@ -20,7 +20,8 @@ This is the controller that takes care of creating, reading, updating and deleti
 
 ### Get Collection For Workspace
 
-Anyone that is part of the workspace can read the projects.
+Anyone that is part of the workspace can read the projects 
+([Read Collection Project Permission](../Security.md/#permissions)).
 
 ```js
 GET {{host}}/api/projects/workspace?workspaceId={workspaceId}
