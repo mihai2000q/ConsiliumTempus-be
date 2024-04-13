@@ -1,6 +1,7 @@
 import { expect } from '../utils/matchers';
 import { test } from "@playwright/test";
-import { deleteUser, getCurrentUser, getUserId, registerUser, useToken } from "../utils/utils";
+import { useToken } from "../utils/utils";
+import { deleteUser, getCurrentUser, registerUser } from "../utils/users.utils";
 
 test.describe('should allow operations on the user entity', () => {
   const EMAIL = "michaeljordan@example.com"
@@ -28,12 +29,12 @@ test.describe('should allow operations on the user entity', () => {
   })
 
   test('should get user', async ({ request }) => {
-    const userId = await getUserId(request)
-    const response = await request.get(`api/users/${userId}`, useToken())
+    const currentUser = await getCurrentUser(request)
+    const response = await request.get(`api/users/${currentUser.id}`, useToken())
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    expect(await response.json()).toStrictEqual({
       firstName: FIRSTNAME,
       lastName: LASTNAME,
       email: EMAIL,
@@ -46,7 +47,7 @@ test.describe('should allow operations on the user entity', () => {
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    expect(await response.json()).toStrictEqual({
       id: expect.any(String),
       firstName: FIRSTNAME,
       lastName: LASTNAME,
@@ -71,13 +72,13 @@ test.describe('should allow operations on the user entity', () => {
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    expect(await response.json()).toStrictEqual({
       message: expect.any(String)
     })
 
     const newUser = await getCurrentUser(request)
 
-    expect(newUser).toEqual({
+    expect(newUser).toStrictEqual({
       id: expect.any(String),
       firstName: body.firstName,
       lastName: body.lastName,
@@ -96,7 +97,7 @@ test.describe('should allow removal of the user entity', () => {
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    expect(await response.json()).toStrictEqual({
       message: expect.any(String)
     })
 
