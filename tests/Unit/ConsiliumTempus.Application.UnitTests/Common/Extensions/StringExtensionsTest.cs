@@ -5,6 +5,44 @@ namespace ConsiliumTempus.Application.UnitTests.Common.Extensions;
 
 public class StringExtensionsTest
 {
+    [Theory]
+    [ClassData(typeof(StringExtensionsData.GetValidToId))]
+    public void ToBackingField_WhenValid_ShouldReturnStringWithIdNotation(string input, string expected)
+    {
+        // Arrange - parameterized
+
+        // Act
+        var outcome1 = input.ToId();
+
+        // Assert
+        outcome1.Should().Be(expected);
+    }
+    
+    [Theory]
+    [ClassData(typeof(StringExtensionsData.GetValidToBackingField))]
+    public void ToBackingField_WhenValid_ShouldReturnStringWithBackingFieldNotation(string input, string expected)
+    {
+        // Arrange - parameterized
+
+        // Act
+        var outcome1 = input.ToBackingField();
+
+        // Assert
+        outcome1.Should().Be(expected);
+    }
+    
+    [Theory]
+    [ClassData(typeof(StringExtensionsData.GetValidToIdBackingField))]
+    public void ToIdBackingField_WhenValid_ShouldReturnStringWithIdBackingFieldNotation(string input, string expected)
+    {
+        // Arrange - parameterized
+
+        // Act
+        var outcome1 = input.ToIdBackingField();
+
+        // Assert
+        outcome1.Should().Be(expected);
+    }
 
     [Theory]
     [ClassData(typeof(StringExtensionsData.GetValidTruncateAggregate))]
@@ -17,19 +55,6 @@ public class StringExtensionsTest
 
         // Assert
         outcome1.Should().Be(expected);
-    }
-    
-    [Fact]
-    public void TruncateAggregate_WhenEmpty_ShouldReturnEmpty()
-    {
-        // Arrange
-        const string input = "";
-
-        // Act
-        var outcome = input.TruncateAggregate();
-
-        // Assert
-        outcome.Should().BeEmpty();
     }
 
     [Fact]

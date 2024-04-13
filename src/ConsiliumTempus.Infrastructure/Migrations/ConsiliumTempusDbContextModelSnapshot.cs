@@ -36,14 +36,15 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("WorkspaceRoleId")
-                        .HasColumnType("int");
+                    b.Property<int>("_workspaceRoleId")
+                        .HasColumnType("int")
+                        .HasColumnName("WorkspaceRoleId");
 
                     b.HasKey("UserId", "WorkspaceId");
 
                     b.HasIndex("WorkspaceId");
 
-                    b.HasIndex("WorkspaceRoleId");
+                    b.HasIndex("_workspaceRoleId");
 
                     b.ToTable("Membership", (string)null);
                 });
@@ -472,17 +473,15 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.WorkspaceRole", "WorkspaceRole")
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.WorkspaceRole", null)
                         .WithMany()
-                        .HasForeignKey("WorkspaceRoleId")
+                        .HasForeignKey("_workspaceRoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
 
                     b.Navigation("Workspace");
-
-                    b.Navigation("WorkspaceRole");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.RefreshToken", b =>

@@ -12,14 +12,13 @@ public sealed class PermissionRepository(ConsiliumTempusDbContext dbContext) : I
     public async Task<HashSet<string>> GetPermissions(UserId userId, WorkspaceId workspaceId)
     {
         var membership = await dbContext.Set<Membership>()
-            .Include(m => m.WorkspaceRole)
-            .ThenInclude(wr => wr.Permissions)
             .SingleOrDefaultAsync(u => u.User.Id == userId && u.Workspace.Id == workspaceId);
 
         if (membership is null) return [];
 
-        return membership
-            .WorkspaceRole
+        return dbContext.Set<WorkspaceRole>()
+            .Include(wr => wr.Permissions)
+            .Single(wr => wr == membership.WorkspaceRole)
             .Permissions
             .Select(x => x.Name)
             .ToHashSet();

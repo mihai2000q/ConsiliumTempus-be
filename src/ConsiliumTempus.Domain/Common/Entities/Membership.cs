@@ -20,21 +20,23 @@ public sealed class Membership : Entity<(UserId, WorkspaceId)>, ITimestamps
         WorkspaceAggregate workspace,
         DateTime createdDateTime,
         DateTime updatedDateTime,
-        WorkspaceRole workspaceRole) : base((user.Id, workspace.Id))
+        int workspaceRoleId) : base((user.Id, workspace.Id))
     {
         User = user;
         Workspace = workspace;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
-        WorkspaceRole = workspaceRole;
+        _workspaceRoleId = workspaceRoleId;
     }
+
+    private int _workspaceRoleId;
     
     public override (UserId, WorkspaceId) Id => new (User.Id, Workspace.Id);
     public UserAggregate User { get; init; } = null!;
     public WorkspaceAggregate Workspace { get; init; } = null!;
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
-    public WorkspaceRole WorkspaceRole { get; private set; } = null!;
+    public WorkspaceRole WorkspaceRole => WorkspaceRole.GetValues().Single(wr => wr.Id == _workspaceRoleId); 
 
     public static Membership Create(
         UserAggregate user,
@@ -46,12 +48,12 @@ public sealed class Membership : Entity<(UserId, WorkspaceId)>, ITimestamps
             workspace,
             DateTime.UtcNow, 
             DateTime.UtcNow, 
-            workspaceRole);
+            workspaceRole.Id);
     }
 
     public void UpdateWorkspaceRole(WorkspaceRole role)
     {
-        WorkspaceRole = role;
+        _workspaceRoleId = role.Id;
         UpdatedDateTime = DateTime.UtcNow;
     }
 }

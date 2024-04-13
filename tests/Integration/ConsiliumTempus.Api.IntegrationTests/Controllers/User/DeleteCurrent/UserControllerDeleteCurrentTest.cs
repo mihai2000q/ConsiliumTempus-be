@@ -53,7 +53,6 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
             .Include(w => w.Memberships)
             .ThenInclude(m => m.User)
             .Include(w => w.Memberships)
-            .ThenInclude(m => m.WorkspaceRole)
             .Include(w => w.Owner)
             .Where(w => preservedWorkspaces.Contains(w))
             .ToList();

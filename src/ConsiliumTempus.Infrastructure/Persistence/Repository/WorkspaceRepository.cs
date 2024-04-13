@@ -53,7 +53,6 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .Include(w => w.Memberships)
             .ThenInclude(m => m.User)
             .Include(w => w.Memberships)
-            .ThenInclude(m => m.WorkspaceRole)
             .Where(w => w.Memberships.Any(m => m.User == user))
             .ToListAsync(cancellationToken);
     }
