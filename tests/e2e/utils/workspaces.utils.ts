@@ -3,7 +3,7 @@ import { useToken } from "./utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
 
 export async function getPersonalWorkspace(request: APIRequestContext) {
-  const response = await request.get('/api/workspaces')
+  const response = await request.get('/api/workspaces', useToken())
   expect(response.ok()).toBeTruthy()
   const json = await response.json()
   expect(json.workspaces).toHaveLength(1)

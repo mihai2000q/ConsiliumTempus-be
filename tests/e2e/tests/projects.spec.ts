@@ -2,17 +2,16 @@ import { test } from "@playwright/test";
 import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
 import { deleteUser, registerUser } from "../utils/users.utils";
-import { createWorkspace, getPersonalWorkspace } from "../utils/workspaces.utils";
+import { getPersonalWorkspace } from "../utils/workspaces.utils";
 import { create2ProjectsIn2DifferentWorkspaces, createProject, getProjectsForUser } from "../utils/projects.utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
-import { create } from "node:domain";
 
 test.describe('should allow operations on the project entity', () => {
   let WORKSPACE_ID: string
 
   test.beforeEach('should register user and get workspace id', async ({ request }) => {
     process.env.API_TOKEN = (await registerUser(request)).token
-    WORKSPACE_ID = await getPersonalWorkspace(request)
+    WORKSPACE_ID = (await getPersonalWorkspace(request)).id
   })
 
   test.afterEach('should delete user', async ({ request }) => {
