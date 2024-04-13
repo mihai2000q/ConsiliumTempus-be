@@ -18,7 +18,7 @@ public sealed class WorkspaceRole : Enumeration<WorkspaceRole>
         Description = "This role can do everything"
     };
     
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used for EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private WorkspaceRole()
     {
     }

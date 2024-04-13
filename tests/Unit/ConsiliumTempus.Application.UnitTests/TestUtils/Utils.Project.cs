@@ -35,7 +35,7 @@ internal static partial class Utils
             return true;
         }
     }
-    
+
     internal static class ProjectSprint
     {
         internal static bool AssertFromCreateCommand(
@@ -47,11 +47,13 @@ internal static partial class Utils
             projectSprint.Name.Value.Should().Be(command.Name);
             projectSprint.StartDate.Should().Be(command.StartDate);
             projectSprint.EndDate.Should().Be(command.EndDate);
+
             projectSprint.Project.Should().Be(project);
             projectSprint.Project
-                .UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+                .LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+
             projectSprint.Project.Workspace
-                .UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+                .LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
             return true;
         }

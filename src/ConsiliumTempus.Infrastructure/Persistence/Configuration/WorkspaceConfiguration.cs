@@ -12,11 +12,6 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
 {
     public void Configure(EntityTypeBuilder<WorkspaceAggregate> builder)
     {
-        ConfigureWorkspacesTable(builder);
-    }
-
-    private static void ConfigureWorkspacesTable(EntityTypeBuilder<WorkspaceAggregate> builder)
-    {
         builder.ToTable(nameof(WorkspaceAggregate).TruncateAggregate());
 
         builder.HasIndex(w => w.Id);
@@ -35,5 +30,13 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
             .Property(d => d.Value)
             .HasColumnName(nameof(Description))
             .HasMaxLength(PropertiesValidation.Workspace.DescriptionMaximumLength);
+
+        builder.OwnsOne(w => w.IsPersonal)
+            .Property(n => n.Value)
+            .HasColumnName(nameof(IsPersonal));
+        
+        builder.HasOne(w => w.Owner)
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

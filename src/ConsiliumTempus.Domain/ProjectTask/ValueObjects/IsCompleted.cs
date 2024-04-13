@@ -5,7 +5,7 @@ namespace ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 
 public sealed class IsCompleted : ValueObject
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private IsCompleted()
     {
     }

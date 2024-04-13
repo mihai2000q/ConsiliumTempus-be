@@ -57,7 +57,7 @@ public class AppHttpClient(
 
     private JwtSecurityToken GetToken(UserAggregate? user = null)
     {
-        var dbContext = dbContextFactory.CreateDbContext();
+        using var dbContext = dbContextFactory.CreateDbContext();
         user ??= dbContext.Users.First();
         return Utils.Token.GenerateValidToken(user, jwtSettings);
     }

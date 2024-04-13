@@ -40,9 +40,11 @@ public class UpdateWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-
+        
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateWorkspaceResult());
+        
+        Utils.Workspace.AssertFromUpdateCommand(workspace, command);
     }
 
     [Fact]

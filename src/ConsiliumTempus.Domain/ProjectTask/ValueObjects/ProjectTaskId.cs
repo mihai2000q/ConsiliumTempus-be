@@ -5,7 +5,7 @@ namespace ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 
 public sealed class ProjectTaskId : AggregateRootId<Guid>
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectTaskId()
     {
     }

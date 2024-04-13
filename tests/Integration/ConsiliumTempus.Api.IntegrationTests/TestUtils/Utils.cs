@@ -10,6 +10,7 @@ internal static partial class Utils
 {
     private static readonly Dictionary<ErrorType, HttpStatusCode> ErrorCodeToHttpStatusMap = new()
     {
+        { ErrorType.Validation, HttpStatusCode.BadRequest },
         { ErrorType.Unauthorized, HttpStatusCode.Unauthorized },
         { ErrorType.NotFound, HttpStatusCode.NotFound },
         { ErrorType.Conflict, HttpStatusCode.Conflict }
@@ -17,6 +18,7 @@ internal static partial class Utils
     
     private static readonly Dictionary<HttpStatusCode, int> StatusCodesMap = new()
     {
+        { HttpStatusCode.BadRequest, StatusCodes.Status400BadRequest },
         { HttpStatusCode.Unauthorized, StatusCodes.Status401Unauthorized },
         { HttpStatusCode.NotFound, StatusCodes.Status404NotFound },
         { HttpStatusCode.Conflict, StatusCodes.Status409Conflict }

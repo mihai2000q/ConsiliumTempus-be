@@ -11,11 +11,6 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
 {
     public void Configure(EntityTypeBuilder<UserAggregate> builder)
     {
-        ConfigureUsersTable(builder);
-    }
-
-    private static void ConfigureUsersTable(EntityTypeBuilder<UserAggregate> builder)
-    {
         builder.ToTable(nameof(UserAggregate).TruncateAggregate());
 
         builder.HasKey(u => u.Id);

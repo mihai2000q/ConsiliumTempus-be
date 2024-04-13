@@ -20,11 +20,11 @@ public sealed class PublishDomainEventsInterceptor(IPublisher mediator) : SaveCh
         InterceptionResult<int> result,
         CancellationToken cancellationToken = new())
     {
-        await PublishDomainEvents(eventData.Context);
+        await PublishDomainEvents(eventData.Context, cancellationToken);
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private async Task PublishDomainEvents(DbContext? dbContext)
+    private async Task PublishDomainEvents(DbContext? dbContext, CancellationToken cancellationToken = default)
     {
         if (dbContext is null) return;
 
@@ -33,7 +33,8 @@ public sealed class PublishDomainEventsInterceptor(IPublisher mediator) : SaveCh
         do
         {
             // Get hold of all the entities
-            entitiesWithDomainEvents = dbContext.ChangeTracker.Entries<IHasDomainEvents>()
+            entitiesWithDomainEvents = dbContext.ChangeTracker
+                .Entries<IHasDomainEvents>()
                 .Select(entry => entry.Entity)
                 .Where(entry => entry.DomainEvents.Any())
                 .ToList();
@@ -47,7 +48,7 @@ public sealed class PublishDomainEventsInterceptor(IPublisher mediator) : SaveCh
             entitiesWithDomainEvents.ForEach(entity => entity.ClearDomainEvents());
 
             // Publish domain events
-            foreach (var domainEvent in domainEvents) await mediator.Publish(domainEvent);
+            foreach (var domainEvent in domainEvents) await mediator.Publish(domainEvent, cancellationToken);
         } while (entitiesWithDomainEvents.Count > 0);
     }
 }

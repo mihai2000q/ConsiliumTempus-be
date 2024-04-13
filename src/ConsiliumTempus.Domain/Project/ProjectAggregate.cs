@@ -12,7 +12,7 @@ namespace ConsiliumTempus.Domain.Project;
 
 public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestamps
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectAggregate()
     {
     }
@@ -24,6 +24,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         IsFavorite isFavorite,
         IsPrivate isPrivate,
         WorkspaceAggregate workspace,
+        DateTime lastActivity,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
     {
@@ -32,6 +33,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         IsFavorite = isFavorite;
         IsPrivate = isPrivate;
         Workspace = workspace;
+        LastActivity = lastActivity;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
     }
@@ -42,6 +44,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     public Description Description { get; private set; } = default!;
     public IsFavorite IsFavorite { get; private set; } = default!;
     public IsPrivate IsPrivate { get; private set; } = default!;
+    public DateTime LastActivity { get; private set; }
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
     public WorkspaceAggregate Workspace { get; init; } = default!;
@@ -62,6 +65,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
             isPrivate,
             workspace,
             DateTime.UtcNow,
+            DateTime.UtcNow,
             DateTime.UtcNow);
 
         project.AddDomainEvent(new ProjectCreated(project, user));
@@ -74,9 +78,9 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         _sprints.Add(sprint);
     }
 
-    public void RefreshUpdatedDateTime()
+    public void RefreshActivity()
     {
-        UpdatedDateTime = DateTime.UtcNow;
-        Workspace.RefreshUpdatedDateTime();
+        LastActivity = DateTime.UtcNow;
+        Workspace.RefreshActivity();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
+using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -18,9 +19,15 @@ internal static partial class Utils
             membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             membership.User.Should().Be(user);
             membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
-            membership.Workspace.Id.Should().NotBeNull();
+
+            membership.Workspace.Id.Value.Should().NotBeEmpty();
             membership.Workspace.Name.Value.Should().Be(workspaceName);
             membership.Workspace.Description.Value.Should().Be(workspaceDescription);
+            membership.Workspace.Owner.Should().Be(user);
+            membership.Workspace.IsPersonal.Value.Should().Be(true);
+            membership.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            membership.Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            membership.Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
     }
 }

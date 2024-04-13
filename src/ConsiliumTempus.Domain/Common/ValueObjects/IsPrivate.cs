@@ -5,7 +5,7 @@ namespace ConsiliumTempus.Domain.Common.ValueObjects;
 
 public sealed class IsPrivate : ValueObject
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private IsPrivate()
     {
     }

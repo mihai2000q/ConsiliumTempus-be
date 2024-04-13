@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.DeleteCurrent;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.User.Events;
 
 namespace ConsiliumTempus.Application.UnitTests.User.Commands.DeleteCurrent;
 
@@ -48,6 +49,10 @@ public class DeleteCurrentUserCommandHandlerTest
         
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteCurrentUserResult());
+
+        user.DomainEvents.Should().HaveCount(1);
+        user.DomainEvents[0].Should().BeOfType<UserDeleted>();
+        ((UserDeleted)user.DomainEvents[0]).User.Should().Be(user);
     }
     
     [Fact]

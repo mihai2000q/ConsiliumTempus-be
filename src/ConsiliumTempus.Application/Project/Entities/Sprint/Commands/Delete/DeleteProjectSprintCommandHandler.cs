@@ -23,7 +23,7 @@ public sealed class DeleteProjectSprintCommandHandler(
         
         projectSprintRepository.Remove(projectSprint);
         
-        projectSprint.Project.RefreshUpdatedDateTime();
+        projectSprint.Project.RefreshActivity();
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

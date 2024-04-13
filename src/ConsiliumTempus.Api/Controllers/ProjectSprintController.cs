@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.Controllers;
 
-[Route("api/projects/sprints")]
+[Route("Api/Projects/Sprints")]
 public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
     [HasPermission(Permissions.CreateProjectSprint)]

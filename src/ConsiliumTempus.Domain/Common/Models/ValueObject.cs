@@ -35,4 +35,11 @@ public abstract class ValueObject : IEquatable<ValueObject>
             .Select(x => x?.GetHashCode() ?? 0)
             .Aggregate((x, y) => x ^ y);
     }
+
+    public override string ToString()
+    {
+        return GetEqualityComponents()
+            .Aggregate("", (current, c) => current + c + ", ")
+            .TrimEnd(' ', ',');
+    }
 }

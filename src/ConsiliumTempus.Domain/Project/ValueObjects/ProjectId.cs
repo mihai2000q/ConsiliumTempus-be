@@ -5,7 +5,7 @@ namespace ConsiliumTempus.Domain.Project.ValueObjects;
 
 public sealed class ProjectId : AggregateRootId<Guid>
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Local")] // used by EF
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectId()
     {
     }
