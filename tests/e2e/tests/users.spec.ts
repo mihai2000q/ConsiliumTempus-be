@@ -26,7 +26,7 @@ test.describe('should allow operations on the user entity', () => {
   })
 
   test.afterEach('should delete user', async ({ request }) => {
-    await deleteUser(request)
+    await deleteUser(request, { email: EMAIL, password: PASSWORD })
   })
 
   test('should get user', async ({ request }) => {
@@ -62,7 +62,8 @@ test.describe('should allow operations on the user entity', () => {
     const body: UpdateUserRequest = {
       firstName: "Michelle",
       lastName: "Moron",
-      role: null
+      role: "CEO",
+      dateOfBirth: null
     }
 
     const response = await request.put('api/users/current', {

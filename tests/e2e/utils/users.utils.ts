@@ -1,5 +1,7 @@
 import { APIRequestContext, expect } from "@playwright/test";
 import { useToken } from "./utils";
+import RegisterRequest from "../types/requests/auth/RegisterRequest";
+import LoginRequest from "../types/requests/auth/LoginRequest";
 
 const EMAIL = "michaeljordan@example.com"
 const PASSWORD = "Password123"
@@ -29,18 +31,20 @@ export async function registerUser(
   role: string = ROLE,
   dateOfBirth: string = DATE_OF_BIRTH
 ) {
+  const body: RegisterRequest = {
+    email: email,
+    password: password,
+    firstName: firstName,
+    lastName: lastName,
+    role: role,
+    dateOfBirth: dateOfBirth
+  }
+
   const res = await request.post('api/auth/register', {
     headers: {
       'Authorization': ''
     },
-    data: {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      password: password,
-      role: role,
-      dateOfBirth: dateOfBirth
-    }
+    data: body
   })
 
   expect(res.ok()).toBeTruthy()
@@ -50,11 +54,13 @@ export async function registerUser(
 
 export async function deleteUser(
   request: APIRequestContext,
-  email: String = EMAIL,
-  password: String = PASSWORD
+  body: LoginRequest = {
+    email: EMAIL,
+    password: PASSWORD
+  }
 ) {
   const token = process.env.API_TOKEN == undefined
-    ? (await loginUser(request, email, password)).token
+    ? (await loginUser(request, body)).token
     : process.env.API_TOKEN
 
   const res = await request.delete('api/users/current', useToken(token))
@@ -64,17 +70,16 @@ export async function deleteUser(
 
 export async function loginUser(
   request: APIRequestContext,
-  email: String = EMAIL,
-  password: String = PASSWORD
+  body: LoginRequest = {
+    email: EMAIL,
+    password: PASSWORD
+  }
 ) {
   const res = await request.post('api/auth/login', {
     headers: {
       'Authorization': ''
     },
-    data: {
-      email: email,
-      password: password,
-    }
+    data: body
   })
 
   expect(res.ok()).toBeTruthy()

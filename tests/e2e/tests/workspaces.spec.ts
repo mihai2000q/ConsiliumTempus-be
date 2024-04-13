@@ -1,6 +1,10 @@
-import { APIRequestContext, test } from "@playwright/test";
-import { deleteUser, registerUser, useToken } from "../utils/utils";
+import { test } from "@playwright/test";
+import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
+import { createWorkspace, getWorkspaces } from "../utils/workspaces.utils";
+import { deleteUser, registerUser } from "../utils/users.utils";
+import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
+import UpdateWorkspaceRequest from "../types/requests/project/UpdateWorkspaceRequest";
 
 test.describe('should allow operations on the workspace entity', () => {
 
@@ -31,7 +35,8 @@ test.describe('should allow operations on the workspace entity', () => {
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    const json = await response.json()
+    expect(json).toEqual({
       workspaces: expect.arrayContaining([
         {
           id: expect.any(String),
@@ -40,6 +45,7 @@ test.describe('should allow operations on the workspace entity', () => {
         }
       ]),
     })
+    expect(json.workspaces).toHaveLength(1)
   })
 
   test('should create workspace', async ({ request }) => {
@@ -69,15 +75,13 @@ test.describe('should allow operations on the workspace entity', () => {
   })
 
   test('should update workspace', async ({ request }) => {
-    const oldBody = {
+    const oldBody: CreateWorkspaceRequest = {
       name: "Some workspace",
       description: "This was the workspace"
     }
-    await addWorkspace(request, oldBody)
-    const workspaces = await getWorkspaces(request)
-    const workspace = workspaces.filter((w: { name: string }) => w.name === oldBody.name)[0]
+    const workspace = await createWorkspace(request, oldBody)
 
-    const body = {
+    const body: UpdateWorkspaceRequest = {
       id: workspace.id,
       name: "New Workspace Name",
       description: "This is a new workspace description"
@@ -105,13 +109,11 @@ test.describe('should allow operations on the workspace entity', () => {
   })
 
   test('should delete workspace', async ({ request }) => {
-    const body = {
+    const body: CreateWorkspaceRequest = {
       name: "New Team",
       description: "This is a new team"
     }
-    await addWorkspace(request, body)
-    const workspaces = await getWorkspaces(request)
-    const workspace = workspaces.filter((w: { name: string }) => w.name === body.name)[0].id
+    const workspace = await createWorkspace(request, body)
 
     const response = await request.delete(`/api/workspaces/${workspace}`, useToken())
 
@@ -125,17 +127,4 @@ test.describe('should allow operations on the workspace entity', () => {
     expect(newWorkspaces).not.toEqual(expect.arrayContaining([workspace]))
   })
 
-  async function getWorkspaces(request: APIRequestContext) {
-    const response = await request.get('/api/workspaces', useToken())
-    expect(response.ok()).toBeTruthy()
-    return (await response.json()).workspaces
-  }
-
-  async function addWorkspace(request: APIRequestContext, body: { name: string; description: string }) {
-    const response = await request.post('/api/workspaces', {
-      ...useToken(),
-      data: body
-    })
-    expect(response.ok()).toBeTruthy()
-  }
 })

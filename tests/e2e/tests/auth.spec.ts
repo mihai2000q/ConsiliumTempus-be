@@ -9,7 +9,7 @@ test.describe('should allow anonymous authentication', () => {
   const PASSWORD = "Password123"
 
   test.afterEach('should delete user', async ({ request }) => {
-    await deleteUser(request, EMAIL, PASSWORD)
+    await deleteUser(request, { email: EMAIL, password: PASSWORD })
   })
 
   test('should register and return tokens', async ({ request }) => {
