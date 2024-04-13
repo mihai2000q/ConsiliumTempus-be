@@ -33,7 +33,7 @@ public sealed class CreateProjectCommandHandler(
             user!);
         await projectRepository.Add(project, cancellationToken);
 
-        workspace.RefreshUpdatedDateTime();
+        workspace.RefreshActivity();
 
         return new CreateProjectResult();
     }

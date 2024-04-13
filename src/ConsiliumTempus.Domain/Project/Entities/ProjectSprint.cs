@@ -46,7 +46,7 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
         DateOnly? startDate = null,
         DateOnly? endDate = null)
     {
-        return new ProjectSprint(
+        var sprint = new ProjectSprint(
             ProjectSprintId.CreateUnique(),
             name,
             project,
@@ -54,6 +54,10 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
             DateTime.UtcNow,
             startDate,
             endDate);
+        
+        sprint.Project.RefreshActivity();
+        
+        return sprint;
     }
 
     public void AddSection(ProjectSection section)

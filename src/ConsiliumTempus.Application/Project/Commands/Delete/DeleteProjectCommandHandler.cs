@@ -19,7 +19,7 @@ public sealed class DeleteProjectCommandHandler(IProjectRepository projectReposi
         
         projectRepository.Remove(project);
         
-        project.Workspace.RefreshUpdatedDateTime();
+        project.Workspace.RefreshActivity();
         
         return new DeleteProjectResult();
     }
