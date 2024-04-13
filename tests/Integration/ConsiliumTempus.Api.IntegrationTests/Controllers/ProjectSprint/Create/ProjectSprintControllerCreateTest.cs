@@ -35,8 +35,9 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
         var createdProject = await dbContext.ProjectSprints
-            .Include(p => p.Project)
-            .SingleAsync(p => p.Name.Value == request.Name);
+            .Include(ps => ps.Project)
+            .ThenInclude(p => p.Workspace)
+            .SingleAsync(ps => ps.Name.Value == request.Name);
         Utils.ProjectSprint.AssertCreation(createdProject, request);
     }
     

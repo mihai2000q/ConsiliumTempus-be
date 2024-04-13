@@ -14,12 +14,14 @@ public static class UserFactory
         string? role = null,
         DateOnly? dateOfBirth = null)
     {
-        return UserAggregate.Register(
+        var user = UserAggregate.Register(
             Credentials.Create(email, password), 
             FirstName.Create(firstName),
             LastName.Create(lastName),
             role is null ? null : Role.Create(role),
             dateOfBirth);
+        user.ClearDomainEvents();
+        return user;
     }
 
     public static UserId CreateId(Guid? id = null)
