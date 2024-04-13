@@ -2,6 +2,7 @@ import { expect } from '../utils/matchers';
 import { test } from "@playwright/test";
 import { useToken } from "../utils/utils";
 import { deleteUser, getCurrentUser, registerUser } from "../utils/users.utils";
+import UpdateUserRequest from "../types/requests/user/UpdateUserRequest";
 
 test.describe('should allow operations on the user entity', () => {
   const EMAIL = "michaeljordan@example.com"
@@ -58,11 +59,10 @@ test.describe('should allow operations on the user entity', () => {
   })
 
   test('should update current user', async ({ request }) => {
-    const body = {
+    const body: UpdateUserRequest = {
       firstName: "Michelle",
       lastName: "Moron",
-      role: "CEO",
-      dateOfBirth: null
+      role: null
     }
 
     const response = await request.put('api/users/current', {
