@@ -90,6 +90,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     IsPersonal = table.Column<bool>(type: "bit", nullable: false),
                     OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastActivity = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -169,6 +170,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     IsFavorite = table.Column<bool>(type: "bit", nullable: false),
                     IsPrivate = table.Column<bool>(type: "bit", nullable: false),
+                    LastActivity = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
