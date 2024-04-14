@@ -74,7 +74,6 @@ test.describe('should allow operations on the project entity', () => {
       description: "This is a new project description",
       isPrivate: false
     }
-
     const response = await request.post('/api/projects', {
       ...useToken(),
       data: body
@@ -88,14 +87,12 @@ test.describe('should allow operations on the project entity', () => {
 
     const projects = await getProjectsForUser(request)
     expect(projects).toHaveLength(1)
-    expect(projects).toStrictEqual({
-      projects: expect.arrayContaining([
-        {
-          id: expect.any(String),
-          name: body.name
-        }
-      ])
-    })
+    expect(projects).toStrictEqual(expect.arrayContaining([
+      {
+        id: expect.any(String),
+        name: body.name
+      }
+    ]))
   })
 
   test('should delete project', async ({ request }) => {
@@ -105,6 +102,7 @@ test.describe('should allow operations on the project entity', () => {
       description: "",
       isPrivate: true
     })
+
     const response = await request.delete(`/api/projects/${project.id}`, useToken());
 
     expect(response.ok()).toBeTruthy()
@@ -114,6 +112,6 @@ test.describe('should allow operations on the project entity', () => {
     })
 
     const projects = await getProjectsForUser(request)
-    await expect(projects).toBeEmpty()
+    expect(projects).toHaveLength(0)
   })
 })

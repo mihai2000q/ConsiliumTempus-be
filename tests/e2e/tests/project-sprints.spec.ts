@@ -32,7 +32,7 @@ test.describe('should allow operations on the project entity', () => {
       startDate: "2024-01-12",
       endDate: "2024-01-26"
     }
-    const response = await request.post('/api/project/sprints', {
+    const response = await request.post('/api/projects/sprints', {
       ...useToken(),
       data: body
     });
@@ -52,7 +52,7 @@ test.describe('should allow operations on the project entity', () => {
       endDate: "2024-01-26"
     })
 
-    const response = await request.delete(`/api/project/sprints/${projectSprint.id}`, useToken());
+    const response = await request.delete(`/api/projects/sprints/${projectSprint.id}`, useToken());
 
     expect(response.ok()).toBeTruthy()
 
