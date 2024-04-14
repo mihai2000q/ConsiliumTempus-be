@@ -4,10 +4,10 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.GetCollectionForWorkspace;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Get;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerGetCollectionForWorkspaceAuthorizationTest(WebAppFactory factory) 
+public class ProjectControllerGetAuthorizationTest(WebAppFactory factory) 
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
@@ -53,11 +53,11 @@ public class ProjectControllerGetCollectionForWorkspaceAuthorizationTest(WebAppF
     private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
     {
         // Arrange
-        var request = ProjectRequestFactory.CreateGetCollectionProjectForWorkspaceRequest(
-            ProjectData.Workspaces[0].Id.Value);
+        var request = ProjectRequestFactory.CreateGetProjectRequest(
+            ProjectData.Projects[0].Id.Value);
         
         // Act
         Client.UseCustomToken(user);
-        return await Client.Get($"api/projects/workspace?workspaceId={request.WorkspaceId}");
+        return await Client.Get($"api/projects/{request.Id}");
     }
 }
