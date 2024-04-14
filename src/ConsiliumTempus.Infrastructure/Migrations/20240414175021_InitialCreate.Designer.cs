@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240413105524_InitialCreate")]
+    [Migration("20240414175021_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -114,11 +114,16 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             Id = 10,
-                            Name = "UpdateProjectSprint"
+                            Name = "ReadCollectionProjectSprint"
                         },
                         new
                         {
                             Id = 11,
+                            Name = "UpdateProjectSprint"
+                        },
+                        new
+                        {
+                            Id = 12,
                             Name = "DeleteProjectSprint"
                         });
                 });
@@ -228,6 +233,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         },
                         new
                         {
+                            WorkspaceRoleId = 1,
+                            PermissionId = 10
+                        },
+                        new
+                        {
                             WorkspaceRoleId = 2,
                             PermissionId = 1
                         },
@@ -255,6 +265,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 2,
                             PermissionId = 10
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 11
                         },
                         new
                         {
@@ -310,6 +325,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 3,
                             PermissionId = 11
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 12
                         });
                 });
 

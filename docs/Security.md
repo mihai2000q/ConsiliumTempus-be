@@ -56,13 +56,14 @@ The permissions will be classified on their respective component:
   - Update
   - Delete
 - Project
+  - Create
   - Read
   - Read Collection
-  - Create
   - Update
   - Delete
 - Project Sprint
   - Create
+  - Read Collection
   - Update
   - Delete
 
@@ -70,16 +71,17 @@ The permissions will be classified on their respective component:
 
 The Access Control List of the system is the following:
 
-|                         | View | Member | Admin |
-|-------------------------|------|--------|-------|
-| Read Workspace          | X    | X      | X     |
-| Update Workspace        |      | X      | X     |
-| Delete Workspace        |      |        | X     |
-| Create Project          |      |        | X     |
-| Read Project            | X    | X      | X     |
-| Read Collection Project | X    | X      | X     |
-| Update Project          |      | X      | X     |
-| Delete Project          |      |        | X     |
-| Create Project Sprint   |      |        | X     |
-| Update Project Sprint   |      | X      | X     |
-| Delete Project Sprint   |      |        | X     |
+|                                | View | Member | Admin |
+|--------------------------------|------|--------|-------|
+| Read Workspace                 | X    | X      | X     |
+| Update Workspace               |      | X      | X     |
+| Delete Workspace               |      |        | X     |
+| Create Project                 |      |        | X     |
+| Read Project                   | X    | X      | X     |
+| Read Collection Project        | X    | X      | X     |
+| Update Project                 |      | X      | X     |
+| Delete Project                 |      |        | X     |
+| Create Project Sprint          |      |        | X     |
+| Read Collection Project Sprint | X    | X      | X     |
+| Update Project Sprint          |      | X      | X     |
+| Delete Project Sprint          |      |        | X     |

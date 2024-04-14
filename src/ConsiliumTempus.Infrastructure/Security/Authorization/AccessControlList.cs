@@ -8,21 +8,22 @@ public static class AccessControlList
     private static readonly List<Permissions> ViewPermissions =
     [
         Permissions.ReadWorkspace,
-        Permissions.ReadProject, Permissions.ReadCollectionProject
+        Permissions.ReadProject, Permissions.ReadCollectionProject,
+        Permissions.ReadCollectionProjectSprint
     ];
 
     private static readonly List<Permissions> MemberPermissions =
     [
         Permissions.ReadWorkspace, Permissions.UpdateWorkspace,
         Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject,
-        Permissions.UpdateProjectSprint
+        Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint,
     ];
 
     private static readonly List<Permissions> AdminPermissions =
     [
         Permissions.ReadWorkspace, Permissions.UpdateWorkspace, Permissions.DeleteWorkspace,
         Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject, Permissions.DeleteProject,
-        Permissions.CreateProjectSprint, Permissions.UpdateProjectSprint, Permissions.DeleteProjectSprint
+        Permissions.CreateProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint, Permissions.DeleteProjectSprint
     ];
 
     public static readonly Dictionary<WorkspaceRole, List<Permissions>> RoleHasPermissions = new()
