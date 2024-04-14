@@ -19,7 +19,7 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.DeleteProject, RequestLocation.Route);
 
             Add(Permissions.CreateProjectSprint, RequestLocation.Body);
-            Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Route);
+            Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Query);
             Add(Permissions.UpdateProjectSprint, RequestLocation.Body);
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route);
         }

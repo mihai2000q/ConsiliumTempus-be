@@ -94,7 +94,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.DeleteProject => HttpRequestReader.GetStringIdFromRoute(request),
 
             Permissions.CreateProjectSprint => await HttpRequestReader.GetPropertyFromBody(request, ToIdProperty<ProjectAggregate>()),
-            Permissions.ReadCollectionProjectSprint => HttpRequestReader.GetStringIdFromRoute(request, ToIdProperty<ProjectAggregate>()),
+            Permissions.ReadCollectionProjectSprint => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<ProjectAggregate>()),
             Permissions.UpdateProjectSprint => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),
             _ => throw new ArgumentOutOfRangeException(nameof(permission))
