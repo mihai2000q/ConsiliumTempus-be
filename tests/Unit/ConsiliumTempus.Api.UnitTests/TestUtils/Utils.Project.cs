@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
@@ -7,6 +8,7 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
@@ -97,6 +99,23 @@ internal static partial class Utils
 
     internal static class ProjectSprint
     {
+        internal static void AssertGetCollectionResponse(
+            GetCollectionProjectSprintResponse response,
+            GetCollectionProjectSprintResult result)
+        {
+            response.Sprints
+                .Zip(result.Sprints)
+                .Should().AllSatisfy(p => AssertProjectSprintResponse(p.First, p.Second));
+        }
+        
+        internal static bool AssertGetCollectionQuery(
+            GetCollectionProjectSprintQuery query, 
+            GetCollectionProjectSprintRequest request)
+        {
+            query.ProjectId.Should().Be(request.ProjectId);
+            return true;
+        }
+        
         internal static bool AssertCreateCommand(CreateProjectSprintCommand command, CreateProjectSprintRequest request)
         {
             command.ProjectId.Should().Be(request.ProjectId);
@@ -110,6 +129,16 @@ internal static partial class Utils
         {
             command.Id.Should().Be(id);
             return true;
+        }
+        
+        private static void AssertProjectSprintResponse(
+            GetCollectionProjectSprintResponse.ProjectSprintResponse response,
+            Domain.Project.Entities.ProjectSprint projectSprint)
+        {
+            response.Id.Should().Be(projectSprint.Id.Value);
+            response.Name.Should().Be(projectSprint.Name.Value);
+            response.StartDate.Should().Be(projectSprint.StartDate);
+            response.EndDate.Should().Be(projectSprint.EndDate);
         }
     }
 }
