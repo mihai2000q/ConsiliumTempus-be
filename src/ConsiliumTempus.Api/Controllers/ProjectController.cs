@@ -1,10 +1,12 @@
 ﻿using ConsiliumTempus.Api.Common.Attributes;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
+using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -16,6 +18,19 @@ namespace ConsiliumTempus.Api.Controllers;
 
 public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
+    [HasPermission(Permissions.ReadProject)]
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Get(GetProjectRequest request, CancellationToken cancellationToken)
+    {
+        var query = Mapper.Map<GetProjectQuery>(request);
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return result.Match(
+            project => Ok(Mapper.Map<GetProjectResponse>(project)),
+            Problem
+        );
+    }
+    
     [HttpGet("User")]
     public async Task<IActionResult> GetCollectionForUser(CancellationToken cancellationToken)
     {

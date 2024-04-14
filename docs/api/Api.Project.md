@@ -1,6 +1,9 @@
 # Consilium Tempus API
 
 * [Project](#project)
+  * [Get](#get)
+    * [Get Request](#get-request)
+    * [Get Response](#get-response)
   * [Get Collection For Workspace](#get-collection-for-workspace)
     * [Get Collection For Workspace Request](#get-collection-for-workspace-request)
     * [Get Collection For Workspace Response](#get-collection-for-workspace-response)
@@ -16,6 +19,35 @@
 ## Project
 
 This is the controller that takes care of creating, reading, updating and deleting a Project.
+
+
+### Get
+
+Anyone that is part of the workspace can read a project
+([Read Project Permission](../Security.md/#permissions)).
+
+```js
+GET {{host}}/api/projects/{id}
+```
+
+- **id** is a 36-character string
+
+#### Get Request
+
+Sends the id of the project inside the route of the request.
+
+#### Get Response
+
+Returns a project.
+
+```json
+{
+  "name": "Project Name 1",
+  "description": "This is the first project",
+  "isFavorite": false,
+  "isPrivate": true
+}
+```
 
 
 ### Get Collection For Workspace
