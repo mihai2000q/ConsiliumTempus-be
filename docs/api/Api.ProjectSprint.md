@@ -1,16 +1,65 @@
 # Consilium Tempus API
 
 * [Project Sprint](#project-sprint)
-    * [Create](#create)
-        * [Create Project Sprint Request](#create-project-sprint-request)
-        * [Create Project Sprint Response](#create-project-sprint-response)
-    * [Delete](#delete)
-        * [Delete Project Sprint Request](#delete-project-sprint-request)
-        * [Delete Project Sprint Response](#delete-project-sprint-response)
+  * [Get Collection](#create)
+    * [Get Collection Project Sprint Request](#create-project-sprint-request)
+    * [Get Collection Project Sprint Response](#create-project-sprint-response)
+  * [Create](#create)
+    * [Create Project Sprint Request](#create-project-sprint-request)
+    * [Create Project Sprint Response](#create-project-sprint-response)
+  * [Delete](#delete)
+    * [Delete Project Sprint Request](#delete-project-sprint-request)
+    * [Delete Project Sprint Response](#delete-project-sprint-response)
 
 ## Project Sprint
 
 This is the controller that takes care of creating, updating and deleting a Project Sprint.
+
+
+### Get Collection
+
+Anyone that is part of a workspace can access the project sprints
+([Get Collection Project Sprint Permission](../Security.md/#permissions)).
+
+```js
+POST {{host}}/api/projects/sprints
+```
+
+#### Get Collection Project Sprint Request
+
+Sends body data that the new workspace needs to be created.
+
+```json
+{
+  "projectId": "10000000-0000-0000-0000-000000000000",
+  "name": "Project Sprint Name",
+  "startDate": "2024-01-01",
+  "endDate": "2024-01-14"
+}
+```
+
+#### Get Collection Project Sprint Response
+
+Returns the project sprints.
+
+```json
+{
+  "sprints": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "name": "Sprint 1",
+      "startDate": "2022-10-10",
+      "endDate": "2022-10-24"
+    },
+    {
+      "id": "20000000-0000-0000-0000-000000000000",
+      "name": "Sprint 2",
+      "startDate": null,
+      "endDate": null
+    }
+  ]
+}
+```
 
 
 ### Create

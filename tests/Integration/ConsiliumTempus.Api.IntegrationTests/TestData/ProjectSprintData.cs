@@ -108,6 +108,11 @@ internal class ProjectSprintData : ITestData
             Workspaces[0],
             "Win NBA",
             "This is an elaborate plan to win NBA",
+            true),
+        ProjectFactory.Create(
+            Workspaces[1],
+            "Win Champions League",
+            "Just an idea on how to win the football league",
             true)
     ];
     
@@ -116,7 +121,14 @@ internal class ProjectSprintData : ITestData
         ProjectSprintFactory.Create(
             Projects[0],
             "Sprint 1 - Qualify on Quarters",
-            new DateOnly(2024, 01, 3),
-            new DateOnly(2024, 01, 17))
+            new DateOnly(2024, 01, 1),
+            new DateOnly(2024, 01, 15)),
+        ProjectSprintFactory.Create(
+            Projects[0],
+            "Sprint 2 - Qualify in Semi Finals",
+            new DateOnly(2024, 01, 16),
+            new DateOnly(2024, 01, 30)),
+        ProjectSprintFactory.Create(
+            Projects[1])
     ];
 }

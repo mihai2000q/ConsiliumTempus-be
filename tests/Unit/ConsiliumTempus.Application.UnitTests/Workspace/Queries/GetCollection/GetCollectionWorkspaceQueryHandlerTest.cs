@@ -52,7 +52,8 @@ public class GetCollectionWorkspaceQueryHandlerTest
         await _workspaceRepository
             .Received(1)
             .GetListForUser(Arg.Any<UserAggregate>());
-        
+
+        outcome.IsError.Should().BeFalse();
         outcome.Value.Workspaces.Should().BeEquivalentTo(workspaces);
     }
     

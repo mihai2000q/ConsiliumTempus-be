@@ -1,10 +1,12 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Delete;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
 
@@ -30,7 +32,54 @@ public class ProjectSprintControllerTest
     #endregion
     
     [Fact]
-    public async Task CreateProject_WhenIsSuccessful_ShouldReturnResponse()
+    public async Task GetCollectionProjectSprint_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectSprintRequestFactory.CreateGetCollectionProjectSprintRequest();
+
+        var result = new GetCollectionProjectSprintResult(ProjectSprintFactory.CreateList());
+        _mediator
+            .Send(Arg.Any<GetCollectionProjectSprintQuery>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.GetCollection(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCollectionProjectSprintQuery>(
+                query => Utils.ProjectSprint.AssertGetCollectionQuery(query, request)));
+
+        var response = outcome.ToResponse<GetCollectionProjectSprintResponse>();
+        Utils.ProjectSprint.AssertGetCollectionResponse(response, result);
+    }
+
+    [Fact]
+    public async Task GetCollectionProjectSprint_WhenProjectIsNotFound_ShouldReturnNotFoundError()
+    {
+        // Arrange
+        var request = ProjectSprintRequestFactory.CreateGetCollectionProjectSprintRequest();
+
+        var error = Errors.Project.NotFound;
+        _mediator
+            .Send(Arg.Any<GetCollectionProjectSprintQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetCollection(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCollectionProjectSprintQuery>(
+                query => Utils.ProjectSprint.AssertGetCollectionQuery(query, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task CreateProjectSprint_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest();
@@ -54,12 +103,12 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task CreateProject_WhenWorkspaceIsNotFound_ShouldReturnNotFoundError()
+    public async Task CreateProjectSprint_WhenProjectIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest();
 
-        var error = Errors.Workspace.NotFound;
+        var error = Errors.Project.NotFound;
         _mediator
             .Send(Arg.Any<CreateProjectSprintCommand>())
             .Returns(error);
@@ -77,7 +126,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task DeleteProject_WhenIsSuccessful_ShouldReturnSuccess()
+    public async Task DeleteProjectSprint_WhenIsSuccessful_ShouldReturnSuccess()
     {
         // Arrange
         var id = Guid.NewGuid();
@@ -101,7 +150,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task DeleteProject_WhenItFails_ShouldReturnNotFoundError()
+    public async Task DeleteProjectSprint_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
         var id = Guid.NewGuid();

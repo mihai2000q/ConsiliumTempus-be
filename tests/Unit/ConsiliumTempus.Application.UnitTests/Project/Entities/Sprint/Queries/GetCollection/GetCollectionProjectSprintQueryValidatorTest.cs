@@ -1,0 +1,43 @@
+﻿using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
+using ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Sprint.Queries;
+
+namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Queries.GetCollection;
+
+public class GetCollectionProjectSprintQueryValidatorTest
+{
+    #region Setup
+
+    private readonly GetCollectionProjectSprintQueryValidator _uut = new();
+
+    #endregion
+    
+    [Theory]
+    [ClassData(typeof(GetCollectionProjectSprintQueryValidatorData.GetValidQueries))]
+    public async Task WhenValid_ShouldReturnTrue(GetCollectionProjectSprintQuery query)
+    {
+        // Arrange - parameterized
+        
+        // Act
+        var outcome = await _uut.ValidateAsync(query);
+
+        // Assert
+        outcome.IsValid.Should().BeTrue();
+    }
+    
+    [Theory]
+    [ClassData(typeof(GetCollectionProjectSprintQueryValidatorData.GetInvalidProjectIdQueries))]
+    public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
+        GetCollectionProjectSprintQuery query, 
+        string property)
+    {
+        // Arrange - parameterized
+        
+        // Act
+        var outcome = await _uut.ValidateAsync(query);
+
+        // Assert
+        outcome.IsValid.Should().BeFalse();
+        outcome.Errors.Should().HaveCount(1);
+        outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
+    }
+}

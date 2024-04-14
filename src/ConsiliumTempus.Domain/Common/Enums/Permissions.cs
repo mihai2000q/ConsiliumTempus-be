@@ -11,6 +11,7 @@ public enum Permissions
     UpdateProject,
     DeleteProject,
     CreateProjectSprint,
+    ReadCollectionProjectSprint,
     UpdateProjectSprint,
     DeleteProjectSprint
 }

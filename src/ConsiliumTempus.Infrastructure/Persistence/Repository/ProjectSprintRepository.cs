@@ -17,6 +17,14 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 
+    public async Task<List<ProjectSprint>> GetListByProject(ProjectId projectId,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.ProjectSprints
+            .Where(ps => ps.Project.Id == projectId)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task Add(ProjectSprint sprint, CancellationToken cancellationToken = default)
     {
         await dbContext.AddAsync(sprint, cancellationToken);

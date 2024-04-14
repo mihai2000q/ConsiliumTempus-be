@@ -317,8 +317,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     { 7, "UpdateProject" },
                     { 8, "DeleteProject" },
                     { 9, "CreateProjectSprint" },
-                    { 10, "UpdateProjectSprint" },
-                    { 11, "DeleteProjectSprint" }
+                    { 10, "ReadCollectionProjectSprint" },
+                    { 11, "UpdateProjectSprint" },
+                    { 12, "DeleteProjectSprint" }
                 });
 
             migrationBuilder.InsertData(
@@ -339,12 +340,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     { 1, 1 },
                     { 5, 1 },
                     { 6, 1 },
+                    { 10, 1 },
                     { 1, 2 },
                     { 2, 2 },
                     { 5, 2 },
                     { 6, 2 },
                     { 7, 2 },
                     { 10, 2 },
+                    { 11, 2 },
                     { 1, 3 },
                     { 2, 3 },
                     { 3, 3 },
@@ -355,7 +358,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     { 8, 3 },
                     { 9, 3 },
                     { 10, 3 },
-                    { 11, 3 }
+                    { 11, 3 },
+                    { 12, 3 }
                 });
 
             migrationBuilder.CreateIndex(
