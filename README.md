@@ -16,7 +16,8 @@
 
 ## Abstract
 
-This is the backend of the Consilium Tempus application. It is written completely in C# using the ASP.Net Core framework.
+This is the backend of the Consilium Tempus application. 
+It is written completely in C# using the ASP.Net Core framework.
 
 ## Get Started
 
@@ -135,15 +136,17 @@ To run the application, type in the following command:
 dotnet run --project ./src/ConsiliumTempus.Api
 ```
 
-The application will run in https by default, but that can be changed by inside the profile on the `launchsettings.json` file, or specify the profile on run.
+The application will run in https by default, 
+but that can be changed by inside the profile on the `launchsettings.json` file, 
+or specify the profile on run.
 
 ### Test Development Environment
 
 To send a request (via Postman) to test if everything works accordingly, see the example below.
-By default, the *host* is `http://localhost:7121/api` for http,
-and `https://localhost:7123/api` for https (you can use any of them in https mode).
+By default, the *host* is `http://localhost:7123/api` for http,
+and `https://localhost:7122/api` for https (you can use any of them in https mode).
 <br>
-To be noted that, in case docker is used, the default port is: `7124`;
+To be noted that, in case docker is used, the default port is: `7123`;
 
 ```js
 POST {{host}}/auth/login
@@ -158,7 +161,8 @@ And the body of the request shall be:
 }
 ```
 
-It will return an Invalid Credentials Error, however, now you know that you have a working connection to the API and to the database.
+It will return an Invalid Credentials Error, however, 
+now you know that you have a working connection to the API and to the database.
 
 ## Testing
 

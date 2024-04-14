@@ -1,6 +1,8 @@
 import { expect } from '../utils/matchers';
 import { test } from "@playwright/test";
-import { deleteUser, getCurrentUser, getUserId, registerUser, useToken } from "../utils/utils";
+import { useToken } from "../utils/utils";
+import { deleteUser, getCurrentUser, registerUser } from "../utils/users.utils";
+import UpdateUserRequest from "../types/requests/user/UpdateUserRequest";
 
 test.describe('should allow operations on the user entity', () => {
   const EMAIL = "michaeljordan@example.com"
@@ -23,21 +25,22 @@ test.describe('should allow operations on the user entity', () => {
     ).token
   })
 
+  test.afterEach('should delete user', async ({ request }) => {
+    await deleteUser(request, { email: EMAIL, password: PASSWORD })
+  })
+
   test('should get user', async ({ request }) => {
-    const userId = await getUserId(request)
-    const response = await request.get(`api/users/${userId}`, useToken())
+    const currentUser = await getCurrentUser(request)
+    const response = await request.get(`api/users/${currentUser.id}`, useToken())
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    expect(await response.json()).toStrictEqual({
       firstName: FIRSTNAME,
       lastName: LASTNAME,
       email: EMAIL,
       role: ROLE
     })
-
-    // cleanup
-    await deleteUser(request)
   })
 
   test('should get current user', async ({ request }) => {
@@ -45,7 +48,7 @@ test.describe('should allow operations on the user entity', () => {
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    expect(await response.json()).toStrictEqual({
       id: expect.any(String),
       firstName: FIRSTNAME,
       lastName: LASTNAME,
@@ -53,13 +56,10 @@ test.describe('should allow operations on the user entity', () => {
       role: ROLE,
       dateOfBirth: DATE_OF_BIRTH
     })
-
-    // cleanup
-    await deleteUser(request)
   })
 
   test('should update current user', async ({ request }) => {
-    const body = {
+    const body: UpdateUserRequest = {
       firstName: "Michelle",
       lastName: "Moron",
       role: "CEO",
@@ -73,13 +73,13 @@ test.describe('should allow operations on the user entity', () => {
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    expect(await response.json()).toStrictEqual({
       message: expect.any(String)
     })
 
     const newUser = await getCurrentUser(request)
 
-    expect(newUser).toEqual({
+    expect(newUser).toStrictEqual({
       id: expect.any(String),
       firstName: body.firstName,
       lastName: body.lastName,
@@ -87,18 +87,22 @@ test.describe('should allow operations on the user entity', () => {
       role: body.role,
       dateOfBirth: body.dateOfBirth
     })
-
-    // cleanup
-    await deleteUser(request)
   })
+})
 
+test.describe('should allow removal of the user entity', () => {
   test('should delete current user', async ({ request }) => {
+    process.env.API_TOKEN = (await registerUser(request)).token
+
     const response = await request.delete('api/users/current', useToken())
 
     expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toEqual({
+    expect(await response.json()).toStrictEqual({
       message: expect.any(String)
     })
+
+    const getCurrentUserResponse = await request.get('/api/users/current', useToken())
+    expect(getCurrentUserResponse.ok()).toBeFalsy()
   })
 })
