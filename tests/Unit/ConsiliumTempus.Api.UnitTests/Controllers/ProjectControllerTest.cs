@@ -1,12 +1,14 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
+using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 using ConsiliumTempus.Common.UnitTests.Project;
@@ -34,6 +36,53 @@ public class ProjectControllerTest
     #endregion
     
     [Fact]
+    public async Task Get_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateGetProjectRequest();
+
+        var project = ProjectFactory.Create();
+        _mediator
+            .Send(Arg.Any<GetProjectQuery>())
+            .Returns(project);
+
+        // Act
+        var outcome = await _uut.Get(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetProjectQuery>(q => 
+                Utils.Project.AssertGetProjectQuery(q, request)));
+
+        var response = outcome.ToResponse<GetProjectResponse>();
+        Utils.Project.AssertGetProjectResponse(response, project);
+    }
+    
+    [Fact]
+    public async Task Get_WhenFails_ShouldReturnNotFoundError()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateGetProjectRequest();
+
+        var error = Errors.Project.NotFound;
+        _mediator
+            .Send(Arg.Any<GetProjectQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.Get(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetProjectQuery>(q => 
+                Utils.Project.AssertGetProjectQuery(q, request)));
+        
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
     public async Task GetCollectionForWorkspace_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
@@ -58,7 +107,7 @@ public class ProjectControllerTest
     }
     
     [Fact]
-    public async Task GetCollectionForWorkspace_WhenFails_ShouldWorkspaceNotFoundError()
+    public async Task GetCollectionForWorkspace_WhenFails_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectForWorkspaceRequest();
@@ -102,7 +151,7 @@ public class ProjectControllerTest
     }
     
     [Fact]
-    public async Task GetCollectionForUser_WhenFails_ShouldUserNotFoundError()
+    public async Task GetCollectionForUser_WhenFails_ShouldReturnUserNotFoundError()
     {
         // Arrange
         var error = Errors.User.NotFound;

@@ -18,6 +18,30 @@ test.describe('should allow operations on the project entity', () => {
     await deleteUser(request)
   })
 
+  test('should get project', async ({ request }) => {
+    const createRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "Project",
+      description: "",
+      isPrivate: true
+    }
+    const project = await createProject(request, createRequest);
+
+    const response = await request.get(
+      `/api/projects/${project.id}`,
+      useToken()
+    )
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      name: project.name,
+      description: createRequest.description,
+      isPrivate: createRequest.isPrivate,
+      isFavorite: expect.any(Boolean),
+    })
+  })
+
   test('should get collection of projects for workspace', async ({ request }) => {
     const { createProjectRequest1 } = await create2ProjectsIn2DifferentWorkspaces(request)
 

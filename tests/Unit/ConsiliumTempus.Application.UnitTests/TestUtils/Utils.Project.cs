@@ -34,6 +34,22 @@ internal static partial class Utils
 
             return true;
         }
+
+        internal static void AssertProject(
+            ProjectAggregate outcome,
+            ProjectAggregate expected)
+        {
+            outcome.Id.Should().Be(expected.Id);
+            outcome.Name.Should().Be(expected.Name);
+            outcome.Description.Should().Be(expected.Description);
+            outcome.IsFavorite.Should().Be(expected.IsFavorite);
+            outcome.IsPrivate.Should().Be(expected.IsPrivate);
+            outcome.LastActivity.Should().Be(expected.LastActivity);
+            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
+            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Workspace.Should().Be(expected.Workspace);
+            outcome.Sprints.Should().BeEquivalentTo(expected.Sprints);
+        }
     }
 
     internal static class ProjectSprint
