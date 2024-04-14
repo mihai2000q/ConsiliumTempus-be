@@ -17,4 +17,11 @@ public static class ProjectSprintFactory
             startDate,
             endDate);
     }
+
+    public static List<Domain.Project.Entities.ProjectSprint> CreateList(int count = 5)
+    {
+        return Enumerable.Repeat(0, count)
+            .Select((_) => Create())
+            .ToList();
+    }
 }
