@@ -7,10 +7,10 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.User.Queries.Get;
 
-public sealed class GetUserQueryHandler(IUserRepository userRepository) 
+public sealed class GetUserQueryHandler(IUserRepository userRepository)
     : IRequestHandler<GetUserQuery, ErrorOr<UserAggregate>>
 {
-    public async Task<ErrorOr<UserAggregate>> Handle(GetUserQuery query, 
+    public async Task<ErrorOr<UserAggregate>> Handle(GetUserQuery query,
         CancellationToken cancellationToken)
     {
         var user = await userRepository.Get(UserId.Create(query.Id), cancellationToken);

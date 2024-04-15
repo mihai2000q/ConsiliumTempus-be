@@ -16,11 +16,11 @@ public sealed class UpdateCurrentUserCommandHandler(ICurrentUserProvider current
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
 
         if (user is null) return Errors.User.NotFound;
-        
+
         user.Update(
             FirstName.Create(command.FirstName.Capitalize()),
             LastName.Create(command.LastName.Capitalize()),
-            command.Role is null ? null : Role.Create(command.Role),
+            command.Role.IfNotNull(Role.Create(command.Role!)),
             command.DateOfBirth);
 
         return new UpdateCurrentUserResult();

@@ -29,7 +29,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         
         var response = await outcome.Content.ReadFromJsonAsync<DeleteCurrentUserResponse>();
-        response!.Message.Should().Be("User has been deleted successfully!");
+        response!.Message.Should().Be("Current user has been deleted successfully!");
         
         // assert user deleted
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();

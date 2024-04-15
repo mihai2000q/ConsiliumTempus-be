@@ -12,7 +12,7 @@ public sealed class GetCollectionProjectSprintQueryHandler(
     : IRequestHandler<GetCollectionProjectSprintQuery, ErrorOr<GetCollectionProjectSprintResult>>
 {
     public async Task<ErrorOr<GetCollectionProjectSprintResult>> Handle(
-        GetCollectionProjectSprintQuery query, 
+        GetCollectionProjectSprintQuery query,
         CancellationToken cancellationToken)
     {
         var project = await projectRepository.Get(ProjectId.Create(query.ProjectId), cancellationToken);

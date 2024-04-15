@@ -45,7 +45,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
         var outcome = await Client.Delete($"api/workspaces/{workspace.Id}");
 
         // Assert
-        await outcome.ValidateError(Errors.Workspace.UserWorkspace);
+        await outcome.ValidateError(Errors.Workspace.PersonalWorkspace);
     }
 
     [Fact]

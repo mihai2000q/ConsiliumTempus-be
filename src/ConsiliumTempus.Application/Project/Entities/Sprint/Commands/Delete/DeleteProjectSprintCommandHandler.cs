@@ -9,10 +9,10 @@ namespace ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
 
 public sealed class DeleteProjectSprintCommandHandler(
     IProjectSprintRepository projectSprintRepository,
-    IUnitOfWork unitOfWork) 
+    IUnitOfWork unitOfWork)
     : IRequestHandler<DeleteProjectSprintCommand, ErrorOr<DeleteProjectSprintResult>>
 {
-    public async Task<ErrorOr<DeleteProjectSprintResult>> Handle(DeleteProjectSprintCommand command, 
+    public async Task<ErrorOr<DeleteProjectSprintResult>> Handle(DeleteProjectSprintCommand command,
         CancellationToken cancellationToken)
     {
         var projectSprintId = ProjectSprintId.Create(command.Id);
@@ -20,9 +20,9 @@ public sealed class DeleteProjectSprintCommandHandler(
             .GetWithProjectAndWorkspace(projectSprintId, cancellationToken);
 
         if (projectSprint is null) return Errors.ProjectSprint.NotFound;
-        
+
         projectSprintRepository.Remove(projectSprint);
-        
+
         projectSprint.Project.RefreshActivity();
 
         await unitOfWork.SaveChangesAsync(cancellationToken);

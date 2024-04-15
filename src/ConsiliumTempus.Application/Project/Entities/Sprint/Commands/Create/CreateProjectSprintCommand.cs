@@ -4,8 +4,8 @@ using MediatR;
 namespace ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 
 public sealed record CreateProjectSprintCommand(
-    Guid ProjectId, 
+    Guid ProjectId,
     string Name,
-    DateOnly? StartDate, 
-    DateOnly? EndDate) 
+    DateOnly? StartDate,
+    DateOnly? EndDate)
     : IRequest<ErrorOr<CreateProjectSprintResult>>;

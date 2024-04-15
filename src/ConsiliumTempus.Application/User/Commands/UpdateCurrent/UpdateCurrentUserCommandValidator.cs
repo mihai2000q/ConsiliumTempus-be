@@ -11,14 +11,14 @@ public sealed class UpdateCurrentUserCommandValidator : AbstractValidator<Update
         RuleFor(c => c.FirstName)
             .NotEmpty()
             .MaximumLength(PropertiesValidation.User.FirstNameMaximumLength);
-        
+
         RuleFor(c => c.LastName)
             .NotEmpty()
             .MaximumLength(PropertiesValidation.User.LastNameMaximumLength);
 
         RuleFor(c => c.Role)
             .MaximumLength(PropertiesValidation.User.RoleMaximumLength);
-        
+
         RuleFor(c => c.DateOfBirth)
             .IsPastDate();
     }

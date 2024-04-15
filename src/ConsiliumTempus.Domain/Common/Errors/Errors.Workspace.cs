@@ -10,8 +10,8 @@ public static partial class Errors
             "Workspace.NotFound",
             "Workspace could not be found");
         
-        public static Error UserWorkspace => Error.Conflict(
-            "Workspace.UserWorkspace",
-            "User Workspaces cannot be deleted, not even by their owners");
+        public static Error PersonalWorkspace => Error.Conflict(
+            "Workspace.PersonalWorkspace",
+            "Personal Workspaces cannot be deleted, not even by their owners");
     }
 }

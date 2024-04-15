@@ -11,7 +11,8 @@ public sealed class GetCollectionProjectForWorkspaceQueryHandler(
     IProjectRepository projectRepository)
     : IRequestHandler<GetCollectionProjectForWorkspaceQuery, ErrorOr<GetCollectionProjectForWorkspaceResult>>
 {
-    public async Task<ErrorOr<GetCollectionProjectForWorkspaceResult>> Handle(GetCollectionProjectForWorkspaceQuery query, 
+    public async Task<ErrorOr<GetCollectionProjectForWorkspaceResult>> Handle(
+        GetCollectionProjectForWorkspaceQuery query,
         CancellationToken cancellationToken)
     {
         var workspace = await workspaceRepository.Get(WorkspaceId.Create(query.WorkspaceId), cancellationToken);

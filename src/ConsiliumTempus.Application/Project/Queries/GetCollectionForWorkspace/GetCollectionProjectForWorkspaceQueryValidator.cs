@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 
-public sealed class GetCollectionProjectForWorkspaceQueryValidator 
+public sealed class GetCollectionProjectForWorkspaceQueryValidator
     : AbstractValidator<GetCollectionProjectForWorkspaceQuery>
 {
     public GetCollectionProjectForWorkspaceQueryValidator()

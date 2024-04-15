@@ -8,7 +8,7 @@ using MediatR;
 namespace ConsiliumTempus.Application.User.Commands.DeleteCurrent;
 
 public sealed class DeleteCurrentUserCommandHandler(
-    IUserRepository userRepository, 
+    IUserRepository userRepository,
     ICurrentUserProvider currentUserProvider)
     : IRequestHandler<DeleteCurrentUserCommand, ErrorOr<DeleteCurrentUserResult>>
 {
@@ -18,10 +18,10 @@ public sealed class DeleteCurrentUserCommandHandler(
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
 
         if (user is null) return Errors.User.NotFound;
-        
+
         userRepository.Remove(user);
         user.AddDomainEvent(new UserDeleted(user));
-        
+
         return new DeleteCurrentUserResult();
     }
 }

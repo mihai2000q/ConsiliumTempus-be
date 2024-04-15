@@ -8,10 +8,10 @@ namespace ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 
 public sealed class GetCollectionProjectForUserQueryHandler(
     ICurrentUserProvider currentUserProvider,
-    IProjectRepository projectRepository) 
+    IProjectRepository projectRepository)
     : IRequestHandler<GetCollectionProjectForUserQuery, ErrorOr<GetCollectionProjectForUserResult>>
 {
-    public async Task<ErrorOr<GetCollectionProjectForUserResult>> Handle(GetCollectionProjectForUserQuery query, 
+    public async Task<ErrorOr<GetCollectionProjectForUserResult>> Handle(GetCollectionProjectForUserQuery query,
         CancellationToken cancellationToken)
     {
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);

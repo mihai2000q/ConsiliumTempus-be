@@ -20,7 +20,7 @@ public sealed class UserDeletedHandler(IWorkspaceRepository workspaceRepository)
             {
                 workspaceRepository.Remove(workspace);
             }
-            else if (workspace.Owner == notification.User) 
+            else if (workspace.Owner == notification.User)
             {
                 // transfer ownership, and promote role if necessary
                 var newOwnerAdmin = workspace.Memberships

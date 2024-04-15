@@ -11,14 +11,12 @@ public sealed class GetCollectionWorkspaceQueryHandler(
     IWorkspaceRepository workspaceRepository)
     : IRequestHandler<GetCollectionWorkspaceQuery, ErrorOr<GetCollectionWorkspaceResult>>
 {
-    public async Task<ErrorOr<GetCollectionWorkspaceResult>> Handle(GetCollectionWorkspaceQuery workspaceQuery, 
+    public async Task<ErrorOr<GetCollectionWorkspaceResult>> Handle(GetCollectionWorkspaceQuery workspaceQuery,
         CancellationToken cancellationToken)
     {
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
         if (user is null) return Errors.User.NotFound;
         return new GetCollectionWorkspaceResult(
-            await workspaceRepository.GetListForUser(
-                user, 
-                cancellationToken));
+            await workspaceRepository.GetListForUser(user, cancellationToken));
     }
 }

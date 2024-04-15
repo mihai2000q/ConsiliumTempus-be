@@ -16,9 +16,9 @@ public static class DependencyInjection
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
             cfg.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
         });
-        
+
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        
+
         return services;
     }
 }

@@ -4,4 +4,4 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.User.Queries.GetCurrent;
 
-public sealed record GetCurrentUserQuery: IRequest<ErrorOr<UserAggregate>>;
+public sealed record GetCurrentUserQuery : IRequest<ErrorOr<UserAggregate>>;

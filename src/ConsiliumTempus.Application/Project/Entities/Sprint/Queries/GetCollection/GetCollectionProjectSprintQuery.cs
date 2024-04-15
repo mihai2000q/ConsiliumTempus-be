@@ -4,5 +4,5 @@ using MediatR;
 namespace ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
 
 public sealed record GetCollectionProjectSprintQuery(
-    Guid ProjectId) 
+    Guid ProjectId)
     : IRequest<ErrorOr<GetCollectionProjectSprintResult>>;
