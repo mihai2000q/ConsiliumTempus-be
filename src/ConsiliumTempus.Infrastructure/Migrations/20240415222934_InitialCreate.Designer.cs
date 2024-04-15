@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240414175021_InitialCreate")]
+    [Migration("20240415222934_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -828,7 +828,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.Property<DateOnly?>("Date")
                                 .HasColumnType("date");
 
-                            b1.Property<Guid>("TaskAggregateId")
+                            b1.Property<Guid>("TaskId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<TimeSpan?>("TimeSpent")
@@ -841,7 +841,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.HasIndex("CreatedById");
 
-                            b1.HasIndex("TaskAggregateId");
+                            b1.HasIndex("TaskId");
 
                             b1.ToTable("ProjectTaskComment", (string)null);
 
@@ -851,8 +851,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .OnDelete(DeleteBehavior.NoAction)
                                 .IsRequired();
 
-                            b1.WithOwner("TaskAggregate")
-                                .HasForeignKey("TaskAggregateId");
+                            b1.WithOwner("Task")
+                                .HasForeignKey("TaskId");
 
                             b1.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Message", "Message", b2 =>
                                 {
@@ -878,7 +878,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.Navigation("Message")
                                 .IsRequired();
 
-                            b1.Navigation("TaskAggregate");
+                            b1.Navigation("Task");
                         });
 
                     b.Navigation("Asignee");

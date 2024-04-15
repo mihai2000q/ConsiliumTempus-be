@@ -48,7 +48,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     public WorkspaceAggregate Workspace { get; init; } = default!;
     public IReadOnlyList<ProjectSprint> Sprints => _sprints.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; }
+    public DateTime UpdatedDateTime { get; private set; }
 
     public static ProjectAggregate Create(
         Name name,
@@ -71,6 +71,12 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         project.AddDomainEvent(new ProjectCreated(project, user));
 
         return project;
+    }
+
+    public void Update(Name name)
+    {
+        Name = name;
+        UpdatedDateTime = DateTime.UtcNow;
     }
 
     public void AddSprint(ProjectSprint sprint)

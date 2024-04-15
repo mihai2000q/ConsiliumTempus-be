@@ -38,7 +38,7 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
     public ProjectAggregate Project { get; init; } = default!;
     public IReadOnlyList<ProjectSection> Sections => _sections.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; }
+    public DateTime UpdatedDateTime { get; private set; }
 
     public static ProjectSprint Create(
         Name name,
@@ -58,6 +58,12 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
         sprint.Project.RefreshActivity();
 
         return sprint;
+    }
+
+    public void Update(Name name)
+    {
+        Name = name;
+        UpdatedDateTime = DateTime.UtcNow;
     }
 
     public void AddSection(ProjectSection section)

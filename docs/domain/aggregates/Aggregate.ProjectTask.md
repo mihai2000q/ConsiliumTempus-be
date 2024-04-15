@@ -8,6 +8,7 @@ This is the project **task** entity.
 class ProjectTask
 {
     ProjectTask Create()
+    void Update()
     void AddComment()
 }
 ```

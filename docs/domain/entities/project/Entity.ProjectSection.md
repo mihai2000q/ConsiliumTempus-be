@@ -8,6 +8,7 @@ This is the project **section** entity.
 class ProjectSection
 {
     ProjectSection Create()
+    void Update()
     void AddTask()
 }
 ```

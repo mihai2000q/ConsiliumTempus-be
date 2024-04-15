@@ -73,7 +73,7 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
             .WithMany()
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasOne(c => c.TaskAggregate)
+        builder.HasOne(c => c.Task)
             .WithMany(t => t.Comments);
     }
 }
