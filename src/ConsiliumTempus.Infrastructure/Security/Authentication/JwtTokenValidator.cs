@@ -16,7 +16,7 @@ public sealed class JwtTokenValidator(
     IUserProvider userProvider) : IJwtTokenValidator
 {
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
-    
+
     public bool ValidateRefreshToken(RefreshToken? refreshToken, string jwtId)
     {
         return refreshToken is not null &&
@@ -24,7 +24,7 @@ public sealed class JwtTokenValidator(
                !refreshToken.IsInvalidated &&
                refreshToken.JwtId.ToString() == jwtId;
     }
-    
+
     public async Task<bool> ValidateAccessToken(string token)
     {
         var jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
@@ -35,7 +35,7 @@ public sealed class JwtTokenValidator(
         {
             return false;
         }
-        
+
         var claims = jwtSecurityToken.Claims.ToArray();
         var sub = GetClaim(claims, JwtRegisteredClaimNames.Sub);
 
@@ -46,13 +46,13 @@ public sealed class JwtTokenValidator(
         return user is not null &&
                AreClaimsValid(claims, user);
     }
-    
+
     private static bool AreClaimsValid(Claim[] claims, UserAggregate user)
     {
         return GetClaim(claims, JwtRegisteredClaimNames.Email) == user.Credentials.Email &&
                GetClaim(claims, JwtRegisteredClaimNames.Jti)?.Length == 36;
     }
-    
+
     private static string? GetClaim(IEnumerable<Claim> claims, string type)
     {
         return claims.SingleOrDefault(x => x.Type == type)?.Value;

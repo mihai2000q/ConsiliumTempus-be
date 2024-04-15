@@ -34,7 +34,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
 
         var request = httpContextAccessor.HttpContext?.Request;
         if (request is null) return;
-        
+
         var workspaceId = await GetWorkspaceId(request, workspaceProvider, permission);
         if (workspaceId is null)
         {

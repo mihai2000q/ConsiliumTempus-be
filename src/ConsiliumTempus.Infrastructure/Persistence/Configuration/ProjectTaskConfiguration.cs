@@ -14,18 +14,18 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
     public void Configure(EntityTypeBuilder<ProjectTaskAggregate> builder)
     {
         builder.ToTable(nameof(ProjectTaskAggregate).TruncateAggregate());
-        
+
         builder.HasKey(t => t.Id);
         builder.Property(t => t.Id)
             .HasConversion(
                 id => id.Value,
                 value => ProjectTaskId.Create(value));
-        
+
         builder.OwnsOne(t => t.Name)
             .Property(n => n.Value)
             .HasColumnName(nameof(Name))
             .HasMaxLength(PropertiesValidation.ProjectTask.NameMaximumLength);
-        
+
         builder.OwnsOne(t => t.Description)
             .Property(d => d.Value)
             .HasColumnName(nameof(Description))
@@ -34,17 +34,17 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
         builder.OwnsOne(t => t.IsCompleted)
             .Property(c => c.Value)
             .HasColumnName(nameof(IsCompleted));
-        
+
         builder.OwnsOne(t => t.Order)
             .Property(o => o.Value)
             .HasColumnName(nameof(Order));
 
         builder.HasOne(t => t.CreatedBy)
             .WithMany();
-        
+
         builder.HasOne(t => t.Asignee)
             .WithMany();
-        
+
         builder.HasOne(t => t.Reviewer)
             .WithMany();
 
@@ -53,17 +53,17 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
 
         builder.OwnsMany(t => t.Comments, ConfigureComments);
     }
-    
+
     private static void ConfigureComments(OwnedNavigationBuilder<ProjectTaskAggregate, ProjectTaskComment> builder)
     {
         builder.ToTable(nameof(ProjectTaskComment));
-        
+
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id)
             .HasConversion(
                 id => id.Value,
                 value => ProjectTaskCommentId.Create(value));
-        
+
         builder.OwnsOne(c => c.Message)
             .Property(m => m.Value)
             .HasColumnName(nameof(Message))

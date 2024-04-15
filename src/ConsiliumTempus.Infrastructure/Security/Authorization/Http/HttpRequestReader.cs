@@ -10,7 +10,7 @@ internal static class HttpRequestReader
         var id = request.RouteValues[property]?.ToString();
         return string.IsNullOrEmpty(id) ? null : id;
     }
-    
+
     internal static string? GetStringIdFromQuery(HttpRequest request, string property = "id")
     {
         var id = request.Query[property].ToString();
