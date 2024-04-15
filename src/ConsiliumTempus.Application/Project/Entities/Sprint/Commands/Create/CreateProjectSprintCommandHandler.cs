@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.Entities;
@@ -11,8 +10,7 @@ namespace ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 
 public sealed class CreateProjectSprintCommandHandler(
     IProjectRepository projectRepository,
-    IProjectSprintRepository projectSprintRepository,
-    IUnitOfWork unitOfWork)
+    IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<CreateProjectSprintCommand, ErrorOr<CreateProjectSprintResult>>
 {
     public async Task<ErrorOr<CreateProjectSprintResult>> Handle(CreateProjectSprintCommand command,
@@ -31,9 +29,7 @@ public sealed class CreateProjectSprintCommandHandler(
         await projectSprintRepository.Add(projectSprint, cancellationToken);
 
         project.RefreshActivity();
-
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-
+        
         return new CreateProjectSprintResult();
     }
 }
