@@ -9,15 +9,17 @@ public sealed class WorkspaceRole : Enumeration<WorkspaceRole>
     {
         Description = "This role can only read data"
     };
+
     public static readonly WorkspaceRole Member = new(2, nameof(Member))
     {
         Description = "This role can do most of the actions with some limitations"
     };
+
     public static readonly WorkspaceRole Admin = new(3, nameof(Admin))
     {
         Description = "This role can do everything"
     };
-    
+
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private WorkspaceRole()
     {

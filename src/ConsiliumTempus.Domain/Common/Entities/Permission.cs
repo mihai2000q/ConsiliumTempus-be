@@ -14,7 +14,7 @@ public sealed class Permission : Entity<int>
     {
         Name = name;
     }
-    
+
     public string Name { get; init; } = string.Empty;
 
     public static Permission Create(int id, string name)

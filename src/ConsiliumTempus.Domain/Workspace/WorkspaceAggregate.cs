@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
@@ -59,7 +59,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
             description,
             owner,
             isPersonal,
-            DateTime.UtcNow, 
+            DateTime.UtcNow,
             DateTime.UtcNow,
             DateTime.UtcNow);
 
@@ -88,10 +88,9 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
     {
         Owner = owner;
     }
-    
+
     public void UpdateIsPersonal(IsPersonal isPersonal)
     {
         IsPersonal = isPersonal;
     }
-
 }

@@ -35,9 +35,9 @@ public sealed class RefreshToken : Entity<Guid>, ITimestamps
     public DateTime ExpiryDateTime { get; init; }
     public bool IsInvalidated { get; private set; }
     public long RefreshTimes { get; private set; }
+    public UserAggregate User { get; init; } = null!;
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
-    public UserAggregate User { get; init; } = null!;
 
     public string Value => Id.ToString();
 
@@ -52,7 +52,7 @@ public sealed class RefreshToken : Entity<Guid>, ITimestamps
             false,
             0,
             user,
-            DateTime.UtcNow, 
+            DateTime.UtcNow,
             DateTime.UtcNow);
     }
 

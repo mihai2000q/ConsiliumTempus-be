@@ -33,12 +33,12 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
     private readonly List<ProjectSection> _sections = [];
 
     public Name Name { get; private set; } = default!;
-    public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; private set; }
     public DateOnly? StartDate { get; private set; }
     public DateOnly? EndDate { get; private set; }
     public ProjectAggregate Project { get; init; } = default!;
     public IReadOnlyList<ProjectSection> Sections => _sections.AsReadOnly();
+    public DateTime CreatedDateTime { get; init; }
+    public DateTime UpdatedDateTime { get; }
 
     public static ProjectSprint Create(
         Name name,
@@ -54,9 +54,9 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
             DateTime.UtcNow,
             startDate,
             endDate);
-        
+
         sprint.Project.RefreshActivity();
-        
+
         return sprint;
     }
 
