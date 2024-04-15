@@ -7,11 +7,11 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
 public sealed class RefreshTokenRepository(ConsiliumTempusDbContext dbContext) : IRefreshTokenRepository
 {
-    public Task<RefreshToken?> Get(string id, CancellationToken cancellationToken = default)
+    public Task<RefreshToken?> Get(Guid id, CancellationToken cancellationToken = default)
     {
         return dbContext.Set<RefreshToken>()
             .Include(rt => rt.User)
-            .SingleOrDefaultAsync(rt => rt.Id == new Guid(id), cancellationToken);
+            .SingleOrDefaultAsync(rt => rt.Id == id, cancellationToken);
     }
 
     public async Task Add(RefreshToken refreshToken, CancellationToken cancellationToken = default)
