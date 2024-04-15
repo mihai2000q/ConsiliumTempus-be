@@ -17,7 +17,7 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
 {
     [HasPermission(Permissions.ReadCollectionProjectSprint)]
     [HttpGet]
-    public async Task<IActionResult> GetCollection(GetCollectionProjectSprintRequest request, 
+    public async Task<IActionResult> GetCollection(GetCollectionProjectSprintRequest request,
         CancellationToken cancellationToken)
     {
         var query = Mapper.Map<GetCollectionProjectSprintQuery>(request);

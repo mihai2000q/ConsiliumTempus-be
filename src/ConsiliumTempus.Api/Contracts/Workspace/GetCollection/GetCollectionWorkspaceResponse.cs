@@ -6,7 +6,6 @@ namespace ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 public sealed record GetCollectionWorkspaceResponse(
     List<GetCollectionWorkspaceResponse.WorkspaceResponse> Workspaces)
 {
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     public sealed record WorkspaceResponse(
         Guid Id,
         string Name,

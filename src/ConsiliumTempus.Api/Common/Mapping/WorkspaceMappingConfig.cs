@@ -29,22 +29,22 @@ public sealed class WorkspaceMappingConfig : IRegister
     private static void GetMappings(TypeAdapterConfig config)
     {
         config.NewConfig<GetWorkspaceRequest, GetWorkspaceQuery>();
-        
+
         config.NewConfig<WorkspaceAggregate, GetWorkspaceResponse>()
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value);
     }
-    
+
     private static void GetCollectionMappings(TypeAdapterConfig config)
     {
         config.NewConfig<GetCollectionWorkspaceResult, GetCollectionWorkspaceResponse>();
-        
+
         config.NewConfig<WorkspaceAggregate, GetCollectionWorkspaceResponse.WorkspaceResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value);
     }
-    
+
     private static void CreateMappings(TypeAdapterConfig config)
     {
         config.NewConfig<CreateWorkspaceRequest, CreateWorkspaceCommand>();

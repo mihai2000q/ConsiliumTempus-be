@@ -30,7 +30,7 @@ public static class DependencyInjection
 
         logging.AddSerilog(logger);
     }
-    
+
     private static IServiceCollection AddMappings(this IServiceCollection services)
     {
         var config = TypeAdapterConfig.GlobalSettings;
@@ -40,7 +40,7 @@ public static class DependencyInjection
         services.AddScoped<IMapper, ServiceMapper>();
         return services;
     }
-    
+
     private static IServiceCollection AddCorsPolicies(this IServiceCollection services)
     {
         services.AddCors(options =>

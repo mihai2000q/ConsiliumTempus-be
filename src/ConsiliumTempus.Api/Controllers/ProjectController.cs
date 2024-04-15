@@ -30,7 +30,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
             Problem
         );
     }
-    
+
     [HttpGet("User")]
     public async Task<IActionResult> GetCollectionForUser(CancellationToken cancellationToken)
     {
@@ -38,34 +38,34 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
-            getCollectionForUserResult => 
+            getCollectionForUserResult =>
                 Ok(Mapper.Map<GetCollectionProjectForUserResponse>(getCollectionForUserResult)),
             Problem
         );
     }
-    
+
     [HasPermission(Permissions.ReadCollectionProject)]
     [HttpGet("Workspace")]
-    public async Task<IActionResult> GetCollectionForWorkspace(GetCollectionProjectForWorkspaceRequest request, 
+    public async Task<IActionResult> GetCollectionForWorkspace(GetCollectionProjectForWorkspaceRequest request,
         CancellationToken cancellationToken)
     {
         var query = Mapper.Map<GetCollectionProjectForWorkspaceQuery>(request);
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
-            getCollectionForWorkspaceResult => 
+            getCollectionForWorkspaceResult =>
                 Ok(Mapper.Map<GetCollectionProjectForWorkspaceResponse>(getCollectionForWorkspaceResult)),
             Problem
         );
     }
-    
+
     [HasPermission(Permissions.CreateProject)]
     [HttpPost]
     public async Task<IActionResult> Create(CreateProjectRequest request, CancellationToken cancellationToken)
     {
         var command = Mapper.Map<CreateProjectCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             createResult => Ok(Mapper.Map<CreateProjectResponse>(createResult)),
             Problem
@@ -78,7 +78,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
     {
         var command = new DeleteProjectCommand(id);
         var result = await Mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             deleteResult => Ok(Mapper.Map<DeleteProjectResponse>(deleteResult)),
             Problem

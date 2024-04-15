@@ -31,15 +31,16 @@ public sealed class UserController(IMapper mapper, ISender mediator) : ApiContro
     {
         var query = new GetCurrentUserQuery();
         var result = await Mediator.Send(query, cancellationToken);
-        
+
         return result.Match(
             getCurrentResult => Ok(Mapper.Map<GetCurrentUserResponse>(getCurrentResult)),
             Problem
         );
     }
-    
+
     [HttpPut("Current")]
-    public async Task<IActionResult> UpdateCurrent(UpdateCurrentUserRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCurrent(UpdateCurrentUserRequest request,
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<UpdateCurrentUserCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
@@ -49,7 +50,7 @@ public sealed class UserController(IMapper mapper, ISender mediator) : ApiContro
             Problem
         );
     }
-    
+
     [HttpDelete("Current")]
     public async Task<IActionResult> DeleteCurrent(CancellationToken cancellationToken)
     {

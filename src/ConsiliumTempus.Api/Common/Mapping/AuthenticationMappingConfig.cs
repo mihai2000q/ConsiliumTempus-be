@@ -32,11 +32,11 @@ public sealed class AuthenticationMappingConfig : IRegister
 
         config.NewConfig<LoginResult, LoginResponse>();
     }
-    
+
     private static void RefreshTokenMappings(TypeAdapterConfig config)
     {
         config.NewConfig<RefreshRequest, RefreshCommand>();
-        
+
         config.NewConfig<RefreshResult, RefreshResponse>();
     }
 }

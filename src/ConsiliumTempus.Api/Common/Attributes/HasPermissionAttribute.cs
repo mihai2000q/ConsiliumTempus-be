@@ -3,5 +3,5 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ConsiliumTempus.Api.Common.Attributes;
 
-public sealed class HasPermissionAttribute(Permissions permission) 
+public sealed class HasPermissionAttribute(Permissions permission)
     : AuthorizeAttribute(permission.ToString());

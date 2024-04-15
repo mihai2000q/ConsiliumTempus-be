@@ -38,7 +38,7 @@ public sealed class AuthenticationController(IMapper mapper, ISender mediator) :
             Problem
         );
     }
-    
+
     [HttpPut("Refresh")]
     public async Task<IActionResult> Refresh(RefreshRequest request, CancellationToken cancellationToken)
     {

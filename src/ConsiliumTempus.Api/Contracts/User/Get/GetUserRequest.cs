@@ -1,12 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.Contracts.User.Get;
 
 public sealed class GetUserRequest
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [SuppressMessage("ReSharper", "PropertyCanBeMadeInitOnly.Global")]
     [FromRoute]
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 }

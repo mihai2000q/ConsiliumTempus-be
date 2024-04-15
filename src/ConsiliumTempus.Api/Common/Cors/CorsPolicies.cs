@@ -6,16 +6,19 @@ public static class CorsPolicies
     {
         public const string Policy = "FrontendPolicy";
         public const string Origin = "http://localhost:8123";
-        public static readonly string[] Methods = [
-            "GET", 
-            "POST", 
-            "PUT", 
+
+        public static readonly string[] Methods =
+        [
+            "GET",
+            "POST",
+            "PUT",
             "DELETE"
         ];
-        public static readonly string[] Headers = [
-            "Authorization", 
+
+        public static readonly string[] Headers =
+        [
+            "Authorization",
             "Content-Type"
         ];
     }
-    
 }
