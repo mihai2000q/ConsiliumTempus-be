@@ -61,7 +61,7 @@ public class GetCollectionProjectForWorkspaceQueryHandlerTest
 
         var projects = ProjectFactory.CreateList();
         _projectRepository
-            .GetListForWorkspace(Arg.Any<WorkspaceId>())
+            .GetListByWorkspace(Arg.Any<WorkspaceId>())
             .Returns(projects);
         
         // Act
@@ -73,7 +73,7 @@ public class GetCollectionProjectForWorkspaceQueryHandlerTest
             .Get(Arg.Is<WorkspaceId>(wId => wId.Value == query.WorkspaceId));
         await _projectRepository
             .Received(1)
-            .GetListForWorkspace(Arg.Is<WorkspaceId>(wId => wId == workspace.Id));
+            .GetListByWorkspace(Arg.Is<WorkspaceId>(wId => wId == workspace.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new GetCollectionProjectForWorkspaceResult(projects));

@@ -43,7 +43,7 @@ public class LoginCommandHandlerTest
 
         var user = UserFactory.Create(password: "This is the pass for Password123");
         _userRepository
-            .GetUserByEmail(query.Email.ToLower())
+            .GetByEmail(query.Email.ToLower())
             .Returns(user);
 
         _scrambler
@@ -71,7 +71,7 @@ public class LoginCommandHandlerTest
         // Assert
         await _userRepository
             .Received(1)
-            .GetUserByEmail(Arg.Any<string>());
+            .GetByEmail(Arg.Any<string>());
         _scrambler
             .Received(1)
             .VerifyPassword(Arg.Any<string>(), Arg.Any<string>());
@@ -104,7 +104,7 @@ public class LoginCommandHandlerTest
         // Assert
         await _userRepository
             .Received(1)
-            .GetUserByEmail(Arg.Any<string>());
+            .GetByEmail(Arg.Any<string>());
         _scrambler.DidNotReceive();
         _jwtTokenGenerator.DidNotReceive();
 
@@ -119,7 +119,7 @@ public class LoginCommandHandlerTest
 
         var user = UserFactory.Create();
         _userRepository
-            .GetUserByEmail(query.Email.ToLower())
+            .GetByEmail(query.Email.ToLower())
             .Returns(user);
 
         _scrambler
@@ -132,7 +132,7 @@ public class LoginCommandHandlerTest
         // Assert
         await _userRepository
             .Received(1)
-            .GetUserByEmail(Arg.Any<string>());
+            .GetByEmail(Arg.Any<string>());
         _scrambler
             .Received(1)
             .VerifyPassword(Arg.Any<string>(), Arg.Any<string>());

@@ -74,7 +74,7 @@ public class RegisterCommandHandlerTest
         // Assert
         await _userRepository
             .Received(1)
-            .GetUserByEmail(Arg.Any<string>());
+            .GetByEmail(Arg.Any<string>());
         await _userRepository
             .Received(1)
             .Add(Arg.Any<UserAggregate>());
@@ -105,7 +105,7 @@ public class RegisterCommandHandlerTest
         var command = AuthenticationCommandFactory.CreateRegisterCommand();
 
         _userRepository
-            .GetUserByEmail(command.Email.ToLower())
+            .GetByEmail(command.Email.ToLower())
             .Returns(UserFactory.Create());
 
         // Act
@@ -114,7 +114,7 @@ public class RegisterCommandHandlerTest
         // Assert
         await _userRepository
             .Received(1)
-            .GetUserByEmail(Arg.Any<string>());
+            .GetByEmail(Arg.Any<string>());
         _jwtTokenGenerator.DidNotReceive();
         _userRepository.DidNotReceive();
 

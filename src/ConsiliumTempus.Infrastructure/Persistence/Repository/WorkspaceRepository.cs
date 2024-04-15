@@ -37,7 +37,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         return projectSprint?.Project.Workspace;
     }
 
-    public async Task<List<WorkspaceAggregate>> GetListForUser(UserAggregate user,
+    public async Task<List<WorkspaceAggregate>> GetListByUser(UserAggregate user,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Workspaces
@@ -45,7 +45,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<WorkspaceAggregate>> GetListForUserWithMemberships(UserAggregate user,
+    public async Task<List<WorkspaceAggregate>> GetListByUserWithMemberships(UserAggregate user,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Workspaces

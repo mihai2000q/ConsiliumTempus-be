@@ -20,7 +20,7 @@ public sealed class RegisterCommandHandler(
     public async Task<ErrorOr<RegisterResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
         var email = command.Email.ToLower();
-        if (await userRepository.GetUserByEmail(email, cancellationToken) is not null)
+        if (await userRepository.GetByEmail(email, cancellationToken) is not null)
             return Errors.User.DuplicateEmail;
 
         var password = scrambler.HashPassword(command.Password);

@@ -22,7 +22,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public Task<List<ProjectAggregate>> GetListForWorkspace(WorkspaceId workspaceId,
+    public Task<List<ProjectAggregate>> GetListByWorkspace(WorkspaceId workspaceId,
         CancellationToken cancellationToken = default)
     {
         return dbContext.Projects
@@ -30,7 +30,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .ToListAsync(cancellationToken);
     }
 
-    public Task<List<ProjectAggregate>> GetListForUser(UserId userId,
+    public Task<List<ProjectAggregate>> GetListByUser(UserId userId,
         CancellationToken cancellationToken = default)
     {
         return dbContext.Projects

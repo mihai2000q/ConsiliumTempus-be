@@ -11,10 +11,10 @@ public interface IProjectRepository
 
     Task<ProjectAggregate?> GetWithWorkspace(ProjectId id, CancellationToken cancellationToken = default);
 
-    Task<List<ProjectAggregate>> GetListForWorkspace(WorkspaceId workspaceId,
+    Task<List<ProjectAggregate>> GetListByWorkspace(WorkspaceId workspaceId,
         CancellationToken cancellationToken = default);
 
-    Task<List<ProjectAggregate>> GetListForUser(UserId userId, CancellationToken cancellationToken = default);
+    Task<List<ProjectAggregate>> GetListByUser(UserId userId, CancellationToken cancellationToken = default);
 
     Task Add(ProjectAggregate project, CancellationToken cancellationToken = default);
 

@@ -12,7 +12,7 @@ public sealed class UserDeletedHandler(IWorkspaceRepository workspaceRepository)
     public async Task Handle(UserDeleted notification, CancellationToken cancellationToken)
     {
         var workspaces =
-            await workspaceRepository.GetListForUserWithMemberships(notification.User, cancellationToken);
+            await workspaceRepository.GetListByUserWithMemberships(notification.User, cancellationToken);
 
         foreach (var workspace in workspaces)
         {

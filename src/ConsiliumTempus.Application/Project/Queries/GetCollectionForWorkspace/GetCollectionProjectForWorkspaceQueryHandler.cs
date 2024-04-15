@@ -18,6 +18,6 @@ public sealed class GetCollectionProjectForWorkspaceQueryHandler(
         var workspace = await workspaceRepository.Get(WorkspaceId.Create(query.WorkspaceId), cancellationToken);
         if (workspace is null) return Errors.Workspace.NotFound;
         return new GetCollectionProjectForWorkspaceResult(
-            await projectRepository.GetListForWorkspace(workspace.Id, cancellationToken));
+            await projectRepository.GetListByWorkspace(workspace.Id, cancellationToken));
     }
 }

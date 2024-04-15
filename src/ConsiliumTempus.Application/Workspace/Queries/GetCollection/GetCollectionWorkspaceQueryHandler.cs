@@ -17,6 +17,6 @@ public sealed class GetCollectionWorkspaceQueryHandler(
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
         if (user is null) return Errors.User.NotFound;
         return new GetCollectionWorkspaceResult(
-            await workspaceRepository.GetListForUser(user, cancellationToken));
+            await workspaceRepository.GetListByUser(user, cancellationToken));
     }
 }
