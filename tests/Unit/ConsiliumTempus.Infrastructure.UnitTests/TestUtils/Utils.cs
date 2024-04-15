@@ -10,7 +10,7 @@ internal static partial class Utils
     internal static void AssertToken(string token, UserAggregate user, JwtSettings jwtSettings)
     {
         var handler = new JwtSecurityTokenHandler();
-        
+
         handler.CanReadToken(token).Should().BeTrue();
 
         var outcomeToken = handler.ReadJwtToken(token);

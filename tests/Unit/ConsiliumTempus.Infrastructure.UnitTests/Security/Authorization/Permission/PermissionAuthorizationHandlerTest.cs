@@ -254,7 +254,7 @@ public class PermissionAuthorizationHandlerTest
 
         context.HasSucceeded.Should().BeTrue();
     }
-    
+
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissionsWithId))]
     public async Task PermissionAuthHandler_WhenRequestIdIsNotGuid_ShouldSucceed(

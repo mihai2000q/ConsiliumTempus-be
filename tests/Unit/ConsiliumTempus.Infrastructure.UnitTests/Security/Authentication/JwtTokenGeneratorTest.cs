@@ -36,12 +36,8 @@ public class JwtTokenGeneratorTest
     public void WhenGenerateToken_ShouldReturnNewToken()
     {
         // Arrange
-        var user = UserFactory.Create(
-            "FirstyLasty@Example.com",
-            "Password123",
-            "FirstName",
-            "LastName");
-        
+        var user = UserFactory.Create();
+
         // Act
         var outcome = _uut.GenerateToken(user);
 
@@ -55,7 +51,7 @@ public class JwtTokenGeneratorTest
         // Arrange
         const string jti = "This is the JwtId";
         var token = Utils.Token.GenerateToken(_jwtSettings, jti: jti);
-        
+
         // Act
         var outcome = _uut.GetJwtIdFromToken(token);
 

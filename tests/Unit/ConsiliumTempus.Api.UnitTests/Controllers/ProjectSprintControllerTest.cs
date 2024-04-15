@@ -77,7 +77,7 @@ public class ProjectSprintControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task CreateProjectSprint_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -142,9 +142,9 @@ public class ProjectSprintControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<DeleteProjectSprintCommand>(command => 
+            .Send(Arg.Is<DeleteProjectSprintCommand>(command =>
                 Utils.ProjectSprint.AssertDeleteCommand(command, id)));
-        
+
         var response = outcome.ToResponse<DeleteProjectSprintResponse>();
         response.Message.Should().Be(result.Message);
     }
@@ -166,7 +166,7 @@ public class ProjectSprintControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<DeleteProjectSprintCommand>(command => 
+            .Send(Arg.Is<DeleteProjectSprintCommand>(command =>
                 Utils.ProjectSprint.AssertDeleteCommand(command, id)));
 
         outcome.ValidateError(error);

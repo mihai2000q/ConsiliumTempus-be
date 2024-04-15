@@ -12,9 +12,9 @@ public static class ProjectSprintCommandFactory
         DateOnly? endDate = null)
     {
         return new CreateProjectSprintCommand(
-            projectId ?? Guid.NewGuid(), 
-            name, 
-            startDate, 
+            projectId ?? Guid.NewGuid(),
+            name,
+            startDate,
             endDate);
     }
 }

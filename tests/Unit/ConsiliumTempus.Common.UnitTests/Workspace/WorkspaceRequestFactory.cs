@@ -15,7 +15,7 @@ public static class WorkspaceRequestFactory
             Id = Guid.NewGuid()
         };
     }
-    
+
     public static CreateWorkspaceRequest CreateCreateWorkspaceRequest(
         string name = Constants.Workspace.Name,
         string description = Constants.Workspace.Description)
@@ -24,7 +24,7 @@ public static class WorkspaceRequestFactory
             name,
             description);
     }
-    
+
     public static UpdateWorkspaceRequest CreateUpdateWorkspaceRequest(
         Guid? id = null,
         string name = Constants.Workspace.Name,

@@ -23,8 +23,7 @@ public class AuthorizationPolicyProviderTest
     }
 
     #endregion
-
-    [Fact (Skip = "Cannot mock the Get Policy Call as it is an internal function")]
+    [Fact(Skip = "Cannot mock the Get Policy Call as it is an internal function")]
     public async Task WhenAuthPolicyProviderHasCachedPolicy_ShouldReturnCachedPolicy()
     {
         // Arrange
@@ -34,20 +33,20 @@ public class AuthorizationPolicyProviderTest
         _options
             .GetPolicy(policyName)
             .Returns(policy);
-        
+
         // Act
         var outcome = await _uut.GetPolicyAsync(policyName);
 
         // Assert
         outcome.Should().Be(policy);
     }
-    
+
     [Fact]
     public async Task WhenAuthPolicyProviderHasNotCached_ShouldReturnNewPolicy()
     {
         // Arrange
         var policy = Permissions.DeleteProject.ToString();
-        
+
         // Act
         var outcome = await _uut.GetPolicyAsync(policy);
 

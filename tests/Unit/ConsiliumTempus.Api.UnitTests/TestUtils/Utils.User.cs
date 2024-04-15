@@ -16,23 +16,6 @@ internal static partial class Utils
             query.Id.Should().Be(request.Id);
             return true;
         }
-        
-        internal static void AssertGetUser(GetUserResponse response, UserAggregate user)
-        {
-            response.FirstName.Should().Be(user.FirstName.Value);
-            response.LastName.Should().Be(user.LastName.Value);
-            response.Email.Should().Be(user.Credentials.Email);
-            response.Role.Should().Be(user.Role?.Value);
-        }
-
-        internal static void AssertGetCurrentUser(GetCurrentUserResponse response, UserAggregate user)
-        {
-            response.FirstName.Should().Be(user.FirstName.Value);
-            response.LastName.Should().Be(user.LastName.Value);
-            response.Email.Should().Be(user.Credentials.Email);
-            response.Role.Should().Be(user.Role?.Value);
-            response.DateOfBirth.Should().Be(user.DateOfBirth);
-        }
 
         internal static bool AssertUpdateCommand(UpdateCurrentUserCommand command, UpdateCurrentUserRequest request)
         {
@@ -41,6 +24,23 @@ internal static partial class Utils
             command.Role.Should().Be(request.Role);
             command.DateOfBirth.Should().Be(request.DateOfBirth);
             return true;
+        }
+
+        internal static void AssertGetUserResponse(GetUserResponse response, UserAggregate user)
+        {
+            response.FirstName.Should().Be(user.FirstName.Value);
+            response.LastName.Should().Be(user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
+            response.Role.Should().Be(user.Role?.Value);
+        }
+
+        internal static void AssertGetCurrentUserResponse(GetCurrentUserResponse response, UserAggregate user)
+        {
+            response.FirstName.Should().Be(user.FirstName.Value);
+            response.LastName.Should().Be(user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
+            response.Role.Should().Be(user.Role?.Value);
+            response.DateOfBirth.Should().Be(user.DateOfBirth);
         }
     }
 }

@@ -16,23 +16,23 @@ public static class AuthenticationCommandFactory
         DateOnly? dateOfBirth = null)
     {
         return new RegisterCommand(
-            firstName, 
-            lastName, 
-            email, 
-            password, 
-            role, 
+            firstName,
+            lastName,
+            email,
+            password,
+            role,
             dateOfBirth);
     }
-    
+
     public static LoginCommand CreateLoginCommand(
-        string email = Constants.User.Email, 
+        string email = Constants.User.Email,
         string password = Constants.User.Password)
     {
         return new LoginCommand(email, password);
     }
-    
+
     public static RefreshCommand CreateRefreshCommand(
-        string token = Constants.Auth.Token, 
+        string token = Constants.Auth.Token,
         string refreshToken = Constants.Auth.RefreshToken)
     {
         return new RefreshCommand(token, refreshToken);

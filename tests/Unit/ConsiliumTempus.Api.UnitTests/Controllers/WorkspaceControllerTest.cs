@@ -100,7 +100,7 @@ public class WorkspaceControllerTest
         var response = outcome.ToResponse<GetCollectionWorkspaceResponse>();
         Utils.Workspace.AssertGetCollectionResponse(response, result);
     }
-    
+
     [Fact]
     public async Task GetCollectionWorkspace_WhenItFails_ShouldReturnUserNotFoundError()
     {
@@ -140,11 +140,11 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<CreateWorkspaceCommand>(
                 command => Utils.Workspace.AssertCreateCommand(command, request)));
-        
+
         var response = outcome.ToResponse<CreateWorkspaceResponse>();
         response.Message.Should().Be(result.Message);
     }
-    
+
     [Fact]
     public async Task CreateWorkspace_WhenItFails_ShouldReturnUserNotFoundError()
     {
@@ -186,7 +186,7 @@ public class WorkspaceControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteWorkspaceCommand>(command => command.Id == id));
-        
+
         var response = outcome.ToResponse<DeleteWorkspaceResponse>();
         response.Message.Should().Be(result.Message);
     }
@@ -232,7 +232,7 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<UpdateWorkspaceCommand>(
                 command => Utils.Workspace.AssertUpdateCommand(command, request)));
-        
+
         var response = outcome.ToResponse<UpdateWorkspaceResponse>();
         response.Message.Should().Be(result.Message);
     }

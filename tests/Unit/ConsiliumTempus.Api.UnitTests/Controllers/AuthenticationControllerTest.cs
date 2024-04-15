@@ -50,7 +50,7 @@ public class AuthenticationControllerTest
             .Received(1)
             .Send(Arg.Is<RegisterCommand>(
                 command => Utils.Authentication.AssertRegisterCommand(command, request)));
-        
+
         var response = outcome.ToResponse<RegisterResponse>();
         response.Token.Should().Be(result.Token);
         response.RefreshToken.Should().Be(result.RefreshToken);
@@ -109,7 +109,7 @@ public class AuthenticationControllerTest
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateLoginRequest();
-        
+
         var error = Errors.Authentication.InvalidCredentials;
         _mediator
             .Send(Arg.Any<LoginCommand>())
@@ -126,7 +126,7 @@ public class AuthenticationControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task WhenRefreshIsSuccessful_ShouldReturnAccessToken()
     {
@@ -146,11 +146,11 @@ public class AuthenticationControllerTest
             .Received(1)
             .Send(Arg.Is<RefreshCommand>(
                 command => Utils.Authentication.AssertRefreshCommand(command, request)));
-        
+
         var response = outcome.ToResponse<RefreshResponse>();
         response.Token.Should().Be(result.Token);
     }
-    
+
     [Fact]
     public async Task WhenRefreshFails_ShouldReturnInvalidTokensError()
     {

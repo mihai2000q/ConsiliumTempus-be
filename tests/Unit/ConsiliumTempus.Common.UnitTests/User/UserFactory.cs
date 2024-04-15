@@ -15,7 +15,7 @@ public static class UserFactory
         DateOnly? dateOfBirth = null)
     {
         var user = UserAggregate.Register(
-            Credentials.Create(email, password), 
+            Credentials.Create(email, password),
             FirstName.Create(firstName),
             LastName.Create(lastName),
             role is null ? null : Role.Create(role),

@@ -7,13 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\src\ConsiliumTempus.Api\ConsiliumTempus.Api.csproj" />
-      <ProjectReference Include="..\..\..\src\ConsiliumTempus.Application\ConsiliumTempus.Application.csproj" />
-      <ProjectReference Include="..\..\..\src\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj" />
+        <ProjectReference Include="..\..\..\src\ConsiliumTempus.Api\ConsiliumTempus.Api.csproj"/>
+        <ProjectReference Include="..\..\..\src\ConsiliumTempus.Application\ConsiliumTempus.Application.csproj"/>
+        <ProjectReference Include="..\..\..\src\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Project\Entities\" />
+        <Folder Include="Project\Entities\"/>
     </ItemGroup>
 
 </Project>

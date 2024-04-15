@@ -24,7 +24,7 @@ public static class ProjectFactory
             workspace ?? WorkspaceFactory.Create(),
             user ?? UserFactory.Create());
     }
-    
+
     public static List<ProjectAggregate> CreateList(int count = 5)
     {
         return Enumerable

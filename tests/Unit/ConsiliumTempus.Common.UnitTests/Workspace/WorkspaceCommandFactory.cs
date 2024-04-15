@@ -11,10 +11,10 @@ public static class WorkspaceCommandFactory
         string description = Constants.Workspace.Description)
     {
         return new CreateWorkspaceCommand(
-            name, 
+            name,
             description);
     }
-    
+
     public static UpdateWorkspaceCommand CreateUpdateWorkspaceCommand(
         Guid? id = null,
         string name = Constants.Workspace.Name,
@@ -22,7 +22,7 @@ public static class WorkspaceCommandFactory
     {
         return new UpdateWorkspaceCommand(
             id ?? Guid.NewGuid(),
-            name, 
+            name,
             description);
     }
 }

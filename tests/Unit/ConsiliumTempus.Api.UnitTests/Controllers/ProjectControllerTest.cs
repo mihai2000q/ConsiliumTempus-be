@@ -52,13 +52,13 @@ public class ProjectControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetProjectQuery>(q => 
+            .Send(Arg.Is<GetProjectQuery>(q =>
                 Utils.Project.AssertGetProjectQuery(q, request)));
 
         var response = outcome.ToResponse<GetProjectResponse>();
         Utils.Project.AssertGetProjectResponse(response, project);
     }
-    
+
     [Fact]
     public async Task Get_WhenFails_ShouldReturnNotFoundError()
     {
@@ -76,18 +76,18 @@ public class ProjectControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetProjectQuery>(q => 
+            .Send(Arg.Is<GetProjectQuery>(q =>
                 Utils.Project.AssertGetProjectQuery(q, request)));
-        
+
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task GetCollectionForWorkspace_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectForWorkspaceRequest();
-        
+
         var result = new GetCollectionProjectForWorkspaceResult(ProjectFactory.CreateList());
         _mediator
             .Send(Arg.Any<GetCollectionProjectForWorkspaceQuery>())
@@ -99,13 +99,13 @@ public class ProjectControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetCollectionProjectForWorkspaceQuery>(q => 
+            .Send(Arg.Is<GetCollectionProjectForWorkspaceQuery>(q =>
                 Utils.Project.AssertGetCollectionProjectForWorkspaceQuery(q, request)));
 
         var response = outcome.ToResponse<GetCollectionProjectForWorkspaceResponse>();
         Utils.Project.AssertGetCollectionForWorkspaceResponse(response, result);
     }
-    
+
     [Fact]
     public async Task GetCollectionForWorkspace_WhenFails_ShouldReturnWorkspaceNotFoundError()
     {
@@ -123,12 +123,12 @@ public class ProjectControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetCollectionProjectForWorkspaceQuery>(q => 
+            .Send(Arg.Is<GetCollectionProjectForWorkspaceQuery>(q =>
                 Utils.Project.AssertGetCollectionProjectForWorkspaceQuery(q, request)));
-        
+
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task GetCollectionForUser_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -144,12 +144,13 @@ public class ProjectControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(new GetCollectionProjectForUserQuery());
+            .Send(Arg.Is<GetCollectionProjectForUserQuery>(q =>
+                Utils.Project.AssertGetCollectionProjectForUserQuery(q)));
 
         var response = outcome.ToResponse<GetCollectionProjectForUserResponse>();
         Utils.Project.AssertGetCollectionForUserResponse(response, result);
     }
-    
+
     [Fact]
     public async Task GetCollectionForUser_WhenFails_ShouldReturnUserNotFoundError()
     {
@@ -165,8 +166,9 @@ public class ProjectControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(new GetCollectionProjectForUserQuery());
-        
+            .Send(Arg.Is<GetCollectionProjectForUserQuery>(q =>
+                Utils.Project.AssertGetCollectionProjectForUserQuery(q)));
+
         outcome.ValidateError(error);
     }
 
@@ -188,7 +190,7 @@ public class ProjectControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<CreateProjectCommand>(command => Utils.Project.AssertCreateCommand(command, request)));
-        
+
         var response = outcome.ToResponse<CreateProjectResponse>();
         response.Message.Should().Be(result.Message);
     }
@@ -233,7 +235,7 @@ public class ProjectControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, id)));
-        
+
         var response = outcome.ToResponse<DeleteProjectResponse>();
         response.Message.Should().Be(result.Message);
     }

@@ -6,5 +6,5 @@ internal static partial class Constants
     {
         internal const string Name = "Pro Basketball Team";
         internal const string Description = "This is our team and we win";
-    }    
+    }
 }

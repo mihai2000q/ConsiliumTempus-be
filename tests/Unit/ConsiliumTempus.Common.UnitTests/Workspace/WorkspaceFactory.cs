@@ -25,7 +25,7 @@ public static class WorkspaceFactory
         workspace.AddUserMembership(MembershipFactory.Create(owner, workspace));
         return workspace;
     }
-    
+
     public static List<WorkspaceAggregate> CreateList(int count = 5)
     {
         return Enumerable
