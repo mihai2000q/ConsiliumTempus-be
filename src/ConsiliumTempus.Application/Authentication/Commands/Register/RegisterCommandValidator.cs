@@ -11,16 +11,16 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
         RuleFor(c => c.FirstName)
             .NotEmpty()
             .MaximumLength(PropertiesValidation.User.FirstNameMaximumLength);
-        
+
         RuleFor(c => c.LastName)
             .NotEmpty()
             .MaximumLength(PropertiesValidation.User.LastNameMaximumLength);
-        
+
         RuleFor(c => c.Email)
             .NotEmpty()
             .MaximumLength(PropertiesValidation.User.EmailMaximumLength)
             .IsEmail();
-        
+
         RuleFor(c => c.Password)
             .NotEmpty()
             .MaximumLength(PropertiesValidation.User.PlainPasswordMaximumLength)
