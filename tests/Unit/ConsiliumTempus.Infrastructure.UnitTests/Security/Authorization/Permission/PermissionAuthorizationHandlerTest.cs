@@ -326,7 +326,7 @@ public class PermissionAuthorizationHandlerTest
         Permissions permission,
         PermissionAuthorizationHandlerData.RequestLocation requestLocation,
         string? id,
-        string provider)
+        PermissionAuthorizationHandlerData.StringIdType provider)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission.ToString()) };
@@ -379,17 +379,17 @@ public class PermissionAuthorizationHandlerTest
 
         switch (provider)
         {
-            case "Workspace":
+            case PermissionAuthorizationHandlerData.StringIdType.Workspace:
                 await _workspaceProvider
                     .Received(1)
                     .Get(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));
                 break;
-            case "Project":
+            case PermissionAuthorizationHandlerData.StringIdType.Project:
                 await _workspaceProvider
                     .Received(1)
                     .GetByProject(Arg.Is<ProjectId>(pId => pId.Value.ToString() == stringId));
                 break;
-            case "ProjectSprint":
+            case PermissionAuthorizationHandlerData.StringIdType.ProjectSprint:
                 await _workspaceProvider
                     .Received(1)
                     .GetByProjectSprint(Arg.Is<ProjectSprintId>(psId => psId.Value.ToString() == stringId));
