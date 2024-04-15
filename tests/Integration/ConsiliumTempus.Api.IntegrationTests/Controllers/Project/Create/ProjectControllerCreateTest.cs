@@ -15,7 +15,7 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task WhenProjectCreateSucceeds_ShouldCreateAndReturnSuccessResponse()
+    public async Task CreateProject_WhenSucceeds_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
         var workspaceId = ProjectData.Workspaces.First().Id.Value;
@@ -43,7 +43,7 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task CreateProject_WhenUserIsNotFound_ShouldReturnForbiddenResponse()
+    public async Task CreateProject_WhenUserIsNotFound_ShouldReturnUserNotFoundError()
     {
         // Arrange
         var workspaceId = ProjectData.Workspaces.First().Id.Value;

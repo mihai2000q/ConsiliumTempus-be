@@ -18,7 +18,6 @@ public sealed class CreateProjectSprintCommandHandler(
     {
         var projectId = ProjectId.Create(command.ProjectId);
         var project = await projectRepository.GetWithWorkspace(projectId, cancellationToken);
-
         if (project is null) return Errors.Project.NotFound;
 
         var projectSprint = ProjectSprint.Create(
