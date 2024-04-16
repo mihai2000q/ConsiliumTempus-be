@@ -27,7 +27,7 @@ public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Projec
         builder.HasOne(s => s.Project)
             .WithMany(p => p.Sprints);
 
-        builder.HasMany(s => s.Sections)
+        builder.HasMany(s => s.Stages)
             .WithOne(s => s.Sprint);
     }
 }

@@ -6,15 +6,15 @@ using ConsiliumTempus.Domain.ProjectTask;
 
 namespace ConsiliumTempus.Domain.Project.Entities;
 
-public sealed class ProjectSection : Entity<ProjectSectionId>
+public sealed class ProjectStage : Entity<ProjectStageId>
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
-    private ProjectSection()
+    private ProjectStage()
     {
     }
 
-    private ProjectSection(
-        ProjectSectionId id,
+    private ProjectStage(
+        ProjectStageId id,
         Name name,
         Order order,
         ProjectSprint sprint) : base(id)
@@ -31,13 +31,13 @@ public sealed class ProjectSection : Entity<ProjectSectionId>
     public ProjectSprint Sprint { get; init; } = default!;
     public IReadOnlyList<ProjectTaskAggregate> Tasks => _tasks.AsReadOnly();
 
-    public static ProjectSection Create(
+    public static ProjectStage Create(
         Name name,
         Order order,
         ProjectSprint sprint)
     {
-        return new ProjectSection(
-            ProjectSectionId.CreateUnique(),
+        return new ProjectStage(
+            ProjectStageId.CreateUnique(),
             name,
             order,
             sprint);

@@ -36,27 +36,27 @@ public class ProjectCreatedHandlerTest
         project.Sprints[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
         var count = 0;
-        project.Sprints[0].Sections.Should().HaveCount(Constants.ProjectSection.Names.Length);
-        project.Sprints[0].Sections
+        project.Sprints[0].Stages.Should().HaveCount(Constants.ProjectStage.Names.Length);
+        project.Sprints[0].Stages
             .ToList()
-            .ForEach(section =>
+            .ForEach(stage =>
             {
-                section.Id.Value.ToString().Should().NotBeNullOrWhiteSpace();
-                section.Order.Value.Should().Be(count++);
-                section.Sprint.Should().Be(project.Sprints[0]);
+                stage.Id.Value.ToString().Should().NotBeNullOrWhiteSpace();
+                stage.Order.Value.Should().Be(count++);
+                stage.Sprint.Should().Be(project.Sprints[0]);
             });
-        project.Sprints[0].Sections
-            .Zip(Constants.ProjectSection.Names)
+        project.Sprints[0].Stages
+            .Zip(Constants.ProjectStage.Names)
             .ToList()
             .ForEach(x => x.First.Name.Value.Should().Be(x.Second));
 
         count = 0;
-        project.Sprints[0].Sections[0].Tasks.Should().HaveCount(Constants.ProjectTask.Names.Length);
-        project.Sprints[0].Sections[0].Tasks
+        project.Sprints[0].Stages[0].Tasks.Should().HaveCount(Constants.ProjectTask.Names.Length);
+        project.Sprints[0].Stages[0].Tasks
             .Zip(Constants.ProjectTask.Names)
             .ToList()
             .ForEach(x => x.First.Name.Value.Should().Be(x.Second));
-        project.Sprints[0].Sections[0].Tasks
+        project.Sprints[0].Stages[0].Tasks
             .ToList()
             .ForEach(task =>
             {
@@ -71,7 +71,7 @@ public class ProjectCreatedHandlerTest
                 task.Reviewer.Should().BeNull();
                 task.DueDate.Should().BeNull();
                 task.EstimatedDuration.Should().BeNull();
-                task.Section.Should().Be(project.Sprints[0].Sections[0]);
+                task.Stage.Should().Be(project.Sprints[0].Stages[0]);
                 task.Comments.Should().BeEmpty();
             });
     }

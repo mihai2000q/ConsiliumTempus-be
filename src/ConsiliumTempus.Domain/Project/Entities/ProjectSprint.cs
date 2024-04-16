@@ -30,13 +30,13 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
         EndDate = endDate;
     }
 
-    private readonly List<ProjectSection> _sections = [];
+    private readonly List<ProjectStage> _stages = [];
 
     public Name Name { get; private set; } = default!;
     public DateOnly? StartDate { get; private set; }
     public DateOnly? EndDate { get; private set; }
     public ProjectAggregate Project { get; init; } = default!;
-    public IReadOnlyList<ProjectSection> Sections => _sections.AsReadOnly();
+    public IReadOnlyList<ProjectStage> Stages => _stages.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
 
@@ -62,8 +62,8 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
         UpdatedDateTime = DateTime.UtcNow;
     }
 
-    public void AddSection(ProjectSection section)
+    public void AddStage(ProjectStage stage)
     {
-        _sections.Add(section);
+        _stages.Add(stage);
     }
 }

@@ -36,7 +36,7 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
         var createdProject = await dbContext.Projects
             .Include(p => p.Workspace)
             .Include(p => p.Sprints)
-            .ThenInclude(ps => ps.Sections.OrderBy(s => s.Order.Value))
+            .ThenInclude(ps => ps.Stages.OrderBy(s => s.Order.Value))
             .ThenInclude(ps => ps.Tasks.OrderBy(t => t.Order.Value))
             .SingleAsync(p => p.Name.Value == request.Name);
         Utils.Project.AssertCreation(createdProject, request);

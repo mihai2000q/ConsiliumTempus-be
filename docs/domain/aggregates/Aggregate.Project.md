@@ -34,7 +34,7 @@ For database design checkout the [Project Diagram](../diagrams/aggregates/Diagra
 ### Entities
 
 - [Project Sprint](../entities/project/Entity.ProjectSprint.md)
-- [Project Section](../entities/project/Entity.ProjectSection.md)
+- [Project Stage](../entities/project/Entity.ProjectStage.md)
 
 ### Properties Validation
 
@@ -46,4 +46,5 @@ For database design checkout the [Project Diagram](../diagrams/aggregates/Diagra
 - **Not Found** when the project cannot be found
 
 ### Domain Events
-- **Project Created** when the project gets created, it will also create sprints, sections and tasks as examples for user 
+
+- **Project Created** when the project gets created, it will also create sprints, stages and tasks as examples for user 

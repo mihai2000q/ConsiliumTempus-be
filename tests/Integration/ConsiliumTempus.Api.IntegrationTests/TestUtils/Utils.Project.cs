@@ -54,8 +54,8 @@ internal static partial class Utils
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
             project.Sprints.Should().HaveCount(1);
-            project.Sprints[0].Sections.Should().HaveCount(Constants.ProjectSection.Names.Length);
-            project.Sprints[0].Sections[0].Tasks
+            project.Sprints[0].Stages.Should().HaveCount(Constants.ProjectStage.Names.Length);
+            project.Sprints[0].Stages[0].Tasks
                 .Should().HaveCount(Constants.ProjectTask.Names.Length);
         }
 

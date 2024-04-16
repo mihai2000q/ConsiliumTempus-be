@@ -17,21 +17,21 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
         notification.Project.AddSprint(sprint);
 
         var count = 0;
-        Constants.ProjectSection.Names
-            .Select(name => ProjectSection.Create(Name.Create(name), Order.Create(count++), sprint))
+        Constants.ProjectStage.Names
+            .Select(name => ProjectStage.Create(Name.Create(name), Order.Create(count++), sprint))
             .ToList()
-            .ForEach(section => sprint.AddSection(section));
+            .ForEach(stage => sprint.AddStage(stage));
 
         count = 0;
-        var section = sprint.Sections[0];
+        var stage = sprint.Stages[0];
         Constants.ProjectTask.Names
             .ToList()
-            .ForEach(name => section.AddTask(ProjectTaskAggregate.Create(
+            .ForEach(name => stage.AddTask(ProjectTaskAggregate.Create(
                 Name.Create(name),
                 Description.Create(string.Empty),
                 Order.Create(count++),
                 notification.User,
-                section)));
+                stage)));
 
         return Task.CompletedTask;
     }

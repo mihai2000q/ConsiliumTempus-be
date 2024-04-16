@@ -3,28 +3,28 @@ using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Domain.Project.ValueObjects;
 
-public sealed class ProjectSectionId : ValueObject
+public sealed class ProjectStageId : ValueObject
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
-    private ProjectSectionId()
+    private ProjectStageId()
     {
     }
 
-    private ProjectSectionId(Guid value)
+    private ProjectStageId(Guid value)
     {
         Value = value;
     }
 
     public Guid Value { get; init; }
 
-    public static ProjectSectionId CreateUnique()
+    public static ProjectStageId CreateUnique()
     {
-        return new ProjectSectionId(Guid.NewGuid());
+        return new ProjectStageId(Guid.NewGuid());
     }
 
-    public static ProjectSectionId Create(Guid value)
+    public static ProjectStageId Create(Guid value)
     {
-        return new ProjectSectionId(value);
+        return new ProjectStageId(value);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
