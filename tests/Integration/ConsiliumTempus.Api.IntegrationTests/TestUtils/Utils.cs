@@ -15,7 +15,7 @@ internal static partial class Utils
         { ErrorType.NotFound, HttpStatusCode.NotFound },
         { ErrorType.Conflict, HttpStatusCode.Conflict }
     };
-    
+
     private static readonly Dictionary<HttpStatusCode, int> StatusCodesMap = new()
     {
         { HttpStatusCode.BadRequest, StatusCodes.Status400BadRequest },
@@ -39,7 +39,7 @@ internal static partial class Utils
     internal static async Task ValidateValidationErrors(this HttpResponseMessage response)
     {
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        
+
         var error = await response.Content.ReadFromJsonAsync<ProblemDetails>();
         error?.Status.Should().Be(StatusCodes.Status400BadRequest);
         var errorCodes = error?.Extensions["errors"] as JsonElement?;

@@ -24,7 +24,7 @@ public static class RefreshTokenFactory
         DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.User), user);
-        
+
         return refreshToken;
     }
 }

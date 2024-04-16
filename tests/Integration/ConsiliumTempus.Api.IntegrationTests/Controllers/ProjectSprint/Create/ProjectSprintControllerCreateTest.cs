@@ -50,11 +50,11 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         var outcome = await Client.Post("api/projects/sprints", request);
 
         // Assert
+        await outcome.ValidateError(Errors.Project.NotFound);
+
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length);
         dbContext.ProjectSprints.SingleOrDefault(p => p.Name.Value == request.Name)
             .Should().BeNull();
-
-        await outcome.ValidateError(Errors.Project.NotFound);
     }
 }

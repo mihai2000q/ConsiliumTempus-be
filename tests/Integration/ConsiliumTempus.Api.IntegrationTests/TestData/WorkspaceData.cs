@@ -19,7 +19,7 @@ internal class WorkspaceData : ITestData
             Memberships
         ];
     }
-    
+
     public static UserAggregate[] Users { get; } =
     [
         UserFactory.Create(
@@ -50,7 +50,7 @@ internal class WorkspaceData : ITestData
             "Lebron",
             "James"),
     ];
-    
+
     public static WorkspaceAggregate[] Workspaces { get; } =
     [
         WorkspaceFactory.Create(
@@ -73,26 +73,26 @@ internal class WorkspaceData : ITestData
         MembershipFactory.Create(
             Users[0],
             Workspaces[0],
-            WorkspaceRole.Admin), 
+            WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[2],
-            WorkspaceRole.Admin), 
+            WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[1],
             Workspaces[1],
-            WorkspaceRole.Admin), 
+            WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[2],
             Workspaces[1],
-            WorkspaceRole.Member), 
+            WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[3],
             Workspaces[0],
-            WorkspaceRole.Member), 
+            WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[4],
             Workspaces[0],
-            WorkspaceRole.View) 
+            WorkspaceRole.View)
     ];
 }

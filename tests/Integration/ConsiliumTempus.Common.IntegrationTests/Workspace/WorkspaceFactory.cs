@@ -18,7 +18,7 @@ public static class WorkspaceFactory
         DateTime? updatedDateTime = null)
     {
         var workspace = DomainFactory.GetObjectInstance<WorkspaceAggregate>();
-        
+
         DomainFactory.SetProperty(ref workspace, nameof(workspace.Id), WorkspaceId.CreateUnique());
         DomainFactory.SetProperty(ref workspace, nameof(workspace.Name), Name.Create(name));
         DomainFactory.SetProperty(ref workspace, nameof(workspace.Description), Description.Create(description));

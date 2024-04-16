@@ -21,7 +21,7 @@ internal static partial class Utils
             response.IsFavorite.Should().Be(project.IsFavorite.Value);
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
         }
-        
+
         internal static void AssertGetCollectionForUserResponse(
             GetCollectionProjectForUserResponse response,
             IEnumerable<ProjectAggregate> projects)
@@ -49,7 +49,7 @@ internal static partial class Utils
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             project.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            
+
             project.Workspace.Id.Value.Should().Be(request.WorkspaceId);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 

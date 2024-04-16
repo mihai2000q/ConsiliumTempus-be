@@ -14,7 +14,7 @@ public class TestAuthHandler(
     : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
 {
     private const string AuthenticationType = "Test";
-    
+
     public const string AuthenticationSchema = "TestSchema";
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()

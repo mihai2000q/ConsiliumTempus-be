@@ -25,7 +25,7 @@ public static class ProjectSprintFactory
         DomainFactory.SetProperty(ref sprint, nameof(sprint.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref sprint, nameof(sprint.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref sprint, nameof(sprint.Project), project);
-        
+
         return sprint;
-    }   
+    }
 }

@@ -18,7 +18,7 @@ public class ProjectSprintControllerGetCollectionValidationTest(WebAppFactory fa
             ProjectSprintData.Projects.First().Id.Value);
 
         // Act
-        Client.UseCustomToken(ProjectData.Users.First());
+        Client.UseCustomToken(ProjectSprintData.Users.First());
         var outcome = await Client.Get($"api/projects/sprints?projectId={request.ProjectId}");
 
         // Assert

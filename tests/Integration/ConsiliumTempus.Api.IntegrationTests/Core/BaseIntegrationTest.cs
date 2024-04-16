@@ -8,9 +8,9 @@ namespace ConsiliumTempus.Api.IntegrationTests.Core;
 
 public abstract class BaseIntegrationTest : IAsyncLifetime
 {
-    private readonly ITestData _testData;
-    private readonly Func<Task> _resetDatabase;
     private readonly bool _isAnonymous;
+    private readonly Func<Task> _resetDatabase;
+    private readonly ITestData _testData;
 
     protected readonly AppHttpClient Client;
     protected readonly IDbContextFactory<ConsiliumTempusDbContext> DbContextFactory;
@@ -44,10 +44,7 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
     private async Task AddTestData(IEnumerable<IEnumerable<object>> data)
     {
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        foreach (var d in data.SelectMany(x => x))
-        {
-            await dbContext.AddAsync(d);
-        }
+        foreach (var d in data.SelectMany(x => x)) await dbContext.AddAsync(d);
         await dbContext.SaveChangesAsync();
     }
 }

@@ -25,7 +25,7 @@ public static class UserFactory
         DomainFactory.SetProperty(ref user, nameof(user.DateOfBirth), dateOfBirth);
         DomainFactory.SetProperty(ref user, nameof(user.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref user, nameof(user.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
-        
+
         return user;
     }
 }

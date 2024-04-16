@@ -10,7 +10,7 @@ internal class AuthData : ITestData
 {
     public IEnumerable<IEnumerable<object>> GetDataCollections()
     {
-        return 
+        return
         [
             Users,
             RefreshTokens
@@ -26,7 +26,7 @@ internal class AuthData : ITestData
             "Jordan",
             "Pro Basketball Player")
     ];
-    
+
     public static RefreshToken[] RefreshTokens { get; } =
     [
         RefreshTokenFactory.Create(
