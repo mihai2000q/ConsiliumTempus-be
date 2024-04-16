@@ -23,7 +23,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         IsCompleted isCompleted,
         Order order,
         UserAggregate createdBy,
-        ProjectSection section,
+        ProjectStage stage,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
     {
@@ -32,7 +32,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         IsCompleted = isCompleted;
         Order = order;
         CreatedBy = createdBy;
-        Section = section;
+        Stage = stage;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
     }
@@ -48,7 +48,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public UserAggregate? Reviewer { get; private set; }
     public DateOnly? DueDate { get; private set; }
     public TimeSpan? EstimatedDuration { get; private set; }
-    public ProjectSection Section { get; private set; } = default!;
+    public ProjectStage Stage { get; private set; } = default!;
     public IReadOnlyList<ProjectTaskComment> Comments => _comments.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
@@ -58,7 +58,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         Description description,
         Order order,
         UserAggregate createdBy,
-        ProjectSection section)
+        ProjectStage stage)
     {
         return new ProjectTaskAggregate(
             ProjectTaskId.CreateUnique(),
@@ -67,7 +67,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             IsCompleted.Create(false),
             order,
             createdBy,
-            section,
+            stage,
             DateTime.UtcNow,
             DateTime.UtcNow);
     }

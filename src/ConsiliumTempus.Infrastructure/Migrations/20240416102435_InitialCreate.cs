@@ -210,7 +210,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProjectSection",
+                name: "ProjectStage",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -220,9 +220,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectSection", x => x.Id);
+                    table.PrimaryKey("PK_ProjectStage", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProjectSection_ProjectSprint_SprintId",
+                        name: "FK_ProjectStage_ProjectSprint_SprintId",
                         column: x => x.SprintId,
                         principalTable: "ProjectSprint",
                         principalColumn: "Id",
@@ -243,7 +243,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     ReviewerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DueDate = table.Column<DateOnly>(type: "date", nullable: true),
                     EstimatedDuration = table.Column<TimeSpan>(type: "time", nullable: true),
-                    SectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -251,9 +251,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_ProjectTask", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProjectTask_ProjectSection_SectionId",
-                        column: x => x.SectionId,
-                        principalTable: "ProjectSection",
+                        name: "FK_ProjectTask_ProjectStage_StageId",
+                        column: x => x.StageId,
+                        principalTable: "ProjectStage",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -378,14 +378,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "WorkspaceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectSection_SprintId",
-                table: "ProjectSection",
-                column: "SprintId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProjectSprint_ProjectId",
                 table: "ProjectSprint",
                 column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectStage_SprintId",
+                table: "ProjectStage",
+                column: "SprintId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectTask_AsigneeId",
@@ -403,9 +403,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "ReviewerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectTask_SectionId",
+                name: "IX_ProjectTask_StageId",
                 table: "ProjectTask",
-                column: "SectionId");
+                column: "StageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectTaskComment_CreatedById",
@@ -474,7 +474,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "WorkspaceRole");
 
             migrationBuilder.DropTable(
-                name: "ProjectSection");
+                name: "ProjectStage");
 
             migrationBuilder.DropTable(
                 name: "ProjectSprint");

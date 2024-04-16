@@ -7,7 +7,7 @@ public static partial class Constants
         public const string Name = "Sprint 1";
     }
 
-    public static class ProjectSection
+    public static class ProjectStage
     {
         public static readonly string[] Names = ["To Do", "In Progress", "Completed"];
     }

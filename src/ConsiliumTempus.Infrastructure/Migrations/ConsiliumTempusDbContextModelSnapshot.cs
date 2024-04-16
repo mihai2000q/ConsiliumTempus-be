@@ -330,21 +330,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSection", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SprintId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SprintId");
-
-                    b.ToTable("ProjectSection", (string)null);
-                });
-
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSprint", b =>
                 {
                     b.Property<Guid>("Id")
@@ -370,6 +355,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectSprint", (string)null);
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectStage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SprintId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SprintId");
+
+                    b.ToTable("ProjectStage", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>
@@ -419,7 +419,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<Guid?>("ReviewerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SectionId")
+                    b.Property<Guid>("StageId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdatedDateTime")
@@ -433,7 +433,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("ReviewerId");
 
-                    b.HasIndex("SectionId");
+                    b.HasIndex("StageId");
 
                     b.ToTable("ProjectTask", (string)null);
                 });
@@ -536,59 +536,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSection", b =>
-                {
-                    b.HasOne("ConsiliumTempus.Domain.Project.Entities.ProjectSprint", "Sprint")
-                        .WithMany("Sections")
-                        .HasForeignKey("SprintId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Name", "Name", b1 =>
-                        {
-                            b1.Property<Guid>("ProjectSectionId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Name");
-
-                            b1.HasKey("ProjectSectionId");
-
-                            b1.ToTable("ProjectSection");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProjectSectionId");
-                        });
-
-                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Order", "Order", b1 =>
-                        {
-                            b1.Property<Guid>("ProjectSectionId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<int>("Value")
-                                .HasColumnType("int")
-                                .HasColumnName("Order");
-
-                            b1.HasKey("ProjectSectionId");
-
-                            b1.ToTable("ProjectSection");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProjectSectionId");
-                        });
-
-                    b.Navigation("Name")
-                        .IsRequired();
-
-                    b.Navigation("Order")
-                        .IsRequired();
-
-                    b.Navigation("Sprint");
-                });
-
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSprint", b =>
                 {
                     b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")
@@ -620,6 +567,59 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectStage", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.Project.Entities.ProjectSprint", "Sprint")
+                        .WithMany("Stages")
+                        .HasForeignKey("SprintId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Name", "Name", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectStageId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
+                                .HasColumnName("Name");
+
+                            b1.HasKey("ProjectStageId");
+
+                            b1.ToTable("ProjectStage");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectStageId");
+                        });
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Order", "Order", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectStageId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("int")
+                                .HasColumnName("Order");
+
+                            b1.HasKey("ProjectStageId");
+
+                            b1.ToTable("ProjectStage");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectStageId");
+                        });
+
+                    b.Navigation("Name")
+                        .IsRequired();
+
+                    b.Navigation("Order")
+                        .IsRequired();
+
+                    b.Navigation("Sprint");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>
@@ -733,9 +733,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("ReviewerId");
 
-                    b.HasOne("ConsiliumTempus.Domain.Project.Entities.ProjectSection", "Section")
+                    b.HasOne("ConsiliumTempus.Domain.Project.Entities.ProjectStage", "Stage")
                         .WithMany("Tasks")
-                        .HasForeignKey("SectionId")
+                        .HasForeignKey("StageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -898,7 +898,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.Navigation("Reviewer");
 
-                    b.Navigation("Section");
+                    b.Navigation("Stage");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.User.UserAggregate", b =>
@@ -1074,14 +1074,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSection", b =>
-                {
-                    b.Navigation("Tasks");
-                });
-
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectSprint", b =>
                 {
-                    b.Navigation("Sections");
+                    b.Navigation("Stages");
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectStage", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>

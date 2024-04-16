@@ -48,7 +48,7 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
         builder.HasOne(t => t.Reviewer)
             .WithMany();
 
-        builder.HasOne(t => t.Section)
+        builder.HasOne(t => t.Stage)
             .WithMany(s => s.Tasks);
 
         builder.OwnsMany(t => t.Comments, ConfigureComments);
