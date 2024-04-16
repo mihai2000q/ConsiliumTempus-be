@@ -10,7 +10,8 @@ namespace ConsiliumTempus.Application.Workspace.Commands.Update;
 public sealed class UpdateWorkspaceCommandHandler(IWorkspaceRepository workspaceRepository)
     : IRequestHandler<UpdateWorkspaceCommand, ErrorOr<UpdateWorkspaceResult>>
 {
-    public async Task<ErrorOr<UpdateWorkspaceResult>> Handle(UpdateWorkspaceCommand command, CancellationToken cancellationToken)
+    public async Task<ErrorOr<UpdateWorkspaceResult>> Handle(UpdateWorkspaceCommand command,
+        CancellationToken cancellationToken)
     {
         var workspaceId = WorkspaceId.Create(command.Id);
         var workspace = await workspaceRepository.Get(workspaceId, cancellationToken);

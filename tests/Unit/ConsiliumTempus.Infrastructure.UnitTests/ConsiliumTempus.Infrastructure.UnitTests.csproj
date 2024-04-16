@@ -11,10 +11,10 @@
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="7.0.0-alpha.3"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0"/>
         <PackageReference Include="Moq" Version="4.20.70"/>
-        <PackageReference Include="NSubstitute" Version="5.1.0" />
-        <PackageReference Include="xunit" Version="2.7.0" />
+        <PackageReference Include="NSubstitute" Version="5.1.0"/>
+        <PackageReference Include="xunit" Version="2.7.0"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
@@ -28,7 +28,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\src\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj"/>
         <ProjectReference Include="..\..\..\src\ConsiliumTempus.Infrastructure\ConsiliumTempus.Infrastructure.csproj"/>
-        <ProjectReference Include="..\ConsiliumTempus.Common.UnitTests\ConsiliumTempus.Common.UnitTests.csproj" />
+        <ProjectReference Include="..\ConsiliumTempus.Common.UnitTests\ConsiliumTempus.Common.UnitTests.csproj"/>
     </ItemGroup>
 
 </Project>

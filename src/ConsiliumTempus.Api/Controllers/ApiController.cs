@@ -15,7 +15,7 @@ public abstract class ApiController(IMapper mapper, ISender mediator) : Controll
 {
     protected readonly IMapper Mapper = mapper;
     protected readonly ISender Mediator = mediator;
-    
+
     protected IActionResult Problem(List<Error> errors)
     {
         if (errors.Count is 0) return Problem();

@@ -33,7 +33,7 @@ internal static partial class Utils
         }
 
         internal static void AssertCreation(
-            WorkspaceAggregate workspace, 
+            WorkspaceAggregate workspace,
             CreateWorkspaceRequest request,
             UserAggregate user)
         {
@@ -54,13 +54,13 @@ internal static partial class Utils
         }
 
         internal static void AssertUpdated(
-            WorkspaceAggregate workspace, 
-            WorkspaceAggregate newWorkspace, 
+            WorkspaceAggregate workspace,
+            WorkspaceAggregate newWorkspace,
             UpdateWorkspaceRequest request)
         {
             // unchanged
             newWorkspace.CreatedDateTime.Should().Be(workspace.CreatedDateTime);
-            
+
             // changed
             newWorkspace.Id.Value.Should().Be(request.Id);
             newWorkspace.Name.Value.Should().Be(request.Name);
@@ -68,7 +68,7 @@ internal static partial class Utils
             newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
-        
+
         private static void AssertWorkspaceResponse(
             GetCollectionWorkspaceResponse.WorkspaceResponse response,
             WorkspaceAggregate workspace)

@@ -31,10 +31,10 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<RefreshResponse>();
-        
+
         Utils.Auth.AssertToken(
-            response!.Token, 
-            JwtSettings, 
+            response!.Token,
+            JwtSettings,
             refreshToken.User);
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
@@ -43,7 +43,7 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
 
         Utils.RefreshToken.AssertUpdate(refreshToken, updatedRefreshToken, response.Token);
     }
-    
+
     [Fact]
     public async Task Refresh_WhenAccessTokenIsInvalidDueToJwtSettings_ShouldReturnInvalidTokensError()
     {
@@ -51,7 +51,7 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
         var refreshToken = AuthData.RefreshTokens[0].Value;
         var token = Utils.Token.GenerateInvalidToken();
         var request = AuthenticationRequestFactory.CreateRefreshRequest(
-            refreshToken, 
+            refreshToken,
             Utils.Token.SecurityTokenToStringToken(token));
 
         // Act
@@ -60,7 +60,7 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Authentication.InvalidTokens);
     }
-    
+
     [Fact]
     public async Task Refresh_WhenAccessTokenIsInvalidDueToClaims_ShouldReturnInvalidTokensError()
     {
@@ -68,7 +68,7 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
         var refreshToken = AuthData.RefreshTokens[0].Value;
         var token = Utils.Token.GenerateInvalidToken(JwtSettings);
         var request = AuthenticationRequestFactory.CreateRefreshRequest(
-            refreshToken, 
+            refreshToken,
             Utils.Token.SecurityTokenToStringToken(token));
 
         // Act
@@ -77,7 +77,7 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Authentication.InvalidTokens);
     }
-    
+
     [Fact]
     public async Task Refresh_WhenRefreshTokenIsInvalidated_ShouldReturnInvalidTokensError()
     {
@@ -94,7 +94,7 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Authentication.InvalidTokens);
     }
-    
+
     [Fact]
     public async Task Refresh_WhenRefreshTokenIsExpired_ShouldReturnInvalidTokensError()
     {
@@ -111,7 +111,7 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Authentication.InvalidTokens);
     }
-    
+
     [Fact]
     public async Task Refresh_WhenRefreshTokenJwtIdIsWrong_ShouldReturnInvalidTokensError()
     {

@@ -15,7 +15,7 @@ public static class ProjectRequestFactory
             Id = id ?? Guid.NewGuid()
         };
     }
-    
+
     public static GetCollectionProjectForWorkspaceRequest CreateGetCollectionProjectForWorkspaceRequest(
         Guid? workspaceId = null)
     {
@@ -24,7 +24,7 @@ public static class ProjectRequestFactory
             WorkspaceId = workspaceId ?? Guid.NewGuid()
         };
     }
-        
+
     public static CreateProjectRequest CreateCreateProjectRequest(
         Guid? workspaceId = null,
         string name = Constants.Project.Name,

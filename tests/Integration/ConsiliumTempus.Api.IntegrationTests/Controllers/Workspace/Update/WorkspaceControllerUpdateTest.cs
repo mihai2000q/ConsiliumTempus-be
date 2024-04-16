@@ -13,16 +13,16 @@ using Microsoft.EntityFrameworkCore;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Update;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerUpdateTest(WebAppFactory factory) 
+public class WorkspaceControllerUpdateTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WorkspaceUpdate_WhenItSucceeds_ShouldUpdateAndReturnSuccessResponse()
+    public async Task UpdateWorkspace_WhenItSucceeds_ShouldUpdateAndReturnSuccessResponse()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: workspace.Id.Value);
-        
+
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
         var outcome = await Client.Put("api/workspaces", request);
@@ -31,26 +31,26 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<UpdateWorkspaceResponse>();
         response!.Message.Should().Be("Workspace has been updated successfully!");
-        
+
         var updatedWorkspace = await GetWorkspaceById(request.Id);
         Utils.Workspace.AssertUpdated(workspace, updatedWorkspace!, request);
     }
-    
+
     [Fact]
-    public async Task WhenWorkspaceUpdateFails_ShouldReturnNotFoundError()
+    public async Task UpdateWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: Guid.NewGuid());
-        
+
         // Act
         var outcome = await Client.Put("api/workspaces", request);
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);
-        
+
         (await GetWorkspaceById(request.Id)).Should().BeNull();
     }
-    
+
     private async Task<WorkspaceAggregate?> GetWorkspaceById(Guid id)
     {
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();

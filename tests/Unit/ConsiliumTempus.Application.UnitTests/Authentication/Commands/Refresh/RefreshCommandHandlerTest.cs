@@ -49,7 +49,7 @@ public class RefreshCommandHandlerTest
         
         var refreshToken = RefreshTokenFactory.Create(jwtId);
         _refreshTokenRepository
-            .Get(command.RefreshToken)
+            .Get(Arg.Any<Guid>())
             .Returns(refreshToken);
         
         _jwtTokenValidator
@@ -79,7 +79,7 @@ public class RefreshCommandHandlerTest
 
         await _refreshTokenRepository
             .Received(1)
-            .Get(Arg.Any<string>());
+            .Get(Arg.Is<Guid>(id => id.ToString() == command.RefreshToken));
         
         _jwtTokenGenerator
             .Received(2)
@@ -111,7 +111,7 @@ public class RefreshCommandHandlerTest
         
         var refreshToken = RefreshTokenFactory.Create(jwtId);
         _refreshTokenRepository
-            .Get(command.RefreshToken)
+            .Get(Arg.Any<Guid>())
             .Returns(refreshToken);
         
         _jwtTokenValidator
@@ -131,7 +131,7 @@ public class RefreshCommandHandlerTest
 
         await _refreshTokenRepository
             .Received(1)
-            .Get(Arg.Any<string>());
+            .Get(Arg.Is<Guid>(id => id.ToString() == command.RefreshToken));
         
         _jwtTokenGenerator
             .Received(1)

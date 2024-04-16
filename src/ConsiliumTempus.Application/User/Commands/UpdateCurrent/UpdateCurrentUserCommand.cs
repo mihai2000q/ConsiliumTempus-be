@@ -7,5 +7,5 @@ public sealed record UpdateCurrentUserCommand(
     string FirstName,
     string LastName,
     string? Role,
-    DateOnly? DateOfBirth) 
+    DateOnly? DateOfBirth)
     : IRequest<ErrorOr<UpdateCurrentUserResult>>;

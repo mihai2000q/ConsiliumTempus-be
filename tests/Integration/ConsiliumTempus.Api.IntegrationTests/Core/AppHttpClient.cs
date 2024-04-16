@@ -20,22 +20,22 @@ public class AppHttpClient(
     {
         return client.GetAsync(requestUri);
     }
-    
+
     public Task<HttpResponseMessage> Post<TRequest>(string requestUri, TRequest request)
     {
         return client.PostAsJsonAsync(requestUri, request);
     }
-    
+
     public Task<HttpResponseMessage> Put<TRequest>(string requestUri, TRequest request)
     {
         return client.PutAsJsonAsync(requestUri, request);
     }
-    
+
     public Task<HttpResponseMessage> Delete(string requestUri)
     {
         return client.DeleteAsync(requestUri);
     }
-    
+
     public void UseCustomToken(UserAggregate? user = null)
     {
         UseToken(GetToken(user));
@@ -45,8 +45,8 @@ public class AppHttpClient(
     {
         UseToken(GetInvalidToken());
     }
-    
-    
+
+
     private void UseToken(JwtSecurityToken securityToken)
     {
         tokenProvider.SetToken(securityToken);

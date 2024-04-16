@@ -12,7 +12,7 @@ public static class ProjectSprintFactory
         DateOnly? endDate = null)
     {
         return Domain.Project.Entities.ProjectSprint.Create(
-            Name.Create(name), 
+            Name.Create(name),
             project ?? ProjectFactory.Create(),
             startDate,
             endDate);
@@ -21,7 +21,7 @@ public static class ProjectSprintFactory
     public static List<Domain.Project.Entities.ProjectSprint> CreateList(int count = 5)
     {
         return Enumerable.Repeat(0, count)
-            .Select((_) => Create())
+            .Select(_ => Create())
             .ToList();
     }
 }

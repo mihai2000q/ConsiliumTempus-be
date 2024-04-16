@@ -16,7 +16,7 @@ public class AuthenticationControllerRegisterTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new AuthData(), true)
 {
     [Fact]
-    public async Task Register_WhenIsSuccessful_ShouldAddNewUserCreateRefreshTokenAndReturnTokens()
+    public async Task Register_WhenIsSuccessful_ShouldCreateNewUserCreateRefreshTokenAndReturnTokens()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRegisterRequest(email: "FirstLast@Example.com");
@@ -37,7 +37,7 @@ public class AuthenticationControllerRegisterTest(WebAppFactory factory)
             .Include(u => u.Memberships)
             .Single(u => u.Credentials.Email == request.Email.ToLower());
         Utils.User.AssertRegistration(user, request);
-        
+
         // assert returned access token
         var response = await outcome.Content.ReadFromJsonAsync<RegisterResponse>();
         Utils.Auth.AssertToken(
@@ -52,14 +52,14 @@ public class AuthenticationControllerRegisterTest(WebAppFactory factory)
             .OrderBy(rt => rt.CreatedDateTime)
             .LastAsync();
         Utils.RefreshToken.AssertCreation(
-            refreshToken, 
-            response?.RefreshToken, 
-            response?.Token, 
+            refreshToken,
+            response?.RefreshToken,
+            response?.Token,
             user);
     }
 
     [Fact]
-    public async Task Register_WhenItFails_ShouldReturnDuplicateEmailError()
+    public async Task Register_WhenUserAlreadyExistsWithSameEmail_ShouldReturnDuplicateEmailError()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRegisterRequest(email: AuthData.Users.First().Credentials.Email);
@@ -70,13 +70,13 @@ public class AuthenticationControllerRegisterTest(WebAppFactory factory)
         // Assert
         // assert returned error
         await outcome.ValidateError(Errors.User.DuplicateEmail);
-        
+
         // assert users in db
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users.Should().HaveCount(AuthData.Users.Length);
         dbContext.Users.SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
             .Should().NotBeNull();
-        
+
         // assert refreshTokens in db
         dbContext.Set<RefreshToken>().Should().HaveCount(AuthData.RefreshTokens.Length);
     }

@@ -22,15 +22,15 @@ internal static class JwtTokenValidatorData
         {
             var token = Utils.Token.GenerateToken(_jwtSettings, algorithm: SecurityAlgorithms.HmacSha384);
             Add(token);
-            
+
             token = Utils.Token.GenerateToken(_jwtSettings, issuer: "a");
             Add(token);
-            
+
             token = Utils.Token.GenerateToken(_jwtSettings, audience: "a");
             Add(token);
         }
     }
-    
+
     internal class GetInvalidTokensByClaims : TheoryData<string, UserAggregate>
     {
         private readonly JwtSettings _jwtSettings = new()
@@ -46,7 +46,7 @@ internal static class JwtTokenValidatorData
             var user = UserFactory.Create();
             var token = Utils.Token.GenerateToken(_jwtSettings, user, email: "");
             Add(token, user);
-            
+
             token = Utils.Token.GenerateToken(_jwtSettings, user, jti: "");
             Add(token, user);
         }

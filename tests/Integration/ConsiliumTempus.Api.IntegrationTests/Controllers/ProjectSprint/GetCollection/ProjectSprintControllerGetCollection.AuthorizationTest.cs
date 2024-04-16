@@ -7,41 +7,41 @@ using ConsiliumTempus.Domain.User;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.GetCollection;
 
 [Collection(nameof(ProjectSprintControllerCollection))]
-public class ProjectSprintControllerGetCollectionAuthorizationTest(WebAppFactory factory) 
+public class ProjectSprintControllerGetCollectionAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectSprintData())
 {
     [Fact]
-    public async Task WhenProjectSprintGetCollectionWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task GetCollectionProjectSprint_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulRequest(ProjectSprintData.Users[0]);
-    }
-    
-    [Fact]
-    public async Task WhenProjectSprintGetCollectionWithMemberRole_ShouldReturnSuccessResponse()
-    {
-        await AssertSuccessfulRequest(ProjectSprintData.Users[3]);
+        await AssertSuccessfulResponse(ProjectSprintData.Users[0]);
     }
 
     [Fact]
-    public async Task WhenProjectGetCollectionWithViewRole_ShouldReturnSuccessResponse()
+    public async Task GetCollectionProjectSprint_WhenWithMemberRole_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulRequest(ProjectSprintData.Users[4]);
+        await AssertSuccessfulResponse(ProjectSprintData.Users[3]);
     }
 
     [Fact]
-    public async Task WhenProjectSprintGetCollectionWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task GetCollectionProjectSprint_WhenWithViewRole_ShouldReturnSuccessResponse()
+    {
+        await AssertSuccessfulResponse(ProjectSprintData.Users[4]);
+    }
+
+    [Fact]
+    public async Task GetCollectionProjectSprint_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectSprintData.Users[1]);
     }
 
-    private async Task AssertSuccessfulRequest(UserAggregate user)
+    private async Task AssertSuccessfulResponse(UserAggregate user)
     {
         var outcome = await ArrangeAndAct(user);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     private async Task AssertForbiddenResponse(UserAggregate user)
     {
         var outcome = await ArrangeAndAct(user);
@@ -55,7 +55,7 @@ public class ProjectSprintControllerGetCollectionAuthorizationTest(WebAppFactory
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetCollectionProjectSprintRequest(
             ProjectSprintData.Projects.First().Id.Value);
-        
+
         // Act
         Client.UseCustomToken(user);
         return Client.Get($"api/projects/sprints?projectId={request.ProjectId}");

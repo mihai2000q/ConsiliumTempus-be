@@ -16,31 +16,31 @@ public sealed class ProjectTaskComment : Entity<ProjectTaskCommentId>, ITimestam
 
     private ProjectTaskComment(
         Message message,
-        ProjectTaskAggregate taskAggregate,
+        ProjectTaskAggregate task,
         DateTime createdDateTime,
         DateTime updatedDateTime)
     {
         Message = message;
-        TaskAggregate = taskAggregate;
+        Task = task;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
     }
 
     public Message Message { get; private set; } = default!;
     public UserAggregate CreatedBy { get; init; } = default!;
-    public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; private set; }
     public DateOnly? Date { get; private set; }
     public TimeSpan? TimeSpent { get; private set; }
-    public ProjectTaskAggregate TaskAggregate { get; init; } = default!;
+    public ProjectTaskAggregate Task { get; init; } = default!;
+    public DateTime CreatedDateTime { get; init; }
+    public DateTime UpdatedDateTime { get; private set; }
 
     public static ProjectTaskComment Create(
         Message message,
-        ProjectTaskAggregate taskAggregate)
+        ProjectTaskAggregate task)
     {
         return new ProjectTaskComment(
             message,
-            taskAggregate,
+            task,
             DateTime.UtcNow,
             DateTime.UtcNow);
     }

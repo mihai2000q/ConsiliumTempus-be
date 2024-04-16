@@ -8,9 +8,9 @@ public interface IWorkspaceRepository
 {
     Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default);
 
-    Task<List<WorkspaceAggregate>> GetListForUser(UserAggregate user, CancellationToken cancellationToken = default);
+    Task<List<WorkspaceAggregate>> GetListByUser(UserAggregate user, CancellationToken cancellationToken = default);
 
-    Task<List<WorkspaceAggregate>> GetListForUserWithMemberships(UserAggregate user,
+    Task<List<WorkspaceAggregate>> GetListByUserWithMemberships(UserAggregate user,
         CancellationToken cancellationToken = default);
 
     Task Add(WorkspaceAggregate workspace, CancellationToken cancellationToken = default);

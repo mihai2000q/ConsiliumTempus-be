@@ -10,13 +10,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentAssertions" Version="7.0.0-alpha.3" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.2" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
-        <PackageReference Include="Respawn" Version="6.2.1" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
-        <PackageReference Include="Testcontainers.MsSql" Version="3.7.0" />
-        <PackageReference Include="xunit" Version="2.7.0" />
+        <PackageReference Include="FluentAssertions" Version="7.0.0-alpha.3"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.2"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0"/>
+        <PackageReference Include="Respawn" Version="6.2.1"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0"/>
+        <PackageReference Include="Testcontainers.MsSql" Version="3.7.0"/>
+        <PackageReference Include="xunit" Version="2.7.0"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
@@ -28,8 +28,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\src\ConsiliumTempus.Api\ConsiliumTempus.Api.csproj" />
-      <ProjectReference Include="..\ConsiliumTempus.Common.IntegrationTests\ConsiliumTempus.Common.IntegrationTests.csproj" />
+        <ProjectReference Include="..\..\..\src\ConsiliumTempus.Api\ConsiliumTempus.Api.csproj"/>
+        <ProjectReference Include="..\ConsiliumTempus.Common.IntegrationTests\ConsiliumTempus.Common.IntegrationTests.csproj"/>
     </ItemGroup>
 
 </Project>

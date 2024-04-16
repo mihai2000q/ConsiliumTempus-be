@@ -12,13 +12,13 @@ public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Projec
     public void Configure(EntityTypeBuilder<ProjectSprint> builder)
     {
         builder.ToTable(nameof(ProjectSprint));
-        
+
         builder.HasKey(s => s.Id);
         builder.Property(s => s.Id)
             .HasConversion(
                 id => id.Value,
                 value => ProjectSprintId.Create(value));
-        
+
         builder.OwnsOne(s => s.Name)
             .Property(n => n.Value)
             .HasColumnName(nameof(Name))

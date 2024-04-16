@@ -9,12 +9,12 @@ namespace ConsiliumTempus.Infrastructure.Security;
 
 public class CurrentUserProvider(
     IHttpContextAccessor httpContextAccessor,
-    IUserRepository userRepository) 
+    IUserRepository userRepository)
     : ICurrentUserProvider
 {
     public async Task<UserAggregate?> GetCurrentUser(CancellationToken cancellationToken = default)
     {
-        var subUserId = httpContextAccessor.HttpContext!.User.Claims
+        var subUserId = httpContextAccessor.HttpContext?.User.Claims
             .SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
         if (subUserId is null || !Guid.TryParse(subUserId, out var guidUserId)) return null;
         var userId = UserId.Create(guidUserId);

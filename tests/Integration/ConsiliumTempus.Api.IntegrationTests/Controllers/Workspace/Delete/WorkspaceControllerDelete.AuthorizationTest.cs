@@ -10,30 +10,30 @@ public class WorkspaceControllerDeleteAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WhenWorkspaceDeleteWithAdminRole_ShouldDeleteAndReturnSuccessResponse()
+    public async Task DeleteWorkspace_WhenWithAdminRole_ShouldDeleteAndReturnSuccessResponse()
     {
-        await AssertSuccessfulRequest(WorkspaceData.Users[0]);
+        await AssertSuccessfulResponse(WorkspaceData.Users[0]);
     }
 
     [Fact]
-    public async Task WhenWorkspaceDeleteWithMemberRole_ShouldReturnForbiddenResponse()
+    public async Task DeleteWorkspace_WhenWithMemberRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(WorkspaceData.Users[3]);
     }
 
     [Fact]
-    public async Task WhenWorkspaceDeleteWithViewRole_ShouldReturnForbiddenResponse()
+    public async Task DeleteWorkspace_WhenWithViewRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(WorkspaceData.Users[4]);
     }
 
     [Fact]
-    public async Task WhenWorkspaceDeleteWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task DeleteWorkspace_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(WorkspaceData.Users[1]);
     }
 
-    private async Task AssertSuccessfulRequest(UserAggregate user)
+    private async Task AssertSuccessfulResponse(UserAggregate user)
     {
         var outcome = await ArrangeAndAct(user);
 

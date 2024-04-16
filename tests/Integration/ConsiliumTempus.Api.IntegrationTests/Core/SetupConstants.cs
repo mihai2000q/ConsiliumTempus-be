@@ -8,10 +8,11 @@ public static class SetupConstants
 {
     public const string MsSqlImage = "mcr.microsoft.com/mssql/server:2022-latest";
     public const string DatabasePassword = "StrongPassword123";
-    
+
     public const string Environment = "Testing";
-    
-    public static readonly Table[] TablesToIgnore = [
+
+    public static readonly Table[] TablesToIgnore =
+    [
         nameof(Permission), nameof(WorkspaceRole), nameof(WorkspaceRoleHasPermission)
     ];
 }

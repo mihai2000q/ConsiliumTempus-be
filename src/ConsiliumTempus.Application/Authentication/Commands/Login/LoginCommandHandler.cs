@@ -16,7 +16,7 @@ public sealed class LoginCommandHandler(
 {
     public async Task<ErrorOr<LoginResult>> Handle(LoginCommand command, CancellationToken cancellationToken)
     {
-        var user = await userRepository.GetUserByEmail(command.Email.ToLower(), cancellationToken);
+        var user = await userRepository.GetByEmail(command.Email.ToLower(), cancellationToken);
         if (user is null) return Errors.Authentication.InvalidCredentials;
 
         var isPasswordEqual = scrambler.VerifyPassword(command.Password, user.Credentials.Password);
@@ -26,7 +26,7 @@ public sealed class LoginCommandHandler(
         var jwtId = jwtTokenGenerator.GetJwtIdFromToken(token);
         var refreshToken = RefreshToken.Create(jwtId, user);
         await refreshTokenRepository.Add(refreshToken, cancellationToken);
-        
+
         return new LoginResult(token, refreshToken.Value);
     }
 }

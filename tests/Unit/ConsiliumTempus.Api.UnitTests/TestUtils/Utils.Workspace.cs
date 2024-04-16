@@ -52,7 +52,7 @@ internal static partial class Utils
             response.Name.Should().Be(workspace.Name.Value);
             response.Description.Should().Be(workspace.Description.Value);
         }
-        
+
         internal static void AssertGetCollectionResponse(
             GetCollectionWorkspaceResponse response,
             GetCollectionWorkspaceResult result)

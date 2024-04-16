@@ -25,7 +25,7 @@ public sealed class UserMappingConfig : IRegister
     private static void GetMappings(TypeAdapterConfig config)
     {
         config.NewConfig<GetUserRequest, GetUserQuery>();
-        
+
         config.NewConfig<UserAggregate, GetUserResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.FirstName, src => src.FirstName.Value)
@@ -33,7 +33,7 @@ public sealed class UserMappingConfig : IRegister
             .Map(dest => dest.Email, src => src.Credentials.Email)
             .Map(dest => dest.Role, src => src.Role!.Value);
     }
-    
+
     private static void GetCurrentMappings(TypeAdapterConfig config)
     {
         config.NewConfig<UserAggregate, GetCurrentUserResponse>()
@@ -51,7 +51,7 @@ public sealed class UserMappingConfig : IRegister
 
         config.NewConfig<UpdateCurrentUserResult, UpdateCurrentUserResponse>();
     }
-    
+
     private static void DeleteMappings(TypeAdapterConfig config)
     {
         config.NewConfig<DeleteCurrentUserResult, DeleteCurrentUserResponse>();

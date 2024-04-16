@@ -26,7 +26,7 @@ public class AuthenticationControllerRefreshValidationTest(WebAppFactory factory
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     [Fact]
     public async Task Refresh_WhenCommandIsInvalid_ShouldReturnValidationErrors()
     {

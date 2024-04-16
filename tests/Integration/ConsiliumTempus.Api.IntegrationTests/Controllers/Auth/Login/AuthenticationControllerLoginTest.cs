@@ -31,7 +31,7 @@ public class AuthenticationControllerLoginTest(WebAppFactory factory)
 
         var response = await outcome.Content.ReadFromJsonAsync<LoginResponse>();
         Utils.Auth.AssertToken(response?.Token, JwtSettings, user);
-        
+
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Set<RefreshToken>().Should().HaveCount(AuthData.RefreshTokens.Length + 1);
         var refreshToken = await dbContext.Set<RefreshToken>()
@@ -40,9 +40,9 @@ public class AuthenticationControllerLoginTest(WebAppFactory factory)
             .OrderBy(rt => rt.CreatedDateTime)
             .LastAsync();
         Utils.RefreshToken.AssertCreation(
-            refreshToken, 
-            response?.RefreshToken, 
-            response?.Token, 
+            refreshToken,
+            response?.RefreshToken,
+            response?.Token,
             user);
     }
 
@@ -57,12 +57,12 @@ public class AuthenticationControllerLoginTest(WebAppFactory factory)
 
         // Assert
         await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
-        
+
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users
             .SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
             .Should().BeNull();
-        
+
         dbContext.Set<RefreshToken>().Should().HaveCount(AuthData.RefreshTokens.Length);
     }
 
@@ -79,12 +79,12 @@ public class AuthenticationControllerLoginTest(WebAppFactory factory)
 
         // Assert
         await outcome.ValidateError(Errors.Authentication.InvalidCredentials);
-        
+
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Users
             .SingleOrDefault(u => u.Credentials.Email == request.Email.ToLower())
             .Should().NotBeNull();
-        
+
         dbContext.Set<RefreshToken>().Should().HaveCount(AuthData.RefreshTokens.Length);
     }
 }

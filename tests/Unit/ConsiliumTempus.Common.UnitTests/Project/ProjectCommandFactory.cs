@@ -12,9 +12,9 @@ public static class ProjectCommandFactory
         bool isPrivate = false)
     {
         return new CreateProjectCommand(
-            workspaceId ?? Guid.NewGuid(), 
-            name, 
-            description, 
+            workspaceId ?? Guid.NewGuid(),
+            name,
+            description,
             isPrivate);
     }
 }

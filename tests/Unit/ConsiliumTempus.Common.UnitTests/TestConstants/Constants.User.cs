@@ -8,5 +8,5 @@ internal static partial class Constants
         internal const string Password = "Password123";
         internal const string FirstName = "Michael";
         internal const string LastName = "Jordan";
-    }    
+    }
 }

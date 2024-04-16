@@ -19,7 +19,6 @@ public sealed class CreateWorkspaceCommandHandler(
         CancellationToken cancellationToken)
     {
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
-        
         if (user is null) return Errors.User.NotFound;
 
         var workspace = WorkspaceAggregate.Create(

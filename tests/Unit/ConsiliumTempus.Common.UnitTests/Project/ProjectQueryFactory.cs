@@ -11,12 +11,12 @@ public static class ProjectQueryFactory
     {
         return new GetProjectQuery(projectId ?? Guid.NewGuid());
     }
-    
+
     public static GetCollectionProjectForUserQuery CreateGetCollectionProjectForUserQuery()
     {
         return new GetCollectionProjectForUserQuery();
     }
-    
+
     public static GetCollectionProjectForWorkspaceQuery CreateGetCollectionProjectForWorkspaceQuery(
         Guid? workspaceId = null)
     {

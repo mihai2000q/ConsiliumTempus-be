@@ -14,7 +14,7 @@ public static class UserRequestFactory
             Id = id ?? Guid.NewGuid()
         };
     }
-    
+
     public static UpdateCurrentUserRequest CreateUpdateCurrentUserRequest(
         string firstName = Constants.User.FirstName,
         string lastName = Constants.User.LastName,
@@ -22,9 +22,9 @@ public static class UserRequestFactory
         DateOnly? dateOfBirth = null)
     {
         return new UpdateCurrentUserRequest(
-            firstName, 
-            lastName, 
-            role, 
+            firstName,
+            lastName,
+            role,
             dateOfBirth);
     }
 }

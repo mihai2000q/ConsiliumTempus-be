@@ -12,9 +12,9 @@ public static class UserCommandFactory
         DateOnly? dateOfBirth = null)
     {
         return new UpdateCurrentUserCommand(
-            firstName, 
-            lastName, 
-            role, 
+            firstName,
+            lastName,
+            role,
             dateOfBirth);
     }
 }

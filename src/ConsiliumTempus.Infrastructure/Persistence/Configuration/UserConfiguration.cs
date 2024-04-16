@@ -25,11 +25,11 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
             cb.HasIndex(c => c.Email)
                 .IsUnique();
             cb.Property(c => c.Email)
-                .HasColumnName("Email")
+                .HasColumnName(nameof(Credentials.Email))
                 .HasMaxLength(PropertiesValidation.User.EmailMaximumLength);
 
             cb.Property(c => c.Password)
-                .HasColumnName("Password");
+                .HasColumnName(nameof(Credentials.Password));
         });
 
         builder.OwnsOne(u => u.FirstName)

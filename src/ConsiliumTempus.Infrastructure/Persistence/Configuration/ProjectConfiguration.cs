@@ -19,12 +19,12 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
             .HasConversion(
                 id => id.Value,
                 value => ProjectId.Create(value));
-        
+
         builder.OwnsOne(p => p.Name)
             .Property(n => n.Value)
             .HasColumnName(nameof(Name))
             .HasMaxLength(PropertiesValidation.Project.NameMaximumLength);
-        
+
         builder.OwnsOne(p => p.Description)
             .Property(d => d.Value)
             .HasColumnName(nameof(Description))
@@ -33,7 +33,7 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
         builder.OwnsOne(p => p.IsFavorite)
             .Property(f => f.Value)
             .HasColumnName(nameof(IsFavorite));
-        
+
         builder.OwnsOne(p => p.IsPrivate)
             .Property(p => p.Value)
             .HasColumnName(nameof(IsPrivate));

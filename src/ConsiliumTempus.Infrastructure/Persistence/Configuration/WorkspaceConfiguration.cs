@@ -34,7 +34,7 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
         builder.OwnsOne(w => w.IsPersonal)
             .Property(n => n.Value)
             .HasColumnName(nameof(IsPersonal));
-        
+
         builder.HasOne(w => w.Owner)
             .WithMany()
             .OnDelete(DeleteBehavior.NoAction);

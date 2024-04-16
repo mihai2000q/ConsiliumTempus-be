@@ -9,7 +9,7 @@ using ConsiliumTempus.Domain.Common.Errors;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.Get;
 
 [Collection(nameof(UserControllerCollection))]
-public class UserControllerGetTest(WebAppFactory factory) 
+public class UserControllerGetTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new UserData())
 {
     [Fact]
@@ -17,7 +17,7 @@ public class UserControllerGetTest(WebAppFactory factory)
     {
         // Arrange
         var user = UserData.Users.First();
-        
+
         // Act
         var outcome = await Client.Get($"api/users/{user.Id}");
 
@@ -26,13 +26,13 @@ public class UserControllerGetTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<GetUserResponse>();
         Utils.User.AssertGetResponse(response!, user);
     }
-    
+
     [Fact]
     public async Task GetUser_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var id = Guid.NewGuid().ToString();
-        
+
         // Act
         var outcome = await Client.Get($"api/users/{id}");
 

@@ -8,6 +8,7 @@ This is the **project** aggregate.
 class Project
 {
     Project Create()
+    void Update()
     void AddSprint()
     void RefreshActivity()
 }

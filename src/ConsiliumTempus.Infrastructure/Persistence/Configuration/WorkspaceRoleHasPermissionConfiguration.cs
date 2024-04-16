@@ -12,7 +12,7 @@ public sealed class WorkspaceRoleHasPermissionConfiguration : IEntityTypeConfigu
     public void Configure(EntityTypeBuilder<WorkspaceRoleHasPermission> builder)
     {
         builder.ToTable(nameof(WorkspaceRoleHasPermission));
-        
+
         builder.HasKey(w => new { w.WorkspaceRoleId, w.PermissionId });
 
         builder.HasOne<WorkspaceRole>()

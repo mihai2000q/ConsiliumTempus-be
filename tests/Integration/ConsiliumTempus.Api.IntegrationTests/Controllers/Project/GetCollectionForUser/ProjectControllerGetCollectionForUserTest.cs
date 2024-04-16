@@ -9,15 +9,15 @@ using ConsiliumTempus.Domain.Common.Errors;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.GetCollectionForUser;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerGetCollectionForUserTest(WebAppFactory factory) 
+public class ProjectControllerGetCollectionForUserTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task WhenGetCollectionForUserSucceeds_ShouldReturnProjects()
+    public async Task GetCollectionForUser_WhenSucceeds_ShouldReturnProjects()
     {
         // Arrange
         var user = ProjectData.Users.First();
-        
+
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Get("api/projects/user");
@@ -32,10 +32,10 @@ public class ProjectControllerGetCollectionForUserTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task WhenGetCollectionForUserFails_ShouldReturnUserNotFoundError()
+    public async Task GetCollectionForUser_WhenUserIsNotFound_ShouldReturnUserNotFoundError()
     {
         // Arrange
-        
+
         // Act
         Client.UseInvalidToken();
         var outcome = await Client.Get("api/projects/user");

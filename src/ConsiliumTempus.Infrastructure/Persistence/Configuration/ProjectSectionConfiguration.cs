@@ -12,13 +12,13 @@ public sealed class ProjectSectionConfiguration : IEntityTypeConfiguration<Proje
     public void Configure(EntityTypeBuilder<ProjectSection> builder)
     {
         builder.ToTable(nameof(ProjectSection));
-        
+
         builder.HasKey(s => s.Id);
         builder.Property(s => s.Id)
             .HasConversion(
                 id => id.Value,
                 value => ProjectSectionId.Create(value));
-        
+
         builder.OwnsOne(s => s.Name)
             .Property(n => n.Value)
             .HasColumnName(nameof(Name))
@@ -27,10 +27,10 @@ public sealed class ProjectSectionConfiguration : IEntityTypeConfiguration<Proje
         builder.OwnsOne(s => s.Order)
             .Property(o => o.Value)
             .HasColumnName(nameof(Order));
-        
+
         builder.HasOne(s => s.Sprint)
             .WithMany(sp => sp.Sections);
-        
+
         builder.HasMany(s => s.Tasks)
             .WithOne(s => s.Section);
     }

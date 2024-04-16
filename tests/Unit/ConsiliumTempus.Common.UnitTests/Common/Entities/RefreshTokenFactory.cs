@@ -15,7 +15,7 @@ public static class RefreshTokenFactory
         var refreshToken = RefreshToken.Create(
             jwtId ?? Guid.NewGuid().ToString(),
             user ?? UserFactory.Create());
-        
+
         typeof(RefreshToken).GetProperty(nameof(refreshToken.IsInvalidated))
             ?.SetValue(refreshToken, invalidated);
 

@@ -16,21 +16,21 @@ public static class AuthenticationRequestFactory
         DateOnly? dateOfBirth = null)
     {
         return new RegisterRequest(
-            firstName, 
-            lastName, 
-            email, 
-            password, 
-            role, 
+            firstName,
+            lastName,
+            email,
+            password,
+            role,
             dateOfBirth);
     }
 
     public static LoginRequest CreateLoginRequest(
-        string email = Constants.User.Email, 
+        string email = Constants.User.Email,
         string password = Constants.User.Password)
     {
         return new LoginRequest(email, password);
     }
-    
+
     public static RefreshRequest CreateRefreshRequest(
         string refreshToken,
         string token)

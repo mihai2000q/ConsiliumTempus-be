@@ -10,7 +10,7 @@ using ConsiliumTempus.Domain.Common.Errors;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.UpdateCurrent;
 
 [Collection(nameof(UserControllerCollection))]
-public class UserControllerUpdateCurrentTest(WebAppFactory factory) 
+public class UserControllerUpdateCurrentTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new UserData())
 {
     [Fact]
@@ -33,9 +33,9 @@ public class UserControllerUpdateCurrentTest(WebAppFactory factory)
         var updatedUser = await dbContext.Users.FindAsync(user.Id);
         Utils.User.AssertUpdate(user, updatedUser!, request);
     }
-    
+
     [Fact]
-    public async Task UpdateCurrentUser_WhenItFails_ShouldReturnNotFoundError()
+    public async Task UpdateCurrentUser_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest();

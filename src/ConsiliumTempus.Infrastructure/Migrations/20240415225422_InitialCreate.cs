@@ -66,9 +66,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     ExpiryDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsInvalidated = table.Column<bool>(type: "bit", nullable: false),
                     RefreshTimes = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -171,9 +171,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     IsFavorite = table.Column<bool>(type: "bit", nullable: false),
                     IsPrivate = table.Column<bool>(type: "bit", nullable: false),
                     LastActivity = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -192,11 +192,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StartDate = table.Column<DateOnly>(type: "date", nullable: true),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -239,13 +239,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false),
                     Order = table.Column<int>(type: "int", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AsigneeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ReviewerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DueDate = table.Column<DateOnly>(type: "date", nullable: true),
                     EstimatedDuration = table.Column<TimeSpan>(type: "time", nullable: true),
-                    SectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -281,18 +281,18 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Date = table.Column<DateOnly>(type: "date", nullable: true),
                     TimeSpent = table.Column<TimeSpan>(type: "time", nullable: true),
-                    TaskAggregateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    TaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProjectTaskComment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProjectTaskComment_ProjectTask_TaskAggregateId",
-                        column: x => x.TaskAggregateId,
+                        name: "FK_ProjectTaskComment_ProjectTask_TaskId",
+                        column: x => x.TaskId,
                         principalTable: "ProjectTask",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -413,9 +413,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectTaskComment_TaskAggregateId",
+                name: "IX_ProjectTaskComment_TaskId",
                 table: "ProjectTaskComment",
-                column: "TaskAggregateId");
+                column: "TaskId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshToken_UserId",

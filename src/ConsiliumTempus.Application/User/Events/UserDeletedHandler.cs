@@ -12,7 +12,7 @@ public sealed class UserDeletedHandler(IWorkspaceRepository workspaceRepository)
     public async Task Handle(UserDeleted notification, CancellationToken cancellationToken)
     {
         var workspaces =
-            await workspaceRepository.GetListForUserWithMemberships(notification.User, cancellationToken);
+            await workspaceRepository.GetListByUserWithMemberships(notification.User, cancellationToken);
 
         foreach (var workspace in workspaces)
         {
@@ -20,7 +20,7 @@ public sealed class UserDeletedHandler(IWorkspaceRepository workspaceRepository)
             {
                 workspaceRepository.Remove(workspace);
             }
-            else if (workspace.Owner == notification.User) 
+            else if (workspace.Owner == notification.User)
             {
                 // transfer ownership, and promote role if necessary
                 var newOwnerAdmin = workspace.Memberships

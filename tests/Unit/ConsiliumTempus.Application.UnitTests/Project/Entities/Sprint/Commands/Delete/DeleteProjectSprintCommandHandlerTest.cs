@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence;
-using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.ProjectSprint;
@@ -14,14 +13,12 @@ public class DeleteProjectSprintCommandHandlerTest
     #region Setup
 
     private readonly IProjectSprintRepository _projectSprintRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly DeleteProjectSprintCommandHandler _uut;
     
     public DeleteProjectSprintCommandHandlerTest()
     {
         _projectSprintRepository = Substitute.For<IProjectSprintRepository>();
-        _unitOfWork = Substitute.For<IUnitOfWork>();
-        _uut = new DeleteProjectSprintCommandHandler(_projectSprintRepository, _unitOfWork);
+        _uut = new DeleteProjectSprintCommandHandler(_projectSprintRepository);
     }
 
     #endregion
@@ -47,9 +44,6 @@ public class DeleteProjectSprintCommandHandlerTest
         _projectSprintRepository
             .Received(1)
             .Remove(Arg.Is<ProjectSprint>(ps => ps == projectSprint));
-        await _unitOfWork
-            .Received(1)
-            .SaveChangesAsync();
         
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectSprintResult());
@@ -71,7 +65,6 @@ public class DeleteProjectSprintCommandHandlerTest
         _projectSprintRepository
             .DidNotReceive()
             .Remove(Arg.Any<ProjectSprint>());
-        _unitOfWork.DidNotReceive();
         
         outcome.IsError.Should().BeTrue();
         outcome.ValidateError(Errors.ProjectSprint.NotFound);

@@ -53,7 +53,7 @@ public class UserControllerTest
             .Send(Arg.Is<GetUserQuery>(query => Utils.User.AssertGetQuery(query, request)));
 
         var response = outcome.ToResponse<GetUserResponse>();
-        Utils.User.AssertGetUser(response, user);
+        Utils.User.AssertGetUserResponse(response, user);
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class UserControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task GetCurrent_WhenIsSuccessful_ShouldReturnCurrentUser()
     {
@@ -96,11 +96,11 @@ public class UserControllerTest
             .Send(Arg.Is<GetCurrentUserQuery>(query => query == new GetCurrentUserQuery()));
 
         var response = outcome.ToResponse<GetCurrentUserResponse>();
-        Utils.User.AssertGetCurrentUser(response, user);
+        Utils.User.AssertGetCurrentUserResponse(response, user);
     }
-    
+
     [Fact]
-    public async Task GetCurrent_WhenItFails_ShouldReturnUserNotFoundError()
+    public async Task GetCurrent_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
         var error = Errors.User.NotFound;
@@ -137,13 +137,13 @@ public class UserControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<UpdateCurrentUserCommand>(command => Utils.User.AssertUpdateCommand(command, request)));
-        
+
         var response = outcome.ToResponse<UpdateCurrentUserResponse>();
         response.Message.Should().Be(result.Message);
     }
-    
+
     [Fact]
-    public async Task UpdateCurrentUser_WhenItFails_ShouldReturnUserNotFoundError()
+    public async Task UpdateCurrentUser_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
@@ -165,7 +165,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task DeleteUser_WhenIsSuccessful_ShouldReturnSuccessResponse()
+    public async Task DeleteCurrentUser_WhenIsSuccessful_ShouldReturnSuccessResponse()
     {
         // Arrange
         var result = new DeleteCurrentUserResult();
@@ -180,13 +180,13 @@ public class UserControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteCurrentUserCommand>(command => command == new DeleteCurrentUserCommand()));
-        
+
         var response = outcome.ToResponse<DeleteCurrentUserResponse>();
         response.Message.Should().Be(result.Message);
     }
-    
+
     [Fact]
-    public async Task DeleteUser_WhenItFails_ShouldReturnUserNotFoundError()
+    public async Task DeleteCurrentUser_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
         var error = Errors.User.NotFound;

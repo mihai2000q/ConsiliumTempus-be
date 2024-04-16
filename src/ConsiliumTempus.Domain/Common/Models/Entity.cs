@@ -15,7 +15,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     }
 
     private readonly List<IDomainEvent> _domainEvents = [];
-    
+
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
     public virtual TId Id { get; } = default!;
 

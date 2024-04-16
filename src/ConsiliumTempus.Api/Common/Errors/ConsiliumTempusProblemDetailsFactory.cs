@@ -12,6 +12,8 @@ public sealed class ConsiliumTempusProblemDetailsFactory(IOptions<ApiBehaviorOpt
 {
     private readonly ApiBehaviorOptions _options = options.Value;
 
+    public const string ErrorCodes = "errorCodes";
+
     public override ProblemDetails CreateProblemDetails(
         HttpContext httpContext,
         int? statusCode = null,
@@ -76,6 +78,6 @@ public sealed class ConsiliumTempusProblemDetailsFactory(IOptions<ApiBehaviorOpt
         problemDetails.Extensions["traceId"] = traceId;
 
         if (httpContext.Items[HttpContextItemKeys.Errors] is List<Error> errors)
-            problemDetails.Extensions.Add("errorCodes", errors.Select(e => e.Code));
+            problemDetails.Extensions.Add(ErrorCodes, errors.Select(e => e.Code));
     }
 }

@@ -14,7 +14,7 @@ public static class ProjectSprintRequestFactory
             ProjectId = projectId ?? Guid.NewGuid()
         };
     }
-    
+
     public static CreateProjectSprintRequest CreateCreateProjectSprintRequest(
         Guid? projectId = null,
         string name = Constants.ProjectSprint.Name,

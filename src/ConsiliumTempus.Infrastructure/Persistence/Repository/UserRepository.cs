@@ -14,7 +14,7 @@ public sealed class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRe
         return await dbContext.Users.FindAsync([id], cancellationToken);
     }
 
-    public async Task<UserAggregate?> GetUserByEmail(string email, CancellationToken cancellationToken = default)
+    public async Task<UserAggregate?> GetByEmail(string email, CancellationToken cancellationToken = default)
     {
         return await dbContext.Users.SingleOrDefaultAsync(
             u => u.Credentials.Email == email,

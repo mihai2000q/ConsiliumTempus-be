@@ -12,7 +12,7 @@ public sealed class LoginCommandValidator : AbstractValidator<LoginCommand>
             .NotEmpty()
             .MaximumLength(PropertiesValidation.User.EmailMaximumLength)
             .IsEmail();
-        
+
         RuleFor(q => q.Password)
             .NotEmpty()
             .MaximumLength(PropertiesValidation.User.PlainPasswordMaximumLength)

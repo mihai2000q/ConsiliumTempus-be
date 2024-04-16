@@ -25,7 +25,7 @@ internal class ProjectSprintData : ITestData
             ProjectSprints
         ];
     }
-    
+
     public static UserAggregate[] Users { get; } =
     [
         UserFactory.Create(
@@ -56,7 +56,7 @@ internal class ProjectSprintData : ITestData
             "Lebron",
             "James"),
     ];
-    
+
     public static WorkspaceAggregate[] Workspaces { get; } =
     [
         WorkspaceFactory.Create(
@@ -79,27 +79,27 @@ internal class ProjectSprintData : ITestData
         MembershipFactory.Create(
             Users[0],
             Workspaces[0],
-            WorkspaceRole.Admin), 
+            WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[2],
-            WorkspaceRole.Admin), 
+            WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[1],
             Workspaces[1],
-            WorkspaceRole.Admin), 
+            WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[2],
             Workspaces[1],
-            WorkspaceRole.Member), 
+            WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[3],
             Workspaces[0],
-            WorkspaceRole.Member), 
+            WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[4],
             Workspaces[0],
-            WorkspaceRole.View) 
+            WorkspaceRole.View)
     ];
 
     public static ProjectAggregate[] Projects { get; } =
@@ -112,10 +112,9 @@ internal class ProjectSprintData : ITestData
         ProjectFactory.Create(
             Workspaces[1],
             "Win Champions League",
-            "Just an idea on how to win the football league",
-            true)
+            "Just an idea on how to win the football league")
     ];
-    
+
     public static ProjectSprint[] ProjectSprints { get; } =
     [
         ProjectSprintFactory.Create(
@@ -129,6 +128,7 @@ internal class ProjectSprintData : ITestData
             new DateOnly(2024, 01, 16),
             new DateOnly(2024, 01, 30)),
         ProjectSprintFactory.Create(
-            Projects[1])
+            Projects[1],
+            "Get the champs lig finals")
     ];
 }

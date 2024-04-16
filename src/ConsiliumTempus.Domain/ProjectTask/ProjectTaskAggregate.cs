@@ -44,14 +44,14 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public IsCompleted IsCompleted { get; private set; } = default!;
     public Order Order { get; private set; } = default!;
     public UserAggregate CreatedBy { get; init; } = default!;
-    public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; private set; }
     public UserAggregate? Asignee { get; private set; }
     public UserAggregate? Reviewer { get; private set; }
     public DateOnly? DueDate { get; private set; }
     public TimeSpan? EstimatedDuration { get; private set; }
     public ProjectSection Section { get; private set; } = default!;
     public IReadOnlyList<ProjectTaskComment> Comments => _comments.AsReadOnly();
+    public DateTime CreatedDateTime { get; init; }
+    public DateTime UpdatedDateTime { get; private set; }
 
     public static ProjectTaskAggregate Create(
         Name name,
@@ -70,6 +70,12 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             section,
             DateTime.UtcNow,
             DateTime.UtcNow);
+    }
+
+    public void Update(Name name)
+    {
+        Name = name;
+        UpdatedDateTime = DateTime.UtcNow;
     }
 
     public void AddComment(ProjectTaskComment comment)

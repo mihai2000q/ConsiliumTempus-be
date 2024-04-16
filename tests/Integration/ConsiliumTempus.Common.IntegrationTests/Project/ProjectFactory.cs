@@ -27,7 +27,7 @@ public static class ProjectFactory
         DomainFactory.SetProperty(ref project, nameof(project.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref project, nameof(project.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref project, nameof(project.Workspace), workspace);
-        
+
         return project;
     }
 }

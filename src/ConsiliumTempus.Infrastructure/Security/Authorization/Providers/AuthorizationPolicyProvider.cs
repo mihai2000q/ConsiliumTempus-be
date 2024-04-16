@@ -12,7 +12,7 @@ public sealed class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> o
         var policy = await base.GetPolicyAsync(policyName);
 
         if (policy is not null) return policy;
-        
+
         return new AuthorizationPolicyBuilder()
             .AddRequirements(new PermissionRequirement(policyName))
             .Build();

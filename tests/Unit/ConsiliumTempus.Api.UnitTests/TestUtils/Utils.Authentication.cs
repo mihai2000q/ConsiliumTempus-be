@@ -28,7 +28,7 @@ internal static partial class Utils
             command.Password.Should().Be(request.Password);
             return true;
         }
-        
+
         public static bool AssertRefreshCommand(RefreshCommand command, RefreshRequest request)
         {
             command.Token.Should().Be(request.Token);

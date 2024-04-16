@@ -13,7 +13,7 @@ public class WorkspaceControllerGetTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WorkspaceGet_WhenItSucceeds_ShouldReturnWorkspace()
+    public async Task GetWorkspace_WhenItSucceeds_ShouldReturnWorkspace()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
@@ -29,7 +29,7 @@ public class WorkspaceControllerGetTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task WorkspaceUpdate_WhenItFails_ShouldReturnNotFoundError()
+    public async Task GetWorkspace_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
         var id = Guid.NewGuid();

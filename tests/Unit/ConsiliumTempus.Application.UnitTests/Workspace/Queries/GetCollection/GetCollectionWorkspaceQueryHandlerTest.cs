@@ -39,7 +39,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
 
         var workspaces = WorkspaceFactory.CreateList();
         _workspaceRepository
-            .GetListForUser(user)
+            .GetListByUser(user)
             .Returns(workspaces);
 
         // Act
@@ -51,7 +51,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .GetCurrentUser();
         await _workspaceRepository
             .Received(1)
-            .GetListForUser(Arg.Any<UserAggregate>());
+            .GetListByUser(Arg.Any<UserAggregate>());
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Workspaces.Should().BeEquivalentTo(workspaces);

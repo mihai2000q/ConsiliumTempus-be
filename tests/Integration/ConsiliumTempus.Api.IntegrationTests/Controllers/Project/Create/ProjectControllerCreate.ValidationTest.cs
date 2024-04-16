@@ -7,11 +7,11 @@ using ConsiliumTempus.Common.IntegrationTests.Project;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Create;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerCreateValidationTest(WebAppFactory factory) 
+public class ProjectControllerCreateValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task WhenProjectCreateCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task CreateProject_WhenCommandIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var workspaceId = ProjectData.Workspaces.First().Id.Value;
@@ -20,13 +20,13 @@ public class ProjectControllerCreateValidationTest(WebAppFactory factory)
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
         var outcome = await Client.Post("api/projects", request);
-        
+
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     [Fact]
-    public async Task WhenProjectCreateCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task CreateProject_WhenCommandIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateCreateProjectRequest(
@@ -35,7 +35,7 @@ public class ProjectControllerCreateValidationTest(WebAppFactory factory)
 
         // Act
         var outcome = await Client.Post("api/projects", request);
-        
+
         // Assert
         await outcome.ValidateValidationErrors();
     }

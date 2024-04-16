@@ -11,30 +11,30 @@ public class ProjectControllerCreateAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task WhenProjectCreateWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task CreateProject_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulRequest(ProjectData.Users[0]);
+        await AssertSuccessfulResponse(ProjectData.Users[0]);
     }
 
     [Fact]
-    public async Task WhenProjectCreateWithMemberRole_ShouldReturnForbiddenResponse()
+    public async Task CreateProject_WhenWithMemberRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectData.Users[3]);
     }
 
     [Fact]
-    public async Task WhenProjectCreateWithViewRole_ShouldReturnForbiddenResponse()
+    public async Task CreateProject_WhenWithViewRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectData.Users[4]);
     }
 
     [Fact]
-    public async Task WhenProjectCreateWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task CreateProject_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectData.Users[1]);
     }
 
-    private async Task AssertSuccessfulRequest(UserAggregate user)
+    private async Task AssertSuccessfulResponse(UserAggregate user)
     {
         var outcome = await ArrangeAndAct(user);
 

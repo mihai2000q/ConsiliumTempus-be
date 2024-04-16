@@ -4,6 +4,20 @@ namespace ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorizati
 
 public static class PermissionAuthorizationHandlerData
 {
+    public enum RequestLocation
+    {
+        Route,
+        Query,
+        Body
+    }
+
+    public enum StringIdType
+    {
+        Workspace,
+        Project,
+        ProjectSprint
+    }
+
     internal class GetPermissions : TheoryData<Permissions, RequestLocation>
     {
         public GetPermissions()
@@ -24,7 +38,7 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route);
         }
     }
-    
+
     internal class GetPermissionsWithId : TheoryData<Permissions, RequestLocation, string?>
     {
         public GetPermissionsWithId()
@@ -40,12 +54,12 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.DeleteProject, RequestLocation.Route, null);
 
             Add(Permissions.CreateProjectSprint, RequestLocation.Body, "projectId");
-            Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Route, "projectId");
+            Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Query, "projectId");
             Add(Permissions.UpdateProjectSprint, RequestLocation.Body, null);
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route, null);
         }
     }
-    
+
     internal class GetPermissionsWithIdAndType : TheoryData<Permissions, RequestLocation, string?, StringIdType>
     {
         public GetPermissionsWithIdAndType()
@@ -61,23 +75,9 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.DeleteProject, RequestLocation.Route, null, StringIdType.Project);
 
             Add(Permissions.CreateProjectSprint, RequestLocation.Body, "projectId", StringIdType.Project);
-            Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Route, "projectId", StringIdType.Project);
+            Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Query, "projectId", StringIdType.Project);
             Add(Permissions.UpdateProjectSprint, RequestLocation.Body, null, StringIdType.ProjectSprint);
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route, null, StringIdType.ProjectSprint);
         }
-    }
-
-    public enum StringIdType
-    {
-        Workspace,
-        Project,
-        ProjectSprint
-    }
-
-    public enum RequestLocation
-    {
-        Route,
-        Query,
-        Body
     }
 }

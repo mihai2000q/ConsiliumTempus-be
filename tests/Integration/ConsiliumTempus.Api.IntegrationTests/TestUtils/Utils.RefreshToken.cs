@@ -9,7 +9,7 @@ internal static partial class Utils
     internal static class RefreshToken
     {
         internal static void AssertCreation(
-            Domain.Common.Entities.RefreshToken refreshToken, 
+            Domain.Common.Entities.RefreshToken refreshToken,
             string? refreshTokenValue,
             string? token,
             UserAggregate user)
@@ -27,10 +27,10 @@ internal static partial class Utils
             refreshToken.User.Should().Be(user);
             refreshToken.RefreshTimes.Should().Be(0);
         }
-        
+
         internal static void AssertUpdate(
-            Domain.Common.Entities.RefreshToken refreshToken, 
-            Domain.Common.Entities.RefreshToken newRefreshToken, 
+            Domain.Common.Entities.RefreshToken refreshToken,
+            Domain.Common.Entities.RefreshToken newRefreshToken,
             string? token)
         {
             var handler = new JwtSecurityTokenHandler();
@@ -44,7 +44,7 @@ internal static partial class Utils
             newRefreshToken.CreatedDateTime.Should().Be(refreshToken.CreatedDateTime);
             newRefreshToken.Value.Should().Be(refreshToken.Value);
             newRefreshToken.ExpiryDateTime.Should().Be(refreshToken.ExpiryDateTime);
-            
+
             // changed
             newRefreshToken.JwtId.ToString()
                 .Should()

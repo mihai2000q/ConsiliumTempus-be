@@ -40,9 +40,9 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
     public LastName LastName { get; private set; } = default!;
     public Role? Role { get; private set; }
     public DateOnly? DateOfBirth { get; private set; }
+    public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
-    public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
 
     public static UserAggregate Register(
         Credentials credentials,

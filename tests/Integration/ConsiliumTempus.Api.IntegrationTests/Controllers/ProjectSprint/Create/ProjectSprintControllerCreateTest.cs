@@ -11,17 +11,16 @@ using Microsoft.EntityFrameworkCore;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Create;
 
 [Collection(nameof(ProjectSprintControllerCollection))]
-public class ProjectSprintControllerCreateTest(WebAppFactory factory) 
+public class ProjectSprintControllerCreateTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectSprintData())
 {
-    
     [Fact]
-    public async Task WhenProjectSprintCreateSucceeds_ShouldAddAndReturnSuccessResponse()
+    public async Task CreateProjectSprint_WhenSucceeds_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
         var project = ProjectSprintData.Projects.First();
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(project.Id.Value);
-        
+
         // Act
         Client.UseCustomToken(ProjectSprintData.Users.First());
         var outcome = await Client.Post("api/projects/sprints", request);
@@ -31,7 +30,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
 
         var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
         response!.Message.Should().Be("Project Sprint created successfully!");
-        
+
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
         var createdProject = await dbContext.ProjectSprints
@@ -40,22 +39,22 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
             .SingleAsync(ps => ps.Name.Value == request.Name);
         Utils.ProjectSprint.AssertCreation(createdProject, request);
     }
-    
+
     [Fact]
-    public async Task WhenProjectSprintCreateFails_ShouldReturnProjectNotFoundError()
+    public async Task CreateProjectSprint_WhenProjectIsNotFound_ShouldReturnProjectNotFoundError()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(Guid.NewGuid());
-        
+
         // Act
         var outcome = await Client.Post("api/projects/sprints", request);
 
         // Assert
+        await outcome.ValidateError(Errors.Project.NotFound);
+
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length);
         dbContext.ProjectSprints.SingleOrDefault(p => p.Name.Value == request.Name)
             .Should().BeNull();
-        
-        await outcome.ValidateError(Errors.Project.NotFound);
     }
 }

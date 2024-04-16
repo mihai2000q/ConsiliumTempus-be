@@ -10,17 +10,17 @@ using ConsiliumTempus.Domain.Common.Errors;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Get;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerGetTest(WebAppFactory factory) 
+public class ProjectControllerGetTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task WhenGetSucceeds_ShouldReturnProject()
+    public async Task GetProject_WhenSucceeds_ShouldReturnProject()
     {
         // Arrange
         var project = ProjectData.Projects.First();
         var request = ProjectRequestFactory.CreateGetProjectRequest(
             project.Id.Value);
-        
+
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
         var outcome = await Client.Get($"api/projects/{request.Id}");
@@ -32,11 +32,11 @@ public class ProjectControllerGetTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task WhenGetFails_ShouldReturnNotFoundError()
+    public async Task GetProject_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetProjectRequest();
-        
+
         // Act
         var outcome = await Client.Get($"api/projects/{request.Id}");
 

@@ -8,6 +8,7 @@ using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Commands.Create;
 
@@ -68,6 +69,36 @@ public class CreateProjectCommandHandlerTest
         outcome.Value.Should().Be(new CreateProjectResult());
 
         workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+    }
+    
+    [Fact]
+    public async Task CreateProjectCommand_WhenUserIsNull_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var command = ProjectCommandFactory.CreateCreateProjectCommand();
+
+        var workspace = WorkspaceFactory.Create();
+        _workspaceRepository
+            .Get(Arg.Any<WorkspaceId>())
+            .Returns(workspace);
+
+        _currentUserProvider
+            .GetCurrentUser()
+            .ReturnsNull();
+        
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Arrange
+        await _workspaceRepository
+            .Received(1)
+            .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));
+        await _currentUserProvider
+            .Received(1)
+            .GetCurrentUser();
+        _projectRepository.DidNotReceive();
+
+        outcome.ValidateError(Errors.User.NotFound);
     }
 
     [Fact]

@@ -10,7 +10,7 @@ public sealed class WorkspaceRoleConfiguration : IEntityTypeConfiguration<Worksp
     public void Configure(EntityTypeBuilder<WorkspaceRole> builder)
     {
         builder.ToTable(nameof(WorkspaceRole));
-        
+
         builder.HasKey(wr => wr.Id);
         builder.Property(wr => wr.Id)
             .HasColumnOrder(0);

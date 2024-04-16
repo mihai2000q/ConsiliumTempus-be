@@ -16,7 +16,7 @@ internal static partial class Utils
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
                 SecurityAlgorithms.HmacSha256);
-            
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
@@ -40,7 +40,7 @@ internal static partial class Utils
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
                 SecurityAlgorithms.HmacSha256);
-            
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, ""),

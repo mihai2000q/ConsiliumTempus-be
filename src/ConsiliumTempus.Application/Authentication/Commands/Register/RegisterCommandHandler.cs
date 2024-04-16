@@ -20,7 +20,7 @@ public sealed class RegisterCommandHandler(
     public async Task<ErrorOr<RegisterResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
         var email = command.Email.ToLower();
-        if (await userRepository.GetUserByEmail(email, cancellationToken) is not null)
+        if (await userRepository.GetByEmail(email, cancellationToken) is not null)
             return Errors.User.DuplicateEmail;
 
         var password = scrambler.HashPassword(command.Password);
@@ -29,12 +29,13 @@ public sealed class RegisterCommandHandler(
             Credentials.Create(email, password),
             FirstName.Create(command.FirstName.Capitalize()),
             LastName.Create(command.LastName.Capitalize()),
-            command.Role is null ? null : Role.Create(command.Role),
+            command.Role.IfNotNull(Role.Create(command.Role!)),
             command.DateOfBirth);
         await userRepository.Add(user, cancellationToken);
 
         var token = jwtTokenGenerator.GenerateToken(user);
         var jwtId = jwtTokenGenerator.GetJwtIdFromToken(token);
+
         var refreshToken = RefreshToken.Create(jwtId, user);
         await refreshTokenRepository.Add(refreshToken, cancellationToken);
 

@@ -13,7 +13,8 @@ internal static partial class Utils
             IEnumerable<Domain.Project.Entities.ProjectSprint> sprints)
         {
             response.Sprints
-                .Zip(sprints)
+                .OrderBy(s => s.Name)
+                .Zip(sprints.OrderBy(s => s.Name.Value))
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
         }
 

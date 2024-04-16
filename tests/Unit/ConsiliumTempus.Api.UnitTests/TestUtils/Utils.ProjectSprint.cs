@@ -1,0 +1,57 @@
+﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
+
+namespace ConsiliumTempus.Api.UnitTests.TestUtils;
+
+internal static partial class Utils
+{
+    internal static class ProjectSprint
+    {
+        internal static bool AssertGetCollectionQuery(
+            GetCollectionProjectSprintQuery query,
+            GetCollectionProjectSprintRequest request)
+        {
+            query.ProjectId.Should().Be(request.ProjectId);
+            return true;
+        }
+
+        internal static bool AssertCreateCommand(
+            CreateProjectSprintCommand command,
+            CreateProjectSprintRequest request)
+        {
+            command.ProjectId.Should().Be(request.ProjectId);
+            command.Name.Should().Be(request.Name);
+            command.StartDate.Should().Be(request.StartDate);
+            command.EndDate.Should().Be(request.EndDate);
+            return true;
+        }
+
+        internal static bool AssertDeleteCommand(DeleteProjectSprintCommand command, Guid id)
+        {
+            command.Id.Should().Be(id);
+            return true;
+        }
+
+        internal static void AssertGetCollectionResponse(
+            GetCollectionProjectSprintResponse response,
+            GetCollectionProjectSprintResult result)
+        {
+            response.Sprints
+                .Zip(result.Sprints)
+                .Should().AllSatisfy(p => AssertProjectSprintResponse(p.First, p.Second));
+        }
+
+        private static void AssertProjectSprintResponse(
+            GetCollectionProjectSprintResponse.ProjectSprintResponse response,
+            Domain.Project.Entities.ProjectSprint projectSprint)
+        {
+            response.Id.Should().Be(projectSprint.Id.Value);
+            response.Name.Should().Be(projectSprint.Name.Value);
+            response.StartDate.Should().Be(projectSprint.StartDate);
+            response.EndDate.Should().Be(projectSprint.EndDate);
+        }
+    }
+}

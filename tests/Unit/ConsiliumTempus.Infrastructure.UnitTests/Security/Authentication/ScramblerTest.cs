@@ -11,7 +11,7 @@ public class ScramblerTest
     #endregion
 
     [Fact]
-    public void WhenHashingPasswordAndVerifyIt_ShouldReturnTrue()
+    public void HashPassword_WhenValidVerifyIt_ShouldReturnTrue()
     {
         // Arrange
         const string password = "Password123";
@@ -25,7 +25,7 @@ public class ScramblerTest
     }
 
     [Fact]
-    public void WhenHashing2TimesPassword_ShouldNotBeEqual()
+    public void HashPassword_WhenHashing2TimesPassword_ShouldNotBeEqual()
     {
         // Arrange
         const string password = "Password123";

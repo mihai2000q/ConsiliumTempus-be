@@ -62,7 +62,7 @@ public class GetCollectionProjectForUserQueryHandlerTest
 
         var projects = ProjectFactory.CreateList();
         _projectRepository
-            .GetListForUser(user.Id)
+            .GetListByUser(user.Id)
             .Returns(projects);
 
         // Act
@@ -74,7 +74,7 @@ public class GetCollectionProjectForUserQueryHandlerTest
             .GetCurrentUser();
         await _projectRepository
             .Received(1)
-            .GetListForUser(Arg.Any<UserId>());
+            .GetListByUser(Arg.Any<UserId>());
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().BeEquivalentTo(new GetCollectionProjectForUserResult(projects));

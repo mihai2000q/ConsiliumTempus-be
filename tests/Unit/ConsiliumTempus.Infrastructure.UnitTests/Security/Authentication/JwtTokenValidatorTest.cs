@@ -44,58 +44,58 @@ public class JwtTokenValidatorTest
     {
         // Arrange
         var refreshToken = RefreshTokenFactory.Create();
-        
+
         // Act
         var outcome = _uut.ValidateRefreshToken(refreshToken, refreshToken.JwtId.ToString());
 
         // Assert
         outcome.Should().BeTrue();
     }
-    
+
     [Fact]
     public void ValidateRefreshToken_WhenRefreshTokenIsNull_ShouldReturnFalse()
     {
         // Arrange
-        
+
         // Act
         var outcome = _uut.ValidateRefreshToken(null, "");
 
         // Assert
         outcome.Should().BeFalse();
     }
-    
+
     [Fact]
     public void ValidateRefreshToken_WhenRefreshTokenIsInvalidated_ShouldReturnFalse()
     {
         // Arrange
         var refreshToken = RefreshTokenFactory.Create(invalidated: true);
-        
+
         // Act
         var outcome = _uut.ValidateRefreshToken(refreshToken, refreshToken.JwtId.ToString());
 
         // Assert
         outcome.Should().BeFalse();
     }
-    
+
     [Fact]
     public void ValidateRefreshToken_WhenRefreshTokenIsExpired_ShouldReturnFalse()
     {
         // Arrange
         var refreshToken = RefreshTokenFactory.Create(expiryDate: DateTime.UtcNow.AddSeconds(-1));
-        
+
         // Act
         var outcome = _uut.ValidateRefreshToken(refreshToken, refreshToken.JwtId.ToString());
 
         // Assert
         outcome.Should().BeFalse();
     }
-    
+
     [Fact]
     public void ValidateRefreshToken_WhenJwtIdIsWrong_ShouldReturnFalse()
     {
         // Arrange
         var refreshToken = RefreshTokenFactory.Create();
-        
+
         // Act
         var outcome = _uut.ValidateRefreshToken(refreshToken, "wrong");
 
@@ -109,86 +109,87 @@ public class JwtTokenValidatorTest
         // Arrange
         var user = UserFactory.Create();
         _userProvider
-            .Get(user.Id)
+            .Get(Arg.Any<UserId>())
             .Returns(user);
-        
+
         var token = Utils.Token.GenerateToken(_jwtSettings, user);
-        
+
         // Act
         var outcome = await _uut.ValidateAccessToken(token);
 
         // Assert
         await _userProvider
             .Received(1)
-            .Get(Arg.Any<UserId>());
-        
+            .Get(Arg.Is<UserId>(uId => uId == user.Id));
+
         outcome.Should().BeTrue();
     }
-    
+
     [Fact]
     public async Task ValidateAccessToken_WhenUserIsNotFound_ShouldReturnFalse()
     {
         // Arrange
-        var token = Utils.Token.GenerateToken(_jwtSettings);
-        
+        var sub = Guid.NewGuid();
+        var token = Utils.Token.GenerateToken(_jwtSettings, sub: sub.ToString());
+
         // Act
         var outcome = await _uut.ValidateAccessToken(token);
 
         // Assert
         await _userProvider
             .Received(1)
-            .Get(Arg.Any<UserId>());
-        
+            .Get(Arg.Is<UserId>(uId => uId.Value == sub));
+
         outcome.Should().BeFalse();
     }
-    
+
     [Theory]
     [ClassData(typeof(JwtTokenValidatorData.GetInvalidTokensByJwtSettings))]
     public async Task ValidateAccessToken_WhenInvalidByJwtSettings_ShouldReturnFalse(string token)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAccessToken(token);
 
         // Assert
-        _userProvider.Received(0);
-        
+        _userProvider.DidNotReceive();
+
         outcome.Should().BeFalse();
     }
-    
+
     [Fact]
     public async Task ValidateAccessToken_WhenUserIdIsWrong_ShouldReturnFalse()
     {
         // Arrange
         var token = Utils.Token.GenerateToken(_jwtSettings, sub: "asd");
-        
+
         // Act
         var outcome = await _uut.ValidateAccessToken(token);
 
         // Assert
-        _userProvider.Received(0);
-        
+        _userProvider.DidNotReceive();
+
         outcome.Should().BeFalse();
     }
-    
+
     [Theory]
     [ClassData(typeof(JwtTokenValidatorData.GetInvalidTokensByClaims))]
     public async Task ValidateAccessToken_WhenInvalidByClaims_ShouldReturnFalse(string token, UserAggregate user)
     {
         // Arrange - parameterized
         _userProvider
-            .Get(user.Id)
+            .Get(Arg.Any<UserId>())
             .Returns(user);
-        
+
         // Act
         var outcome = await _uut.ValidateAccessToken(token);
 
         // Assert
         await _userProvider
             .Received(1)
-            .Get(Arg.Any<UserId>());
-        
+            .Get(Arg.Is<UserId>(uId => uId == user.Id));
+
         outcome.Should().BeFalse();
     }
 }

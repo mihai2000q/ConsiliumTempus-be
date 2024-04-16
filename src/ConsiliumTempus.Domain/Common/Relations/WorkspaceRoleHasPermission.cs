@@ -8,13 +8,13 @@ public sealed class WorkspaceRoleHasPermission
     private WorkspaceRoleHasPermission()
     {
     }
-    
+
     private WorkspaceRoleHasPermission(int workspaceRoleId, int permissionId)
     {
         WorkspaceRoleId = workspaceRoleId;
         PermissionId = permissionId;
     }
-    
+
     public int WorkspaceRoleId { get; init; }
     public int PermissionId { get; init; }
 

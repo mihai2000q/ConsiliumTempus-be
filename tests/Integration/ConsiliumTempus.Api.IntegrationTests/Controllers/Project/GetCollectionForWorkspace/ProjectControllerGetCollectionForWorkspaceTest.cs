@@ -10,16 +10,16 @@ using ConsiliumTempus.Domain.Common.Errors;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.GetCollectionForWorkspace;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerGetCollectionForWorkspaceTest(WebAppFactory factory) 
+public class ProjectControllerGetCollectionForWorkspaceTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task WhenGetCollectionForWorkspaceSucceeds_ShouldReturnProjects()
+    public async Task GetProjectCollectionForWorkspace_WhenSucceeds_ShouldReturnProjects()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectForWorkspaceRequest(
             ProjectData.Workspaces.First().Id.Value);
-        
+
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
         var outcome = await Client.Get($"api/projects/workspace?workspaceId={request.WorkspaceId}");
@@ -34,11 +34,11 @@ public class ProjectControllerGetCollectionForWorkspaceTest(WebAppFactory factor
     }
 
     [Fact]
-    public async Task WhenGetCollectionForWorkspaceFails_ShouldReturnWorkspaceNotFoundError()
+    public async Task GetProjectCollectionForWorkspace_WhenWorkspaceIsNotFound_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectForWorkspaceRequest();
-        
+
         // Act
         var outcome = await Client.Get($"api/projects/workspace?workspaceId={request.WorkspaceId}");
 
