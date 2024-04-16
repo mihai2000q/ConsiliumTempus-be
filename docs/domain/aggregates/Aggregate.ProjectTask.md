@@ -27,7 +27,7 @@ class ProjectTask
   "reviewer": {},
   "dueDate": "2020-01-01",
   "estimatedDuration": "08:30",
-  "section": {},
+  "stage": {},
   "comments": [{}]
 }
 ```

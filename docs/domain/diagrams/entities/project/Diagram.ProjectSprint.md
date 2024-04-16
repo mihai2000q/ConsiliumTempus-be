@@ -5,7 +5,7 @@
 ### Relationships
 
 - **Many-to-one** relationship with the [Project](../../../aggregates/Aggregate.Project.md) aggregate.
-- **One-to-many** relationship with the [Project Section](../../../entities/project/Entity.ProjectSection.md) entity.
+- **One-to-many** relationship with the [Project Stage](../../../entities/project/Entity.ProjectStage.md) entity.
 
 ### Diagram
 

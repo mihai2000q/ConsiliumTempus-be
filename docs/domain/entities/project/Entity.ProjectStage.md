@@ -1,13 +1,13 @@
 # Domain Entities
 
-## Project Section
+## Project Stage
 
-This is the project **section** entity.
+This is the project **stage** entity.
 
 ```csharp
-class ProjectSection
+class ProjectStage
 {
-    ProjectSection Create()
+    ProjectStage Create()
     void Update()
     void AddTask()
 }
@@ -16,14 +16,14 @@ class ProjectSection
 ```json
 {
   "id": { "value": "00000000-0000-0000-0000-000000000000" },
-  "name": { "value": "Section 1" },
+  "name": { "value": "Stage 1" },
   "order": { "value": 0 },
   "sprint": {},
   "tasks": [{}]
 }
 ```
 
-For database design checkout the [Project Section Diagram](../../diagrams/entities/project/Diagram.ProjectSection.md).
+For database design checkout the [Project Stage Diagram](../../diagrams/entities/project/Diagram.ProjectStage.md).
 
 ### Properties Validation
 

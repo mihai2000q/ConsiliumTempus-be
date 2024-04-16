@@ -110,6 +110,6 @@ except the primary key and direct relations), check below:
   - [Workspace Role Diagram](domain/diagrams/entities/Diagram.WorkspaceRole.md)
   - Project Entities
     - [Project Sprint Diagram](domain/diagrams/entities/project/Diagram.ProjectSprint.md)
-    - [Project Section Diagram](domain/diagrams/entities/project/Diagram.ProjectSection.md)
+    - [Project Stage Diagram](domain/diagrams/entities/project/Diagram.ProjectStage.md)
   - Project Task Entities
     - [Project Task Comment Diagram](domain/diagrams/entities/project-task/Diagram.ProjectTaskComment.md)
