@@ -30,7 +30,7 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
 
         var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
         response!.Message.Should().Be("Project created successfully!");
-        
+
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length + 1);
         var createdProject = await dbContext.Projects
@@ -56,7 +56,7 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
-    
+
     [Fact]
     public async Task CreateProject_WhenWorkspaceIsNotFound_ShouldReturnWorkspaceNotFoundError()
     {
@@ -68,7 +68,7 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);
-        
+
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length);
         dbContext.Projects.SingleOrDefault(p => p.Name.Value == request.Name).Should().BeNull();

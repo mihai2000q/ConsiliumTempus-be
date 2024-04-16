@@ -13,7 +13,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WorkspaceDelete_WhenItSucceeds_ShouldDeleteAndReturnSuccessResponse()
+    public async Task DeleteWorkspace_WhenItSucceeds_ShouldDeleteAndReturnSuccessResponse()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces[0];
@@ -35,7 +35,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task WorkspaceDelete_WhenWorkspaceIsUserWorkspace_ShouldReturnUserWorkspaceError()
+    public async Task DeleteWorkspace_WhenIsPersonalWorkspace_ShouldReturnUserWorkspaceError()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces[2];
@@ -49,7 +49,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task WorkspaceDelete_WhenWorkspaceIsNotFound_ShouldReturnNotFoundError()
+    public async Task WorkspaceDelete_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var id = Guid.NewGuid();

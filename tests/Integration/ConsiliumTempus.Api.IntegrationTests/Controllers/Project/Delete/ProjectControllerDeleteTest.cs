@@ -10,15 +10,15 @@ using FluentAssertions.Extensions;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Delete;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerDeleteTest(WebAppFactory factory) 
+public class ProjectControllerDeleteTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task WhenProjectDeleteSucceeds_ShouldDeleteAndReturnSuccessResponse()
+    public async Task DeleteProject_WhenSucceeds_ShouldDeleteAndReturnSuccessResponse()
     {
         // Arrange
         var project = ProjectData.Projects.First();
-        
+
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
         var outcome = await Client.Delete($"api/projects/{project.Id}");
@@ -28,7 +28,7 @@ public class ProjectControllerDeleteTest(WebAppFactory factory)
 
         var response = await outcome.Content.ReadFromJsonAsync<DeleteProjectResponse>();
         response!.Message.Should().Be("Project has been deleted successfully!");
-        
+
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length - 1);
         var workspace = dbContext.Workspaces.Single(w => w == project.Workspace);
@@ -36,17 +36,17 @@ public class ProjectControllerDeleteTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task WhenProjectDeleteFails_ShouldReturnNotFoundError()
+    public async Task DeleteProject_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var id = Guid.NewGuid();
-        
+
         // Act
         var outcome = await Client.Delete($"api/projects/{id}");
 
         // Assert
         await outcome.ValidateError(Errors.Project.NotFound);
-        
+
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length);
         dbContext.Projects.AsEnumerable()

@@ -7,33 +7,34 @@ using ConsiliumTempus.Domain.User;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Update;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerUpdateAuthorizationTest(WebAppFactory factory) 
+public class WorkspaceControllerUpdateAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WhenWorkspaceUpdateWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task UpdateWorkspace_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulRequest(WorkspaceData.Users[0]);
+        await AssertSuccessfulResponse(WorkspaceData.Users[0]);
     }
-    
+
     [Fact]
-    public async Task WhenWorkspaceUpdateWithMemberRole_ShouldReturnSuccessResponse()
+    public async Task UpdateWorkspace_WhenWithMemberRole_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulRequest(WorkspaceData.Users[3]);
+        await AssertSuccessfulResponse(WorkspaceData.Users[3]);
     }
-    
+
     [Fact]
-    public async Task WhenWorkspaceUpdateWithViewRole_ShouldReturnForbiddenResponse()
+    public async Task UpdateWorkspace_WhenWithViewRole_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenRequest(WorkspaceData.Users[4]);
+        await AssertForbiddenResponse(WorkspaceData.Users[4]);
     }
-    
+
     [Fact]
-    public async Task WhenWorkspaceUpdateWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task UpdateWorkspace_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenRequest(WorkspaceData.Users[1]);
+        await AssertForbiddenResponse(WorkspaceData.Users[1]);
     }
-    private async Task AssertSuccessfulRequest(UserAggregate user)
+
+    private async Task AssertSuccessfulResponse(UserAggregate user)
     {
         var outcome = await ArrangeAndAct(user);
 
@@ -41,7 +42,7 @@ public class WorkspaceControllerUpdateAuthorizationTest(WebAppFactory factory)
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-    private async Task AssertForbiddenRequest(UserAggregate user)
+    private async Task AssertForbiddenResponse(UserAggregate user)
     {
         var outcome = await ArrangeAndAct(user);
 
@@ -54,7 +55,7 @@ public class WorkspaceControllerUpdateAuthorizationTest(WebAppFactory factory)
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: workspace.Id.Value);
-        
+
         // Act
         Client.UseCustomToken(user);
         return await Client.Put("api/workspaces", request);

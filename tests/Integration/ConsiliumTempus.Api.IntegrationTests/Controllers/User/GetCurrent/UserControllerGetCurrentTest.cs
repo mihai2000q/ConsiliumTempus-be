@@ -9,15 +9,15 @@ using ConsiliumTempus.Domain.Common.Errors;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.GetCurrent;
 
 [Collection(nameof(UserControllerCollection))]
-public class UserControllerGetCurrentTest(WebAppFactory factory) 
+public class UserControllerGetCurrentTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new UserData())
 {
     [Fact]
-    public async Task WhenGetCurrentUserIsSuccessful_ShouldReturnCurrentUser()
+    public async Task GetCurrentUser_WhenIsSuccessful_ShouldReturnCurrentUser()
     {
         // Arrange
         var user = UserData.Users.First();
-        
+
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Get("api/users/current");
@@ -27,12 +27,12 @@ public class UserControllerGetCurrentTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<GetCurrentUserResponse>();
         Utils.User.AssertGetCurrentResponse(response!, user);
     }
-    
+
     [Fact]
-    public async Task WhenGetCurrentUserFails_ShouldReturnNotFoundError()
+    public async Task GetCurrentUser_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        
+
         // Act
         Client.UseInvalidToken();
         var outcome = await Client.Get("api/users/current");

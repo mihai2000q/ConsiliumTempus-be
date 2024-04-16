@@ -7,11 +7,11 @@ using ConsiliumTempus.Common.IntegrationTests.Project;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Get;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerGetValidationTest(WebAppFactory factory) 
+public class ProjectControllerGetValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task WhenGetProjectQueryIsValid_ShouldReturnSuccessResponse()
+    public async Task GetProject_WhenQueryIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetProjectRequest(
@@ -24,13 +24,13 @@ public class ProjectControllerGetValidationTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     [Fact]
-    public async Task WhenGetProjectQueryIsInvalid_ShouldReturnValidationErrors()
+    public async Task GetProject_WhenQueryIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetProjectRequest(Guid.Empty);
-        
+
         // Act
         var outcome = await Client.Get($"api/projects/{request.Id}");
 

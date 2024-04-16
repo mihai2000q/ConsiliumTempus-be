@@ -15,12 +15,12 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WhenWorkspaceCreateIsSuccessful_ShouldCreateAndReturnSuccessResponse()
+    public async Task CreateWorkspace_WhenIsSuccessful_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
-        
+
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Post("api/workspaces", request);
@@ -29,7 +29,7 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<CreateWorkspaceResponse>();
         response!.Message.Should().Be("Workspace has been created successfully!");
-        
+
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length + 1);
         var createdWorkspace = await dbContext.Workspaces
@@ -40,13 +40,13 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
             .SingleAsync(w => w.Name.Value == request.Name);
         Utils.Workspace.AssertCreation(createdWorkspace, request, user);
     }
-    
+
     [Fact]
-    public async Task WhenWorkspaceCreateFails_ShouldReturnUserNotFoundError()
+    public async Task CreateWorkspace_WhenUserIsNotFound_ShouldReturnUserNotFoundError()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
-        
+
         // Act
         Client.UseInvalidToken();
         var outcome = await Client.Post("api/workspaces", request);

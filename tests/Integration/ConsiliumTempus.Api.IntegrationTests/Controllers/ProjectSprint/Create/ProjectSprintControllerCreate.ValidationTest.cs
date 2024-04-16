@@ -7,17 +7,16 @@ using ConsiliumTempus.Common.IntegrationTests.Project.Entities;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Create;
 
 [Collection(nameof(ProjectSprintControllerCollection))]
-public class ProjectSprintControllerCreateValidationTest(WebAppFactory factory) 
+public class ProjectSprintControllerCreateValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectSprintData())
 {
-    
     [Fact]
-    public async Task WhenProjectSprintCreateCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task CreateProjectSprint_WhenCommandIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var project = ProjectSprintData.Projects.First();
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(project.Id.Value);
-        
+
         // Act
         Client.UseCustomToken(ProjectSprintData.Users.First());
         var outcome = await Client.Post("api/projects/sprints", request);
@@ -25,15 +24,15 @@ public class ProjectSprintControllerCreateValidationTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     [Fact]
-    public async Task WhenProjectSprintCreateCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task CreateProjectSprint_WhenCommandIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
             projectId: Guid.Empty, 
             name: string.Empty);  
-        
+
         // Act
         var outcome = await Client.Post("api/projects/sprints", request);
 

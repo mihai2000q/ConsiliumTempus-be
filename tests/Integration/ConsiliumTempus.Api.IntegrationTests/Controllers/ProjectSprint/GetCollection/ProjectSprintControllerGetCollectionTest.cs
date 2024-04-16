@@ -10,7 +10,7 @@ using ConsiliumTempus.Domain.Common.Errors;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.GetCollection;
 
 [Collection(nameof(ProjectSprintControllerCollection))]
-public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory) 
+public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectSprintData())
 {
     [Fact]
@@ -32,7 +32,7 @@ public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory)
             response!,
             project.Sprints);
     }
-    
+
     [Fact]
     public async Task GetCollectionProjectSprint_WhenProjectIsNotFound_ShouldReturnProjectNotFoundError()
     {

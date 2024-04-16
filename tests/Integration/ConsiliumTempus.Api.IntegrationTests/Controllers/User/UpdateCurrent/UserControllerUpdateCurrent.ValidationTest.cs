@@ -7,7 +7,7 @@ using ConsiliumTempus.Common.IntegrationTests.User;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.UpdateCurrent;
 
 [Collection(nameof(UserControllerCollection))]
-public class UserControllerUpdateValidationTest(WebAppFactory factory) 
+public class UserControllerUpdateValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new UserData())
 {
     [Fact]
@@ -15,14 +15,14 @@ public class UserControllerUpdateValidationTest(WebAppFactory factory)
     {
         // Arrange
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
-        
+
         // Act
         var outcome = await Client.Put("api/users/current", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     [Fact]
     public async Task UpdateCurrentUser_WhenCommandIsInvalid_ShouldReturnValidationErrors()
     {
@@ -30,7 +30,7 @@ public class UserControllerUpdateValidationTest(WebAppFactory factory)
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest(
             firstName: string.Empty, 
             role: new string('a', 1000));
-        
+
         // Act
         var outcome = await Client.Put("api/users/current", request);
 

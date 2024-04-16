@@ -11,26 +11,26 @@ public class WorkspaceControllerCreateValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WorkspaceCreate_WhenCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task CreateWorkspace_WhenCommandIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
-        
+
         // Act
         var outcome = await Client.Post("api/workspaces", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     [Fact]
-    public async Task WorkspaceCreate_WhenCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task CreateWorkspace_WhenCommandIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest(
             name: string.Empty,
             description: new string('a', 2000));
-        
+
         // Act
         var outcome = await Client.Post("api/workspaces", request);
 

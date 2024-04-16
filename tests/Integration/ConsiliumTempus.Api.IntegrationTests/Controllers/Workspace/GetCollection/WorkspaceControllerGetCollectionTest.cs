@@ -13,14 +13,14 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task WhenWorkspaceGetCollectionForUserIsSuccessful_ShouldReturnAllTheWorkspacesForUser()
+    public async Task GetWorkspaceCollectionForUser_WhenIsSuccessful_ShouldReturnAllTheWorkspacesForUser()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
         var workspaces = user.Memberships.Select(m => m.Workspace)
             .OrderBy(w => w.Name.Value)
             .ToList();
-        
+
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Get("api/Workspaces");
@@ -30,12 +30,12 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
         Utils.Workspace.AssertGetCollectionResponse(response!, workspaces);
     }
-    
+
     [Fact]
-    public async Task WhenWorkspaceGetCollectionForUserFails_ShouldReturnUserNotFoundError()
+    public async Task GetWorkspaceCollectionForUser_WhenUserIsNotFound_ShouldReturnUserNotFoundError()
     {
         // Arrange
-        
+
         // Act
         Client.UseInvalidToken();
         var outcome = await Client.Get("api/Workspaces");
