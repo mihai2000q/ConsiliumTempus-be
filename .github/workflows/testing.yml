@@ -12,10 +12,11 @@ jobs:
   
   unit-testing:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     name: Unit Testing
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build
       uses: ./.github/workflows/build-action
@@ -25,10 +26,11 @@ jobs:
 
   integration-testing:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     name: Integration Testing
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build
       uses: ./.github/workflows/build-action
@@ -38,6 +40,7 @@ jobs:
     
   end-to-end-testing:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     name: End To End Testing
     steps:
     - name: Checkout Repo
