@@ -29,7 +29,7 @@ public sealed class RegisterCommandHandler(
             Credentials.Create(email, password),
             FirstName.Create(command.FirstName.Capitalize()),
             LastName.Create(command.LastName.Capitalize()),
-            command.Role.IfNotNull(Role.Create(command.Role!)),
+            command.Role.IfNotNull(() => Role.Create(command.Role!)),
             command.DateOfBirth);
         await userRepository.Add(user, cancellationToken);
 
