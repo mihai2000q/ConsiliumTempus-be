@@ -56,10 +56,13 @@ Anyone that is part of the workspace can read the projects
 ([Read Collection Project Permission](../Security.md/#permissions)).
 
 ```js
-GET {{host}}/api/projects/workspace?workspaceId={workspaceId}
+GET {{host}}/api/projects/workspace?workspaceId={workspaceId}&name=project&isFavorite=true&isPrivate=false
 ```
 
-- **workspaceId** is a 36-character string
+- **workspaceId** is a 36-character string id
+- **name** is used to filter by name
+- **isFavorite** is used to filter by favorites
+- **isPrivate** is used to filter by accessibility
 
 #### Get Collection For Workspace Request
 

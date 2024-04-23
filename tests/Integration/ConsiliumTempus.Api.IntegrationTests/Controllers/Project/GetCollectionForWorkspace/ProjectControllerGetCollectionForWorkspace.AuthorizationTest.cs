@@ -11,25 +11,25 @@ public class ProjectControllerGetCollectionForWorkspaceAuthorizationTest(WebAppF
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task GetProjectCollectionForWorkspace_WhenWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task GetCollectionProjectForWorkspace_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(ProjectData.Users[0]);
     }
 
     [Fact]
-    public async Task GetProjectCollectionForWorkspace_WhenWithMemberRole_ShouldReturnSuccessResponse()
+    public async Task GetCollectionProjectForWorkspace_WhenWithMemberRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(ProjectData.Users[3]);
     }
 
     [Fact]
-    public async Task GetProjectCollectionForWorkspace_WhenWithViewRole_ShouldReturnSuccessResponse()
+    public async Task GetCollectionProjectForWorkspace_WhenWithViewRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(ProjectData.Users[4]);
     }
 
     [Fact]
-    public async Task GetProjectCollectionForWorkspace_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task GetCollectionProjectForWorkspace_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectData.Users[1]);
     }

@@ -13,7 +13,7 @@ public class ProjectControllerGetCollectionForUserTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task GetCollectionForUser_WhenSucceeds_ShouldReturnProjects()
+    public async Task GetCollectionProjectForUser_WhenSucceeds_ShouldReturnProjects()
     {
         // Arrange
         var user = ProjectData.Users.First();
@@ -32,7 +32,7 @@ public class ProjectControllerGetCollectionForUserTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionForUser_WhenUserIsNotFound_ShouldReturnUserNotFoundError()
+    public async Task GetCollectionProjectForUser_WhenUserIsNotFound_ShouldReturnUserNotFoundError()
     {
         // Arrange
 
