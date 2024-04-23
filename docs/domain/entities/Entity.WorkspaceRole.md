@@ -3,7 +3,7 @@
 ## Workspace Role
 
 This entity derives from a smart enumeration, so it does not have any other functions.
-Its only purpose is to server as an Enum class for the three roles: *View*, *Member* and *Admin*. 
+Its only purpose is to serve as an Enum class for the three roles: *View*, *Member* and *Admin*. 
 
 ```csharp
 class WorkspaceRole 
