@@ -4,6 +4,8 @@ using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using NSubstitute.ReturnsExtensions;
 
@@ -27,7 +29,7 @@ public class GetCollectionProjectForWorkspaceQueryHandlerTest
     #endregion
 
     [Fact]
-    public async Task GetCollectionProjectForWorkspace_WhenFails_ShouldReturnWorkspaceNotFoundError()
+    public async Task GetCollectionProjectForWorkspace_WhenWorkspaceIsNull_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
         var query = ProjectQueryFactory.CreateGetCollectionProjectForWorkspaceQuery();
@@ -61,7 +63,7 @@ public class GetCollectionProjectForWorkspaceQueryHandlerTest
 
         var projects = ProjectFactory.CreateList();
         _projectRepository
-            .GetListByWorkspace(Arg.Any<WorkspaceId>())
+            .GetListByWorkspace(Arg.Any<WorkspaceId>(), Arg.Any<IReadOnlyList<IFilter<ProjectAggregate>>>())
             .Returns(projects);
         
         // Act
@@ -73,9 +75,12 @@ public class GetCollectionProjectForWorkspaceQueryHandlerTest
             .Get(Arg.Is<WorkspaceId>(wId => wId.Value == query.WorkspaceId));
         await _projectRepository
             .Received(1)
-            .GetListByWorkspace(Arg.Is<WorkspaceId>(wId => wId == workspace.Id));
+            .GetListByWorkspace(
+                Arg.Is<WorkspaceId>(wId => wId == workspace.Id), 
+                Arg.Is<IReadOnlyList<IFilter<ProjectAggregate>>>(filters => 
+                    Utils.Project.AssertGetCollectionProjectForWorkspaceFilters(filters, query)));
 
         outcome.IsError.Should().BeFalse();
-        outcome.Value.Should().Be(new GetCollectionProjectForWorkspaceResult(projects));
+        outcome.Value.Projects.Should().BeEquivalentTo(projects);
     }
 }

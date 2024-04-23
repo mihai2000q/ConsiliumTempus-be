@@ -1,5 +1,8 @@
 ﻿using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
+using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
+using ConsiliumTempus.Domain.Common.Filters;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.User;
@@ -49,6 +52,17 @@ internal static partial class Utils
             outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
             outcome.Workspace.Should().Be(expected.Workspace);
             outcome.Sprints.Should().BeEquivalentTo(expected.Sprints);
+        }
+
+        internal static bool AssertGetCollectionProjectForWorkspaceFilters(
+            IReadOnlyList<IFilter<ProjectAggregate>> filters,
+            GetCollectionProjectForWorkspaceQuery query)
+        {
+            filters.OfType<Filters.Project.NameFilter>().Single().Value.Should().Be(query.Name);
+            filters.OfType<Filters.Project.IsFavoriteFilter>().Single().Value.Should().Be(query.IsFavorite);
+            filters.OfType<Filters.Project.IsPrivateFilter>().Single().Value.Should().Be(query.IsPrivate);
+
+            return true;
         }
     }
 

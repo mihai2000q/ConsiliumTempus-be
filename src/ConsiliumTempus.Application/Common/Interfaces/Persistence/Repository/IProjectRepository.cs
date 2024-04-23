@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Project;
+﻿using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -11,7 +12,9 @@ public interface IProjectRepository
 
     Task<ProjectAggregate?> GetWithWorkspace(ProjectId id, CancellationToken cancellationToken = default);
 
-    Task<List<ProjectAggregate>> GetListByWorkspace(WorkspaceId workspaceId,
+    Task<List<ProjectAggregate>> GetListByWorkspace(
+        WorkspaceId workspaceId,
+        IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default);
 
     Task<List<ProjectAggregate>> GetListByUser(UserId userId, CancellationToken cancellationToken = default);
