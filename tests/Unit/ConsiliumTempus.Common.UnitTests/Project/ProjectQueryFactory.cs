@@ -27,7 +27,7 @@ public static class ProjectQueryFactory
         bool? isPrivate = null)
     {
         return new GetCollectionProjectQuery(
-            workspaceId ?? Guid.NewGuid(),
+            workspaceId,
             name,
             isFavorite,
             isPrivate);

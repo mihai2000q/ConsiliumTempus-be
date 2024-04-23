@@ -1,19 +1,19 @@
-﻿using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
-using ConsiliumTempus.Application.UnitTests.TestData.Project.Queries.GetCollectionForWorkspace;
+﻿using ConsiliumTempus.Application.Project.Queries.GetCollection;
+using ConsiliumTempus.Application.UnitTests.TestData.Project.Queries.GetCollection;
 
-namespace ConsiliumTempus.Application.UnitTests.Project.Queries.GetCollectionForWorkspace;
+namespace ConsiliumTempus.Application.UnitTests.Project.Queries.GetCollection;
 
-public class GetCollectionProjectForWorkspaceQueryValidatorTest
+public class GetCollectionProjectQueryValidatorTest
 {
     #region Setup
 
-    private readonly GetCollectionProjectForWorkspaceQueryValidator _uut = new();
+    private readonly GetCollectionProjectQueryValidator _uut = new();
 
     #endregion
 
     [Theory]
     [ClassData(typeof(GetCollectionProjectForWorkspaceQueryValidatorData.GetValidQueries))]
-    public async Task WhenValid_ShouldReturnTrue(GetCollectionProjectForWorkspaceQuery query)
+    public async Task WhenValid_ShouldReturnTrue(GetCollectionProjectQuery query)
     {
         // Arrange - parameterized
         
@@ -25,9 +25,9 @@ public class GetCollectionProjectForWorkspaceQueryValidatorTest
     }
     
     [Theory]
-    [ClassData(typeof(GetCollectionProjectForWorkspaceQueryValidatorData.GetInvalidWorkspaceIdQueries))]
+    [ClassData(typeof(GetCollectionProjectForWorkspaceQueryValidatorData.GetInvalidNameQueries))]
     public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
-        GetCollectionProjectForWorkspaceQuery query, 
+        GetCollectionProjectQuery query, 
         string property)
     {
         // Arrange - parameterized

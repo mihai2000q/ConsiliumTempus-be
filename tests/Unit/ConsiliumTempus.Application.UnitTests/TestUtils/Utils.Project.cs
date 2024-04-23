@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Project.Commands.Create;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Filters;
@@ -7,6 +8,7 @@ using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -58,7 +60,8 @@ internal static partial class Utils
             IReadOnlyList<IFilter<ProjectAggregate>> filters,
             GetCollectionProjectQuery query)
         {
-            filters.OfType<Filters.Project.WorkspaceFilter>().Single().Value.Should().Be(query.WorkspaceId);
+            filters.OfType<Filters.Project.WorkspaceFilter>().Single().Value.Should().Be(
+                query.WorkspaceId.IfNotNull(() => WorkspaceId.Create(query.WorkspaceId!.Value)));
             filters.OfType<Filters.Project.NameFilter>().Single().Value.Should().Be(query.Name);
             filters.OfType<Filters.Project.IsFavoriteFilter>().Single().Value.Should().Be(query.IsFavorite);
             filters.OfType<Filters.Project.IsPrivateFilter>().Single().Value.Should().Be(query.IsPrivate);
