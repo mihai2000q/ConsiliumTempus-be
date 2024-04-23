@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Get;
+using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
 using FluentAssertions.Extensions;
@@ -27,17 +27,19 @@ internal static partial class Utils
             IEnumerable<ProjectAggregate> projects)
         {
             response.Projects
-                .Zip(projects)
-                .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
+                .OrderBy(p => p.Id)
+                .Zip(projects.OrderBy(p => p.Id.Value))
+                .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
         }
 
-        internal static void AssertGetCollectionForWorkspaceResponse(
-            GetCollectionProjectForWorkspaceResponse response,
+        internal static void AssertGetCollectionResponse(
+            GetCollectionProjectResponse response,
             IEnumerable<ProjectAggregate> projects)
         {
             response.Projects
-                .Zip(projects)
-                .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
+                .OrderBy(p => p.Id)
+                .Zip(projects.OrderBy(p => p.Id.Value))
+                .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
         }
 
         internal static void AssertCreation(ProjectAggregate project, CreateProjectRequest request)
@@ -59,7 +61,7 @@ internal static partial class Utils
                 .Should().HaveCount(Constants.ProjectTask.Names.Length);
         }
 
-        private static void AssertResponse(
+        private static void AssertProjectResponse(
             GetCollectionProjectForUserResponse.ProjectResponse projectResponse,
             ProjectAggregate project)
         {
@@ -67,13 +69,15 @@ internal static partial class Utils
             projectResponse.Name.Should().Be(project.Name.Value);
         }
 
-        private static void AssertResponse(
-            GetCollectionProjectForWorkspaceResponse.ProjectResponse projectResponse,
+        private static void AssertProjectResponse(
+            GetCollectionProjectResponse.ProjectResponse projectResponse,
             ProjectAggregate project)
         {
             projectResponse.Id.Should().Be(project.Id.Value);
             projectResponse.Name.Should().Be(project.Name.Value);
             projectResponse.Description.Should().Be(project.Description.Value);
+            projectResponse.IsFavorite.Should().Be(project.IsFavorite.Value);
+            projectResponse.IsPrivate.Should().Be(project.IsPrivate.Value);
         }
     }
 }

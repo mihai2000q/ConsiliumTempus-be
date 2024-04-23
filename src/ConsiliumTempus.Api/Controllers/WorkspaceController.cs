@@ -38,8 +38,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
-            getCollectionResult =>
-                Ok(Mapper.Map<GetCollectionWorkspaceResponse>(getCollectionResult)),
+            getCollectionResult => Ok(Mapper.Map<GetCollectionWorkspaceResponse>(getCollectionResult)),
             Problem
         );
     }

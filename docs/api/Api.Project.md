@@ -4,9 +4,9 @@
   * [Get](#get)
     * [Get Request](#get-request)
     * [Get Response](#get-response)
-  * [Get Collection For Workspace](#get-collection-for-workspace)
-    * [Get Collection For Workspace Request](#get-collection-for-workspace-request)
-    * [Get Collection For Workspace Response](#get-collection-for-workspace-response)
+  * [Get Collection](#get-collection)
+    * [Get Collection](#get-collection-request)
+    * [Get Collection](#get-collection-response)
   * [Get Collection For User](#get-collection-for-user)
     * [Get Collection For User Response](#get-collection-for-user-response)
   * [Create](#create)
@@ -50,13 +50,13 @@ Returns a project.
 ```
 
 
-### Get Collection For Workspace
+### Get Collection
 
 Anyone that is part of the workspace can read the projects 
 ([Read Collection Project Permission](../Security.md/#permissions)).
 
 ```js
-GET {{host}}/api/projects/workspace?workspaceId={workspaceId}&name=project&isFavorite=true&isPrivate=false
+GET {{host}}/api/projects?workspaceId={workspaceId}&name=project&isFavorite=true&isPrivate=false
 ```
 
 - **workspaceId** is a 36-character string id
@@ -64,11 +64,11 @@ GET {{host}}/api/projects/workspace?workspaceId={workspaceId}&name=project&isFav
 - **isFavorite** is used to filter by favorites
 - **isPrivate** is used to filter by accessibility
 
-#### Get Collection For Workspace Request
+#### Get Collection Request
 
-Sends the id of the workspace inside the query parameters of the request.
+Sends optional query parameters to filter the projects by workspace, name, etc.
 
-#### Get Collection For Workspace Response
+#### Get Collection Response
 
 Returns wrapped up projects' ids, names, and descriptions.
 
@@ -78,12 +78,16 @@ Returns wrapped up projects' ids, names, and descriptions.
     {
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Project Name 1",
-      "description": "This is the first project"
+      "description": "This is the first project",
+      "isFavorite": true,
+      "isPrivate": false
     },
     {
       "id": "20000000-0000-0000-0000-000000000000",
       "name": "Project Name 2",
-      "description": "This is the second project"
+      "description": "This is the second project",
+      "isFavorite": true,
+      "isPrivate": false
     }
   ]
 }

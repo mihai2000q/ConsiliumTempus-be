@@ -3,7 +3,6 @@ using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
-using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
@@ -24,13 +23,13 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public Task<List<ProjectAggregate>> GetListByWorkspace(
-        WorkspaceId workspaceId,
+    public Task<List<ProjectAggregate>> GetListByUser(
+        UserId userId,
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default)
     {
         return dbContext.Projects
-            .Where(p => p.Workspace.Id == workspaceId)
+            .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
             .ApplyFilters(filters)
             .ToListAsync(cancellationToken);
     }

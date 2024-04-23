@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
+namespace ConsiliumTempus.Api.Contracts.Project.GetCollection;
 
-public sealed class GetCollectionProjectForWorkspaceRequest
+public sealed class GetCollectionProjectRequest
 {
-    [FromQuery] public Guid WorkspaceId { get; init; }
+    [FromQuery] public Guid? WorkspaceId { get; init; }
     
     [FromQuery] public string? Name { get; init; }
     

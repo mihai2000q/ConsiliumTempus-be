@@ -1,9 +1,6 @@
 ﻿using ConsiliumTempus.Application.Project.Queries.Get;
+using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
-using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
-using ConsiliumTempus.Domain.Common.Filters;
-using ConsiliumTempus.Domain.Common.Interfaces;
-using ConsiliumTempus.Domain.Project;
 
 namespace ConsiliumTempus.Common.UnitTests.Project;
 
@@ -20,14 +17,14 @@ public static class ProjectQueryFactory
         return new GetCollectionProjectForUserQuery();
     }
 
-    public static GetCollectionProjectForWorkspaceQuery CreateGetCollectionProjectForWorkspaceQuery(
+    public static GetCollectionProjectQuery CreateGetCollectionProjectQuery(
         Guid? workspaceId = null,
         string? name = null,
         bool? isFavorite = null,
         bool? isPrivate = null)
     {
-        return new GetCollectionProjectForWorkspaceQuery(
-            workspaceId ?? Guid.NewGuid(),
+        return new GetCollectionProjectQuery(
+            workspaceId,
             name,
             isFavorite,
             isPrivate);

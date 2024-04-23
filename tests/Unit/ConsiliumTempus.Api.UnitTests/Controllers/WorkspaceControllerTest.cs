@@ -59,7 +59,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task GetWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task GetWorkspace_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetWorkspaceRequest();
@@ -102,7 +102,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task GetCollectionWorkspace_WhenItFails_ShouldReturnUserNotFoundError()
+    public async Task GetCollectionWorkspace_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var error = Errors.User.NotFound;
@@ -146,7 +146,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task CreateWorkspace_WhenItFails_ShouldReturnUserNotFoundError()
+    public async Task CreateWorkspace_WhenItFails_ShouldReturnUserPRoblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
@@ -192,7 +192,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task DeleteWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task DeleteWorkspace_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var id = Guid.NewGuid();
@@ -238,7 +238,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task UpdateWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task UpdateWorkspace_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest();

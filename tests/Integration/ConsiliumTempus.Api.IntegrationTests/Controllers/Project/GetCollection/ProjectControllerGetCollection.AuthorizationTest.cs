@@ -4,32 +4,45 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.GetCollectionForWorkspace;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.GetCollection;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerGetCollectionForWorkspaceAuthorizationTest(WebAppFactory factory)
+public class ProjectControllerGetCollectionAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task GetCollectionProjectForWorkspace_WhenWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task GetCollectionProject_WithoutWorkspace_ShouldReturnSuccessResponse()
+    {
+        // Arrange
+
+        // Act
+        Client.UseCustomToken(ProjectData.Users[0]);
+        var outcome = await Client.Get("api/projects");
+        
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+    
+    [Fact]
+    public async Task GetCollectionProject_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(ProjectData.Users[0]);
     }
 
     [Fact]
-    public async Task GetCollectionProjectForWorkspace_WhenWithMemberRole_ShouldReturnSuccessResponse()
+    public async Task GetCollectionProject_WhenWithMemberRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(ProjectData.Users[3]);
     }
 
     [Fact]
-    public async Task GetCollectionProjectForWorkspace_WhenWithViewRole_ShouldReturnSuccessResponse()
+    public async Task GetCollectionProject_WhenWithViewRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(ProjectData.Users[4]);
     }
 
     [Fact]
-    public async Task GetCollectionProjectForWorkspace_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task GetCollectionProject_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectData.Users[1]);
     }
@@ -53,11 +66,11 @@ public class ProjectControllerGetCollectionForWorkspaceAuthorizationTest(WebAppF
     private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
     {
         // Arrange
-        var request = ProjectRequestFactory.CreateGetCollectionProjectForWorkspaceRequest(
+        var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
             ProjectData.Workspaces[0].Id.Value);
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Get($"api/projects/workspace?workspaceId={request.WorkspaceId}");
+        return await Client.Get($"api/projects?workspaceId={request.WorkspaceId}");
     }
 }

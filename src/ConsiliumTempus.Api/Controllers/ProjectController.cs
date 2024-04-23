@@ -2,13 +2,13 @@
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
+using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.Get;
+using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
-using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 using ConsiliumTempus.Domain.Common.Enums;
 using MapsterMapper;
 using MediatR;
@@ -45,16 +45,15 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
     }
 
     [HasPermission(Permissions.ReadCollectionProject)]
-    [HttpGet("Workspace")]
-    public async Task<IActionResult> GetCollectionForWorkspace(GetCollectionProjectForWorkspaceRequest request,
+    [HttpGet]
+    public async Task<IActionResult> GetCollection(GetCollectionProjectRequest request, 
         CancellationToken cancellationToken)
     {
-        var query = Mapper.Map<GetCollectionProjectForWorkspaceQuery>(request);
+        var query = Mapper.Map<GetCollectionProjectQuery>(request);
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
-            getCollectionForWorkspaceResult =>
-                Ok(Mapper.Map<GetCollectionProjectForWorkspaceResponse>(getCollectionForWorkspaceResult)),
+            getCollectionResult => Ok(Mapper.Map<GetCollectionProjectResponse>(getCollectionResult)),
             Problem
         );
     }

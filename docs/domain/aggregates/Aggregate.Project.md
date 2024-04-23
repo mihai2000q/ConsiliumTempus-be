@@ -51,6 +51,7 @@ For database design checkout the [Project Diagram](../diagrams/aggregates/Diagra
 
 ### Filters
 
+- **Workspace** to filter by workspace
 - **Name** to filter by name
 - **IsFavorite** to filter by favorites
 - **IsPrivate** to filter by accessibility

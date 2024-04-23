@@ -1,12 +1,12 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Get;
+using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.Get;
+using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
-using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 using ConsiliumTempus.Domain.Project;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
@@ -30,9 +30,9 @@ internal static partial class Utils
             return true;
         }
 
-        internal static bool AssertGetCollectionProjectForWorkspaceQuery(
-            GetCollectionProjectForWorkspaceQuery query,
-            GetCollectionProjectForWorkspaceRequest request)
+        internal static bool AssertGetCollectionProjectQuery(
+            GetCollectionProjectQuery query,
+            GetCollectionProjectRequest request)
         {
             query.WorkspaceId.Should().Be(request.WorkspaceId);
             query.Name.Should().Be(request.Name);
@@ -68,8 +68,8 @@ internal static partial class Utils
         }
 
         internal static void AssertGetCollectionForWorkspaceResponse(
-            GetCollectionProjectForWorkspaceResponse response,
-            GetCollectionProjectForWorkspaceResult result)
+            GetCollectionProjectResponse response,
+            GetCollectionProjectResult result)
         {
             response.Projects
                 .Zip(result.Projects)
@@ -94,12 +94,14 @@ internal static partial class Utils
         }
 
         private static void AssertProjectResponse(
-            GetCollectionProjectForWorkspaceResponse.ProjectResponse projectResponse,
+            GetCollectionProjectResponse.ProjectResponse projectResponse,
             ProjectAggregate project)
         {
             projectResponse.Id.Should().Be(project.Id.Value);
             projectResponse.Name.Should().Be(project.Name.Value);
             projectResponse.Description.Should().Be(project.Description.Value);
+            projectResponse.IsFavorite.Should().Be(project.IsFavorite.Value);
+            projectResponse.IsPrivate.Should().Be(project.IsPrivate.Value);
         }
     }
 }
