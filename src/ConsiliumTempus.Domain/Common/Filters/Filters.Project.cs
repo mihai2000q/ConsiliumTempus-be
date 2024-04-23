@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.GenericFilters;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project;
 
 namespace ConsiliumTempus.Domain.Common.Filters;
@@ -7,6 +8,9 @@ public static partial class Filters
 {
     public static class Project
     {
+        public sealed class WorkspaceFilter(Guid? value)
+            : Filter<Guid?, ProjectAggregate>(value, p => p.Workspace.Id.Value);
+        
         public sealed class NameFilter(string? value)
             : StringFilter<ProjectAggregate>(value, p => p.Name.Value);
 
