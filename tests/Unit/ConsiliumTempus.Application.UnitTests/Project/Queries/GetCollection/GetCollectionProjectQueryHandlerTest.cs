@@ -4,11 +4,9 @@ using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.User;
-using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User.ValueObjects;
-using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Queries.GetCollection;
 
@@ -28,28 +26,6 @@ public class GetCollectionProjectQueryHandlerTest
     }
 
     #endregion
-
-    [Fact]
-    public async Task GetCollectionProject_WhenUserIsNull_ShouldReturnUserNotFoundError()
-    {
-        // Arrange
-        var query = ProjectQueryFactory.CreateGetCollectionProjectQuery();
-
-        _currentUserProvider
-            .GetCurrentUser()
-            .ReturnsNull();
-        
-        // Act
-        var outcome = await _uut.Handle(query, default);
-
-        // Assert
-        await _currentUserProvider
-            .Received(1)
-            .GetCurrentUser();
-        _projectRepository.DidNotReceive();
-        
-        outcome.ValidateError(Errors.User.NotFound);
-    }
     
     [Fact]
     public async Task GetCollectionProject_WhenSucceeds_ShouldReturnProjects()
@@ -59,7 +35,7 @@ public class GetCollectionProjectQueryHandlerTest
 
         var user = UserFactory.Create();
         _currentUserProvider
-            .GetCurrentUser()
+            .GetCurrentUserAfterPermissionCheck()
             .Returns(user);
 
         var projects = ProjectFactory.CreateList();
@@ -73,7 +49,7 @@ public class GetCollectionProjectQueryHandlerTest
         // Assert
         await _currentUserProvider
             .Received(1)
-            .GetCurrentUser();
+            .GetCurrentUserAfterPermissionCheck();
         await _projectRepository
             .Received(1)
             .GetListByUser(

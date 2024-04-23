@@ -110,6 +110,15 @@ internal class ProjectData : ITestData
             Workspaces[1],
             "Win Champions League",
             "Just an idea on how to win the football league",
+            true),
+        ProjectFactory.Create(
+            Workspaces[0],
+            "Win Another Tournament"),
+        ProjectFactory.Create(
+            Workspaces[2],
+            "Get a house",
+            "this is actually really important",
+            false,
             true)
     ];
 }

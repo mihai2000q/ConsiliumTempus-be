@@ -60,7 +60,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task Get_WhenFails_ShouldReturnNotFoundError()
+    public async Task Get_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetProjectRequest();
@@ -107,7 +107,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task GetCollection_WhenFails_ShouldReturnUserNotFoundError()
+    public async Task GetCollection_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest();
@@ -152,7 +152,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task GetCollectionForUser_WhenFails_ShouldReturnUserNotFoundError()
+    public async Task GetCollectionForUser_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var error = Errors.User.NotFound;
@@ -196,7 +196,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task CreateProject_WhenWorkspaceIsNotFound_ShouldReturnNotFoundError()
+    public async Task CreateProject_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateCreateProjectRequest();
@@ -241,7 +241,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task DeleteProject_WhenItFails_ShouldReturnNotFoundError()
+    public async Task DeleteProject_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var id = Guid.NewGuid();

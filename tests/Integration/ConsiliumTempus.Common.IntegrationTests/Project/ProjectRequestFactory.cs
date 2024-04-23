@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Get;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
+using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
 namespace ConsiliumTempus.Common.IntegrationTests.Project;
@@ -16,12 +16,18 @@ public static class ProjectRequestFactory
         };
     }
 
-    public static GetCollectionProjectForWorkspaceRequest CreateGetCollectionProjectForWorkspaceRequest(
-        Guid? workspaceId = null)
+    public static GetCollectionProjectRequest CreateGetCollectionProjectRequest(
+        Guid? workspaceId = null,
+        string? name = null,
+        bool? isFavorite = null,
+        bool? isPrivate = null)
     {
-        return new GetCollectionProjectForWorkspaceRequest
+        return new GetCollectionProjectRequest
         {
-            WorkspaceId = workspaceId ?? Guid.NewGuid()
+            WorkspaceId = workspaceId,
+            Name = name,
+            IsFavorite = isFavorite,
+            IsPrivate = isPrivate
         };
     }
 

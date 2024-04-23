@@ -1,9 +1,6 @@
 ﻿using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
-using ConsiliumTempus.Domain.Common.Filters;
-using ConsiliumTempus.Domain.Common.Interfaces;
-using ConsiliumTempus.Domain.Project;
 
 namespace ConsiliumTempus.Common.UnitTests.Project;
 

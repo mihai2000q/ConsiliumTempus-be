@@ -57,7 +57,7 @@ public class AuthenticationControllerTest
     }
 
     [Fact]
-    public async Task WhenRegisterFails_ShouldReturnDuplicateEmailError()
+    public async Task WhenRegisterFails_ShouldProblem()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRegisterRequest();
@@ -105,7 +105,7 @@ public class AuthenticationControllerTest
     }
 
     [Fact]
-    public async Task WhenLoginFails_ShouldReturnLoginResponse()
+    public async Task WhenLoginFails_ShouldReturnProblem()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateLoginRequest();
@@ -152,7 +152,7 @@ public class AuthenticationControllerTest
     }
 
     [Fact]
-    public async Task WhenRefreshFails_ShouldReturnInvalidTokensError()
+    public async Task WhenRefreshFails_ShouldReturnProblem()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRefreshRequest();

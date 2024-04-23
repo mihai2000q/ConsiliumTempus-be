@@ -57,7 +57,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task GetUser_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task GetUser_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = UserRequestFactory.CreateGetUserRequest();
@@ -100,7 +100,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task GetCurrent_WhenItFails_ShouldReturnNotFoundError()
+    public async Task GetCurrent_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var error = Errors.User.NotFound;
@@ -143,7 +143,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task UpdateCurrentUser_WhenItFails_ShouldReturnNotFoundError()
+    public async Task UpdateCurrentUser_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
@@ -186,7 +186,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task DeleteCurrentUser_WhenItFails_ShouldReturnNotFoundError()
+    public async Task DeleteCurrentUser_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var error = Errors.User.NotFound;

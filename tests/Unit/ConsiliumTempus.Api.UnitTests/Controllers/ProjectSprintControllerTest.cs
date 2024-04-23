@@ -56,7 +56,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task GetCollectionProjectSprint_WhenProjectIsNotFound_ShouldReturnNotFoundError()
+    public async Task GetCollectionProjectSprint_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetCollectionProjectSprintRequest();
@@ -103,7 +103,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task CreateProjectSprint_WhenProjectIsNotFound_ShouldReturnNotFoundError()
+    public async Task CreateProjectSprint_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest();
@@ -150,7 +150,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task DeleteProjectSprint_WhenItFails_ShouldReturnNotFoundError()
+    public async Task DeleteProjectSprint_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var id = Guid.NewGuid();
