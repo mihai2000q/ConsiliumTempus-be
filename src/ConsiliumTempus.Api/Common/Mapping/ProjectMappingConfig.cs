@@ -2,13 +2,13 @@
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
+using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.Get;
+using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
-using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 using ConsiliumTempus.Domain.Project;
 using Mapster;
 
@@ -21,7 +21,7 @@ public sealed class ProjectMappingConfig : IRegister
     {
         GetMappings(config);
         GetCollectionForUserMappings(config);
-        GetCollectionForWorkspaceMappings(config);
+        GetCollectionMappings(config);
         CreateMappings(config);
         DeleteMappings(config);
     }
@@ -45,15 +45,17 @@ public sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.Name, src => src.Name.Value);
     }
 
-    private static void GetCollectionForWorkspaceMappings(TypeAdapterConfig config)
+    private static void GetCollectionMappings(TypeAdapterConfig config)
     {
-        config.NewConfig<GetCollectionProjectForWorkspaceRequest, GetCollectionProjectForWorkspaceQuery>();
+        config.NewConfig<GetCollectionProjectRequest, GetCollectionProjectQuery>();
 
-        config.NewConfig<GetCollectionProjectForWorkspaceResult, GetCollectionProjectForWorkspaceResponse>();
-        config.NewConfig<ProjectAggregate, GetCollectionProjectForWorkspaceResponse.ProjectResponse>()
+        config.NewConfig<GetCollectionProjectResult, GetCollectionProjectResponse>();
+        config.NewConfig<ProjectAggregate, GetCollectionProjectResponse.ProjectResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value);
+            .Map(dest => dest.Description, src => src.Description.Value)
+            .Map(dest => dest.IsFavorite, src => src.IsFavorite.Value)
+            .Map(dest => dest.IsPrivate, src => src.IsPrivate.Value);
     }
 
     private static void CreateMappings(TypeAdapterConfig config)

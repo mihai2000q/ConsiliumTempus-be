@@ -2,15 +2,15 @@
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
+using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForWorkspace;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.Get;
+using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
-using ConsiliumTempus.Application.Project.Queries.GetCollectionForWorkspace;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
 
@@ -83,48 +83,48 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task GetCollectionForWorkspace_WhenIsSuccessful_ShouldReturnResponse()
+    public async Task GetCollection_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
-        var request = ProjectRequestFactory.CreateGetCollectionProjectForWorkspaceRequest();
+        var request = ProjectRequestFactory.CreateGetCollectionProjectRequest();
 
-        var result = new GetCollectionProjectForWorkspaceResult(ProjectFactory.CreateList());
+        var result = new GetCollectionProjectResult(ProjectFactory.CreateList());
         _mediator
-            .Send(Arg.Any<GetCollectionProjectForWorkspaceQuery>())
+            .Send(Arg.Any<GetCollectionProjectQuery>())
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollectionForWorkspace(request, default);
+        var outcome = await _uut.GetCollection(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetCollectionProjectForWorkspaceQuery>(q =>
-                Utils.Project.AssertGetCollectionProjectForWorkspaceQuery(q, request)));
+            .Send(Arg.Is<GetCollectionProjectQuery>(q =>
+                Utils.Project.AssertGetCollectionProjectQuery(q, request)));
 
-        var response = outcome.ToResponse<GetCollectionProjectForWorkspaceResponse>();
+        var response = outcome.ToResponse<GetCollectionProjectResponse>();
         Utils.Project.AssertGetCollectionForWorkspaceResponse(response, result);
     }
 
     [Fact]
-    public async Task GetCollectionForWorkspace_WhenFails_ShouldReturnWorkspaceNotFoundError()
+    public async Task GetCollection_WhenFails_ShouldReturnUserNotFoundError()
     {
         // Arrange
-        var request = ProjectRequestFactory.CreateGetCollectionProjectForWorkspaceRequest();
+        var request = ProjectRequestFactory.CreateGetCollectionProjectRequest();
 
-        var error = Errors.Workspace.NotFound;
+        var error = Errors.User.NotFound;
         _mediator
-            .Send(Arg.Any<GetCollectionProjectForWorkspaceQuery>())
+            .Send(Arg.Any<GetCollectionProjectQuery>())
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollectionForWorkspace(request, default);
+        var outcome = await _uut.GetCollection(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetCollectionProjectForWorkspaceQuery>(q =>
-                Utils.Project.AssertGetCollectionProjectForWorkspaceQuery(q, request)));
+            .Send(Arg.Is<GetCollectionProjectQuery>(q =>
+                Utils.Project.AssertGetCollectionProjectQuery(q, request)));
 
         outcome.ValidateError(error);
     }
