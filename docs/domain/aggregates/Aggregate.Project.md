@@ -48,3 +48,9 @@ For database design checkout the [Project Diagram](../diagrams/aggregates/Diagra
 ### Domain Events
 
 - **Project Created** when the project gets created, it will also create sprints, stages and tasks as examples for user 
+
+### Filters
+
+- **Name** to filter by name
+- **IsFavorite** to filter by favorites
+- **IsPrivate** to filter by accessibility
