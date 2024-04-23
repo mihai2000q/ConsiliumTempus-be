@@ -2,5 +2,5 @@
 
 public static class GlobalExtensions
 {
-    public static TS? IfNotNull<T, TS>(this T o, TS s) => o is null ? default : s;
+    public static TReturn? IfNotNull<T, TReturn>(this T o, Func<TReturn> s) => o is null ? default : s.Invoke();
 }

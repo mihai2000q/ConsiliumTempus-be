@@ -1,6 +1,6 @@
 ﻿namespace ConsiliumTempus.Domain.Common.Models;
 
-public class AggregateRoot<TId, TIdType> : Entity<TId>
+public abstract class AggregateRoot<TId, TIdType> : Entity<TId>
     where TId : AggregateRootId<TIdType>
     where TIdType : notnull
 {

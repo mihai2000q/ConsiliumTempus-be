@@ -17,11 +17,17 @@ public static class ProjectRequestFactory
     }
 
     public static GetCollectionProjectForWorkspaceRequest CreateGetCollectionProjectForWorkspaceRequest(
-        Guid? workspaceId = null)
+        Guid? workspaceId = null,
+        string? name = null,
+        bool? isFavorite = null,
+        bool? isPrivate = null)
     {
         return new GetCollectionProjectForWorkspaceRequest
         {
-            WorkspaceId = workspaceId ?? Guid.NewGuid()
+            WorkspaceId = workspaceId ?? Guid.NewGuid(),
+            Name = name,
+            IsFavorite = isFavorite,
+            IsPrivate = isPrivate,
         };
     }
 

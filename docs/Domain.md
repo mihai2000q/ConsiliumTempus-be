@@ -6,6 +6,8 @@
   * [Entities](#entities)
   * [Value Objects](#value-objects)
   * [Domain Errors](#domain-errors)
+  * [Enums](#enums)
+  * [Relations](#relations)
   * [Database Diagrams](#database-diagrams)
 
 Below, you will find a complete list and documentation for each **Aggregate**, **Entity** and **Value Object**.
@@ -24,11 +26,11 @@ All Aggregates inherit from the **Aggregate Root** class, which requires a uniqu
 This Id has to inherit from the **Aggregate Root Id**, which is a value object 
 (they won't be included in the value object lists as they are required and part of all the aggregates).
 **Aggregate Root** is also essentially an **Entity** at its roots,
-however, an *Aggregate** will usually be a model that contains all the relations of multiple entities.
+however, an **Aggregate** will usually be a model that contains all the relations of multiple entities.
 
 Each aggregate can have its own set of **entities** or **value objects**.
 
-Each aggregate has a set of possible *errors* and *properties validation*.
+Each aggregate has a set of possible *errors*, *filters* or *properties validation*.
 The aforementioned refers to the constraints that each property has
 (i.e., the name cannot be longer than 100 characters).
 

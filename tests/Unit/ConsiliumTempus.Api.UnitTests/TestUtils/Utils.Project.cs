@@ -35,6 +35,10 @@ internal static partial class Utils
             GetCollectionProjectForWorkspaceRequest request)
         {
             query.WorkspaceId.Should().Be(request.WorkspaceId);
+            query.Name.Should().Be(request.Name);
+            query.IsFavorite.Should().Be(request.IsFavorite);
+            query.IsPrivate.Should().Be(request.IsPrivate);
+            
             return true;
         }
 
