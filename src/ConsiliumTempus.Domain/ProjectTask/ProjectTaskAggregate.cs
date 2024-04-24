@@ -21,7 +21,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         Name name,
         Description description,
         IsCompleted isCompleted,
-        Order order,
+        CustomOrderPosition customOrderPosition,
         UserAggregate createdBy,
         ProjectStage stage,
         DateTime createdDateTime,
@@ -30,7 +30,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         Name = name;
         Description = description;
         IsCompleted = isCompleted;
-        Order = order;
+        CustomOrderPosition = customOrderPosition;
         CreatedBy = createdBy;
         Stage = stage;
         CreatedDateTime = createdDateTime;
@@ -42,7 +42,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
     public IsCompleted IsCompleted { get; private set; } = default!;
-    public Order Order { get; private set; } = default!;
+    public CustomOrderPosition CustomOrderPosition { get; private set; } = default!;
     public UserAggregate CreatedBy { get; init; } = default!;
     public UserAggregate? Asignee { get; private set; }
     public UserAggregate? Reviewer { get; private set; }
@@ -56,7 +56,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public static ProjectTaskAggregate Create(
         Name name,
         Description description,
-        Order order,
+        CustomOrderPosition customOrderPosition,
         UserAggregate createdBy,
         ProjectStage stage)
     {
@@ -65,7 +65,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             name,
             description,
             IsCompleted.Create(false),
-            order,
+            customOrderPosition,
             createdBy,
             stage,
             DateTime.UtcNow,

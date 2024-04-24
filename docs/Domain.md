@@ -69,7 +69,7 @@ The value objects are:
 - **IsPrivate**, which encapsulates a boolean *Value*
 - **Message**, which encapsulates a string *Value*
 - **Name**, which encapsulates a string *Value*
-- **Order**, which encapsulates an int *Value,* and it's used to achieve custom ordering
+- **CustomOrderPosition**, which encapsulates an int *Value,* and it's used to achieve custom ordering
 
 ## Domain Errors
 

@@ -17,7 +17,7 @@ class ProjectStage
 {
   "id": { "value": "00000000-0000-0000-0000-000000000000" },
   "name": { "value": "Stage 1" },
-  "order": { "value": 0 },
+  "customOrderPosition": { "value": 0 },
   "sprint": {},
   "tasks": [{}]
 }
