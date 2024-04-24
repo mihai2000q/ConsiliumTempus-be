@@ -11,6 +11,7 @@ internal static class LoginCommandValidatorData
         public GetValidCommands()
         {
             Add(AuthenticationCommandFactory.CreateLoginCommand());
+            Add(AuthenticationCommandFactory.CreateLoginCommand(email: "Some@Example.com"));
             Add(new LoginCommand("MichaelJ@Gmail.com", "Password123"));
         }
     }
@@ -19,15 +20,24 @@ internal static class LoginCommandValidatorData
     {
         public GetInvalidEmailCommands()
         {
-            var query = AuthenticationCommandFactory.CreateLoginCommand(email: "");
-            Add(query, nameof(query.Email), 2);
+            var command = AuthenticationCommandFactory.CreateLoginCommand(email: "");
+            Add(command, nameof(command.Email), 2);
             
-            query = AuthenticationCommandFactory.CreateLoginCommand(email: "random string");
-            Add(query, nameof(query.Email), 1);
+            command = AuthenticationCommandFactory.CreateLoginCommand(email: "random string");
+            Add(command, nameof(command.Email), 1);
             
-            query = AuthenticationCommandFactory.CreateLoginCommand(
+            command = AuthenticationCommandFactory.CreateLoginCommand(email: "SomeExample");
+            Add(command, nameof(command.Email), 1);
+            
+            command = AuthenticationCommandFactory.CreateLoginCommand(email: "Some@Example");
+            Add(command, nameof(command.Email), 1);
+            
+            command = AuthenticationCommandFactory.CreateLoginCommand(email: "SomeExample.com");
+            Add(command, nameof(command.Email), 1);
+            
+            command = AuthenticationCommandFactory.CreateLoginCommand(
                 email: new string('a', PropertiesValidation.User.EmailMaximumLength + 1));
-            Add(query, nameof(query.Email), 2);
+            Add(command, nameof(command.Email), 2);
         }
     }
     
@@ -35,24 +45,24 @@ internal static class LoginCommandValidatorData
     {
         public GetInvalidPasswordCommands()
         {
-            var query = AuthenticationCommandFactory.CreateLoginCommand(password: "");
-            Add(query, nameof(query.Password), 5);
+            var command = AuthenticationCommandFactory.CreateLoginCommand(password: "");
+            Add(command, nameof(command.Password), 5);
             
-            query = AuthenticationCommandFactory.CreateLoginCommand(
+            command = AuthenticationCommandFactory.CreateLoginCommand(
                 password: new string('a', PropertiesValidation.User.PlainPasswordMaximumLength + 1));
-            Add(query, nameof(query.Password), 3);
+            Add(command, nameof(command.Password), 3);
             
-            query = AuthenticationCommandFactory.CreateLoginCommand(password: "aaa");
-            Add(query, nameof(query.Password), 3);
+            command = AuthenticationCommandFactory.CreateLoginCommand(password: "aaa");
+            Add(command, nameof(command.Password), 3);
             
-            query = AuthenticationCommandFactory.CreateLoginCommand(password: "Aaaa");
-            Add(query, nameof(query.Password), 2);
+            command = AuthenticationCommandFactory.CreateLoginCommand(password: "Aaaa");
+            Add(command, nameof(command.Password), 2);
             
-            query = AuthenticationCommandFactory.CreateLoginCommand(password: "Aaaaaaaaa");
-            Add(query, nameof(query.Password), 1);
+            command = AuthenticationCommandFactory.CreateLoginCommand(password: "Aaaaaaaaa");
+            Add(command, nameof(command.Password), 1);
             
-            query = AuthenticationCommandFactory.CreateLoginCommand(password: "aaaaaaaaa123");
-            Add(query, nameof(query.Password), 1);
+            command = AuthenticationCommandFactory.CreateLoginCommand(password: "aaaaaaaaa123");
+            Add(command, nameof(command.Password), 1);
         }
     }
 }

@@ -6,7 +6,8 @@ public static class FluentValidationExtensions
 {
     public static IRuleBuilderOptions<T, string> IsPassword<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
-        return ruleBuilder.Must(p => p.Length > 8)
+        return ruleBuilder
+            .Must(p => p.Length > 8)
             .WithMessage("'{PropertyName}' must be longer than 8 characters")
             .Must(p => p.ContainsUppercase())
             .WithMessage("'{PropertyName}' must contain an uppercase letter")
@@ -18,8 +19,8 @@ public static class FluentValidationExtensions
 
     public static IRuleBuilderOptions<T, string> IsEmail<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
-        return ruleBuilder.Must(e => e.IsValidEmail())
-            .WithMessage("'{PropertyName}' must be valid");
+        return ruleBuilder.Must(e => Regex.RegexStore.EmailRegex().IsMatch(e))
+            .WithMessage("'{PropertyName}' must be valid email");
     }
 
     public static IRuleBuilderOptions<T, DateOnly?> IsPastDate<T>(this IRuleBuilder<T, DateOnly?> ruleBuilder)

@@ -11,7 +11,7 @@ internal static class StringExtensionsData
             Add("BigRole", "BigRoleId");
         }
     }
-    
+
     internal class GetValidToBackingField : TheoryData<string, string>
     {
         public GetValidToBackingField()
@@ -46,25 +46,6 @@ internal static class StringExtensionsData
             Add("WorkspaceAggreg", "WorkspaceAggreg");
             Add("Workspace", "Workspace");
             Add("", "");
-        }
-    }
-
-    internal class GetValidEmails : TheoryData<string>
-    {
-        public GetValidEmails()
-        {
-            Add("Some@Example.com");
-            Add("Marcel@yahoo.com");
-        }
-    }
-
-    internal class GetInvalidEmails : TheoryData<string>
-    {
-        public GetInvalidEmails()
-        {
-            Add("SomeExample");
-            Add("Some@Example");
-            Add("SomeExample.com");
         }
     }
 
