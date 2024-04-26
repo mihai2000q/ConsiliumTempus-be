@@ -16,30 +16,30 @@ public sealed class ProjectStage : Entity<ProjectStageId>
     private ProjectStage(
         ProjectStageId id,
         Name name,
-        Order order,
+        CustomOrderPosition customOrderPosition,
         ProjectSprint sprint) : base(id)
     {
         Name = name;
-        Order = order;
+        CustomOrderPosition = customOrderPosition;
         Sprint = sprint;
     }
 
     private readonly List<ProjectTaskAggregate> _tasks = [];
 
     public Name Name { get; private set; } = default!;
-    public Order Order { get; private set; } = default!;
+    public CustomOrderPosition CustomOrderPosition { get; private set; } = default!;
     public ProjectSprint Sprint { get; init; } = default!;
     public IReadOnlyList<ProjectTaskAggregate> Tasks => _tasks.AsReadOnly();
 
     public static ProjectStage Create(
         Name name,
-        Order order,
+        CustomOrderPosition customOrderPosition,
         ProjectSprint sprint)
     {
         return new ProjectStage(
             ProjectStageId.CreateUnique(),
             name,
-            order,
+            customOrderPosition,
             sprint);
     }
 

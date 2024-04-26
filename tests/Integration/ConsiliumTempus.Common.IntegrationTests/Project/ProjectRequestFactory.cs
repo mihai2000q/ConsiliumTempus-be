@@ -17,6 +17,7 @@ public static class ProjectRequestFactory
     }
 
     public static GetCollectionProjectRequest CreateGetCollectionProjectRequest(
+        string? order = null,
         Guid? workspaceId = null,
         string? name = null,
         bool? isFavorite = null,
@@ -24,6 +25,7 @@ public static class ProjectRequestFactory
     {
         return new GetCollectionProjectRequest
         {
+            Order = order,
             WorkspaceId = workspaceId,
             Name = name,
             IsFavorite = isFavorite,

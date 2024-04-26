@@ -17,7 +17,7 @@ public class StringExtensionsTest
         // Assert
         outcome1.Should().Be(expected);
     }
-    
+
     [Theory]
     [ClassData(typeof(StringExtensionsData.GetValidToBackingField))]
     public void ToBackingField_WhenValid_ShouldReturnStringWithBackingFieldNotation(string input, string expected)
@@ -30,7 +30,7 @@ public class StringExtensionsTest
         // Assert
         outcome1.Should().Be(expected);
     }
-    
+
     [Theory]
     [ClassData(typeof(StringExtensionsData.GetValidToIdBackingField))]
     public void ToIdBackingField_WhenValid_ShouldReturnStringWithIdBackingFieldNotation(string input, string expected)
@@ -130,32 +130,6 @@ public class StringExtensionsTest
 
         // Act
         var outcome = str.ContainsNumber();
-
-        // Assert
-        outcome.Should().BeFalse();
-    }
-
-    [Theory]
-    [ClassData(typeof(StringExtensionsData.GetValidEmails))]
-    public void IsValidEmail_WhenStringIsValidEmail_ShouldReturnTrue(string input)
-    {
-        // Arrange - parameterized
-
-        // Act
-        var outcome = input.IsValidEmail();
-
-        // Assert
-        outcome.Should().BeTrue();
-    }
-
-    [Theory]
-    [ClassData(typeof(StringExtensionsData.GetInvalidEmails))]
-    public void IsValidEmail_WhenStringIsNotValidEmail_ShouldReturnFalse(string input)
-    {
-        // Arrange - parameterized
-
-        // Act
-        var outcome = input.IsValidEmail();
 
         // Assert
         outcome.Should().BeFalse();

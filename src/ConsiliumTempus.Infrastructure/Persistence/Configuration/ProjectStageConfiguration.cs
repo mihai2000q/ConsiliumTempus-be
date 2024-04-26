@@ -24,9 +24,9 @@ public sealed class ProjectStageConfiguration : IEntityTypeConfiguration<Project
             .HasColumnName(nameof(Name))
             .HasMaxLength(PropertiesValidation.ProjectStage.NameMaximumLength);
 
-        builder.OwnsOne(s => s.Order)
+        builder.OwnsOne(s => s.CustomOrderPosition)
             .Property(o => o.Value)
-            .HasColumnName(nameof(Order));
+            .HasColumnName(nameof(CustomOrderPosition));
 
         builder.HasOne(s => s.Sprint)
             .WithMany(sp => sp.Stages);

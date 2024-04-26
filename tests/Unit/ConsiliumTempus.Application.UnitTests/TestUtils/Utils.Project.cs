@@ -2,8 +2,11 @@
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Common.Orders;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.User;
@@ -54,6 +57,23 @@ internal static partial class Utils
             outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
             outcome.Workspace.Should().Be(expected.Workspace);
             outcome.Sprints.Should().BeEquivalentTo(expected.Sprints);
+        }
+
+        internal static bool AssertGetCollectionProjectOrder(
+            IOrder<ProjectAggregate>? order,
+            GetCollectionProjectQuery query)
+        {
+            if (query.Order is null) return order is null;
+            var split = query.Order.Split(Order<object>.Separator);
+
+            order!.Type
+                .Should()
+                .Be(split[1] == Order<object>.Descending ? OrderType.Descending : OrderType.Ascending);
+    
+            return ProjectOrder
+                .OrderProperties
+                .Single(op => op.Identifier == split[0])
+                .PropertySelector == order.PropertySelector;
         }
 
         internal static bool AssertGetCollectionProjectFilters(

@@ -67,7 +67,7 @@ public class ProjectControllerGetCollectionAuthorizationTest(WebAppFactory facto
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            ProjectData.Workspaces[0].Id.Value);
+            workspaceId: ProjectData.Workspaces[0].Id.Value);
 
         // Act
         Client.UseCustomToken(user);

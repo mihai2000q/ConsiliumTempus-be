@@ -42,7 +42,7 @@ public class ProjectCreatedHandlerTest
             .ForEach(stage =>
             {
                 stage.Id.Value.ToString().Should().NotBeNullOrWhiteSpace();
-                stage.Order.Value.Should().Be(count++);
+                stage.CustomOrderPosition.Value.Should().Be(count++);
                 stage.Sprint.Should().Be(project.Sprints[0]);
             });
         project.Sprints[0].Stages
@@ -64,7 +64,7 @@ public class ProjectCreatedHandlerTest
                 task.Description.Value.Should().BeEmpty();
                 task.IsCompleted.Value.Should().BeFalse();
                 task.CreatedBy.Should().Be(user);
-                task.Order.Value.Should().Be(count++);
+                task.CustomOrderPosition.Value.Should().Be(count++);
                 task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
                 task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
                 task.Asignee.Should().BeNull();

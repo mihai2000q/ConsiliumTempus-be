@@ -29,9 +29,6 @@ public static class StringExtensions
     public static bool ContainsNumber(this string str) =>
         str.Any(Numbers.Contains);
 
-    public static bool IsValidEmail(this string str) =>
-        Regex.RegexStore.EmailRegex().IsMatch(str);
-
     public static string Capitalize(this string str)
     {
         if (str.Length == 0) return string.Empty;

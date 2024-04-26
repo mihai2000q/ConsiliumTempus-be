@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240416102435_InitialCreate")]
+    [Migration("20240424150212_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -580,6 +580,23 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.CustomOrderPosition", "CustomOrderPosition", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectStageId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("int")
+                                .HasColumnName("CustomOrderPosition");
+
+                            b1.HasKey("ProjectStageId");
+
+                            b1.ToTable("ProjectStage");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectStageId");
+                        });
+
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Name", "Name", b1 =>
                         {
                             b1.Property<Guid>("ProjectStageId")
@@ -599,27 +616,10 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("ProjectStageId");
                         });
 
-                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Order", "Order", b1 =>
-                        {
-                            b1.Property<Guid>("ProjectStageId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<int>("Value")
-                                .HasColumnType("int")
-                                .HasColumnName("Order");
-
-                            b1.HasKey("ProjectStageId");
-
-                            b1.ToTable("ProjectStage");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProjectStageId");
-                        });
-
-                    b.Navigation("Name")
+                    b.Navigation("CustomOrderPosition")
                         .IsRequired();
 
-                    b.Navigation("Order")
+                    b.Navigation("Name")
                         .IsRequired();
 
                     b.Navigation("Sprint");
@@ -742,6 +742,23 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.CustomOrderPosition", "CustomOrderPosition", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectTaskAggregateId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("int")
+                                .HasColumnName("CustomOrderPosition");
+
+                            b1.HasKey("ProjectTaskAggregateId");
+
+                            b1.ToTable("ProjectTask");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectTaskAggregateId");
+                        });
+
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b1 =>
                         {
                             b1.Property<Guid>("ProjectTaskAggregateId")
@@ -771,23 +788,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasMaxLength(100)
                                 .HasColumnType("nvarchar(100)")
                                 .HasColumnName("Name");
-
-                            b1.HasKey("ProjectTaskAggregateId");
-
-                            b1.ToTable("ProjectTask");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProjectTaskAggregateId");
-                        });
-
-                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Order", "Order", b1 =>
-                        {
-                            b1.Property<Guid>("ProjectTaskAggregateId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<int>("Value")
-                                .HasColumnType("int")
-                                .HasColumnName("Order");
 
                             b1.HasKey("ProjectTaskAggregateId");
 
@@ -887,6 +887,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.Navigation("CreatedBy");
 
+                    b.Navigation("CustomOrderPosition")
+                        .IsRequired();
+
                     b.Navigation("Description")
                         .IsRequired();
 
@@ -894,9 +897,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Name")
-                        .IsRequired();
-
-                    b.Navigation("Order")
                         .IsRequired();
 
                     b.Navigation("Reviewer");

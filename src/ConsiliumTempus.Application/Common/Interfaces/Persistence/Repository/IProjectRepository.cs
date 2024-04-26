@@ -13,6 +13,7 @@ public interface IProjectRepository
 
     Task<List<ProjectAggregate>> GetListByUser(
         UserId userId,
+        IOrder<ProjectAggregate>? order,
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default);
 
