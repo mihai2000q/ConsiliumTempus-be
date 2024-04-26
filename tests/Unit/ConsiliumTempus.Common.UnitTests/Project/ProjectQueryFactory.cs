@@ -18,12 +18,14 @@ public static class ProjectQueryFactory
     }
 
     public static GetCollectionProjectQuery CreateGetCollectionProjectQuery(
+        string? order = null,
         Guid? workspaceId = null,
         string? name = null,
         bool? isFavorite = null,
         bool? isPrivate = null)
     {
         return new GetCollectionProjectQuery(
+            order,
             workspaceId,
             name,
             isFavorite,

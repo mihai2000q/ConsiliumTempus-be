@@ -7,16 +7,31 @@ namespace ConsiliumTempus.Domain.Common.Orders;
 
 public sealed class ProjectOrder : Order<ProjectAggregate>
 {
-    private static readonly IEnumerable<OrderProperty<ProjectAggregate>> OrderPropertiesList =
+    private static class Properties
+    {
+        public sealed record NameOrderProperty()
+            : OrderProperty<ProjectAggregate>(nameof(ProjectAggregate.Name), p => p.Name.Value);
+
+        public sealed record LastActivityProperty()
+            : OrderProperty<ProjectAggregate>(nameof(ProjectAggregate.LastActivity), p => p.LastActivity);
+
+        public sealed record UpdatedDateTimeProperty()
+            : OrderProperty<ProjectAggregate>(nameof(ProjectAggregate.UpdatedDateTime), p => p.UpdatedDateTime);
+
+        public sealed record CreatedDateTimeProperty()
+            : OrderProperty<ProjectAggregate>(nameof(ProjectAggregate.CreatedDateTime), p => p.CreatedDateTime);
+    }
+    
+    public static readonly IReadOnlyList<OrderProperty<ProjectAggregate>> OrderProperties =
     [
-        new OrderProperties.OrderProperties.Project.NameOrderProperty(),
-        new OrderProperties.OrderProperties.Project.LastActivityProperty(),
-        new OrderProperties.OrderProperties.Project.UpdatedDateTimeProperty(),
-        new OrderProperties.OrderProperties.Project.CreatedDateTimeProperty()
+        new Properties.NameOrderProperty(),
+        new Properties.LastActivityProperty(),
+        new Properties.UpdatedDateTimeProperty(),
+        new Properties.CreatedDateTimeProperty()
     ];
 
     private static readonly IReadOnlyDictionary<string, Expression<Func<ProjectAggregate, object?>>>
-        StringToPropertySelector = ToDictionary(OrderPropertiesList);
+        StringToPropertySelector = ToDictionary(OrderProperties);
     
     private ProjectOrder(Expression<Func<ProjectAggregate, object?>> propertySelector, OrderType orderType)
         : base(propertySelector, orderType)

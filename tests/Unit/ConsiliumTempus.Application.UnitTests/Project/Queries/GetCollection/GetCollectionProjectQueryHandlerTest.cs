@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
+using ConsiliumTempus.Application.UnitTests.TestData.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.User;
@@ -27,12 +28,11 @@ public class GetCollectionProjectQueryHandlerTest
 
     #endregion
     
-    [Fact]
-    public async Task GetCollectionProject_WhenSucceeds_ShouldReturnProjects()
+    [Theory]
+    [ClassData(typeof(GetCollectionProjectQueryHandlerData.GetQueries))]
+    public async Task GetCollectionProject_WhenSucceeds_ShouldReturnProjects(GetCollectionProjectQuery query)
     {
         // Arrange
-        var query = ProjectQueryFactory.CreateGetCollectionProjectQuery();
-
         var user = UserFactory.Create();
         _currentUserProvider
             .GetCurrentUserAfterPermissionCheck()
@@ -40,7 +40,10 @@ public class GetCollectionProjectQueryHandlerTest
 
         var projects = ProjectFactory.CreateList();
         _projectRepository
-            .GetListByUser(Arg.Any<UserId>(), Arg.Any<IReadOnlyList<IFilter<ProjectAggregate>>>())
+            .GetListByUser(
+                Arg.Any<UserId>(),
+                Arg.Any<IOrder<ProjectAggregate>>(),
+                Arg.Any<IReadOnlyList<IFilter<ProjectAggregate>>>())
             .Returns(projects);
         
         // Act
@@ -54,6 +57,7 @@ public class GetCollectionProjectQueryHandlerTest
             .Received(1)
             .GetListByUser(
                 Arg.Is<UserId>(uId => uId == user.Id), 
+                Arg.Is<IOrder<ProjectAggregate>?>(o => Utils.Project.AssertGetCollectionProjectOrder(o, query)),
                 Arg.Is<IReadOnlyList<IFilter<ProjectAggregate>>>(filters => 
                     Utils.Project.AssertGetCollectionProjectFilters(filters, query)));
 

@@ -25,10 +25,12 @@ public class GetCollectionProjectQueryValidatorTest
     }
     
     [Theory]
+    [ClassData(typeof(GetCollectionProjectForWorkspaceQueryValidatorData.GetInvalidOrderQueries))]
     [ClassData(typeof(GetCollectionProjectForWorkspaceQueryValidatorData.GetInvalidNameQueries))]
     public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionProjectQuery query, 
-        string property)
+        string property,
+        short numberOfErrors)
     {
         // Arrange - parameterized
         
@@ -37,7 +39,7 @@ public class GetCollectionProjectQueryValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(1);
+        outcome.Errors.Should().HaveCount(numberOfErrors);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }
