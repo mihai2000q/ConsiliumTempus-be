@@ -30,7 +30,7 @@ however, an **Aggregate** will usually be a model that contains all the relation
 
 Each aggregate can have its own set of **entities** or **value objects**.
 
-Each aggregate has a set of possible *errors*, *filters* or *properties validation*.
+Each aggregate has a set of possible *errors*, *filters*, *orders* or *properties validation*.
 The aforementioned refers to the constraints that each property has
 (i.e., the name cannot be longer than 100 characters).
 
@@ -69,7 +69,7 @@ The value objects are:
 - **IsPrivate**, which encapsulates a boolean *Value*
 - **Message**, which encapsulates a string *Value*
 - **Name**, which encapsulates a string *Value*
-- **Order**, which encapsulates an int *Value,* and it's used to achieve custom ordering
+- **CustomOrderPosition**, which encapsulates an int *Value,* and it's used to achieve custom ordering
 
 ## Domain Errors
 
@@ -82,6 +82,7 @@ These errors are not tied to any aggregate, therefore notable and only used in t
 ## Enums
 
 The enums defined in the Domain of the application are:
+- **OrderType**, which is used to determine whether the order should be ascending or descending
 - **Permissions**, which are used on the Presentation Layer for Authorization
 
 ## Relations

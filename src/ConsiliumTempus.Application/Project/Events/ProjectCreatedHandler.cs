@@ -18,7 +18,7 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
 
         var count = 0;
         Constants.ProjectStage.Names
-            .Select(name => ProjectStage.Create(Name.Create(name), Order.Create(count++), sprint))
+            .Select(name => ProjectStage.Create(Name.Create(name), CustomOrderPosition.Create(count++), sprint))
             .ToList()
             .ForEach(stage => sprint.AddStage(stage));
 
@@ -29,7 +29,7 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
             .ForEach(name => stage.AddTask(ProjectTaskAggregate.Create(
                 Name.Create(name),
                 Description.Create(string.Empty),
-                Order.Create(count++),
+                CustomOrderPosition.Create(count++),
                 notification.User,
                 stage)));
 

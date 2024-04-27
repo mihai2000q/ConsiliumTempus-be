@@ -3,23 +3,23 @@ using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Domain.Common.ValueObjects;
 
-public sealed class Order : ValueObject
+public sealed class CustomOrderPosition : ValueObject
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
-    private Order()
+    private CustomOrderPosition()
     {
     }
 
-    private Order(int value)
+    private CustomOrderPosition(int value)
     {
         Value = value;
     }
 
     public int Value { get; }
 
-    public static Order Create(int value)
+    public static CustomOrderPosition Create(int value)
     {
-        return new Order(value);
+        return new CustomOrderPosition(value);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

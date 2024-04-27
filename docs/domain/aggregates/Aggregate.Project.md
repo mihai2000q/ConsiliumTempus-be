@@ -55,3 +55,10 @@ For database design checkout the [Project Diagram](../diagrams/aggregates/Diagra
 - **Name** to filter by name
 - **IsFavorite** to filter by favorites
 - **IsPrivate** to filter by accessibility
+
+### Orders
+
+- **Name** to order alphabetically
+- **LastActivity** to order by activity
+- **UpdatedDateTime** to order by last modified date
+- **CreatedDateTime** to order by creation time

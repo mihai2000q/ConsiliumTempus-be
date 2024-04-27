@@ -34,11 +34,12 @@ internal static partial class Utils
             GetCollectionProjectQuery query,
             GetCollectionProjectRequest request)
         {
+            query.Order.Should().Be(request.Order);
             query.WorkspaceId.Should().Be(request.WorkspaceId);
             query.Name.Should().Be(request.Name);
             query.IsFavorite.Should().Be(request.IsFavorite);
             query.IsPrivate.Should().Be(request.IsPrivate);
-            
+
             return true;
         }
 

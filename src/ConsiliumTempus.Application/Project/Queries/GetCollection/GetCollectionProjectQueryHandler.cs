@@ -3,6 +3,7 @@ using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Orders;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ErrorOr;
@@ -21,6 +22,7 @@ public sealed class GetCollectionProjectQueryHandler(
     {
         var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
 
+        var order = ProjectOrder.Parse(query.Order);
         var filters = new List<IFilter<ProjectAggregate>>
         {
             new Filters.Project.WorkspaceFilter(query.WorkspaceId.IfNotNull(() =>
@@ -32,6 +34,7 @@ public sealed class GetCollectionProjectQueryHandler(
 
         var projects = await projectRepository.GetListByUser(
             user.Id,
+            order,
             filters,
             cancellationToken);
         return new GetCollectionProjectResult(projects);

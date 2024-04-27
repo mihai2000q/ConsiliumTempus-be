@@ -20,7 +20,7 @@ class ProjectTask
   "description": { "value": "This is the description of the task" } ,
   "isCompleted": { "value": false },
   "createdBy": {},
-  "order": { "value": 1 },
+  "customOrderPosition": { "value": 1 },
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
   "assignee": {},

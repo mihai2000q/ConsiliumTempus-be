@@ -16,7 +16,7 @@ public abstract class StringFilter<TEntity>(
         .GetMethods()
         .Where(m => m.Name == nameof(string.Contains))
         .Where(m => m.GetParameters().Length == 1)
-        .Single(m => m.GetParameters().First().ParameterType == "".GetType());
+        .Single(m => m.GetParameters().First().ParameterType == string.Empty.GetType());
     private static readonly Func<string?, bool> StringCondition = v => !string.IsNullOrWhiteSpace(v);
     
     protected override Expression GetExpressionBody(Expression propertyExpression, Expression valueExpression)

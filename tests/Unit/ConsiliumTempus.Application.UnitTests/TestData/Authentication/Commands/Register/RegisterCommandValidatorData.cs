@@ -11,6 +11,7 @@ internal static class RegisterCommandValidatorData
         public GetValidCommands()
         {
             Add(AuthenticationCommandFactory.CreateRegisterCommand());
+            Add(AuthenticationCommandFactory.CreateRegisterCommand(email: "Some@Example.com"));
             Add(new RegisterCommand(
                 "Michael",
                 "Jordan",
@@ -54,7 +55,16 @@ internal static class RegisterCommandValidatorData
             var command = AuthenticationCommandFactory.CreateRegisterCommand(email: "");
             Add(command, nameof(command.Email), 2);
 
-            command = AuthenticationCommandFactory.CreateRegisterCommand(email: "This is an email");
+            command = AuthenticationCommandFactory.CreateRegisterCommand(email: "This is not an email");
+            Add(command, nameof(command.Email), 1);
+            
+            command = AuthenticationCommandFactory.CreateRegisterCommand(email: "SomeExample");
+            Add(command, nameof(command.Email), 1);
+            
+            command = AuthenticationCommandFactory.CreateRegisterCommand(email: "Some@Example");
+            Add(command, nameof(command.Email), 1);
+            
+            command = AuthenticationCommandFactory.CreateRegisterCommand(email: "SomeExample.com");
             Add(command, nameof(command.Email), 1);
 
             command = AuthenticationCommandFactory.CreateRegisterCommand(

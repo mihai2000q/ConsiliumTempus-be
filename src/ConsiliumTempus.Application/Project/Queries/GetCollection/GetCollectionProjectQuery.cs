@@ -4,6 +4,7 @@ using MediatR;
 namespace ConsiliumTempus.Application.Project.Queries.GetCollection;
 
 public sealed record GetCollectionProjectQuery(
+    string? Order = null,
     Guid? WorkspaceId = null,
     string? Name = null,
     bool? IsFavorite = null,
