@@ -25,8 +25,7 @@ public sealed class GetCollectionProjectQueryHandler(
         var order = ProjectOrder.Parse(query.Order);
         var filters = new List<IFilter<ProjectAggregate>>
         {
-            new Filters.Project.WorkspaceFilter(query.WorkspaceId.IfNotNull(() =>
-                WorkspaceId.Create(query.WorkspaceId!.Value))),
+            new Filters.Project.WorkspaceFilter(query.WorkspaceId.IfNotNull(WorkspaceId.Create)),
             new Filters.Project.NameFilter(query.Name),
             new Filters.Project.IsFavoriteFilter(query.IsFavorite),
             new Filters.Project.IsPrivateFilter(query.IsPrivate)

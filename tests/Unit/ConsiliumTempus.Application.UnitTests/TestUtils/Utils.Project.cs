@@ -81,7 +81,7 @@ internal static partial class Utils
             GetCollectionProjectQuery query)
         {
             filters.OfType<Filters.Project.WorkspaceFilter>().Single().Value.Should().Be(
-                query.WorkspaceId.IfNotNull(() => WorkspaceId.Create(query.WorkspaceId!.Value)));
+                query.WorkspaceId.IfNotNull(WorkspaceId.Create));
             filters.OfType<Filters.Project.NameFilter>().Single().Value.Should().Be(query.Name);
             filters.OfType<Filters.Project.IsFavoriteFilter>().Single().Value.Should().Be(query.IsFavorite);
             filters.OfType<Filters.Project.IsPrivateFilter>().Single().Value.Should().Be(query.IsPrivate);
