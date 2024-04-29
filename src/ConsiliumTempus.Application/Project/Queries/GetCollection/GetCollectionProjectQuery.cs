@@ -4,9 +4,11 @@ using MediatR;
 namespace ConsiliumTempus.Application.Project.Queries.GetCollection;
 
 public sealed record GetCollectionProjectQuery(
-    string? Order = null,
-    Guid? WorkspaceId = null,
-    string? Name = null,
-    bool? IsFavorite = null,
-    bool? IsPrivate = null)
+    int? PageSize,
+    int? CurrentPage,
+    string? Order,
+    Guid? WorkspaceId,
+    string? Name,
+    bool? IsFavorite,
+    bool? IsPrivate)
     : IRequest<ErrorOr<GetCollectionProjectResult>>;

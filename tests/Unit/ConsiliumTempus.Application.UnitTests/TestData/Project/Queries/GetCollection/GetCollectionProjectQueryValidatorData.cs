@@ -14,12 +14,42 @@ internal static class GetCollectionProjectForWorkspaceQueryValidatorData
             Add(query);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                pageSize: 10,
+                currentPage: 2,
                 order: "name.desc",
                 workspaceId: Guid.NewGuid(),
                 name: "Project",
                 isFavorite: false,
                 isPrivate: true);
             Add(query);
+        }
+    }
+    
+    internal class GetInvalidPageSizeQueries : TheoryData<GetCollectionProjectQuery, string, short>
+    {
+        public GetInvalidPageSizeQueries()
+        {
+            var query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                pageSize: -1);
+            Add(query, nameof(query.PageSize), 1);
+            
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                pageSize: 0);
+            Add(query, nameof(query.PageSize), 1);
+        }
+    }
+    
+    internal class GetInvalidCurrentPageQueries : TheoryData<GetCollectionProjectQuery, string, short>
+    {
+        public GetInvalidCurrentPageQueries()
+        {
+            var query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                currentPage: -1);
+            Add(query, nameof(query.PageSize), 1);
+            
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                currentPage: 0);
+            Add(query, nameof(query.PageSize), 1);
         }
     }
     

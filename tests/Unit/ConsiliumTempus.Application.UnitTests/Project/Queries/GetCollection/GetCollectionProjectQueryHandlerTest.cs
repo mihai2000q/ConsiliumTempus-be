@@ -6,6 +6,7 @@ using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User.ValueObjects;
 
@@ -42,6 +43,7 @@ public class GetCollectionProjectQueryHandlerTest
         _projectRepository
             .GetListByUser(
                 Arg.Any<UserId>(),
+                Arg.Any<PaginationInfo>(),
                 Arg.Any<IOrder<ProjectAggregate>>(),
                 Arg.Any<IReadOnlyList<IFilter<ProjectAggregate>>>())
             .Returns(projects);
@@ -57,6 +59,7 @@ public class GetCollectionProjectQueryHandlerTest
             .Received(1)
             .GetListByUser(
                 Arg.Is<UserId>(uId => uId == user.Id), 
+                Arg.Is<PaginationInfo>(pi => pi.PageSize == query.PageSize && pi.CurrentPage == query.CurrentPage),
                 Arg.Is<IOrder<ProjectAggregate>?>(o => Utils.Project.AssertGetCollectionProjectOrder(o, query)),
                 Arg.Is<IReadOnlyList<IFilter<ProjectAggregate>>>(filters => 
                     Utils.Project.AssertGetCollectionProjectFilters(filters, query)));
