@@ -45,11 +45,11 @@ internal static class GetCollectionProjectForWorkspaceQueryValidatorData
         {
             var query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 currentPage: -1);
-            Add(query, nameof(query.PageSize), 1);
+            Add(query, nameof(query.CurrentPage), 1);
             
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 currentPage: 0);
-            Add(query, nameof(query.PageSize), 1);
+            Add(query, nameof(query.CurrentPage), 1);
         }
     }
     
