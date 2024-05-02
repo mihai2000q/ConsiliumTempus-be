@@ -122,8 +122,8 @@ internal class ProjectData : ITestData
             true),
         ProjectFactory.Create(
             Workspaces[2],
-            "Get a house",
-            "this is actually really important",
+            "Start a retiring investment plan",
+            "",
             false,
             true),
         ProjectFactory.Create(
