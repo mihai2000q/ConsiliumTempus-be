@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Infrastructure.Extensions;
 
@@ -23,6 +24,17 @@ public static class QueryableExtensions
         return order.Type == OrderType.Descending
             ? queryable.OrderByDescending(order.PropertySelector)
             : queryable.OrderBy(order.PropertySelector);
+    }
+
+    public static IQueryable<TSource> Paginate<TSource>(
+        this IQueryable<TSource> queryable,
+        PaginationInfo? paginationInfo)
+    {
+        if (paginationInfo is null) return queryable;
+        var (pageSize, currentPage) = paginationInfo;
+        return queryable
+            .Skip(pageSize * currentPage)
+            .Take(pageSize);
     }
 
     public static IQueryable<TSource> WhereIf<TSource>(

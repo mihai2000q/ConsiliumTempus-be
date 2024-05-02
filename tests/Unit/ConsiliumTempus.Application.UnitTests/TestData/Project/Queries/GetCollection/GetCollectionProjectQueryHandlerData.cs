@@ -13,6 +13,8 @@ internal static class GetCollectionProjectQueryHandlerData
             Add(query);
             
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                pageSize: 12,
+                currentPage: 1,
                 order: "name.desc",
                 name: "Some Project");
             Add(query);

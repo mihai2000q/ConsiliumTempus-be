@@ -27,9 +27,14 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
+        var expectedProjects = ProjectData.Projects
+            .Where(p => p.Workspace.Memberships.Any(m => m.User == user))
+            .ToList();
         Utils.Project.AssertGetCollectionResponse(
             response!,
-            GetFilteredProjects(user));
+            expectedProjects,
+            expectedProjects.Count,
+            null);
     }
 
     [Fact]
@@ -47,9 +52,13 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
+        var expectedProjects = GetFilteredProjects(user, p =>
+            p.Workspace.Id.Value == request.WorkspaceId);
         Utils.Project.AssertGetCollectionResponse(
             response!,
-            GetFilteredProjects(user, p => p.Workspace.Id.Value == request.WorkspaceId));
+            expectedProjects,
+            expectedProjects.Count,
+            null);
     }
 
     [Fact]
@@ -67,9 +76,13 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
+        var expectedProjects = GetFilteredProjects(user, p =>
+            p.Name.Value.ToLower().Contains(request.Name?.ToLower() ?? ""));
         Utils.Project.AssertGetCollectionResponse(
             response!,
-            GetFilteredProjects(user, p => p.Workspace.Id.Value == request.WorkspaceId));
+            expectedProjects,
+            expectedProjects.Count,
+            null);
     }
 
     [Fact]
@@ -87,9 +100,13 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
+        var expectedProjects = GetFilteredProjects(user, p =>
+            p.IsFavorite.Value == request.IsFavorite);
         Utils.Project.AssertGetCollectionResponse(
             response!,
-            GetFilteredProjects(user, p => p.IsFavorite.Value == request.IsFavorite));
+            expectedProjects,
+            expectedProjects.Count,
+            null);
     }
 
     [Fact]
@@ -107,9 +124,13 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
+        var expectedProjects = GetFilteredProjects(user, p =>
+            p.IsPrivate.Value == request.IsPrivate);
         Utils.Project.AssertGetCollectionResponse(
             response!,
-            GetFilteredProjects(user, p => p.IsPrivate.Value == request.IsPrivate));
+            expectedProjects,
+            expectedProjects.Count,
+            null);
     }
 
     [Fact]
@@ -122,27 +143,67 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?isPrivate={request.IsPrivate}");
+        var outcome = await Client.Get($"api/projects?order={request.Order}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
         var expectedProjects = ProjectData.Projects
             .Where(p => p.Workspace.Memberships.Any(m => m.User == user))
-            .OrderByDescending(p => p.Name.Value);
+            .OrderByDescending(p => p.Name.Value)
+            .ToList();
         Utils.Project.AssertGetCollectionResponse(
             response!,
-            expectedProjects);
+            expectedProjects,
+            expectedProjects.Count,
+            null,
+            true);
     }
 
-    private static IEnumerable<ProjectAggregate> GetFilteredProjects(
-        UserAggregate user,
-        Func<ProjectAggregate, bool>? whereSelector = null)
+    [Fact]
+    public async Task GetProjectCollection_WhenRequestHasPaginationAndOrder_ShouldReturnProjectsOrderedAndPaginated()
     {
-        var projects = ProjectData.Projects
-            .Where(p => p.Workspace.Memberships.Any(m => m.User == user));
-        return whereSelector is not null
-            ? projects.Where(whereSelector)
-            : projects;
+        // Arrange
+        var user = ProjectData.Users.First();
+        var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
+            pageSize: 2,
+            currentPage: 2,
+            order: "name.asc");
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Get($"api/projects?pageSize={request.PageSize}" +
+                                       $"&currentPage={request.CurrentPage}" +
+                                       $"&order={request.Order}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
+
+        var userProjects = ProjectData.Projects
+            .Where(p => p.Workspace.Memberships.Any(m => m.User == user))
+            .ToList();
+        var expectedProjects = userProjects
+            .OrderBy(p => p.Name.Value)
+            .Skip(request.PageSize!.Value * request.CurrentPage!.Value)
+            .Take(request.PageSize.Value)
+            .ToList();
+
+        Utils.Project.AssertGetCollectionResponse(
+            response!,
+            expectedProjects,
+            userProjects.Count,
+            userProjects.Count / request.PageSize,
+            true);
+    }
+
+    private static List<ProjectAggregate> GetFilteredProjects(
+        UserAggregate user,
+        Func<ProjectAggregate, bool> whereSelector)
+    {
+        return ProjectData.Projects
+            .Where(p => p.Workspace.Memberships.Any(m => m.User == user))
+            .Where(whereSelector)
+            .ToList();
     }
 }

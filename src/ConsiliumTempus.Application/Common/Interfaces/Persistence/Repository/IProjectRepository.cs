@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
@@ -13,7 +14,13 @@ public interface IProjectRepository
 
     Task<List<ProjectAggregate>> GetListByUser(
         UserId userId,
+        PaginationInfo? paginationInfo,
         IOrder<ProjectAggregate>? order,
+        IEnumerable<IFilter<ProjectAggregate>> filters,
+        CancellationToken cancellationToken = default);
+    
+    Task<int> GetListByUserCount(
+        UserId userId,
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default);
 

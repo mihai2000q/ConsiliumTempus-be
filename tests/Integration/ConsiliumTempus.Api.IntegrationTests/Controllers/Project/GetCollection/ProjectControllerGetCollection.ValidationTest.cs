@@ -29,7 +29,8 @@ public class ProjectControllerGetCollectionValidationTest(WebAppFactory factory)
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            name: new string('*', PropertiesValidation.Project.NameMaximumLength + 1));
+            name: new string('*', PropertiesValidation.Project.NameMaximumLength + 1),
+            pageSize: -1);
 
         // Act
         var outcome = await Client.Get($"api/projects?name={request.Name}");

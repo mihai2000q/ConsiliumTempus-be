@@ -119,6 +119,18 @@ internal class ProjectData : ITestData
             "Get a house",
             "this is actually really important",
             false,
+            true),
+        ProjectFactory.Create(
+            Workspaces[2],
+            "Start a retiring investment plan",
+            "",
+            false,
+            true),
+        ProjectFactory.Create(
+            Workspaces[2],
+            "Start a new life",
+            "criminal activity",
+            false,
             true)
     ];
 }

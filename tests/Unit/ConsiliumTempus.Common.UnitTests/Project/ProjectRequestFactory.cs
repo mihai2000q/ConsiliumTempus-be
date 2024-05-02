@@ -17,6 +17,8 @@ public static class ProjectRequestFactory
     }
 
     public static GetCollectionProjectRequest CreateGetCollectionProjectRequest(
+        int? pageSize = null,
+        int? currentPage = null,
         string? order = null,
         Guid? workspaceId = null,
         string? name = null,
@@ -25,6 +27,8 @@ public static class ProjectRequestFactory
     {
         return new GetCollectionProjectRequest
         {
+            PageSize = pageSize,
+            CurrentPage = currentPage,
             Order = order,
             WorkspaceId = workspaceId,
             Name = name,
