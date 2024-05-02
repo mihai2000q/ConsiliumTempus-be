@@ -39,8 +39,7 @@ internal static partial class Utils
             GetCollectionProjectSprintResponse response,
             GetCollectionProjectSprintResult result)
         {
-            response.Sprints
-                .Zip(result.Sprints)
+            response.Sprints.Zip(result.Sprints)
                 .Should().AllSatisfy(p => AssertProjectSprintResponse(p.First, p.Second));
         }
 

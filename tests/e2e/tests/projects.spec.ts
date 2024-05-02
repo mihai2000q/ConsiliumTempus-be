@@ -3,7 +3,12 @@ import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
 import { deleteUser, registerUser } from "../utils/users.utils";
 import { getPersonalWorkspace } from "../utils/workspaces.utils";
-import { create2ProjectsIn2DifferentWorkspaces, createProject, getProjectsForUser } from "../utils/projects.utils";
+import {
+  create2ProjectsIn2DifferentWorkspaces,
+  createProject,
+  createProjects,
+  getProjectsForUser
+} from "../utils/projects.utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
 
 test.describe('should allow operations on the project entity', () => {
@@ -55,7 +60,7 @@ test.describe('should allow operations on the project entity', () => {
 
       const json = await response.json()
       expect(json).toStrictEqual({
-        projects: expect.arrayContaining([
+        projects: [
           {
             id: expect.any(String),
             name: createProjectRequest1.name,
@@ -63,7 +68,9 @@ test.describe('should allow operations on the project entity', () => {
             isPrivate: createProjectRequest1.isPrivate,
             isFavorite: expect.any(Boolean),
           }
-        ])
+        ],
+        totalCount: 1,
+        totalPages: null
       })
       expect(json.projects).toHaveLength(1)
     })
@@ -107,25 +114,16 @@ test.describe('should allow operations on the project entity', () => {
             isPrivate: createProjectRequest2.isPrivate,
             isFavorite: expect.any(Boolean),
           },
-        ])
+        ]),
+        totalCount: 2,
+        totalPages: null
       })
       expect(json.projects).toHaveLength(2)
     })
 
     test('should get collection of projects ordered by name ascending', async ({ request }) => {
-      const createProjectRequest1: CreateProjectRequest = {
-        workspaceId: WORKSPACE_ID,
-        name: "Project 1",
-        description: "This is some project",
-        isPrivate: true
-      }
-      await createProject(request, createProjectRequest1)
-
-      const createProjectRequest2 = {
-        ...createProjectRequest1,
-        name: "Project 2"
-      }
-      await createProject(request, createProjectRequest2)
+      const totalCount = 2
+      const createProjectRequests = await createProjects(request, totalCount)
 
       const response = await request.get(
         `/api/projects?order=name.asc`,
@@ -139,21 +137,58 @@ test.describe('should allow operations on the project entity', () => {
         projects: [
           {
             id: expect.any(String),
-            name: createProjectRequest1.name,
-            description: createProjectRequest1.description,
-            isPrivate: createProjectRequest1.isPrivate,
-            isFavorite: expect.any(Boolean),
+            name: createProjectRequests[0].name,
+            description: createProjectRequests[0].description,
+            isPrivate: createProjectRequests[0].isPrivate,
+            isFavorite: false,
           },
           {
             id: expect.any(String),
-            name: createProjectRequest2.name,
-            description: createProjectRequest2.description,
-            isPrivate: createProjectRequest2.isPrivate,
-            isFavorite: expect.any(Boolean),
+            name: createProjectRequests[1].name,
+            description: createProjectRequests[1].description,
+            isPrivate: createProjectRequests[1].isPrivate,
+            isFavorite: false,
           },
-        ]
+        ],
+        totalCount: totalCount,
+        totalPages: null
       })
-      expect(json.projects).toHaveLength(2)
+      expect(json.projects).toHaveLength(totalCount)
+    })
+
+    test('should get collection of projects paginated and ordered by name ascending', async ({ request }) => {
+      const totalCount = 5
+      const createProjectRequests = await createProjects(request, totalCount)
+
+      const pageSize = 2
+      const currentPage = 1
+      const response = await request.get(
+        `/api/projects?order=name.asc&pageSize=${pageSize}&currentPage=${currentPage}`,
+        useToken()
+      )
+
+      expect(response.ok()).toBeTruthy()
+
+
+      const expectedProjects = createProjectRequests
+        .slice(pageSize * currentPage, pageSize * currentPage + pageSize)
+        .map(r => {
+          return {
+            id: expect.any(String),
+            name: r.name,
+            description: r.description,
+            isPrivate: r.isPrivate,
+            isFavorite: false
+          }
+        })
+
+      const json = await response.json()
+      expect(json).toStrictEqual({
+        projects: expectedProjects,
+        totalCount: totalCount,
+        totalPages: Math.floor(totalCount / pageSize),
+      })
+      expect(json.projects).toHaveLength(pageSize)
     })
   })
 

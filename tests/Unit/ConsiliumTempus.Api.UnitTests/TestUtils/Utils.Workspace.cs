@@ -57,8 +57,7 @@ internal static partial class Utils
             GetCollectionWorkspaceResponse response,
             GetCollectionWorkspaceResult result)
         {
-            response.Workspaces
-                .Zip(result.Workspaces)
+            response.Workspaces.Zip(result.Workspaces)
                 .Should().AllSatisfy(p => AssertWorkspaceResponse(p.First, p.Second));
         }
 

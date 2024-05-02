@@ -4,7 +4,9 @@ namespace ConsiliumTempus.Api.Contracts.Project.GetCollection;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed record GetCollectionProjectResponse(
-    List<GetCollectionProjectResponse.ProjectResponse> Projects)
+    List<GetCollectionProjectResponse.ProjectResponse> Projects,
+    int TotalCount,
+    int? TotalPages)
 {
     public sealed record ProjectResponse(
         Guid Id,

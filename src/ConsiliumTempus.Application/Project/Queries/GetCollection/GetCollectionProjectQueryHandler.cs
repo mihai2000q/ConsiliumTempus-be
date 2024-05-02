@@ -35,17 +35,16 @@ public sealed class GetCollectionProjectQueryHandler(
             new Filters.Project.IsPrivateFilter(query.IsPrivate)
         };
 
-        var (projects, totalCount) = await (
-            projectRepository.GetListByUser(
-                user.Id,
-                paginationInfo,
-                order,
-                filters,
-                cancellationToken),
-            projectRepository.GetListByUserCount(
-                user.Id,
-                filters,
-                cancellationToken));
+        var projects = await projectRepository.GetListByUser(
+            user.Id,
+            paginationInfo,
+            order,
+            filters,
+            cancellationToken);
+        var totalCount = await projectRepository.GetListByUserCount(
+            user.Id,
+            filters,
+            cancellationToken);
 
         return new GetCollectionProjectResult(
             projects,

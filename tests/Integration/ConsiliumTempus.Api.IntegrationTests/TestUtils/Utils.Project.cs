@@ -34,12 +34,27 @@ internal static partial class Utils
 
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectResponse response,
-            IEnumerable<ProjectAggregate> projects)
+            IEnumerable<ProjectAggregate> projects,
+            int totalCount,
+            int? totalPages,
+            bool isOrdered = false)
         {
-            response.Projects
-                .OrderBy(p => p.Id)
-                .Zip(projects.OrderBy(p => p.Id.Value))
-                .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
+            if (isOrdered)
+            {
+                response.Projects
+                    .Zip(projects)
+                    .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
+            }
+            else
+            {
+                response.Projects
+                    .OrderBy(p => p.Id)
+                    .Zip(projects.OrderBy(p => p.Id.Value))
+                    .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
+            }
+
+            response.TotalCount.Should().Be(totalCount);
+            response.TotalPages.Should().Be(totalPages);
         }
 
         internal static void AssertCreation(ProjectAggregate project, CreateProjectRequest request)
