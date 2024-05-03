@@ -53,12 +53,15 @@ Returns the workspace data.
 Anyone logged in can request this data, but it will return only the workspaces that are linked to this user.
 
 ```js
-GET {{host}}/api/workspaces?order=name.asc
+GET {{host}}/api/workspaces?order=name.asc&name=worksp
 ```
 
 ### Get Collection Workspace Request
 
 Sends optional query parameters for ordering, filtering, and page-based pagination.
+
+- **order** is used to order the collection
+- **name** is used to filter by name
 
 #### Get Collection Workspace Response
 

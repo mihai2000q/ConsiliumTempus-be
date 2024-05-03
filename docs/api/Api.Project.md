@@ -60,6 +60,10 @@ in case the workspace Id is mentioned, otherwise any logged-in user will get the
 GET {{host}}/api/projects?pageSize=2&currentPage=1&order=name.desc&workspaceId=10000000-0000-0000-0000-000000000000&name=project&isFavorite=true&isPrivate=false
 ```
 
+#### Get Collection Request
+
+it sends optional query parameters to paginate, order or filter the projects by workspace, name, etc.
+
 - **pageSize** is used to specify the size of the page
 - **currentPage** is used to specify the current page
 - **order** is used to order the collection
@@ -67,10 +71,6 @@ GET {{host}}/api/projects?pageSize=2&currentPage=1&order=name.desc&workspaceId=1
 - **name** is used to filter by name
 - **isFavorite** is used to filter by favorites
 - **isPrivate** is used to filter by accessibility
-
-#### Get Collection Request
-
-it sends optional query parameters to paginate, order or filter the projects by workspace, name, etc.
 
 #### Get Collection Response
 

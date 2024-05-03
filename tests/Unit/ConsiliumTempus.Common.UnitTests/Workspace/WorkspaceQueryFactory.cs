@@ -11,9 +11,11 @@ public static class WorkspaceQueryFactory
     }
 
     public static GetCollectionWorkspaceQuery CreateGetCollectionWorkspaceQuery(
-        string? order = null)
+        string? order = null,
+        string? name = null)
     {
         return new GetCollectionWorkspaceQuery(
-            order);
+            order,
+            name);
     }
 }

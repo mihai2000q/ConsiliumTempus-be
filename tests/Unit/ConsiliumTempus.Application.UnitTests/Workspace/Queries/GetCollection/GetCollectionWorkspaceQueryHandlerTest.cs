@@ -43,7 +43,10 @@ public class GetCollectionWorkspaceQueryHandlerTest
 
         var workspaces = WorkspaceFactory.CreateList();
         _workspaceRepository
-            .GetListByUser(Arg.Any<UserAggregate>(), Arg.Any<IOrder<WorkspaceAggregate>?>())
+            .GetListByUser(
+                Arg.Any<UserAggregate>(), 
+                Arg.Any<IOrder<WorkspaceAggregate>?>(),
+                Arg.Any<IEnumerable<IFilter<WorkspaceAggregate>>>())
             .Returns(workspaces);
 
         // Act
@@ -58,7 +61,9 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .GetListByUser(
                 Arg.Is<UserAggregate>(u => u == user),
                 Arg.Is<IOrder<WorkspaceAggregate>?>(o => 
-                    o.Assert(query.Order, WorkspaceOrder.OrderProperties)));
+                    o.Assert(query.Order, WorkspaceOrder.OrderProperties)),
+                Arg.Is<IEnumerable<IFilter<WorkspaceAggregate>>>(filters => 
+                    Utils.Workspace.AssertGetCollectionFilters(filters, query)));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Workspaces.Should().BeEquivalentTo(workspaces);

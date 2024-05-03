@@ -26,6 +26,7 @@ public class GetCollectionWorkspaceQueryValidatorTest
     
     [Theory]
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidOrderQueries))]
+    [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidNameQueries))]
     public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionWorkspaceQuery query, 
         string property,

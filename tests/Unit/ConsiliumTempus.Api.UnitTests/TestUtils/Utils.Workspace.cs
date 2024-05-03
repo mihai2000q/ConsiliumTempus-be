@@ -27,6 +27,7 @@ internal static partial class Utils
             GetCollectionWorkspaceRequest request)
         {
             query.Order.Should().Be(request.Order);
+            query.Name.Should().Be(request.Name);
             return true;
         }
 

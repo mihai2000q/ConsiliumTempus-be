@@ -42,10 +42,12 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
     public async Task<List<WorkspaceAggregate>> GetListByUser(
         UserAggregate user,
         IOrder<WorkspaceAggregate>? order,
+        IEnumerable<IFilter<WorkspaceAggregate>> filters,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Workspaces
             .Where(w => w.Memberships.Any(m => m.User == user))
+            .ApplyFilters(filters)
             .ApplyOrder(order)
             .ToListAsync(cancellationToken);
     }

@@ -12,6 +12,7 @@ public interface IWorkspaceRepository
     Task<List<WorkspaceAggregate>> GetListByUser(
         UserAggregate user, 
         IOrder<WorkspaceAggregate>? order,
+        IEnumerable<IFilter<WorkspaceAggregate>> filters,
         CancellationToken cancellationToken = default);
 
     Task<List<WorkspaceAggregate>> GetListByUserWithMemberships(UserAggregate user,
