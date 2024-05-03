@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Domain.Common.Models;
+﻿using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -17,5 +19,22 @@ internal static partial class Utils
         paginationInfo.PageSize.Should().Be(pageSize);
         paginationInfo.CurrentPage.Should().Be(currentPage);
         return true;
+    }
+    
+    internal static bool Assert<TEntity>(
+        this IOrder<TEntity>? order,
+        string? stringOrder,
+        IEnumerable<OrderProperty<TEntity>> orderProperties)
+    {
+        if (stringOrder is null) return order is null;
+        var split = stringOrder.Split(Order<object>.Separator);
+
+        order!.Type
+            .Should()
+            .Be(split[1] == Order<object>.Descending ? OrderType.Descending : OrderType.Ascending);
+    
+        return orderProperties
+            .Single(op => op.Identifier == split[0])
+            .PropertySelector == order.PropertySelector;
     }
 }
