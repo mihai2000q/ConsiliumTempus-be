@@ -23,13 +23,22 @@ internal static partial class Utils
 
         internal static void AssertGetCollectionResponse(
             GetCollectionWorkspaceResponse response,
-            List<WorkspaceAggregate> workspaces)
+            List<WorkspaceAggregate> workspaces,
+            bool isOrdered = false)
         {
             response.Workspaces.Should().HaveCount(workspaces.Count);
-            response.Workspaces
-                .OrderBy(c => c.Name)
-                .Zip(workspaces)
-                .Should().AllSatisfy(x => AssertWorkspaceResponse(x.First, x.Second));
+            if (isOrdered)
+            {
+                response.Workspaces.Zip(workspaces)
+                    .Should().AllSatisfy(x => AssertWorkspaceResponse(x.First, x.Second));
+            }
+            else
+            {
+                response.Workspaces
+                    .OrderBy(w => w.Id)
+                    .Zip(workspaces.OrderBy(w => w.Id.Value))
+                    .Should().AllSatisfy(x => AssertWorkspaceResponse(x.First, x.Second));
+            }
         }
 
         internal static void AssertCreation(
