@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.Workspace;
+using ConsiliumTempus.Domain.Common.Validation;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.Workspace.Queries.GetCollection;
 
@@ -45,6 +46,16 @@ internal static class GetCollectionWorkspaceQueryValidatorData
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
                 order: "not_a_property.asc");
             Add(query, nameof(query.Order), 1);
+        }
+    }
+    
+    internal class GetInvalidNameQueries : TheoryData<GetCollectionWorkspaceQuery, string, int>
+    {
+        public GetInvalidNameQueries()
+        {
+            var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                name: new string('*', PropertiesValidation.Workspace.NameMaximumLength + 1));
+            Add(query, nameof(query.Name), 1);
         }
     }
 }

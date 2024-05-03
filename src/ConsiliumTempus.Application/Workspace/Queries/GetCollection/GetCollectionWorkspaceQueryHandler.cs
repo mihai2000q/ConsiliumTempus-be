@@ -1,7 +1,10 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Common.Filters;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Orders;
+using ConsiliumTempus.Domain.Workspace;
 using ErrorOr;
 using MediatR;
 
@@ -19,10 +22,15 @@ public sealed class GetCollectionWorkspaceQueryHandler(
         if (user is null) return Errors.User.NotFound;
 
         var order = WorkspaceOrder.Parse(query.Order);
+        var filters = new List<IFilter<WorkspaceAggregate>>
+        {
+            new Filters.Workspace.NameFilter(query.Name)
+        };
         
         var workspaces = await workspaceRepository.GetListByUser(
             user,
             order,
+            filters,
             cancellationToken);
         
         return new GetCollectionWorkspaceResult(
