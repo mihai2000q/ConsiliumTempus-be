@@ -4,7 +4,7 @@ using ConsiliumTempus.Domain.Common.Validation;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Queries.GetCollection;
 
-internal static class GetCollectionProjectForWorkspaceQueryValidatorData
+internal static class GetCollectionProjectQueryValidatorData
 {
     internal class GetValidQueries : TheoryData<GetCollectionProjectQuery>
     {
