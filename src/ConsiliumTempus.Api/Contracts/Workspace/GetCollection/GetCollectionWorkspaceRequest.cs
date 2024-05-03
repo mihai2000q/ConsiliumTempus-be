@@ -5,4 +5,6 @@ namespace ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 public sealed class GetCollectionWorkspaceRequest
 {
     [FromQuery] public string? Order { get; init; }
+    
+    [FromQuery] public string? Name { get; init; }
 }

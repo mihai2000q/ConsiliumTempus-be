@@ -42,6 +42,27 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         var expectedWorkspaces = user.Memberships.Select(m => m.Workspace).ToList();
         Utils.Workspace.AssertGetCollectionResponse(response!, expectedWorkspaces);
     }
+    
+    [Fact]
+    public async Task GetCollectionWorkspace_WhenRequestHasNameFilter_ShouldReturnWorkspacesFilteredByName()
+    {
+        // Arrange
+        var user = WorkspaceData.Users.First();
+        var query = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
+            name: "sOme");
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Get($"api/Workspaces?name={query.Name}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
+        var expectedWorkspaces = user.Memberships.Select(m => m.Workspace)
+            .Where(w => w.Name.Value.ToLower().Contains(query.Name!.ToLower()))
+            .ToList();
+        Utils.Workspace.AssertGetCollectionResponse(response!, expectedWorkspaces);
+    }
 
     [Fact]
     public async Task GetCollectionWorkspace_WhenRequestHasOrderNameAsc_ShouldReturnWorkspacesOrderedByNameAscending()

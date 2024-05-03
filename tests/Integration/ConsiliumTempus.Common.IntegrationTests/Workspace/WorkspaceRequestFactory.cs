@@ -18,11 +18,13 @@ public static class WorkspaceRequestFactory
     }
     
     public static GetCollectionWorkspaceRequest CreateGetCollectionWorkspaceRequest(
-        string? order = null)
+        string? order = null,
+        string? name = null)
     {
         return new GetCollectionWorkspaceRequest
         {
-            Order = order
+            Order = order,
+            Name = name
         };
     }
 
