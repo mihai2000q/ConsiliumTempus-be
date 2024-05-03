@@ -1,9 +1,11 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using Microsoft.EntityFrameworkCore;
@@ -37,11 +39,14 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         return projectSprint?.Project.Workspace;
     }
 
-    public async Task<List<WorkspaceAggregate>> GetListByUser(UserAggregate user,
+    public async Task<List<WorkspaceAggregate>> GetListByUser(
+        UserAggregate user,
+        IOrder<WorkspaceAggregate>? order,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Workspaces
             .Where(w => w.Memberships.Any(m => m.User == user))
+            .ApplyOrder(order)
             .ToListAsync(cancellationToken);
     }
 

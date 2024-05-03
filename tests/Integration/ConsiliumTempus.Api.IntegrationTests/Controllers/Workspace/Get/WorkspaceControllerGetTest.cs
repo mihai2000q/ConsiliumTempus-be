@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Get;
@@ -17,10 +18,11 @@ public class WorkspaceControllerGetTest(WebAppFactory factory)
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
+        var query = WorkspaceRequestFactory.CreateGetWorkspaceRequest(workspace.Id.Value);
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users[0]);
-        var outcome = await Client.Get($"api/workspaces/{workspace.Id}");
+        var outcome = await Client.Get($"api/workspaces/{query.Id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -32,10 +34,10 @@ public class WorkspaceControllerGetTest(WebAppFactory factory)
     public async Task GetWorkspace_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var query = WorkspaceRequestFactory.CreateGetWorkspaceRequest();
 
         // Act
-        var outcome = await Client.Get($"api/workspaces/{id}");
+        var outcome = await Client.Get($"api/workspaces/{query.Id}");
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);

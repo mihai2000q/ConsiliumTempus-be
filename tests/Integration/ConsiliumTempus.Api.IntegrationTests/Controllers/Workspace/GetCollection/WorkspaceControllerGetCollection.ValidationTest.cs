@@ -4,38 +4,36 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Update;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.GetCollection;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerUpdateValidationTest(WebAppFactory factory)
+public class WorkspaceControllerGetCollectionValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task UpdateWorkspace_WhenCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task GetCollectionWorkspace_WhenQueryIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var workspace = WorkspaceData.Workspaces.First();
-        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: workspace.Id.Value);
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
-        var outcome = await Client.Put("api/workspaces", request);
+        var outcome = await Client.Get($"api/workspaces?order={request.Order}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]
-    public async Task UpdateWorkspace_WhenCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task GetCollectionWorkspace_WhenQueryIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
-        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(
-            id: Guid.Empty, 
-            name: string.Empty);
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
+            order: "something wrong");
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
-        var outcome = await Client.Put("api/workspaces", request);
+        var outcome = await Client.Get($"api/workspaces?order={request.Order}");
 
         // Assert
         await outcome.ValidateValidationErrors();

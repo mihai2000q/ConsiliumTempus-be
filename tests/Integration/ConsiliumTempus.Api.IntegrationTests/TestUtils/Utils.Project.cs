@@ -34,11 +34,12 @@ internal static partial class Utils
 
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectResponse response,
-            IEnumerable<ProjectAggregate> projects,
+            IReadOnlyList<ProjectAggregate> projects,
             int totalCount,
             int? totalPages,
             bool isOrdered = false)
         {
+            response.Projects.Count.Should().Be(projects.Count);
             if (isOrdered)
             {
                 response.Projects

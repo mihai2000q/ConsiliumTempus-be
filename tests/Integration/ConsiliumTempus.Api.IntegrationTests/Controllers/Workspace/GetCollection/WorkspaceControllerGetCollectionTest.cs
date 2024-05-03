@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.GetCollection;
@@ -13,26 +14,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task GetWorkspaceCollectionForUser_WhenIsSuccessful_ShouldReturnAllTheWorkspacesForUser()
-    {
-        // Arrange
-        var user = WorkspaceData.Users.First();
-        var workspaces = user.Memberships.Select(m => m.Workspace)
-            .OrderBy(w => w.Name.Value)
-            .ToList();
-
-        // Act
-        Client.UseCustomToken(user);
-        var outcome = await Client.Get("api/Workspaces");
-
-        // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
-        Utils.Workspace.AssertGetCollectionResponse(response!, workspaces);
-    }
-
-    [Fact]
-    public async Task GetWorkspaceCollectionForUser_WhenUserIsNotFound_ShouldReturnUserNotFoundError()
+    public async Task GetCollectionWorkspace_WhenUserIsNotFound_ShouldReturnUserNotFoundError()
     {
         // Arrange
 
@@ -42,5 +24,43 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
 
         // Assert
         await outcome.ValidateError(Errors.User.NotFound);
+    }
+
+    [Fact]
+    public async Task GetCollectionWorkspace_WhenIsSuccessful_ShouldReturnWorkspaces()
+    {
+        // Arrange
+        var user = WorkspaceData.Users.First();
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Get("api/Workspaces");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
+        var expectedWorkspaces = user.Memberships.Select(m => m.Workspace).ToList();
+        Utils.Workspace.AssertGetCollectionResponse(response!, expectedWorkspaces);
+    }
+
+    [Fact]
+    public async Task GetCollectionWorkspace_WhenRequestHasOrderNameAsc_ShouldReturnWorkspacesOrderedByNameAscending()
+    {
+        // Arrange
+        var user = WorkspaceData.Users.First();
+        var query = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
+            order: "name.asc");
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Get($"api/Workspaces?order={query.Order}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
+        var expectedWorkspaces = user.Memberships.Select(m => m.Workspace)
+            .OrderBy(w => w.Name.Value)
+            .ToList();
+        Utils.Workspace.AssertGetCollectionResponse(response!, expectedWorkspaces, true);
     }
 }

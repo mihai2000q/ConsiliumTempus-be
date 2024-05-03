@@ -32,9 +32,10 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCollection(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetCollection(GetCollectionWorkspaceRequest request,
+        CancellationToken cancellationToken)
     {
-        var query = new GetCollectionWorkspaceQuery();
+        var query = Mapper.Map<GetCollectionWorkspaceQuery>(request);
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(

@@ -30,6 +30,76 @@ test.describe('should allow operations on the workspace entity', () => {
     })
   })
 
+  test.describe('should allow to get collection of workspaces', async () => {
+    test('should get collection of workspaces', async ({ request }) => {
+      const createWorkspaceRequest: CreateWorkspaceRequest = {
+        name: "Some Workspace",
+        description: "Some Workspace description that i am not sure what to put",
+      }
+      await createWorkspace(request, createWorkspaceRequest)
+
+      const response = await request.get('/api/workspaces', useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json).toStrictEqual({
+        workspaces: expect.arrayContaining([
+          {
+            id: expect.any(String),
+            name: expect.any(String),
+            description: expect.any(String)
+          },
+          {
+            id: expect.any(String),
+            name: createWorkspaceRequest.name,
+            description: createWorkspaceRequest.description
+          }
+        ]),
+      })
+      expect(json.workspaces).toHaveLength(2)
+    })
+
+    test('should get collection of workspaces ordered by create date time descending', async ({ request }) => {
+      const createWorkspaceRequest1: CreateWorkspaceRequest = {
+        name: "Some Workspace",
+        description: "Some Workspace description that i am not sure what to put",
+      }
+      await createWorkspace(request, createWorkspaceRequest1)
+      const createWorkspaceRequest2: CreateWorkspaceRequest = {
+        name: "Some New Workspace",
+        description: "",
+      }
+      await createWorkspace(request, createWorkspaceRequest2)
+
+      const response = await request.get('/api/workspaces?order=created_date_time.desc', useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json).toStrictEqual({
+        workspaces: [
+          {
+            id: expect.any(String),
+            name: createWorkspaceRequest2.name,
+            description: createWorkspaceRequest2.description
+          },
+          {
+            id: expect.any(String),
+            name: createWorkspaceRequest1.name,
+            description: createWorkspaceRequest1.description
+          },
+          {
+            id: expect.any(String),
+            name: expect.any(String),
+            description: expect.any(String)
+          }
+        ],
+      })
+      expect(json.workspaces).toHaveLength(3)
+    })
+  })
+
   test('should get collection of workspaces', async ({ request }) => {
     const response = await request.get('/api/workspaces', useToken())
 
@@ -126,5 +196,4 @@ test.describe('should allow operations on the workspace entity', () => {
     const newWorkspaces = await getWorkspaces(request)
     expect(newWorkspaces).not.toStrictEqual(expect.arrayContaining([workspace]))
   })
-
 })

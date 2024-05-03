@@ -22,9 +22,11 @@ internal static partial class Utils
             return true;
         }
 
-        internal static bool AssertGetCollectionQuery(GetCollectionWorkspaceQuery query)
+        internal static bool AssertGetCollectionQuery(
+            GetCollectionWorkspaceQuery query, 
+            GetCollectionWorkspaceRequest request)
         {
-            query.Should().Be(new GetCollectionWorkspaceQuery());
+            query.Order.Should().Be(request.Order);
             return true;
         }
 

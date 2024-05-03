@@ -5,6 +5,7 @@
     * [Get Workspace Request](#get-workspace-request)
     * [Get Workspace Response](#get-workspace-response)
   * [Get Collection](#get-collection)
+    * [Get Collection Workspace Request](#get-collection-workspace-request)
     * [Get Collection Workspace Response](#get-collection-workspace-response)
   * [Create](#create)
     * [Create Workspace Request](#create-workspace-request)
@@ -52,8 +53,12 @@ Returns the workspace data.
 Anyone logged in can request this data, but it will return only the workspaces that are linked to this user.
 
 ```js
-GET {{host}}/api/workspaces
+GET {{host}}/api/workspaces?order=name.asc
 ```
+
+### Get Collection Workspace Request
+
+Sends optional query parameters for ordering, filtering, and page-based pagination.
 
 #### Get Collection Workspace Response
 

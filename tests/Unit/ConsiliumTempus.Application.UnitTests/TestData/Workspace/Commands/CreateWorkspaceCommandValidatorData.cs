@@ -4,7 +4,7 @@ using ConsiliumTempus.Domain.Common.Validation;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.Workspace.Commands;
 
-public static class CreateWorkspaceCommandValidatorData
+internal static class CreateWorkspaceCommandValidatorData
 {
     internal class GetValidCommands : TheoryData<CreateWorkspaceCommand>
     {
