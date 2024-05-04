@@ -7,6 +7,7 @@ using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.Orders;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
@@ -45,9 +46,17 @@ public class GetCollectionWorkspaceQueryHandlerTest
         _workspaceRepository
             .GetListByUser(
                 Arg.Any<UserAggregate>(), 
+                Arg.Any<PaginationInfo?>(),
                 Arg.Any<IOrder<WorkspaceAggregate>?>(),
                 Arg.Any<IEnumerable<IFilter<WorkspaceAggregate>>>())
             .Returns(workspaces);
+
+        const int workspacesCount = 25;
+        _workspaceRepository
+            .GetListByUserCount(
+                Arg.Any<UserAggregate>(), 
+                Arg.Any<IEnumerable<IFilter<WorkspaceAggregate>>>())
+            .Returns(workspacesCount);
 
         // Act
         var outcome = await _uut.Handle(query, default);
@@ -60,13 +69,26 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .Received(1)
             .GetListByUser(
                 Arg.Is<UserAggregate>(u => u == user),
+                Arg.Is<PaginationInfo?>(p => p.Assert(query.PageSize, query.CurrentPage)),
                 Arg.Is<IOrder<WorkspaceAggregate>?>(o => 
                     o.Assert(query.Order, WorkspaceOrder.OrderProperties)),
+                Arg.Is<IEnumerable<IFilter<WorkspaceAggregate>>>(filters => 
+                    Utils.Workspace.AssertGetCollectionFilters(filters, query)));
+        
+        await _workspaceRepository
+            .Received(1)
+            .GetListByUserCount(
+                Arg.Is<UserAggregate>(u => u == user),
                 Arg.Is<IEnumerable<IFilter<WorkspaceAggregate>>>(filters => 
                     Utils.Workspace.AssertGetCollectionFilters(filters, query)));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Workspaces.Should().BeEquivalentTo(workspaces);
+        outcome.Value.TotalCount.Should().Be(workspacesCount);
+        if (query.PageSize is null || query.CurrentPage is null)
+            outcome.Value.TotalPages.Should().BeNull();
+        else
+            outcome.Value.TotalPages.Should().Be(workspacesCount / query.PageSize);
     }
     
     [Fact]

@@ -17,7 +17,9 @@ internal static class GetCollectionWorkspaceQueryHandlerData
             Add(query);
             
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
-                order: "last_activity.desc");
+                order: "last_activity.desc",
+                pageSize: 25,
+                currentPage: 1);
             Add(query);
         }
     }

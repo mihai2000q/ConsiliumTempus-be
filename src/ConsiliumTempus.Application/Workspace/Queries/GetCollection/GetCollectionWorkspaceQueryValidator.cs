@@ -9,6 +9,12 @@ public sealed class GetCollectionWorkspaceQueryValidator : AbstractValidator<Get
 {
     public GetCollectionWorkspaceQueryValidator()
     {
+        RuleFor(q => q.PageSize)
+            .GreaterThan(0);
+
+        RuleFor(q => q.CurrentPage)
+            .GreaterThan(0);
+
         RuleFor(q => q.Order)
             .HasOrderFormat(WorkspaceOrder.OrderProperties);
 
