@@ -33,7 +33,7 @@ public static class QueryableExtensions
         if (paginationInfo is null) return queryable;
         var (pageSize, currentPage) = paginationInfo;
         return queryable
-            .Skip(pageSize * currentPage)
+            .Skip(pageSize * (currentPage - 1))
             .Take(pageSize);
     }
 

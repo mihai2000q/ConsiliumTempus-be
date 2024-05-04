@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User;
@@ -41,6 +42,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
 
     public async Task<List<WorkspaceAggregate>> GetListByUser(
         UserAggregate user,
+        PaginationInfo? paginationInfo,
         IOrder<WorkspaceAggregate>? order,
         IEnumerable<IFilter<WorkspaceAggregate>> filters,
         CancellationToken cancellationToken = default)
@@ -49,7 +51,19 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .Where(w => w.Memberships.Any(m => m.User == user))
             .ApplyFilters(filters)
             .ApplyOrder(order)
+            .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<int> GetListByUserCount(
+        UserAggregate user,
+        IEnumerable<IFilter<WorkspaceAggregate>> filters,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Workspaces
+            .Where(w => w.Memberships.Any(m => m.User == user))
+            .ApplyFilters(filters)
+            .CountAsync(cancellationToken);
     }
 
     public async Task<List<WorkspaceAggregate>> GetListByUserWithMemberships(UserAggregate user,
