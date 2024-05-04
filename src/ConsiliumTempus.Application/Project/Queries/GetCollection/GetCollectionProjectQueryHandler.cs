@@ -23,9 +23,7 @@ public sealed class GetCollectionProjectQueryHandler(
     {
         var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
 
-        var paginationInfo = query.PageSize is null || query.CurrentPage is null
-            ? default
-            : new PaginationInfo(query.PageSize.Value, query.CurrentPage.Value);
+        var paginationInfo = PaginationInfo.Create(query.PageSize, query.CurrentPage);
         var order = ProjectOrder.Parse(query.Order);
         var filters = new List<IFilter<ProjectAggregate>>
         {
