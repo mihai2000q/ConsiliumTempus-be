@@ -11,7 +11,7 @@ public class WorkspaceControllerUpdateValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task UpdateWorkspace_WhenCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task UpdateWorkspace_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
@@ -26,7 +26,7 @@ public class WorkspaceControllerUpdateValidationTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task UpdateWorkspace_WhenCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task UpdateWorkspace_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(

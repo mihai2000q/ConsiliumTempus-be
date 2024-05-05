@@ -15,7 +15,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task GetProjectCollection_WhenRequestIsEmpty_ShouldReturnUserProjects()
+    public async Task GetCollectionProject_WhenRequestIsEmpty_ShouldReturnUserProjects()
     {
         // Arrange
         var user = ProjectData.Users.First();
@@ -38,7 +38,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetProjectCollection_WhenRequestHasWorkspaceId_ShouldReturnProjectsFilteredByWorkspace()
+    public async Task GetCollectionProject_WhenRequestHasWorkspaceId_ShouldReturnProjectsFilteredByWorkspace()
     {
         // Arrange
         var user = ProjectData.Users.First();
@@ -62,7 +62,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetProjectCollection_WhenRequestHasName_ShouldReturnProjectsFilteredByName()
+    public async Task GetCollectionProject_WhenRequestHasName_ShouldReturnProjectsFilteredByName()
     {
         // Arrange
         var user = ProjectData.Users.First();
@@ -86,7 +86,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetProjectCollection_WhenRequestHasIsFavorite_ShouldReturnProjectsFilteredByIsFavorite()
+    public async Task GetCollectionProject_WhenRequestHasIsFavorite_ShouldReturnProjectsFilteredByIsFavorite()
     {
         // Arrange
         var user = ProjectData.Users.First();
@@ -110,7 +110,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetProjectCollection_WhenRequestHasIsPrivate_ShouldReturnProjectsFilteredByIsPrivate()
+    public async Task GetCollectionProject_WhenRequestHasIsPrivate_ShouldReturnProjectsFilteredByIsPrivate()
     {
         // Arrange
         var user = ProjectData.Users.First();
@@ -134,7 +134,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetProjectCollection_WhenRequestHasNameDescOrder_ShouldReturnProjectsOrderedByDescendingName()
+    public async Task GetCollectionProject_WhenRequestHasNameDescOrder_ShouldReturnProjectsOrderedByDescendingName()
     {
         // Arrange
         var user = ProjectData.Users.First();
@@ -161,7 +161,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetProjectCollection_WhenRequestHasPaginationAndOrder_ShouldReturnProjectsOrderedAndPaginated()
+    public async Task GetCollectionProject_WhenRequestHasPaginationAndOrder_ShouldReturnProjectsOrderedAndPaginated()
     {
         // Arrange
         var user = ProjectData.Users.First();

@@ -11,7 +11,7 @@ public class AuthenticationControllerRefreshValidationTest(WebAppFactory factory
     : BaseIntegrationTest(factory, new AuthData(), true)
 {
     [Fact]
-    public async Task Refresh_WhenCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task Refresh_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var refreshToken = AuthData.RefreshTokens.First();
@@ -28,7 +28,7 @@ public class AuthenticationControllerRefreshValidationTest(WebAppFactory factory
     }
 
     [Fact]
-    public async Task Refresh_WhenCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task Refresh_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRefreshRequest(refreshToken: "", token: "");
