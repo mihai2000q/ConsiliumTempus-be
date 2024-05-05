@@ -40,28 +40,36 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
         var expectedWorkspaces = user.Memberships.Select(m => m.Workspace).ToList();
-        Utils.Workspace.AssertGetCollectionResponse(response!, expectedWorkspaces);
+        Utils.Workspace.AssertGetCollectionResponse(
+            response!,
+            expectedWorkspaces,
+            expectedWorkspaces.Count,
+            null);
     }
-    
+
     [Fact]
     public async Task GetCollectionWorkspace_WhenRequestHasNameFilter_ShouldReturnWorkspacesFilteredByName()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
-        var query = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
             name: "sOme");
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/Workspaces?name={query.Name}");
+        var outcome = await Client.Get($"api/Workspaces?name={request.Name}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
         var expectedWorkspaces = user.Memberships.Select(m => m.Workspace)
-            .Where(w => w.Name.Value.ToLower().Contains(query.Name!.ToLower()))
+            .Where(w => w.Name.Value.ToLower().Contains(request.Name!.ToLower()))
             .ToList();
-        Utils.Workspace.AssertGetCollectionResponse(response!, expectedWorkspaces);
+        Utils.Workspace.AssertGetCollectionResponse(
+            response!,
+            expectedWorkspaces,
+            expectedWorkspaces.Count,
+            null);
     }
 
     [Fact]
@@ -69,12 +77,12 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     {
         // Arrange
         var user = WorkspaceData.Users.First();
-        var query = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
             order: "name.asc");
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/Workspaces?order={query.Order}");
+        var outcome = await Client.Get($"api/Workspaces?order={request.Order}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -82,6 +90,47 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         var expectedWorkspaces = user.Memberships.Select(m => m.Workspace)
             .OrderBy(w => w.Name.Value)
             .ToList();
-        Utils.Workspace.AssertGetCollectionResponse(response!, expectedWorkspaces, true);
+        Utils.Workspace.AssertGetCollectionResponse(
+            response!, 
+            expectedWorkspaces, 
+            expectedWorkspaces.Count,
+            null,
+            true);
+    }
+
+    [Fact]
+    public async Task GetCollectionWorkspace_WhenRequestHasPaginationAndOrder_ShouldReturnWorkspacesPaginatedAndOrdered()
+    {
+        // Arrange
+        var user = WorkspaceData.Users.First();
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
+            order: "name.desc",
+            pageSize: 2,
+            currentPage: 1);
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Get($"api/Workspaces?order={request.Order}" +
+                                       $"&pageSize={request.PageSize}" +
+                                       $"&currentPage={request.CurrentPage}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
+
+        var workspaces = user.Memberships.Select(m => m.Workspace)
+            .OrderByDescending(w => w.Name.Value)
+            .ToList();
+        var expectedWorkspaces = workspaces
+            .Skip(request.PageSize!.Value * (request.CurrentPage!.Value - 1))
+            .Take(request.PageSize.Value)
+            .ToList();
+        
+        Utils.Workspace.AssertGetCollectionResponse(
+            response!, 
+            expectedWorkspaces, 
+            workspaces.Count,
+            workspaces.Count / request.PageSize,
+            isOrdered: true);
     }
 }

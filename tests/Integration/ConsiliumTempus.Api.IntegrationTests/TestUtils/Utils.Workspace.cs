@@ -24,6 +24,8 @@ internal static partial class Utils
         internal static void AssertGetCollectionResponse(
             GetCollectionWorkspaceResponse response,
             List<WorkspaceAggregate> workspaces,
+            int totalCount,
+            int? totalPages,
             bool isOrdered = false)
         {
             response.Workspaces.Should().HaveCount(workspaces.Count);
@@ -39,6 +41,9 @@ internal static partial class Utils
                     .Zip(workspaces.OrderBy(w => w.Id.Value))
                     .Should().AllSatisfy(x => AssertWorkspaceResponse(x.First, x.Second));
             }
+
+            response.TotalCount.Should().Be(totalCount);
+            response.TotalPages.Should().Be(totalPages);
         }
 
         internal static void AssertCreation(

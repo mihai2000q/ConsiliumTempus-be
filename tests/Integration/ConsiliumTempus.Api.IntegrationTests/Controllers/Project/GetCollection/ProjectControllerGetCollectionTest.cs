@@ -185,7 +185,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
             .ToList();
         var expectedProjects = userProjects
             .OrderBy(p => p.Name.Value)
-            .Skip(request.PageSize!.Value * request.CurrentPage!.Value)
+            .Skip(request.PageSize!.Value * (request.CurrentPage!.Value - 1))
             .Take(request.PageSize.Value)
             .ToList();
 

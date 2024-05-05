@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
-import { createWorkspace, getWorkspaces } from "../utils/workspaces.utils";
+import { createWorkspace, createWorkspaces, getWorkspaces, PersonalWorkspaceName } from "../utils/workspaces.utils";
 import { deleteUser, registerUser } from "../utils/users.utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
 import UpdateWorkspaceRequest from "../types/requests/workspace/UpdateWorkspaceRequest";
@@ -47,7 +47,7 @@ test.describe('should allow operations on the workspace entity', () => {
         workspaces: expect.arrayContaining([
           {
             id: expect.any(String),
-            name: expect.any(String),
+            name: PersonalWorkspaceName,
             description: expect.any(String)
           },
           {
@@ -61,16 +61,7 @@ test.describe('should allow operations on the workspace entity', () => {
     })
 
     test('should get collection of workspaces ordered by create date time descending', async ({ request }) => {
-      const createWorkspaceRequest1: CreateWorkspaceRequest = {
-        name: "Some Workspace",
-        description: "Some Workspace description that i am not sure what to put",
-      }
-      await createWorkspace(request, createWorkspaceRequest1)
-      const createWorkspaceRequest2: CreateWorkspaceRequest = {
-        name: "Some New Workspace",
-        description: "",
-      }
-      await createWorkspace(request, createWorkspaceRequest2)
+      const createWorkspaceRequests = await createWorkspaces(request, 2)
 
       const response = await request.get('/api/workspaces?order=created_date_time.desc', useToken())
 
@@ -81,17 +72,17 @@ test.describe('should allow operations on the workspace entity', () => {
         workspaces: [
           {
             id: expect.any(String),
-            name: createWorkspaceRequest2.name,
-            description: createWorkspaceRequest2.description
+            name: createWorkspaceRequests[0].name,
+            description: createWorkspaceRequests[0].description
           },
           {
             id: expect.any(String),
-            name: createWorkspaceRequest1.name,
-            description: createWorkspaceRequest1.description
+            name: createWorkspaceRequests[1].name,
+            description: createWorkspaceRequests[1].description
           },
           {
             id: expect.any(String),
-            name: expect.any(String),
+            name: PersonalWorkspaceName,
             description: expect.any(String)
           }
         ],
@@ -122,6 +113,41 @@ test.describe('should allow operations on the workspace entity', () => {
       })
       expect(json.workspaces).toHaveLength(1)
     })
+
+    test('should get collection of workspaces paginated and ordered by name ascending', async ({ request }) => {
+      const totalCount = 5
+      const createWorkspaceRequests = await createWorkspaces(request, totalCount - 1)
+
+      const pageSize = 6
+      const currentPage = 1
+      const response = await request.get(`/api/workspaces?order=name.asc&pageSize=${pageSize}&currentPage=${currentPage}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const start = pageSize * (currentPage - 1)
+      const expectedWorkspaces: any[] = createWorkspaceRequests
+        .slice(start, start + pageSize)
+        .map(r => {
+          return {
+            id: expect.any(String),
+            name: r.name,
+            description: r.description,
+          }
+        })
+      expectedWorkspaces.unshift({
+        id: expect.any(String),
+        name: PersonalWorkspaceName,
+        description: expect.any(String)
+      })
+
+      const json = await response.json()
+      expect(json).toStrictEqual({
+        workspaces: expectedWorkspaces,
+        totalCount: totalCount,
+        totalPages: Math.floor(totalCount / pageSize),
+      })
+      expect(json.workspaces).toHaveLength(totalCount < pageSize ? totalCount : pageSize)
+    })
   })
 
   test('should get collection of workspaces', async ({ request }) => {
@@ -134,7 +160,7 @@ test.describe('should allow operations on the workspace entity', () => {
       workspaces: expect.arrayContaining([
         {
           id: expect.any(String),
-          name: expect.any(String),
+          name: PersonalWorkspaceName,
           description: expect.any(String)
         }
       ]),

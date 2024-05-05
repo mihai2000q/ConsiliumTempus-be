@@ -200,8 +200,9 @@ test.describe('should allow operations on the project entity', () => {
       expect(response.ok()).toBeTruthy()
 
 
+      const start = pageSize * (currentPage - 1)
       const expectedProjects = createProjectRequests
-        .slice(pageSize * currentPage, pageSize * currentPage + pageSize)
+        .slice(start, start + pageSize)
         .map(r => {
           return {
             id: expect.any(String),
@@ -218,7 +219,7 @@ test.describe('should allow operations on the project entity', () => {
         totalCount: totalCount,
         totalPages: Math.floor(totalCount / pageSize),
       })
-      expect(json.projects).toHaveLength(pageSize)
+      expect(json.projects).toHaveLength(totalCount < pageSize ? totalCount : pageSize)
     })
   })
 

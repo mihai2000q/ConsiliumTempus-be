@@ -18,11 +18,15 @@ public static class WorkspaceRequestFactory
     }
 
     public static GetCollectionWorkspaceRequest CreateGetCollectionWorkspaceRequest(
+        int? pageSize = null,
+        int? currentPage = null,
         string? order = null,
         string? name = null)
     {
         return new GetCollectionWorkspaceRequest
         {
+            PageSize = pageSize,
+            CurrentPage = currentPage,
             Order = order,
             Name = name
         };
