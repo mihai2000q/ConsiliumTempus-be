@@ -56,6 +56,8 @@ test.describe('should allow operations on the workspace entity', () => {
             description: createWorkspaceRequest.description
           }
         ]),
+        totalCount: 2,
+        totalPages: null
       })
       expect(json.workspaces).toHaveLength(2)
     })
@@ -72,13 +74,13 @@ test.describe('should allow operations on the workspace entity', () => {
         workspaces: [
           {
             id: expect.any(String),
-            name: createWorkspaceRequests[0].name,
-            description: createWorkspaceRequests[0].description
+            name: createWorkspaceRequests[1].name,
+            description: createWorkspaceRequests[1].description
           },
           {
             id: expect.any(String),
-            name: createWorkspaceRequests[1].name,
-            description: createWorkspaceRequests[1].description
+            name: createWorkspaceRequests[0].name,
+            description: createWorkspaceRequests[0].description
           },
           {
             id: expect.any(String),
@@ -86,6 +88,8 @@ test.describe('should allow operations on the workspace entity', () => {
             description: expect.any(String)
           }
         ],
+        totalCount: 3,
+        totalPages: null
       })
       expect(json.workspaces).toHaveLength(3)
     })
@@ -110,6 +114,8 @@ test.describe('should allow operations on the workspace entity', () => {
             description: createWorkspaceRequest.description
           }
         ],
+        totalCount: 1,
+        totalPages: null
       })
       expect(json.workspaces).toHaveLength(1)
     })
@@ -148,24 +154,6 @@ test.describe('should allow operations on the workspace entity', () => {
       })
       expect(json.workspaces).toHaveLength(totalCount < pageSize ? totalCount : pageSize)
     })
-  })
-
-  test('should get collection of workspaces', async ({ request }) => {
-    const response = await request.get('/api/workspaces', useToken())
-
-    expect(response.ok()).toBeTruthy()
-
-    const json = await response.json()
-    expect(json).toStrictEqual({
-      workspaces: expect.arrayContaining([
-        {
-          id: expect.any(String),
-          name: PersonalWorkspaceName,
-          description: expect.any(String)
-        }
-      ]),
-    })
-    expect(json.workspaces).toHaveLength(1)
   })
 
   test('should create workspace', async ({ request }) => {
