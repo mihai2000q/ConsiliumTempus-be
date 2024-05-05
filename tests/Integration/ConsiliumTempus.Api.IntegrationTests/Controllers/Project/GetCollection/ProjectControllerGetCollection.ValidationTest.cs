@@ -12,7 +12,7 @@ public class ProjectControllerGetCollectionValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task GetProjectCollection_WhenQueryIsValid_ShouldReturnSuccessResponse()
+    public async Task GetCollectionProject_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
 
@@ -25,7 +25,7 @@ public class ProjectControllerGetCollectionValidationTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetProjectCollection_WhenQueryIsInvalid_ShouldReturnValidationErrors()
+    public async Task GetCollectionProject_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(

@@ -11,7 +11,7 @@ public class AuthenticationControllerLoginValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new AuthData(), true)
 {
     [Fact]
-    public async Task Login_WhenCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task Login_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateLoginRequest();
@@ -24,7 +24,7 @@ public class AuthenticationControllerLoginValidationTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task Login_WhenCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task Login_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateLoginRequest(email: "no email");

@@ -2,6 +2,8 @@ import { APIRequestContext, expect } from "@playwright/test";
 import { useToken } from "./utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
 
+export const PersonalWorkspaceName = "My Workspace"
+
 export async function getPersonalWorkspace(request: APIRequestContext) {
   const response = await request.get('/api/workspaces', useToken())
   expect(response.ok()).toBeTruthy()
@@ -30,4 +32,24 @@ export async function createWorkspace(
   expect(response.ok()).toBeTruthy()
 
   return (await getWorkspaces(request)).filter((w: { name: string }) => w.name === body.name)[0]
+}
+
+export async function createWorkspaces(request: APIRequestContext, count: number) {
+  const requests = []
+
+  const createWorkspaceRequest1: CreateWorkspaceRequest = {
+    name: "Workspace 1",
+    description: "some description"
+  }
+  await createWorkspace(request, createWorkspaceRequest1)
+
+  requests.push(createWorkspaceRequest1)
+  for (let i = 2; i <= count; i++) {
+    const createRequest = { ...createWorkspaceRequest1 }
+    createRequest.name = "Workspace " + i
+    await createWorkspace(request, createRequest)
+    requests.push(createRequest)
+  }
+
+  return requests
 }

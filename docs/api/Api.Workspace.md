@@ -53,13 +53,15 @@ Returns the workspace data.
 Anyone logged in can request this data, but it will return only the workspaces that are linked to this user.
 
 ```js
-GET {{host}}/api/workspaces?order=name.asc&name=worksp
+GET {{host}}/api/workspaces?pageSize=2&currentPage=1order=name.asc&name=worksp
 ```
 
 ### Get Collection Workspace Request
 
 Sends optional query parameters for ordering, filtering, and page-based pagination.
 
+- **pageSize** is used to specify the size of the page
+- **currentPage** is used to specify the current page
 - **order** is used to order the collection
 - **name** is used to filter by name
 
@@ -80,7 +82,9 @@ Returns the workspaces.
       "name": "Workspace 2",
       "description": "This is the second workspace"
     }
-  ]
+  ],
+  "totalCount": 4,
+  "totalPages": 2
 }
 ```
 

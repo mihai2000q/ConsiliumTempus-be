@@ -11,10 +11,10 @@ public class WorkspaceControllerGetCollectionValidationTest(WebAppFactory factor
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task GetCollectionWorkspace_WhenQueryIsValid_ShouldReturnSuccessResponse()
+    public async Task GetCollectionWorkspace_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(order: "name.asc");
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
@@ -25,15 +25,19 @@ public class WorkspaceControllerGetCollectionValidationTest(WebAppFactory factor
     }
 
     [Fact]
-    public async Task GetCollectionWorkspace_WhenQueryIsInvalid_ShouldReturnValidationErrors()
+    public async Task GetCollectionWorkspace_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
-            order: "something wrong");
+            order: "something wrong",
+            pageSize: -1,
+            currentPage: 0);
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
-        var outcome = await Client.Get($"api/workspaces?order={request.Order}");
+        var outcome = await Client.Get($"api/workspaces?order={request.Order}" +
+                                       $"&pageSize={request.PageSize}" +
+                                       $"&currentPage={request.CurrentPage}");
 
         // Assert
         await outcome.ValidateValidationErrors();

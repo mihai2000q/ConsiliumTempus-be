@@ -11,7 +11,7 @@ public class ProjectSprintControllerCreateValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectSprintData())
 {
     [Fact]
-    public async Task CreateProjectSprint_WhenCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task CreateProjectSprint_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var project = ProjectSprintData.Projects.First();
@@ -26,7 +26,7 @@ public class ProjectSprintControllerCreateValidationTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task CreateProjectSprint_WhenCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task CreateProjectSprint_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(

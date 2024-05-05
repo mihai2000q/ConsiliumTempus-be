@@ -86,7 +86,10 @@ public class WorkspaceControllerTest
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
 
-        var result = new GetCollectionWorkspaceResult(WorkspaceFactory.CreateList());
+        var result = new GetCollectionWorkspaceResult(
+            WorkspaceFactory.CreateList(),
+            25,
+            null);
         _mediator
             .Send(Arg.Any<GetCollectionWorkspaceQuery>())
             .Returns(result);

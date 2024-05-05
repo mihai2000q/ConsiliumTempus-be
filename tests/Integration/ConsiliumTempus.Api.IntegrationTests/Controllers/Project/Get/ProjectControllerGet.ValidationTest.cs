@@ -11,7 +11,7 @@ public class ProjectControllerGetValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task GetProject_WhenQueryIsValid_ShouldReturnSuccessResponse()
+    public async Task GetProject_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetProjectRequest(
@@ -26,7 +26,7 @@ public class ProjectControllerGetValidationTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetProject_WhenQueryIsInvalid_ShouldReturnValidationErrors()
+    public async Task GetProject_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetProjectRequest(Guid.Empty);

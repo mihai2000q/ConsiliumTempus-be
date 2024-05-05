@@ -26,6 +26,8 @@ internal static partial class Utils
             GetCollectionWorkspaceQuery query, 
             GetCollectionWorkspaceRequest request)
         {
+            query.PageSize.Should().Be(request.PageSize);
+            query.CurrentPage.Should().Be(request.CurrentPage);
             query.Order.Should().Be(request.Order);
             query.Name.Should().Be(request.Name);
             return true;

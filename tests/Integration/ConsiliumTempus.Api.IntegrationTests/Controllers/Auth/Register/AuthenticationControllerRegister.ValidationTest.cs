@@ -11,7 +11,7 @@ public class AuthenticationControllerRegisterValidationTest(WebAppFactory factor
     : BaseIntegrationTest(factory, new AuthData(), true)
 {
     [Fact]
-    public async Task Register_WhenCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task Register_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRegisterRequest(
@@ -27,7 +27,7 @@ public class AuthenticationControllerRegisterValidationTest(WebAppFactory factor
     }
 
     [Fact]
-    public async Task Register_WhenCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task Register_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRegisterRequest(
