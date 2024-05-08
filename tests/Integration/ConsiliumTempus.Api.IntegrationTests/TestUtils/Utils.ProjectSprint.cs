@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using FluentAssertions.Extensions;
 
@@ -8,6 +9,15 @@ internal static partial class Utils
 {
     internal static class ProjectSprint
     {
+        internal static void AssertGetResponse(
+            GetProjectSprintResponse response,
+            Domain.Project.Entities.ProjectSprint sprint)
+        {
+            response.Name.Should().Be(sprint.Name.Value);
+            response.StartDate.Should().Be(sprint.StartDate);
+            response.EndDate.Should().Be(sprint.EndDate);
+        }
+        
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectSprintResponse response,
             IReadOnlyList<Domain.Project.Entities.ProjectSprint> sprints)
