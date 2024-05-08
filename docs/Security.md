@@ -52,20 +52,21 @@ The workspace roles are:
 The permissions will be classified on their respective component:
 
 - Workspace
-  - Read
-  - Update
-  - Delete
+    - Read
+    - Update
+    - Delete
 - Project
-  - Create
-  - Read
-  - Read Collection
-  - Update
-  - Delete
+    - Create
+    - Read
+    - Read Collection
+    - Update
+    - Delete
 - Project Sprint
-  - Create
-  - Read Collection
-  - Update
-  - Delete
+    - Create
+    - Read
+    - Read Collection
+    - Update
+    - Delete
 
 ## Workspace Roles to Permissions
 
@@ -82,6 +83,7 @@ The Access Control List of the system is the following:
 | Update Project                 |      | X      | X     |
 | Delete Project                 |      |        | X     |
 | Create Project Sprint          |      |        | X     |
+| Read Project Sprint            | X    | X      | X     |
 | Read Collection Project Sprint | X    | X      | X     |
 | Update Project Sprint          |      | X      | X     |
 | Delete Project Sprint          |      |        | X     |

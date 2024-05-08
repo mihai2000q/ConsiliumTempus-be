@@ -17,12 +17,7 @@ internal static class HttpRequestReader
         return string.IsNullOrEmpty(id) ? null : id;
     }
 
-    internal static Task<string?> GetStringIdFromBody(HttpRequest request)
-    {
-        return GetPropertyFromBody(request, "id");
-    }
-
-    internal static async Task<string?> GetPropertyFromBody(HttpRequest request, string property)
+    internal static async Task<string?> GetStringIdFromBody(HttpRequest request, string property = "id")
     {
         request.EnableBuffering();
         var body = await JsonSerializer.DeserializeAsync<Dictionary<string, JsonElement>>(request.Body);

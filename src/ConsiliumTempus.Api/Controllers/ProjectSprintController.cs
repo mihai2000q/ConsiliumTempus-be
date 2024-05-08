@@ -17,6 +17,7 @@ namespace ConsiliumTempus.Api.Controllers;
 [Route("Projects/Sprints")]
 public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
+    [HasPermission(Permissions.ReadProjectSprint)]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get(GetProjectSprintRequest request, CancellationToken cancellationToken)
     {

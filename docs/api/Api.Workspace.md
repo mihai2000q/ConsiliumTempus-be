@@ -60,10 +60,10 @@ GET {{host}}/api/workspaces?pageSize=2&currentPage=1order=name.asc&name=worksp
 
 Sends optional query parameters for ordering, filtering, and page-based pagination.
 
-- **pageSize** is used to specify the size of the page
-- **currentPage** is used to specify the current page
-- **order** is used to order the collection
-- **name** is used to filter by name
+- _**pageSize**_ is used to specify the size of the page
+- _**currentPage**_ is used to specify the current page
+- _**order**_ is used to order the collection
+- _**name**_ is used to filter by name
 
 #### Get Collection Workspace Response
 

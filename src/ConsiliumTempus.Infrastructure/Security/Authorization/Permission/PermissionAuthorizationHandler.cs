@@ -70,6 +70,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.CreateProjectSprint or
             Permissions.ReadCollectionProjectSprint => await workspaceProvider.GetByProject(ProjectId.Create(guidId)),
 
+            Permissions.ReadProjectSprint or
             Permissions.UpdateProjectSprint or
             Permissions.DeleteProjectSprint => await workspaceProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
 
@@ -87,13 +88,14 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.UpdateWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
 
-            Permissions.CreateProject => await HttpRequestReader.GetPropertyFromBody(request, ToIdProperty<WorkspaceAggregate>()),
+            Permissions.CreateProject => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<WorkspaceAggregate>()),
             Permissions.ReadProject => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.ReadCollectionProject => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<WorkspaceAggregate>()),
             Permissions.UpdateProject => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProject => HttpRequestReader.GetStringIdFromRoute(request),
 
-            Permissions.CreateProjectSprint => await HttpRequestReader.GetPropertyFromBody(request, ToIdProperty<ProjectAggregate>()),
+            Permissions.CreateProjectSprint => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<ProjectAggregate>()),
+            Permissions.ReadProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.ReadCollectionProjectSprint => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<ProjectAggregate>()),
             Permissions.UpdateProjectSprint => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),
