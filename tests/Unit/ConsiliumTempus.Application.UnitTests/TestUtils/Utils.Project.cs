@@ -91,5 +91,19 @@ internal static partial class Utils
 
             return true;
         }
+        
+        internal static void AssertProjectSprint(
+            Domain.Project.Entities.ProjectSprint outcome,
+            Domain.Project.Entities.ProjectSprint expected)
+        {
+            outcome.Id.Should().Be(expected.Id);
+            outcome.Name.Should().Be(expected.Name);
+            outcome.StartDate.Should().Be(expected.StartDate);
+            outcome.EndDate.Should().Be(expected.EndDate);
+            outcome.Project.Should().Be(expected.Project);
+            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
+            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Stages.Should().BeEquivalentTo(expected.Stages);
+        }
     }
 }
