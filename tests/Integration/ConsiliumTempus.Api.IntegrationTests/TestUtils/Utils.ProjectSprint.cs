@@ -10,8 +10,9 @@ internal static partial class Utils
     {
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectSprintResponse response,
-            IEnumerable<Domain.Project.Entities.ProjectSprint> sprints)
+            IReadOnlyList<Domain.Project.Entities.ProjectSprint> sprints)
         {
+            response.Sprints.Should().HaveCount(sprints.Count);
             response.Sprints
                 .OrderBy(s => s.Name)
                 .Zip(sprints.OrderBy(s => s.Name.Value))

@@ -24,8 +24,9 @@ internal static partial class Utils
 
         internal static void AssertGetCollectionForUserResponse(
             GetCollectionProjectForUserResponse response,
-            IEnumerable<ProjectAggregate> projects)
+            IReadOnlyList<ProjectAggregate> projects)
         {
+            response.Projects.Should().HaveCount(projects.Count);
             response.Projects
                 .OrderBy(p => p.Id)
                 .Zip(projects.OrderBy(p => p.Id.Value))
@@ -39,7 +40,7 @@ internal static partial class Utils
             int? totalPages,
             bool isOrdered = false)
         {
-            response.Projects.Count.Should().Be(projects.Count);
+            response.Projects.Should().HaveCount(projects.Count);
             if (isOrdered)
             {
                 response.Projects
