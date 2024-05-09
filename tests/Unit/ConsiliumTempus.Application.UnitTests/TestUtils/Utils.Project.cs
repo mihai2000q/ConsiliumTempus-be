@@ -1,8 +1,12 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Project.Commands.Create;
+using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
+using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Delete;
+using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Update;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Filters;
@@ -62,23 +66,6 @@ internal static partial class Utils
             outcome.Sprints.Should().BeEquivalentTo(expected.Sprints);
         }
 
-        internal static bool AssertGetCollectionProjectOrder(
-            IOrder<ProjectAggregate>? order,
-            GetCollectionProjectQuery query)
-        {
-            if (query.Order is null) return order is null;
-            var split = query.Order.Split(Order<object>.Separator);
-
-            order!.Type
-                .Should()
-                .Be(split[1] == Order<object>.Descending ? OrderType.Descending : OrderType.Ascending);
-
-            return ProjectOrder
-                .OrderProperties
-                .Single(op => op.Identifier == split[0])
-                .PropertySelector == order.PropertySelector;
-        }
-
         internal static bool AssertGetCollectionProjectFilters(
             IReadOnlyList<IFilter<ProjectAggregate>> filters,
             GetCollectionProjectQuery query)
@@ -88,6 +75,17 @@ internal static partial class Utils
             filters.OfType<Filters.Project.NameFilter>().Single().Value.Should().Be(query.Name);
             filters.OfType<Filters.Project.IsFavoriteFilter>().Single().Value.Should().Be(query.IsFavorite);
             filters.OfType<Filters.Project.IsPrivateFilter>().Single().Value.Should().Be(query.IsPrivate);
+
+            return true;
+        }
+        
+        internal static bool AssertFromDeleteCommand(
+            ProjectAggregate project,
+            DeleteProjectCommand command)
+        {
+            project.Id.Value.Should().Be(command.Id);
+
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
             return true;
         }
@@ -143,6 +141,18 @@ internal static partial class Utils
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+
+        internal static bool AssertFromDeleteCommand(
+            Domain.Project.Entities.ProjectSprint sprint,
+            DeleteProjectSprintCommand command)
+        {
+            sprint.Id.Value.Should().Be(command.Id);
+
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+
+            return true;
         }
     }
 

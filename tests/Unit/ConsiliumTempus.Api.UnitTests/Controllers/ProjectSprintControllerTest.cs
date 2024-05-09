@@ -11,7 +11,7 @@ using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.Get;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
-using ConsiliumTempus.Common.UnitTests.Project.Entities.ProjectSprint;
+using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Errors;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;

@@ -2,7 +2,7 @@
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
-namespace ConsiliumTempus.Common.UnitTests.Project.Entities.ProjectSprint;
+namespace ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 
 public static class ProjectSprintCommandFactory
 {

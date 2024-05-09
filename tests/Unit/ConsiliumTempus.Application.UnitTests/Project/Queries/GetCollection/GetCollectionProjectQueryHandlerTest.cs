@@ -67,8 +67,9 @@ public class GetCollectionProjectQueryHandlerTest
             .Received(1)
             .GetListByUser(
                 Arg.Is<UserId>(uId => uId == user.Id),
-                Arg.Is<PaginationInfo>(pi => pi.Assert(query.PageSize, query.CurrentPage)),
-                Arg.Is<IOrder<ProjectAggregate>?>(o => o.Assert(query.Order, ProjectOrder.OrderProperties)),
+                Arg.Is<PaginationInfo>(pi => pi.AssertPagination(query.PageSize, query.CurrentPage)),
+                Arg.Is<IOrder<ProjectAggregate>?>(o => 
+                    o.AssertOrder(query.Order, ProjectOrder.OrderProperties)),
                 Arg.Is<IReadOnlyList<IFilter<ProjectAggregate>>>(filters =>
                     Utils.Project.AssertGetCollectionProjectFilters(filters, query)));
 

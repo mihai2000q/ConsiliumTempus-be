@@ -13,7 +13,7 @@ internal static partial class Utils
         error.FirstError.Should().Be(expectedError);
     }
 
-    internal static bool Assert(this PaginationInfo? paginationInfo, int? pageSize, int? currentPage)
+    internal static bool AssertPagination(this PaginationInfo? paginationInfo, int? pageSize, int? currentPage)
     {
         if (paginationInfo is null) return true;
         paginationInfo.PageSize.Should().Be(pageSize);
@@ -21,7 +21,7 @@ internal static partial class Utils
         return true;
     }
     
-    internal static bool Assert<TEntity>(
+    internal static bool AssertOrder<TEntity>(
         this IOrder<TEntity>? order,
         string? stringOrder,
         IEnumerable<OrderProperty<TEntity>> orderProperties)

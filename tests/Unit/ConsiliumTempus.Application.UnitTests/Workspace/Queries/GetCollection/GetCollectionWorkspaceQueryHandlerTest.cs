@@ -69,9 +69,9 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .Received(1)
             .GetListByUser(
                 Arg.Is<UserAggregate>(u => u == user),
-                Arg.Is<PaginationInfo?>(p => p.Assert(query.PageSize, query.CurrentPage)),
+                Arg.Is<PaginationInfo?>(p => p.AssertPagination(query.PageSize, query.CurrentPage)),
                 Arg.Is<IOrder<WorkspaceAggregate>?>(o => 
-                    o.Assert(query.Order, WorkspaceOrder.OrderProperties)),
+                    o.AssertOrder(query.Order, WorkspaceOrder.OrderProperties)),
                 Arg.Is<IEnumerable<IFilter<WorkspaceAggregate>>>(filters => 
                     Utils.Workspace.AssertGetCollectionFilters(filters, query)));
         
