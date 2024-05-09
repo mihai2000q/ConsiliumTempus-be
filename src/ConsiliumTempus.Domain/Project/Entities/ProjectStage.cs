@@ -43,6 +43,11 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             sprint);
     }
 
+    public void Update(Name name)
+    {
+        Name = name;
+    }
+
     public void AddTask(ProjectTaskAggregate taskAggregate)
     {
         _tasks.Add(taskAggregate);
