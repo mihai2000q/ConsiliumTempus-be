@@ -1,8 +1,10 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.Get;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
 
@@ -33,6 +35,17 @@ internal static partial class Utils
             CreateProjectSprintRequest request)
         {
             command.ProjectId.Should().Be(request.ProjectId);
+            command.Name.Should().Be(request.Name);
+            command.StartDate.Should().Be(request.StartDate);
+            command.EndDate.Should().Be(request.EndDate);
+            return true;
+        }
+        
+        internal static bool AssertUpdateCommand(
+            UpdateProjectSprintCommand command,
+            UpdateProjectSprintRequest request)
+        {
+            command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
             command.StartDate.Should().Be(request.StartDate);
             command.EndDate.Should().Be(request.EndDate);

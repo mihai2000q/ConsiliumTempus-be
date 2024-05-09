@@ -3,8 +3,10 @@ using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.Get;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
 using ConsiliumTempus.Domain.Project.Entities;
@@ -20,6 +22,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
         Get(config);
         GetCollectionMappings(config);
         CreateMappings(config);
+        UpdateMappings(config);
         DeleteMappings(config);
     }
     
@@ -47,6 +50,13 @@ public sealed class ProjectSprintMappingConfig : IRegister
         config.NewConfig<CreateProjectSprintRequest, CreateProjectSprintCommand>();
 
         config.NewConfig<CreateProjectSprintResult, CreateProjectSprintResponse>();
+    }
+    
+    private static void UpdateMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateProjectSprintRequest, UpdateProjectSprintCommand>();
+
+        config.NewConfig<UpdateProjectSprintResult, UpdateProjectSprintResponse>();
     }
 
     private static void DeleteMappings(TypeAdapterConfig config)
