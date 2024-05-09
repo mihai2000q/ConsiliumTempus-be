@@ -4,7 +4,7 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using ConsiliumTempus.Common.IntegrationTests.Project.Entities;
+using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,15 +29,15 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
-        response!.Message.Should().Be("Project Sprint created successfully!");
+        response!.Message.Should().Be("Project Sprint has been created successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
-        var createdProject = await dbContext.ProjectSprints
+        var createdSprint = await dbContext.ProjectSprints
             .Include(ps => ps.Project)
             .ThenInclude(p => p.Workspace)
             .SingleAsync(ps => ps.Name.Value == request.Name);
-        Utils.ProjectSprint.AssertCreation(createdProject, request);
+        Utils.ProjectSprint.AssertCreation(createdSprint, request);
     }
 
     [Fact]

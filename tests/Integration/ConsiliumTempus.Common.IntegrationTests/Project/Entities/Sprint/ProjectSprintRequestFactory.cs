@@ -4,7 +4,7 @@ using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
-namespace ConsiliumTempus.Common.IntegrationTests.Project.Entities;
+namespace ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
 
 public static class ProjectSprintRequestFactory
 {

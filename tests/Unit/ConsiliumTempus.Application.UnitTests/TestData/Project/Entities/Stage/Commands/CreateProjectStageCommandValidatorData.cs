@@ -1,7 +1,6 @@
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Stage;
 using ConsiliumTempus.Domain.Common.Validation;
-using ConsiliumTempus.Domain.Project.Entities;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Stage.Commands;
 
