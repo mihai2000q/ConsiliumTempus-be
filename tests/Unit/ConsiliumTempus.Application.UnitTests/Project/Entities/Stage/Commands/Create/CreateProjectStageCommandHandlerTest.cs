@@ -34,7 +34,7 @@ public class CreateProjectStageCommandHandlerTest
         var command = ProjectStageCommandFactory.CreateCreateProjectStageCommand();
 
         _projectSprintRepository
-            .GetWithStagesProjectAndWorkspace(Arg.Any<ProjectSprintId>())
+            .GetWithStagesAndWorkspace(Arg.Any<ProjectSprintId>())
             .ReturnsNull();
 
         // Act
@@ -43,7 +43,7 @@ public class CreateProjectStageCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithStagesProjectAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.ProjectSprintId));
+            .GetWithStagesAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.ProjectSprintId));
         _projectSprintRepository.DidNotReceive();
 
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
@@ -57,7 +57,7 @@ public class CreateProjectStageCommandHandlerTest
 
         var sprint = ProjectSprintFactory.Create();
         _projectSprintRepository
-            .GetWithStagesProjectAndWorkspace(Arg.Any<ProjectSprintId>())
+            .GetWithStagesAndWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);
 
         // Act
@@ -66,7 +66,7 @@ public class CreateProjectStageCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithStagesProjectAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.ProjectSprintId));
+            .GetWithStagesAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.ProjectSprintId));
         await _projectStageRepository
             .Received(1)
             .Add(Arg.Is<ProjectStage>(stage => Utils.ProjectStage.AssertFromCreateCommand(stage, command, sprint)));

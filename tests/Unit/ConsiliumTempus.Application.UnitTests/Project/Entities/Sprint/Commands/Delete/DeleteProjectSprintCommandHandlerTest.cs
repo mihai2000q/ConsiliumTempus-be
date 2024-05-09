@@ -31,7 +31,7 @@ public class DeleteProjectSprintCommandHandlerTest
 
         var projectSprint = ProjectSprintFactory.Create();
         _projectSprintRepository
-            .GetWithProjectAndWorkspace(Arg.Any<ProjectSprintId>())
+            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(projectSprint);
         
         // Act
@@ -40,7 +40,7 @@ public class DeleteProjectSprintCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithProjectAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
         _projectSprintRepository
             .Received(1)
             .Remove(Arg.Is<ProjectSprint>(ps => ps == projectSprint));
@@ -61,7 +61,7 @@ public class DeleteProjectSprintCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithProjectAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
         _projectSprintRepository
             .DidNotReceive()
             .Remove(Arg.Any<ProjectSprint>());

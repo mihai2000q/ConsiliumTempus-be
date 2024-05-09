@@ -7,9 +7,9 @@ public interface IProjectSprintRepository
 {
     Task<ProjectSprint?> Get(ProjectSprintId id, CancellationToken cancellationToken = default);
     
-    Task<ProjectSprint?> GetWithProjectAndWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default);
+    Task<ProjectSprint?> GetWithWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default);
 
-    Task<ProjectSprint?> GetWithStagesProjectAndWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default);
+    Task<ProjectSprint?> GetWithStagesAndWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default);
 
     Task<List<ProjectSprint>> GetListByProject(ProjectId projectId, CancellationToken cancellationToken = default);
 

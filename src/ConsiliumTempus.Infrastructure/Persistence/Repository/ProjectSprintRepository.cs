@@ -13,7 +13,7 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
         return await dbContext.ProjectSprints.FindAsync([id], cancellationToken);
     }
     
-    public async Task<ProjectSprint?> GetWithProjectAndWorkspace(ProjectSprintId id,
+    public async Task<ProjectSprint?> GetWithWorkspace(ProjectSprintId id,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.ProjectSprints
@@ -22,12 +22,12 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 
-    public async Task<ProjectSprint?> GetWithStagesProjectAndWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default)
+    public async Task<ProjectSprint?> GetWithStagesAndWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.ProjectSprints
+            .Include(ps => ps.Stages)
             .Include(ps => ps.Project)
             .ThenInclude(p => p.Workspace)
-            .Include(ps => ps.Stages)
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 

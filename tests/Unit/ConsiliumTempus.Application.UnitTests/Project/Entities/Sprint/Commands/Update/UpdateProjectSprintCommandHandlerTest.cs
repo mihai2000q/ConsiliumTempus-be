@@ -29,7 +29,7 @@ public class UpdateProjectSprintCommandHandlerTest
         // Arrange
         var sprint = ProjectSprintFactory.Create();
         _projectSprintRepository
-            .GetWithProjectAndWorkspace(Arg.Any<ProjectSprintId>())
+            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);
         
         var command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand(id: sprint.Id.Value);
@@ -40,7 +40,7 @@ public class UpdateProjectSprintCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithProjectAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateProjectSprintResult());
@@ -55,7 +55,7 @@ public class UpdateProjectSprintCommandHandlerTest
         var command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand();
 
         _projectSprintRepository
-            .GetWithProjectAndWorkspace(Arg.Any<ProjectSprintId>())
+            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .ReturnsNull();
         
         // Act
@@ -64,7 +64,7 @@ public class UpdateProjectSprintCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithProjectAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }
