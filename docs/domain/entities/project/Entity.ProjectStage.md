@@ -28,3 +28,7 @@ For database design checkout the [Project Stage Diagram](../../diagrams/entities
 ### Properties Validation
 
 - The **Name** cannot be longer than 100 characters
+
+### Domain Errors
+
+- **Not Found** when the project stage cannot be found
