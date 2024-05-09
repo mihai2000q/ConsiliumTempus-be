@@ -14,5 +14,8 @@ public enum Permissions
     ReadProjectSprint,
     ReadCollectionProjectSprint,
     UpdateProjectSprint,
-    DeleteProjectSprint
+    DeleteProjectSprint,
+    CreateProjectStage,
+    UpdateProjectStage,
+    DeleteProjectStage
 }

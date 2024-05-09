@@ -127,6 +127,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             Id = 13,
                             Name = "DeleteProjectSprint"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "CreateProjectStage"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "UpdateProjectStage"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "DeleteProjectStage"
                         });
                 });
 
@@ -285,6 +300,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         },
                         new
                         {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 15
+                        },
+                        new
+                        {
                             WorkspaceRoleId = 3,
                             PermissionId = 1
                         },
@@ -347,6 +367,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 3,
                             PermissionId = 13
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 14
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 15
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 16
                         });
                 });
 

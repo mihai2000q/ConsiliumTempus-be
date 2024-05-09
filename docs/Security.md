@@ -67,6 +67,10 @@ The permissions will be classified on their respective component:
     - Read Collection
     - Update
     - Delete
+- Project Stage
+    - Create
+    - Update
+    - Delete
 
 ## Workspace Roles to Permissions
 
@@ -87,3 +91,6 @@ The Access Control List of the system is the following:
 | Read Collection Project Sprint | X    | X      | X     |
 | Update Project Sprint          |      | X      | X     |
 | Delete Project Sprint          |      |        | X     |
+| Create Project Stage           |      |        | X     |
+| Update Project Stage           |      | X      | X     |
+| Delete Project Stage           |      |        | X     |

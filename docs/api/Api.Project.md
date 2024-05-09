@@ -18,7 +18,7 @@
 
 ## Project
 
-This is the controller that takes care of creating, reading, updating and deleting a Project.
+This is the controller that takes care of creating, updating, deleting and querying Projects.
 
 
 ### Get
@@ -139,7 +139,7 @@ POST {{host}}/api/projects
 
 #### Create Project Request
 
-Sends body data that the new workspace needs to be created.
+Sends body data that the new project needs to be created.
 
 ```json
 {
