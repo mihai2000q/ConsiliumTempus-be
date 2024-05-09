@@ -6,6 +6,7 @@ import { getPersonalWorkspace } from "../utils/workspaces.utils";
 import { createProject } from "../utils/projects.utils";
 import { createProjectSprint, getProjectSprints } from "../utils/project-sprint.utils";
 import CreateProjectSprintRequest from "../types/requests/project-sprint/CreateProjectSprintRequest";
+import UpdateProjectSprintRequest from "../types/requests/project-sprint/UpdateProjectSprintRequest";
 
 test.describe('should allow operations on the project entity', () => {
   let PROJECT_ID: string
@@ -94,6 +95,45 @@ test.describe('should allow operations on the project entity', () => {
     expect(sprints).toStrictEqual(expect.arrayContaining([
       {
         id: expect.any(String),
+        name: body.name,
+        startDate: body.startDate,
+        endDate: body.endDate
+      }
+    ]))
+  })
+
+  test('should update project sprint', async ({ request }) => {
+    const createProjectSprintRequest: CreateProjectSprintRequest = {
+      projectId: PROJECT_ID,
+      name: "Sprint 2",
+      startDate: "2024-01-12",
+      endDate: "2024-01-26"
+    }
+    const sprint = await createProjectSprint(request, createProjectSprintRequest)
+
+    const body: UpdateProjectSprintRequest = {
+      id: sprint.id,
+      name: "New Sprint",
+      startDate: null,
+      endDate: null
+    }
+    const response = await request.put('/api/projects/sprints', {
+      ...useToken(),
+      data: body
+    });
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const sprints = await getProjectSprints(request, PROJECT_ID)
+    expect(sprints).toHaveLength(2)
+    expect(sprints).not.toStrictEqual(expect.arrayContaining([sprint]))
+    expect(sprints).toStrictEqual(expect.arrayContaining([
+      {
+        id: body.id,
         name: body.name,
         startDate: body.startDate,
         endDate: body.endDate

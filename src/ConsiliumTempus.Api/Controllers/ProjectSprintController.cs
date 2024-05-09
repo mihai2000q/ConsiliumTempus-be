@@ -3,8 +3,10 @@ using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.Get;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -29,7 +31,7 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
             Problem
         );
     }
-    
+
     [HasPermission(Permissions.ReadCollectionProjectSprint)]
     [HttpGet]
     public async Task<IActionResult> GetCollection(GetCollectionProjectSprintRequest request,
@@ -53,6 +55,19 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
 
         return result.Match(
             createResult => Ok(Mapper.Map<CreateProjectSprintResponse>(createResult)),
+            Problem
+        );
+    }
+
+    [HasPermission(Permissions.UpdateProjectSprint)]
+    [HttpPut]
+    public async Task<IActionResult> Update(UpdateProjectSprintRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateProjectSprintCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateResult => Ok(Mapper.Map<UpdateProjectSprintResponse>(updateResult)),
             Problem
         );
     }
