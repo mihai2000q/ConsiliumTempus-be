@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Interfaces;
@@ -9,6 +10,7 @@ using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -104,6 +106,20 @@ internal static partial class Utils
             outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
             outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
             outcome.Stages.Should().BeEquivalentTo(expected.Stages);
+        }
+        
+        internal static void AssertFromUpdateCommand(
+            Domain.Project.Entities.ProjectSprint sprint,
+            UpdateProjectSprintCommand command)
+        {
+            sprint.Id.Value.Should().Be(command.Id);
+            sprint.Name.Value.Should().Be(command.Name);
+            sprint.StartDate.Should().Be(command.StartDate);
+            sprint.EndDate.Should().Be(command.EndDate);
+            sprint.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
     }
 }
