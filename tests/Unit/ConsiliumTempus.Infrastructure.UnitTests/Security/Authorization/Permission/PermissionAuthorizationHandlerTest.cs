@@ -1,18 +1,15 @@
 ﻿using System.Security.Claims;
-using System.Text.Json;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Enums;
-using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorization;
+using ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.JsonWebTokens;
 using NSubstitute.ReturnsExtensions;
 
@@ -149,33 +146,7 @@ public class PermissionAuthorizationHandlerTest
         ]));
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
-        switch (requestLocation)
-        {
-            case PermissionAuthorizationHandlerData.RequestLocation.Route:
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .RouteValues
-                    .Returns(new RouteValueDictionary());
-                break;
-            case PermissionAuthorizationHandlerData.RequestLocation.Query:
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .Query
-                    .Returns(new QueryCollection());
-                break;
-            case PermissionAuthorizationHandlerData.RequestLocation.Body:
-                var bodyStream = JsonSerializer.SerializeToUtf8Bytes(new Dictionary<string, string>());
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .Body
-                    .Returns(new MemoryStream(bodyStream));
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(requestLocation), requestLocation, null);
-        }
+        Utils.Authorization.MockEmptyHttpRequest(_httpContextAccessor, requestLocation);
 
         // Act
         await _uut.HandleAsync(context);
@@ -206,48 +177,14 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         const string stringId = "";
-        switch (requestLocation)
-        {
-            case PermissionAuthorizationHandlerData.RequestLocation.Route:
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .RouteValues
-                    .Returns(new RouteValueDictionary { [id ?? "id"] = stringId });
-                break;
-            case PermissionAuthorizationHandlerData.RequestLocation.Query:
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .Query
-                    .Returns(new QueryCollection(
-                        new Dictionary<string, StringValues> { [id ?? "id"] = stringId }));
-                break;
-            case PermissionAuthorizationHandlerData.RequestLocation.Body:
-                var bodyStream = JsonSerializer.SerializeToUtf8Bytes(
-                    new Dictionary<string, string> { [id ?? "id"] = stringId });
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .Body
-                    .Returns(new MemoryStream(bodyStream));
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(requestLocation), requestLocation, null);
-        }
-
-        _httpContextAccessor
-            .HttpContext!
-            .Request
-            .RouteValues
-            .Returns(new RouteValueDictionary { [id ?? "id"] = "" });
+        Utils.Authorization.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
 
         // Act
         await _uut.HandleAsync(context);
 
         // Assert
         _ = _httpContextAccessor
-            .Received(3)
+            .Received(2)
             .HttpContext;
         _workspaceProvider.DidNotReceive();
         _permissionProvider.DidNotReceive();
@@ -271,48 +208,14 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         const string stringId = "not guid";
-        switch (requestLocation)
-        {
-            case PermissionAuthorizationHandlerData.RequestLocation.Route:
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .RouteValues
-                    .Returns(new RouteValueDictionary { [id ?? "id"] = stringId });
-                break;
-            case PermissionAuthorizationHandlerData.RequestLocation.Query:
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .Query
-                    .Returns(new QueryCollection(
-                        new Dictionary<string, StringValues> { [id ?? "id"] = stringId }));
-                break;
-            case PermissionAuthorizationHandlerData.RequestLocation.Body:
-                var bodyStream = JsonSerializer.SerializeToUtf8Bytes(
-                    new Dictionary<string, string> { [id ?? "id"] = stringId });
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .Body
-                    .Returns(new MemoryStream(bodyStream));
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(requestLocation), requestLocation, null);
-        }
-
-        _httpContextAccessor
-            .HttpContext!
-            .Request
-            .RouteValues
-            .Returns(new RouteValueDictionary { [id ?? "id"] = "" });
+        Utils.Authorization.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
 
         // Act
         await _uut.HandleAsync(context);
 
         // Assert
         _ = _httpContextAccessor
-            .Received(3)
+            .Received(2)
             .HttpContext;
         _workspaceProvider.DidNotReceive();
         _permissionProvider.DidNotReceive();
@@ -337,37 +240,7 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.NewGuid().ToString();
-        switch (requestLocation)
-        {
-            case PermissionAuthorizationHandlerData.RequestLocation.Body:
-            {
-                var body = new Dictionary<string, string> { [id ?? "id"] = stringId };
-                var bodyStream = JsonSerializer.SerializeToUtf8Bytes(body);
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .Body
-                    .Returns(new MemoryStream(bodyStream));
-                break;
-            }
-            case PermissionAuthorizationHandlerData.RequestLocation.Route:
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .RouteValues
-                    .Returns(new RouteValueDictionary { [id ?? "id"] = stringId });
-                break;
-            case PermissionAuthorizationHandlerData.RequestLocation.Query:
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .Query
-                    .Returns(new QueryCollection(
-                        new Dictionary<string, StringValues> { [id ?? "id"] = stringId }));
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(requestLocation), requestLocation, null);
-        }
+        Utils.Authorization.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
 
         // Act
         await _uut.HandleAsync(context);
@@ -376,26 +249,7 @@ public class PermissionAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-
-        switch (provider)
-        {
-            case PermissionAuthorizationHandlerData.StringIdType.Workspace:
-                await _workspaceProvider
-                    .Received(1)
-                    .Get(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));
-                break;
-            case PermissionAuthorizationHandlerData.StringIdType.Project:
-                await _workspaceProvider
-                    .Received(1)
-                    .GetByProject(Arg.Is<ProjectId>(pId => pId.Value.ToString() == stringId));
-                break;
-            case PermissionAuthorizationHandlerData.StringIdType.ProjectSprint:
-                await _workspaceProvider
-                    .Received(1)
-                    .GetByProjectSprint(Arg.Is<ProjectSprintId>(psId => psId.Value.ToString() == stringId));
-                break;
-        }
-
+        await Utils.Authorization.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
         _permissionProvider.DidNotReceive();
 
         context.HasSucceeded.Should().BeTrue();
@@ -419,50 +273,10 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.NewGuid().ToString();
-        switch (requestLocation)
-        {
-            case PermissionAuthorizationHandlerData.RequestLocation.Body:
-            {
-                var body = new Dictionary<string, string> { [id ?? "id"] = stringId };
-                var bodyStream = JsonSerializer.SerializeToUtf8Bytes(body);
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .Body
-                    .Returns(new MemoryStream(bodyStream));
-                break;
-            }
-            case PermissionAuthorizationHandlerData.RequestLocation.Route:
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .RouteValues
-                    .Returns(new RouteValueDictionary { [id ?? "id"] = stringId });
-                break;
-            case PermissionAuthorizationHandlerData.RequestLocation.Query:
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .Query
-                    .Returns(new QueryCollection(
-                        new Dictionary<string, StringValues> { [id ?? "id"] = stringId }));
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(requestLocation), requestLocation, null);
-        }
+        Utils.Authorization.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
 
         var workspace = WorkspaceFactory.Create();
-        _workspaceProvider
-            .Get(Arg.Any<WorkspaceId>())
-            .Returns(workspace);
-
-        _workspaceProvider
-            .GetByProject(Arg.Any<ProjectId>())
-            .Returns(workspace);
-
-        _workspaceProvider
-            .GetByProjectSprint(Arg.Any<ProjectSprintId>())
-            .Returns(workspace);
+        Utils.Authorization.MockWorkspaceProvider(_workspaceProvider, workspace);
 
         _permissionProvider
             .GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>())
@@ -475,27 +289,7 @@ public class PermissionAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-
-        switch (provider)
-        {
-            case PermissionAuthorizationHandlerData.StringIdType.Workspace:
-                await _workspaceProvider
-                    .Received(1)
-                    .Get(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));
-                break;
-            case PermissionAuthorizationHandlerData.StringIdType.Project:
-                await _workspaceProvider
-                    .Received(1)
-                    .GetByProject(Arg.Is<ProjectId>(pId => pId.Value.ToString() == stringId));
-                break;
-            case PermissionAuthorizationHandlerData.StringIdType.ProjectSprint:
-                await _workspaceProvider
-                    .Received(1)
-                    .GetByProjectSprint(Arg.Is<ProjectSprintId>(psId => psId.Value.ToString() == stringId));
-                break;
-            default: throw new Exception();
-        }
-
+        await Utils.Authorization.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
         await _permissionProvider
             .Received(1)
             .GetPermissions(
@@ -523,50 +317,10 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.NewGuid().ToString();
-        switch (requestLocation)
-        {
-            case PermissionAuthorizationHandlerData.RequestLocation.Body:
-            {
-                var body = new Dictionary<string, string> { [id ?? "id"] = stringId };
-                var bodyStream = JsonSerializer.SerializeToUtf8Bytes(body);
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .Body
-                    .Returns(new MemoryStream(bodyStream));
-                break;
-            }
-            case PermissionAuthorizationHandlerData.RequestLocation.Route:
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .RouteValues
-                    .Returns(new RouteValueDictionary { [id ?? "id"] = stringId });
-                break;
-            case PermissionAuthorizationHandlerData.RequestLocation.Query:
-                _httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .Query
-                    .Returns(new QueryCollection(
-                        new Dictionary<string, StringValues> { [id ?? "id"] = stringId }));
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(requestLocation), requestLocation, null);
-        }
+        Utils.Authorization.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
 
         var workspace = WorkspaceFactory.Create();
-        _workspaceProvider
-            .Get(Arg.Any<WorkspaceId>())
-            .Returns(workspace);
-
-        _workspaceProvider
-            .GetByProject(Arg.Any<ProjectId>())
-            .Returns(workspace);
-
-        _workspaceProvider
-            .GetByProjectSprint(Arg.Any<ProjectSprintId>())
-            .Returns(workspace);
+        Utils.Authorization.MockWorkspaceProvider(_workspaceProvider, workspace);
 
         _permissionProvider
             .GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>())
@@ -579,27 +333,7 @@ public class PermissionAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-
-        switch (provider)
-        {
-            case PermissionAuthorizationHandlerData.StringIdType.Workspace:
-                await _workspaceProvider
-                    .Received(1)
-                    .Get(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));
-                break;
-            case PermissionAuthorizationHandlerData.StringIdType.Project:
-                await _workspaceProvider
-                    .Received(1)
-                    .GetByProject(Arg.Is<ProjectId>(pId => pId.Value.ToString() == stringId));
-                break;
-            case PermissionAuthorizationHandlerData.StringIdType.ProjectSprint:
-                await _workspaceProvider
-                    .Received(1)
-                    .GetByProjectSprint(Arg.Is<ProjectSprintId>(psId => psId.Value.ToString() == stringId));
-                break;
-            default: throw new Exception();
-        }
-
+        await Utils.Authorization.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
         await _permissionProvider
             .Received(1)
             .GetPermissions(

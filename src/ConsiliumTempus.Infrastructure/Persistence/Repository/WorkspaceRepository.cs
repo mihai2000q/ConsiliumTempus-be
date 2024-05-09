@@ -38,6 +38,18 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
 
         return projectSprint?.Project.Workspace;
     }
+    
+    public async Task<WorkspaceAggregate?> GetByProjectStage(ProjectStageId id,
+        CancellationToken cancellationToken = default)
+    {
+        var projectStage = await dbContext.ProjectStages
+            .Include(ps => ps.Sprint)
+            .ThenInclude(ps => ps.Project)
+            .ThenInclude(p => p.Workspace)
+            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
+
+        return projectStage?.Sprint.Project.Workspace;
+    }
 
     public async Task<List<WorkspaceAggregate>> GetListByUser(
         UserAggregate user,

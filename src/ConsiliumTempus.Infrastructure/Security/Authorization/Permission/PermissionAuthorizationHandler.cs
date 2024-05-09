@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
@@ -72,7 +73,11 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
 
             Permissions.ReadProjectSprint or
             Permissions.UpdateProjectSprint or
-            Permissions.DeleteProjectSprint => await workspaceProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
+            Permissions.DeleteProjectSprint or
+            Permissions.CreateProjectStage => await workspaceProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
+            
+            Permissions.UpdateProjectStage or
+            Permissions.DeleteProjectStage => await workspaceProvider.GetByProjectStage(ProjectStageId.Create(guidId)),
 
             _ => await workspaceProvider.Get(WorkspaceId.Create(guidId)),
         };
@@ -99,9 +104,18 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.ReadCollectionProjectSprint => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<ProjectAggregate>()),
             Permissions.UpdateProjectSprint => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),
+            
+            Permissions.CreateProjectStage => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<ProjectSprint>()),
+            Permissions.UpdateProjectStage => await HttpRequestReader.GetStringIdFromBody(request),
+            Permissions.DeleteProjectStage => HttpRequestReader.GetStringIdFromRoute(request),
             _ => throw new ArgumentOutOfRangeException(nameof(permission))
         };
     }
 
-    private static string ToIdProperty<T>() => typeof(T).Name.TruncateAggregate().ToLower().ToId();
+    private static string ToIdProperty<T>()
+    {
+        var property = typeof(T).Name.TruncateAggregate();
+        property = property[0].ToString().ToLower() + property[1..];
+        return property.ToId();
+    }
 }
