@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240424150212_InitialCreate")]
+    [Migration("20240509075358_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -114,16 +114,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             Id = 10,
-                            Name = "ReadCollectionProjectSprint"
+                            Name = "ReadProjectSprint"
                         },
                         new
                         {
                             Id = 11,
-                            Name = "UpdateProjectSprint"
+                            Name = "ReadCollectionProjectSprint"
                         },
                         new
                         {
                             Id = 12,
+                            Name = "UpdateProjectSprint"
+                        },
+                        new
+                        {
+                            Id = 13,
                             Name = "DeleteProjectSprint"
                         });
                 });
@@ -238,6 +243,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         },
                         new
                         {
+                            WorkspaceRoleId = 1,
+                            PermissionId = 11
+                        },
+                        new
+                        {
                             WorkspaceRoleId = 2,
                             PermissionId = 1
                         },
@@ -270,6 +280,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 2,
                             PermissionId = 11
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 12
                         },
                         new
                         {
@@ -330,6 +345,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 3,
                             PermissionId = 12
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 13
                         });
                 });
 

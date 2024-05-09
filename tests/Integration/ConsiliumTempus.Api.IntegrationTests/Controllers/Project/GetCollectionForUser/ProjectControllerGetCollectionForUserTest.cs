@@ -28,7 +28,8 @@ public class ProjectControllerGetCollectionForUserTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionForUserResponse(
             response!,
             ProjectData.Projects
-                .Where(p => p.Workspace.Memberships.Any(m => m.User == user)));
+                .Where(p => p.Workspace.Memberships.Any(m => m.User == user))
+                .ToList());
     }
 
     [Fact]

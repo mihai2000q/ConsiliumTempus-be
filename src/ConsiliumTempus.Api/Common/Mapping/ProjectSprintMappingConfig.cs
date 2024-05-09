@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Delete;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.Get;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
 using ConsiliumTempus.Domain.Project.Entities;
 using Mapster;
@@ -15,9 +17,18 @@ public sealed class ProjectSprintMappingConfig : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
+        Get(config);
         GetCollectionMappings(config);
         CreateMappings(config);
         DeleteMappings(config);
+    }
+    
+    private static void Get(TypeAdapterConfig config)
+    {
+        config.NewConfig<GetProjectSprintRequest, GetProjectSprintQuery>();
+
+        config.NewConfig<ProjectSprint, GetProjectSprintResponse>()
+            .Map(dest => dest.Name, src => src.Name.Value);
     }
 
     private static void GetCollectionMappings(TypeAdapterConfig config)

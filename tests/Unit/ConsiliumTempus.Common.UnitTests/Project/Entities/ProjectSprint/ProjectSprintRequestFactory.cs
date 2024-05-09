@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
@@ -6,12 +7,20 @@ namespace ConsiliumTempus.Common.UnitTests.Project.Entities.ProjectSprint;
 
 public static class ProjectSprintRequestFactory
 {
+    public static GetProjectSprintRequest CreateGetProjectSprintRequest(Guid? id = null)
+    {
+        return new GetProjectSprintRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
+    }
+    
     public static GetCollectionProjectSprintRequest CreateGetCollectionProjectSprintRequest(
-        Guid? projectId = null)
+        Guid? id = null)
     {
         return new GetCollectionProjectSprintRequest
         {
-            ProjectId = projectId ?? Guid.NewGuid()
+            ProjectId = id ?? Guid.NewGuid()
         };
     }
 

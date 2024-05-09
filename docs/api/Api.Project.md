@@ -64,13 +64,13 @@ GET {{host}}/api/projects?pageSize=2&currentPage=1&order=name.desc&workspaceId=1
 
 it sends optional query parameters to paginate, order or filter the projects by workspace, name, etc.
 
-- **pageSize** is used to specify the size of the page
-- **currentPage** is used to specify the current page
-- **order** is used to order the collection
-- **workspaceId** is used to order the projects by workspace
-- **name** is used to filter by name
-- **isFavorite** is used to filter by favorites
-- **isPrivate** is used to filter by accessibility
+- _**pageSize**_ is used to specify the size of the page
+- _**currentPage**_ is used to specify the current page
+- _**order**_ is used to order the collection
+- _**workspaceId**_ is used to order the projects by workspace
+- _**name**_ is used to filter by name
+- _**isFavorite**_ is used to filter by favorites
+- _**isPrivate**_ is used to filter by accessibility
 
 #### Get Collection Response
 

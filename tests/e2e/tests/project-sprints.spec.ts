@@ -25,6 +25,26 @@ test.describe('should allow operations on the project entity', () => {
     await deleteUser(request)
   })
 
+  test('should get project sprint', async ({ request }) => {
+    const createProjectSprintRequest: CreateProjectSprintRequest = {
+      projectId: PROJECT_ID,
+      name: "Project Sprint Name",
+      startDate: "2024-01-12",
+      endDate: "2024-01-26"
+    }
+    const projectSprint = await createProjectSprint(request, createProjectSprintRequest)
+
+    const response = await request.get(`/api/projects/sprints/${projectSprint.id}`, useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      name: createProjectSprintRequest.name,
+      startDate: createProjectSprintRequest.startDate,
+      endDate: createProjectSprintRequest.endDate,
+    })
+  })
+
   test('should get collection of project sprints', async ({ request }) => {
     const projectSprint = await createProjectSprint(request, {
       projectId: PROJECT_ID,

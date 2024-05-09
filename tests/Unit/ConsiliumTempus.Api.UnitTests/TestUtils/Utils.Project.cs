@@ -34,6 +34,8 @@ internal static partial class Utils
             GetCollectionProjectQuery query,
             GetCollectionProjectRequest request)
         {
+            query.PageSize.Should().Be(request.PageSize);
+            query.CurrentPage.Should().Be(request.CurrentPage);
             query.Order.Should().Be(request.Order);
             query.WorkspaceId.Should().Be(request.WorkspaceId);
             query.Name.Should().Be(request.Name);

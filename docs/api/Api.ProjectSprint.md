@@ -1,9 +1,12 @@
 # Consilium Tempus API
 
 * [Project Sprint](#project-sprint)
-  * [Get Collection](#create)
-    * [Get Collection Project Sprint Request](#create-project-sprint-request)
-    * [Get Collection Project Sprint Response](#create-project-sprint-response)
+  * [Get](#get)
+    * [Get Project Sprint Request](#get-project-sprint-request)
+    * [Get Project Sprint Response](#get-project-sprint-response)
+  * [Get Collection](#get-collection)
+    * [Get Collection Project Sprint Request](#get-collection-project-sprint-request)
+    * [Get Collection Project Sprint Response](#get-collection-project-sprint-response)
   * [Create](#create)
     * [Create Project Sprint Request](#create-project-sprint-request)
     * [Create Project Sprint Response](#create-project-sprint-response)
@@ -16,27 +19,48 @@
 This is the controller that takes care of creating, updating and deleting a Project Sprint.
 
 
+### Get
+
+Anyone that is part of a workspace can access the project sprints
+([Get Project Sprint Permission](../Security.md/#permissions)).
+
+```js
+POST {{host}}/api/projects/sprints/{id}
+```
+
+- **id** is a 36 characters strings
+
+#### Get Project Sprint Request
+
+Sends the id of the sprint as part of the route.
+
+#### Get Project Sprint Response
+
+Returns the project sprint.
+
+```json
+{
+  "name": "Sprint 1",
+  "startDate": "2022-10-10",
+  "endDate": "2022-10-24"
+}
+```
+
+
 ### Get Collection
 
 Anyone that is part of a workspace can access the project sprints
 ([Get Collection Project Sprint Permission](../Security.md/#permissions)).
 
 ```js
-POST {{host}}/api/projects/sprints
+POST {{host}}/api/projects/sprints?projectId=10000000-0000-0000-0000-000000000000
 ```
 
 #### Get Collection Project Sprint Request
 
-Sends body data that the new workspace needs to be created.
+Sends the project id as a query parameter.
 
-```json
-{
-  "projectId": "10000000-0000-0000-0000-000000000000",
-  "name": "Project Sprint Name",
-  "startDate": "2024-01-01",
-  "endDate": "2024-01-14"
-}
-```
+- **projectId** is used to specify the project that the sprint is part of
 
 #### Get Collection Project Sprint Response
 
