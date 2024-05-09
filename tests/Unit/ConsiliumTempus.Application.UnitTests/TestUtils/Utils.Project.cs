@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
+using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Filters;
@@ -12,6 +13,7 @@ using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -69,7 +71,7 @@ internal static partial class Utils
             order!.Type
                 .Should()
                 .Be(split[1] == Order<object>.Descending ? OrderType.Descending : OrderType.Ascending);
-    
+
             return ProjectOrder
                 .OrderProperties
                 .Single(op => op.Identifier == split[0])
@@ -101,13 +103,36 @@ internal static partial class Utils
             projectSprint.Name.Value.Should().Be(command.Name);
             projectSprint.StartDate.Should().Be(command.StartDate);
             projectSprint.EndDate.Should().Be(command.EndDate);
+            projectSprint.Stages.Should().BeEmpty();
+            projectSprint.DomainEvents.Should().BeEmpty();
 
             projectSprint.Project.Should().Be(project);
-            projectSprint.Project
-                .LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            projectSprint.Project.LastActivity
+                .Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
-            projectSprint.Project.Workspace
-                .LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            projectSprint.Project.Workspace.LastActivity
+                .Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+
+            return true;
+        }
+    }
+
+    internal static class ProjectStage
+    {
+        internal static bool AssertFromCreateCommand(
+            Domain.Project.Entities.ProjectStage projectStage,
+            CreateProjectStageCommand command,
+            Domain.Project.Entities.ProjectSprint sprint)
+        {
+            projectStage.Id.Value.Should().NotBeEmpty();
+            projectStage.Name.Value.Should().Be(command.Name);
+            projectStage.CustomOrderPosition.Value.Should().Be(sprint.Stages.Count);
+            projectStage.Sprint.Should().Be(sprint);
+            projectStage.Tasks.Should().BeEmpty();
+            projectStage.DomainEvents.Should().BeEmpty();
+
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
             return true;
         }

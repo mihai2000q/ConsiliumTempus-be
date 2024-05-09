@@ -19,6 +19,7 @@ internal static partial class Utils
             membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             membership.User.Should().Be(user);
             membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+            membership.DomainEvents.Should().BeEmpty();
 
             membership.Workspace.Id.Value.Should().NotBeEmpty();
             membership.Workspace.Name.Value.Should().Be(workspaceName);
