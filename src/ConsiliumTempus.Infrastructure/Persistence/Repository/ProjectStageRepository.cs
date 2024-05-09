@@ -14,7 +14,18 @@ public sealed class ProjectStageRepository(ConsiliumTempusDbContext dbContext) :
             .Include(ps => ps.Sprint)
             .ThenInclude(ps => ps.Project)
             .ThenInclude(p => p.Workspace)
-            .SingleAsync(ps => ps.Id == id, cancellationToken);
+            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
+    }
+
+    public async Task<ProjectStage?> GetWithStagesAndWorkspace(ProjectStageId id, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.ProjectStages
+            .Include(ps => ps.Sprint)
+            .ThenInclude(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
+            .Include(ps => ps.Sprint)
+            .ThenInclude(ps => ps.Project)
+            .ThenInclude(p => p.Workspace)
+            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 
     public async Task Add(ProjectStage stage, CancellationToken cancellationToken = default)

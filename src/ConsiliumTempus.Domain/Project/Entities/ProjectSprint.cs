@@ -75,7 +75,7 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
     public void RemoveStage(ProjectStage stage)
     {
         if (!_stages.Remove(stage)) return;
-        for (var i = stage.CustomOrderPosition.Value + 1; i < stage.Sprint.Stages.Count; i++)
+        for (var i = stage.CustomOrderPosition.Value; i < stage.Sprint.Stages.Count; i++)
         {
             stage.Sprint.Stages[i].DecrementCustomOrderPosition();
         }

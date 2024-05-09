@@ -9,14 +9,17 @@ namespace ConsiliumTempus.Application.Project.Entities.Stage.Commands.Delete;
 public sealed class DeleteProjectStageCommandHandler(IProjectStageRepository projectStageRepository)
     : IRequestHandler<DeleteProjectStageCommand, ErrorOr<DeleteProjectStageResult>>
 {
-    public async Task<ErrorOr<DeleteProjectStageResult>> Handle(DeleteProjectStageCommand command, CancellationToken cancellationToken)
+    public async Task<ErrorOr<DeleteProjectStageResult>> Handle(DeleteProjectStageCommand command,
+        CancellationToken cancellationToken)
     {
-        var stage = await projectStageRepository.GetWithWorkspace(ProjectStageId.Create(command.Id), cancellationToken);
+        var stage = await projectStageRepository.GetWithStagesAndWorkspace(
+            ProjectStageId.Create(command.Id),
+            cancellationToken);
         if (stage is null) return Errors.ProjectStage.NotFound;
-        
+
         stage.Sprint.RemoveStage(stage);
         stage.Sprint.Project.RefreshActivity();
-        
+
         return new DeleteProjectStageResult();
     }
 }
