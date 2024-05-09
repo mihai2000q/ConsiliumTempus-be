@@ -175,5 +175,17 @@ internal static partial class Utils
 
             return true;
         }
+
+        internal static void AssertFromUpdateCommand(
+            Domain.Project.Entities.ProjectStage stage,
+            UpdateProjectStageCommand command)
+        {
+            stage.Id.Value.Should().Be(command.Id);
+            stage.Name.Value.Should().Be(command.Name);
+
+            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+
     }
 }

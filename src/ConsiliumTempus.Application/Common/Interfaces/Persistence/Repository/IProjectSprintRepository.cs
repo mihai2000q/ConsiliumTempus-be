@@ -6,7 +6,7 @@ namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 public interface IProjectSprintRepository
 {
     Task<ProjectSprint?> Get(ProjectSprintId id, CancellationToken cancellationToken = default);
-    
+
     Task<ProjectSprint?> GetWithWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default);
 
     Task<ProjectSprint?> GetWithStagesAndWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default);
