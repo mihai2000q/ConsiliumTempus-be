@@ -21,9 +21,4 @@ public sealed class ProjectStageRepository(ConsiliumTempusDbContext dbContext) :
     {
         await dbContext.AddAsync(stage, cancellationToken);
     }
-
-    public void Remove(ProjectStage stage)
-    {
-        dbContext.Remove(stage);
-    }
 }

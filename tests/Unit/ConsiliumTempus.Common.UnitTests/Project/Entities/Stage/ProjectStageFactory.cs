@@ -17,4 +17,17 @@ public static class ProjectStageFactory
             CustomOrderPosition.Create(customOrderPosition),
             sprint ?? ProjectSprintFactory.Create());
     }
+    
+    public static ProjectStage CreateWithStages(
+        int stagesCount = 5)
+    {
+        var sprint = ProjectSprintFactory.Create();
+
+        var count = 1;
+        Enumerable.Repeat(0, stagesCount)
+            .ToList()
+            .ForEach(_ => sprint.AddStage(Create(customOrderPosition: count++)));
+
+        return sprint.Stages[0];
+    }
 }

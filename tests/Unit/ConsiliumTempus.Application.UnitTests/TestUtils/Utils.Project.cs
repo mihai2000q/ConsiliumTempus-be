@@ -187,5 +187,19 @@ internal static partial class Utils
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
 
+        internal static void AssertFromDeleteCommand(
+            Domain.Project.Entities.ProjectStage stage,
+            DeleteProjectStageCommand command)
+        {
+            stage.Id.Value.Should().Be(command.Id);
+
+            stage.Sprint.Stages.Should().NotContain(stage);
+            var customOrderPosition = 0;
+            stage.Sprint.Stages.Should().AllSatisfy(s =>
+                s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+
+            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
     }
 }

@@ -14,10 +14,9 @@ public sealed class DeleteProjectStageCommandHandler(IProjectStageRepository pro
         var stage = await projectStageRepository.GetWithWorkspace(ProjectStageId.Create(command.Id), cancellationToken);
         if (stage is null) return Errors.ProjectStage.NotFound;
         
-        projectStageRepository.Remove(stage);
-        
+        stage.Sprint.RemoveStage(stage);
         stage.Sprint.Project.RefreshActivity();
-
+        
         return new DeleteProjectStageResult();
     }
 }

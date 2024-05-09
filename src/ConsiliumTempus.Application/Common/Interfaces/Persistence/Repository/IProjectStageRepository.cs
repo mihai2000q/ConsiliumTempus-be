@@ -8,6 +8,4 @@ public interface IProjectStageRepository
     Task<ProjectStage?> GetWithWorkspace(ProjectStageId id, CancellationToken cancellationToken = default);
 
     Task Add(ProjectStage stage, CancellationToken cancellationToken = default);
-
-    void Remove(ProjectStage stage);
 }
