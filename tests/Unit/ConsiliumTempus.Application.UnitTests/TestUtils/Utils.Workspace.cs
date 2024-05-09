@@ -25,7 +25,8 @@ internal static partial class Utils
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            
+            workspace.DomainEvents.Should().BeEmpty();
+
             workspace.Memberships.Should().HaveCount(1);
             workspace.Memberships[0].Id.Should().Be((user.Id, workspace.Id));
             workspace.Memberships[0].User.Should().Be(user);

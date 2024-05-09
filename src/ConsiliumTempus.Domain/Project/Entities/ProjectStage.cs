@@ -43,6 +43,16 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             sprint);
     }
 
+    public void Update(Name name)
+    {
+        Name = name;
+    }
+
+    public void DecrementCustomOrderPosition()
+    {
+        CustomOrderPosition = CustomOrderPosition.Create(CustomOrderPosition.Value - 1);
+    }
+
     public void AddTask(ProjectTaskAggregate taskAggregate)
     {
         _tasks.Add(taskAggregate);

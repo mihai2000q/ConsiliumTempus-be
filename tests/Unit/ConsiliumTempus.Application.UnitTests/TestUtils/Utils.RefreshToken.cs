@@ -19,8 +19,9 @@ internal static partial class Utils
             refreshToken.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             refreshToken.User.Should().Be(user);
+            refreshToken.DomainEvents.Should().BeEmpty();
         }
-        
+
         internal static void AssertUpdate(
             Domain.Common.Entities.RefreshToken refreshToken,
             string jwtId,

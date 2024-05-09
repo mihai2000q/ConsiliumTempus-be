@@ -27,12 +27,12 @@ public class DeleteProjectCommandHandlerTest
     public async Task WhenDeleteProjectIsSuccessful_ShouldDeleteProjectAndReturnSuccess()
     {
         // Arrange
-        var command = new DeleteProjectCommand(Guid.NewGuid());
-
         var project = ProjectFactory.Create();
         _projectRepository
             .GetWithWorkspace(Arg.Any<ProjectId>())
             .Returns(project);
+        
+        var command = new DeleteProjectCommand(project.Id.Value);
         
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -43,12 +43,10 @@ public class DeleteProjectCommandHandlerTest
             .GetWithWorkspace(Arg.Is<ProjectId>(id => id.Value == command.Id));
         _projectRepository
             .Received(1)
-            .Remove(Arg.Is<ProjectAggregate>(pr => pr == project));
+            .Remove(Arg.Is<ProjectAggregate>(p => Utils.Project.AssertFromDeleteCommand(p, command)));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectResult());
-
-        project.Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
     }
 
     [Fact]

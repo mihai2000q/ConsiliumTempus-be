@@ -10,13 +10,16 @@
   * [Create](#create)
     * [Create Project Sprint Request](#create-project-sprint-request)
     * [Create Project Sprint Response](#create-project-sprint-response)
+  * [Update](#update)
+    * [Update Project Sprint Request](#update-project-sprint-request)
+    * [Update Project Sprint Response](#update-project-sprint-response)
   * [Delete](#delete)
     * [Delete Project Sprint Request](#delete-project-sprint-request)
     * [Delete Project Sprint Response](#delete-project-sprint-response)
 
 ## Project Sprint
 
-This is the controller that takes care of creating, updating and deleting a Project Sprint.
+This is the controller that takes care of creating, updating, deleting and querying Project Sprints.
 
 
 ### Get
@@ -97,7 +100,7 @@ POST {{host}}/api/projects/sprints
 
 #### Create Project Sprint Request
 
-Sends body data that the new workspace needs to be created.
+Sends body data that the new project sprint needs to be created.
 
 ```json
 {
@@ -111,6 +114,33 @@ Sends body data that the new workspace needs to be created.
 #### Create Project Sprint Response
 
 Returns a confirmation message that the sprint has been created successfully.
+
+
+### Update
+
+Only admin and member users that are part of the workspace can create a project
+([Update Project Sprint Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/projects/sprints
+```
+
+#### Update Project Sprint Request
+
+Sends body data that the project sprint needs to be updated.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "name": "New Project Sprint Name",
+  "startDate": null,
+  "endDate": null
+}
+```
+
+#### Update Project Sprint Response
+
+Returns a confirmation message that the sprint has been updated successfully.
 
 
 ### Delete

@@ -2,7 +2,7 @@
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
-using ConsiliumTempus.Common.UnitTests.Project.Entities.ProjectSprint;
+using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;

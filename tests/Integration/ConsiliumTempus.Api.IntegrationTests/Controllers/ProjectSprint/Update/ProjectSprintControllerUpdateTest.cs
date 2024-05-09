@@ -4,7 +4,7 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using ConsiliumTempus.Common.IntegrationTests.Project.Entities;
+using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,7 +29,7 @@ public class ProjectSprintControllerUpdateTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<UpdateProjectSprintResponse>();
-        response!.Message.Should().Be("Project Sprint updated successfully!");
+        response!.Message.Should().Be("Project Sprint has been updated successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var newSprint = dbContext.ProjectSprints

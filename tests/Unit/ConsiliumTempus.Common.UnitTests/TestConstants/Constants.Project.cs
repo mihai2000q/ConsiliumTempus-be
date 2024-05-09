@@ -12,4 +12,9 @@ internal static partial class Constants
     {
         internal const string Name = "First Quarters";
     }
+
+    internal static class ProjectStage
+    {
+        internal const string Name = "In Transit";
+    }
 }

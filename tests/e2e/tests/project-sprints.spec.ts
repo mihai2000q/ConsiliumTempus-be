@@ -8,7 +8,7 @@ import { createProjectSprint, getProjectSprints } from "../utils/project-sprint.
 import CreateProjectSprintRequest from "../types/requests/project-sprint/CreateProjectSprintRequest";
 import UpdateProjectSprintRequest from "../types/requests/project-sprint/UpdateProjectSprintRequest";
 
-test.describe('should allow operations on the project entity', () => {
+test.describe('should allow operations on the project sprint entity', () => {
   let PROJECT_ID: string
 
   test.beforeEach('should register user and get project id', async ({ request }) => {

@@ -8,7 +8,9 @@ This is the project **sprint** entity.
 class ProjectSprint
 {
     ProjectSprint Create()
-    void AddSection()
+    void Update()
+    void AddStage()
+    void RemoveStage()
 }
 ```
 
@@ -30,3 +32,7 @@ For database design checkout the [Project Sprint Diagram](../../diagrams/entitie
 ### Properties Validation
 
 - The **Name** cannot be longer than 100 characters
+
+### Domain Errors
+
+- **Not Found** when the project sprint cannot be found

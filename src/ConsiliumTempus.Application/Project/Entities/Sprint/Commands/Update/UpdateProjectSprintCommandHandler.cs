@@ -13,7 +13,7 @@ public sealed class UpdateProjectSprintCommandHandler(IProjectSprintRepository p
     public async Task<ErrorOr<UpdateProjectSprintResult>> Handle(UpdateProjectSprintCommand command,
         CancellationToken cancellationToken)
     {
-        var sprint = await projectSprintRepository.GetWithProjectAndWorkspace(
+        var sprint = await projectSprintRepository.GetWithWorkspace(
             ProjectSprintId.Create(command.Id),
             cancellationToken);
         if (sprint is null) return Errors.ProjectSprint.NotFound;

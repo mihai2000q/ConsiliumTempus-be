@@ -15,7 +15,7 @@ public sealed class DeleteProjectSprintCommandHandler(
     {
         var projectSprintId = ProjectSprintId.Create(command.Id);
         var projectSprint = await projectSprintRepository
-            .GetWithProjectAndWorkspace(projectSprintId, cancellationToken);
+            .GetWithWorkspace(projectSprintId, cancellationToken);
 
         if (projectSprint is null) return Errors.ProjectSprint.NotFound;
 

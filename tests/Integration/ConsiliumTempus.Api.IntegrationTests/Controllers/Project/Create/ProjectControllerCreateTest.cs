@@ -29,7 +29,7 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
-        response!.Message.Should().Be("Project created successfully!");
+        response!.Message.Should().Be("Project has been created successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length + 1);

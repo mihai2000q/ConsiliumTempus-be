@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.Get;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
 
-namespace ConsiliumTempus.Common.UnitTests.Project.Entities.ProjectSprint;
+namespace ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 
 public static class ProjectSprintQueryFactory
 {

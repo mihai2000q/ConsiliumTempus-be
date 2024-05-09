@@ -1,5 +1,5 @@
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
-using ConsiliumTempus.Common.UnitTests.Project.Entities.ProjectSprint;
+using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Validation;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Sprint.Commands;

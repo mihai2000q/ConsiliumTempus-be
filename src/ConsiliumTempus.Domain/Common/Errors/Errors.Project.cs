@@ -17,4 +17,11 @@ public static partial class Errors
             "ProjectSprint.NotFound",
             "Project Sprint could not be found");
     }
+    
+    public static class ProjectStage
+    {
+        public static Error NotFound => Error.NotFound(
+            "ProjectStage.NotFound",
+            "Project Stage could not be found");
+    }
 }

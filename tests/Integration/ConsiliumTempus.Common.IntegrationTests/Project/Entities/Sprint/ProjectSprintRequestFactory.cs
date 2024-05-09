@@ -2,9 +2,9 @@
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
-using ConsiliumTempus.Common.UnitTests.TestConstants;
+using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
-namespace ConsiliumTempus.Common.UnitTests.Project.Entities.ProjectSprint;
+namespace ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
 
 public static class ProjectSprintRequestFactory
 {
@@ -15,13 +15,13 @@ public static class ProjectSprintRequestFactory
             Id = id ?? Guid.NewGuid()
         };
     }
-
+    
     public static GetCollectionProjectSprintRequest CreateGetCollectionProjectSprintRequest(
-        Guid? id = null)
+        Guid? projectId = null)
     {
         return new GetCollectionProjectSprintRequest
         {
-            ProjectId = id ?? Guid.NewGuid()
+            ProjectId = projectId ?? Guid.NewGuid()
         };
     }
 
@@ -37,7 +37,7 @@ public static class ProjectSprintRequestFactory
             startDate,
             endDate);
     }
-
+    
     public static UpdateProjectSprintRequest CreateUpdateProjectSprintRequest(
         Guid? id = null,
         string name = Constants.ProjectSprint.Name,
