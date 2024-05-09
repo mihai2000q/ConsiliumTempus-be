@@ -111,6 +111,7 @@ public static class DependencyInjection
         services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
         services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<IProjectSprintRepository, ProjectSprintRepository>();
+        services.AddScoped<IProjectStageRepository, ProjectStageRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
     }
 }

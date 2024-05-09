@@ -16,6 +16,7 @@ public sealed class ConsiliumTempusDbContext(
 {
     public DbSet<ProjectAggregate> Projects { get; init; } = null!;
     public DbSet<ProjectSprint> ProjectSprints { get; init; } = null!;
+    public DbSet<ProjectStage> ProjectStages { get; init; } = null!;
     public DbSet<UserAggregate> Users { get; init; } = null!;
     public DbSet<WorkspaceAggregate> Workspaces { get; init; } = null!;
 

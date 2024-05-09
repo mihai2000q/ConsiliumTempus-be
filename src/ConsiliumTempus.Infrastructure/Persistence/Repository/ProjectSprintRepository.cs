@@ -17,6 +17,15 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 
+    public async Task<ProjectSprint?> GetWithStagesProjectAndWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.ProjectSprints
+            .Include(ps => ps.Project)
+            .ThenInclude(p => p.Workspace)
+            .Include(ps => ps.Stages)
+            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
+    }
+
     public async Task<List<ProjectSprint>> GetListByProject(ProjectId projectId,
         CancellationToken cancellationToken = default)
     {
