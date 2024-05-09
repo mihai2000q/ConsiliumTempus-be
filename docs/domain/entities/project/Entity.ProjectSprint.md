@@ -8,7 +8,9 @@ This is the project **sprint** entity.
 class ProjectSprint
 {
     ProjectSprint Create()
-    void AddSection()
+    void Update()
+    void AddStage()
+    void RemoveStage()
 }
 ```
 

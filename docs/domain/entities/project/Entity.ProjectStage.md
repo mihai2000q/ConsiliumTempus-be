@@ -9,6 +9,7 @@ class ProjectStage
 {
     ProjectStage Create()
     void Update()
+    void DecrementCustomOrderPosition()
     void AddTask()
 }
 ```
