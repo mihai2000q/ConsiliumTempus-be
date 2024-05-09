@@ -11,7 +11,7 @@ public class ProjectControllerCreateValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task CreateProject_WhenCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task CreateProject_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var workspaceId = ProjectData.Workspaces.First().Id.Value;
@@ -26,7 +26,7 @@ public class ProjectControllerCreateValidationTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task CreateProject_WhenCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task CreateProject_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateCreateProjectRequest(

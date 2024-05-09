@@ -1,5 +1,7 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
 using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -8,10 +10,20 @@ internal static partial class Utils
 {
     internal static class ProjectSprint
     {
+        internal static void AssertGetResponse(
+            GetProjectSprintResponse response,
+            Domain.Project.Entities.ProjectSprint sprint)
+        {
+            response.Name.Should().Be(sprint.Name.Value);
+            response.StartDate.Should().Be(sprint.StartDate);
+            response.EndDate.Should().Be(sprint.EndDate);
+        }
+        
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectSprintResponse response,
-            IEnumerable<Domain.Project.Entities.ProjectSprint> sprints)
+            IReadOnlyList<Domain.Project.Entities.ProjectSprint> sprints)
         {
+            response.Sprints.Should().HaveCount(sprints.Count);
             response.Sprints
                 .OrderBy(s => s.Name)
                 .Zip(sprints.OrderBy(s => s.Name.Value))
@@ -29,6 +41,26 @@ internal static partial class Utils
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+        
+        internal static void AssertUpdated(
+            Domain.Project.Entities.ProjectSprint sprint,
+            Domain.Project.Entities.ProjectSprint newSprint,
+            UpdateProjectSprintRequest request)
+        {
+            // unchanged
+            newSprint.CreatedDateTime.Should().Be(sprint.CreatedDateTime);
+            newSprint.Project.Should().Be(sprint.Project);
+
+            // changed
+            newSprint.Id.Value.Should().Be(request.Id);
+            newSprint.Name.Value.Should().Be(request.Name);
+            newSprint.StartDate.Should().Be(request.StartDate);
+            newSprint.EndDate.Should().Be(request.EndDate);
+            newSprint.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            
+            newSprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newSprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
 
         private static void AssertResponse(

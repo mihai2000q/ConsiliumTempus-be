@@ -11,8 +11,14 @@ internal static class GetCollectionProjectQueryHandlerData
         {
             var query = ProjectQueryFactory.CreateGetCollectionProjectQuery();
             Add(query);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                order: "last_activity.asc");
+            Add(query);
             
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                pageSize: 12,
+                currentPage: 1,
                 order: "name.desc",
                 name: "Some Project");
             Add(query);

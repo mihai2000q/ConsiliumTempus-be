@@ -12,7 +12,7 @@ public class GetCollectionProjectQueryValidatorTest
     #endregion
 
     [Theory]
-    [ClassData(typeof(GetCollectionProjectForWorkspaceQueryValidatorData.GetValidQueries))]
+    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetValidQueries))]
     public async Task WhenValid_ShouldReturnTrue(GetCollectionProjectQuery query)
     {
         // Arrange - parameterized
@@ -25,8 +25,10 @@ public class GetCollectionProjectQueryValidatorTest
     }
     
     [Theory]
-    [ClassData(typeof(GetCollectionProjectForWorkspaceQueryValidatorData.GetInvalidOrderQueries))]
-    [ClassData(typeof(GetCollectionProjectForWorkspaceQueryValidatorData.GetInvalidNameQueries))]
+    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidPageSizeQueries))]
+    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidCurrentPageQueries))]
+    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidOrderQueries))]
+    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidNameQueries))]
     public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionProjectQuery query, 
         string property,

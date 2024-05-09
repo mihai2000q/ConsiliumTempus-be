@@ -66,6 +66,18 @@ internal class WorkspaceData : ITestData
             "Michael Group",
             "This is the Description of the third Workspace",
             true),
+        WorkspaceFactory.Create(
+            Users[0],
+            "Some Group"),
+        WorkspaceFactory.Create(
+            Users[0],
+            "Some Group That I Want To Delete"),
+        WorkspaceFactory.Create(
+            Users[0],
+            "Test Test"),
+        WorkspaceFactory.Create(
+            Users[0],
+            "Hi There")
     ];
 
     public static Membership[] Memberships { get; } =

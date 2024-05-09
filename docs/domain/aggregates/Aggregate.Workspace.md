@@ -48,3 +48,14 @@ For database design checkout the [Workspace Diagram](../diagrams/aggregates/Diag
 and it's used to determine whether the workspace is made to be the primary place for a user. 
 (One user must have exactly one workspace where they are owners, and it is a personal workspace, 
 otherwise they can be part of other people's personal workspaces, but they can't be owners).
+
+### Filters
+
+- **Name** to filter by name
+
+### Orders
+
+- **Name** to order alphabetically
+- **LastActivity** to order by activity
+- **UpdatedDateTime** to order by last modified date
+- **CreatedDateTime** to order by creation time

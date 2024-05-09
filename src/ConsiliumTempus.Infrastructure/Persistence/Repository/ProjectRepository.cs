@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
@@ -25,6 +26,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
 
     public Task<List<ProjectAggregate>> GetListByUser(
         UserId userId,
+        PaginationInfo? paginationInfo,
         IOrder<ProjectAggregate>? order,
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default)
@@ -33,7 +35,19 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
             .ApplyFilters(filters)
             .ApplyOrder(order)
+            .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);
+    }
+
+    public Task<int> GetListByUserCount(
+        UserId userId,
+        IEnumerable<IFilter<ProjectAggregate>> filters,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.Projects
+            .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
+            .ApplyFilters(filters)
+            .CountAsync(cancellationToken);
     }
 
     public Task<List<ProjectAggregate>> GetListByUser(UserId userId,

@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Filters;
@@ -83,7 +84,7 @@ internal static partial class Utils
             GetCollectionProjectQuery query)
         {
             filters.OfType<Filters.Project.WorkspaceFilter>().Single().Value.Should().Be(
-                query.WorkspaceId.IfNotNull(() => WorkspaceId.Create(query.WorkspaceId!.Value)));
+                query.WorkspaceId.IfNotNull(WorkspaceId.Create));
             filters.OfType<Filters.Project.NameFilter>().Single().Value.Should().Be(query.Name);
             filters.OfType<Filters.Project.IsFavoriteFilter>().Single().Value.Should().Be(query.IsFavorite);
             filters.OfType<Filters.Project.IsPrivateFilter>().Single().Value.Should().Be(query.IsPrivate);
@@ -114,6 +115,34 @@ internal static partial class Utils
                 .Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
             return true;
+        }
+
+        internal static void AssertProjectSprint(
+            Domain.Project.Entities.ProjectSprint outcome,
+            Domain.Project.Entities.ProjectSprint expected)
+        {
+            outcome.Id.Should().Be(expected.Id);
+            outcome.Name.Should().Be(expected.Name);
+            outcome.StartDate.Should().Be(expected.StartDate);
+            outcome.EndDate.Should().Be(expected.EndDate);
+            outcome.Project.Should().Be(expected.Project);
+            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
+            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Stages.Should().BeEquivalentTo(expected.Stages);
+        }
+
+        internal static void AssertFromUpdateCommand(
+            Domain.Project.Entities.ProjectSprint sprint,
+            UpdateProjectSprintCommand command)
+        {
+            sprint.Id.Value.Should().Be(command.Id);
+            sprint.Name.Value.Should().Be(command.Name);
+            sprint.StartDate.Should().Be(command.StartDate);
+            sprint.EndDate.Should().Be(command.EndDate);
+            sprint.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
     }
 

@@ -17,6 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
+    app.UsePathBase(new PathString("/Api"));
+    app.UseRouting();
     app.UseHttpsRedirection();
     app.UseCors(CorsPolicies.Frontend.Policy);
     app.UseAuthentication();

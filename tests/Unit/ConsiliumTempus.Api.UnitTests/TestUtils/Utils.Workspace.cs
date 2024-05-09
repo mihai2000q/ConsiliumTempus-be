@@ -22,9 +22,14 @@ internal static partial class Utils
             return true;
         }
 
-        internal static bool AssertGetCollectionQuery(GetCollectionWorkspaceQuery query)
+        internal static bool AssertGetCollectionQuery(
+            GetCollectionWorkspaceQuery query, 
+            GetCollectionWorkspaceRequest request)
         {
-            query.Should().Be(new GetCollectionWorkspaceQuery());
+            query.PageSize.Should().Be(request.PageSize);
+            query.CurrentPage.Should().Be(request.CurrentPage);
+            query.Order.Should().Be(request.Order);
+            query.Name.Should().Be(request.Name);
             return true;
         }
 
@@ -57,8 +62,7 @@ internal static partial class Utils
             GetCollectionWorkspaceResponse response,
             GetCollectionWorkspaceResult result)
         {
-            response.Workspaces
-                .Zip(result.Workspaces)
+            response.Workspaces.Zip(result.Workspaces)
                 .Should().AllSatisfy(p => AssertWorkspaceResponse(p.First, p.Second));
         }
 

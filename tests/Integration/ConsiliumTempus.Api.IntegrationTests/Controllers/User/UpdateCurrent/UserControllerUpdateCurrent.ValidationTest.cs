@@ -11,7 +11,7 @@ public class UserControllerUpdateValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new UserData())
 {
     [Fact]
-    public async Task UpdateCurrentUser_WhenCommandIsValid_ShouldReturnSuccessResponse()
+    public async Task UpdateCurrentUser_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
@@ -24,7 +24,7 @@ public class UserControllerUpdateValidationTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task UpdateCurrentUser_WhenCommandIsInvalid_ShouldReturnValidationErrors()
+    public async Task UpdateCurrentUser_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest(

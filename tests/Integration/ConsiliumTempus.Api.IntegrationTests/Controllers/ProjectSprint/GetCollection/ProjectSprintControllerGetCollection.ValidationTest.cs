@@ -11,7 +11,7 @@ public class ProjectSprintControllerGetCollectionValidationTest(WebAppFactory fa
     : BaseIntegrationTest(factory, new ProjectSprintData())
 {
     [Fact]
-    public async Task GetCollectionProjectSprint_WhenQueryIsValid_ShouldReturnSuccessResponse()
+    public async Task GetCollectionProjectSprint_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetCollectionProjectSprintRequest(
@@ -26,7 +26,7 @@ public class ProjectSprintControllerGetCollectionValidationTest(WebAppFactory fa
     }
 
     [Fact]
-    public async Task GetCollectionProjectSprint_WhenQueryIsInvalid_ShouldReturnValidationErrors()
+    public async Task GetCollectionProjectSprint_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetCollectionProjectSprintRequest(Guid.Empty);

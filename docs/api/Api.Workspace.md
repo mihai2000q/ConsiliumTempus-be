@@ -5,6 +5,7 @@
     * [Get Workspace Request](#get-workspace-request)
     * [Get Workspace Response](#get-workspace-response)
   * [Get Collection](#get-collection)
+    * [Get Collection Workspace Request](#get-collection-workspace-request)
     * [Get Collection Workspace Response](#get-collection-workspace-response)
   * [Create](#create)
     * [Create Workspace Request](#create-workspace-request)
@@ -52,8 +53,17 @@ Returns the workspace data.
 Anyone logged in can request this data, but it will return only the workspaces that are linked to this user.
 
 ```js
-GET {{host}}/api/workspaces
+GET {{host}}/api/workspaces?pageSize=2&currentPage=1order=name.asc&name=worksp
 ```
+
+### Get Collection Workspace Request
+
+Sends optional query parameters for ordering, filtering, and page-based pagination.
+
+- _**pageSize**_ is used to specify the size of the page
+- _**currentPage**_ is used to specify the current page
+- _**order**_ is used to order the collection
+- _**name**_ is used to filter by name
 
 #### Get Collection Workspace Response
 
@@ -72,7 +82,9 @@ Returns the workspaces.
       "name": "Workspace 2",
       "description": "This is the second workspace"
     }
-  ]
+  ],
+  "totalCount": 4,
+  "totalPages": 2
 }
 ```
 

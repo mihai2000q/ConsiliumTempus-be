@@ -34,6 +34,8 @@ internal static partial class Utils
             GetCollectionProjectQuery query,
             GetCollectionProjectRequest request)
         {
+            query.PageSize.Should().Be(request.PageSize);
+            query.CurrentPage.Should().Be(request.CurrentPage);
             query.Order.Should().Be(request.Order);
             query.WorkspaceId.Should().Be(request.WorkspaceId);
             query.Name.Should().Be(request.Name);
@@ -68,21 +70,21 @@ internal static partial class Utils
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
         }
 
-        internal static void AssertGetCollectionForWorkspaceResponse(
+        internal static void AssertGetCollectionResponse(
             GetCollectionProjectResponse response,
             GetCollectionProjectResult result)
         {
-            response.Projects
-                .Zip(result.Projects)
+            response.Projects.Zip(result.Projects)
                 .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
+            response.TotalCount.Should().Be(result.TotalCount);
+            response.TotalPages.Should().Be(result.TotalPages);
         }
 
         internal static void AssertGetCollectionForUserResponse(
             GetCollectionProjectForUserResponse response,
             GetCollectionProjectForUserResult result)
         {
-            response.Projects
-                .Zip(result.Projects)
+            response.Projects.Zip(result.Projects)
                 .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
         }
 

@@ -12,7 +12,7 @@ public class ProjectControllerGetCollectionValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task GetProjectCollection_WhenQueryIsValid_ShouldReturnSuccessResponse()
+    public async Task GetCollectionProject_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
 
@@ -25,11 +25,12 @@ public class ProjectControllerGetCollectionValidationTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetProjectCollection_WhenQueryIsInvalid_ShouldReturnValidationErrors()
+    public async Task GetCollectionProject_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            name: new string('*', PropertiesValidation.Project.NameMaximumLength + 1));
+            name: new string('*', PropertiesValidation.Project.NameMaximumLength + 1),
+            pageSize: -1);
 
         // Act
         var outcome = await Client.Get($"api/projects?name={request.Name}");

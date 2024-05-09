@@ -1,0 +1,14 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+
+public sealed class GetCollectionWorkspaceRequest
+{
+    [FromQuery] public int? PageSize { get; init; }
+    
+    [FromQuery] public int? CurrentPage { get; init; }
+    
+    [FromQuery] public string? Order { get; init; }
+    
+    [FromQuery] public string? Name { get; init; }
+}

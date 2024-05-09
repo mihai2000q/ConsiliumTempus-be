@@ -1,6 +1,9 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Filters;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -43,6 +46,15 @@ internal static partial class Utils
             workspace.Name.Value.Should().Be(command.Name);
             workspace.Description.Value.Should().Be(command.Description);
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+        }
+
+        internal static bool AssertGetCollectionFilters(
+            IEnumerable<IFilter<WorkspaceAggregate>> filters,
+            GetCollectionWorkspaceQuery query)
+        {
+            filters.OfType<Filters.Workspace.NameFilter>().Single().Value.Should().Be(query.Name);
+
+            return true;
         }
 
         internal static void AssertWorkspace(WorkspaceAggregate outcome, WorkspaceAggregate expected)

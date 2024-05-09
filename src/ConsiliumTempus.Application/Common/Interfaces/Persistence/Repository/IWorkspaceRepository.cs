@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Domain.User;
+﻿using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
@@ -8,7 +10,17 @@ public interface IWorkspaceRepository
 {
     Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default);
 
-    Task<List<WorkspaceAggregate>> GetListByUser(UserAggregate user, CancellationToken cancellationToken = default);
+    Task<List<WorkspaceAggregate>> GetListByUser(
+        UserAggregate user, 
+        PaginationInfo? paginationInfo,
+        IOrder<WorkspaceAggregate>? order,
+        IEnumerable<IFilter<WorkspaceAggregate>> filters,
+        CancellationToken cancellationToken = default);
+    
+    Task<int> GetListByUserCount(
+        UserAggregate user, 
+        IEnumerable<IFilter<WorkspaceAggregate>> filters,
+        CancellationToken cancellationToken = default);
 
     Task<List<WorkspaceAggregate>> GetListByUserWithMemberships(UserAggregate user,
         CancellationToken cancellationToken = default);

@@ -56,9 +56,14 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
             endDate);
     }
 
-    public void Update(Name name)
+    public void Update(
+        Name name,
+        DateOnly? startDate,
+        DateOnly? endDate)
     {
         Name = name;
+        StartDate = startDate;
+        EndDate = endDate;
         UpdatedDateTime = DateTime.UtcNow;
     }
 

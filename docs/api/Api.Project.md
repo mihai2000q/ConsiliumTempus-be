@@ -52,25 +52,29 @@ Returns a project.
 
 ### Get Collection
 
-Anyone that is part of the workspace can read the projects 
-([Read Collection Project Permission](../Security.md/#permissions)).
+Anyone that is part of the workspace can read the projects
+([Read Collection Project Permission](../Security.md/#permissions)),
+in case the workspace Id is mentioned, otherwise any logged-in user will get their projects.
 
 ```js
-GET {{host}}/api/projects?workspaceId={workspaceId}&name=project&isFavorite=true&isPrivate=false
+GET {{host}}/api/projects?pageSize=2&currentPage=1&order=name.desc&workspaceId=10000000-0000-0000-0000-000000000000&name=project&isFavorite=true&isPrivate=false
 ```
-
-- **workspaceId** is a 36-character string id
-- **name** is used to filter by name
-- **isFavorite** is used to filter by favorites
-- **isPrivate** is used to filter by accessibility
 
 #### Get Collection Request
 
-Sends optional query parameters to filter the projects by workspace, name, etc.
+it sends optional query parameters to paginate, order or filter the projects by workspace, name, etc.
+
+- _**pageSize**_ is used to specify the size of the page
+- _**currentPage**_ is used to specify the current page
+- _**order**_ is used to order the collection
+- _**workspaceId**_ is used to order the projects by workspace
+- _**name**_ is used to filter by name
+- _**isFavorite**_ is used to filter by favorites
+- _**isPrivate**_ is used to filter by accessibility
 
 #### Get Collection Response
 
-Returns wrapped up projects' ids, names, and descriptions.
+Returns the projects, their total count and total pages, if paginated.
 
 ```json
 {
@@ -89,7 +93,9 @@ Returns wrapped up projects' ids, names, and descriptions.
       "isFavorite": true,
       "isPrivate": false
     }
-  ]
+  ],
+  "totalCount": 5,
+  "totalPages": 3
 }
 ```
 

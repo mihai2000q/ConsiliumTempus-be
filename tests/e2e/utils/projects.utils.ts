@@ -23,7 +23,6 @@ export async function createProject(
 }
 
 export async function create2ProjectsIn2DifferentWorkspaces(request: APIRequestContext) {
-
   const createProjectRequest1: CreateProjectRequest = {
     workspaceId: (await getPersonalWorkspace(request)).id,
     name: "Unique Project Name",
@@ -41,4 +40,26 @@ export async function create2ProjectsIn2DifferentWorkspaces(request: APIRequestC
     createProjectRequest1: createProjectRequest1,
     createProjectRequest2: createProjectRequest2
   }
+}
+
+export async function createProjects(request: APIRequestContext, count: number) {
+  const requests = []
+
+  const createProjectRequest1: CreateProjectRequest = {
+    workspaceId: (await getPersonalWorkspace(request)).id,
+    name: "Project 1",
+    description: "some description",
+    isPrivate: false
+  }
+  await createProject(request, createProjectRequest1)
+
+  requests.push(createProjectRequest1)
+  for (let i = 2; i <= count; i++) {
+    const createRequest = { ...createProjectRequest1 }
+    createRequest.name = "Project " + i
+    await createProject(request, createRequest)
+    requests.push(createRequest)
+  }
+
+  return requests
 }

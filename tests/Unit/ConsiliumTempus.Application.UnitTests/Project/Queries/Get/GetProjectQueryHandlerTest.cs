@@ -23,7 +23,7 @@ public class GetProjectQueryHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleGetWorkspaceQuery_WhenIsSuccessful_ShouldReturnWorkspace()
+    public async Task HandleGetProjectQuery_WhenIsSuccessful_ShouldReturnProject()
     {
         // Arrange
         var query = ProjectQueryFactory.CreateGetProjectQuery();
@@ -45,7 +45,7 @@ public class GetProjectQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetWorkspaceQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetProjectQuery_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = ProjectQueryFactory.CreateGetProjectQuery();

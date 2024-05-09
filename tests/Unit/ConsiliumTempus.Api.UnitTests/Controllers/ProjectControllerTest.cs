@@ -88,7 +88,10 @@ public class ProjectControllerTest
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest();
 
-        var result = new GetCollectionProjectResult(ProjectFactory.CreateList());
+        var result = new GetCollectionProjectResult(
+            ProjectFactory.CreateList(),
+            25,
+            null);
         _mediator
             .Send(Arg.Any<GetCollectionProjectQuery>())
             .Returns(result);
@@ -103,7 +106,7 @@ public class ProjectControllerTest
                 Utils.Project.AssertGetCollectionProjectQuery(q, request)));
 
         var response = outcome.ToResponse<GetCollectionProjectResponse>();
-        Utils.Project.AssertGetCollectionForWorkspaceResponse(response, result);
+        Utils.Project.AssertGetCollectionResponse(response, result);
     }
 
     [Fact]

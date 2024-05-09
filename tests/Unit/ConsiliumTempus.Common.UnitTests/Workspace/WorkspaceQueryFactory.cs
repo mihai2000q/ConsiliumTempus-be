@@ -10,8 +10,16 @@ public static class WorkspaceQueryFactory
         return new GetWorkspaceQuery(id ?? Guid.NewGuid());
     }
 
-    public static GetCollectionWorkspaceQuery CreateGetCollectionWorkspaceQuery()
+    public static GetCollectionWorkspaceQuery CreateGetCollectionWorkspaceQuery(
+        int? pageSize = null,
+        int? currentPage = null,
+        string? order = null,
+        string? name = null)
     {
-        return new GetCollectionWorkspaceQuery();
+        return new GetCollectionWorkspaceQuery(
+            pageSize,
+            currentPage,
+            order,
+            name);
     }
 }

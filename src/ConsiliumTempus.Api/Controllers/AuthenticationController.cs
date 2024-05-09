@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.Controllers;
 
-[Route("Api/Auth")]
+[Route("Auth")]
 [AllowAnonymous]
 public sealed class AuthenticationController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {

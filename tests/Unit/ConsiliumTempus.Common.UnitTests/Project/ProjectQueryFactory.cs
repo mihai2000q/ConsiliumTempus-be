@@ -18,6 +18,8 @@ public static class ProjectQueryFactory
     }
 
     public static GetCollectionProjectQuery CreateGetCollectionProjectQuery(
+        int? pageSize = null,
+        int? currentPage = null,
         string? order = null,
         Guid? workspaceId = null,
         string? name = null,
@@ -25,6 +27,8 @@ public static class ProjectQueryFactory
         bool? isPrivate = null)
     {
         return new GetCollectionProjectQuery(
+            pageSize,
+            currentPage,
             order,
             workspaceId,
             name,

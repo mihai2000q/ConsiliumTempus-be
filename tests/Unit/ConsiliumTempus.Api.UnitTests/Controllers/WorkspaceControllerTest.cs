@@ -84,18 +84,24 @@ public class WorkspaceControllerTest
     public async Task GetCollectionWorkspace_WhenIsSuccessful_ShouldReturnCollectionOfWorkspaces()
     {
         // Arrange
-        var result = new GetCollectionWorkspaceResult(WorkspaceFactory.CreateList());
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
+
+        var result = new GetCollectionWorkspaceResult(
+            WorkspaceFactory.CreateList(),
+            25,
+            null);
         _mediator
             .Send(Arg.Any<GetCollectionWorkspaceQuery>())
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollection(default);
+        var outcome = await _uut.GetCollection(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetCollectionWorkspaceQuery>(query => Utils.Workspace.AssertGetCollectionQuery(query)));
+            .Send(Arg.Is<GetCollectionWorkspaceQuery>(query =>
+                Utils.Workspace.AssertGetCollectionQuery(query, request)));
 
         var response = outcome.ToResponse<GetCollectionWorkspaceResponse>();
         Utils.Workspace.AssertGetCollectionResponse(response, result);
@@ -105,18 +111,21 @@ public class WorkspaceControllerTest
     public async Task GetCollectionWorkspace_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
+
         var error = Errors.User.NotFound;
         _mediator
             .Send(Arg.Any<GetCollectionWorkspaceQuery>())
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollection(default);
+        var outcome = await _uut.GetCollection(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetCollectionWorkspaceQuery>(query => Utils.Workspace.AssertGetCollectionQuery(query)));
+            .Send(Arg.Is<GetCollectionWorkspaceQuery>(query =>
+                Utils.Workspace.AssertGetCollectionQuery(query, request)));
 
         outcome.ValidateError(error);
     }

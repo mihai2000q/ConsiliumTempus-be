@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
@@ -12,7 +13,22 @@ public static class WorkspaceRequestFactory
     {
         return new GetWorkspaceRequest
         {
-            Id = Guid.NewGuid()
+            Id = id ?? Guid.NewGuid()
+        };
+    }
+    
+    public static GetCollectionWorkspaceRequest CreateGetCollectionWorkspaceRequest(
+        int? pageSize = null,
+        int? currentPage = null,
+        string? order = null,
+        string? name = null)
+    {
+        return new GetCollectionWorkspaceRequest
+        {
+            PageSize = pageSize,
+            CurrentPage = currentPage,
+            Order = order,
+            Name = name
         };
     }
 
