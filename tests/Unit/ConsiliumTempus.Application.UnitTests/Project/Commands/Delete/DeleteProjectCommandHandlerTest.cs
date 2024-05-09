@@ -27,12 +27,12 @@ public class DeleteProjectCommandHandlerTest
     public async Task WhenDeleteProjectIsSuccessful_ShouldDeleteProjectAndReturnSuccess()
     {
         // Arrange
-        var command = new DeleteProjectCommand(Guid.NewGuid());
-
         var project = ProjectFactory.Create();
         _projectRepository
             .GetWithWorkspace(Arg.Any<ProjectId>())
             .Returns(project);
+        
+        var command = new DeleteProjectCommand(project.Id.Value);
         
         // Act
         var outcome = await _uut.Handle(command, default);
