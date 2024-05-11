@@ -45,7 +45,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
         var workspaces = WorkspaceFactory.CreateList();
         _workspaceRepository
             .GetListByUser(
-                Arg.Any<UserAggregate>(), 
+                Arg.Any<UserAggregate>(),
                 Arg.Any<PaginationInfo?>(),
                 Arg.Any<IOrder<WorkspaceAggregate>?>(),
                 Arg.Any<IEnumerable<IFilter<WorkspaceAggregate>>>())
@@ -54,7 +54,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
         const int workspacesCount = 25;
         _workspaceRepository
             .GetListByUserCount(
-                Arg.Any<UserAggregate>(), 
+                Arg.Any<UserAggregate>(),
                 Arg.Any<IEnumerable<IFilter<WorkspaceAggregate>>>())
             .Returns(workspacesCount);
 
@@ -70,16 +70,16 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .GetListByUser(
                 Arg.Is<UserAggregate>(u => u == user),
                 Arg.Is<PaginationInfo?>(p => p.AssertPagination(query.PageSize, query.CurrentPage)),
-                Arg.Is<IOrder<WorkspaceAggregate>?>(o => 
+                Arg.Is<IOrder<WorkspaceAggregate>?>(o =>
                     o.AssertOrder(query.Order, WorkspaceOrder.OrderProperties)),
-                Arg.Is<IEnumerable<IFilter<WorkspaceAggregate>>>(filters => 
+                Arg.Is<IEnumerable<IFilter<WorkspaceAggregate>>>(filters =>
                     Utils.Workspace.AssertGetCollectionFilters(filters, query)));
-        
+
         await _workspaceRepository
             .Received(1)
             .GetListByUserCount(
                 Arg.Is<UserAggregate>(u => u == user),
-                Arg.Is<IEnumerable<IFilter<WorkspaceAggregate>>>(filters => 
+                Arg.Is<IEnumerable<IFilter<WorkspaceAggregate>>>(filters =>
                     Utils.Workspace.AssertGetCollectionFilters(filters, query)));
 
         outcome.IsError.Should().BeFalse();
@@ -88,9 +88,9 @@ public class GetCollectionWorkspaceQueryHandlerTest
         if (query.PageSize is null || query.CurrentPage is null)
             outcome.Value.TotalPages.Should().BeNull();
         else
-            outcome.Value.TotalPages.Should().Be(workspacesCount / query.PageSize);
+            outcome.Value.TotalPages.Should().Be((int)Math.Ceiling((double)workspacesCount / query.PageSize.Value));
     }
-    
+
     [Fact]
     public async Task WhenGetCollectionWorkspaceFails_ShouldReturnUserNotFoundError()
     {
@@ -105,7 +105,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .Received(1)
             .GetCurrentUser();
         _workspaceRepository.DidNotReceive();
-        
+
         outcome.ValidateError(Errors.User.NotFound);
     }
 }

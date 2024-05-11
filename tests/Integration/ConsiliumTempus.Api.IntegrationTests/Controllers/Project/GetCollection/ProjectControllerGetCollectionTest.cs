@@ -193,7 +193,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
             response!,
             expectedProjects,
             userProjects.Count,
-            userProjects.Count / request.PageSize,
+            (int)Math.Ceiling((double)userProjects.Count / request.PageSize.Value),
             true);
     }
 
