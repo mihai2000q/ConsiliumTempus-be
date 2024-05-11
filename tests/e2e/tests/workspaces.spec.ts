@@ -150,7 +150,7 @@ test.describe('should allow operations on the workspace entity', () => {
       expect(json).toStrictEqual({
         workspaces: expectedWorkspaces,
         totalCount: totalCount,
-        totalPages: Math.floor(totalCount / pageSize),
+        totalPages: Math.ceil(totalCount / pageSize),
       })
       expect(json.workspaces).toHaveLength(totalCount < pageSize ? totalCount : pageSize)
     })

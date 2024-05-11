@@ -217,7 +217,7 @@ test.describe('should allow operations on the project entity', () => {
       expect(json).toStrictEqual({
         projects: expectedProjects,
         totalCount: totalCount,
-        totalPages: Math.floor(totalCount / pageSize),
+        totalPages: Math.ceil(totalCount / pageSize),
       })
       expect(json.projects).toHaveLength(totalCount < pageSize ? totalCount : pageSize)
     })

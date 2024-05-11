@@ -19,7 +19,7 @@ public sealed class PaginationInfo
 
     public int GetTotalPages(int totalCount)
     {
-        return (int)Math.Floor((decimal)totalCount / PageSize);
+        return (int)Math.Ceiling((decimal)totalCount / PageSize);
     }
     
     public void Deconstruct(out int pageSize, out int currentPage)
