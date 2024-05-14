@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
@@ -11,6 +12,8 @@ public interface IWorkspaceProvider
     Task<WorkspaceAggregate?> GetByProject(ProjectId id, CancellationToken cancellationToken = default);
 
     Task<WorkspaceAggregate?> GetByProjectSprint(ProjectSprintId id, CancellationToken cancellationToken = default);
-    
+
     Task<WorkspaceAggregate?> GetByProjectStage(ProjectStageId id, CancellationToken cancellationToken = default);
+
+    Task<WorkspaceAggregate?> GetByProjectTask(ProjectTaskId id, CancellationToken cancellationToken = default);
 }

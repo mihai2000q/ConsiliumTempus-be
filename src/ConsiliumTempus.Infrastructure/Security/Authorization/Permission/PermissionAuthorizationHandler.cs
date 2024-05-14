@@ -3,6 +3,7 @@ using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -77,7 +78,13 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.CreateProjectStage => await workspaceProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
             
             Permissions.UpdateProjectStage or
-            Permissions.DeleteProjectStage => await workspaceProvider.GetByProjectStage(ProjectStageId.Create(guidId)),
+            Permissions.DeleteProjectStage or
+            Permissions.CreateProjectTask or
+            Permissions.ReadCollectionProjectTask => await workspaceProvider.GetByProjectStage(ProjectStageId.Create(guidId)),
+            
+            Permissions.ReadProjectTask or
+            Permissions.UpdateProjectTask or
+            Permissions.DeleteProjectTask => await workspaceProvider.GetByProjectTask(ProjectTaskId.Create(guidId)),
 
             _ => await workspaceProvider.Get(WorkspaceId.Create(guidId)),
         };
@@ -108,6 +115,13 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.CreateProjectStage => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<ProjectSprint>()),
             Permissions.UpdateProjectStage => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProjectStage => HttpRequestReader.GetStringIdFromRoute(request),
+            
+            Permissions.CreateProjectTask => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<ProjectStage>()),
+            Permissions.ReadProjectTask => HttpRequestReader.GetStringIdFromRoute(request),
+            Permissions.ReadCollectionProjectTask => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<ProjectStage>()),
+            Permissions.UpdateProjectTask => await HttpRequestReader.GetStringIdFromBody(request),
+            Permissions.DeleteProjectTask => HttpRequestReader.GetStringIdFromRoute(request),
+            
             _ => throw new ArgumentOutOfRangeException(nameof(permission))
         };
     }
