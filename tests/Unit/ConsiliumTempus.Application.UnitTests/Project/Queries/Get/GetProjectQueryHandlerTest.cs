@@ -7,14 +7,14 @@ using ConsiliumTempus.Domain.Project.ValueObjects;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Queries.Get;
 
-public class GetProjectQueryHandlerTest
+public class GetWithSprintsProjectQueryHandlerTest
 {
     #region Setup
 
     private readonly IProjectRepository _projectRepository;
     private readonly GetProjectQueryHandler _uut;
 
-    public GetProjectQueryHandlerTest()
+    public GetWithSprintsProjectQueryHandlerTest()
     {
         _projectRepository = Substitute.For<IProjectRepository>();
         _uut = new GetProjectQueryHandler(_projectRepository);
@@ -23,14 +23,14 @@ public class GetProjectQueryHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleGetProjectQuery_WhenIsSuccessful_ShouldReturnProject()
+    public async Task HandleGetWithSprintsProjectQuery_WhenIsSuccessful_ShouldReturnProject()
     {
         // Arrange
         var query = ProjectQueryFactory.CreateGetProjectQuery();
 
         var project = ProjectFactory.Create();
         _projectRepository
-            .Get(Arg.Any<ProjectId>())
+            .GetWithSprints(Arg.Any<ProjectId>())
             .Returns(project);
         // Act
         var outcome = await _uut.Handle(query, default);
@@ -38,14 +38,14 @@ public class GetProjectQueryHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .Get(Arg.Is<ProjectId>(id => query.Id == id.Value));
+            .GetWithSprints(Arg.Is<ProjectId>(id => query.Id == id.Value));
 
         outcome.IsError.Should().BeFalse();
         Utils.Project.AssertProject(outcome.Value, project);
     }
 
     [Fact]
-    public async Task HandleGetProjectQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetWithSprintsProjectQuery_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = ProjectQueryFactory.CreateGetProjectQuery();
@@ -56,7 +56,7 @@ public class GetProjectQueryHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .Get(Arg.Is<ProjectId>(id => query.Id == id.Value));
+            .GetWithSprints(Arg.Is<ProjectId>(id => query.Id == id.Value));
 
         outcome.ValidateError(Errors.Project.NotFound);
     }
