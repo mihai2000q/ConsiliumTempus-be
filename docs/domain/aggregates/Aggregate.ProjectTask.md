@@ -9,6 +9,7 @@ class ProjectTask
 {
     ProjectTask Create()
     void Update()
+    void DecrementCustomOrderPosition()
     void AddComment()
 }
 ```
@@ -38,6 +39,10 @@ For database design checkout the [Project Task Diagram](../diagrams/aggregates/D
 
 - The **Name** cannot be longer than 100 characters
 - The **Description** cannot be longer than 1000 characters
+
+### Domain Errors
+
+- **Not Found** when the project cannot be found
 
 ### Entities
 

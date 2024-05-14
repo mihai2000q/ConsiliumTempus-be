@@ -11,6 +11,7 @@ class ProjectStage
     void Update()
     void DecrementCustomOrderPosition()
     void AddTask()
+    void RemoveTask()
 }
 ```
 

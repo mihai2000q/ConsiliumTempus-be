@@ -57,4 +57,13 @@ public sealed class ProjectStage : Entity<ProjectStageId>
     {
         _tasks.Add(taskAggregate);
     }
+    
+    public void RemoveTask(ProjectTaskAggregate task)
+    {
+        if (!_tasks.Remove(task)) return;
+        for (var i = task.CustomOrderPosition.Value; i < _tasks.Count; i++)
+        {
+            _tasks[i].DecrementCustomOrderPosition();
+        }
+    }
 }
