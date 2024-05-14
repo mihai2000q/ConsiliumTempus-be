@@ -1,20 +1,22 @@
 ﻿using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
+using ConsiliumTempus.Application.Project.Queries.GetOverview;
 
 namespace ConsiliumTempus.Common.UnitTests.Project;
 
 public static class ProjectQueryFactory
 {
     public static GetProjectQuery CreateGetProjectQuery(
-        Guid? projectId = null)
+        Guid? id = null)
     {
-        return new GetProjectQuery(projectId ?? Guid.NewGuid());
+        return new GetProjectQuery(id ?? Guid.NewGuid());
     }
 
-    public static GetCollectionProjectForUserQuery CreateGetCollectionProjectForUserQuery()
+    public static GetOverviewProjectQuery CreateGetOverviewProjectQuery(
+        Guid? id = null)
     {
-        return new GetCollectionProjectForUserQuery();
+        return new GetOverviewProjectQuery(id ?? Guid.NewGuid());
     }
 
     public static GetCollectionProjectQuery CreateGetCollectionProjectQuery(
@@ -34,5 +36,10 @@ public static class ProjectQueryFactory
             name,
             isFavorite,
             isPrivate);
+    }
+
+    public static GetCollectionProjectForUserQuery CreateGetCollectionProjectForUserQuery()
+    {
+        return new GetCollectionProjectForUserQuery();
     }
 }

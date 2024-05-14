@@ -8,6 +8,7 @@ using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Update;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
+using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
@@ -61,6 +62,14 @@ internal static partial class Utils
             outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
             outcome.Workspace.Should().Be(expected.Workspace);
             outcome.Sprints.Should().BeEquivalentTo(expected.Sprints);
+        }
+        
+        internal static void AssertProjectOverview(
+            GetOverviewProjectResult outcome,
+            ProjectAggregate project)
+        {
+            outcome.Description.Should().Be(project.Description.Value);
+            
         }
 
         internal static bool AssertGetCollectionProjectFilters(
