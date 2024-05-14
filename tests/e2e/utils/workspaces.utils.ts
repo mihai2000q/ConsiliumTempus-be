@@ -2,8 +2,6 @@ import { APIRequestContext, expect } from "@playwright/test";
 import { useToken } from "./utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
 
-export const PersonalWorkspaceName = "My Workspace"
-
 export async function getPersonalWorkspace(request: APIRequestContext) {
   const response = await request.get('/api/workspaces', useToken())
   expect(response.ok()).toBeTruthy()

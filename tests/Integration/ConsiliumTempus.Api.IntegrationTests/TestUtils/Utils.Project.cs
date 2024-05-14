@@ -20,6 +20,13 @@ internal static partial class Utils
             response.Description.Should().Be(project.Description.Value);
             response.IsFavorite.Should().Be(project.IsFavorite.Value);
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
+            response.Sprints
+                .Zip(project.Sprints
+                    .OrderBy(s => s.StartDate)
+                    .ThenBy(s => s.EndDate)
+                    .ThenBy(s => s.Name.Value)
+                    .ThenBy(s => s.CreatedDateTime))
+                .Should().AllSatisfy(p => AssertProjectSprintResponse(p.First, p.Second));
         }
 
         internal static void AssertGetCollectionForUserResponse(
@@ -78,6 +85,16 @@ internal static partial class Utils
                 .Should().HaveCount(Constants.ProjectTask.Names.Length);
         }
 
+        private static void AssertProjectSprintResponse(
+            GetProjectResponse.ProjectSprintResponse sprintResponse,
+            Domain.Project.Entities.ProjectSprint sprint)
+        {
+            sprintResponse.Id.Should().Be(sprint.Id.Value);
+            sprintResponse.Name.Should().Be(sprint.Name.Value);
+            sprintResponse.StartDate.Should().Be(sprint.StartDate);
+            sprintResponse.EndDate.Should().Be(sprint.EndDate);
+        }
+        
         private static void AssertProjectResponse(
             GetCollectionProjectForUserResponse.ProjectResponse projectResponse,
             ProjectAggregate project)

@@ -3,7 +3,7 @@ import { useToken } from "./utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
 import { createWorkspace, getPersonalWorkspace } from "./workspaces.utils";
 
-export async function getProjectsForUser(request: APIRequestContext) {
+export async function getProjects(request: APIRequestContext) {
   const response = await request.get('/api/projects/user', useToken())
   expect(response.ok()).toBeTruthy()
   return (await response.json()).projects
@@ -19,7 +19,7 @@ export async function createProject(
   })
   expect(response.ok()).toBeTruthy()
 
-  return (await getProjectsForUser(request)).filter((p: { name: string }) => p.name === body.name)[0]
+  return (await getProjects(request)).filter((p: { name: string }) => p.name === body.name)[0]
 }
 
 export async function create2ProjectsIn2DifferentWorkspaces(request: APIRequestContext) {
