@@ -7,6 +7,7 @@ import { createProject } from "../utils/projects.utils";
 import { createProjectSprint, getProjectSprints } from "../utils/project-sprint.utils";
 import CreateProjectSprintRequest from "../types/requests/project-sprint/CreateProjectSprintRequest";
 import UpdateProjectSprintRequest from "../types/requests/project-sprint/UpdateProjectSprintRequest";
+import { ProjectSprintName } from "../utils/constants";
 
 test.describe('should allow operations on the project sprint entity', () => {
   let PROJECT_ID: string
@@ -29,7 +30,7 @@ test.describe('should allow operations on the project sprint entity', () => {
   test('should get project sprint', async ({ request }) => {
     const createProjectSprintRequest: CreateProjectSprintRequest = {
       projectId: PROJECT_ID,
-      name: "Project Sprint Name",
+      name: "Sprint Name",
       startDate: "2024-01-12",
       endDate: "2024-01-26"
     }
@@ -49,7 +50,7 @@ test.describe('should allow operations on the project sprint entity', () => {
   test('should get collection of project sprints', async ({ request }) => {
     const projectSprint = await createProjectSprint(request, {
       projectId: PROJECT_ID,
-      name: "Project Sprint Name",
+      name: "Sprint Name",
       startDate: "2024-01-12",
       endDate: "2024-01-26"
     })
@@ -60,14 +61,20 @@ test.describe('should allow operations on the project sprint entity', () => {
 
     const json = await response.json()
     expect(json).toStrictEqual({
-      sprints: expect.arrayContaining([
+      sprints: [
+        {
+          id: expect.any(String),
+          name: ProjectSprintName,
+          startDate: null,
+          endDate: null,
+        },
         {
           id: expect.any(String),
           name: projectSprint.name,
           startDate: projectSprint.startDate,
           endDate: projectSprint.endDate,
         }
-      ])
+      ]
     })
     expect(json.sprints).toHaveLength(2);
   })
@@ -92,14 +99,20 @@ test.describe('should allow operations on the project sprint entity', () => {
 
     const sprints = await getProjectSprints(request, PROJECT_ID)
     expect(sprints).toHaveLength(2)
-    expect(sprints).toStrictEqual(expect.arrayContaining([
+    expect(sprints).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: ProjectSprintName,
+        startDate: null,
+        endDate: null,
+      },
       {
         id: expect.any(String),
         name: body.name,
         startDate: body.startDate,
         endDate: body.endDate
       }
-    ]))
+    ])
   })
 
   test('should update project sprint', async ({ request }) => {
@@ -113,7 +126,7 @@ test.describe('should allow operations on the project sprint entity', () => {
 
     const body: UpdateProjectSprintRequest = {
       id: sprint.id,
-      name: "New Sprint",
+      name: "Sprint 2 - Updated",
       startDate: null,
       endDate: null
     }
@@ -131,14 +144,20 @@ test.describe('should allow operations on the project sprint entity', () => {
     const sprints = await getProjectSprints(request, PROJECT_ID)
     expect(sprints).toHaveLength(2)
     expect(sprints).not.toStrictEqual(expect.arrayContaining([sprint]))
-    expect(sprints).toStrictEqual(expect.arrayContaining([
+    expect(sprints).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: ProjectSprintName,
+        startDate: null,
+        endDate: null,
+      },
       {
         id: body.id,
         name: body.name,
         startDate: body.startDate,
         endDate: body.endDate
       }
-    ]))
+    ])
   })
 
   test('should delete project sprint', async ({ request }) => {
@@ -167,5 +186,13 @@ test.describe('should allow operations on the project sprint entity', () => {
         endDate: projectSprint.endDate
       }
     ]))
+    expect(sprints).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: ProjectSprintName,
+        startDate: null,
+        endDate: null,
+      }
+    ])
   })
 })

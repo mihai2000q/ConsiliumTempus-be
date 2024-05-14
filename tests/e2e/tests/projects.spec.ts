@@ -7,9 +7,10 @@ import {
   create2ProjectsIn2DifferentWorkspaces,
   createProject,
   createProjects,
-  getProjectsForUser
+  getProjects
 } from "../utils/projects.utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
+import { ProjectSprintName } from "../utils/constants";
 
 test.describe('should allow operations on the project entity', () => {
   let WORKSPACE_ID: string
@@ -44,6 +45,14 @@ test.describe('should allow operations on the project entity', () => {
       description: createRequest.description,
       isPrivate: createRequest.isPrivate,
       isFavorite: expect.any(Boolean),
+      sprints: [
+        {
+          id: expect.any(String),
+          name: ProjectSprintName,
+          startDate: null,
+          endDate: null,
+        }
+      ]
     })
   })
 
@@ -267,7 +276,7 @@ test.describe('should allow operations on the project entity', () => {
       message: expect.any(String)
     })
 
-    const projects = await getProjectsForUser(request)
+    const projects = await getProjects(request)
     expect(projects).toHaveLength(1)
     expect(projects).toStrictEqual(expect.arrayContaining([
       {
@@ -293,7 +302,7 @@ test.describe('should allow operations on the project entity', () => {
       message: expect.any(String)
     })
 
-    const projects = await getProjectsForUser(request)
+    const projects = await getProjects(request)
     expect(projects).toHaveLength(0)
   })
 })

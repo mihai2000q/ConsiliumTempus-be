@@ -7,4 +7,12 @@ public sealed record GetProjectResponse(
     string Name,
     string Description,
     bool IsFavorite,
-    bool IsPrivate);
+    bool IsPrivate,
+    List<GetProjectResponse.ProjectSprintResponse> Sprints)
+{
+    public sealed record ProjectSprintResponse(
+        Guid Id,
+        string Name,
+        DateOnly? StartDate,
+        DateOnly? EndDate);
+};

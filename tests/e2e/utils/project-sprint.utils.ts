@@ -3,7 +3,7 @@ import { useToken } from "./utils";
 import CreateProjectSprintRequest from "../types/requests/project-sprint/CreateProjectSprintRequest";
 
 export async function getProjectSprints(request: APIRequestContext, projectId: string) {
-  const response = await request.get(`/api/projects/sprints?projectId=${projectId}`, useToken())
+  const response = await request.get(`/api/projects/${projectId}`, useToken())
   expect(response.ok()).toBeTruthy()
   return (await response.json()).sprints
 }

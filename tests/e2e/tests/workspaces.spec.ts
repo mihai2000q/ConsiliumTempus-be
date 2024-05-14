@@ -1,7 +1,8 @@
 import { test } from "@playwright/test";
 import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
-import { createWorkspace, createWorkspaces, getWorkspaces, PersonalWorkspaceName } from "../utils/workspaces.utils";
+import { createWorkspace, createWorkspaces, getWorkspaces } from "../utils/workspaces.utils";
+import { PersonalWorkspaceName } from "../utils/constants";
 import { deleteUser, registerUser } from "../utils/users.utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
 import UpdateWorkspaceRequest from "../types/requests/workspace/UpdateWorkspaceRequest";

@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Common.UnitTests.TestConstants;
+﻿using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
+using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.ValueObjects;
@@ -15,14 +16,21 @@ public static class ProjectFactory
         string description = Constants.Project.Description,
         bool isPrivate = false,
         UserAggregate? user = null,
-        WorkspaceAggregate? workspace = null)
+        WorkspaceAggregate? workspace = null,
+        int sprintsCount = 5)
     {
-        return ProjectAggregate.Create(
+        var project = ProjectAggregate.Create(
             Name.Create(name),
             Description.Create(description),
             IsPrivate.Create(isPrivate),
             workspace ?? WorkspaceFactory.Create(),
             user ?? UserFactory.Create());
+
+        ProjectSprintFactory
+            .CreateList(sprintsCount, project: project)
+            .ForEach(s => project.AddSprint(s));
+
+        return project;
     }
 
     public static List<ProjectAggregate> CreateList(int count = 5)

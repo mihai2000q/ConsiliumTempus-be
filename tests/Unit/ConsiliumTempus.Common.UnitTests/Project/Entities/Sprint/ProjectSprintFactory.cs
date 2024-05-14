@@ -20,10 +20,14 @@ public static class ProjectSprintFactory
             endDate);
     }
 
-    public static List<ProjectSprint> CreateList(int count = 5)
+    public static List<ProjectSprint> CreateList(
+        int count = 5,
+        string name = Constants.ProjectSprint.Name,
+        ProjectAggregate? project = null)
     {
-        return Enumerable.Repeat(0, count)
-            .Select(_ => Create())
+        return Enumerable
+            .Range(0, count)
+            .Select(i => Create(name + i, project))
             .ToList();
     }
 }
