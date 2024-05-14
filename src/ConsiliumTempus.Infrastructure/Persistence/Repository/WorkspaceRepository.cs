@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -38,7 +39,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
 
         return projectSprint?.Project.Workspace;
     }
-    
+
     public async Task<WorkspaceAggregate?> GetByProjectStage(ProjectStageId id,
         CancellationToken cancellationToken = default)
     {
@@ -49,6 +50,19 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
 
         return projectStage?.Sprint.Project.Workspace;
+    }
+
+    public async Task<WorkspaceAggregate?> GetByProjectTask(ProjectTaskId id,
+        CancellationToken cancellationToken = default)
+    {
+        var projectTask = await dbContext.ProjectTasks
+            .Include(pt => pt.Stage)
+            .ThenInclude(ps => ps.Sprint)
+            .ThenInclude(ps => ps.Project)
+            .ThenInclude(p => p.Workspace)
+            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
+
+        return projectTask?.Stage.Sprint.Project.Workspace;
     }
 
     public async Task<List<WorkspaceAggregate>> GetListByUser(

@@ -9,6 +9,7 @@ class ProjectTask
 {
     ProjectTask Create()
     void Update()
+    void DecrementCustomOrderPosition()
     void AddComment()
 }
 ```
@@ -18,9 +19,9 @@ class ProjectTask
   "id": { "value": "00000000-0000-0000-0000-000000000000" },
   "name": { "value": "Task 1" },
   "description": { "value": "This is the description of the task" } ,
+  "customOrderPosition": { "value": 1 },
   "isCompleted": { "value": false },
   "createdBy": {},
-  "customOrderPosition": { "value": 1 },
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
   "assignee": {},
@@ -38,6 +39,10 @@ For database design checkout the [Project Task Diagram](../diagrams/aggregates/D
 
 - The **Name** cannot be longer than 100 characters
 - The **Description** cannot be longer than 1000 characters
+
+### Domain Errors
+
+- **Not Found** when the project cannot be found
 
 ### Entities
 

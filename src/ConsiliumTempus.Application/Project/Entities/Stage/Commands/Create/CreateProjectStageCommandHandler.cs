@@ -16,7 +16,9 @@ public sealed class CreateProjectStageCommandHandler(
     public async Task<ErrorOr<CreateProjectStageResult>> Handle(CreateProjectStageCommand command,
         CancellationToken cancellationToken)
     {
-        var sprint = await projectSprintRepository.GetWithStagesAndWorkspace(ProjectSprintId.Create(command.ProjectSprintId), cancellationToken);
+        var sprint = await projectSprintRepository.GetWithStagesAndWorkspace(
+            ProjectSprintId.Create(command.ProjectSprintId),
+            cancellationToken);
         if (sprint is null) return Errors.ProjectSprint.NotFound;
 
         var stage = ProjectStage.Create(

@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
@@ -27,6 +28,7 @@ internal static partial class Utils
                         .RouteValues
                         .Returns(new RouteValueDictionary());
                     break;
+
                 case PermissionAuthorizationHandlerData.RequestLocation.Query:
                     httpContextAccessor
                         .HttpContext!
@@ -34,6 +36,7 @@ internal static partial class Utils
                         .Query
                         .Returns(new QueryCollection());
                     break;
+
                 case PermissionAuthorizationHandlerData.RequestLocation.Body:
                     var bodyStream = JsonSerializer.SerializeToUtf8Bytes(new Dictionary<string, string>());
                     httpContextAccessor
@@ -42,6 +45,7 @@ internal static partial class Utils
                         .Body
                         .Returns(new MemoryStream(bodyStream));
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(requestLocation), requestLocation, null);
             }
@@ -56,7 +60,6 @@ internal static partial class Utils
             switch (requestLocation)
             {
                 case PermissionAuthorizationHandlerData.RequestLocation.Body:
-                {
                     var body = new Dictionary<string, string> { [id ?? "id"] = stringId };
                     var bodyStream = JsonSerializer.SerializeToUtf8Bytes(body);
                     httpContextAccessor
@@ -65,7 +68,7 @@ internal static partial class Utils
                         .Body
                         .Returns(new MemoryStream(bodyStream));
                     break;
-                }
+
                 case PermissionAuthorizationHandlerData.RequestLocation.Route:
                     httpContextAccessor
                         .HttpContext!
@@ -73,6 +76,7 @@ internal static partial class Utils
                         .RouteValues
                         .Returns(new RouteValueDictionary { [id ?? "id"] = stringId });
                     break;
+
                 case PermissionAuthorizationHandlerData.RequestLocation.Query:
                     httpContextAccessor
                         .HttpContext!
@@ -81,6 +85,7 @@ internal static partial class Utils
                         .Returns(new QueryCollection(
                             new Dictionary<string, StringValues> { [id ?? "id"] = stringId }));
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(requestLocation), requestLocation, null);
             }
@@ -103,6 +108,10 @@ internal static partial class Utils
             workspaceProvider
                 .GetByProjectStage(Arg.Any<ProjectStageId>())
                 .Returns(workspace);
+            
+            workspaceProvider
+                .GetByProjectTask(Arg.Any<ProjectTaskId>())
+                .Returns(workspace);
         }
 
         internal static async Task VerifyWorkspaceProvider(
@@ -117,21 +126,31 @@ internal static partial class Utils
                         .Received(1)
                         .Get(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));
                     break;
+
                 case PermissionAuthorizationHandlerData.StringIdType.Project:
                     await workspaceProvider
                         .Received(1)
                         .GetByProject(Arg.Is<ProjectId>(pId => pId.Value.ToString() == stringId));
                     break;
+
                 case PermissionAuthorizationHandlerData.StringIdType.ProjectSprint:
                     await workspaceProvider
                         .Received(1)
                         .GetByProjectSprint(Arg.Is<ProjectSprintId>(psId => psId.Value.ToString() == stringId));
                     break;
+
                 case PermissionAuthorizationHandlerData.StringIdType.ProjectStage:
                     await workspaceProvider
                         .Received(1)
                         .GetByProjectStage(Arg.Is<ProjectStageId>(psId => psId.Value.ToString() == stringId));
                     break;
+                
+                case PermissionAuthorizationHandlerData.StringIdType.ProjectTask:
+                    await workspaceProvider
+                        .Received(1)
+                        .GetByProjectTask(Arg.Is<ProjectTaskId>(ptId => ptId.Value.ToString() == stringId));
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(provider), provider, null);
             }

@@ -9,7 +9,8 @@ public static class AccessControlList
     [
         Permissions.ReadWorkspace,
         Permissions.ReadProject, Permissions.ReadCollectionProject,
-        Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint
+        Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint,
+        Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask
     ];
 
     private static readonly List<Permissions> MemberPermissions =
@@ -17,7 +18,8 @@ public static class AccessControlList
         Permissions.ReadWorkspace, Permissions.UpdateWorkspace,
         Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject,
         Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint,
-        Permissions.UpdateProjectStage
+        Permissions.UpdateProjectStage,
+        Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask, Permissions.UpdateProjectTask, Permissions.DeleteProjectTask,
     ];
 
     private static readonly List<Permissions> AdminPermissions =
@@ -25,7 +27,8 @@ public static class AccessControlList
         Permissions.ReadWorkspace, Permissions.UpdateWorkspace, Permissions.DeleteWorkspace,
         Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject, Permissions.DeleteProject,
         Permissions.CreateProjectSprint, Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint, Permissions.DeleteProjectSprint,
-        Permissions.CreateProjectStage, Permissions.UpdateProjectStage, Permissions.DeleteProjectStage
+        Permissions.CreateProjectStage, Permissions.UpdateProjectStage, Permissions.DeleteProjectStage,
+        Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask, Permissions.UpdateProjectTask, Permissions.DeleteProjectTask,
     ];
 
     public static readonly Dictionary<WorkspaceRole, List<Permissions>> RoleHasPermissions = new()

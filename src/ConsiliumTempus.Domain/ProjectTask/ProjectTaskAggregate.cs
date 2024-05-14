@@ -41,8 +41,8 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
-    public IsCompleted IsCompleted { get; private set; } = default!;
     public CustomOrderPosition CustomOrderPosition { get; private set; } = default!;
+    public IsCompleted IsCompleted { get; private set; } = default!;
     public UserAggregate CreatedBy { get; init; } = default!;
     public UserAggregate? Asignee { get; private set; }
     public UserAggregate? Reviewer { get; private set; }
@@ -81,5 +81,10 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public void AddComment(ProjectTaskComment comment)
     {
         _comments.Add(comment);
+    }
+
+    public void DecrementCustomOrderPosition()
+    {
+        CustomOrderPosition = CustomOrderPosition.Create(CustomOrderPosition.Value - 1);
     }
 }
