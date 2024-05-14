@@ -14,7 +14,7 @@ public sealed class GetOverviewProjectQueryHandler(IProjectRepository projectRep
     {
         var project = await projectRepository.Get(ProjectId.Create(query.Id), cancellationToken);
         return project is not null 
-            ? new GetOverviewProjectResult(project.Description.Value)
+            ? new GetOverviewProjectResult(project.Description)
             : Errors.Project.NotFound;
     }
 }

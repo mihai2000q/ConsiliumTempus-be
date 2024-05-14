@@ -68,7 +68,7 @@ internal static partial class Utils
             GetOverviewProjectResult outcome,
             ProjectAggregate project)
         {
-            outcome.Description.Should().Be(project.Description.Value);
+            outcome.Description.Should().Be(project.Description);
             
         }
 

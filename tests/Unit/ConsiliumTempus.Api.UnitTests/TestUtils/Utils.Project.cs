@@ -2,11 +2,13 @@
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
+using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
+using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Domain.Project;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
@@ -18,6 +20,14 @@ internal static partial class Utils
         internal static bool AssertGetProjectQuery(
             GetProjectQuery query,
             GetProjectRequest request)
+        {
+            query.Id.Should().Be(request.Id);
+            return true;
+        }
+
+        internal static bool AssertGetOverviewProjectQuery(
+            GetOverviewProjectQuery query,
+            GetOverviewProjectRequest request)
         {
             query.Id.Should().Be(request.Id);
             return true;
@@ -68,6 +78,13 @@ internal static partial class Utils
             response.Description.Should().Be(project.Description.Value);
             response.IsFavorite.Should().Be(project.IsFavorite.Value);
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
+        }
+
+        internal static void AssertGetOverviewProjectResponse(
+            GetOverviewProjectResponse response,
+            GetOverviewProjectResult result)
+        {
+            response.Description.Should().Be(result.Description.Value);
         }
 
         internal static void AssertGetCollectionResponse(

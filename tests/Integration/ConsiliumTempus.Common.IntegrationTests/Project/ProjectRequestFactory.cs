@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
+using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
 namespace ConsiliumTempus.Common.IntegrationTests.Project;
@@ -11,6 +12,15 @@ public static class ProjectRequestFactory
         Guid? id = null)
     {
         return new GetProjectRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
+    }
+    
+    public static GetOverviewProjectRequest CreateGetOverviewProjectRequest(
+        Guid? id = null)
+    {
+        return new GetOverviewProjectRequest
         {
             Id = id ?? Guid.NewGuid()
         };

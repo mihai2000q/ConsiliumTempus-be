@@ -4,11 +4,13 @@ using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
+using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
+using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
 using Mapster;
@@ -21,6 +23,7 @@ public sealed class ProjectMappingConfig : IRegister
     public void Register(TypeAdapterConfig config)
     {
         GetMappings(config);
+        GetOverviewMappings(config);
         GetCollectionForUserMappings(config);
         GetCollectionMappings(config);
         CreateMappings(config);
@@ -40,6 +43,14 @@ public sealed class ProjectMappingConfig : IRegister
             .IgnoreNullValues(true)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Id, src => src.Id.Value);
+    }
+
+    private static void GetOverviewMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<GetOverviewProjectRequest, GetOverviewProjectQuery>();
+
+        config.NewConfig<GetOverviewProjectResult, GetOverviewProjectResponse>()
+            .Map(dest => dest.Description, src => src.Description.Value);
     }
 
     private static void GetCollectionForUserMappings(TypeAdapterConfig config)
