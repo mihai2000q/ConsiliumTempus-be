@@ -28,7 +28,7 @@ public class DeleteProjectTaskCommandHandlerTest
     public async Task DeleteProjectTaskCommand_WhenIsSuccessful_ShouldDeleteProjectTask()
     {
         // Arrange
-        var stage = ProjectStageFactory.Create();
+        var stage = ProjectStageFactory.CreateWithTasks();
         _projectStageRepository
             .GetWithTasksAndWorkspace(Arg.Any<ProjectStageId>())
             .Returns(stage);
@@ -69,6 +69,6 @@ public class DeleteProjectTaskCommandHandlerTest
             .Received(1)
             .GetWithTasksAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.StageId));
 
-        outcome.ValidateError(Errors.Workspace.NotFound);
+        outcome.ValidateError(Errors.ProjectStage.NotFound);
     }
 }

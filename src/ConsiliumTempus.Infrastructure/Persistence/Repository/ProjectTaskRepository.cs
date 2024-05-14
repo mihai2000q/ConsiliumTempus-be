@@ -24,10 +24,21 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectTasks
-            .Include(t => t.CreatedBy)
             .Where(t => t.Stage.Id == stageId)
             .ApplyFilters(filters)
             .ToListAsync(cancellationToken);
+    }
+    
+    public Task<int> GetListByStageCount(
+        ProjectStageId stageId, 
+        IReadOnlyList<IFilter<ProjectTaskAggregate>> filters,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.ProjectTasks
+            .Include(t => t.CreatedBy)
+            .Where(t => t.Stage.Id == stageId)
+            .ApplyFilters(filters)
+            .CountAsync(cancellationToken);
     }
 
     public async Task Add(ProjectTaskAggregate task, CancellationToken cancellationToken = default)

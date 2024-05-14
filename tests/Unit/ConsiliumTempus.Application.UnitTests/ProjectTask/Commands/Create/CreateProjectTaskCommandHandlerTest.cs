@@ -9,6 +9,7 @@ using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using FluentAssertions.Extensions;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.ProjectTask.Commands.Create;
 
@@ -77,6 +78,10 @@ public class CreateProjectTaskCommandHandlerTest
         // Arrange
         var command = ProjectTaskCommandFactory.CreateCreateProjectTaskCommand();
 
+        _projectStageRepository
+            .GetWithTasksAndWorkspace(Arg.Any<ProjectStageId>())
+            .ReturnsNull();
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
@@ -87,6 +92,6 @@ public class CreateProjectTaskCommandHandlerTest
         _currentUserProvider.DidNotReceive();
         _projectTaskRepository.DidNotReceive();
 
-        outcome.ValidateError(Errors.Workspace.NotFound);
+        outcome.ValidateError(Errors.ProjectStage.NotFound);
     }
 }

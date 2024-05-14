@@ -8,6 +8,11 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
 public sealed class ProjectStageRepository(ConsiliumTempusDbContext dbContext) : IProjectStageRepository
 {
+    public async Task<ProjectStage?> Get(ProjectStageId id, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.ProjectStages.FindAsync([id], cancellationToken);
+    }
+    
     public async Task<ProjectStage?> GetWithTasksAndWorkspace(ProjectStageId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.ProjectStages

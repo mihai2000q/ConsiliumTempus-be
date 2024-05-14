@@ -24,4 +24,12 @@ public static class ProjectTaskFactory
             user ?? UserFactory.Create(),
             stage ?? ProjectStageFactory.Create());
     }
+    
+    public static List<ProjectTaskAggregate> CreateList(int count = 5)
+    {
+        return Enumerable
+            .Range(0, count)
+            .Select(_ => Create())
+            .ToList();
+    }
 }

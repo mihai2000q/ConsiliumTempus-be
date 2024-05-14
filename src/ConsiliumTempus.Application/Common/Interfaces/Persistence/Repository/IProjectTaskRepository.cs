@@ -13,6 +13,11 @@ public interface IProjectTaskRepository
         ProjectStageId stageId, 
         IReadOnlyList<IFilter<ProjectTaskAggregate>> filters,
         CancellationToken cancellationToken = default);
+    
+    Task<int> GetListByStageCount(
+        ProjectStageId stageId, 
+        IReadOnlyList<IFilter<ProjectTaskAggregate>> filters,
+        CancellationToken cancellationToken = default);
 
     Task Add(ProjectTaskAggregate task, CancellationToken cancellationToken = default);
 
