@@ -30,6 +30,7 @@ internal static partial class Utils
             task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             task.Comments.Should().BeEmpty();
+            task.DomainEvents.Should().BeEmpty();
 
             return true;
         }
@@ -49,6 +50,26 @@ internal static partial class Utils
 
             stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+        
+        internal static void AssertProjectTask(
+            ProjectTaskAggregate outcome,
+            ProjectTaskAggregate expected)
+        {
+            outcome.Id.Should().Be(expected.Id);
+            outcome.Name.Should().Be(expected.Name);
+            outcome.Description.Should().Be(expected.Description);
+            outcome.CustomOrderPosition.Should().Be(expected.CustomOrderPosition);
+            outcome.IsCompleted.Should().Be(expected.IsCompleted);
+            outcome.CreatedBy.Should().Be(expected.CreatedBy);
+            outcome.Asignee.Should().Be(expected.Asignee);
+            outcome.Reviewer.Should().Be(expected.Reviewer);
+            outcome.DueDate.Should().Be(expected.DueDate);
+            outcome.EstimatedDuration.Should().Be(expected.EstimatedDuration);
+            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
+            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Stage.Should().Be(expected.Stage);
+            outcome.Comments.Should().BeEquivalentTo(expected.Comments);
         }
     }
 }
