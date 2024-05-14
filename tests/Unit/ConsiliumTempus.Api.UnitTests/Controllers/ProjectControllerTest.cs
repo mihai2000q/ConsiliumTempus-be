@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
+using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.Create;
@@ -11,8 +12,10 @@ using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
+using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -34,7 +37,7 @@ public class ProjectControllerTest
     }
 
     #endregion
-    
+
     [Fact]
     public async Task Get_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -78,6 +81,53 @@ public class ProjectControllerTest
             .Received(1)
             .Send(Arg.Is<GetProjectQuery>(q =>
                 Utils.Project.AssertGetProjectQuery(q, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task GetOverview_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateGetOverviewProjectRequest();
+
+        var projectOverview = new GetOverviewProjectResult(Description.Create("this is a description"));
+        _mediator
+            .Send(Arg.Any<GetOverviewProjectQuery>())
+            .Returns(projectOverview);
+
+        // Act
+        var outcome = await _uut.GetOverview(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetOverviewProjectQuery>(q =>
+                Utils.Project.AssertGetOverviewProjectQuery(q, request)));
+
+        var response = outcome.ToResponse<GetOverviewProjectResponse>();
+        Utils.Project.AssertGetOverviewProjectResponse(response, projectOverview);
+    }
+
+    [Fact]
+    public async Task GetOverview_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateGetOverviewProjectRequest();
+
+        var error = Errors.Project.NotFound;
+        _mediator
+            .Send(Arg.Any<GetOverviewProjectQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetOverview(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetOverviewProjectQuery>(q =>
+                Utils.Project.AssertGetOverviewProjectQuery(q, request)));
 
         outcome.ValidateError(error);
     }

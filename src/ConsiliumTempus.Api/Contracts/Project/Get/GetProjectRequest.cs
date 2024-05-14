@@ -4,6 +4,5 @@ namespace ConsiliumTempus.Api.Contracts.Project.Get;
 
 public sealed class GetProjectRequest
 {
-    [FromRoute] 
-    public Guid Id { get; init; }
+    [FromRoute] public Guid Id { get; init; }
 }

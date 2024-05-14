@@ -4,11 +4,13 @@ using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
+using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
+using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Domain.Common.Enums;
 using MapsterMapper;
 using MediatR;
@@ -31,6 +33,19 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasPermission(Permissions.ReadProject)]
+    [HttpGet("Overview/{id:guid}")]
+    public async Task<IActionResult> GetOverview(GetOverviewProjectRequest request, CancellationToken cancellationToken)
+    {
+        var query = Mapper.Map<GetOverviewProjectQuery>(request);
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return result.Match(
+            projectOverview => Ok(Mapper.Map<GetOverviewProjectResponse>(projectOverview)),
+            Problem
+        );
+    }
+
     [HttpGet("User")]
     public async Task<IActionResult> GetCollectionForUser(CancellationToken cancellationToken)
     {
@@ -46,7 +61,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
     [HasPermission(Permissions.ReadCollectionProject)]
     [HttpGet]
-    public async Task<IActionResult> GetCollection(GetCollectionProjectRequest request, 
+    public async Task<IActionResult> GetCollection(GetCollectionProjectRequest request,
         CancellationToken cancellationToken)
     {
         var query = Mapper.Map<GetCollectionProjectQuery>(request);

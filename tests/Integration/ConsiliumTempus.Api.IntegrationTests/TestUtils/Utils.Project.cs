@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
+using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
 using FluentAssertions.Extensions;
@@ -27,6 +28,13 @@ internal static partial class Utils
                     .ThenBy(s => s.Name.Value)
                     .ThenBy(s => s.CreatedDateTime))
                 .Should().AllSatisfy(p => AssertProjectSprintResponse(p.First, p.Second));
+        }
+        
+        internal static void AssertGetOverviewProjectResponse(
+            GetOverviewProjectResponse response,
+            ProjectAggregate project)
+        {
+            response.Description.Should().Be(project.Description.Value);
         }
 
         internal static void AssertGetCollectionForUserResponse(

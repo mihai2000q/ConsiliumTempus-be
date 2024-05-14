@@ -25,7 +25,7 @@ test.describe('should allow operations on the project entity', () => {
   })
 
   test('should get project', async ({ request }) => {
-    const createRequest = {
+    const createRequest: CreateProjectRequest = {
       workspaceId: WORKSPACE_ID,
       name: "Project",
       description: "",
@@ -53,6 +53,27 @@ test.describe('should allow operations on the project entity', () => {
           endDate: null,
         }
       ]
+    })
+  })
+
+  test('should get overview project', async ({ request }) => {
+    const createRequest: CreateProjectRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "Project",
+      description: "This is a very descriptive description of this new project",
+      isPrivate: true
+    }
+    const project = await createProject(request, createRequest);
+
+    const response = await request.get(
+      `/api/projects/overview/${project.id}`,
+      useToken()
+    )
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      description: createRequest.description,
     })
   })
 
