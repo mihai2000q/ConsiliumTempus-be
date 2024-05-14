@@ -10,7 +10,15 @@ internal static class CreateProjectCommandValidatorData
     {
         public GetValidCommands()
         {
-            Add(ProjectCommandFactory.CreateCreateProjectCommand());
+            var command = ProjectCommandFactory.CreateCreateProjectCommand();
+            Add(command);
+
+            command = ProjectCommandFactory.CreateCreateProjectCommand(
+                Guid.NewGuid(),
+                "New Project",
+                "This is a description",
+                true);
+            Add(command);
         }
     }
 
