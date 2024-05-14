@@ -10,7 +10,13 @@ internal static class CreateProjectTaskCommandValidatorData
     {
         public GetValidCommands()
         {
-            Add(ProjectTaskCommandFactory.CreateCreateProjectTaskCommand());
+            var command = ProjectTaskCommandFactory.CreateCreateProjectTaskCommand();
+            Add(command);
+
+            command = ProjectTaskCommandFactory.CreateCreateProjectTaskCommand(
+                Guid.NewGuid(),
+                "New Task");
+            Add(command);
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.ProjectTask.Commands.Create;
+using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.ProjectTask;
@@ -12,5 +13,14 @@ public static class ProjectTaskCommandFactory
         return new CreateProjectTaskCommand(
             projectStageId ?? Guid.NewGuid(),
             name);
+    }
+    
+    public static DeleteProjectTaskCommand CreateDeleteProjectTaskCommand(
+        Guid? id = null,
+        Guid? projectStageId = null)
+    {
+        return new DeleteProjectTaskCommand(
+            id ?? Guid.NewGuid(),
+            projectStageId ?? Guid.NewGuid());
     }
 }
