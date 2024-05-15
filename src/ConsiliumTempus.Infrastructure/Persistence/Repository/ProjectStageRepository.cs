@@ -42,6 +42,14 @@ public sealed class ProjectStageRepository(ConsiliumTempusDbContext dbContext) :
             .ThenInclude(p => p.Workspace)
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
+    
+    public Task<List<ProjectStage>> GetListBySprint(ProjectSprintId id, CancellationToken cancellationToken = default)
+    {
+        return dbContext.ProjectStages
+            .Where(ps => ps.Sprint.Id == id)
+            .OrderBy(ps => ps.CustomOrderPosition.Value)
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task Add(ProjectStage stage, CancellationToken cancellationToken = default)
     {
