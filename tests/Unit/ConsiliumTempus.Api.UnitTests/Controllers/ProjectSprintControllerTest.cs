@@ -34,7 +34,7 @@ public class ProjectSprintControllerTest
     }
 
     #endregion
-    
+
     [Fact]
     public async Task GetProjectSprint_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -79,7 +79,7 @@ public class ProjectSprintControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task GetCollectionProjectSprint_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -173,7 +173,7 @@ public class ProjectSprintControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task UpdateProjectSprint_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -225,7 +225,7 @@ public class ProjectSprintControllerTest
     public async Task DeleteProjectSprint_WhenIsSuccessful_ShouldReturnSuccess()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var request = ProjectSprintRequestFactory.CreateDeleteProjectSprintRequest();
 
         var result = new DeleteProjectSprintResult();
         _mediator
@@ -233,13 +233,13 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(id, default);
+        var outcome = await _uut.Delete(request, default);
 
         // Assert
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteProjectSprintCommand>(command =>
-                Utils.ProjectSprint.AssertDeleteCommand(command, id)));
+                Utils.ProjectSprint.AssertDeleteCommand(command, request)));
 
         var response = outcome.ToResponse<DeleteProjectSprintResponse>();
         response.Message.Should().Be(result.Message);
@@ -249,7 +249,7 @@ public class ProjectSprintControllerTest
     public async Task DeleteProjectSprint_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var request = ProjectSprintRequestFactory.CreateDeleteProjectSprintRequest();
 
         var error = Errors.ProjectSprint.NotFound;
         _mediator
@@ -257,13 +257,13 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(id, default);
+        var outcome = await _uut.Delete(request, default);
 
         // Assert
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteProjectSprintCommand>(command =>
-                Utils.ProjectSprint.AssertDeleteCommand(command, id)));
+                Utils.ProjectSprint.AssertDeleteCommand(command, request)));
 
         outcome.ValidateError(error);
     }

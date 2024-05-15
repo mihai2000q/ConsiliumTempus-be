@@ -25,7 +25,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
         UpdateMappings(config);
         DeleteMappings(config);
     }
-    
+
     private static void Get(TypeAdapterConfig config)
     {
         config.NewConfig<GetProjectSprintRequest, GetProjectSprintQuery>();
@@ -51,7 +51,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
 
         config.NewConfig<CreateProjectSprintResult, CreateProjectSprintResponse>();
     }
-    
+
     private static void UpdateMappings(TypeAdapterConfig config)
     {
         config.NewConfig<UpdateProjectSprintRequest, UpdateProjectSprintCommand>();
@@ -61,6 +61,8 @@ public sealed class ProjectSprintMappingConfig : IRegister
 
     private static void DeleteMappings(TypeAdapterConfig config)
     {
+        config.NewConfig<DeleteProjectSprintRequest, DeleteProjectSprintCommand>();
+
         config.NewConfig<DeleteProjectSprintResult, DeleteProjectSprintResponse>();
     }
 }

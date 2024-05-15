@@ -88,9 +88,9 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
     [HasPermission(Permissions.DeleteProject)]
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(DeleteProjectRequest request, CancellationToken cancellationToken)
     {
-        var command = new DeleteProjectCommand(id);
+        var command = Mapper.Map<DeleteProjectCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(

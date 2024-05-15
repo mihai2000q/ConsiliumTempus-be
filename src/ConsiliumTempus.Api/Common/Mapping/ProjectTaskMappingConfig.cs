@@ -52,7 +52,7 @@ public sealed class ProjectTaskMappingConfig : IRegister
     private static void DeleteMappings(TypeAdapterConfig config)
     {
         config.NewConfig<DeleteProjectTaskRequest, DeleteProjectTaskCommand>();
-        
+
         config.NewConfig<DeleteProjectTaskResult, DeleteProjectTaskResponse>();
     }
 }

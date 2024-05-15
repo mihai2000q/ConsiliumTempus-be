@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Delete;
@@ -53,9 +54,10 @@ public class ProjectControllerDeleteAuthorizationTest(WebAppFactory factory)
     {
         // Arrange
         var project = ProjectData.Projects.First();
+        var request = ProjectRequestFactory.CreateDeleteProjectRequest(project.Id.Value);
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Delete($"api/projects/{project.Id}");
+        return await Client.Delete($"api/projects/{request.Id}");
     }
 }

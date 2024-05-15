@@ -274,7 +274,7 @@ public class ProjectControllerTest
     public async Task DeleteProject_WhenIsSuccessful_ShouldReturnSuccess()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var request = ProjectRequestFactory.CreateDeleteProjectRequest();
 
         var result = new DeleteProjectResult();
         _mediator
@@ -282,12 +282,12 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(id, default);
+        var outcome = await _uut.Delete(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, id)));
+            .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, request)));
 
         var response = outcome.ToResponse<DeleteProjectResponse>();
         response.Message.Should().Be(result.Message);
@@ -297,7 +297,7 @@ public class ProjectControllerTest
     public async Task DeleteProject_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var request = ProjectRequestFactory.CreateDeleteProjectRequest();
 
         var error = Errors.Project.NotFound;
         _mediator
@@ -305,12 +305,12 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(id, default);
+        var outcome = await _uut.Delete(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, id)));
+            .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, request)));
 
         outcome.ValidateError(error);
     }

@@ -1,8 +1,10 @@
 ﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
+using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
+using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
@@ -19,23 +21,26 @@ internal static partial class Utils
             GetWorkspaceRequest request)
         {
             query.Id.Should().Be(request.Id);
+
             return true;
         }
 
         internal static bool AssertGetCollectionQuery(
-            GetCollectionWorkspaceQuery query, 
+            GetCollectionWorkspaceQuery query,
             GetCollectionWorkspaceRequest request)
         {
             query.PageSize.Should().Be(request.PageSize);
             query.CurrentPage.Should().Be(request.CurrentPage);
             query.Order.Should().Be(request.Order);
             query.Name.Should().Be(request.Name);
+
             return true;
         }
 
         internal static bool AssertCreateCommand(CreateWorkspaceCommand command, CreateWorkspaceRequest request)
         {
             command.Name.Should().Be(request.Name);
+
             return true;
         }
 
@@ -46,6 +51,16 @@ internal static partial class Utils
             command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
             command.Description.Should().Be(request.Description);
+
+            return true;
+        }
+
+        internal static bool AssertDeleteCommand(
+            DeleteWorkspaceCommand command,
+            DeleteWorkspaceRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+
             return true;
         }
 

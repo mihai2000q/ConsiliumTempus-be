@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Stage.Create;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Stage.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Stage.Update;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Delete;
@@ -16,21 +17,26 @@ internal static partial class Utils
         {
             command.ProjectSprintId.Should().Be(request.ProjectSprintId);
             command.Name.Should().Be(request.Name);
+
             return true;
         }
-        
+
         internal static bool AssertUpdateCommand(
             UpdateProjectStageCommand command,
             UpdateProjectStageRequest request)
         {
             command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
+
             return true;
         }
 
-        internal static bool AssertDeleteCommand(DeleteProjectStageCommand command, Guid id)
+        internal static bool AssertDeleteCommand(
+            DeleteProjectStageCommand command,
+            DeleteProjectStageRequest request)
         {
-            command.Id.Should().Be(id);
+            command.Id.Should().Be(request.Id);
+
             return true;
         }
     }

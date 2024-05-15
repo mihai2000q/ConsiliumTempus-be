@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
+using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
@@ -22,6 +23,7 @@ internal static partial class Utils
             GetProjectRequest request)
         {
             query.Id.Should().Be(request.Id);
+
             return true;
         }
 
@@ -30,6 +32,7 @@ internal static partial class Utils
             GetOverviewProjectRequest request)
         {
             query.Id.Should().Be(request.Id);
+
             return true;
         }
 
@@ -37,7 +40,7 @@ internal static partial class Utils
             GetCollectionProjectForUserQuery query)
         {
             query.Should().Be(new GetCollectionProjectForUserQuery());
-            
+
             return true;
         }
 
@@ -61,14 +64,16 @@ internal static partial class Utils
             command.WorkspaceId.Should().Be(request.WorkspaceId);
             command.Name.Should().Be(request.Name);
             command.IsPrivate.Should().Be(request.IsPrivate);
-            
+
             return true;
         }
 
-        internal static bool AssertDeleteCommand(DeleteProjectCommand command, Guid id)
+        internal static bool AssertDeleteCommand(
+            DeleteProjectCommand command,
+            DeleteProjectRequest id)
         {
-            command.Id.Should().Be(id);
-            
+            command.Id.Should().Be(command.Id);
+
             return true;
         }
 

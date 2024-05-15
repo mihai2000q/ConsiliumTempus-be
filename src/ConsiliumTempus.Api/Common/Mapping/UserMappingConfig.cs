@@ -19,7 +19,7 @@ public sealed class UserMappingConfig : IRegister
         GetMappings(config);
         GetCurrentMappings(config);
         UpdateCurrentMappings(config);
-        DeleteMappings(config);
+        DeleteCurrentMappings(config);
     }
 
     private static void GetMappings(TypeAdapterConfig config)
@@ -52,7 +52,7 @@ public sealed class UserMappingConfig : IRegister
         config.NewConfig<UpdateCurrentUserResult, UpdateCurrentUserResponse>();
     }
 
-    private static void DeleteMappings(TypeAdapterConfig config)
+    private static void DeleteCurrentMappings(TypeAdapterConfig config)
     {
         config.NewConfig<DeleteCurrentUserResult, DeleteCurrentUserResponse>();
     }

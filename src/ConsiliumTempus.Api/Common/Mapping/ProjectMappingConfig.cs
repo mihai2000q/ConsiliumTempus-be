@@ -83,6 +83,8 @@ public sealed class ProjectMappingConfig : IRegister
 
     private static void DeleteMappings(TypeAdapterConfig config)
     {
+        config.NewConfig<DeleteProjectRequest, DeleteProjectCommand>();
+
         config.NewConfig<DeleteProjectResult, DeleteProjectResponse>();
     }
 }

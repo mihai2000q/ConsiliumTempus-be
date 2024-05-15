@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Stage.Create;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Stage.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Stage.Update;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
@@ -22,5 +23,13 @@ public static class ProjectStageRequestFactory
         return new UpdateProjectStageRequest(
             id ?? Guid.NewGuid(),
             name);
+    }
+    
+    public static DeleteProjectStageRequest CreateDeleteProjectStageRequest(Guid? id = null)
+    {
+        return new DeleteProjectStageRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
     }
 }

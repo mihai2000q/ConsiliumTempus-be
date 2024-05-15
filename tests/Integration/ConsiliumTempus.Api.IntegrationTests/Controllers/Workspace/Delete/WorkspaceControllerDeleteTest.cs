@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Delete;
@@ -17,10 +18,11 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces[0];
+        var request = WorkspaceRequestFactory.CreateDeleteWorkspaceRequest(workspace.Id.Value);
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users[0]);
-        var outcome = await Client.Delete($"api/workspaces/{workspace.Id}");
+        var outcome = await Client.Delete($"api/workspaces/{request.Id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -39,10 +41,11 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces[2];
+        var request = WorkspaceRequestFactory.CreateDeleteWorkspaceRequest(workspace.Id.Value);
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users[0]);
-        var outcome = await Client.Delete($"api/workspaces/{workspace.Id}");
+        var outcome = await Client.Delete($"api/workspaces/{request.Id}");
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.PersonalWorkspace);
@@ -52,10 +55,10 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
     public async Task WorkspaceDelete_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var request = WorkspaceRequestFactory.CreateDeleteWorkspaceRequest();
 
         // Act
-        var outcome = await Client.Delete($"api/workspaces/{id}");
+        var outcome = await Client.Delete($"api/workspaces/{request.Id}");
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);
@@ -63,7 +66,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length);
         dbContext.Workspaces.AsEnumerable()
-            .SingleOrDefault(w => w.Id.Value == id)
+            .SingleOrDefault(w => w.Id.Value == request.Id)
             .Should().BeNull();
     }
 }

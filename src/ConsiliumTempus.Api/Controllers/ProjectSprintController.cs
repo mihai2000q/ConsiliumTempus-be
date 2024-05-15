@@ -74,9 +74,9 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
 
     [HasPermission(Permissions.DeleteProjectSprint)]
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(DeleteProjectSprintRequest request, CancellationToken cancellationToken)
     {
-        var command = new DeleteProjectSprintCommand(id);
+        var command = Mapper.Map<DeleteProjectSprintCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(

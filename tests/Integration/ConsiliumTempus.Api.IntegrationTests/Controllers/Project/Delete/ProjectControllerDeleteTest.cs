@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions.Extensions;
 
@@ -18,10 +19,11 @@ public class ProjectControllerDeleteTest(WebAppFactory factory)
     {
         // Arrange
         var project = ProjectData.Projects.First();
+        var request = ProjectRequestFactory.CreateDeleteProjectRequest(project.Id.Value);
 
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
-        var outcome = await Client.Delete($"api/projects/{project.Id}");
+        var outcome = await Client.Delete($"api/projects/{request.Id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -39,10 +41,10 @@ public class ProjectControllerDeleteTest(WebAppFactory factory)
     public async Task DeleteProject_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var request = ProjectRequestFactory.CreateDeleteProjectRequest();
 
         // Act
-        var outcome = await Client.Delete($"api/projects/{id}");
+        var outcome = await Client.Delete($"api/projects/{request.Id}");
 
         // Assert
         await outcome.ValidateError(Errors.Project.NotFound);
@@ -50,6 +52,6 @@ public class ProjectControllerDeleteTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length);
         dbContext.Projects.AsEnumerable()
-            .SingleOrDefault(p => p.Id.Value == id).Should().BeNull();
+            .SingleOrDefault(p => p.Id.Value == request.Id).Should().BeNull();
     }
 }

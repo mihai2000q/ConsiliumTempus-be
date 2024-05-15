@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
+using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
@@ -48,5 +49,13 @@ public static class WorkspaceRequestFactory
             id ?? Guid.NewGuid(),
             name,
             description);
+    }
+    
+    public static DeleteWorkspaceRequest CreateDeleteWorkspaceRequest(Guid? id = null)
+    {
+        return new DeleteWorkspaceRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
     }
 }

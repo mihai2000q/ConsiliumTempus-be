@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Delete;
@@ -53,9 +54,10 @@ public class ProjectSprintControllerDeleteAuthorizationTest(WebAppFactory factor
     {
         // Arrange
         var sprint = ProjectSprintData.ProjectSprints.First();
+        var request = ProjectSprintRequestFactory.CreateDeleteProjectSprintRequest(sprint.Id.Value);
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Delete($"api/projects/sprints/{sprint.Id.Value}");
+        return await Client.Delete($"api/projects/sprints/{request.Id}");
     }
 }

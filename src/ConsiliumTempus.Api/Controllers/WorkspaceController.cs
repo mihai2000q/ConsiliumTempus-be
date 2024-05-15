@@ -72,9 +72,9 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
     [HasPermission(Permissions.DeleteWorkspace)]
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(DeleteWorkspaceRequest request, CancellationToken cancellationToken)
     {
-        var command = new DeleteWorkspaceCommand(id);
+        var command = Mapper.Map<DeleteWorkspaceCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
