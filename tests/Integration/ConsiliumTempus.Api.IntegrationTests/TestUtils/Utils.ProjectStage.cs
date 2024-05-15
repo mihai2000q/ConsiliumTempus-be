@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Stage.Create;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Stage.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Stage.Update;
 using FluentAssertions.Extensions;
 
@@ -8,6 +9,15 @@ internal static partial class Utils
 {
     internal static class ProjectStage
     {
+        internal static void AssertGetCollectionResponse(
+            GetCollectionProjectStageResponse response,
+            IReadOnlyList<Domain.Project.Entities.ProjectStage> stages)
+        {
+            response.Stages
+                .Zip(stages.OrderBy(s => s.CustomOrderPosition.Value))
+                .Should().AllSatisfy(x => AssertResponse(x.First, x.Second));
+        }
+        
         internal static void AssertCreation(
             Domain.Project.Entities.ProjectStage stage,
             CreateProjectStageRequest request)
@@ -34,6 +44,14 @@ internal static partial class Utils
 
             newStage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             newStage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+
+        private static void AssertResponse(
+            GetCollectionProjectStageResponse.ProjectStageResponse response,
+            Domain.Project.Entities.ProjectStage projectStage)
+        {
+            response.Id.Should().Be(projectStage.Id.Value);
+            response.Name.Should().Be(projectStage.Name.Value);
         }
     }
 }

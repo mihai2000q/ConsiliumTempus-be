@@ -3,7 +3,9 @@ import { useToken } from "./utils";
 import CreateProjectStageRequest from "../types/requests/project-stage/CreateProjectStageRequest";
 
 export async function getProjectStages(request: APIRequestContext, projectSprintId: string) {
-  return [{id: "", name: "something"}]
+  const response = await request.get(`/api/projects/stages?projectSprintId=${projectSprintId}`, useToken())
+  expect(response.ok()).toBeTruthy()
+  return (await response.json()).stages
 }
 
 export async function createProjectStage(
