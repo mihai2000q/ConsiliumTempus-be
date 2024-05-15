@@ -79,6 +79,12 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         UpdatedDateTime = DateTime.UtcNow;
         RefreshActivity();
     }
+    
+    public void UpdateOverview(Description description)
+    {
+        Description = description;
+        RefreshActivity();
+    }
 
     public void AddSprint(ProjectSprint sprint)
     {

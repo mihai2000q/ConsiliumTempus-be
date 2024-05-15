@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
@@ -67,6 +68,18 @@ internal static partial class Utils
             project.Id.Value.Should().Be(command.Id);
             project.Name.Value.Should().Be(command.Name);
             project.IsFavorite.Value.Should().Be(command.IsFavorite);
+            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+        
+        internal static void AssertFromUpdateOverviewCommand(
+            ProjectAggregate project,
+            UpdateOverviewProjectCommand command)
+        {
+            project.Id.Value.Should().Be(command.Id);
+            project.Description.Value.Should().Be(command.Description);
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
