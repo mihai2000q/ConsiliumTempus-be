@@ -138,10 +138,7 @@ public class ProjectControllerTest
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest();
 
-        var result = new GetCollectionProjectResult(
-            ProjectFactory.CreateList(),
-            25,
-            null);
+        var result = ProjectResultFactory.CreateGetCollectionProjectResult();
         _mediator
             .Send(Arg.Any<GetCollectionProjectQuery>())
             .Returns(result);
@@ -231,7 +228,7 @@ public class ProjectControllerTest
         // Arrange
         var request = ProjectRequestFactory.CreateCreateProjectRequest();
 
-        var result = new CreateProjectResult();
+        var result = ProjectResultFactory.CreateCreateProjectResult();
         _mediator
             .Send(Arg.Any<CreateProjectCommand>())
             .Returns(result);
@@ -276,7 +273,7 @@ public class ProjectControllerTest
         // Arrange
         var request = ProjectRequestFactory.CreateDeleteProjectRequest();
 
-        var result = new DeleteProjectResult();
+        var result = ProjectResultFactory.CreateDeleteProjectResult();
         _mediator
             .Send(Arg.Any<DeleteProjectCommand>())
             .Returns(result);

@@ -37,7 +37,7 @@ public class AuthenticationControllerTest
         // Arrange
         var request = AuthenticationRequestFactory.CreateRegisterRequest();
 
-        var result = new RegisterResult("access token", "refresh token");
+        var result = AuthenticationResultFactory.CreateRegisterResult();
         _mediator
             .Send(Arg.Any<RegisterCommand>())
             .Returns(result);
@@ -85,7 +85,7 @@ public class AuthenticationControllerTest
         // Arrange
         var request = AuthenticationRequestFactory.CreateLoginRequest();
 
-        var result = new LoginResult("access token", "refresh token");
+        var result = AuthenticationResultFactory.CreateLoginResult();
         _mediator
             .Send(Arg.Any<LoginCommand>())
             .Returns(result);
@@ -133,7 +133,7 @@ public class AuthenticationControllerTest
         // Arrange
         var request = AuthenticationRequestFactory.CreateRefreshRequest();
 
-        var result = new RefreshResult("access token");
+        var result = AuthenticationResultFactory.CreateRefreshResult();
         _mediator
             .Send(Arg.Any<RefreshCommand>())
             .Returns(result);

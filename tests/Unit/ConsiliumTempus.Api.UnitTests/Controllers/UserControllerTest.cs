@@ -125,7 +125,7 @@ public class UserControllerTest
         // Arrange
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
 
-        var result = new UpdateCurrentUserResult();
+        var result = UserResultFactory.CreateUpdateCurrentUserResult();
         _mediator
             .Send(Arg.Any<UpdateCurrentUserCommand>())
             .Returns(result);
@@ -168,7 +168,7 @@ public class UserControllerTest
     public async Task DeleteCurrentUser_WhenIsSuccessful_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var result = new DeleteCurrentUserResult();
+        var result = UserResultFactory.CreateDeleteCurrentUserResult();
         _mediator
             .Send(Arg.Any<DeleteCurrentUserCommand>())
             .Returns(result);

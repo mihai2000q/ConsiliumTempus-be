@@ -34,7 +34,7 @@ public static class ProjectFactory
     public static List<ProjectAggregate> CreateList(int count = 5)
     {
         return Enumerable
-            .Repeat(0, count)
+            .Range(0, count)
             .Select(_ => Create())
             .ToList();
     }

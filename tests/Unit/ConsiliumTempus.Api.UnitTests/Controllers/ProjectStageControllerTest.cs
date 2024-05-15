@@ -37,7 +37,7 @@ public class ProjectStageControllerTest
         // Arrange
         var request = ProjectStageRequestFactory.CreateCreateProjectStageRequest();
 
-        var result = new CreateProjectStageResult();
+        var result = ProjectStageResultFactory.CreateCreateProjectStageResult();
         _mediator
             .Send(Arg.Any<CreateProjectStageCommand>())
             .Returns(result);
@@ -84,7 +84,7 @@ public class ProjectStageControllerTest
         // Arrange
         var request = ProjectStageRequestFactory.CreateUpdateProjectStageRequest();
 
-        var result = new UpdateProjectStageResult();
+        var result = ProjectStageResultFactory.CreateUpdateProjectStageResult();
         _mediator
             .Send(Arg.Any<UpdateProjectStageCommand>())
             .Returns(result);
@@ -131,7 +131,7 @@ public class ProjectStageControllerTest
         // Arrange
         var request = ProjectStageRequestFactory.CreateDeleteProjectStageRequest();
 
-        var result = new DeleteProjectStageResult();
+        var result = ProjectStageResultFactory.CreateDeleteProjectStageResult();
         _mediator
             .Send(Arg.Any<DeleteProjectStageCommand>())
             .Returns(result);

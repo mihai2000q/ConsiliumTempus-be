@@ -86,9 +86,7 @@ public class ProjectTaskControllerTest
         // Arrange
         var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest();
 
-        var result = new GetCollectionProjectTaskResult(
-            ProjectTaskFactory.CreateList(),
-            25);
+        var result = ProjectTaskResultFactory.CreateGetCollectionProjectTaskResult();
         _mediator
             .Send(Arg.Any<GetCollectionProjectTaskQuery>())
             .Returns(result);
@@ -135,7 +133,7 @@ public class ProjectTaskControllerTest
         // Arrange
         var request = ProjectTaskRequestFactory.CreateCreateProjectTaskRequest();
 
-        var result = new CreateProjectTaskResult();
+        var result = ProjectTaskResultFactory.CreateCreateProjectTaskResult();
         _mediator
             .Send(Arg.Any<CreateProjectTaskCommand>())
             .Returns(result);
@@ -180,7 +178,7 @@ public class ProjectTaskControllerTest
         // Arrange
         var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest();
 
-        var result = new DeleteProjectTaskResult();
+        var result = ProjectTaskResultFactory.CreateDeleteProjectTaskResult();
         _mediator
             .Send(Arg.Any<DeleteProjectTaskCommand>())
             .Returns(result);

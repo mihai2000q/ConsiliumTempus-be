@@ -41,10 +41,10 @@ public class WorkspaceControllerTest
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetWorkspaceRequest();
 
-        var result = WorkspaceFactory.Create();
+        var workspace = WorkspaceFactory.Create();
         _mediator
             .Send(Arg.Any<GetWorkspaceQuery>())
-            .Returns(result);
+            .Returns(workspace);
 
         // Act
         var outcome = await _uut.Get(request, default);
@@ -55,7 +55,7 @@ public class WorkspaceControllerTest
             .Send(Arg.Is<GetWorkspaceQuery>(query => Utils.Workspace.AssertGetQuery(query, request)));
 
         var response = outcome.ToResponse<GetWorkspaceResponse>();
-        Utils.Workspace.AssertGetResponse(response, result);
+        Utils.Workspace.AssertGetResponse(response, workspace);
     }
 
     [Fact]
@@ -86,10 +86,7 @@ public class WorkspaceControllerTest
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
 
-        var result = new GetCollectionWorkspaceResult(
-            WorkspaceFactory.CreateList(),
-            25,
-            null);
+        var result = WorkspaceResultFactory.CreateGetCollectionWorkspaceResult();
         _mediator
             .Send(Arg.Any<GetCollectionWorkspaceQuery>())
             .Returns(result);
@@ -136,7 +133,7 @@ public class WorkspaceControllerTest
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
 
-        var result = new CreateWorkspaceResult();
+        var result = WorkspaceResultFactory.CreateCreateWorkspaceResult();
         _mediator
             .Send(Arg.Any<CreateWorkspaceCommand>())
             .Returns(result);
@@ -183,7 +180,7 @@ public class WorkspaceControllerTest
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest();
 
-        var result = new UpdateWorkspaceResult();
+        var result = WorkspaceResultFactory.CreateUpdateWorkspaceResult();
         _mediator
             .Send(Arg.Any<UpdateWorkspaceCommand>())
             .Returns(result);
@@ -230,7 +227,7 @@ public class WorkspaceControllerTest
         // Arrange
         var request = WorkspaceRequestFactory.CreateDeleteWorkspaceRequest();
 
-        var result = new DeleteWorkspaceResult();
+        var result = WorkspaceResultFactory.CreateDeleteWorkspaceResult();
         _mediator
             .Send(Arg.Any<DeleteWorkspaceCommand>())
             .Returns(result);

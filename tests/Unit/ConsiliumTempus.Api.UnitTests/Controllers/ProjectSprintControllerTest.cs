@@ -86,7 +86,7 @@ public class ProjectSprintControllerTest
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetCollectionProjectSprintRequest();
 
-        var result = new GetCollectionProjectSprintResult(ProjectSprintFactory.CreateList());
+        var result = ProjectSprintResultFactory.CreateGetCollectionProjectSprintResult();
         _mediator
             .Send(Arg.Any<GetCollectionProjectSprintQuery>())
             .Returns(result);
@@ -133,7 +133,7 @@ public class ProjectSprintControllerTest
         // Arrange
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest();
 
-        var result = new CreateProjectSprintResult();
+        var result = ProjectSprintResultFactory.CreateCreateProjectSprintResult();
         _mediator
             .Send(Arg.Any<CreateProjectSprintCommand>())
             .Returns(result);
@@ -180,7 +180,7 @@ public class ProjectSprintControllerTest
         // Arrange
         var request = ProjectSprintRequestFactory.CreateUpdateProjectSprintRequest();
 
-        var result = new UpdateProjectSprintResult();
+        var result = ProjectSprintResultFactory.CreateUpdateProjectSprintResult();
         _mediator
             .Send(Arg.Any<UpdateProjectSprintCommand>())
             .Returns(result);
@@ -227,7 +227,7 @@ public class ProjectSprintControllerTest
         // Arrange
         var request = ProjectSprintRequestFactory.CreateDeleteProjectSprintRequest();
 
-        var result = new DeleteProjectSprintResult();
+        var result = ProjectSprintResultFactory.CreateDeleteProjectSprintResult();
         _mediator
             .Send(Arg.Any<DeleteProjectSprintCommand>())
             .Returns(result);
