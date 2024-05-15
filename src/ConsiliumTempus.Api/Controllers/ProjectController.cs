@@ -4,8 +4,10 @@ using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
@@ -67,6 +69,19 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
         return result.Match(
             createResult => Ok(Mapper.Map<CreateProjectResponse>(createResult)),
+            Problem
+        );
+    }
+    
+    [HasPermission(Permissions.UpdateProject)]
+    [HttpPut]
+    public async Task<IActionResult> Update(UpdateProjectRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateProjectCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateResult => Ok(Mapper.Map<UpdateProjectResponse>(updateResult)),
             Problem
         );
     }

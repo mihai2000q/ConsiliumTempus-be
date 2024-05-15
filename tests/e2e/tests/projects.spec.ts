@@ -11,6 +11,7 @@ import {
 } from "../utils/projects.utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
 import { ProjectSprintName } from "../utils/constants";
+import UpdateProjectRequest from "../types/requests/project/UpdateProjectRequest";
 
 test.describe('should allow operations on the project entity', () => {
   let WORKSPACE_ID: string
@@ -275,6 +276,43 @@ test.describe('should allow operations on the project entity', () => {
         description: "",
         isPrivate: body.isPrivate,
         isFavorite: false
+      }
+    ])
+  })
+
+  test('should update project', async ({ request }) => {
+    const createProjectRequest: CreateProjectRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "New Project",
+      isPrivate: false
+    }
+    const project = await createProject(request, createProjectRequest)
+
+    const updateProjectRequest: UpdateProjectRequest = {
+      id: project.id,
+      name: "This is my project now",
+      isFavorite: true
+    }
+    const response = await request.put('/api/projects', {
+      ...useToken(),
+      data: updateProjectRequest
+    })
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const projects = await getProjects(request)
+    expect(projects).toHaveLength(1)
+    expect(projects).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: updateProjectRequest.name,
+        description: "",
+        isPrivate: createProjectRequest.isPrivate,
+        isFavorite: updateProjectRequest.isFavorite
       }
     ])
   })

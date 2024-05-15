@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
 namespace ConsiliumTempus.Common.IntegrationTests.Project;
@@ -55,6 +56,17 @@ public static class ProjectRequestFactory
             workspaceId ?? Guid.NewGuid(),
             name,
             isPrivate);
+    }
+    
+    public static UpdateProjectRequest CreateUpdateProjectRequest(
+        Guid? id = null,
+        string name = Constants.Project.Name,
+        bool isFavorite = false)
+    {
+        return new UpdateProjectRequest(
+            id ?? Guid.NewGuid(),
+            name,
+            isFavorite);
     }
     
     public static DeleteProjectRequest CreateDeleteProjectRequest(Guid? id = null)

@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
 using FluentAssertions.Extensions;
@@ -79,6 +80,24 @@ internal static partial class Utils
             project.Sprints[0].Stages.Should().HaveCount(Constants.ProjectStage.Names.Length);
             project.Sprints[0].Stages[0].Tasks
                 .Should().HaveCount(Constants.ProjectTask.Names.Length);
+        }
+        
+        internal static void AssertUpdate(
+            ProjectAggregate project,
+            ProjectAggregate newProject, 
+            UpdateProjectRequest request)
+        {
+            // unchanged
+            newProject.CreatedDateTime.Should().Be(project.CreatedDateTime);
+            
+            // changed
+            newProject.Id.Value.Should().Be(request.Id);
+            newProject.Name.Value.Should().Be(request.Name);
+            newProject.IsFavorite.Value.Should().Be(request.IsFavorite);
+            newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+
+            newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
 
         private static void AssertProjectSprintResponse(

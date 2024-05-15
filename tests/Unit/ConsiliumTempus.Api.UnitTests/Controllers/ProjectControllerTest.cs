@@ -4,10 +4,12 @@ using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
@@ -178,7 +180,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task CreateProject_WhenIsSuccessful_ShouldReturnResponse()
+    public async Task Create_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateCreateProjectRequest();
@@ -201,7 +203,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task CreateProject_WhenItFails_ShouldReturnProblem()
+    public async Task Create_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateCreateProjectRequest();
@@ -223,7 +225,52 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task DeleteProject_WhenIsSuccessful_ShouldReturnSuccess()
+    public async Task Update_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdateProjectRequest();
+
+        var result = ProjectResultFactory.CreateUpdateProjectResult();
+        _mediator
+            .Send(Arg.Any<UpdateProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.Update(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateProjectCommand>(command => Utils.Project.AssertUpdateCommand(command, request)));
+
+        var response = outcome.ToResponse<UpdateProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task Update_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdateProjectRequest();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdateProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.Update(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateProjectCommand>(command => Utils.Project.AssertUpdateCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task Delete_WhenIsSuccessful_ShouldReturnSuccess()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateDeleteProjectRequest();
@@ -246,7 +293,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task DeleteProject_WhenItFails_ShouldReturnProblem()
+    public async Task Delete_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateDeleteProjectRequest();

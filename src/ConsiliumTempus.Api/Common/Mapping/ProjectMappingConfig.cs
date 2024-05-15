@@ -4,8 +4,10 @@ using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
@@ -24,6 +26,7 @@ public sealed class ProjectMappingConfig : IRegister
         GetOverviewMappings(config);
         GetCollectionMappings(config);
         CreateMappings(config);
+        UpdateMappings(config);
         DeleteMappings(config);
     }
 
@@ -68,6 +71,13 @@ public sealed class ProjectMappingConfig : IRegister
         config.NewConfig<CreateProjectRequest, CreateProjectCommand>();
 
         config.NewConfig<CreateProjectResult, CreateProjectResponse>();
+    }
+    
+    private static void UpdateMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateProjectRequest, UpdateProjectCommand>();
+
+        config.NewConfig<UpdateProjectResult, UpdateProjectResponse>();
     }
 
     private static void DeleteMappings(TypeAdapterConfig config)

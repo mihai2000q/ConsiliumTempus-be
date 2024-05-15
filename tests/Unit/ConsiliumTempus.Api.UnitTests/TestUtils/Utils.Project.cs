@@ -3,8 +3,10 @@ using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
@@ -49,7 +51,9 @@ internal static partial class Utils
             return true;
         }
 
-        internal static bool AssertCreateCommand(CreateProjectCommand command, CreateProjectRequest request)
+        internal static bool AssertCreateCommand(
+            CreateProjectCommand command, 
+            CreateProjectRequest request)
         {
             command.WorkspaceId.Should().Be(request.WorkspaceId);
             command.Name.Should().Be(request.Name);
@@ -57,12 +61,23 @@ internal static partial class Utils
 
             return true;
         }
+        
+        internal static bool AssertUpdateCommand(
+            UpdateProjectCommand command, 
+            UpdateProjectRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.Name.Should().Be(request.Name);
+            command.IsFavorite.Should().Be(request.IsFavorite);
+
+            return true;
+        }
 
         internal static bool AssertDeleteCommand(
             DeleteProjectCommand command,
-            DeleteProjectRequest id)
+            DeleteProjectRequest request)
         {
-            command.Id.Should().Be(command.Id);
+            command.Id.Should().Be(request.Id);
 
             return true;
         }
