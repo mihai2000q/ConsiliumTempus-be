@@ -69,8 +69,8 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
     {
         Name = name;
         Description = description;
-        LastActivity = DateTime.UtcNow;
         UpdatedDateTime = DateTime.UtcNow;
+        RefreshActivity();
     }
 
     public void RefreshActivity()

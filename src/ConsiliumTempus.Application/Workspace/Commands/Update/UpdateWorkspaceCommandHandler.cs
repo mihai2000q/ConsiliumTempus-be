@@ -13,9 +13,7 @@ public sealed class UpdateWorkspaceCommandHandler(IWorkspaceRepository workspace
     public async Task<ErrorOr<UpdateWorkspaceResult>> Handle(UpdateWorkspaceCommand command,
         CancellationToken cancellationToken)
     {
-        var workspaceId = WorkspaceId.Create(command.Id);
-        var workspace = await workspaceRepository.Get(workspaceId, cancellationToken);
-
+        var workspace = await workspaceRepository.Get(WorkspaceId.Create(command.Id), cancellationToken);
         if (workspace is null) return Errors.Workspace.NotFound;
 
         workspace.Update(
