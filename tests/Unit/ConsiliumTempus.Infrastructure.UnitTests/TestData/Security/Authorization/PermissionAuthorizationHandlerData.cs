@@ -41,6 +41,7 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route);
             
             Add(Permissions.CreateProjectStage, RequestLocation.Body);
+            Add(Permissions.ReadCollectionProjectStage, RequestLocation.Query);
             Add(Permissions.UpdateProjectStage, RequestLocation.Body);
             Add(Permissions.DeleteProjectStage, RequestLocation.Route);
             
@@ -73,6 +74,7 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route, null);
             
             Add(Permissions.CreateProjectStage, RequestLocation.Body, "projectSprintId");
+            Add(Permissions.ReadCollectionProjectStage, RequestLocation.Query, "projectSprintId");
             Add(Permissions.UpdateProjectStage, RequestLocation.Body, null);
             Add(Permissions.DeleteProjectStage, RequestLocation.Route, null);
             
@@ -105,6 +107,7 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route, null, StringIdType.ProjectSprint);
             
             Add(Permissions.CreateProjectStage, RequestLocation.Body, "projectSprintId", StringIdType.ProjectSprint);
+            Add(Permissions.ReadCollectionProjectStage, RequestLocation.Query, "projectSprintId", StringIdType.ProjectSprint);
             Add(Permissions.UpdateProjectStage, RequestLocation.Body, null, StringIdType.ProjectStage);
             Add(Permissions.DeleteProjectStage, RequestLocation.Route, null, StringIdType.ProjectStage);
             

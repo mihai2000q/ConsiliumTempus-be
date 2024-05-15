@@ -17,6 +17,7 @@ namespace ConsiliumTempus.Api.Controllers;
 [Route("Projects/Stages")]
 public sealed class ProjectStageController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
+    [HasPermission(Permissions.ReadCollectionProjectStage)]
     [HttpGet]
     public async Task<IActionResult> GetCollection(GetCollectionProjectStageRequest request, CancellationToken cancellationToken)
     {

@@ -75,7 +75,8 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.ReadProjectSprint or
             Permissions.UpdateProjectSprint or
             Permissions.DeleteProjectSprint or
-            Permissions.CreateProjectStage => await workspaceProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
+            Permissions.CreateProjectStage or
+            Permissions.ReadCollectionProjectStage => await workspaceProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
             
             Permissions.UpdateProjectStage or
             Permissions.DeleteProjectStage or
@@ -113,6 +114,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.DeleteProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),
             
             Permissions.CreateProjectStage => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<ProjectSprint>()),
+            Permissions.ReadCollectionProjectStage => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<ProjectSprint>()),
             Permissions.UpdateProjectStage => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProjectStage => HttpRequestReader.GetStringIdFromRoute(request),
             
