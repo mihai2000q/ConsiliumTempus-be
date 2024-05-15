@@ -52,7 +52,7 @@ internal static partial class Utils
         }
 
         internal static bool AssertCreateCommand(
-            CreateProjectCommand command, 
+            CreateProjectCommand command,
             CreateProjectRequest request)
         {
             command.WorkspaceId.Should().Be(request.WorkspaceId);
@@ -61,9 +61,9 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static bool AssertUpdateCommand(
-            UpdateProjectCommand command, 
+            UpdateProjectCommand command,
             UpdateProjectRequest request)
         {
             command.Id.Should().Be(request.Id);

@@ -11,7 +11,10 @@ internal static partial class Utils
 {
     internal static class User
     {
-        internal static bool AssertFromRegisterCommand(UserAggregate user, RegisterCommand command, string password)
+        internal static void AssertFromRegisterCommand(
+            UserAggregate user,
+            RegisterCommand command,
+            string password)
         {
             user.Id.Should().NotBeNull();
             user.FirstName.Value.Should().Be(command.FirstName.CapitalizeWord());
@@ -29,8 +32,6 @@ internal static partial class Utils
             user.DomainEvents.Should().HaveCount(1);
             user.DomainEvents[0].Should().BeOfType<UserRegistered>();
             ((UserRegistered)user.DomainEvents[0]).User.Should().Be(user);
-
-            return true;
         }
 
         internal static void AssertFromUpdateCurrentCommand(

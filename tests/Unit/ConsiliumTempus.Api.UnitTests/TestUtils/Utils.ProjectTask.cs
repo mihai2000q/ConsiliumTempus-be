@@ -39,12 +39,12 @@ internal static partial class Utils
         }
 
         internal static bool AssertDeleteCommand(
-            DeleteProjectTaskCommand command, 
+            DeleteProjectTaskCommand command,
             DeleteProjectTaskRequest request)
         {
             command.Id.Should().Be(request.Id);
             command.StageId.Should().Be(request.StageId);
-            
+
             return true;
         }
 

@@ -18,7 +18,7 @@ internal static partial class Utils
             response.StartDate.Should().Be(sprint.StartDate);
             response.EndDate.Should().Be(sprint.EndDate);
         }
-        
+
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectSprintResponse response,
             IReadOnlyList<Domain.Project.Entities.ProjectSprint> sprints)
@@ -44,7 +44,7 @@ internal static partial class Utils
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
-        
+
         internal static void AssertUpdated(
             Domain.Project.Entities.ProjectSprint sprint,
             Domain.Project.Entities.ProjectSprint newSprint,
@@ -60,7 +60,7 @@ internal static partial class Utils
             newSprint.StartDate.Should().Be(request.StartDate);
             newSprint.EndDate.Should().Be(request.EndDate);
             newSprint.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            
+
             newSprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             newSprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }

@@ -81,15 +81,15 @@ internal static partial class Utils
             project.Sprints[0].Stages[0].Tasks
                 .Should().HaveCount(Constants.ProjectTask.Names.Length);
         }
-        
+
         internal static void AssertUpdate(
             ProjectAggregate project,
-            ProjectAggregate newProject, 
+            ProjectAggregate newProject,
             UpdateProjectRequest request)
         {
             // unchanged
             newProject.CreatedDateTime.Should().Be(project.CreatedDateTime);
-            
+
             // changed
             newProject.Id.Value.Should().Be(request.Id);
             newProject.Name.Value.Should().Be(request.Name);
