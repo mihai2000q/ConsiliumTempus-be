@@ -3,13 +3,11 @@ using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
-using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
@@ -24,7 +22,6 @@ public sealed class ProjectMappingConfig : IRegister
     {
         GetMappings(config);
         GetOverviewMappings(config);
-        GetCollectionForUserMappings(config);
         GetCollectionMappings(config);
         CreateMappings(config);
         DeleteMappings(config);
@@ -51,14 +48,6 @@ public sealed class ProjectMappingConfig : IRegister
 
         config.NewConfig<GetOverviewProjectResult, GetOverviewProjectResponse>()
             .Map(dest => dest.Description, src => src.Description.Value);
-    }
-
-    private static void GetCollectionForUserMappings(TypeAdapterConfig config)
-    {
-        config.NewConfig<GetCollectionProjectForUserResult, GetCollectionProjectForUserResponse>();
-        config.NewConfig<ProjectAggregate, GetCollectionProjectForUserResponse.ProjectResponse>()
-            .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.Name.Value);
     }
 
     private static void GetCollectionMappings(TypeAdapterConfig config)

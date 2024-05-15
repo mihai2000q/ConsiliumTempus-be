@@ -249,32 +249,6 @@ test.describe('should allow operations on the project entity', () => {
     })
   })
 
-  test('should get collection of projects for user', async ({ request }) => {
-    const {
-      createProjectRequest1,
-      createProjectRequest2
-    } = await create2ProjectsIn2DifferentWorkspaces(request)
-
-    const response = await request.get(`/api/projects/user`, useToken())
-
-    expect(response.ok()).toBeTruthy()
-
-    const json = await response.json()
-    expect(json).toStrictEqual({
-      projects: expect.arrayContaining([
-        {
-          id: expect.any(String),
-          name: createProjectRequest1.name
-        },
-        {
-          id: expect.any(String),
-          name: createProjectRequest2.name
-        }
-      ])
-    })
-    expect(json.projects).toHaveLength(2)
-  })
-
   test('should create project', async ({ request }) => {
     const body: CreateProjectRequest = {
       workspaceId: WORKSPACE_ID,
@@ -294,12 +268,15 @@ test.describe('should allow operations on the project entity', () => {
 
     const projects = await getProjects(request)
     expect(projects).toHaveLength(1)
-    expect(projects).toStrictEqual(expect.arrayContaining([
+    expect(projects).toStrictEqual([
       {
         id: expect.any(String),
-        name: body.name
+        name: body.name,
+        description: "",
+        isPrivate: body.isPrivate,
+        isFavorite: false
       }
-    ]))
+    ])
   })
 
   test('should delete project', async ({ request }) => {

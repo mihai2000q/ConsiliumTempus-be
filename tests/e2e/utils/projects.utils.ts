@@ -4,7 +4,7 @@ import CreateProjectRequest from "../types/requests/project/CreateProjectRequest
 import { createWorkspace, getPersonalWorkspace } from "./workspaces.utils";
 
 export async function getProjects(request: APIRequestContext) {
-  const response = await request.get('/api/projects/user', useToken())
+  const response = await request.get('/api/projects', useToken())
   expect(response.ok()).toBeTruthy()
   return (await response.json()).projects
 }
