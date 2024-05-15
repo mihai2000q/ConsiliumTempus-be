@@ -49,14 +49,13 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
 
     public static WorkspaceAggregate Create(
         Name name,
-        Description description,
         UserAggregate owner,
         IsPersonal isPersonal)
     {
         var workspace = new WorkspaceAggregate(
             WorkspaceId.CreateUnique(),
             name,
-            description,
+            Description.Create(string.Empty), 
             owner,
             isPersonal,
             DateTime.UtcNow,

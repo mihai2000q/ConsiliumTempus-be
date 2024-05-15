@@ -7,12 +7,10 @@ namespace ConsiliumTempus.Common.UnitTests.Workspace;
 public static class WorkspaceCommandFactory
 {
     public static CreateWorkspaceCommand CreateCreateWorkspaceCommand(
-        string name = Constants.Workspace.Name,
-        string description = Constants.Workspace.Description)
+        string name = Constants.Workspace.Name)
     {
         return new CreateWorkspaceCommand(
-            name,
-            description);
+            name);
     }
 
     public static UpdateWorkspaceCommand CreateUpdateWorkspaceCommand(

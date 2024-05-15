@@ -3,5 +3,4 @@
 public sealed record CreateProjectRequest(
     Guid WorkspaceId,
     string Name,
-    string Description,
     bool IsPrivate);

@@ -53,7 +53,7 @@ internal static partial class Utils
         {
             workspace.Id.Value.Should().NotBeEmpty();
             workspace.Name.Value.Should().Be(request.Name);
-            workspace.Description.Value.Should().Be(request.Description);
+            workspace.Description.Value.Should().BeEmpty();
             workspace.Owner.Should().Be(user);
             workspace.IsPersonal.Value.Should().Be(false);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());

@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 
-public sealed class GetProjectSprintRequest
+public sealed record GetProjectSprintRequest
 {
-    [FromRoute] public Guid Id { get; set; }
+    [FromRoute] public Guid Id { get; init; }
 }

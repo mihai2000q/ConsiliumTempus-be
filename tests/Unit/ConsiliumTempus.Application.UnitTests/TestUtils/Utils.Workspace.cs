@@ -19,7 +19,7 @@ internal static partial class Utils
             UserAggregate user)
         {
             workspace.Name.Value.Should().Be(command.Name);
-            workspace.Description.Value.Should().Be(command.Description);
+            workspace.Description.Value.Should().BeEmpty();
             workspace.Owner.Should().Be(user);
             workspace.IsPersonal.Value.Should().Be(false);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));

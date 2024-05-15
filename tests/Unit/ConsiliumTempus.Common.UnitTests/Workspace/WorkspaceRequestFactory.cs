@@ -33,12 +33,10 @@ public static class WorkspaceRequestFactory
     }
 
     public static CreateWorkspaceRequest CreateCreateWorkspaceRequest(
-        string name = Constants.Workspace.Name,
-        string description = Constants.Workspace.Description)
+        string name = Constants.Workspace.Name)
     {
         return new CreateWorkspaceRequest(
-            name,
-            description);
+            name);
     }
 
     public static UpdateWorkspaceRequest CreateUpdateWorkspaceRequest(

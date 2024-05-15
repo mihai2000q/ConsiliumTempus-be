@@ -36,7 +36,6 @@ internal static partial class Utils
         internal static bool AssertCreateCommand(CreateWorkspaceCommand command, CreateWorkspaceRequest request)
         {
             command.Name.Should().Be(request.Name);
-            command.Description.Should().Be(request.Description);
             return true;
         }
 

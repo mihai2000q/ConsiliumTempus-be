@@ -77,7 +77,7 @@ internal static partial class Utils
         internal static void AssertCreation(ProjectAggregate project, CreateProjectRequest request)
         {
             project.Name.Value.Should().Be(request.Name);
-            project.Description.Value.Should().Be(request.Description);
+            project.Description.Value.Should().BeEmpty();
             project.IsFavorite.Value.Should().Be(false);
             project.IsPrivate.Value.Should().Be(request.IsPrivate);
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());

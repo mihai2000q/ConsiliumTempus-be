@@ -35,7 +35,6 @@ test.describe('should allow operations on the workspace entity', () => {
     test('should get collection of workspaces', async ({ request }) => {
       const createWorkspaceRequest: CreateWorkspaceRequest = {
         name: "Some Workspace",
-        description: "Some Workspace description that i am not sure what to put",
       }
       await createWorkspace(request, createWorkspaceRequest)
 
@@ -54,7 +53,7 @@ test.describe('should allow operations on the workspace entity', () => {
           {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
-            description: createWorkspaceRequest.description
+            description: ""
           }
         ]),
         totalCount: 2,
@@ -76,12 +75,12 @@ test.describe('should allow operations on the workspace entity', () => {
           {
             id: expect.any(String),
             name: createWorkspaceRequests[1].name,
-            description: createWorkspaceRequests[1].description
+            description: ""
           },
           {
             id: expect.any(String),
             name: createWorkspaceRequests[0].name,
-            description: createWorkspaceRequests[0].description
+            description: ""
           },
           {
             id: expect.any(String),
@@ -98,7 +97,6 @@ test.describe('should allow operations on the workspace entity', () => {
     test('should get collection of workspaces filtered by name', async ({ request }) => {
       const createWorkspaceRequest: CreateWorkspaceRequest = {
         name: "Some Workspace",
-        description: "",
       }
       await createWorkspace(request, createWorkspaceRequest)
 
@@ -112,7 +110,7 @@ test.describe('should allow operations on the workspace entity', () => {
           {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
-            description: createWorkspaceRequest.description
+            description: ""
           }
         ],
         totalCount: 1,
@@ -138,7 +136,7 @@ test.describe('should allow operations on the workspace entity', () => {
           return {
             id: expect.any(String),
             name: r.name,
-            description: r.description,
+            description: "",
           }
         })
       expectedWorkspaces.unshift({
@@ -186,7 +184,6 @@ test.describe('should allow operations on the workspace entity', () => {
   test('should update workspace', async ({ request }) => {
     const oldBody: CreateWorkspaceRequest = {
       name: "Some workspace",
-      description: "This was the workspace"
     }
     const workspace = await createWorkspace(request, oldBody)
 
@@ -220,7 +217,6 @@ test.describe('should allow operations on the workspace entity', () => {
   test('should delete workspace', async ({ request }) => {
     const body: CreateWorkspaceRequest = {
       name: "New Team",
-      description: "This is a new team"
     }
     const workspace = await createWorkspace(request, body)
 

@@ -27,9 +27,7 @@ public class WorkspaceControllerCreateValidationTest(WebAppFactory factory)
     public async Task CreateWorkspace_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
-        var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest(
-            name: string.Empty,
-            description: new string('a', 2000));
+        var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest(name: string.Empty);
 
         // Act
         var outcome = await Client.Post("api/workspaces", request);

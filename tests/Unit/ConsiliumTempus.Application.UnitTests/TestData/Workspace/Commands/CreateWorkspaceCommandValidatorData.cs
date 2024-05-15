@@ -12,8 +12,7 @@ internal static class CreateWorkspaceCommandValidatorData
         {
             Add(WorkspaceCommandFactory.CreateCreateWorkspaceCommand());
             Add(new CreateWorkspaceCommand(
-                "Basketball Team",
-                "This is the team's workspace"));
+                "Basketball Team"));
         }
     }
     
@@ -29,14 +28,4 @@ internal static class CreateWorkspaceCommandValidatorData
             Add(command, nameof(command.Name), 1);
         }
     }
-
-    internal class GetInvalidDescriptionCommands : TheoryData<CreateWorkspaceCommand, string, int>
-    {
-        public GetInvalidDescriptionCommands()
-        {
-            var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand(
-                description: new string('a', PropertiesValidation.Workspace.DescriptionMaximumLength + 1));
-            Add(command, nameof(command.Description), 1);
-        }
-    }    
 }
