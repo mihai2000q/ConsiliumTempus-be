@@ -73,10 +73,10 @@ internal static partial class Utils
             UpdateWorkspaceRequest request)
         {
             // unchanged
+            newWorkspace.Id.Value.Should().Be(request.Id);
             newWorkspace.CreatedDateTime.Should().Be(workspace.CreatedDateTime);
 
             // changed
-            newWorkspace.Id.Value.Should().Be(request.Id);
             newWorkspace.Name.Value.Should().Be(request.Name);
             newWorkspace.Description.Value.Should().Be(request.Description);
             newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());

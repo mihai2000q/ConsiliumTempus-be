@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.Project;
@@ -27,6 +28,15 @@ public static class ProjectCommandFactory
             id ?? Guid.NewGuid(),
             name,
             isFavorite);
+    }
+    
+    public static UpdateOverviewProjectCommand CreateUpdateOverviewProjectCommand(
+        Guid? id = null,
+        string name = Constants.Project.Description)
+    {
+        return new UpdateOverviewProjectCommand(
+            id ?? Guid.NewGuid(),
+            name);
     }
     
     public static DeleteProjectCommand CreateDeleteProjectCommand(Guid? id = null)
