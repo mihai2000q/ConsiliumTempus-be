@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Domain.Project;
 
@@ -18,17 +19,22 @@ public static class ProjectResultFactory
             totalCount,
             totalPages);
     }
-    
+
     public static CreateProjectResult CreateCreateProjectResult()
     {
         return new CreateProjectResult();
     }
-    
+
     public static UpdateProjectResult CreateUpdateProjectResult()
     {
         return new UpdateProjectResult();
     }
-    
+
+    public static UpdateOverviewProjectResult CreateUpdateOverviewProjectResult()
+    {
+        return new UpdateOverviewProjectResult();
+    }
+
     public static DeleteProjectResult CreateDeleteProjectResult()
     {
         return new DeleteProjectResult();

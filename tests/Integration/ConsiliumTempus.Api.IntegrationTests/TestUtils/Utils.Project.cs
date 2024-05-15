@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
 using FluentAssertions.Extensions;
@@ -88,12 +89,29 @@ internal static partial class Utils
             UpdateProjectRequest request)
         {
             // unchanged
+            newProject.Id.Value.Should().Be(request.Id);
             newProject.CreatedDateTime.Should().Be(project.CreatedDateTime);
 
             // changed
-            newProject.Id.Value.Should().Be(request.Id);
             newProject.Name.Value.Should().Be(request.Name);
             newProject.IsFavorite.Value.Should().Be(request.IsFavorite);
+            newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+
+            newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+        
+        internal static void AssertUpdateOverview(
+            ProjectAggregate project,
+            ProjectAggregate newProject,
+            UpdateOverviewProjectRequest request)
+        {
+            // unchanged
+            newProject.Id.Value.Should().Be(request.Id);
+            newProject.CreatedDateTime.Should().Be(project.CreatedDateTime);
+
+            // changed
+            newProject.Description.Value.Should().Be(request.Description);
             newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 

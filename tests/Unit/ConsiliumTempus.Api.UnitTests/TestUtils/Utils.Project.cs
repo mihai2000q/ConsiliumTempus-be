@@ -4,9 +4,11 @@ using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
@@ -69,6 +71,16 @@ internal static partial class Utils
             command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
             command.IsFavorite.Should().Be(request.IsFavorite);
+
+            return true;
+        }
+        
+        internal static bool AssertUpdateOverviewCommand(
+            UpdateOverviewProjectCommand command,
+            UpdateOverviewProjectRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.Description.Should().Be(request.Description);
 
             return true;
         }

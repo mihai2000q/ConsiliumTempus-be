@@ -51,11 +51,11 @@ internal static partial class Utils
             UpdateProjectSprintRequest request)
         {
             // unchanged
+            newSprint.Id.Value.Should().Be(request.Id);
             newSprint.CreatedDateTime.Should().Be(sprint.CreatedDateTime);
             newSprint.Project.Should().Be(sprint.Project);
 
             // changed
-            newSprint.Id.Value.Should().Be(request.Id);
             newSprint.Name.Value.Should().Be(request.Name);
             newSprint.StartDate.Should().Be(request.StartDate);
             newSprint.EndDate.Should().Be(request.EndDate);

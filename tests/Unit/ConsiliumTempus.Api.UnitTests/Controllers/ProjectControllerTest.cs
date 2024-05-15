@@ -5,11 +5,13 @@ using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
@@ -265,6 +267,53 @@ public class ProjectControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<UpdateProjectCommand>(command => Utils.Project.AssertUpdateCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task UpdateOverview_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdateOverviewProjectRequest();
+
+        var result = ProjectResultFactory.CreateUpdateOverviewProjectResult();
+        _mediator
+            .Send(Arg.Any<UpdateOverviewProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.UpdateOverview(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateOverviewProjectCommand>(command => 
+                Utils.Project.AssertUpdateOverviewCommand(command, request)));
+
+        var response = outcome.ToResponse<UpdateOverviewProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task UpdateOverview_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdateOverviewProjectRequest();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdateOverviewProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.UpdateOverview(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateOverviewProjectCommand>(command => 
+                Utils.Project.AssertUpdateOverviewCommand(command, request)));
 
         outcome.ValidateError(error);
     }

@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.Project;
@@ -67,6 +68,15 @@ public static class ProjectRequestFactory
             id ?? Guid.NewGuid(),
             name,
             isFavorite);
+    }
+    
+    public static UpdateOverviewProjectRequest CreateUpdateOverviewProjectRequest(
+        Guid? id = null,
+        string description = Constants.Project.Description)
+    {
+        return new UpdateOverviewProjectRequest(
+            id ?? Guid.NewGuid(),
+            description);
     }
     
     public static DeleteProjectRequest CreateDeleteProjectRequest(Guid? id = null)
