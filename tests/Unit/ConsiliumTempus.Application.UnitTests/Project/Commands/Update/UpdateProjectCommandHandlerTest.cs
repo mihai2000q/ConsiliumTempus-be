@@ -3,7 +3,6 @@ using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using NSubstitute.ReturnsExtensions;
 

@@ -44,4 +44,14 @@ public static class ProjectStageFactory
 
         return sprint.Stages[0];
     }
+
+    public static List<ProjectStage> CreateList(
+        int count = 5,
+        ProjectSprint? sprint = null)
+    {
+        return Enumerable
+            .Range(0, count)
+            .Select(i => Create(sprint, Constants.ProjectStage.Name + i, i))
+            .ToList();
+    }
 }

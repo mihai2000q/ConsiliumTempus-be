@@ -19,6 +19,7 @@ public enum Permissions
     UpdateProjectSprint,
     DeleteProjectSprint,
     // Project Stage
+    ReadCollectionProjectStage,
     CreateProjectStage,
     UpdateProjectStage,
     DeleteProjectStage,

@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Application.UnitTests.TestData.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
-using ConsiliumTempus.Common.UnitTests.Workspace;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Queries.Get;
 

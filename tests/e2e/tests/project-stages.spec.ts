@@ -18,12 +18,11 @@ test.describe('should allow operations on the project stage entity', () => {
     const project = await createProject(request, {
       workspaceId: workspace.id,
       name: "Project name",
-      description: "",
       isPrivate: true
     })
     SPRINT_ID = (await createProjectSprint(request, {
       projectId: project.id,
-      name: "Sprint 1",
+      name: "Sprint 2",
       startDate: null,
       endDate: null,
     })).id
@@ -33,7 +32,30 @@ test.describe('should allow operations on the project stage entity', () => {
     await deleteUser(request)
   })
 
-  test.skip('should create project stage', async ({ request }) => {
+  test('should get collection of projects', async ({ request }) => {
+    const createProjectStageRequest: CreateProjectStageRequest = {
+      projectSprintId: SPRINT_ID,
+      name: "In Transit",
+    }
+    const stage = await createProjectStage(request, createProjectStageRequest)
+
+    const response = await request.get(`/api/projects/stages?projectSprintId=${SPRINT_ID}`, useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    const json = await response.json()
+    expect(json).toStrictEqual({
+      stages: [
+        {
+          id: stage.id,
+          name: createProjectStageRequest.name
+        }
+      ]
+    })
+    expect(json.stages).toHaveLength(1)
+  })
+
+  test('should create project stage', async ({ request }) => {
     const body: CreateProjectStageRequest = {
       projectSprintId: SPRINT_ID,
       name: "In Transit"
@@ -59,7 +81,7 @@ test.describe('should allow operations on the project stage entity', () => {
     ]))
   })
 
-  test.skip('should update project stage', async ({ request }) => {
+  test('should update project stage', async ({ request }) => {
     const createProjectStageRequest: CreateProjectStageRequest = {
       projectSprintId: SPRINT_ID,
       name: "In Transit"
@@ -92,7 +114,7 @@ test.describe('should allow operations on the project stage entity', () => {
     ]))
   })
 
-  test.skip('should delete project stage', async ({ request }) => {
+  test('should delete project stage', async ({ request }) => {
     const stage = await createProjectStage(request, {
       projectSprintId: SPRINT_ID,
       name: "In Transit"

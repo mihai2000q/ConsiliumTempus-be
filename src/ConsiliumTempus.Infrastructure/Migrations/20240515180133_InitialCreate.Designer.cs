@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240515081134_InitialCreate")]
+    [Migration("20240515180133_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -134,41 +134,46 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             Id = 14,
-                            Name = "CreateProjectStage"
+                            Name = "ReadCollectionProjectStage"
                         },
                         new
                         {
                             Id = 15,
-                            Name = "UpdateProjectStage"
+                            Name = "CreateProjectStage"
                         },
                         new
                         {
                             Id = 16,
-                            Name = "DeleteProjectStage"
+                            Name = "UpdateProjectStage"
                         },
                         new
                         {
                             Id = 17,
-                            Name = "CreateProjectTask"
+                            Name = "DeleteProjectStage"
                         },
                         new
                         {
                             Id = 18,
-                            Name = "ReadProjectTask"
+                            Name = "CreateProjectTask"
                         },
                         new
                         {
                             Id = 19,
-                            Name = "ReadCollectionProjectTask"
+                            Name = "ReadProjectTask"
                         },
                         new
                         {
                             Id = 20,
-                            Name = "UpdateProjectTask"
+                            Name = "ReadCollectionProjectTask"
                         },
                         new
                         {
                             Id = 21,
+                            Name = "UpdateProjectTask"
+                        },
+                        new
+                        {
+                            Id = 22,
                             Name = "DeleteProjectTask"
                         });
                 });
@@ -289,12 +294,17 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 1,
-                            PermissionId = 18
+                            PermissionId = 14
                         },
                         new
                         {
                             WorkspaceRoleId = 1,
                             PermissionId = 19
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 1,
+                            PermissionId = 20
                         },
                         new
                         {
@@ -339,12 +349,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 2,
-                            PermissionId = 15
+                            PermissionId = 14
                         },
                         new
                         {
                             WorkspaceRoleId = 2,
-                            PermissionId = 17
+                            PermissionId = 16
                         },
                         new
                         {
@@ -365,6 +375,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 2,
                             PermissionId = 21
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 22
                         },
                         new
                         {
@@ -434,12 +449,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 3,
-                            PermissionId = 14
+                            PermissionId = 15
                         },
                         new
                         {
                             WorkspaceRoleId = 3,
-                            PermissionId = 15
+                            PermissionId = 14
                         },
                         new
                         {
@@ -470,6 +485,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 3,
                             PermissionId = 21
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 22
                         });
                 });
 
