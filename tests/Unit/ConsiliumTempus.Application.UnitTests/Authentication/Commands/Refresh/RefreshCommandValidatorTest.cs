@@ -13,7 +13,7 @@ public class RefreshCommandValidatorTest
     
     [Theory]
     [ClassData(typeof(RefreshCommandValidatorData.GetValidCommands))]
-    public async Task WhenValid_ShouldReturnTrue(RefreshCommand command)
+    public async Task ValidateRefreshCommand_WhenValid_ShouldReturnTrue(RefreshCommand command)
     {
         // Arrange - parameterized
         
@@ -27,7 +27,9 @@ public class RefreshCommandValidatorTest
     [Theory]
     [ClassData(typeof(RefreshCommandValidatorData.GetInvalidTokenCommands))]
     [ClassData(typeof(RefreshCommandValidatorData.GetInvalidRefreshTokenCommands))]
-    public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(RefreshCommand command, string property)
+    public async Task ValidateRefreshCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
+        RefreshCommand command, 
+        string property)
     {
         // Arrange - parameterized
         

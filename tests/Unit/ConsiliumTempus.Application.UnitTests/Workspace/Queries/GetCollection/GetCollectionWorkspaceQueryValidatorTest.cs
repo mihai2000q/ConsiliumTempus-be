@@ -13,7 +13,7 @@ public class GetCollectionWorkspaceQueryValidatorTest
 
     [Theory]
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetValidQueries))]
-    public async Task WhenValid_ShouldReturnTrue(GetCollectionWorkspaceQuery query)
+    public async Task ValidateGetCollectionWorkspaceQuery_WhenValid_ShouldReturnTrue(GetCollectionWorkspaceQuery query)
     {
         // Arrange - parameterized
         
@@ -29,7 +29,7 @@ public class GetCollectionWorkspaceQueryValidatorTest
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidNameQueries))]
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidPageSizeQueries))]
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidCurrentPageQueries))]
-    public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
+    public async Task ValidateGetCollectionWorkspaceQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionWorkspaceQuery query, 
         string property,
         short numberOfErrors)

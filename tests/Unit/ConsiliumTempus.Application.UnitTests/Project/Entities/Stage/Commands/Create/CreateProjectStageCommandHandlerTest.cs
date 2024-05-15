@@ -28,7 +28,7 @@ public class CreateProjectStageCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task CreateProjectStage_WhenSprintIsNull_ShouldReturnSprintNotFoundError()
+    public async Task HandleCreateProjectStageCommand_WhenSprintIsNull_ShouldReturnSprintNotFoundError()
     {
         // Arrange
         var command = ProjectStageCommandFactory.CreateCreateProjectStageCommand();
@@ -50,7 +50,7 @@ public class CreateProjectStageCommandHandlerTest
     }
 
     [Fact]
-    public async Task CreateProjectStage_WhenSuccessful_ShouldCreateProjectStageAndReturnSuccessfulResult()
+    public async Task HandleCreateProjectStageCommand_WhenSuccessful_ShouldCreateProjectStageAndReturnSuccessfulResult()
     {
         // Arrange
         var command = ProjectStageCommandFactory.CreateCreateProjectStageCommand();

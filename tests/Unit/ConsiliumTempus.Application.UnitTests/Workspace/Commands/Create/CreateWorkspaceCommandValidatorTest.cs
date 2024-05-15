@@ -13,7 +13,7 @@ public class CreateWorkspaceCommandValidatorTest
     
     [Theory]
     [ClassData(typeof(CreateWorkspaceCommandValidatorData.GetValidCommands))]
-    public async Task WhenValid_ShouldReturnTrue(CreateWorkspaceCommand command)
+    public async Task ValidateCreateWorkspaceCommand_WhenValid_ShouldReturnTrue(CreateWorkspaceCommand command)
     {
         // Arrange - parameterized
         
@@ -26,7 +26,7 @@ public class CreateWorkspaceCommandValidatorTest
     
     [Theory]
     [ClassData(typeof(CreateWorkspaceCommandValidatorData.GetInvalidNameCommands))]
-    public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
+    public async Task ValidateCreateWorkspaceCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         CreateWorkspaceCommand command, 
         string property, 
         int expectedErrors)

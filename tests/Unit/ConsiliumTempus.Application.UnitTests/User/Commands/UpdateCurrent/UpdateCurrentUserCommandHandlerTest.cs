@@ -21,17 +21,18 @@ public class UpdateCurrentUserCommandHandlerTest
     }
 
     #endregion
-    
+
     [Theory]
     [ClassData(typeof(UpdateCurrentUserCommandHandlerData.GetCommands))]
-    public async Task WhenUpdateCurrentUserCommandIsSuccessful_ShouldReturnSuccessResponse(UpdateCurrentUserCommand command)
+    public async Task HandleUpdateCurrentUserCommand_WhenIsSuccessful_ShouldReturnSuccessResponse(
+        UpdateCurrentUserCommand command)
     {
         // Arrange
         var currentUser = UserFactory.Create();
         _currentUserProvider
             .GetCurrentUser()
             .Returns(currentUser);
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
@@ -44,13 +45,13 @@ public class UpdateCurrentUserCommandHandlerTest
         outcome.Value.Should().Be(new UpdateCurrentUserResult());
         Utils.User.AssertFromUpdateCurrentCommand(currentUser, command);
     }
-    
+
     [Fact]
-    public async Task WhenUpdateCurrentUserCommandFails_ShouldReturnNotFoundError()
+    public async Task HandleUpdateCurrentUserCommand_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = UserCommandFactory.CreateUpdateUserCommand();
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 

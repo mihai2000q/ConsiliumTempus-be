@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Workspace.Queries.Get;
+﻿using ConsiliumTempus.Application.UnitTests.TestData.Workspace.Queries.Get;
+using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Queries.Get;
@@ -11,11 +12,11 @@ public class GetWorkspaceQueryValidatorTest
 
     #endregion
     
-    [Fact]
-    public async Task WhenIsValid_ShouldReturnTrue()
+    [Theory]
+    [ClassData(typeof(GetWorkspaceQueryValidatorData.GetValidQueries))]
+    public async Task ValidateGetWorkspaceQuery_WhenIsValid_ShouldReturnTrue(GetWorkspaceQuery query)
     {
-        // Arrange
-        var query = WorkspaceQueryFactory.CreateGetWorkspaceQuery(id: Guid.NewGuid());
+        // Arrange - parameterized
 
         // Act
         var outcome = await _uut.ValidateAsync(query);
@@ -25,11 +26,13 @@ public class GetWorkspaceQueryValidatorTest
         outcome.Errors.Should().BeEmpty();
     }
     
-    [Fact]
-    public async Task WhenIdIsInvalid_ShouldReturnFalse()
+    [Theory]
+    [ClassData(typeof(GetWorkspaceQueryValidatorData.GetInvalidIdQueries))]
+    public async Task ValidateGetWorkspaceQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
+        GetWorkspaceQuery query,
+        string property)
     {
-        // Arrange
-        var query = WorkspaceQueryFactory.CreateGetWorkspaceQuery(id: Guid.Empty);
+        // Arrange - parameterized
 
         // Act
         var outcome = await _uut.ValidateAsync(query);
@@ -37,6 +40,6 @@ public class GetWorkspaceQueryValidatorTest
         // Assert
         outcome.IsValid.Should().BeFalse();
         outcome.Errors.Should().HaveCount(1);
-        outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(nameof(query.Id)));
+        outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

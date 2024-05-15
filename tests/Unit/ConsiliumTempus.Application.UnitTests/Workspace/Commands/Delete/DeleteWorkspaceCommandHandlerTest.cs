@@ -25,15 +25,15 @@ public class DeleteWorkspaceCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task DeleteWorkspace_WhenIsSuccessful_ShouldDeleteAndReturnDeleteResult()
+    public async Task HandleDeleteWorkspaceCommand_WhenIsSuccessful_ShouldDeleteAndReturnDeleteResult()
     {
         // Arrange
-        var command = new DeleteWorkspaceCommand(Guid.NewGuid());
-
         var workspace = WorkspaceFactory.Create();
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);
+
+        var command = WorkspaceCommandFactory.CreateDeleteWorkspaceCommand(workspace.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -49,17 +49,17 @@ public class DeleteWorkspaceCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteWorkspaceResult());
     }
-    
+
     [Fact]
-    public async Task DeleteWorkspace_WhenWorkspaceIsUserWorkspace_ShouldReturnUserWorkspaceError()
+    public async Task HandleDeleteWorkspaceCommand_WhenWorkspaceIsPersonal_ShouldReturnUserWorkspaceError()
     {
         // Arrange
-        var command = new DeleteWorkspaceCommand(Guid.NewGuid());
-        
         var workspace = WorkspaceFactory.Create(isPersonal: true);
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);
+
+        var command = WorkspaceCommandFactory.CreateDeleteWorkspaceCommand(workspace.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -76,15 +76,15 @@ public class DeleteWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task DeleteWorkspace_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
+    public async Task HandleDeleteWorkspaceCommand_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
-        var command = new DeleteWorkspaceCommand(Guid.NewGuid());
+        var command = WorkspaceCommandFactory.CreateDeleteWorkspaceCommand();
 
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .ReturnsNull();
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 

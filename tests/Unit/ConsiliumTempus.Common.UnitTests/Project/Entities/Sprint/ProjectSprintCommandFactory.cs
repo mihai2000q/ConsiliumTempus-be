@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
+using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
@@ -30,5 +31,10 @@ public static class ProjectSprintCommandFactory
             name,
             startDate,
             endDate);
+    }
+    
+    public static DeleteProjectSprintCommand CreateDeleteProjectSprintCommand(Guid? id = null)
+    {
+        return new DeleteProjectSprintCommand(id ?? Guid.NewGuid());
     }
 }

@@ -1,5 +1,5 @@
-﻿using ConsiliumTempus.Application.User.Queries.Get;
-using ConsiliumTempus.Common.UnitTests.User;
+﻿using ConsiliumTempus.Application.UnitTests.TestData.User.Queries;
+using ConsiliumTempus.Application.User.Queries.Get;
 
 namespace ConsiliumTempus.Application.UnitTests.User.Queries.Get;
 
@@ -11,11 +11,11 @@ public class GetUserQueryValidatorTest
 
     #endregion
 
-    [Fact]
-    public async Task WhenIsValid_ShouldReturnTrue()
+    [Theory]
+    [ClassData(typeof(GetUserQueryValidatorData.GetValidQueries))]
+    public async Task ValidateGetUserQuery_WhenIsValid_ShouldReturnTrue(GetUserQuery query)
     {
-        // Arrange
-        var query = UserQueryFactory.CreateGetUserQuery(id: Guid.NewGuid());
+        // Arrange - parameterized
 
         // Act
         var outcome = await _uut.ValidateAsync(query);
@@ -25,11 +25,13 @@ public class GetUserQueryValidatorTest
         outcome.Errors.Should().BeEmpty();
     }
     
-    [Fact]
-    public async Task WhenIdIsInvalid_ShouldReturnFalse()
+    [Theory]
+    [ClassData(typeof(GetUserQueryValidatorData.GetInvalidIdQueries))]
+    public async Task ValidateGetUserQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
+        GetUserQuery query,
+        string property)
     {
-        // Arrange
-        var query = UserQueryFactory.CreateGetUserQuery(id: Guid.Empty);
+        // Arrange - parameterized
 
         // Act
         var outcome = await _uut.ValidateAsync(query);
@@ -37,6 +39,6 @@ public class GetUserQueryValidatorTest
         // Assert
         outcome.IsValid.Should().BeFalse();
         outcome.Errors.Should().HaveCount(1);
-        outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(nameof(query.Id)));
+        outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

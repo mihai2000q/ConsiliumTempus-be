@@ -14,7 +14,7 @@ public class DeleteProjectStageCommandHandlerTest
 
     private readonly IProjectStageRepository _projectStageRepository;
     private readonly DeleteProjectStageCommandHandler _uut;
-    
+
     public DeleteProjectStageCommandHandlerTest()
     {
         _projectStageRepository = Substitute.For<IProjectStageRepository>();
@@ -24,16 +24,16 @@ public class DeleteProjectStageCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenDeleteProjectStageIsSuccessful_ShouldRemoveAndReturnSuccessfulResult()
+    public async Task DeleteProjectStageCommand_WhenIsSuccessful_ShouldRemoveAndReturnSuccessfulResult()
     {
         // Arrange
         var projectStage = ProjectStageFactory.CreateWithStages();
         _projectStageRepository
             .GetWithStagesAndWorkspace(Arg.Any<ProjectStageId>())
             .Returns(projectStage);
-        
-        var command = new DeleteProjectStageCommand(Id: projectStage.Id.Value);
-        
+
+        var command = ProjectStageCommandFactory.CreateDeleteProjectStageCommand(projectStage.Id.Value);
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
@@ -41,23 +41,23 @@ public class DeleteProjectStageCommandHandlerTest
         await _projectStageRepository
             .Received(1)
             .GetWithStagesAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.Id));
-        
+
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectStageResult());
-        
+
         Utils.ProjectStage.AssertFromDeleteCommand(projectStage, command);
     }
-    
+
     [Fact]
-    public async Task WhenDeleteProjectStageFails_ShouldReturnNotFoundError()
+    public async Task DeleteProjectStageCommand_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
-        var command = new DeleteProjectStageCommand(Guid.NewGuid());
+        var command = ProjectStageCommandFactory.CreateDeleteProjectStageCommand();
 
         _projectStageRepository
             .GetWithStagesAndWorkspace(Arg.Any<ProjectStageId>())
             .ReturnsNull();
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
@@ -65,7 +65,7 @@ public class DeleteProjectStageCommandHandlerTest
         await _projectStageRepository
             .Received(1)
             .GetWithStagesAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.Id));
-        
+
         outcome.IsError.Should().BeTrue();
         outcome.ValidateError(Errors.ProjectStage.NotFound);
     }

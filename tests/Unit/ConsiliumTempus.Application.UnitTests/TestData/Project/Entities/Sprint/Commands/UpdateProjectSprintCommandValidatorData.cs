@@ -13,7 +13,7 @@ internal static class UpdateProjectSprintCommandValidatorData
             var command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand();
             Add(command);
 
-            command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand(
+            command = new UpdateProjectSprintCommand(
                 Guid.NewGuid(),
                 "New Sprint",
                 new DateOnly(2022, 12, 12),

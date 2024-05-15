@@ -13,7 +13,7 @@ public class CreateProjectSprintCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetValidCommands))]
-    public async Task WhenValid_ShouldReturnTrue(CreateProjectSprintCommand command)
+    public async Task ValidateCreateProjectSprintCommand_WhenValid_ShouldReturnTrue(CreateProjectSprintCommand command)
     {
         // Arrange - parameterized
 
@@ -27,7 +27,7 @@ public class CreateProjectSprintCommandValidatorTest
     [Theory]
     [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidProjectIdCommands))]
     [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidNameCommands))]
-    public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
+    public async Task ValidateCreateProjectSprintCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         CreateProjectSprintCommand command,
         string property,
         int expectedErrors)

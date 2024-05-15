@@ -13,8 +13,11 @@ internal static class GetCollectionWorkspaceQueryValidatorData
             var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery();
             Add(query);
 
-            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
-                order: "name.asc");
+            query = new GetCollectionWorkspaceQuery(
+                10,
+                2,
+                "name.asc",
+                "proj");
             Add(query);
         }
     }

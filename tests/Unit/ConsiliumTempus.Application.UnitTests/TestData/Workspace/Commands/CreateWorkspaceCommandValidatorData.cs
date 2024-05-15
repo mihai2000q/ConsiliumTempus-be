@@ -10,9 +10,12 @@ internal static class CreateWorkspaceCommandValidatorData
     {
         public GetValidCommands()
         {
-            Add(WorkspaceCommandFactory.CreateCreateWorkspaceCommand());
-            Add(new CreateWorkspaceCommand(
-                "Basketball Team"));
+            var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand();
+            Add(command);
+
+            command = new CreateWorkspaceCommand(
+                "Basketball Team");
+            Add(command);
         }
     }
     

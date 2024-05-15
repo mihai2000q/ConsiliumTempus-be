@@ -13,7 +13,7 @@ public class UpdateCurrentUserCommandValidatorTest
     
     [Theory]
     [ClassData(typeof(UpdateCurrentUserCommandValidatorData.GetValidCommands))]
-    public async Task WhenValid_ShouldReturnTrue(UpdateCurrentUserCommand command)
+    public async Task ValidateUpdateCurrentUserCommand_WhenValid_ShouldReturnTrue(UpdateCurrentUserCommand command)
     {
         // Arrange - parameterized
         
@@ -29,7 +29,10 @@ public class UpdateCurrentUserCommandValidatorTest
     [ClassData(typeof(UpdateCurrentUserCommandValidatorData.GetInvalidLastNameCommands))]
     [ClassData(typeof(UpdateCurrentUserCommandValidatorData.GetInvalidRoleCommands))]
     [ClassData(typeof(UpdateCurrentUserCommandValidatorData.GetInvalidDateOfBirthCommands))]
-    public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(UpdateCurrentUserCommand command, string property, int expectedErrors)
+    public async Task ValidateUpdateCurrentUserCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
+        UpdateCurrentUserCommand command,
+        string property,
+        int expectedErrors)
     {
         // Arrange - parameterized
         

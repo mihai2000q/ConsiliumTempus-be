@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Project.Commands.Create;
+using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.Project;
@@ -14,5 +15,10 @@ public static class ProjectCommandFactory
             workspaceId ?? Guid.NewGuid(),
             name,
             isPrivate);
+    }
+    
+    public static DeleteProjectCommand CreateDeleteProjectCommand(Guid? id = null)
+    {
+        return new DeleteProjectCommand(id ?? Guid.NewGuid());
     }
 }

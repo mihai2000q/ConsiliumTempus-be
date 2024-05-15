@@ -25,7 +25,7 @@ public class DeleteProjectTaskCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task DeleteProjectTaskCommand_WhenIsSuccessful_ShouldDeleteProjectTask()
+    public async Task HandleDeleteProjectTaskCommand_WhenIsSuccessful_ShouldDeleteProjectTask()
     {
         // Arrange
         var stage = ProjectStageFactory.CreateWithTasks();
@@ -35,7 +35,9 @@ public class DeleteProjectTaskCommandHandlerTest
 
         var task = stage.Tasks[0];
         
-        var command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand(task.Id.Value, stage.Id.Value);
+        var command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand(
+            task.Id.Value, 
+            stage.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -52,7 +54,7 @@ public class DeleteProjectTaskCommandHandlerTest
     }
 
     [Fact]
-    public async Task DeleteProjectTaskCommand_WhenProjectStageIsNull_ShouldReturnProjectStageNotFoundError()
+    public async Task HandleDeleteProjectTaskCommand_WhenProjectStageIsNull_ShouldReturnProjectStageNotFoundError()
     {
         // Arrange
         var command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand();

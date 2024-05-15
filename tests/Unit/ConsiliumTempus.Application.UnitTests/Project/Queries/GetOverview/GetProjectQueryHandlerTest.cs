@@ -33,6 +33,7 @@ public class GetOverviewProjectQueryHandlerTest
         _projectRepository
             .Get(Arg.Any<ProjectId>())
             .Returns(project);
+
         // Act
         var outcome = await _uut.Handle(query, default);
 

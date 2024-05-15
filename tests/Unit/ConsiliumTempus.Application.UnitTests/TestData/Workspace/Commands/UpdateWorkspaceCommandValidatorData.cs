@@ -10,14 +10,17 @@ internal static class UpdateWorkspaceCommandValidatorData
     {
         public GetValidCommands()
         {
-            Add(WorkspaceCommandFactory.CreateUpdateWorkspaceCommand());
-            Add(new UpdateWorkspaceCommand(
+            var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand();
+            Add(command);
+
+            command = new UpdateWorkspaceCommand(
                 Guid.NewGuid(),
                 "Basketball Team",
-                "This is the team's workspace"));
+                "This is the team's workspace");
+            Add(command);
         }
     }
-    
+
     internal class GetInvalidNameCommands : TheoryData<UpdateWorkspaceCommand, string, int>
     {
         public GetInvalidNameCommands()

@@ -33,7 +33,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
 
     [Theory]
     [ClassData(typeof(GetCollectionWorkspaceQueryHandlerData.GetQueries))]
-    public async Task WhenGetCollectionWorkspaceIsSuccessful_ShouldReturnCollectionOfWorkspaces(
+    public async Task HandleGetCollectionWorkspaceQuery_WhenIsSuccessful_ShouldReturnCollectionOfWorkspaces(
         GetCollectionWorkspaceQuery query)
     {
         // Arrange
@@ -92,7 +92,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
     }
 
     [Fact]
-    public async Task WhenGetCollectionWorkspaceFails_ShouldReturnUserNotFoundError()
+    public async Task HandleGetCollectionWorkspaceQuery_WhenItFails_ShouldReturnUserNotFoundError()
     {
         // Arrange
         var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery();

@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
+using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
@@ -22,5 +23,10 @@ public static class WorkspaceCommandFactory
             id ?? Guid.NewGuid(),
             name,
             description);
+    }
+    
+    public static DeleteWorkspaceCommand CreateDeleteWorkspaceCommand(Guid? id = null)
+    {
+        return new DeleteWorkspaceCommand(id ?? Guid.NewGuid());
     }
 }

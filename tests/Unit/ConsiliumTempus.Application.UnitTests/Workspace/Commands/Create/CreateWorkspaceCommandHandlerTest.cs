@@ -30,7 +30,7 @@ public class CreateWorkspaceCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenCreateWorkspaceIsSuccessful_ShouldAddWorkspaceAndReturnResponse()
+    public async Task HandleCreateWorkspaceCommand_WhenIsSuccessful_ShouldAddWorkspaceAndReturnResponse()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand();
@@ -47,6 +47,7 @@ public class CreateWorkspaceCommandHandlerTest
         await _currentUserProvider
             .Received(1)
             .GetCurrentUser();
+
         await _workspaceRepository
             .Received(1)
             .Add(Arg.Is<WorkspaceAggregate>(workspace =>
@@ -55,9 +56,9 @@ public class CreateWorkspaceCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new CreateWorkspaceResult());
     }
-    
+
     [Fact]
-    public async Task WhenCreateWorkspaceFails_ShouldReturnUserNotFoundError()
+    public async Task HandleCreateWorkspaceCommand_WhenItFails_ShouldReturnUserNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand();

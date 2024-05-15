@@ -11,6 +11,10 @@ internal static class GetCollectionProjectSprintQueryValidatorData
         {
             var query = ProjectSprintQueryFactory.CreateGetCollectionProjectSprintQuery();
             Add(query);
+
+            query = new GetCollectionProjectSprintQuery(
+                Guid.NewGuid());
+            Add(query);
         }
     } 
     

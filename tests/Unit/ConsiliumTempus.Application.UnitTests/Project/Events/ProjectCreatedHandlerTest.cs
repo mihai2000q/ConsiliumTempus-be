@@ -15,7 +15,7 @@ public class ProjectCreatedHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenProjectCreatedIsSuccessful_ShouldAddMoreDataToTheProject()
+    public async Task HandleProjectCreated_WhenSuccessful_ShouldAddSprintsStagesAndTasksToTheProject()
     {
         // Arrange
         var user = UserFactory.Create();

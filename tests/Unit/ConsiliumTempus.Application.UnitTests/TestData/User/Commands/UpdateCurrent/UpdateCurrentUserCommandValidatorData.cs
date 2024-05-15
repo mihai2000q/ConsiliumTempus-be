@@ -10,12 +10,15 @@ internal static class UpdateCurrentUserCommandValidatorData
     {
         public GetValidCommands()
         {
-            Add(UserCommandFactory.CreateUpdateUserCommand());
-            Add(new UpdateCurrentUserCommand(
+            var command = UserCommandFactory.CreateUpdateUserCommand();
+            Add(command);
+
+            command = new UpdateCurrentUserCommand(
                 "new Michael",
                 "jackson or Jordan?",
                 "Pro Singer and Basketball Player",
-                new DateOnly(1978, 12, 23)));
+                new DateOnly(1978, 12, 23));
+            Add(command);
         }
     }
     

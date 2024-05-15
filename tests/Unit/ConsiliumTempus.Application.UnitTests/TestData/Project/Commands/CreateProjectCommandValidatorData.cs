@@ -13,7 +13,7 @@ internal static class CreateProjectCommandValidatorData
             var command = ProjectCommandFactory.CreateCreateProjectCommand();
             Add(command);
 
-            command = ProjectCommandFactory.CreateCreateProjectCommand(
+            command = new CreateProjectCommand(
                 Guid.NewGuid(),
                 "New Project",
                 true);

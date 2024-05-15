@@ -13,7 +13,7 @@ public class RegisterCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(RegisterCommandValidatorData.GetValidCommands))]
-    public async Task WhenValid_ShouldReturnTrue(RegisterCommand command)
+    public async Task ValidateRegisterCommand_WhenValid_ShouldReturnTrue(RegisterCommand command)
     {
         // Arrange - parameterized
         
@@ -31,7 +31,10 @@ public class RegisterCommandValidatorTest
     [ClassData(typeof(RegisterCommandValidatorData.GetInvalidPasswordCommands))]
     [ClassData(typeof(RegisterCommandValidatorData.GetInvalidRoleCommands))]
     [ClassData(typeof(RegisterCommandValidatorData.GetInvalidDateOfBirthCommands))]
-    public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(RegisterCommand command, string property, int expectedErrors)
+    public async Task ValidateRegisterCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
+        RegisterCommand command,
+        string property,
+        int expectedErrors)
     {
         // Arrange - parameterized
         

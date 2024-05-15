@@ -23,7 +23,7 @@ public class GetCollectionProjectTaskQueryHandlerTest
     #endregion
 
     [Fact]
-    public async Task GetCollectionProjectTask_WhenSucceeds_ShouldReturnProjectTasks()
+    public async Task HandleGetCollectionProjectTaskQuery_WhenSucceeds_ShouldReturnProjectTasks()
     {
         // Arrange
         var query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery();
