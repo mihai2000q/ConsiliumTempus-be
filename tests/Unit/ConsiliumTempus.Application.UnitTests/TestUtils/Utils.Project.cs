@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
@@ -48,6 +49,30 @@ internal static partial class Utils
             return true;
         }
 
+        internal static bool AssertFromDeleteCommand(
+            ProjectAggregate project,
+            DeleteProjectCommand command)
+        {
+            project.Id.Value.Should().Be(command.Id);
+
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+
+            return true;
+        }
+
+        internal static void AssertFromUpdateCommand(
+            ProjectAggregate project,
+            UpdateProjectCommand command)
+        {
+            project.Id.Value.Should().Be(command.Id);
+            project.Name.Value.Should().Be(command.Name);
+            project.IsFavorite.Value.Should().Be(command.IsFavorite);
+            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+
         internal static void AssertProject(
             ProjectAggregate outcome,
             ProjectAggregate expected)
@@ -80,17 +105,6 @@ internal static partial class Utils
             filters.OfType<Filters.Project.NameFilter>().Single().Value.Should().Be(query.Name);
             filters.OfType<Filters.Project.IsFavoriteFilter>().Single().Value.Should().Be(query.IsFavorite);
             filters.OfType<Filters.Project.IsPrivateFilter>().Single().Value.Should().Be(query.IsPrivate);
-
-            return true;
-        }
-
-        internal static bool AssertFromDeleteCommand(
-            ProjectAggregate project,
-            DeleteProjectCommand command)
-        {
-            project.Id.Value.Should().Be(command.Id);
-
-            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
             return true;
         }

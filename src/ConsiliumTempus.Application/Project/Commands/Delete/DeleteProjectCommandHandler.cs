@@ -12,9 +12,7 @@ public sealed class DeleteProjectCommandHandler(IProjectRepository projectReposi
     public async Task<ErrorOr<DeleteProjectResult>> Handle(DeleteProjectCommand command,
         CancellationToken cancellationToken)
     {
-        var id = ProjectId.Create(command.Id);
-        var project = await projectRepository.GetWithWorkspace(id, cancellationToken);
-
+        var project = await projectRepository.GetWithWorkspace(ProjectId.Create(command.Id), cancellationToken);
         if (project is null) return Errors.Project.NotFound;
 
         projectRepository.Remove(project);
