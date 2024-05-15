@@ -36,6 +36,10 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
     {
         return await dbContext.ProjectSprints
             .Where(ps => ps.Project.Id == projectId)
+            .OrderBy(s => s.StartDate)
+            .ThenBy(s => s.EndDate)
+            .ThenBy(s => s.Name.Value)
+            .ThenBy(s => s.CreatedDateTime)
             .ToListAsync(cancellationToken);
     }
 

@@ -25,8 +25,10 @@ internal static partial class Utils
         {
             response.Sprints.Should().HaveCount(sprints.Count);
             response.Sprints
-                .OrderBy(s => s.Name)
-                .Zip(sprints.OrderBy(s => s.Name.Value))
+                .Zip(sprints.OrderBy(s => s.StartDate)
+                    .ThenBy(s => s.EndDate)
+                    .ThenBy(s => s.Name.Value)
+                    .ThenBy(s => s.CreatedDateTime))
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
         }
 
