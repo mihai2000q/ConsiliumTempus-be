@@ -156,13 +156,12 @@ test.describe('should allow operations on the workspace entity', () => {
   })
 
   test('should create workspace', async ({ request }) => {
-    const body = {
-      name: "New Workspace",
-      description: "This is a new workspace"
+    const createWorkspaceRequest: CreateWorkspaceRequest = {
+      name: "New Workspace"
     }
     const response = await request.post('/api/workspaces', {
       ...useToken(),
-      data: body
+      data: createWorkspaceRequest
     })
 
     expect(response.ok()).toBeTruthy()
@@ -175,8 +174,8 @@ test.describe('should allow operations on the workspace entity', () => {
     expect(workspaces).toStrictEqual(expect.arrayContaining([
       {
         id: expect.any(String),
-        name: body.name,
-        description: body.description
+        name: createWorkspaceRequest.name,
+        description: ""
       }
     ]))
   })

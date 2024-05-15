@@ -63,13 +63,12 @@ internal static partial class Utils
             outcome.Workspace.Should().Be(expected.Workspace);
             outcome.Sprints.Should().BeEquivalentTo(expected.Sprints);
         }
-        
+
         internal static void AssertProjectOverview(
             GetOverviewProjectResult outcome,
             ProjectAggregate project)
         {
             outcome.Description.Should().Be(project.Description);
-            
         }
 
         internal static bool AssertGetCollectionProjectFilters(
@@ -84,7 +83,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static bool AssertFromDeleteCommand(
             ProjectAggregate project,
             DeleteProjectCommand command)

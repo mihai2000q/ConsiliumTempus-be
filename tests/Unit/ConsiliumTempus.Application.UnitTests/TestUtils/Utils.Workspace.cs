@@ -35,6 +35,7 @@ internal static partial class Utils
             workspace.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.Projects.Should().BeEmpty();
+
             return true;
         }
 

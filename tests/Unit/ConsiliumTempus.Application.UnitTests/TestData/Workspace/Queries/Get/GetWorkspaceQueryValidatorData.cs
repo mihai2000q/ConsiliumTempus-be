@@ -17,12 +17,12 @@ internal static class GetWorkspaceQueryValidatorData
         }
     }
     
-    internal class GetInvalidIdQueries : TheoryData<GetWorkspaceQuery>
+    internal class GetInvalidIdQueries : TheoryData<GetWorkspaceQuery, string>
     {
         public GetInvalidIdQueries()
         {
             var query = WorkspaceQueryFactory.CreateGetWorkspaceQuery(id: Guid.Empty);
-            Add(query);
+            Add(query, nameof(query.Id));
         }
     }
 }
