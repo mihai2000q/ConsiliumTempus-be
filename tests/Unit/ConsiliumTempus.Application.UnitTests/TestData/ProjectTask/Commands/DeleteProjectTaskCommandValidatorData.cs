@@ -12,7 +12,7 @@ internal static class DeleteProjectTaskCommandValidatorData
             var command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand();
             Add(command);
             
-            command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand(
+            command = new DeleteProjectTaskCommand(
                 Guid.NewGuid(),
                 Guid.NewGuid());
             Add(command);

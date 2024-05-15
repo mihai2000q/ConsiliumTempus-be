@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User.ValueObjects;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.User.Queries.Get;
 
@@ -23,7 +24,7 @@ public class GetUserQueryHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenGetUserQueryIsSuccessful_ShouldReturnUser()
+    public async Task HandleGetUserQuery_WhenIsSuccessful_ShouldReturnUser()
     {
         // Arrange
         var query = UserQueryFactory.CreateGetUserQuery();
@@ -46,10 +47,14 @@ public class GetUserQueryHandlerTest
     }
 
     [Fact]
-    public async Task WhenGetUserQueryIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetUserQuery_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = UserQueryFactory.CreateGetUserQuery();
+
+        _userRepository
+            .Get(Arg.Any<UserId>())
+            .ReturnsNull();
 
         // Act
         var outcome = await _uut.Handle(query, default);

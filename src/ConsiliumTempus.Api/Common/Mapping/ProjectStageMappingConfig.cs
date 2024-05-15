@@ -18,14 +18,14 @@ public sealed class ProjectStageMappingConfig : IRegister
         UpdateMappings(config);
         DeleteMappings(config);
     }
-    
+
     private static void CreateMappings(TypeAdapterConfig config)
     {
         config.NewConfig<CreateProjectStageRequest, CreateProjectStageCommand>();
 
         config.NewConfig<CreateProjectStageResult, CreateProjectStageResponse>();
     }
-    
+
     private static void UpdateMappings(TypeAdapterConfig config)
     {
         config.NewConfig<UpdateProjectStageRequest, UpdateProjectStageCommand>();
@@ -35,6 +35,8 @@ public sealed class ProjectStageMappingConfig : IRegister
 
     private static void DeleteMappings(TypeAdapterConfig config)
     {
+        config.NewConfig<DeleteProjectStageRequest, DeleteProjectStageCommand>();
+
         config.NewConfig<DeleteProjectStageResult, DeleteProjectStageResponse>();
     }
 }

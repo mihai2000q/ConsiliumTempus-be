@@ -26,7 +26,9 @@ public class UserDeletedHandlerTest
 
     [Theory]
     [ClassData(typeof(UserDeletedHandlerData.GetData))]
-    public async Task UserDeletedHandle_When_Should(List<WorkspaceAggregate> workspaces, UserAggregate user)
+    public async Task HandleUserDelete_WhenSuccessful_ShouldEitherDeleteWorkspaceOrTransferOwnership(
+        List<WorkspaceAggregate> workspaces,
+        UserAggregate user)
     {
         // Arrange
         _workspaceRepository

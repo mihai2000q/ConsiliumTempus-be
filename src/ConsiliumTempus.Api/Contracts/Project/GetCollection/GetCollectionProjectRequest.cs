@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Api.Contracts.Project.GetCollection;
 
-public sealed class GetCollectionProjectRequest
+public sealed record GetCollectionProjectRequest
 {
     [FromQuery] public int? PageSize { get; init; }
 

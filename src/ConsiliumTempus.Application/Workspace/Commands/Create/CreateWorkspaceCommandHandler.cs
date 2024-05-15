@@ -23,7 +23,6 @@ public sealed class CreateWorkspaceCommandHandler(
 
         var workspace = WorkspaceAggregate.Create(
             Name.Create(command.Name),
-            Description.Create(command.Description),
             user,
             IsPersonal.Create(false));
         await workspaceRepository.Add(workspace, cancellationToken);

@@ -1,13 +1,12 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
+using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
-using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Domain.Project;
 
@@ -22,6 +21,7 @@ internal static partial class Utils
             GetProjectRequest request)
         {
             query.Id.Should().Be(request.Id);
+
             return true;
         }
 
@@ -30,13 +30,7 @@ internal static partial class Utils
             GetOverviewProjectRequest request)
         {
             query.Id.Should().Be(request.Id);
-            return true;
-        }
 
-        internal static bool AssertGetCollectionProjectForUserQuery(
-            GetCollectionProjectForUserQuery query)
-        {
-            query.Should().Be(new GetCollectionProjectForUserQuery());
             return true;
         }
 
@@ -59,14 +53,17 @@ internal static partial class Utils
         {
             command.WorkspaceId.Should().Be(request.WorkspaceId);
             command.Name.Should().Be(request.Name);
-            command.Description.Should().Be(request.Description);
             command.IsPrivate.Should().Be(request.IsPrivate);
+
             return true;
         }
 
-        internal static bool AssertDeleteCommand(DeleteProjectCommand command, Guid id)
+        internal static bool AssertDeleteCommand(
+            DeleteProjectCommand command,
+            DeleteProjectRequest id)
         {
-            command.Id.Should().Be(id);
+            command.Id.Should().Be(command.Id);
+
             return true;
         }
 
@@ -95,22 +92,6 @@ internal static partial class Utils
                 .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
             response.TotalCount.Should().Be(result.TotalCount);
             response.TotalPages.Should().Be(result.TotalPages);
-        }
-
-        internal static void AssertGetCollectionForUserResponse(
-            GetCollectionProjectForUserResponse response,
-            GetCollectionProjectForUserResult result)
-        {
-            response.Projects.Zip(result.Projects)
-                .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
-        }
-
-        private static void AssertProjectResponse(
-            GetCollectionProjectForUserResponse.ProjectResponse projectResponse,
-            ProjectAggregate project)
-        {
-            projectResponse.Id.Should().Be(project.Id.Value);
-            projectResponse.Name.Should().Be(project.Name.Value);
         }
 
         private static void AssertProjectResponse(

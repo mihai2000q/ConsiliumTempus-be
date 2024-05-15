@@ -43,9 +43,9 @@ public sealed class ProjectStageController(IMapper mapper, ISender mediator) : A
 
     [HasPermission(Permissions.DeleteProjectStage)]
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(DeleteProjectStageRequest request, CancellationToken cancellationToken)
     {
-        var command = new DeleteProjectStageCommand(id);
+        var command = Mapper.Map<DeleteProjectStageCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(

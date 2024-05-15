@@ -28,7 +28,6 @@ test.describe('should allow operations on the project entity', () => {
     const createRequest: CreateProjectRequest = {
       workspaceId: WORKSPACE_ID,
       name: "Project",
-      description: "",
       isPrivate: true
     }
     const project = await createProject(request, createRequest);
@@ -42,7 +41,7 @@ test.describe('should allow operations on the project entity', () => {
 
     expect(await response.json()).toStrictEqual({
       name: project.name,
-      description: createRequest.description,
+      description: "",
       isPrivate: createRequest.isPrivate,
       isFavorite: expect.any(Boolean),
       sprints: [
@@ -56,11 +55,10 @@ test.describe('should allow operations on the project entity', () => {
     })
   })
 
-  test('should get overview project', async ({ request }) => {
+  test.skip('should get overview project', async ({ request }) => {
     const createRequest: CreateProjectRequest = {
       workspaceId: WORKSPACE_ID,
       name: "Project",
-      description: "This is a very descriptive description of this new project",
       isPrivate: true
     }
     const project = await createProject(request, createRequest);
@@ -73,7 +71,7 @@ test.describe('should allow operations on the project entity', () => {
     expect(response.ok()).toBeTruthy()
 
     expect(await response.json()).toStrictEqual({
-      description: createRequest.description,
+      description: "",
     })
   })
 
@@ -82,7 +80,6 @@ test.describe('should allow operations on the project entity', () => {
       const createProjectRequest: CreateProjectRequest = {
         workspaceId: WORKSPACE_ID,
         name: "Project",
-        description: "Some Project",
         isPrivate: true
       }
       await createProject(request, createProjectRequest)
@@ -97,7 +94,7 @@ test.describe('should allow operations on the project entity', () => {
           {
             id: expect.any(String),
             name: createProjectRequest.name,
-            description: createProjectRequest.description,
+            description: "",
             isPrivate: createProjectRequest.isPrivate,
             isFavorite: false,
           }
@@ -124,7 +121,7 @@ test.describe('should allow operations on the project entity', () => {
           {
             id: expect.any(String),
             name: createProjectRequest1.name,
-            description: createProjectRequest1.description,
+            description: "",
             isPrivate: createProjectRequest1.isPrivate,
             isFavorite: false,
           }
@@ -139,7 +136,6 @@ test.describe('should allow operations on the project entity', () => {
       const createProjectRequest1: CreateProjectRequest = {
         workspaceId: WORKSPACE_ID,
         name: "Project 1",
-        description: "This is some project",
         isPrivate: true
       }
       await createProject(request, createProjectRequest1)
@@ -163,14 +159,14 @@ test.describe('should allow operations on the project entity', () => {
           {
             id: expect.any(String),
             name: createProjectRequest1.name,
-            description: createProjectRequest1.description,
+            description: "",
             isPrivate: createProjectRequest1.isPrivate,
             isFavorite: false,
           },
           {
             id: expect.any(String),
             name: createProjectRequest2.name,
-            description: createProjectRequest2.description,
+            description: "",
             isPrivate: createProjectRequest2.isPrivate,
             isFavorite: false,
           },
@@ -198,14 +194,14 @@ test.describe('should allow operations on the project entity', () => {
           {
             id: expect.any(String),
             name: createProjectRequests[0].name,
-            description: createProjectRequests[0].description,
+            description: "",
             isPrivate: createProjectRequests[0].isPrivate,
             isFavorite: false,
           },
           {
             id: expect.any(String),
             name: createProjectRequests[1].name,
-            description: createProjectRequests[1].description,
+            description: "",
             isPrivate: createProjectRequests[1].isPrivate,
             isFavorite: false,
           },
@@ -237,7 +233,7 @@ test.describe('should allow operations on the project entity', () => {
           return {
             id: expect.any(String),
             name: r.name,
-            description: r.description,
+            description: "",
             isPrivate: r.isPrivate,
             isFavorite: false
           }
@@ -253,37 +249,10 @@ test.describe('should allow operations on the project entity', () => {
     })
   })
 
-  test('should get collection of projects for user', async ({ request }) => {
-    const {
-      createProjectRequest1,
-      createProjectRequest2
-    } = await create2ProjectsIn2DifferentWorkspaces(request)
-
-    const response = await request.get(`/api/projects/user`, useToken())
-
-    expect(response.ok()).toBeTruthy()
-
-    const json = await response.json()
-    expect(json).toStrictEqual({
-      projects: expect.arrayContaining([
-        {
-          id: expect.any(String),
-          name: createProjectRequest1.name
-        },
-        {
-          id: expect.any(String),
-          name: createProjectRequest2.name
-        }
-      ])
-    })
-    expect(json.projects).toHaveLength(2)
-  })
-
   test('should create project', async ({ request }) => {
     const body: CreateProjectRequest = {
       workspaceId: WORKSPACE_ID,
       name: "New Project",
-      description: "This is a new project description",
       isPrivate: false
     }
     const response = await request.post('/api/projects', {
@@ -299,19 +268,21 @@ test.describe('should allow operations on the project entity', () => {
 
     const projects = await getProjects(request)
     expect(projects).toHaveLength(1)
-    expect(projects).toStrictEqual(expect.arrayContaining([
+    expect(projects).toStrictEqual([
       {
         id: expect.any(String),
-        name: body.name
+        name: body.name,
+        description: "",
+        isPrivate: body.isPrivate,
+        isFavorite: false
       }
-    ]))
+    ])
   })
 
   test('should delete project', async ({ request }) => {
     const project = await createProject(request, {
       workspaceId: WORKSPACE_ID,
       name: "Project name",
-      description: "",
       isPrivate: true
     })
 

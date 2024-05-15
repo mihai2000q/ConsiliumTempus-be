@@ -13,7 +13,7 @@ public class LoginCommandValidatorTest
     
     [Theory]
     [ClassData(typeof(LoginCommandValidatorData.GetValidCommands))]
-    public async Task WhenValid_ShouldReturnTrue(LoginCommand command)
+    public async Task ValidateLoginCommand_WhenValid_ShouldReturnTrue(LoginCommand command)
     {
         // Arrange - parameterized
         
@@ -27,7 +27,10 @@ public class LoginCommandValidatorTest
     [Theory]
     [ClassData(typeof(LoginCommandValidatorData.GetInvalidEmailCommands))]
     [ClassData(typeof(LoginCommandValidatorData.GetInvalidPasswordCommands))]
-    public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(LoginCommand command, string property, int expectedErrors)
+    public async Task ValidateLoginCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
+        LoginCommand command, 
+        string property, 
+        int expectedErrors)
     {
         // Arrange - parameterized
         

@@ -5,6 +5,7 @@ using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Commands.Delete;
 
@@ -24,7 +25,7 @@ public class DeleteProjectSprintCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenDeleteProjectSprintIsSuccessful_ShouldRemoveAndReturnSuccessfulResult()
+    public async Task HandleDeleteProjectSprintCommand_WhenIsSuccessful_ShouldRemoveAndReturnSuccessfulResult()
     {
         // Arrange
         var projectSprint = ProjectSprintFactory.Create();
@@ -32,7 +33,7 @@ public class DeleteProjectSprintCommandHandlerTest
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(projectSprint);
 
-        var command = new DeleteProjectSprintCommand(projectSprint.Id.Value);
+        var command = ProjectSprintCommandFactory.CreateDeleteProjectSprintCommand(projectSprint.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -50,10 +51,14 @@ public class DeleteProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task WhenDeleteProjectSprintFails_ShouldReturnNotFoundError()
+    public async Task HandleDeleteProjectSprintCommand_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
-        var command = new DeleteProjectSprintCommand(Guid.NewGuid());
+        var command = ProjectSprintCommandFactory.CreateDeleteProjectSprintCommand();
+
+        _projectSprintRepository
+            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
+            .ReturnsNull();
 
         // Act
         var outcome = await _uut.Handle(command, default);

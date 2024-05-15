@@ -37,7 +37,7 @@ public class ProjectStageControllerTest
         // Arrange
         var request = ProjectStageRequestFactory.CreateCreateProjectStageRequest();
 
-        var result = new CreateProjectStageResult();
+        var result = ProjectStageResultFactory.CreateCreateProjectStageResult();
         _mediator
             .Send(Arg.Any<CreateProjectStageCommand>())
             .Returns(result);
@@ -77,14 +77,14 @@ public class ProjectStageControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task UpdateProjectStage_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = ProjectStageRequestFactory.CreateUpdateProjectStageRequest();
 
-        var result = new UpdateProjectStageResult();
+        var result = ProjectStageResultFactory.CreateUpdateProjectStageResult();
         _mediator
             .Send(Arg.Any<UpdateProjectStageCommand>())
             .Returns(result);
@@ -129,21 +129,21 @@ public class ProjectStageControllerTest
     public async Task DeleteProjectStage_WhenIsSuccessful_ShouldReturnSuccess()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var request = ProjectStageRequestFactory.CreateDeleteProjectStageRequest();
 
-        var result = new DeleteProjectStageResult();
+        var result = ProjectStageResultFactory.CreateDeleteProjectStageResult();
         _mediator
             .Send(Arg.Any<DeleteProjectStageCommand>())
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(id, default);
+        var outcome = await _uut.Delete(request, default);
 
         // Assert
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteProjectStageCommand>(command =>
-                Utils.ProjectStage.AssertDeleteCommand(command, id)));
+                Utils.ProjectStage.AssertDeleteCommand(command, request)));
 
         var response = outcome.ToResponse<DeleteProjectStageResponse>();
         response.Message.Should().Be(result.Message);
@@ -153,7 +153,7 @@ public class ProjectStageControllerTest
     public async Task DeleteProjectStage_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var request = ProjectStageRequestFactory.CreateDeleteProjectStageRequest();
 
         var error = Errors.ProjectStage.NotFound;
         _mediator
@@ -161,13 +161,13 @@ public class ProjectStageControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(id, default);
+        var outcome = await _uut.Delete(request, default);
 
         // Assert
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteProjectStageCommand>(command =>
-                Utils.ProjectStage.AssertDeleteCommand(command, id)));
+                Utils.ProjectStage.AssertDeleteCommand(command, request)));
 
         outcome.ValidateError(error);
     }

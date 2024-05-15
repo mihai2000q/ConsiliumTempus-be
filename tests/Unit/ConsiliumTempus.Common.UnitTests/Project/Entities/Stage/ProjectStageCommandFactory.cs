@@ -1,4 +1,5 @@
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
+using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
@@ -22,5 +23,10 @@ public static class ProjectStageCommandFactory
         return new UpdateProjectStageCommand(
             id ?? Guid.NewGuid(),
             name);
+    }
+    
+    public static DeleteProjectStageCommand CreateDeleteProjectStageCommand(Guid? id = null)
+    {
+        return new DeleteProjectStageCommand(id ?? Guid.NewGuid());
     }
 }

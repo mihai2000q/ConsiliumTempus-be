@@ -13,10 +13,9 @@ internal static class CreateProjectCommandValidatorData
             var command = ProjectCommandFactory.CreateCreateProjectCommand();
             Add(command);
 
-            command = ProjectCommandFactory.CreateCreateProjectCommand(
+            command = new CreateProjectCommand(
                 Guid.NewGuid(),
                 "New Project",
-                "This is a description",
                 true);
             Add(command);
         }
@@ -41,16 +40,6 @@ internal static class CreateProjectCommandValidatorData
             command = ProjectCommandFactory.CreateCreateProjectCommand(
                 name: new string('a', PropertiesValidation.Project.NameMaximumLength + 1));
             Add(command, nameof(command.Name), 1);
-        }
-    }
-
-    internal class GetInvalidDescriptionCommands : TheoryData<CreateProjectCommand, string, int>
-    {
-        public GetInvalidDescriptionCommands()
-        {
-            var command = ProjectCommandFactory.CreateCreateProjectCommand(
-                description: new string('a', PropertiesValidation.Project.DescriptionMaximumLength + 1));
-            Add(command, nameof(command.Description), 1);
         }
     }
 }

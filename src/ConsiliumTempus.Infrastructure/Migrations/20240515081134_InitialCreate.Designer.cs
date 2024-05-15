@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240514205750_InitialCreate")]
+    [Migration("20240515081134_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -814,8 +814,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(1000)
-                                .HasColumnType("nvarchar(1000)")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Description");
 
                             b1.HasKey("ProjectAggregateId");
@@ -906,8 +905,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(1000)
-                                .HasColumnType("nvarchar(1000)")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Description");
 
                             b1.HasKey("ProjectTaskAggregateId");
@@ -1174,8 +1172,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(1000)
-                                .HasColumnType("nvarchar(1000)")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Description");
 
                             b1.HasKey("WorkspaceAggregateId");

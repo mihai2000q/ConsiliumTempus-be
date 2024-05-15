@@ -52,7 +52,6 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
 
     public static ProjectAggregate Create(
         Name name,
-        Description description,
         IsPrivate isPrivate,
         WorkspaceAggregate workspace,
         UserAggregate user)
@@ -60,7 +59,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         var project = new ProjectAggregate(
             ProjectId.CreateUnique(),
             name,
-            description,
+            Description.Create(string.Empty), 
             IsFavorite.Create(false),
             isPrivate,
             workspace,
@@ -77,6 +76,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     {
         Name = name;
         UpdatedDateTime = DateTime.UtcNow;
+        RefreshActivity();
     }
 
     public void AddSprint(ProjectSprint sprint)

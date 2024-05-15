@@ -5,6 +5,7 @@ using ConsiliumTempus.Application.User.Commands.DeleteCurrent;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User.Events;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.User.Commands.DeleteCurrent;
 
@@ -26,7 +27,7 @@ public class DeleteCurrentUserCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenDeleteCurrentUserCommandIsSuccessful_ShouldDeleteAndReturnDeleteResult()
+    public async Task HandleDeleteCurrentUserCommand_WhenIsSuccessful_ShouldDeleteAndReturnDeleteResult()
     {
         // Arrange
         var command = new DeleteCurrentUserCommand();
@@ -43,10 +44,11 @@ public class DeleteCurrentUserCommandHandlerTest
         await _currentUserProvider
             .Received(1)
             .GetCurrentUser();
+
         _userRepository
             .Received(1)
             .Remove(user);
-        
+
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteCurrentUserResult());
 
@@ -54,12 +56,16 @@ public class DeleteCurrentUserCommandHandlerTest
         user.DomainEvents[0].Should().BeOfType<UserDeleted>();
         ((UserDeleted)user.DomainEvents[0]).User.Should().Be(user);
     }
-    
+
     [Fact]
-    public async Task WhenDeleteCurrentUserCommandFails_ShouldReturnNotFoundError()
+    public async Task HandleDeleteCurrentUserCommand_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = new DeleteCurrentUserCommand();
+
+        _currentUserProvider
+            .GetCurrentUser()
+            .ReturnsNull();
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -69,7 +75,7 @@ public class DeleteCurrentUserCommandHandlerTest
             .Received(1)
             .GetCurrentUser();
         _userRepository.DidNotReceive();
-        
+
         outcome.ValidateError(Errors.User.NotFound);
     }
 }

@@ -13,7 +13,7 @@ public class GetCollectionProjectQueryValidatorTest
 
     [Theory]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetValidQueries))]
-    public async Task WhenValid_ShouldReturnTrue(GetCollectionProjectQuery query)
+    public async Task ValidateGetCollectionProjectQuery_WhenValid_ShouldReturnTrue(GetCollectionProjectQuery query)
     {
         // Arrange - parameterized
         
@@ -29,10 +29,10 @@ public class GetCollectionProjectQueryValidatorTest
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidCurrentPageQueries))]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidOrderQueries))]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidNameQueries))]
-    public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
+    public async Task ValidateGetCollectionProjectQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionProjectQuery query, 
         string property,
-        short numberOfErrors)
+        short expectedErrors)
     {
         // Arrange - parameterized
         
@@ -41,7 +41,7 @@ public class GetCollectionProjectQueryValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(numberOfErrors);
+        outcome.Errors.Should().HaveCount(expectedErrors);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

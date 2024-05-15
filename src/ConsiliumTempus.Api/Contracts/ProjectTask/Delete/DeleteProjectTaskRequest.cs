@@ -2,8 +2,8 @@
 
 namespace ConsiliumTempus.Api.Contracts.ProjectTask.Delete;
 
-public sealed class DeleteProjectTaskRequest
+public sealed record DeleteProjectTaskRequest
 {
-    [FromRoute] public Guid Id { get; set; }
-    [FromQuery] public Guid StageId { get; set; }
+    [FromRoute] public Guid Id { get; init; }
+    [FromQuery] public Guid StageId { get; init; }
 }

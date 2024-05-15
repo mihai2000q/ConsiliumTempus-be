@@ -24,7 +24,7 @@ public class UpdateProjectStageCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenUpdateProjectStageIsSuccessful_ShouldUpdateAndReturnSuccessResult()
+    public async Task HandleUpdateProjectStageCommand_WhenIsSuccessful_ShouldUpdateAndReturnSuccessResult()
     {
         // Arrange
         var stage = ProjectStageFactory.Create();
@@ -49,7 +49,7 @@ public class UpdateProjectStageCommandHandlerTest
     }
 
     [Fact]
-    public async Task WhenUpdateProjectStageFails_ShouldReturnNotFoundError()
+    public async Task HandleUpdateProjectStageCommand_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectStageCommandFactory.CreateUpdateProjectStageCommand();

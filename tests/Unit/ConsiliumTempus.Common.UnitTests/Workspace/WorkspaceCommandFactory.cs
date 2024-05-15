@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
+using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
@@ -7,12 +8,10 @@ namespace ConsiliumTempus.Common.UnitTests.Workspace;
 public static class WorkspaceCommandFactory
 {
     public static CreateWorkspaceCommand CreateCreateWorkspaceCommand(
-        string name = Constants.Workspace.Name,
-        string description = Constants.Workspace.Description)
+        string name = Constants.Workspace.Name)
     {
         return new CreateWorkspaceCommand(
-            name,
-            description);
+            name);
     }
 
     public static UpdateWorkspaceCommand CreateUpdateWorkspaceCommand(
@@ -24,5 +23,10 @@ public static class WorkspaceCommandFactory
             id ?? Guid.NewGuid(),
             name,
             description);
+    }
+    
+    public static DeleteWorkspaceCommand CreateDeleteWorkspaceCommand(Guid? id = null)
+    {
+        return new DeleteWorkspaceCommand(id ?? Guid.NewGuid());
     }
 }

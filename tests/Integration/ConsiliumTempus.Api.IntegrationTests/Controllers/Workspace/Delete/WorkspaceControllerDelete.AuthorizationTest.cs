@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Delete;
@@ -53,9 +54,10 @@ public class WorkspaceControllerDeleteAuthorizationTest(WebAppFactory factory)
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
+        var request = WorkspaceRequestFactory.CreateDeleteWorkspaceRequest(workspace.Id.Value);
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Delete($"api/workspaces/{workspace.Id}");
+        return await Client.Delete($"api/workspaces/{request.Id}");
     }
 }

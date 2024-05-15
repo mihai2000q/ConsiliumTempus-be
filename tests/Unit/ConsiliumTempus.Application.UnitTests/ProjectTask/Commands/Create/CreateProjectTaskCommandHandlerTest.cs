@@ -36,7 +36,7 @@ public class CreateProjectTaskCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task CreateProjectTaskCommand_WhenIsSuccessful_ShouldCreateAndSaveProjectTaskOnProjectStage()
+    public async Task HandleCreateProjectTaskCommand_WhenIsSuccessful_ShouldCreateAndSaveProjectTaskOnProjectStage()
     {
         // Arrange
         var command = ProjectTaskCommandFactory.CreateCreateProjectTaskCommand();
@@ -73,7 +73,7 @@ public class CreateProjectTaskCommandHandlerTest
     }
 
     [Fact]
-    public async Task CreateProjectTaskCommand_WhenProjectStageIsNull_ShouldReturnProjectStageNotFoundError()
+    public async Task HandleCreateProjectTaskCommand_WhenProjectStageIsNull_ShouldReturnProjectStageNotFoundError()
     {
         // Arrange
         var command = ProjectTaskCommandFactory.CreateCreateProjectTaskCommand();

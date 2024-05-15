@@ -10,15 +10,17 @@ internal static class RegisterCommandValidatorData
     {
         public GetValidCommands()
         {
-            Add(AuthenticationCommandFactory.CreateRegisterCommand());
-            Add(AuthenticationCommandFactory.CreateRegisterCommand(email: "Some@Example.com"));
-            Add(new RegisterCommand(
+            var command = AuthenticationCommandFactory.CreateRegisterCommand();
+            Add(command);
+
+            command = new RegisterCommand(
                 "Michael",
                 "Jordan",
                 "MichaelJ@Gmail.com",
                 "Password123",
                 "Pro Basketball Player",
-                new DateOnly(1991, 5, 23)));
+                new DateOnly(1991, 5, 23));
+            Add(command);
         }
     }
 

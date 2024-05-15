@@ -13,9 +13,9 @@ internal static class UpdateProjectStageCommandValidatorData
             var command = ProjectStageCommandFactory.CreateUpdateProjectStageCommand();
             Add(command);
 
-            command = ProjectStageCommandFactory.CreateUpdateProjectStageCommand(
-                id: Guid.NewGuid(),
-                name: "In Progress");
+            command = new UpdateProjectStageCommand(
+                Guid.NewGuid(),
+                "In Progress");
             Add(command);
         }
     }

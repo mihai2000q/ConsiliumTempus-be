@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
@@ -49,5 +50,13 @@ public static class ProjectSprintRequestFactory
             name,
             startDate,
             endDate);
+    }
+    
+    public static DeleteProjectSprintRequest CreateDeleteProjectSprintRequest(Guid? id = null)
+    {
+        return new DeleteProjectSprintRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
     }
 }

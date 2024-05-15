@@ -3,13 +3,11 @@ using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
-using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Domain.Common.Enums;
 using MapsterMapper;
@@ -46,19 +44,6 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
-    [HttpGet("User")]
-    public async Task<IActionResult> GetCollectionForUser(CancellationToken cancellationToken)
-    {
-        var query = new GetCollectionProjectForUserQuery();
-        var result = await Mediator.Send(query, cancellationToken);
-
-        return result.Match(
-            getCollectionForUserResult =>
-                Ok(Mapper.Map<GetCollectionProjectForUserResponse>(getCollectionForUserResult)),
-            Problem
-        );
-    }
-
     [HasPermission(Permissions.ReadCollectionProject)]
     [HttpGet]
     public async Task<IActionResult> GetCollection(GetCollectionProjectRequest request,
@@ -88,9 +73,9 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
     [HasPermission(Permissions.DeleteProject)]
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(DeleteProjectRequest request, CancellationToken cancellationToken)
     {
-        var command = new DeleteProjectCommand(id);
+        var command = Mapper.Map<DeleteProjectCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(

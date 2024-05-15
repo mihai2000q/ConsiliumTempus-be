@@ -34,7 +34,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static void AssertFromDeleteCommand(
             ProjectTaskAggregate task,
             Domain.Project.Entities.ProjectStage stage,
@@ -42,7 +42,7 @@ internal static partial class Utils
         {
             task.Id.Value.Should().Be(command.Id);
             stage.Id.Value.Should().Be(command.StageId);
-            
+
             stage.Tasks.Should().NotContain(task);
             var customOrderPosition = 0;
             stage.Tasks.Should().AllSatisfy(t =>
@@ -51,7 +51,7 @@ internal static partial class Utils
             stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
-        
+
         internal static void AssertProjectTask(
             ProjectTaskAggregate outcome,
             ProjectTaskAggregate expected)

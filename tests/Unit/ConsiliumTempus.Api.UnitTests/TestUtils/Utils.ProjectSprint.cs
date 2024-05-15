@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
+using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
@@ -19,14 +20,16 @@ internal static partial class Utils
             GetProjectSprintRequest request)
         {
             query.Id.Should().Be(request.Id);
+
             return true;
         }
-        
+
         internal static bool AssertGetCollectionQuery(
             GetCollectionProjectSprintQuery query,
             GetCollectionProjectSprintRequest request)
         {
             query.ProjectId.Should().Be(request.ProjectId);
+
             return true;
         }
 
@@ -38,9 +41,10 @@ internal static partial class Utils
             command.Name.Should().Be(request.Name);
             command.StartDate.Should().Be(request.StartDate);
             command.EndDate.Should().Be(request.EndDate);
+
             return true;
         }
-        
+
         internal static bool AssertUpdateCommand(
             UpdateProjectSprintCommand command,
             UpdateProjectSprintRequest request)
@@ -49,15 +53,19 @@ internal static partial class Utils
             command.Name.Should().Be(request.Name);
             command.StartDate.Should().Be(request.StartDate);
             command.EndDate.Should().Be(request.EndDate);
+
             return true;
         }
 
-        internal static bool AssertDeleteCommand(DeleteProjectSprintCommand command, Guid id)
+        internal static bool AssertDeleteCommand(
+            DeleteProjectSprintCommand command,
+            DeleteProjectSprintRequest request)
         {
-            command.Id.Should().Be(id);
+            command.Id.Should().Be(request.Id);
+
             return true;
         }
-        
+
         internal static void AssertGetResponse(
             GetProjectSprintResponse response,
             Domain.Project.Entities.ProjectSprint sprint)

@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
-using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 
 namespace ConsiliumTempus.Common.UnitTests.Project;
@@ -36,10 +35,5 @@ public static class ProjectQueryFactory
             name,
             isFavorite,
             isPrivate);
-    }
-
-    public static GetCollectionProjectForUserQuery CreateGetCollectionProjectForUserQuery()
-    {
-        return new GetCollectionProjectForUserQuery();
     }
 }

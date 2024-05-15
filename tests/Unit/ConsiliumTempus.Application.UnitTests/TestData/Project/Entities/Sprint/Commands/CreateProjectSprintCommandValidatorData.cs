@@ -10,7 +10,15 @@ internal static class CreateProjectSprintCommandValidatorData
     {
         public GetValidCommands()
         {
-            Add(ProjectSprintCommandFactory.CreateCreateProjectSprintCommand());
+            var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand();
+            Add(command);
+
+            command = new CreateProjectSprintCommand(
+                Guid.NewGuid(),
+                "New Project Sprint",
+                new DateOnly(2022, 11, 12),
+                new DateOnly(2022, 11, 26));
+            Add(command);
         }
     }
 

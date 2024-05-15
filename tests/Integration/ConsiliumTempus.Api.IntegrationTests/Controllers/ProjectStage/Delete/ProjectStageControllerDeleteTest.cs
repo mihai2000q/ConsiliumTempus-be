@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Stage;
 using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +20,11 @@ public class ProjectStageControllerDeleteTest(WebAppFactory factory)
     {
         // Arrange
         var stage = ProjectStageData.ProjectStages.First();
+        var request = ProjectStageRequestFactory.CreateDeleteProjectStageRequest(stage.Id.Value);
 
         // Act
         Client.UseCustomToken(ProjectStageData.Users.First());
-        var outcome = await Client.Delete($"api/projects/stages/{stage.Id.Value}");
+        var outcome = await Client.Delete($"api/projects/stages/{request.Id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -54,10 +56,10 @@ public class ProjectStageControllerDeleteTest(WebAppFactory factory)
     public async Task DeleteProjectStage_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var request = ProjectStageRequestFactory.CreateDeleteProjectStageRequest();
 
         // Act
-        var outcome = await Client.Delete($"api/projects/stages/{id}");
+        var outcome = await Client.Delete($"api/projects/stages/{request.Id}");
 
         // Assert
         await outcome.ValidateError(Errors.ProjectStage.NotFound);
@@ -65,7 +67,7 @@ public class ProjectStageControllerDeleteTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectStages.Should().HaveCount(ProjectStageData.ProjectStages.Length);
         dbContext.ProjectStages.AsEnumerable()
-            .SingleOrDefault(p => p.Id.Value == id)
+            .SingleOrDefault(p => p.Id.Value == request.Id)
             .Should().BeNull();
     }
 }

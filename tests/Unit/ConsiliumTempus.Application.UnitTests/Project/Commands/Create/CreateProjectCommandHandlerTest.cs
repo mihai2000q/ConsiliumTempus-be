@@ -8,6 +8,7 @@ using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Commands.Create;
 
@@ -34,7 +35,7 @@ public class CreateProjectCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task CreateProjectCommand_WhenIsSuccessful_ShouldCreateAndSaveProjectOnWorkspace()
+    public async Task HandleCreateProjectCommand_WhenIsSuccessful_ShouldCreateAndSaveProjectOnWorkspace()
     {
         // Arrange
         var command = ProjectCommandFactory.CreateCreateProjectCommand();
@@ -56,9 +57,11 @@ public class CreateProjectCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));
+
         await _currentUserProvider
             .Received(1)
             .GetCurrentUserAfterPermissionCheck();
+
         await _projectRepository
             .Received(1)
             .Add(Arg.Is<ProjectAggregate>(project =>
@@ -71,10 +74,14 @@ public class CreateProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task CreateProjectCommand_WhenWorkspaceIsNull_ShouldReturnWorkspaceNotFoundError()
+    public async Task HandleCreateProjectCommand_WhenWorkspaceIsNull_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
         var command = ProjectCommandFactory.CreateCreateProjectCommand();
+
+        _workspaceRepository
+            .Get(Arg.Any<WorkspaceId>())
+            .ReturnsNull();
 
         // Act
         var outcome = await _uut.Handle(command, default);

@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +20,11 @@ public class ProjectSprintControllerDeleteTest(WebAppFactory factory)
     {
         // Arrange
         var sprint = ProjectSprintData.ProjectSprints.First();
+        var request = ProjectSprintRequestFactory.CreateDeleteProjectSprintRequest(sprint.Id.Value);
 
         // Act
         Client.UseCustomToken(ProjectSprintData.Users.First());
-        var outcome = await Client.Delete($"api/projects/sprints/{sprint.Id.Value}");
+        var outcome = await Client.Delete($"api/projects/sprints/{request.Id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -45,10 +47,10 @@ public class ProjectSprintControllerDeleteTest(WebAppFactory factory)
     public async Task DeleteProjectSprint_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var request = ProjectSprintRequestFactory.CreateDeleteProjectSprintRequest();
 
         // Act
-        var outcome = await Client.Delete($"api/projects/sprints/{id}");
+        var outcome = await Client.Delete($"api/projects/sprints/{request.Id}");
 
         // Assert
         await outcome.ValidateError(Errors.ProjectSprint.NotFound);
@@ -56,7 +58,7 @@ public class ProjectSprintControllerDeleteTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length);
         dbContext.ProjectSprints.AsEnumerable()
-            .SingleOrDefault(p => p.Id.Value == id)
+            .SingleOrDefault(p => p.Id.Value == request.Id)
             .Should().BeNull();
     }
 }

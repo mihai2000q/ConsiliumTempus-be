@@ -13,14 +13,14 @@ internal static class GetCollectionProjectQueryValidatorData
             var query = ProjectQueryFactory.CreateGetCollectionProjectQuery();
             Add(query);
 
-            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                pageSize: 10,
-                currentPage: 2,
-                order: "name.desc",
-                workspaceId: Guid.NewGuid(),
-                name: "Project",
-                isFavorite: false,
-                isPrivate: true);
+            query = new GetCollectionProjectQuery(
+                10,
+                2,
+                "name.desc",
+                Guid.NewGuid(),
+                "New Project",
+                false,
+                true);
             Add(query);
         }
     }

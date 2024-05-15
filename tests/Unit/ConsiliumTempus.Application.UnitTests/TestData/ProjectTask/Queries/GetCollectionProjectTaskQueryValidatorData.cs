@@ -12,8 +12,8 @@ internal static class GetCollectionProjectTaskQueryValidatorData
             var query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery();
             Add(query);
 
-            query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery(
-                projectStageId: Guid.NewGuid());
+            query = new GetCollectionProjectTaskQuery(
+                Guid.NewGuid());
             Add(query);
         }
     }

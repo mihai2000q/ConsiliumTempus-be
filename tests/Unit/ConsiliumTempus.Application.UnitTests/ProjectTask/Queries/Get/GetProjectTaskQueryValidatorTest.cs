@@ -1,5 +1,5 @@
 ﻿using ConsiliumTempus.Application.ProjectTask.Queries.Get;
-using ConsiliumTempus.Common.UnitTests.ProjectTask;
+using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Queries;
 
 namespace ConsiliumTempus.Application.UnitTests.ProjectTask.Queries.Get;
 
@@ -11,11 +11,11 @@ public class GetProjectTaskQueryValidatorTest
 
     #endregion
     
-    [Fact]
-    public async Task WhenQueryIsValid_ShouldReturnTrue()
+    [Theory]
+    [ClassData(typeof(GetProjectTaskQueryValidatorData.GetValidQueries))]
+    public async Task HandleGetProjectTaskQuery_WhenQueryIsValid_ShouldReturnTrue(GetProjectTaskQuery query)
     {
-        // Arrange
-        var query = ProjectTaskQueryFactory.CreateGetProjectTaskQuery();
+        // Arrange - parameterized
 
         // Act
         var outcome = await _uut.ValidateAsync(query);
@@ -25,11 +25,13 @@ public class GetProjectTaskQueryValidatorTest
         outcome.Errors.Should().BeEmpty();
     }
     
-    [Fact]
-    public async Task WhenIdIsInvalid_ShouldReturnFalse()
+    [Theory]
+    [ClassData(typeof(GetProjectTaskQueryValidatorData.GetInvalidIdQueries))]
+    public async Task HandleGetProjectTaskQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
+        GetProjectTaskQuery query,
+        string property)
     {
-        // Arrange
-        var query = ProjectTaskQueryFactory.CreateGetProjectTaskQuery(Guid.Empty);
+        // Arrange - parameterized
 
         // Act
         var outcome = await _uut.ValidateAsync(query);
@@ -37,6 +39,6 @@ public class GetProjectTaskQueryValidatorTest
         // Assert
         outcome.IsValid.Should().BeFalse();
         outcome.Errors.Should().HaveCount(1);
-        outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(nameof(query.Id)));
+        outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

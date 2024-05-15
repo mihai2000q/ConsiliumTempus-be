@@ -10,15 +10,15 @@ namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 internal static partial class Utils
 {
     internal static class User
-    { 
-        internal static void AssertFromRegisterCommand(UserAggregate user, RegisterCommand command, string password)
+    {
+        internal static bool AssertFromRegisterCommand(UserAggregate user, RegisterCommand command, string password)
         {
             user.Id.Should().NotBeNull();
             user.FirstName.Value.Should().Be(command.FirstName.CapitalizeWord());
             user.LastName.Value.Should().Be(command.LastName.CapitalizeWord());
             user.Credentials.Email.Should().Be(command.Email.ToLower());
             user.Credentials.Password.Should().Be(password);
-            if (command.Role is null) 
+            if (command.Role is null)
                 user.Role.Should().BeNull();
             else
                 user.Role!.Value.Should().Be(command.Role);
@@ -29,6 +29,8 @@ internal static partial class Utils
             user.DomainEvents.Should().HaveCount(1);
             user.DomainEvents[0].Should().BeOfType<UserRegistered>();
             ((UserRegistered)user.DomainEvents[0]).User.Should().Be(user);
+
+            return true;
         }
 
         internal static void AssertFromUpdateCurrentCommand(
@@ -37,7 +39,7 @@ internal static partial class Utils
         {
             user.FirstName.Value.Should().Be(command.FirstName);
             user.LastName.Value.Should().Be(command.LastName);
-            if (command.Role is null) 
+            if (command.Role is null)
                 user.Role.Should().BeNull();
             else
                 user.Role!.Value.Should().Be(command.Role);

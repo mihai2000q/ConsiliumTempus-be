@@ -10,9 +10,5 @@ public sealed class CreateWorkspaceCommandValidator : AbstractValidator<CreateWo
         RuleFor(c => c.Name)
             .NotEmpty()
             .MaximumLength(PropertiesValidation.Workspace.NameMaximumLength);
-
-        RuleFor(c => c.Description)
-            .NotNull()
-            .MaximumLength(PropertiesValidation.Workspace.DescriptionMaximumLength);
     }
 }

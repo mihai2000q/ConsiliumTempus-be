@@ -38,7 +38,7 @@ public class RegisterCommandHandlerTest
 
     [Theory]
     [ClassData(typeof(RegisterCommandHandlerData.GetCommands))]
-    public async Task WhenRegisterIsSuccessful_ShouldCreateUserAndReturnNewToken(RegisterCommand command)
+    public async Task HandleRegisterCommand_WhenIsSuccessful_ShouldCreateUserAndReturnNewToken(RegisterCommand command)
     {
         // Arrange
         UserAggregate createdUser = null!;
@@ -50,14 +50,14 @@ public class RegisterCommandHandlerTest
         _scrambler
             .HashPassword(command.Password)
             .Returns(hashedPassword);
-        
+
         UserAggregate userUsedForJwt = null!;
         const string token = "This is a token";
         _jwtTokenGenerator
             .GenerateToken(Arg.Any<UserAggregate>())
             .Returns(token)
             .AndDoes(user => userUsedForJwt = user.Arg<UserAggregate>());
-        
+
         var jwtId = new Guid().ToString();
         _jwtTokenGenerator
             .GetJwtIdFromToken(token)
@@ -74,16 +74,18 @@ public class RegisterCommandHandlerTest
         // Assert
         await _userRepository
             .Received(1)
-            .GetByEmail(Arg.Any<string>());
+            .GetByEmail(Arg.Is<string>(e => e == command.Email.ToLower()));
         await _userRepository
             .Received(1)
             .Add(Arg.Any<UserAggregate>());
+
         _jwtTokenGenerator
             .Received(1)
             .GenerateToken(Arg.Any<UserAggregate>());
         _jwtTokenGenerator
             .Received(1)
-            .GetJwtIdFromToken(Arg.Any<string>());
+            .GetJwtIdFromToken(Arg.Is<string>(t => t == token));
+
         await _refreshTokenRepository
             .Received(1)
             .Add(Arg.Any<RefreshToken>());
@@ -99,14 +101,15 @@ public class RegisterCommandHandlerTest
     }
 
     [Fact]
-    public async Task WhenRegisterFindsAnotherUserWithSameEmail_ShouldReturnDuplicateEmailError()
+    public async Task HandleRegisterCommand_WhenThereIsAnotherUserWithSameEmail_ShouldReturnDuplicateEmailError()
     {
         // Arrange
         var command = AuthenticationCommandFactory.CreateRegisterCommand();
 
+        var user = UserFactory.Create();
         _userRepository
             .GetByEmail(command.Email.ToLower())
-            .Returns(UserFactory.Create());
+            .Returns(user);
 
         // Act
         var outcome = await _uut.Handle(command, default);

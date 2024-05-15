@@ -27,7 +27,6 @@ public class UpdateWorkspaceCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(UpdateWorkspaceCommandValidatorData.GetInvalidNameCommands))]
-    [ClassData(typeof(UpdateWorkspaceCommandValidatorData.GetInvalidDescriptionCommands))]
     public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
         UpdateWorkspaceCommand command,
         string property,

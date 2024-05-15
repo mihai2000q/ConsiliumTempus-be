@@ -13,7 +13,6 @@ public static class ProjectFactory
 {
     public static ProjectAggregate Create(
         string name = Constants.Project.Name,
-        string description = Constants.Project.Description,
         bool isPrivate = false,
         UserAggregate? user = null,
         WorkspaceAggregate? workspace = null,
@@ -21,7 +20,6 @@ public static class ProjectFactory
     {
         var project = ProjectAggregate.Create(
             Name.Create(name),
-            Description.Create(description),
             IsPrivate.Create(isPrivate),
             workspace ?? WorkspaceFactory.Create(),
             user ?? UserFactory.Create());
@@ -36,7 +34,7 @@ public static class ProjectFactory
     public static List<ProjectAggregate> CreateList(int count = 5)
     {
         return Enumerable
-            .Repeat(0, count)
+            .Range(0, count)
             .Select(_ => Create())
             .ToList();
     }

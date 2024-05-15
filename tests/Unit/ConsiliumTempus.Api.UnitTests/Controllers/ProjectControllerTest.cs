@@ -3,7 +3,6 @@ using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
@@ -11,7 +10,6 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
-using ConsiliumTempus.Application.Project.Queries.GetCollectionForUser;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -138,10 +136,7 @@ public class ProjectControllerTest
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest();
 
-        var result = new GetCollectionProjectResult(
-            ProjectFactory.CreateList(),
-            25,
-            null);
+        var result = ProjectResultFactory.CreateGetCollectionProjectResult();
         _mediator
             .Send(Arg.Any<GetCollectionProjectQuery>())
             .Returns(result);
@@ -183,55 +178,12 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task GetCollectionForUser_WhenIsSuccessful_ShouldReturnResponse()
-    {
-        // Arrange
-        var result = new GetCollectionProjectForUserResult(ProjectFactory.CreateList());
-        _mediator
-            .Send(Arg.Any<GetCollectionProjectForUserQuery>())
-            .Returns(result);
-
-        // Act
-        var outcome = await _uut.GetCollectionForUser(default);
-
-        // Assert
-        await _mediator
-            .Received(1)
-            .Send(Arg.Is<GetCollectionProjectForUserQuery>(q =>
-                Utils.Project.AssertGetCollectionProjectForUserQuery(q)));
-
-        var response = outcome.ToResponse<GetCollectionProjectForUserResponse>();
-        Utils.Project.AssertGetCollectionForUserResponse(response, result);
-    }
-
-    [Fact]
-    public async Task GetCollectionForUser_WhenItFails_ShouldReturnProblem()
-    {
-        // Arrange
-        var error = Errors.User.NotFound;
-        _mediator
-            .Send(Arg.Any<GetCollectionProjectForUserQuery>())
-            .Returns(error);
-
-        // Act
-        var outcome = await _uut.GetCollectionForUser(default);
-
-        // Assert
-        await _mediator
-            .Received(1)
-            .Send(Arg.Is<GetCollectionProjectForUserQuery>(q =>
-                Utils.Project.AssertGetCollectionProjectForUserQuery(q)));
-
-        outcome.ValidateError(error);
-    }
-
-    [Fact]
     public async Task CreateProject_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateCreateProjectRequest();
 
-        var result = new CreateProjectResult();
+        var result = ProjectResultFactory.CreateCreateProjectResult();
         _mediator
             .Send(Arg.Any<CreateProjectCommand>())
             .Returns(result);
@@ -274,20 +226,20 @@ public class ProjectControllerTest
     public async Task DeleteProject_WhenIsSuccessful_ShouldReturnSuccess()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var request = ProjectRequestFactory.CreateDeleteProjectRequest();
 
-        var result = new DeleteProjectResult();
+        var result = ProjectResultFactory.CreateDeleteProjectResult();
         _mediator
             .Send(Arg.Any<DeleteProjectCommand>())
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(id, default);
+        var outcome = await _uut.Delete(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, id)));
+            .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, request)));
 
         var response = outcome.ToResponse<DeleteProjectResponse>();
         response.Message.Should().Be(result.Message);
@@ -297,7 +249,7 @@ public class ProjectControllerTest
     public async Task DeleteProject_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
-        var id = Guid.NewGuid();
+        var request = ProjectRequestFactory.CreateDeleteProjectRequest();
 
         var error = Errors.Project.NotFound;
         _mediator
@@ -305,12 +257,12 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(id, default);
+        var outcome = await _uut.Delete(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, id)));
+            .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, request)));
 
         outcome.ValidateError(error);
     }

@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 
-public sealed class GetCollectionProjectTaskRequest
+public sealed record GetCollectionProjectTaskRequest
 {
-    [FromQuery] public Guid ProjectStageId { get; set; }
+    [FromQuery] public Guid ProjectStageId { get; init; }
 }

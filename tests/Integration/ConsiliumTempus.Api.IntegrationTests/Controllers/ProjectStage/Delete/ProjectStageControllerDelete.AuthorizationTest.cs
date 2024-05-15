@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Stage;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectStage.Delete;
@@ -53,9 +54,10 @@ public class ProjectStageControllerDeleteAuthorizationTest(WebAppFactory factory
     {
         // Arrange
         var stage = ProjectStageData.ProjectStages.First();
-
+        var request = ProjectStageRequestFactory.CreateDeleteProjectStageRequest(stage.Id.Value);
+        
         // Act
         Client.UseCustomToken(user);
-        return await Client.Delete($"api/projects/stages/{stage.Id.Value}");
+        return await Client.Delete($"api/projects/stages/{request.Id}");
     }
 }

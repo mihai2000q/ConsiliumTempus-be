@@ -10,9 +10,13 @@ internal static class LoginCommandValidatorData
     {
         public GetValidCommands()
         {
-            Add(AuthenticationCommandFactory.CreateLoginCommand());
-            Add(AuthenticationCommandFactory.CreateLoginCommand(email: "Some@Example.com"));
-            Add(new LoginCommand("MichaelJ@Gmail.com", "Password123"));
+            var command = AuthenticationCommandFactory.CreateLoginCommand();
+            Add(command);
+            
+            command = new LoginCommand(
+                "MichaelJ@Gmail.com", 
+                "MichaelPassword123");
+            Add(command);
         }
     }
     

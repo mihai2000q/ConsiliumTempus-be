@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
+using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
@@ -8,8 +9,7 @@ namespace ConsiliumTempus.Common.UnitTests.Project;
 
 public static class ProjectRequestFactory
 {
-    public static GetProjectRequest CreateGetProjectRequest(
-        Guid? id = null)
+    public static GetProjectRequest CreateGetProjectRequest(Guid? id = null)
     {
         return new GetProjectRequest
         {
@@ -17,8 +17,7 @@ public static class ProjectRequestFactory
         };
     }
     
-    public static GetOverviewProjectRequest CreateGetOverviewProjectRequest(
-        Guid? id = null)
+    public static GetOverviewProjectRequest CreateGetOverviewProjectRequest(Guid? id = null)
     {
         return new GetOverviewProjectRequest
         {
@@ -50,13 +49,19 @@ public static class ProjectRequestFactory
     public static CreateProjectRequest CreateCreateProjectRequest(
         Guid? workspaceId = null,
         string name = Constants.Project.Name,
-        string description = Constants.Project.Description,
         bool isPrivate = false)
     {
         return new CreateProjectRequest(
             workspaceId ?? Guid.NewGuid(),
             name,
-            description,
             isPrivate);
+    }
+    
+    public static DeleteProjectRequest CreateDeleteProjectRequest(Guid? id = null)
+    {
+        return new DeleteProjectRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
     }
 }

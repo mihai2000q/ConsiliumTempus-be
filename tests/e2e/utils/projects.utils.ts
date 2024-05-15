@@ -4,7 +4,7 @@ import CreateProjectRequest from "../types/requests/project/CreateProjectRequest
 import { createWorkspace, getPersonalWorkspace } from "./workspaces.utils";
 
 export async function getProjects(request: APIRequestContext) {
-  const response = await request.get('/api/projects/user', useToken())
+  const response = await request.get('/api/projects', useToken())
   expect(response.ok()).toBeTruthy()
   return (await response.json()).projects
 }
@@ -26,7 +26,6 @@ export async function create2ProjectsIn2DifferentWorkspaces(request: APIRequestC
   const createProjectRequest1: CreateProjectRequest = {
     workspaceId: (await getPersonalWorkspace(request)).id,
     name: "Unique Project Name",
-    description: "some description",
     isPrivate: false
   }
   await createProject(request, createProjectRequest1)
@@ -48,7 +47,6 @@ export async function createProjects(request: APIRequestContext, count: number) 
   const createProjectRequest1: CreateProjectRequest = {
     workspaceId: (await getPersonalWorkspace(request)).id,
     name: "Project 1",
-    description: "some description",
     isPrivate: false
   }
   await createProject(request, createProjectRequest1)

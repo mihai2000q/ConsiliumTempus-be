@@ -1,7 +1,6 @@
 ﻿using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
-using ConsiliumTempus.Api.Contracts.Project.GetCollectionForUser;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
@@ -29,23 +28,12 @@ internal static partial class Utils
                     .ThenBy(s => s.CreatedDateTime))
                 .Should().AllSatisfy(p => AssertProjectSprintResponse(p.First, p.Second));
         }
-        
+
         internal static void AssertGetOverviewProjectResponse(
             GetOverviewProjectResponse response,
             ProjectAggregate project)
         {
             response.Description.Should().Be(project.Description.Value);
-        }
-
-        internal static void AssertGetCollectionForUserResponse(
-            GetCollectionProjectForUserResponse response,
-            IReadOnlyList<ProjectAggregate> projects)
-        {
-            response.Projects.Should().HaveCount(projects.Count);
-            response.Projects
-                .OrderBy(p => p.Id)
-                .Zip(projects.OrderBy(p => p.Id.Value))
-                .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
         }
 
         internal static void AssertGetCollectionResponse(
@@ -77,7 +65,7 @@ internal static partial class Utils
         internal static void AssertCreation(ProjectAggregate project, CreateProjectRequest request)
         {
             project.Name.Value.Should().Be(request.Name);
-            project.Description.Value.Should().Be(request.Description);
+            project.Description.Value.Should().BeEmpty();
             project.IsFavorite.Value.Should().Be(false);
             project.IsPrivate.Value.Should().Be(request.IsPrivate);
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
@@ -101,14 +89,6 @@ internal static partial class Utils
             sprintResponse.Name.Should().Be(sprint.Name.Value);
             sprintResponse.StartDate.Should().Be(sprint.StartDate);
             sprintResponse.EndDate.Should().Be(sprint.EndDate);
-        }
-        
-        private static void AssertProjectResponse(
-            GetCollectionProjectForUserResponse.ProjectResponse projectResponse,
-            ProjectAggregate project)
-        {
-            projectResponse.Id.Should().Be(project.Id.Value);
-            projectResponse.Name.Should().Be(project.Name.Value);
         }
 
         private static void AssertProjectResponse(

@@ -13,7 +13,7 @@ public class GetCollectionProjectTaskQueryValidatorTest
 
     [Theory]
     [ClassData(typeof(GetCollectionProjectTaskQueryValidatorData.GetValidQueries))]
-    public async Task WhenValid_ShouldReturnTrue(GetCollectionProjectTaskQuery query)
+    public async Task ValidateGetCollectionProjectQuery_WhenValid_ShouldReturnTrue(GetCollectionProjectTaskQuery query)
     {
         // Arrange - parameterized
         
@@ -26,7 +26,7 @@ public class GetCollectionProjectTaskQueryValidatorTest
     
     [Theory]
     [ClassData(typeof(GetCollectionProjectTaskQueryValidatorData.GetInvalidProjectStageIdQueries))]
-    public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
+    public async Task ValidateGetCollectionProjectQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionProjectTaskQuery query, 
         string property,
         short numberOfErrors)

@@ -20,7 +20,7 @@ internal static partial class Utils
         paginationInfo.CurrentPage.Should().Be(currentPage);
         return true;
     }
-    
+
     internal static bool AssertOrder<TEntity>(
         this IOrder<TEntity>? order,
         string? stringOrder,
@@ -32,7 +32,7 @@ internal static partial class Utils
         order!.Type
             .Should()
             .Be(split[1] == Order<object>.Descending ? OrderType.Descending : OrderType.Ascending);
-    
+
         return orderProperties
             .Single(op => op.Identifier == split[0])
             .PropertySelector == order.PropertySelector;

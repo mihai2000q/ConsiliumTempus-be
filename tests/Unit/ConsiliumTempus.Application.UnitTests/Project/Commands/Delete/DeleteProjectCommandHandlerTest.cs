@@ -24,15 +24,15 @@ public class DeleteProjectCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenDeleteProjectIsSuccessful_ShouldDeleteProjectAndReturnSuccess()
+    public async Task HandleDeleteProjectCommand_WhenIsSuccessful_ShouldDeleteProjectAndReturnSuccess()
     {
         // Arrange
         var project = ProjectFactory.Create();
         _projectRepository
             .GetWithWorkspace(Arg.Any<ProjectId>())
             .Returns(project);
-        
-        var command = new DeleteProjectCommand(project.Id.Value);
+
+        var command = ProjectCommandFactory.CreateDeleteProjectCommand(id: project.Id.Value);
         
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -50,10 +50,10 @@ public class DeleteProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task WhenDeleteProjectFails_ShouldReturnNotFoundError()
+    public async Task HandleDeleteProjectCommand_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
-        var command = new DeleteProjectCommand(Guid.NewGuid());
+        var command = ProjectCommandFactory.CreateDeleteProjectCommand();
 
         // Act
         var outcome = await _uut.Handle(command, default);

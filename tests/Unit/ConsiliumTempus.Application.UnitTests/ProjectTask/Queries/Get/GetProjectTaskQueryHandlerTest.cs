@@ -33,6 +33,7 @@ public class GetProjectTaskQueryHandlerTest
         _projectTaskRepository
             .Get(Arg.Any<ProjectTaskId>())
             .Returns(task);
+        
         // Act
         var outcome = await _uut.Handle(query, default);
 

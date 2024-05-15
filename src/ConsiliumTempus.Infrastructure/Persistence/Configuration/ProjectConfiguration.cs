@@ -27,8 +27,7 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
 
         builder.OwnsOne(p => p.Description)
             .Property(d => d.Value)
-            .HasColumnName(nameof(Description))
-            .HasMaxLength(PropertiesValidation.Project.DescriptionMaximumLength);
+            .HasColumnName(nameof(Description));
 
         builder.OwnsOne(p => p.IsFavorite)
             .Property(f => f.Value)

@@ -9,7 +9,13 @@ internal static class RefreshCommandValidatorData
     {
         public GetValidCommands()
         {
-            Add(AuthenticationCommandFactory.CreateRefreshCommand());
+            var command = AuthenticationCommandFactory.CreateRefreshCommand();
+            Add(command);
+
+            command = new RefreshCommand(
+                "this is a token",
+                "RefreshTokenId");
+            Add(command);
         }
     }
     

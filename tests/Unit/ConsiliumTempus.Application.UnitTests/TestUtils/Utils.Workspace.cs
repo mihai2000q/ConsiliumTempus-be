@@ -19,7 +19,7 @@ internal static partial class Utils
             UserAggregate user)
         {
             workspace.Name.Value.Should().Be(command.Name);
-            workspace.Description.Value.Should().Be(command.Description);
+            workspace.Description.Value.Should().BeEmpty();
             workspace.Owner.Should().Be(user);
             workspace.IsPersonal.Value.Should().Be(false);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
@@ -35,6 +35,7 @@ internal static partial class Utils
             workspace.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             workspace.Projects.Should().BeEmpty();
+
             return true;
         }
 

@@ -26,7 +26,6 @@ public sealed class CreateProjectCommandHandler(
 
         var project = ProjectAggregate.Create(
             Name.Create(command.Name),
-            Description.Create(command.Description),
             IsPrivate.Create(command.IsPrivate),
             workspace,
             user);

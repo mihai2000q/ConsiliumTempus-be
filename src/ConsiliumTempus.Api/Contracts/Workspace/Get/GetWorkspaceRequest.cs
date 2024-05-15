@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Api.Contracts.Workspace.Get;
 
-public sealed class GetWorkspaceRequest
+public sealed record GetWorkspaceRequest
 {
     [FromRoute]
     public Guid Id { get; init; }

@@ -7,8 +7,6 @@
   * [Get Collection](#get-collection)
     * [Get Collection Request](#get-collection-request)
     * [Get Collection Response](#get-collection-response)
-  * [Get Collection For User](#get-collection-for-user)
-    * [Get Collection For User Response](#get-collection-for-user-response)
   * [Create](#create)
     * [Create Project Request](#create-project-request)
     * [Create Project Response](#create-project-response)
@@ -96,34 +94,6 @@ Returns the projects, their total count and total pages, if paginated.
   ],
   "totalCount": 5,
   "totalPages": 3
-}
-```
-
-
-### Get Collection For User
-
-Anyone logged in can fetch the projects that they are part of.
-
-```js
-GET {{host}}/api/projects/user
-```
-
-#### Get Collection For User Response
-
-Returns wrapped up projects' ids and names.
-
-```json
-{
-  "projects": [
-    {
-      "id": "10000000-0000-0000-0000-000000000000",
-      "name": "Project Name 1"
-    },
-    {
-      "id": "20000000-0000-0000-0000-000000000000",
-      "name": "Project Name 2"
-    }
-  ]
 }
 ```
 

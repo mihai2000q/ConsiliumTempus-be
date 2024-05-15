@@ -28,8 +28,7 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
 
         builder.OwnsOne(t => t.Description)
             .Property(d => d.Value)
-            .HasColumnName(nameof(Description))
-            .HasMaxLength(PropertiesValidation.ProjectTask.DescriptionMaximumLength);
+            .HasColumnName(nameof(Description));
 
         builder.OwnsOne(t => t.IsCompleted)
             .Property(c => c.Value)

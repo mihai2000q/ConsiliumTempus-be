@@ -6,6 +6,7 @@ using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Commands.Create;
 
@@ -27,7 +28,7 @@ public class CreateProjectSprintCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenCreateProjectSprintIsSuccessful_ShouldAddAndReturnSuccessResult()
+    public async Task HandleCreateProjectSprintCommand_WhenIsSuccessful_ShouldAddAndReturnSuccessResult()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand();
@@ -54,10 +55,14 @@ public class CreateProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task WhenCreateProjectSprintFails_ShouldReturnProjectNotFoundError()
+    public async Task HandleCreateProjectSprintCommand_WhenItFails_ShouldReturnProjectNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand();
+
+        _projectRepository
+            .GetWithWorkspace(Arg.Any<ProjectId>())
+            .ReturnsNull();
 
         // Act
         var outcome = await _uut.Handle(command, default);

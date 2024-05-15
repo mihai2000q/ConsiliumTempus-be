@@ -15,7 +15,7 @@ public class UserRegisteredHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenUserRegisters_ShouldAddWorkspaceToUser()
+    public async Task HandleUserRegistered_WhenSuccessful_ShouldAddWorkspaceToUser()
     {
         // Arrange
         var user = UserFactory.Create();

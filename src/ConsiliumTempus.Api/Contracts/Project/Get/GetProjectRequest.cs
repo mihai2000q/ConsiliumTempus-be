@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Api.Contracts.Project.Get;
 
-public sealed class GetProjectRequest
+public sealed record GetProjectRequest
 {
     [FromRoute] public Guid Id { get; init; }
 }

@@ -32,7 +32,7 @@ internal static partial class Utils
         {
             project.Id.Value.Should().NotBeEmpty();
             project.Name.Value.Should().Be(command.Name);
-            project.Description.Value.Should().Be(command.Description);
+            project.Description.Value.Should().BeEmpty();
             project.IsPrivate.Value.Should().Be(command.IsPrivate);
             project.IsFavorite.Value.Should().Be(false);
             project.Sprints.Should().BeEmpty();
@@ -63,13 +63,12 @@ internal static partial class Utils
             outcome.Workspace.Should().Be(expected.Workspace);
             outcome.Sprints.Should().BeEquivalentTo(expected.Sprints);
         }
-        
+
         internal static void AssertProjectOverview(
             GetOverviewProjectResult outcome,
             ProjectAggregate project)
         {
             outcome.Description.Should().Be(project.Description);
-            
         }
 
         internal static bool AssertGetCollectionProjectFilters(
@@ -84,7 +83,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static bool AssertFromDeleteCommand(
             ProjectAggregate project,
             DeleteProjectCommand command)

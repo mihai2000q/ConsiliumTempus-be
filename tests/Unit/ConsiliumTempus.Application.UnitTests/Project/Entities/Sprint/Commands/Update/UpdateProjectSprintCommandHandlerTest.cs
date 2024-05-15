@@ -24,7 +24,7 @@ public class UpdateProjectSprintCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task WhenUpdateProjectSprintIsSuccessful_ShouldUpdateAndReturnSuccessResult()
+    public async Task HandleUpdateProjectSprintCommand_WhenIsSuccessful_ShouldUpdateAndReturnSuccessResult()
     {
         // Arrange
         var sprint = ProjectSprintFactory.Create();
@@ -49,7 +49,7 @@ public class UpdateProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task WhenUpdateProjectSprintFails_ShouldReturnNotFoundError()
+    public async Task HandleUpdateProjectSprintCommand_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand();

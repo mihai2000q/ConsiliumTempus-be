@@ -14,9 +14,9 @@ public sealed class UserRegisteredHandler : INotificationHandler<UserRegistered>
     {
         var workspace = WorkspaceAggregate.Create(
             Name.Create(Constants.Workspace.Name),
-            Description.Create(Constants.Workspace.Description),
             notification.User,
             IsPersonal.Create(true));
+        workspace.Update(workspace.Name, Description.Create(Constants.Workspace.Description));
 
         var membership = Membership.Create(notification.User, workspace, WorkspaceRole.Admin);
         notification.User.AddWorkspaceMembership(membership);
