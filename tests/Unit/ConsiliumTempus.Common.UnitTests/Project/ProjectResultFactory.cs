@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Domain.Project;
 
@@ -21,6 +22,11 @@ public static class ProjectResultFactory
     public static CreateProjectResult CreateCreateProjectResult()
     {
         return new CreateProjectResult();
+    }
+    
+    public static UpdateProjectResult CreateUpdateProjectResult()
+    {
+        return new UpdateProjectResult();
     }
     
     public static DeleteProjectResult CreateDeleteProjectResult()

@@ -19,7 +19,7 @@ internal static partial class Utils
             stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
-        
+
         internal static void AssertUpdated(
             Domain.Project.Entities.ProjectStage stage,
             Domain.Project.Entities.ProjectStage newStage,
@@ -31,7 +31,7 @@ internal static partial class Utils
             // changed
             newStage.Id.Value.Should().Be(request.Id);
             newStage.Name.Value.Should().Be(request.Name);
-            
+
             newStage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             newStage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }

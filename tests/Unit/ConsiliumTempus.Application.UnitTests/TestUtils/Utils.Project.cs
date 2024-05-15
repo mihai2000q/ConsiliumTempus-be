@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
@@ -48,6 +49,30 @@ internal static partial class Utils
             return true;
         }
 
+        internal static bool AssertFromDeleteCommand(
+            ProjectAggregate project,
+            DeleteProjectCommand command)
+        {
+            project.Id.Value.Should().Be(command.Id);
+
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+
+            return true;
+        }
+
+        internal static void AssertFromUpdateCommand(
+            ProjectAggregate project,
+            UpdateProjectCommand command)
+        {
+            project.Id.Value.Should().Be(command.Id);
+            project.Name.Value.Should().Be(command.Name);
+            project.IsFavorite.Value.Should().Be(command.IsFavorite);
+            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+
         internal static void AssertProject(
             ProjectAggregate outcome,
             ProjectAggregate expected)
@@ -83,17 +108,6 @@ internal static partial class Utils
 
             return true;
         }
-
-        internal static bool AssertFromDeleteCommand(
-            ProjectAggregate project,
-            DeleteProjectCommand command)
-        {
-            project.Id.Value.Should().Be(command.Id);
-
-            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-
-            return true;
-        }
     }
 
     internal static class ProjectSprint
@@ -118,20 +132,6 @@ internal static partial class Utils
                 .Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
             return true;
-        }
-
-        internal static void AssertProjectSprint(
-            Domain.Project.Entities.ProjectSprint outcome,
-            Domain.Project.Entities.ProjectSprint expected)
-        {
-            outcome.Id.Should().Be(expected.Id);
-            outcome.Name.Should().Be(expected.Name);
-            outcome.StartDate.Should().Be(expected.StartDate);
-            outcome.EndDate.Should().Be(expected.EndDate);
-            outcome.Project.Should().Be(expected.Project);
-            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
-            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
-            outcome.Stages.Should().BeEquivalentTo(expected.Stages);
         }
 
         internal static void AssertFromUpdateCommand(
@@ -159,6 +159,20 @@ internal static partial class Utils
 
             return true;
         }
+
+        internal static void AssertProjectSprint(
+            Domain.Project.Entities.ProjectSprint outcome,
+            Domain.Project.Entities.ProjectSprint expected)
+        {
+            outcome.Id.Should().Be(expected.Id);
+            outcome.Name.Should().Be(expected.Name);
+            outcome.StartDate.Should().Be(expected.StartDate);
+            outcome.EndDate.Should().Be(expected.EndDate);
+            outcome.Project.Should().Be(expected.Project);
+            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
+            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Stages.Should().BeEquivalentTo(expected.Stages);
+        }
     }
 
     internal static class ProjectStage
@@ -181,17 +195,6 @@ internal static partial class Utils
             return true;
         }
 
-        internal static void AssertFromUpdateCommand(
-            Domain.Project.Entities.ProjectStage stage,
-            UpdateProjectStageCommand command)
-        {
-            stage.Id.Value.Should().Be(command.Id);
-            stage.Name.Value.Should().Be(command.Name);
-
-            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-        }
-
         internal static void AssertFromDeleteCommand(
             Domain.Project.Entities.ProjectStage stage,
             DeleteProjectStageCommand command)
@@ -202,6 +205,17 @@ internal static partial class Utils
             var customOrderPosition = 0;
             stage.Sprint.Stages.Should().AllSatisfy(s =>
                 s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+
+            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+
+        internal static void AssertFromUpdateCommand(
+            Domain.Project.Entities.ProjectStage stage,
+            UpdateProjectStageCommand command)
+        {
+            stage.Id.Value.Should().Be(command.Id);
+            stage.Name.Value.Should().Be(command.Name);
 
             stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());

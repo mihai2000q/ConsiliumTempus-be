@@ -11,7 +11,10 @@ internal static partial class Utils
 {
     internal static class Token
     {
-        internal static JwtSecurityToken GenerateValidToken(UserAggregate user, JwtSettings jwtSettings, string? jti = null)
+        internal static JwtSecurityToken GenerateValidToken(
+            UserAggregate user,
+            JwtSettings jwtSettings,
+            string? jti = null)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),

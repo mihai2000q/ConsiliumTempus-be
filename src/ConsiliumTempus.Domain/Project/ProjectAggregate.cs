@@ -72,9 +72,10 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         return project;
     }
 
-    public void Update(Name name)
+    public void Update(Name name, IsFavorite isFavorite)
     {
         Name = name;
+        IsFavorite = isFavorite;
         UpdatedDateTime = DateTime.UtcNow;
         RefreshActivity();
     }
