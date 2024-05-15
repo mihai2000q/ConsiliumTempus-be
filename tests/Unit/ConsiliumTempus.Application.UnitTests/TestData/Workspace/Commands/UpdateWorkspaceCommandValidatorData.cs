@@ -30,14 +30,4 @@ internal static class UpdateWorkspaceCommandValidatorData
             Add(command, nameof(command.Name), 1);
         }
     }
-
-    internal class GetInvalidDescriptionCommands : TheoryData<UpdateWorkspaceCommand, string, int>
-    {
-        public GetInvalidDescriptionCommands()
-        {
-            var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand(
-                description: new string('a', PropertiesValidation.Workspace.DescriptionMaximumLength + 1));
-            Add(command, nameof(command.Description), 1);
-        }
-    }    
 }
