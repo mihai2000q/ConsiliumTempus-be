@@ -67,7 +67,7 @@ public class ProjectCreatedHandlerTest
                 task.CustomOrderPosition.Value.Should().Be(count++);
                 task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
                 task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-                task.Asignee.Should().BeNull();
+                task.Assignee.Should().BeNull();
                 task.Reviewer.Should().BeNull();
                 task.DueDate.Should().BeNull();
                 task.EstimatedDuration.Should().BeNull();

@@ -54,7 +54,7 @@ public sealed class ProjectStage : Entity<ProjectStageId>
         if (onTop)
         {
             _tasks.ForEach(t => 
-                t.Update(t.Name, t.CustomOrderPosition + CustomOrderPosition.Create(1)));
+                t.UpdateCustomOrderPosition(t.CustomOrderPosition + CustomOrderPosition.Create(1)));
             _tasks.Insert(0, task);
         }
         else
@@ -62,15 +62,13 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             _tasks.Add(task);
         }
     }
-    
+
     public void RemoveTask(ProjectTaskAggregate task)
     {
         _tasks.Remove(task);
         for (var i = task.CustomOrderPosition.Value; i < _tasks.Count; i++)
         {
-            _tasks[i].Update(
-                _tasks[i].Name, 
-                _tasks[i].CustomOrderPosition - CustomOrderPosition.Create(1));
+            _tasks[i].UpdateCustomOrderPosition(_tasks[i].CustomOrderPosition - CustomOrderPosition.Create(1));
         }
     }
 }
