@@ -2,7 +2,7 @@ using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Stage;
 using ConsiliumTempus.Domain.Common.Validation;
 
-namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Stage.Commands;
+namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Stage.Commands.Create;
 
 internal static class CreateProjectStageCommandValidatorData
 {
@@ -15,7 +15,8 @@ internal static class CreateProjectStageCommandValidatorData
 
             command = new CreateProjectStageCommand(
                 Guid.NewGuid(),
-                "In Progress");
+                "In Progress",
+                false);
             Add(command);
         }
     }

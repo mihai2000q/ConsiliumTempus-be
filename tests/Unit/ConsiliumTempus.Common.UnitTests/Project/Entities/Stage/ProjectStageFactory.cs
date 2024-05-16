@@ -37,10 +37,10 @@ public static class ProjectStageFactory
     {
         var sprint = ProjectSprintFactory.Create();
 
-        var count = 1;
+        var count = 0;
         Enumerable.Repeat(0, stagesCount)
             .ToList()
-            .ForEach(_ => sprint.AddStage(Create(customOrderPosition: count++)));
+            .ForEach(_ => sprint.AddStage(Create(sprint, customOrderPosition: count++)));
 
         return sprint.Stages[0];
     }

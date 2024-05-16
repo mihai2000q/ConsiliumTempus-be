@@ -2,7 +2,7 @@ using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Stage;
 using ConsiliumTempus.Domain.Common.Validation;
 
-namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Stage.Commands;
+namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Stage.Commands.Update;
 
 internal static class UpdateProjectStageCommandValidatorData
 {

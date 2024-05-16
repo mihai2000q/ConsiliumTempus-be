@@ -1,7 +1,7 @@
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Delete;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Stage;
 
-namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Stage.Commands;
+namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Stage.Commands.Delete;
 
 internal static class DeleteProjectStageCommandValidatorData
 {
