@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240516132505_InitialCreate")]
+    [Migration("20240516170058_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -544,7 +544,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AsigneeId")
+                    b.Property<Guid?>("AssigneeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CreatedById")
@@ -570,7 +570,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AsigneeId");
+                    b.HasIndex("AssigneeId");
 
                     b.HasIndex("CreatedById");
 
@@ -861,9 +861,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.ProjectTaskAggregate", b =>
                 {
-                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Asignee")
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Assignee")
                         .WithMany()
-                        .HasForeignKey("AsigneeId");
+                        .HasForeignKey("AssigneeId");
 
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
                         .WithMany()
@@ -1019,7 +1019,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.Navigation("Task");
                         });
 
-                    b.Navigation("Asignee");
+                    b.Navigation("Assignee");
 
                     b.Navigation("Comments");
 

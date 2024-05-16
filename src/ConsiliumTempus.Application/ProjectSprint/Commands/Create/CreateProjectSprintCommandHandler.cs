@@ -16,8 +16,7 @@ public sealed class CreateProjectSprintCommandHandler(
     public async Task<ErrorOr<CreateProjectSprintResult>> Handle(CreateProjectSprintCommand command,
         CancellationToken cancellationToken)
     {
-        var projectId = ProjectId.Create(command.ProjectId);
-        var project = await projectRepository.GetWithWorkspace(projectId, cancellationToken);
+        var project = await projectRepository.GetWithWorkspace(ProjectId.Create(command.ProjectId), cancellationToken);
         if (project is null) return Errors.Project.NotFound;
 
         var projectSprint = ProjectSprintAggregate.Create(

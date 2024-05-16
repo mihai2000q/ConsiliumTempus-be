@@ -239,7 +239,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     CustomOrderPosition = table.Column<int>(type: "int", nullable: false),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AsigneeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AssigneeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ReviewerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DueDate = table.Column<DateOnly>(type: "date", nullable: true),
                     EstimatedDuration = table.Column<TimeSpan>(type: "time", nullable: true),
@@ -257,8 +257,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProjectTask_User_AsigneeId",
-                        column: x => x.AsigneeId,
+                        name: "FK_ProjectTask_User_AssigneeId",
+                        column: x => x.AssigneeId,
                         principalTable: "User",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -416,9 +416,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "SprintId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectTask_AsigneeId",
+                name: "IX_ProjectTask_AssigneeId",
                 table: "ProjectTask",
-                column: "AsigneeId");
+                column: "AssigneeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectTask_CreatedById",
