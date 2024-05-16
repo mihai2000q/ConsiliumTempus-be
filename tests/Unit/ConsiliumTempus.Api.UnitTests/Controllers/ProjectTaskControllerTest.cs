@@ -128,7 +128,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task CreateProjectTask_WhenIsSuccessful_ShouldReturnResponse()
+    public async Task Create_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateCreateProjectTaskRequest();
@@ -151,7 +151,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task CreateProjectTask_WhenItFails_ShouldReturnProblem()
+    public async Task Create_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateCreateProjectTaskRequest();
@@ -173,7 +173,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task DeleteProjectTask_WhenIsSuccessful_ShouldReturnSuccess()
+    public async Task Delete_WhenIsSuccessful_ShouldReturnSuccess()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest();
@@ -197,7 +197,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task DeleteProjectTask_WhenItFails_ShouldReturnProblem()
+    public async Task Delete_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest();

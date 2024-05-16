@@ -34,7 +34,7 @@ public class UserControllerTest
     #endregion
 
     [Fact]
-    public async Task GetUser_WhenIsSuccessful_ShouldReturnUser()
+    public async Task Get_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = UserRequestFactory.CreateGetUserRequest();
@@ -57,7 +57,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task GetUser_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = UserRequestFactory.CreateGetUserRequest();
@@ -79,7 +79,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task GetCurrent_WhenIsSuccessful_ShouldReturnCurrentUser()
+    public async Task GetCurrent_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var user = UserFactory.Create();
@@ -120,7 +120,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task UpdateCurrentUser_WhenIsSuccessful_ShouldReturnSuccessResponse()
+    public async Task UpdateCurrent_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
@@ -143,7 +143,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task UpdateCurrentUser_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateCurrent_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
@@ -165,7 +165,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task DeleteCurrentUser_WhenIsSuccessful_ShouldReturnSuccessResponse()
+    public async Task DeleteCurrent_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var result = UserResultFactory.CreateDeleteCurrentUserResult();
@@ -186,7 +186,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task DeleteCurrentUser_WhenItFails_ShouldReturnProblem()
+    public async Task DeleteCurrent_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var error = Errors.User.NotFound;

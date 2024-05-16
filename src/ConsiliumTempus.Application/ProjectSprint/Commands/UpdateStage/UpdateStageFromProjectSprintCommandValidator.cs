@@ -7,7 +7,7 @@ public sealed class UpdateStageFromProjectSprintCommandValidator : AbstractValid
 {
     public UpdateStageFromProjectSprintCommandValidator()
     {
-        RuleFor(c => c.ProjectSprintId)
+        RuleFor(c => c.Id)
             .NotEmpty();
 
         RuleFor(c => c.StageId)

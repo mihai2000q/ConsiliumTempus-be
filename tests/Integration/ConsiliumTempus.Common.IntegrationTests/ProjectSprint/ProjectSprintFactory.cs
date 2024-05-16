@@ -4,7 +4,7 @@ using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 
-namespace ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
+namespace ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 
 public static class ProjectSprintFactory
 {

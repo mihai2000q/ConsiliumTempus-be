@@ -1,8 +1,8 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
 using ConsiliumTempus.Common.IntegrationTests.Project;
-using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
-using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Stage;
+using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
+using ConsiliumTempus.Common.IntegrationTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;

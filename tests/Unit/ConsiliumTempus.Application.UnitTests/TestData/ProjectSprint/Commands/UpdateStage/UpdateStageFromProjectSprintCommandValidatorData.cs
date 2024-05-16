@@ -26,7 +26,7 @@ internal static class UpdateStageFromProjectSprintCommandValidatorData
         public GetInvalidProjectSprintIdCommands()
         {
             var command = ProjectSprintCommandFactory.CreateUpdateStageFromProjectSprintCommand(projectSprintId: Guid.Empty);
-            Add(command, nameof(command.ProjectSprintId));
+            Add(command, nameof(command.Id));
         }
     }
 

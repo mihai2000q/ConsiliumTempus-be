@@ -1,12 +1,18 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.AddStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
+using ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
+using ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
+using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Domain.ProjectSprint;
@@ -22,8 +28,11 @@ public sealed class ProjectSprintMappingConfig : IRegister
         Get(config);
         GetCollectionMappings(config);
         CreateMappings(config);
+        AddStageMappings(config);
         UpdateMappings(config);
+        UpdateStageMappings(config);
         DeleteMappings(config);
+        RemoveStageMappings(config);
     }
 
     private static void Get(TypeAdapterConfig config)
@@ -51,6 +60,13 @@ public sealed class ProjectSprintMappingConfig : IRegister
 
         config.NewConfig<CreateProjectSprintResult, CreateProjectSprintResponse>();
     }
+    
+    private static void AddStageMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<AddStageToProjectSprintRequest, AddStageToProjectSprintCommand>();
+
+        config.NewConfig<AddStageToProjectSprintResult, AddStageToProjectSprintResponse>();
+    }
 
     private static void UpdateMappings(TypeAdapterConfig config)
     {
@@ -58,11 +74,25 @@ public sealed class ProjectSprintMappingConfig : IRegister
 
         config.NewConfig<UpdateProjectSprintResult, UpdateProjectSprintResponse>();
     }
+    
+    private static void UpdateStageMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateStageFromProjectSprintRequest, UpdateStageFromProjectSprintCommand>();
+
+        config.NewConfig<UpdateStageFromProjectSprintResult, UpdateStageFromProjectSprintResponse>();
+    }
 
     private static void DeleteMappings(TypeAdapterConfig config)
     {
         config.NewConfig<DeleteProjectSprintRequest, DeleteProjectSprintCommand>();
 
         config.NewConfig<DeleteProjectSprintResult, DeleteProjectSprintResponse>();
+    }
+    
+    private static void RemoveStageMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<RemoveStageFromProjectSprintRequest, RemoveStageFromProjectSprintCommand>();
+
+        config.NewConfig<RemoveStageFromProjectSprintResult, RemoveStageFromProjectSprintResponse>();
     }
 }

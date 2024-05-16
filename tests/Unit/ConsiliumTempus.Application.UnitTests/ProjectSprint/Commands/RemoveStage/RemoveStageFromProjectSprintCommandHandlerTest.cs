@@ -43,7 +43,7 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.ProjectSprintId));
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new RemoveStageFromProjectSprintResult());
@@ -67,7 +67,7 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.ProjectSprintId));
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }
@@ -89,7 +89,7 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.ProjectSprintId));
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.ProjectStage.NotFound);
     }

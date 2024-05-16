@@ -6,7 +6,7 @@ public sealed class RemoveStageFromProjectSprintCommandValidator : AbstractValid
 {
     public RemoveStageFromProjectSprintCommandValidator()
     {
-        RuleFor(c => c.ProjectSprintId)
+        RuleFor(c => c.Id)
             .NotEmpty();
 
         RuleFor(c => c.StageId)

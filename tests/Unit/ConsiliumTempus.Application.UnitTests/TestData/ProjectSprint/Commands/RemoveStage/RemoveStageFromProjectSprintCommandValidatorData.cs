@@ -24,7 +24,7 @@ internal static class RemoveStageFromProjectSprintCommandValidatorData
         public GetInvalidProjectSprintIdCommands()
         {
             var command = ProjectSprintCommandFactory.CreateRemoveStageFromProjectSprintCommand(projectSprintId: Guid.Empty);
-            Add(command, nameof(command.ProjectSprintId));
+            Add(command, nameof(command.Id));
         }
     }
 

@@ -15,7 +15,7 @@ public sealed class AddStageToProjectSprintCommandHandler(IProjectSprintReposito
         CancellationToken cancellationToken)
     {
         var sprint = await projectSprintRepository.GetWithWorkspace(
-            ProjectSprintId.Create(command.ProjectSprintId),
+            ProjectSprintId.Create(command.Id),
             cancellationToken);
         if (sprint is null) return Errors.ProjectSprint.NotFound;
 

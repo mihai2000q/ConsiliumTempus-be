@@ -1,11 +1,17 @@
-﻿using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
+﻿using ConsiliumTempus.Api.Contracts.ProjectSprint.AddStage;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
+using ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
+using ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
+using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Domain.ProjectSprint;
@@ -46,6 +52,17 @@ internal static partial class Utils
             return true;
         }
 
+        internal static bool AssertAddStageCommand(
+            AddStageToProjectSprintCommand command,
+            AddStageToProjectSprintRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.Name.Should().Be(request.Name);
+            command.OnTop.Should().Be(request.OnTop);
+
+            return true;
+        }
+
         internal static bool AssertUpdateCommand(
             UpdateProjectSprintCommand command,
             UpdateProjectSprintRequest request)
@@ -58,11 +75,32 @@ internal static partial class Utils
             return true;
         }
 
+        internal static bool AssertUpdateStageCommand(
+            UpdateStageFromProjectSprintCommand command,
+            UpdateStageFromProjectSprintRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.StageId.Should().Be(request.StageId);
+            command.Name.Should().Be(request.Name);
+
+            return true;
+        }
+
         internal static bool AssertDeleteCommand(
             DeleteProjectSprintCommand command,
             DeleteProjectSprintRequest request)
         {
             command.Id.Should().Be(request.Id);
+
+            return true;
+        }
+
+        internal static bool AssertRemoveStageCommand(
+            RemoveStageFromProjectSprintCommand command,
+            RemoveStageFromProjectSprintRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.StageId.Should().Be(request.StageId);
 
             return true;
         }
