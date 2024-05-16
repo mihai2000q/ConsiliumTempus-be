@@ -8,9 +8,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
 
-public sealed class CreateProjectStageCommandHandler(
-    IProjectSprintRepository projectSprintRepository,
-    IProjectStageRepository projectStageRepository)
+public sealed class CreateProjectStageCommandHandler(IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<CreateProjectStageCommand, ErrorOr<CreateProjectStageResult>>
 {
     public async Task<ErrorOr<CreateProjectStageResult>> Handle(CreateProjectStageCommand command,
@@ -23,10 +21,9 @@ public sealed class CreateProjectStageCommandHandler(
 
         var stage = ProjectStage.Create(
             Name.Create(command.Name),
-            CustomOrderPosition.Create(sprint.Stages.Count),
+            CustomOrderPosition.Create(command.OnTop ? 0 : sprint.Stages.Count),
             sprint);
-        await projectStageRepository.Add(stage, cancellationToken);
-
+        sprint.AddStage(stage, command.OnTop);
         sprint.Project.RefreshActivity();
 
         return new CreateProjectStageResult();

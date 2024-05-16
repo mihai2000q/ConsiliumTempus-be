@@ -43,19 +43,24 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             sprint);
     }
 
-    public void Update(Name name)
+    public void Update(Name name, CustomOrderPosition customOrderPosition)
     {
         Name = name;
+        CustomOrderPosition = customOrderPosition;
     }
 
-    public void DecrementCustomOrderPosition()
+    public void AddTask(ProjectTaskAggregate task, bool onTop = false)
     {
-        CustomOrderPosition = CustomOrderPosition.Create(CustomOrderPosition.Value - 1);
-    }
-
-    public void AddTask(ProjectTaskAggregate taskAggregate)
-    {
-        _tasks.Add(taskAggregate);
+        if (onTop)
+        {
+            _tasks.ForEach(t => 
+                t.Update(t.Name, t.CustomOrderPosition + CustomOrderPosition.Create(1)));
+            _tasks.Insert(0, task);
+        }
+        else
+        {
+            _tasks.Add(task);
+        }
     }
     
     public void RemoveTask(ProjectTaskAggregate task)

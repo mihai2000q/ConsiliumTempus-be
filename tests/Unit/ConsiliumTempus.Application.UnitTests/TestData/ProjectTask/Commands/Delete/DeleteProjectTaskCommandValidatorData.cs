@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 
-namespace ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands;
+namespace ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.Delete;
 
 internal static class DeleteProjectTaskCommandValidatorData
 {

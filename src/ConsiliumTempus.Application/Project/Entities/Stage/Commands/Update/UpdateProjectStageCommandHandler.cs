@@ -16,7 +16,9 @@ public sealed class UpdateProjectStageCommandHandler(IProjectStageRepository pro
         var stage = await projectStageRepository.GetWithWorkspace(ProjectStageId.Create(command.Id), cancellationToken);
         if (stage is null) return Errors.ProjectStage.NotFound;
         
-        stage.Update(Name.Create(command.Name));
+        stage.Update(
+            Name.Create(command.Name),
+            stage.CustomOrderPosition);
         
         stage.Sprint.Project.RefreshActivity();
 

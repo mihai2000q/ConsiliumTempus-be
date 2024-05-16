@@ -2,7 +2,7 @@
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Validation;
 
-namespace ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands;
+namespace ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.Create;
 
 internal static class CreateProjectTaskCommandValidatorData
 {
@@ -15,7 +15,8 @@ internal static class CreateProjectTaskCommandValidatorData
 
             command = new CreateProjectTaskCommand(
                 Guid.NewGuid(),
-                "New Task");
+                "New Task",
+                true);
             Add(command);
         }
     }

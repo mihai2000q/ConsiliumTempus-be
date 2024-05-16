@@ -5,5 +5,6 @@ namespace ConsiliumTempus.Application.ProjectTask.Commands.Create;
 
 public sealed record CreateProjectTaskCommand(
     Guid ProjectStageId,
-    string Name)
+    string Name,
+    bool OnTop)
     : IRequest<ErrorOr<CreateProjectTaskResult>>;

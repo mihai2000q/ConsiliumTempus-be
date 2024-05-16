@@ -2,4 +2,5 @@
 
 public sealed record CreateProjectStageRequest(
     Guid ProjectSprintId,
-    string Name);
+    string Name,
+    bool OnTop);

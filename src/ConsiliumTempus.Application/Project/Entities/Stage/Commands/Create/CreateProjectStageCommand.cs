@@ -5,5 +5,6 @@ namespace ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
 
 public sealed record CreateProjectStageCommand(
     Guid ProjectSprintId,
-    string Name)
+    string Name,
+    bool OnTop)
     : IRequest<ErrorOr<CreateProjectStageResult>>;

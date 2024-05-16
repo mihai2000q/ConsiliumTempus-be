@@ -72,9 +72,10 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             DateTime.UtcNow);
     }
 
-    public void Update(Name name)
+    public void Update(Name name, CustomOrderPosition customOrderPosition)
     {
         Name = name;
+        CustomOrderPosition = customOrderPosition;
         UpdatedDateTime = DateTime.UtcNow;
     }
 

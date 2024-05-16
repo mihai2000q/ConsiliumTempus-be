@@ -14,6 +14,4 @@ public interface IProjectStageRepository
     Task<ProjectStage?> GetWithStagesAndWorkspace(ProjectStageId id, CancellationToken cancellationToken = default);
 
     Task<List<ProjectStage>> GetListBySprint(ProjectSprintId id, CancellationToken cancellationToken = default);
-
-    Task Add(ProjectStage stage, CancellationToken cancellationToken = default);
 }

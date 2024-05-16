@@ -190,14 +190,15 @@ internal static partial class Utils
 
     internal static class ProjectStage
     {
-        internal static bool AssertFromCreateCommand(
-            Domain.Project.Entities.ProjectStage projectStage,
+        internal static void AssertFromCreateCommand(
             CreateProjectStageCommand command,
             Domain.Project.Entities.ProjectSprint sprint)
         {
+            var projectStage = command.OnTop ? sprint.Stages[^1] : sprint.Stages[0];
+            
             projectStage.Id.Value.Should().NotBeEmpty();
             projectStage.Name.Value.Should().Be(command.Name);
-            projectStage.CustomOrderPosition.Value.Should().Be(sprint.Stages.Count);
+            projectStage.CustomOrderPosition.Value.Should().Be(command.OnTop ? 0 : sprint.Stages.Count - 1);
             projectStage.Sprint.Should().Be(sprint);
             projectStage.Tasks.Should().BeEmpty();
             projectStage.DomainEvents.Should().BeEmpty();
@@ -205,7 +206,8 @@ internal static partial class Utils
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
-            return true;
+            var count = 0;
+            sprint.Stages.Should().AllSatisfy(stage => stage.CustomOrderPosition.Value.Should().Be(count++));
         }
 
         internal static void AssertFromDeleteCommand(

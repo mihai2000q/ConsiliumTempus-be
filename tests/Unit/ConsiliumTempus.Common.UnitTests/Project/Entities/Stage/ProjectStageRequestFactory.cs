@@ -9,11 +9,13 @@ public static class ProjectStageRequestFactory
 {
     public static CreateProjectStageRequest CreateCreateProjectStageRequest(
         Guid? projectSprintId = null,
-        string name = Constants.ProjectStage.Name)
+        string name = Constants.ProjectStage.Name,
+        bool onTop = false)
     {
         return new CreateProjectStageRequest(
             projectSprintId ?? Guid.NewGuid(),
-            name);
+            name,
+            onTop);
     }
 
     public static UpdateProjectStageRequest CreateUpdateProjectStageRequest(

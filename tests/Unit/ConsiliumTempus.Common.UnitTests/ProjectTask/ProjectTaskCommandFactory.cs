@@ -8,11 +8,13 @@ public static class ProjectTaskCommandFactory
 {
     public static CreateProjectTaskCommand CreateCreateProjectTaskCommand(
         Guid? projectStageId = null,
-        string name = Constants.ProjectTask.Name)
+        string name = Constants.ProjectTask.Name,
+        bool onTop = false)
     {
         return new CreateProjectTaskCommand(
             projectStageId ?? Guid.NewGuid(),
-            name);
+            name,
+            onTop);
     }
     
     public static DeleteProjectTaskCommand CreateDeleteProjectTaskCommand(

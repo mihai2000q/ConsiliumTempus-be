@@ -11,8 +11,7 @@ namespace ConsiliumTempus.Application.ProjectTask.Commands.Create;
 
 public sealed class CreateProjectTaskCommandHandler(
     ICurrentUserProvider currentUserProvider,
-    IProjectStageRepository projectStageRepository,
-    IProjectTaskRepository projectTaskRepository)
+    IProjectStageRepository projectStageRepository)
     : IRequestHandler<CreateProjectTaskCommand, ErrorOr<CreateProjectTaskResult>>
 {
     public async Task<ErrorOr<CreateProjectTaskResult>> Handle(CreateProjectTaskCommand command, 
@@ -31,8 +30,7 @@ public sealed class CreateProjectTaskCommandHandler(
             CustomOrderPosition.Create(stage.Tasks.Count),
             user,
             stage);
-        await projectTaskRepository.Add(task, cancellationToken);
-        
+        stage.AddTask(task, command.OnTop);
         stage.Sprint.Project.RefreshActivity();
 
         return new CreateProjectTaskResult();

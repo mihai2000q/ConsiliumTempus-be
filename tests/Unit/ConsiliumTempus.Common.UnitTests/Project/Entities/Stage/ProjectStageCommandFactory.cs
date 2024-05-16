@@ -9,11 +9,13 @@ public static class ProjectStageCommandFactory
 {
     public static CreateProjectStageCommand CreateCreateProjectStageCommand(
         Guid? projectSprintId = null,
-        string name = Constants.ProjectStage.Name)
+        string name = Constants.ProjectStage.Name,
+        bool onTop = false)
     {
         return new CreateProjectStageCommand(
             projectSprintId ?? Guid.NewGuid(),
-            name);
+            name,
+            onTop);
     }
     
     public static UpdateProjectStageCommand CreateUpdateProjectStageCommand(

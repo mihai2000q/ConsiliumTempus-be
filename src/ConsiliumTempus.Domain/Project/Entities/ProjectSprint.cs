@@ -67,17 +67,27 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
         UpdatedDateTime = DateTime.UtcNow;
     }
 
-    public void AddStage(ProjectStage stage)
+    public void AddStage(ProjectStage stage, bool onTop = false)
     {
-        _stages.Add(stage);
+        if (onTop)
+        {
+            _stages.ForEach(s => 
+                s.Update(s.Name, s.CustomOrderPosition + CustomOrderPosition.Create(1)));
+            _stages.Insert(0, stage);
+        }
+        else
+        {
+            _stages.Add(stage);
+        }
     }
-    
+
     public void RemoveStage(ProjectStage stage)
     {
         if (!_stages.Remove(stage)) return;
         for (var i = stage.CustomOrderPosition.Value; i < _stages.Count; i++)
         {
-            _stages[i].DecrementCustomOrderPosition();
+            var s = _stages[i];
+            s.Update(s.Name, s.CustomOrderPosition - CustomOrderPosition.Create(1));
         }
     }
 }

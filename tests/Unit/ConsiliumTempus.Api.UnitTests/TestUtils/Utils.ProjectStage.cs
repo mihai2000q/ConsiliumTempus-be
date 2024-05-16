@@ -17,6 +17,7 @@ internal static partial class Utils
         {
             command.ProjectSprintId.Should().Be(request.ProjectSprintId);
             command.Name.Should().Be(request.Name);
+            command.OnTop.Should().Be(request.OnTop);
 
             return true;
         }
