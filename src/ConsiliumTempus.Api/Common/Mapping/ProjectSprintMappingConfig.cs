@@ -4,12 +4,12 @@ using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.Get;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
-using ConsiliumTempus.Domain.Project.Entities;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
+using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
+using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
+using ConsiliumTempus.Domain.ProjectSprint;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
@@ -30,7 +30,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
     {
         config.NewConfig<GetProjectSprintRequest, GetProjectSprintQuery>();
 
-        config.NewConfig<ProjectSprint, GetProjectSprintResponse>()
+        config.NewConfig<ProjectSprintAggregate, GetProjectSprintResponse>()
             .Map(dest => dest.Name, src => src.Name.Value);
     }
 
@@ -39,7 +39,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
         config.NewConfig<GetCollectionProjectSprintRequest, GetCollectionProjectSprintQuery>();
 
         config.NewConfig<GetCollectionProjectSprintResult, GetCollectionProjectSprintResponse>();
-        config.NewConfig<ProjectSprint, GetCollectionProjectSprintResponse.ProjectSprintResponse>()
+        config.NewConfig<ProjectSprintAggregate, GetCollectionProjectSprintResponse.ProjectSprintResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value);

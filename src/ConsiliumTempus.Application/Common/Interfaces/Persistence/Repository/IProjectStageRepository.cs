@@ -1,5 +1,6 @@
-using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 
 namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 

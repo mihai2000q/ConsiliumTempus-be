@@ -11,7 +11,7 @@ internal static partial class Utils
     {
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectStageResponse response,
-            IReadOnlyList<Domain.Project.Entities.ProjectStage> stages)
+            IReadOnlyList<Domain.ProjectSprint.Entities.ProjectStage> stages)
         {
             response.Stages
                 .Zip(stages.OrderBy(s => s.CustomOrderPosition.Value))
@@ -19,7 +19,7 @@ internal static partial class Utils
         }
         
         internal static void AssertCreation(
-            Domain.Project.Entities.ProjectStage stage,
+            Domain.ProjectSprint.Entities.ProjectStage stage,
             CreateProjectStageRequest request)
         {
             stage.Name.Value.Should().Be(request.Name);
@@ -31,8 +31,8 @@ internal static partial class Utils
         }
 
         internal static void AssertUpdated(
-            Domain.Project.Entities.ProjectStage stage,
-            Domain.Project.Entities.ProjectStage newStage,
+            Domain.ProjectSprint.Entities.ProjectStage stage,
+            Domain.ProjectSprint.Entities.ProjectStage newStage,
             UpdateProjectStageRequest request)
         {
             // unchanged
@@ -48,7 +48,7 @@ internal static partial class Utils
 
         private static void AssertResponse(
             GetCollectionProjectStageResponse.ProjectStageResponse response,
-            Domain.Project.Entities.ProjectStage projectStage)
+            Domain.ProjectSprint.Entities.ProjectStage projectStage)
         {
             response.Id.Should().Be(projectStage.Id.Value);
             response.Name.Should().Be(projectStage.Name.Value);

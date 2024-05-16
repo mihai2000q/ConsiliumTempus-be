@@ -2,7 +2,7 @@
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.Project.Entities;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
 

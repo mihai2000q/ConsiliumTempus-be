@@ -7,7 +7,7 @@ using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Update;
 using ConsiliumTempus.Application.Project.Entities.Stage.Queries.GetCollection;
-using ConsiliumTempus.Domain.Project.Entities;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;

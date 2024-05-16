@@ -1,6 +1,7 @@
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 

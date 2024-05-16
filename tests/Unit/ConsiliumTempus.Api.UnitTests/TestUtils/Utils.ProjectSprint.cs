@@ -3,11 +3,12 @@ using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.Get;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
+using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
+using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
+using ConsiliumTempus.Domain.ProjectSprint;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -68,7 +69,7 @@ internal static partial class Utils
 
         internal static void AssertGetResponse(
             GetProjectSprintResponse response,
-            Domain.Project.Entities.ProjectSprint sprint)
+            ProjectSprintAggregate sprint)
         {
             response.Name.Should().Be(sprint.Name.Value);
             response.StartDate.Should().Be(sprint.StartDate);
@@ -85,7 +86,7 @@ internal static partial class Utils
 
         private static void AssertProjectSprintResponse(
             GetCollectionProjectSprintResponse.ProjectSprintResponse response,
-            Domain.Project.Entities.ProjectSprint projectSprint)
+            ProjectSprintAggregate projectSprint)
         {
             response.Id.Should().Be(projectSprint.Id.Value);
             response.Name.Should().Be(projectSprint.Name.Value);

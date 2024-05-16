@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
+using ConsiliumTempus.Domain.ProjectSprint;
 using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -12,7 +13,7 @@ internal static partial class Utils
     {
         internal static void AssertGetResponse(
             GetProjectSprintResponse response,
-            Domain.Project.Entities.ProjectSprint sprint)
+            ProjectSprintAggregate sprint)
         {
             response.Name.Should().Be(sprint.Name.Value);
             response.StartDate.Should().Be(sprint.StartDate);
@@ -21,7 +22,7 @@ internal static partial class Utils
 
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectSprintResponse response,
-            IReadOnlyList<Domain.Project.Entities.ProjectSprint> sprints)
+            IReadOnlyList<ProjectSprintAggregate> sprints)
         {
             response.Sprints.Should().HaveCount(sprints.Count);
             response.Sprints
@@ -33,7 +34,7 @@ internal static partial class Utils
         }
 
         internal static void AssertCreation(
-            Domain.Project.Entities.ProjectSprint sprint,
+            ProjectSprintAggregate sprint,
             CreateProjectSprintRequest request)
         {
             sprint.Name.Value.Should().Be(request.Name);
@@ -46,8 +47,8 @@ internal static partial class Utils
         }
 
         internal static void AssertUpdated(
-            Domain.Project.Entities.ProjectSprint sprint,
-            Domain.Project.Entities.ProjectSprint newSprint,
+            ProjectSprintAggregate sprint,
+            ProjectSprintAggregate newSprint,
             UpdateProjectSprintRequest request)
         {
             // unchanged
@@ -67,7 +68,7 @@ internal static partial class Utils
 
         private static void AssertResponse(
             GetCollectionProjectSprintResponse.ProjectSprintResponse response,
-            Domain.Project.Entities.ProjectSprint projectSprint)
+            ProjectSprintAggregate projectSprint)
         {
             response.Id.Should().Be(projectSprint.Id.Value);
             response.Name.Should().Be(projectSprint.Name.Value);

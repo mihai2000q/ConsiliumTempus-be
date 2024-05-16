@@ -1,26 +1,26 @@
 ﻿using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.Project.Entities;
+using ConsiliumTempus.Domain.ProjectSprint;
 
 namespace ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 
 public static class ProjectSprintFactory
 {
-    public static ProjectSprint Create(
+    public static ProjectSprintAggregate Create(
         string name = Constants.ProjectSprint.Name,
         ProjectAggregate? project = null,
         DateOnly? startDate = null,
         DateOnly? endDate = null)
     {
-        return ProjectSprint.Create(
+        return ProjectSprintAggregate.Create(
             Name.Create(name),
             project ?? ProjectFactory.Create(),
             startDate,
             endDate);
     }
 
-    public static List<ProjectSprint> CreateList(
+    public static List<ProjectSprintAggregate> CreateList(
         int count = 5,
         string name = Constants.ProjectSprint.Name,
         ProjectAggregate? project = null)

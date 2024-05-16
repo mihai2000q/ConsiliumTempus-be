@@ -1,17 +1,19 @@
-﻿using ConsiliumTempus.Domain.Common.Validation;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
 
-public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<ProjectSprint>
+public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<ProjectSprintAggregate>
 {
-    public void Configure(EntityTypeBuilder<ProjectSprint> builder)
+    public void Configure(EntityTypeBuilder<ProjectSprintAggregate> builder)
     {
-        builder.ToTable(nameof(ProjectSprint));
+        builder.ToTable(nameof(ProjectSprintAggregate).TruncateAggregate());
 
         builder.HasKey(s => s.Id);
         builder.Property(s => s.Id)
@@ -29,5 +31,7 @@ public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Projec
 
         builder.HasMany(s => s.Stages)
             .WithOne(s => s.Sprint);
+
+        builder.Navigation(s => s.Stages).AutoInclude();
     }
 }

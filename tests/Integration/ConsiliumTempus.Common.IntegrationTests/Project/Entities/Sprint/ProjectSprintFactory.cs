@@ -1,14 +1,15 @@
 ﻿using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 
 namespace ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
 
 public static class ProjectSprintFactory
 {
-    public static ProjectSprint Create(
+    public static ProjectSprintAggregate Create(
         ProjectAggregate project,
         string name = Constants.ProjectSprint.Name,
         DateOnly? startDate = null,
@@ -16,7 +17,7 @@ public static class ProjectSprintFactory
         DateTime? createdDateTime = null,
         DateTime? updatedDateTime = null)
     {
-        var sprint = DomainFactory.GetObjectInstance<ProjectSprint>();
+        var sprint = DomainFactory.GetObjectInstance<ProjectSprintAggregate>();
 
         DomainFactory.SetProperty(ref sprint, nameof(sprint.Id), ProjectSprintId.CreateUnique());
         DomainFactory.SetProperty(ref sprint, nameof(sprint.Name), Name.Create(name));

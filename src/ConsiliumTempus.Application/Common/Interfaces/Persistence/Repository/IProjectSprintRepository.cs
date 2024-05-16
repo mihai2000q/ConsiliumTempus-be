@@ -1,19 +1,18 @@
-﻿using ConsiliumTempus.Domain.Project.Entities;
-using ConsiliumTempus.Domain.Project.ValueObjects;
+﻿using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 
 namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 
 public interface IProjectSprintRepository
 {
-    Task<ProjectSprint?> Get(ProjectSprintId id, CancellationToken cancellationToken = default);
+    Task<ProjectSprintAggregate?> Get(ProjectSprintId id, CancellationToken cancellationToken = default);
 
-    Task<ProjectSprint?> GetWithWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default);
+    Task<ProjectSprintAggregate?> GetWithWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default);
 
-    Task<ProjectSprint?> GetWithStagesAndWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default);
+    Task<List<ProjectSprintAggregate>> GetListByProject(ProjectId projectId, CancellationToken cancellationToken = default);
 
-    Task<List<ProjectSprint>> GetListByProject(ProjectId projectId, CancellationToken cancellationToken = default);
+    Task Add(ProjectSprintAggregate sprint, CancellationToken cancellationToken = default);
 
-    Task Add(ProjectSprint sprint, CancellationToken cancellationToken = default);
-
-    void Remove(ProjectSprint sprint);
+    void Remove(ProjectSprintAggregate sprint);
 }

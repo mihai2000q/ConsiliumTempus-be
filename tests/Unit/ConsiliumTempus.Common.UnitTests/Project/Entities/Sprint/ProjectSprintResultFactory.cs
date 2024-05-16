@@ -9,7 +9,7 @@ namespace ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 public static class ProjectSprintResultFactory
 {
     public static GetCollectionProjectSprintResult CreateGetCollectionProjectSprintResult(
-        List<ProjectSprint>? sprints = null)
+        List<ProjectSprintAggregate>? sprints = null)
     {
         return new GetCollectionProjectSprintResult(
             sprints ?? ProjectSprintFactory.CreateList());

@@ -1,8 +1,10 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
@@ -113,8 +115,8 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.UpdateProjectSprint => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),
             
-            Permissions.CreateProjectStage => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<ProjectSprint>()),
-            Permissions.ReadCollectionProjectStage => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<ProjectSprint>()),
+            Permissions.CreateProjectStage => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<ProjectSprintAggregate>()),
+            Permissions.ReadCollectionProjectStage => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<ProjectSprintAggregate>()),
             Permissions.UpdateProjectStage => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProjectStage => HttpRequestReader.GetStringIdFromRoute(request),
             

@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Domain.Project.Entities;
+﻿using ConsiliumTempus.Domain.ProjectSprint.Entities;
 
 namespace ConsiliumTempus.Application.Project.Entities.Stage.Queries.GetCollection;
 

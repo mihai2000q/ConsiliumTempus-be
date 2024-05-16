@@ -3,18 +3,19 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Delete;
 using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Update;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Events;
+using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -126,7 +127,7 @@ internal static partial class Utils
     internal static class ProjectSprint
     {
         internal static bool AssertFromCreateCommand(
-            Domain.Project.Entities.ProjectSprint projectSprint,
+            ProjectSprintAggregate projectSprint,
             CreateProjectSprintCommand command,
             ProjectAggregate project)
         {
@@ -148,7 +149,7 @@ internal static partial class Utils
         }
 
         internal static void AssertFromUpdateCommand(
-            Domain.Project.Entities.ProjectSprint sprint,
+            ProjectSprintAggregate sprint,
             UpdateProjectSprintCommand command)
         {
             sprint.Id.Value.Should().Be(command.Id);
@@ -162,7 +163,7 @@ internal static partial class Utils
         }
 
         internal static bool AssertFromDeleteCommand(
-            Domain.Project.Entities.ProjectSprint sprint,
+            ProjectSprintAggregate sprint,
             DeleteProjectSprintCommand command)
         {
             sprint.Id.Value.Should().Be(command.Id);
@@ -174,8 +175,8 @@ internal static partial class Utils
         }
 
         internal static void AssertProjectSprint(
-            Domain.Project.Entities.ProjectSprint outcome,
-            Domain.Project.Entities.ProjectSprint expected)
+            ProjectSprintAggregate outcome,
+            ProjectSprintAggregate expected)
         {
             outcome.Id.Should().Be(expected.Id);
             outcome.Name.Should().Be(expected.Name);
@@ -192,7 +193,7 @@ internal static partial class Utils
     {
         internal static void AssertFromCreateCommand(
             CreateProjectStageCommand command,
-            Domain.Project.Entities.ProjectSprint sprint)
+            ProjectSprintAggregate sprint)
         {
             var projectStage = command.OnTop ? sprint.Stages[^1] : sprint.Stages[0];
             
@@ -211,7 +212,7 @@ internal static partial class Utils
         }
 
         internal static void AssertFromDeleteCommand(
-            Domain.Project.Entities.ProjectStage stage,
+            Domain.ProjectSprint.Entities.ProjectStage stage,
             DeleteProjectStageCommand command)
         {
             stage.Id.Value.Should().Be(command.Id);
@@ -226,7 +227,7 @@ internal static partial class Utils
         }
 
         internal static void AssertFromUpdateCommand(
-            Domain.Project.Entities.ProjectStage stage,
+            Domain.ProjectSprint.Entities.ProjectStage stage,
             UpdateProjectStageCommand command)
         {
             stage.Id.Value.Should().Be(command.Id);

@@ -7,7 +7,8 @@ using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.Project.Entities;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -117,7 +118,7 @@ internal class ProjectStageData : ITestData
             "Just an idea on how to win the football league")
     ];
 
-    public static ProjectSprint[] ProjectSprints { get; } =
+    public static ProjectSprintAggregate[] ProjectSprints { get; } =
     [
         ProjectSprintFactory.Create(
             Projects[0],

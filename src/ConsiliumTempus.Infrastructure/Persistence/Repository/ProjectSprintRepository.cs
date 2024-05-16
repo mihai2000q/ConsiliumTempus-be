@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,12 +9,12 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
 public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) : IProjectSprintRepository
 {
-    public async Task<ProjectSprint?> Get(ProjectSprintId id, CancellationToken cancellationToken = default)
+    public async Task<ProjectSprintAggregate?> Get(ProjectSprintId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.ProjectSprints.FindAsync([id], cancellationToken);
     }
     
-    public async Task<ProjectSprint?> GetWithWorkspace(ProjectSprintId id,
+    public async Task<ProjectSprintAggregate?> GetWithWorkspace(ProjectSprintId id,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.ProjectSprints
@@ -22,19 +23,11 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 
-    public async Task<ProjectSprint?> GetWithStagesAndWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default)
-    {
-        return await dbContext.ProjectSprints
-            .Include(ps => ps.Stages)
-            .Include(ps => ps.Project)
-            .ThenInclude(p => p.Workspace)
-            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
-    }
-
-    public async Task<List<ProjectSprint>> GetListByProject(ProjectId projectId,
+    public async Task<List<ProjectSprintAggregate>> GetListByProject(ProjectId projectId,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.ProjectSprints
+            .IgnoreAutoIncludes()
             .Where(ps => ps.Project.Id == projectId)
             .OrderBy(s => s.StartDate)
             .ThenBy(s => s.EndDate)
@@ -43,12 +36,12 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
             .ToListAsync(cancellationToken);
     }
 
-    public async Task Add(ProjectSprint sprint, CancellationToken cancellationToken = default)
+    public async Task Add(ProjectSprintAggregate sprint, CancellationToken cancellationToken = default)
     {
         await dbContext.AddAsync(sprint, cancellationToken);
     }
 
-    public void Remove(ProjectSprint sprint)
+    public void Remove(ProjectSprintAggregate sprint)
     {
         dbContext.Remove(sprint);
     }

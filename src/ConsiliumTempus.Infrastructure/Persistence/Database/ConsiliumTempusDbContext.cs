@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.Project.Entities;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
@@ -16,7 +17,7 @@ public sealed class ConsiliumTempusDbContext(
     : DbContext(options)
 {
     public DbSet<ProjectAggregate> Projects { get; init; } = null!;
-    public DbSet<ProjectSprint> ProjectSprints { get; init; } = null!;
+    public DbSet<ProjectSprintAggregate> ProjectSprints { get; init; } = null!;
     public DbSet<ProjectStage> ProjectStages { get; init; } = null!;
     public DbSet<ProjectTaskAggregate> ProjectTasks { get; init; } = null!;
     public DbSet<UserAggregate> Users { get; init; } = null!;

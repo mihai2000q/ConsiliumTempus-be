@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 

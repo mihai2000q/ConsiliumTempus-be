@@ -2,14 +2,15 @@ using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.Project.Entities;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 
 namespace ConsiliumTempus.Common.UnitTests.Project.Entities.Stage;
 
 public static class ProjectStageFactory
 {
     public static ProjectStage Create(
-        ProjectSprint? sprint = null,
+        ProjectSprintAggregate? sprint = null,
         string name = Constants.ProjectStage.Name,
         int customOrderPosition = 0)
     {
@@ -47,7 +48,7 @@ public static class ProjectStageFactory
 
     public static List<ProjectStage> CreateList(
         int count = 5,
-        ProjectSprint? sprint = null)
+        ProjectSprintAggregate? sprint = null)
     {
         return Enumerable
             .Range(0, count)

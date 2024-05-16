@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Models;
 
-namespace ConsiliumTempus.Domain.Project.ValueObjects;
+namespace ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 
 public sealed class ProjectSprintId : ValueObject
 {

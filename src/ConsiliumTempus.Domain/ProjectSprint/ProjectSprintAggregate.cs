@@ -2,18 +2,21 @@
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 
-namespace ConsiliumTempus.Domain.Project.Entities;
+namespace ConsiliumTempus.Domain.ProjectSprint;
 
-public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
+public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
-    private ProjectSprint()
+    private ProjectSprintAggregate()
     {
     }
 
-    private ProjectSprint(
+    private ProjectSprintAggregate(
         ProjectSprintId id,
         Name name,
         ProjectAggregate project,
@@ -40,13 +43,13 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
 
-    public static ProjectSprint Create(
+    public static ProjectSprintAggregate Create(
         Name name,
         ProjectAggregate project,
         DateOnly? startDate = null,
         DateOnly? endDate = null)
     {
-        return new ProjectSprint(
+        return new ProjectSprintAggregate(
             ProjectSprintId.CreateUnique(),
             name,
             project,
