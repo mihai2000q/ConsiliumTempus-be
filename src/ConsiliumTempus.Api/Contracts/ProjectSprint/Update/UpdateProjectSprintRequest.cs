@@ -1,4 +1,4 @@
-﻿namespace ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
+﻿namespace ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 
 public sealed record UpdateProjectSprintRequest(
     Guid Id,

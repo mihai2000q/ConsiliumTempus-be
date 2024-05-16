@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Delete;
+namespace ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
 
 public sealed record DeleteProjectSprintRequest
 {

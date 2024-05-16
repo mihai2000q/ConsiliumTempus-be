@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
+namespace ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 
 public sealed record GetProjectSprintRequest
 {

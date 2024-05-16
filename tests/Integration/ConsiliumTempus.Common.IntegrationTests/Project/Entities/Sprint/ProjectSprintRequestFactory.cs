@@ -1,8 +1,8 @@
-﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Delete;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
+﻿using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
 namespace ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;

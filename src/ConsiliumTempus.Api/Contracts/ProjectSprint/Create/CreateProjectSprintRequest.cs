@@ -1,4 +1,4 @@
-﻿namespace ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
+﻿namespace ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
 
 public sealed record CreateProjectSprintRequest(
     Guid ProjectId,

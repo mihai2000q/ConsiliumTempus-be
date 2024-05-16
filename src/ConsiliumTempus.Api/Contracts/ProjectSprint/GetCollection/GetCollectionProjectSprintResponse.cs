@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
+namespace ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed record GetCollectionProjectSprintResponse(
