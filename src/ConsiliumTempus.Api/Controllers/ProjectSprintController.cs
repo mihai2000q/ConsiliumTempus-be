@@ -65,6 +65,7 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
         );
     }
 
+    [HasPermission(Permissions.AddStageToProjectSprint)]
     [HttpPost("Add-Stage")]
     public async Task<IActionResult> AddStage(AddStageToProjectSprintRequest request, CancellationToken cancellationToken)
     {
@@ -90,6 +91,7 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
         );
     }
 
+    [HasPermission(Permissions.UpdateStageFromProjectSprint)]
     [HttpPut("Update-Stage")]
     public async Task<IActionResult> UpdateStage(UpdateStageFromProjectSprintRequest request,
         CancellationToken cancellationToken)
@@ -116,6 +118,7 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
         );
     }
 
+    [HasPermission(Permissions.RemoveStageFromProjectSprint)]
     [HttpDelete("{id:guid}/Remove-Stage/{stageId:guid}")]
     public async Task<IActionResult> RemoveStage(RemoveStageFromProjectSprintRequest request, CancellationToken cancellationToken)
     {

@@ -18,11 +18,10 @@ public enum Permissions
     ReadCollectionProjectSprint,
     UpdateProjectSprint,
     DeleteProjectSprint,
-    // Project Stage
-    ReadCollectionProjectStage,
-    CreateProjectStage,
-    UpdateProjectStage,
-    DeleteProjectStage,
+    // Project Sprint - Project Stage
+    AddStageToProjectSprint,
+    UpdateStageFromProjectSprint,
+    RemoveStageFromProjectSprint,
     // Project Task
     CreateProjectTask,
     ReadProjectTask,

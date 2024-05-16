@@ -321,15 +321,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     { 11, "ReadCollectionProjectSprint" },
                     { 12, "UpdateProjectSprint" },
                     { 13, "DeleteProjectSprint" },
-                    { 14, "ReadCollectionProjectStage" },
-                    { 15, "CreateProjectStage" },
-                    { 16, "UpdateProjectStage" },
-                    { 17, "DeleteProjectStage" },
-                    { 18, "CreateProjectTask" },
-                    { 19, "ReadProjectTask" },
-                    { 20, "ReadCollectionProjectTask" },
-                    { 21, "UpdateProjectTask" },
-                    { 22, "DeleteProjectTask" }
+                    { 14, "AddStageToProjectSprint" },
+                    { 15, "UpdateStageFromProjectSprint" },
+                    { 16, "RemoveStageFromProjectSprint" },
+                    { 17, "CreateProjectTask" },
+                    { 18, "ReadProjectTask" },
+                    { 19, "ReadCollectionProjectTask" },
+                    { 20, "UpdateProjectTask" },
+                    { 21, "DeleteProjectTask" }
                 });
 
             migrationBuilder.InsertData(
@@ -352,9 +351,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     { 6, 1 },
                     { 10, 1 },
                     { 11, 1 },
-                    { 14, 1 },
+                    { 18, 1 },
                     { 19, 1 },
-                    { 20, 1 },
                     { 1, 2 },
                     { 2, 2 },
                     { 5, 2 },
@@ -363,13 +361,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     { 10, 2 },
                     { 11, 2 },
                     { 12, 2 },
-                    { 14, 2 },
-                    { 16, 2 },
+                    { 15, 2 },
+                    { 17, 2 },
                     { 18, 2 },
                     { 19, 2 },
                     { 20, 2 },
                     { 21, 2 },
-                    { 22, 2 },
                     { 1, 3 },
                     { 2, 3 },
                     { 3, 3 },
@@ -390,8 +387,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     { 18, 3 },
                     { 19, 3 },
                     { 20, 3 },
-                    { 21, 3 },
-                    { 22, 3 }
+                    { 21, 3 }
                 });
 
             migrationBuilder.CreateIndex(

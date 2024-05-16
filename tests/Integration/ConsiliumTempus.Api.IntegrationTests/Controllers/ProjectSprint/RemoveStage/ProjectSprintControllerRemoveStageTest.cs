@@ -55,6 +55,7 @@ public class ProjectSprintControllerRemoveStageTest(WebAppFactory factory)
             id: sprint.Id.Value);
 
         // Act
+        Client.UseCustomToken(ProjectSprintData.Users.First());
         var outcome = await Client.Delete("api/projects/sprints" +
                                           $"/{request.Id}/Remove-Stage/{request.StageId}");
 

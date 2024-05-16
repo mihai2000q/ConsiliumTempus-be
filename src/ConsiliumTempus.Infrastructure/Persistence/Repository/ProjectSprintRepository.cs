@@ -11,23 +11,25 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
 {
     public async Task<ProjectSprintAggregate?> Get(ProjectSprintId id, CancellationToken cancellationToken = default)
     {
-        return await dbContext.ProjectSprints.FindAsync([id], cancellationToken);
+        return await dbContext.ProjectSprints
+            .Include(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
+            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
     
-    public async Task<ProjectSprintAggregate?> GetWithWorkspace(ProjectSprintId id,
+    public Task<ProjectSprintAggregate?> GetWithWorkspace(ProjectSprintId id,
         CancellationToken cancellationToken = default)
     {
-        return await dbContext.ProjectSprints
+        return dbContext.ProjectSprints
+            .Include(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
             .Include(ps => ps.Project)
             .ThenInclude(p => p.Workspace)
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 
-    public async Task<List<ProjectSprintAggregate>> GetListByProject(ProjectId projectId,
+    public Task<List<ProjectSprintAggregate>> GetListByProject(ProjectId projectId,
         CancellationToken cancellationToken = default)
     {
-        return await dbContext.ProjectSprints
-            .IgnoreAutoIncludes()
+        return dbContext.ProjectSprints
             .Where(ps => ps.Project.Id == projectId)
             .OrderBy(s => s.StartDate)
             .ThenBy(s => s.EndDate)

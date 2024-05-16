@@ -53,6 +53,7 @@ public class ProjectSprintControllerUpdateStageTest(WebAppFactory factory)
             id: sprint.Id.Value);
 
         // Act
+        Client.UseCustomToken(ProjectSprintData.Users.First());
         var outcome = await Client.Put("api/projects/sprints/Update-Stage", request);
 
         // Assert

@@ -10,7 +10,6 @@ public static class AccessControlList
         Permissions.ReadWorkspace,
         Permissions.ReadProject, Permissions.ReadCollectionProject,
         Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint,
-        Permissions.ReadCollectionProjectStage,
         Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask
     ];
 
@@ -19,7 +18,7 @@ public static class AccessControlList
         Permissions.ReadWorkspace, Permissions.UpdateWorkspace,
         Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject,
         Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint,
-        Permissions.ReadCollectionProjectStage, Permissions.UpdateProjectStage,
+        Permissions.UpdateStageFromProjectSprint,
         Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask, Permissions.UpdateProjectTask, Permissions.DeleteProjectTask,
     ];
 
@@ -28,7 +27,7 @@ public static class AccessControlList
         Permissions.ReadWorkspace, Permissions.UpdateWorkspace, Permissions.DeleteWorkspace,
         Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject, Permissions.DeleteProject,
         Permissions.CreateProjectSprint, Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint, Permissions.DeleteProjectSprint,
-        Permissions.CreateProjectStage, Permissions.ReadCollectionProjectStage, Permissions.UpdateProjectStage, Permissions.DeleteProjectStage,
+        Permissions.AddStageToProjectSprint, Permissions.UpdateStageFromProjectSprint, Permissions.RemoveStageFromProjectSprint,
         Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask, Permissions.UpdateProjectTask, Permissions.DeleteProjectTask,
     ];
 
