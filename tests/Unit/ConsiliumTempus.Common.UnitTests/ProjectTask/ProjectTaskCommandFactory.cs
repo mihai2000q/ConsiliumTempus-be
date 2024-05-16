@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.ProjectTask;
@@ -33,6 +34,19 @@ public static class ProjectTaskCommandFactory
             id ?? Guid.NewGuid(),
             name,
             isCompleted,
+            assigneeId);
+    }
+    
+    public static UpdateOverviewProjectTaskCommand CreateUpdateOverviewProjectTaskCommand(
+        Guid? id = null,
+        string name = Constants.ProjectTask.Name,
+        string description = Constants.ProjectTask.Description,
+        Guid? assigneeId = null)
+    {
+        return new UpdateOverviewProjectTaskCommand(
+            id ?? Guid.NewGuid(),
+            name,
+            description,
             assigneeId);
     }
 }
