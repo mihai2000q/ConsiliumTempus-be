@@ -3,7 +3,7 @@ using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
-using ConsiliumTempus.Common.UnitTests.Project.Entities.Stage;
+using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;

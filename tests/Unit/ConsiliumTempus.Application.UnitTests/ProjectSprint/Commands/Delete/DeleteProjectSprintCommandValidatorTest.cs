@@ -1,5 +1,5 @@
 using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
-using ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Sprint.Commands;
+using ConsiliumTempus.Application.UnitTests.TestData.ProjectSprint.Commands.Delete;
 
 namespace ConsiliumTempus.Application.UnitTests.ProjectSprint.Commands.Delete;
 

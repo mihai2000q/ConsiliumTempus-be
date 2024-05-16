@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Common.UnitTests.Project.Entities.Stage;
+﻿using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.ValueObjects;

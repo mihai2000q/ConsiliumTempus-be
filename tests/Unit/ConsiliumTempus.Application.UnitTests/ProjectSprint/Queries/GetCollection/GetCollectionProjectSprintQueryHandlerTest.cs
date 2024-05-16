@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
-using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
+using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 
 namespace ConsiliumTempus.Application.UnitTests.ProjectSprint.Queries.GetCollection;

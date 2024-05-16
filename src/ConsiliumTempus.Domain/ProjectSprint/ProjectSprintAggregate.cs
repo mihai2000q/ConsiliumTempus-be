@@ -85,7 +85,7 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>, ITimestamp
 
     public void RemoveStage(ProjectStage stage)
     {
-        if (!_stages.Remove(stage)) return;
+        _stages.Remove(stage);
         for (var i = stage.CustomOrderPosition.Value; i < _stages.Count; i++)
         {
             var s = _stages[i];

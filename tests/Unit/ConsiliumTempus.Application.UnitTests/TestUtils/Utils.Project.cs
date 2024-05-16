@@ -3,19 +3,12 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
-using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
-using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Delete;
-using ConsiliumTempus.Application.Project.Entities.Stage.Commands.Update;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
-using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
-using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
-using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Events;
-using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -121,120 +114,6 @@ internal static partial class Utils
             filters.OfType<Filters.Project.IsPrivateFilter>().Single().Value.Should().Be(query.IsPrivate);
 
             return true;
-        }
-    }
-
-    internal static class ProjectSprint
-    {
-        internal static bool AssertFromCreateCommand(
-            ProjectSprintAggregate projectSprint,
-            CreateProjectSprintCommand command,
-            ProjectAggregate project)
-        {
-            projectSprint.Id.Value.Should().NotBeEmpty();
-            projectSprint.Name.Value.Should().Be(command.Name);
-            projectSprint.StartDate.Should().Be(command.StartDate);
-            projectSprint.EndDate.Should().Be(command.EndDate);
-            projectSprint.Stages.Should().BeEmpty();
-            projectSprint.DomainEvents.Should().BeEmpty();
-
-            projectSprint.Project.Should().Be(project);
-            projectSprint.Project.LastActivity
-                .Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-
-            projectSprint.Project.Workspace.LastActivity
-                .Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-
-            return true;
-        }
-
-        internal static void AssertFromUpdateCommand(
-            ProjectSprintAggregate sprint,
-            UpdateProjectSprintCommand command)
-        {
-            sprint.Id.Value.Should().Be(command.Id);
-            sprint.Name.Value.Should().Be(command.Name);
-            sprint.StartDate.Should().Be(command.StartDate);
-            sprint.EndDate.Should().Be(command.EndDate);
-            sprint.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-
-            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-        }
-
-        internal static bool AssertFromDeleteCommand(
-            ProjectSprintAggregate sprint,
-            DeleteProjectSprintCommand command)
-        {
-            sprint.Id.Value.Should().Be(command.Id);
-
-            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-
-            return true;
-        }
-
-        internal static void AssertProjectSprint(
-            ProjectSprintAggregate outcome,
-            ProjectSprintAggregate expected)
-        {
-            outcome.Id.Should().Be(expected.Id);
-            outcome.Name.Should().Be(expected.Name);
-            outcome.StartDate.Should().Be(expected.StartDate);
-            outcome.EndDate.Should().Be(expected.EndDate);
-            outcome.Project.Should().Be(expected.Project);
-            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
-            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
-            outcome.Stages.Should().BeEquivalentTo(expected.Stages);
-        }
-    }
-
-    internal static class ProjectStage
-    {
-        internal static void AssertFromCreateCommand(
-            CreateProjectStageCommand command,
-            ProjectSprintAggregate sprint)
-        {
-            var projectStage = command.OnTop ? sprint.Stages[^1] : sprint.Stages[0];
-            
-            projectStage.Id.Value.Should().NotBeEmpty();
-            projectStage.Name.Value.Should().Be(command.Name);
-            projectStage.CustomOrderPosition.Value.Should().Be(command.OnTop ? 0 : sprint.Stages.Count - 1);
-            projectStage.Sprint.Should().Be(sprint);
-            projectStage.Tasks.Should().BeEmpty();
-            projectStage.DomainEvents.Should().BeEmpty();
-
-            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-
-            var count = 0;
-            sprint.Stages.Should().AllSatisfy(stage => stage.CustomOrderPosition.Value.Should().Be(count++));
-        }
-
-        internal static void AssertFromDeleteCommand(
-            Domain.ProjectSprint.Entities.ProjectStage stage,
-            DeleteProjectStageCommand command)
-        {
-            stage.Id.Value.Should().Be(command.Id);
-
-            stage.Sprint.Stages.Should().NotContain(stage);
-            var customOrderPosition = 0;
-            stage.Sprint.Stages.Should().AllSatisfy(s =>
-                s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
-
-            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-        }
-
-        internal static void AssertFromUpdateCommand(
-            Domain.ProjectSprint.Entities.ProjectStage stage,
-            UpdateProjectStageCommand command)
-        {
-            stage.Id.Value.Should().Be(command.Id);
-            stage.Name.Value.Should().Be(command.Name);
-
-            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
     }
 }

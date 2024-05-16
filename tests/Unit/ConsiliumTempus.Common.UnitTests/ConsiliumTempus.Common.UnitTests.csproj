@@ -12,8 +12,4 @@
         <ProjectReference Include="..\..\..\src\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Project\Entities\"/>
-    </ItemGroup>
-
 </Project>
