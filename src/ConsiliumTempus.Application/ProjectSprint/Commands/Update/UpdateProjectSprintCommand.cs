@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using MediatR;
 
-namespace ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
+namespace ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 
 public sealed record UpdateProjectSprintCommand(
     Guid Id,

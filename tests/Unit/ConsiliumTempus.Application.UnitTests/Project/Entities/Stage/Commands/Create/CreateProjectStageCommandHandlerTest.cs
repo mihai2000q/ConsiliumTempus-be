@@ -6,6 +6,7 @@ using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Stage;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Stage.Commands.Create;
@@ -32,7 +33,7 @@ public class CreateProjectStageCommandHandlerTest
         var command = ProjectStageCommandFactory.CreateCreateProjectStageCommand();
 
         _projectSprintRepository
-            .GetWithStagesAndWorkspace(Arg.Any<ProjectSprintId>())
+            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .ReturnsNull();
 
         // Act
@@ -41,7 +42,7 @@ public class CreateProjectStageCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithStagesAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.ProjectSprintId));
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.ProjectSprintId));
         _projectSprintRepository.DidNotReceive();
 
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
@@ -55,7 +56,7 @@ public class CreateProjectStageCommandHandlerTest
         // Arrange
         var sprint = ProjectSprintFactory.Create();
         _projectSprintRepository
-            .GetWithStagesAndWorkspace(Arg.Any<ProjectSprintId>())
+            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);
 
         // Act
@@ -64,7 +65,7 @@ public class CreateProjectStageCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithStagesAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.ProjectSprintId));
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.ProjectSprintId));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new CreateProjectStageResult());

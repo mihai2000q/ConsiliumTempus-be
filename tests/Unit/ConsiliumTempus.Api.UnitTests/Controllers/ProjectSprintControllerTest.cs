@@ -6,11 +6,11 @@ using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.Get;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
+using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
+using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Errors;
 

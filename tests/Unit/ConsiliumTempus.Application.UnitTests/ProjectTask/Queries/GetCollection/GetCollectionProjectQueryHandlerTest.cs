@@ -3,6 +3,7 @@ using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 
 namespace ConsiliumTempus.Application.UnitTests.ProjectTask.Queries.GetCollection;

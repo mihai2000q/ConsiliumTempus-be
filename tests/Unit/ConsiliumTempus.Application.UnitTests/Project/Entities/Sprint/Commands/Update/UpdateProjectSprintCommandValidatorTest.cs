@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
+﻿using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Sprint.Commands;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Commands.Update;

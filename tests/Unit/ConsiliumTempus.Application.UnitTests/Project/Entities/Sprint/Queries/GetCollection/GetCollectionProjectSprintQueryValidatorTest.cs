@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
+﻿using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Sprint.Queries;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Queries.GetCollection;

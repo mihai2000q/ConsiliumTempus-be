@@ -1,12 +1,12 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint;
 using ErrorOr;
 using MediatR;
 
-namespace ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
+namespace ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 
 public sealed class CreateProjectSprintCommandHandler(
     IProjectRepository projectRepository,
@@ -20,7 +20,7 @@ public sealed class CreateProjectSprintCommandHandler(
         var project = await projectRepository.GetWithWorkspace(projectId, cancellationToken);
         if (project is null) return Errors.Project.NotFound;
 
-        var projectSprint = ProjectSprint.Create(
+        var projectSprint = ProjectSprintAggregate.Create(
             Name.Create(command.Name),
             project,
             command.StartDate,

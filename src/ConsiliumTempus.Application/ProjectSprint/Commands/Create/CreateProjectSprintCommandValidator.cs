@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 
-namespace ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
+namespace ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 
 public sealed class CreateProjectSprintCommandValidator : AbstractValidator<CreateProjectSprintCommand>
 {

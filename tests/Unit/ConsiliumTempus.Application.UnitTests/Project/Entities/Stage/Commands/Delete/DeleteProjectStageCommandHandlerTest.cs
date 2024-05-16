@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Stage;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Stage.Commands.Delete;
@@ -29,7 +30,7 @@ public class DeleteProjectStageCommandHandlerTest
         // Arrange
         var projectStage = ProjectStageFactory.CreateWithStages();
         _projectStageRepository
-            .GetWithStagesAndWorkspace(Arg.Any<ProjectStageId>())
+            .GetWithWorkspace(Arg.Any<ProjectStageId>())
             .Returns(projectStage);
 
         var command = ProjectStageCommandFactory.CreateDeleteProjectStageCommand(projectStage.Id.Value);
@@ -40,7 +41,7 @@ public class DeleteProjectStageCommandHandlerTest
         // Assert
         await _projectStageRepository
             .Received(1)
-            .GetWithStagesAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.Id));
+            .GetWithWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectStageResult());
@@ -55,7 +56,7 @@ public class DeleteProjectStageCommandHandlerTest
         var command = ProjectStageCommandFactory.CreateDeleteProjectStageCommand();
 
         _projectStageRepository
-            .GetWithStagesAndWorkspace(Arg.Any<ProjectStageId>())
+            .GetWithWorkspace(Arg.Any<ProjectStageId>())
             .ReturnsNull();
 
         // Act
@@ -64,7 +65,7 @@ public class DeleteProjectStageCommandHandlerTest
         // Assert
         await _projectStageRepository
             .Received(1)
-            .GetWithStagesAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.Id));
+            .GetWithWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeTrue();
         outcome.ValidateError(Errors.ProjectStage.NotFound);

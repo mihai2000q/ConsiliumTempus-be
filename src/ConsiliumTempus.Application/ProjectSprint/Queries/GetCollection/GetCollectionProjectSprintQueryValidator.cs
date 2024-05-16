@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
+namespace ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 
 public sealed class GetCollectionProjectSprintQueryValidator : AbstractValidator<GetCollectionProjectSprintQuery>
 {

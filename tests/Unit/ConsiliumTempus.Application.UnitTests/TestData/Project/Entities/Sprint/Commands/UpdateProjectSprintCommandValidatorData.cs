@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
+﻿using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Validation;
 

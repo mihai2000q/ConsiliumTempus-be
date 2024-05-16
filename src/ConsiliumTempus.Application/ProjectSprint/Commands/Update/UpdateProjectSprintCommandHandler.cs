@@ -2,10 +2,11 @@
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ErrorOr;
 using MediatR;
 
-namespace ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
+namespace ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 
 public sealed class UpdateProjectSprintCommandHandler(IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<UpdateProjectSprintCommand, ErrorOr<UpdateProjectSprintResult>>

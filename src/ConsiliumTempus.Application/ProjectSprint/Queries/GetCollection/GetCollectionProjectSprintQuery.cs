@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using MediatR;
 
-namespace ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
+namespace ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 
 public sealed record GetCollectionProjectSprintQuery(
     Guid ProjectId)

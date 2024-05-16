@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
+namespace ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
 
 public sealed class DeleteProjectSprintCommandValidator : AbstractValidator<DeleteProjectSprintCommand>
 {

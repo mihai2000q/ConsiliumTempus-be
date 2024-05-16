@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 
-namespace ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
+namespace ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 
 public sealed class UpdateProjectSprintCommandValidator : AbstractValidator<UpdateProjectSprintCommand>
 {
