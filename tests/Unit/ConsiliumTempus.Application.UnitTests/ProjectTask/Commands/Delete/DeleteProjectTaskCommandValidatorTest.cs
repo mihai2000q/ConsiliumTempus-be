@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
-using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands;
 using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.Delete;
 
 namespace ConsiliumTempus.Application.UnitTests.ProjectTask.Commands.Delete;
