@@ -2,7 +2,7 @@
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
+using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Update;
 

@@ -1,7 +1,12 @@
-﻿using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
+﻿using ConsiliumTempus.Api.Contracts.ProjectSprint.AddStage;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -12,16 +17,19 @@ internal static partial class Utils
     {
         internal static void AssertGetResponse(
             GetProjectSprintResponse response,
-            Domain.Project.Entities.ProjectSprint sprint)
+            ProjectSprintAggregate sprint)
         {
             response.Name.Should().Be(sprint.Name.Value);
             response.StartDate.Should().Be(sprint.StartDate);
             response.EndDate.Should().Be(sprint.EndDate);
+            response.Stages
+                .Zip(sprint.Stages)
+                .Should().AllSatisfy(x => AssertProjectStageResponse(x.First, x.Second));
         }
 
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectSprintResponse response,
-            IReadOnlyList<Domain.Project.Entities.ProjectSprint> sprints)
+            IReadOnlyList<ProjectSprintAggregate> sprints)
         {
             response.Sprints.Should().HaveCount(sprints.Count);
             response.Sprints
@@ -33,7 +41,7 @@ internal static partial class Utils
         }
 
         internal static void AssertCreation(
-            Domain.Project.Entities.ProjectSprint sprint,
+            ProjectSprintAggregate sprint,
             CreateProjectSprintRequest request)
         {
             sprint.Name.Value.Should().Be(request.Name);
@@ -45,9 +53,26 @@ internal static partial class Utils
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
 
+        internal static void AssertAddedStage(
+            ProjectSprintAggregate sprint,
+            AddStageToProjectSprintRequest request)
+        {
+            sprint.Id.Value.Should().Be(request.Id);
+            var newStage = sprint.Stages.Single(s => s.Name.Value == request.Name);
+            newStage.CustomOrderPosition.Value.Should().Be(request.OnTop ? 0 : sprint.Stages.Count - 1);
+
+            var customOrderPosition = 0;
+            sprint.Stages
+                .OrderBy(s => s.CustomOrderPosition.Value)
+                .Should().AllSatisfy(s => s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+
         internal static void AssertUpdated(
-            Domain.Project.Entities.ProjectSprint sprint,
-            Domain.Project.Entities.ProjectSprint newSprint,
+            ProjectSprintAggregate sprint,
+            ProjectSprintAggregate newSprint,
             UpdateProjectSprintRequest request)
         {
             // unchanged
@@ -65,14 +90,50 @@ internal static partial class Utils
             newSprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
 
+        internal static void AssertUpdatedStage(
+            ProjectSprintAggregate sprint,
+            UpdateStageFromProjectSprintRequest request)
+        {
+            sprint.Id.Value.Should().Be(request.Id);
+            var stage = sprint.Stages.Single(s => s.Id.Value == request.StageId);
+            stage.Name.Value.Should().Be(request.Name);
+
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+
+        internal static void AssertRemovedStage(
+            ProjectSprintAggregate sprint,
+            RemoveStageFromProjectSprintRequest request)
+        {
+            sprint.Id.Value.Should().Be(request.Id);
+            sprint.Stages.Should().NotContain(s => s.Id.Value == request.StageId);
+            
+            var customOrderPosition = 0;
+            sprint.Stages
+                .OrderBy(s => s.CustomOrderPosition.Value)
+                .Should().AllSatisfy(s => s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+
         private static void AssertResponse(
             GetCollectionProjectSprintResponse.ProjectSprintResponse response,
-            Domain.Project.Entities.ProjectSprint projectSprint)
+            ProjectSprintAggregate projectSprint)
         {
             response.Id.Should().Be(projectSprint.Id.Value);
             response.Name.Should().Be(projectSprint.Name.Value);
             response.StartDate.Should().Be(projectSprint.StartDate);
             response.EndDate.Should().Be(projectSprint.EndDate);
+        }
+        
+        private static void AssertProjectStageResponse(
+            GetProjectSprintResponse.ProjectStageResponse response,
+            ProjectStage projectStage)
+        {
+            response.Id.Should().Be(projectStage.Id.Value);
+            response.Name.Should().Be(projectStage.Name.Value);
         }
     }
 }

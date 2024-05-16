@@ -6,14 +6,4 @@ public static partial class PropertiesValidation
     {
         public const short NameMaximumLength = 100;
     }
-
-    public static class ProjectSprint
-    {
-        public const short NameMaximumLength = 100;
-    }
-
-    public static class ProjectStage
-    {
-        public const short NameMaximumLength = 100;
-    }
 }

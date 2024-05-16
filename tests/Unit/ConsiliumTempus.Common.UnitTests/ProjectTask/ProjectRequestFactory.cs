@@ -43,8 +43,7 @@ public static class ProjectTaskRequestFactory
     {
         return new DeleteProjectTaskRequest
         {
-            Id = id ?? Guid.NewGuid(),
-            StageId = projectStageId ?? Guid.NewGuid()
+            Id = id ?? Guid.NewGuid()
         };
     }
 }

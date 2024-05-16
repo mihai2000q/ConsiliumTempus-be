@@ -1,11 +1,12 @@
 ﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
+using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Update;
@@ -33,10 +34,8 @@ public class ProjectSprintControllerUpdateTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var newSprint = dbContext.ProjectSprints
-            .Include(ps => ps.Project)
-            .ThenInclude(p => p.Workspace)
-            .AsEnumerable()
-            .Single(ps => ps.Id.Value == request.Id);
+            .Include(ps => ps.Project.Workspace)
+            .Single(ps => ps.Id == ProjectSprintId.Create(request.Id));
         
         Utils.ProjectSprint.AssertUpdated(
             sprint,

@@ -32,7 +32,7 @@ public class GetCollectionWorkspaceQueryValidatorTest
     public async Task ValidateGetCollectionWorkspaceQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionWorkspaceQuery query, 
         string property,
-        short numberOfErrors)
+        short expectedErrors)
     {
         // Arrange - parameterized
         
@@ -41,7 +41,7 @@ public class GetCollectionWorkspaceQueryValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(numberOfErrors);
+        outcome.Errors.Should().HaveCount(expectedErrors);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

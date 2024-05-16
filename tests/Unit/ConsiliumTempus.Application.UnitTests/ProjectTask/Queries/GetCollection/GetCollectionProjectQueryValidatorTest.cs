@@ -28,8 +28,7 @@ public class GetCollectionProjectTaskQueryValidatorTest
     [ClassData(typeof(GetCollectionProjectTaskQueryValidatorData.GetInvalidProjectStageIdQueries))]
     public async Task ValidateGetCollectionProjectQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionProjectTaskQuery query, 
-        string property,
-        short numberOfErrors)
+        string property)
     {
         // Arrange - parameterized
         
@@ -38,7 +37,7 @@ public class GetCollectionProjectTaskQueryValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(numberOfErrors);
+        outcome.Errors.Should().HaveCount(1);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

@@ -32,7 +32,7 @@ public class AuthenticationControllerTest
     #endregion
     
     [Fact]
-    public async Task WhenRegisterIsSuccessful_ShouldReturnRegisterResponse()
+    public async Task Register_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRegisterRequest();
@@ -57,7 +57,7 @@ public class AuthenticationControllerTest
     }
 
     [Fact]
-    public async Task WhenRegisterFails_ShouldProblem()
+    public async Task Register_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRegisterRequest();
@@ -80,7 +80,7 @@ public class AuthenticationControllerTest
     }
 
     [Fact]
-    public async Task WhenLoginIsSuccessful_ShouldReturnLoginResponse()
+    public async Task Login_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateLoginRequest();
@@ -105,7 +105,7 @@ public class AuthenticationControllerTest
     }
 
     [Fact]
-    public async Task WhenLoginFails_ShouldReturnProblem()
+    public async Task Login_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateLoginRequest();
@@ -128,7 +128,7 @@ public class AuthenticationControllerTest
     }
 
     [Fact]
-    public async Task WhenRefreshIsSuccessful_ShouldReturnAccessToken()
+    public async Task Refresh_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRefreshRequest();
@@ -152,7 +152,7 @@ public class AuthenticationControllerTest
     }
 
     [Fact]
-    public async Task WhenRefreshFails_ShouldReturnProblem()
+    public async Task Refresh_WhenFails_ShouldReturnProblem()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRefreshRequest();

@@ -19,16 +19,16 @@ internal static class CreateWorkspaceCommandValidatorData
         }
     }
     
-    internal class GetInvalidNameCommands : TheoryData<CreateWorkspaceCommand, string, int>
+    internal class GetInvalidNameCommands : TheoryData<CreateWorkspaceCommand, string>
     {
         public GetInvalidNameCommands()
         {
             var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand(name: "");
-            Add(command, nameof(command.Name), 1);
+            Add(command, nameof(command.Name));
 
             command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand(
                 name: new string('a', PropertiesValidation.Workspace.NameMaximumLength + 1));
-            Add(command, nameof(command.Name), 1);
+            Add(command, nameof(command.Name));
         }
     }
 }

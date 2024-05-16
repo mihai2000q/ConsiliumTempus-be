@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.ProjectSprint;
 using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -120,7 +121,7 @@ internal static partial class Utils
 
         private static void AssertProjectSprintResponse(
             GetProjectResponse.ProjectSprintResponse sprintResponse,
-            Domain.Project.Entities.ProjectSprint sprint)
+            ProjectSprintAggregate sprint)
         {
             sprintResponse.Id.Should().Be(sprint.Id.Value);
             sprintResponse.Name.Should().Be(sprint.Name.Value);

@@ -1,10 +1,10 @@
 ﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Delete;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
+using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;

@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.Project.Entities;
-using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -29,7 +29,7 @@ public sealed class ProjectStageConfiguration : IEntityTypeConfiguration<Project
             .HasColumnName(nameof(CustomOrderPosition));
 
         builder.HasOne(s => s.Sprint)
-            .WithMany(sp => sp.Stages);
+            .WithMany(ps => ps.Stages);
 
         builder.HasMany(s => s.Tasks)
             .WithOne(s => s.Stage);

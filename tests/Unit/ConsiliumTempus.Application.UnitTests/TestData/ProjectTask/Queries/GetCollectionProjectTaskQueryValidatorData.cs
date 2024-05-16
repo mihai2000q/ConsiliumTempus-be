@@ -18,12 +18,12 @@ internal static class GetCollectionProjectTaskQueryValidatorData
         }
     }
     
-    internal class GetInvalidProjectStageIdQueries : TheoryData<GetCollectionProjectTaskQuery, string, short>
+    internal class GetInvalidProjectStageIdQueries : TheoryData<GetCollectionProjectTaskQuery, string>
     {
         public GetInvalidProjectStageIdQueries()
         {
             var query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery(Guid.Empty);
-            Add(query, nameof(query.ProjectStageId), 1);
+            Add(query, nameof(query.ProjectStageId));
         }
     }
 }

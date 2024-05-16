@@ -29,8 +29,7 @@ public class CreateProjectCommandValidatorTest
     [ClassData(typeof(CreateProjectCommandValidatorData.GetInvalidNameCommands))]
     public async Task ValidateCreateProjectCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         CreateProjectCommand command,
-        string property,
-        int expectedErrors)
+        string property)
     {
         // Arrange - parameterized
 
@@ -39,7 +38,7 @@ public class CreateProjectCommandValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(expectedErrors);
+        outcome.Errors.Should().HaveCount(1);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

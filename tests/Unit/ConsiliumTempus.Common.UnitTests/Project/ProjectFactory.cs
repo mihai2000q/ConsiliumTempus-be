@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
+﻿using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;

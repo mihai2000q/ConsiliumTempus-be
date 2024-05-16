@@ -1,12 +1,14 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
 using ConsiliumTempus.Common.IntegrationTests.Project;
-using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
+using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
+using ConsiliumTempus.Common.IntegrationTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.Project.Entities;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -22,7 +24,8 @@ internal class ProjectSprintData : ITestData
             Workspaces,
             Memberships,
             Projects,
-            ProjectSprints
+            ProjectSprints,
+            ProjectStages
         ];
     }
 
@@ -115,7 +118,7 @@ internal class ProjectSprintData : ITestData
             "Just an idea on how to win the football league")
     ];
 
-    public static ProjectSprint[] ProjectSprints { get; } =
+    public static ProjectSprintAggregate[] ProjectSprints { get; } =
     [
         ProjectSprintFactory.Create(
             Projects[0],
@@ -130,5 +133,20 @@ internal class ProjectSprintData : ITestData
         ProjectSprintFactory.Create(
             Projects[1],
             "Get the champs lig finals")
+    ];
+    
+    public static ProjectStage[] ProjectStages { get; } =
+    [
+        ProjectStageFactory.Create(
+            ProjectSprints[0],
+            "To do"),
+        ProjectStageFactory.Create(
+            ProjectSprints[0],
+            "In Progress",
+            1),
+        ProjectStageFactory.Create(
+            ProjectSprints[0],
+            "Done",
+            2)
     ];
 }

@@ -21,25 +21,25 @@ internal static class CreateProjectTaskCommandValidatorData
         }
     }
 
-    internal class GetInvalidProjectStageIdCommands : TheoryData<CreateProjectTaskCommand, string, int>
+    internal class GetInvalidProjectStageIdCommands : TheoryData<CreateProjectTaskCommand, string>
     {
         public GetInvalidProjectStageIdCommands()
         {
             var command = ProjectTaskCommandFactory.CreateCreateProjectTaskCommand(projectStageId: Guid.Empty);
-            Add(command, nameof(command.ProjectStageId), 1);
+            Add(command, nameof(command.ProjectStageId));
         }
     }
 
-    internal class GetInvalidNameCommands : TheoryData<CreateProjectTaskCommand, string, int>
+    internal class GetInvalidNameCommands : TheoryData<CreateProjectTaskCommand, string>
     {
         public GetInvalidNameCommands()
         {
             var command = ProjectTaskCommandFactory.CreateCreateProjectTaskCommand(name: "");
-            Add(command, nameof(command.Name), 1);
+            Add(command, nameof(command.Name));
 
             command = ProjectTaskCommandFactory.CreateCreateProjectTaskCommand(
                 name: new string('a', PropertiesValidation.ProjectTask.NameMaximumLength + 1));
-            Add(command, nameof(command.Name), 1);
+            Add(command, nameof(command.Name));
         }
     }
 }

@@ -1,15 +1,22 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Create;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Delete;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Get;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.Update;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Create;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Delete;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Commands.Update;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.Get;
-using ConsiliumTempus.Application.Project.Entities.Sprint.Queries.GetCollection;
-using ConsiliumTempus.Domain.Project.Entities;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.AddStage;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
+using ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
+using ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
+using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
+using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
+using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
@@ -22,15 +29,21 @@ public sealed class ProjectSprintMappingConfig : IRegister
         Get(config);
         GetCollectionMappings(config);
         CreateMappings(config);
+        AddStageMappings(config);
         UpdateMappings(config);
+        UpdateStageMappings(config);
         DeleteMappings(config);
+        RemoveStageMappings(config);
     }
 
     private static void Get(TypeAdapterConfig config)
     {
         config.NewConfig<GetProjectSprintRequest, GetProjectSprintQuery>();
 
-        config.NewConfig<ProjectSprint, GetProjectSprintResponse>()
+        config.NewConfig<ProjectSprintAggregate, GetProjectSprintResponse>()
+            .Map(dest => dest.Name, src => src.Name.Value);
+        config.NewConfig<ProjectStage, GetProjectSprintResponse.ProjectStageResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value);
     }
 
@@ -39,7 +52,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
         config.NewConfig<GetCollectionProjectSprintRequest, GetCollectionProjectSprintQuery>();
 
         config.NewConfig<GetCollectionProjectSprintResult, GetCollectionProjectSprintResponse>();
-        config.NewConfig<ProjectSprint, GetCollectionProjectSprintResponse.ProjectSprintResponse>()
+        config.NewConfig<ProjectSprintAggregate, GetCollectionProjectSprintResponse.ProjectSprintResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value);
@@ -51,6 +64,13 @@ public sealed class ProjectSprintMappingConfig : IRegister
 
         config.NewConfig<CreateProjectSprintResult, CreateProjectSprintResponse>();
     }
+    
+    private static void AddStageMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<AddStageToProjectSprintRequest, AddStageToProjectSprintCommand>();
+
+        config.NewConfig<AddStageToProjectSprintResult, AddStageToProjectSprintResponse>();
+    }
 
     private static void UpdateMappings(TypeAdapterConfig config)
     {
@@ -58,11 +78,25 @@ public sealed class ProjectSprintMappingConfig : IRegister
 
         config.NewConfig<UpdateProjectSprintResult, UpdateProjectSprintResponse>();
     }
+    
+    private static void UpdateStageMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateStageFromProjectSprintRequest, UpdateStageFromProjectSprintCommand>();
+
+        config.NewConfig<UpdateStageFromProjectSprintResult, UpdateStageFromProjectSprintResponse>();
+    }
 
     private static void DeleteMappings(TypeAdapterConfig config)
     {
         config.NewConfig<DeleteProjectSprintRequest, DeleteProjectSprintCommand>();
 
         config.NewConfig<DeleteProjectSprintResult, DeleteProjectSprintResponse>();
+    }
+    
+    private static void RemoveStageMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<RemoveStageFromProjectSprintRequest, RemoveStageFromProjectSprintCommand>();
+
+        config.NewConfig<RemoveStageFromProjectSprintResult, RemoveStageFromProjectSprintResponse>();
     }
 }

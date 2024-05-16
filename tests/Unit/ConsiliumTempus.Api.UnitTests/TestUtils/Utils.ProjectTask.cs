@@ -46,7 +46,6 @@ internal static partial class Utils
             DeleteProjectTaskRequest request)
         {
             command.Id.Should().Be(request.Id);
-            command.StageId.Should().Be(request.StageId);
 
             return true;
         }

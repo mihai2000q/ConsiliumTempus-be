@@ -2,9 +2,9 @@
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -38,7 +38,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         UpdatedDateTime = updatedDateTime;
     }
 
-    private readonly List<ProjectSprint> _sprints = [];
+    private readonly List<ProjectSprintAggregate> _sprints = [];
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
@@ -46,7 +46,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     public IsPrivate IsPrivate { get; private set; } = default!;
     public DateTime LastActivity { get; private set; }
     public WorkspaceAggregate Workspace { get; init; } = default!;
-    public IReadOnlyList<ProjectSprint> Sprints => _sprints.AsReadOnly();
+    public IReadOnlyList<ProjectSprintAggregate> Sprints => _sprints.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
 
@@ -86,7 +86,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         RefreshActivity();
     }
 
-    public void AddSprint(ProjectSprint sprint)
+    public void AddSprint(ProjectSprintAggregate sprint)
     {
         _sprints.Add(sprint);
     }

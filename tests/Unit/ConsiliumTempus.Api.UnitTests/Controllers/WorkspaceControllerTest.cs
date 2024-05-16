@@ -36,7 +36,7 @@ public class WorkspaceControllerTest
     #endregion
 
     [Fact]
-    public async Task GetWorkspace_WhenIsSuccessful_ShouldReturnWorkspace()
+    public async Task Get_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetWorkspaceRequest();
@@ -59,7 +59,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task GetWorkspace_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetWorkspaceRequest();
@@ -81,7 +81,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task GetCollectionWorkspace_WhenIsSuccessful_ShouldReturnCollectionOfWorkspaces()
+    public async Task GetCollection_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
@@ -105,7 +105,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task GetCollectionWorkspace_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollection_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
@@ -128,7 +128,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task CreateWorkspace_WhenIsSuccessful_ShouldReturnSuccessResponse()
+    public async Task Create_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
@@ -152,7 +152,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task CreateWorkspace_WhenItFails_ShouldReturnUserProblem()
+    public async Task Create_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
@@ -175,7 +175,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task UpdateWorkspace_WhenIsSuccessful_ShouldReturnSuccessResponse()
+    public async Task Update_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest();
@@ -199,7 +199,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task UpdateWorkspace_WhenItFails_ShouldReturnProblem()
+    public async Task Update_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest();
@@ -222,7 +222,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task DeleteWorkspace_WhenIsSuccessful_ShouldReturnSuccessResponse()
+    public async Task Delete_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateDeleteWorkspaceRequest();
@@ -246,7 +246,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task DeleteWorkspace_WhenItFails_ShouldReturnProblem()
+    public async Task Delete_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateDeleteWorkspaceRequest();

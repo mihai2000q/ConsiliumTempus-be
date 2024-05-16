@@ -4,10 +4,17 @@ import { expect } from "../utils/matchers";
 import { deleteUser, registerUser } from "../utils/users.utils";
 import { getPersonalWorkspace } from "../utils/workspaces.utils";
 import { createProject } from "../utils/projects.utils";
-import { createProjectSprint, getProjectSprints } from "../utils/project-sprint.utils";
+import {
+  addStageToProjectSprint,
+  createProjectSprint,
+  getProjectSprints,
+  getProjectStages
+} from "../utils/project-sprint.utils";
 import CreateProjectSprintRequest from "../types/requests/project-sprint/CreateProjectSprintRequest";
 import UpdateProjectSprintRequest from "../types/requests/project-sprint/UpdateProjectSprintRequest";
 import { ProjectSprintName } from "../utils/constants";
+import AddStageToProjectSprintRequest from "../types/requests/project-sprint/AddStageToProjectSprintRequest";
+import UpdateStageFromProjectSprintRequest from "../types/requests/project-sprint/UpdateStageFromProjectSprintRequest";
 
 test.describe('should allow operations on the project sprint entity', () => {
   let PROJECT_ID: string
@@ -18,7 +25,6 @@ test.describe('should allow operations on the project sprint entity', () => {
     PROJECT_ID = (await createProject(request, {
       workspaceId: workspace.id,
       name: "Project name",
-      description: "",
       isPrivate: true
     })).id
   })
@@ -44,6 +50,7 @@ test.describe('should allow operations on the project sprint entity', () => {
       name: createProjectSprintRequest.name,
       startDate: createProjectSprintRequest.startDate,
       endDate: createProjectSprintRequest.endDate,
+      stages: []
     })
   })
 
@@ -115,6 +122,41 @@ test.describe('should allow operations on the project sprint entity', () => {
     ])
   })
 
+  test('should add stage to project sprint', async ({ request }) => {
+    const createProjectSprintRequest: CreateProjectSprintRequest = {
+      projectId: PROJECT_ID,
+      name: "Sprint 2",
+      startDate: "2024-01-12",
+      endDate: "2024-01-26"
+    }
+    const sprint = await createProjectSprint(request, createProjectSprintRequest)
+
+    const body: AddStageToProjectSprintRequest = {
+      id: sprint.id,
+      name: "In Transit",
+      onTop: true
+    }
+    const response = await request.post('/api/projects/sprints/add-stage', {
+      ...useToken(),
+      data: body
+    });
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const stages = await getProjectStages(request, body.id)
+    expect(stages).toHaveLength(1)
+    expect(stages).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: body.name,
+      }
+    ])
+  })
+
   test('should update project sprint', async ({ request }) => {
     const createProjectSprintRequest: CreateProjectSprintRequest = {
       projectId: PROJECT_ID,
@@ -160,6 +202,53 @@ test.describe('should allow operations on the project sprint entity', () => {
     ])
   })
 
+  test('should update stage from project sprint', async ({ request }) => {
+    const createProjectSprintRequest: CreateProjectSprintRequest = {
+      projectId: PROJECT_ID,
+      name: "Sprint 2",
+      startDate: "2024-01-12",
+      endDate: "2024-01-26"
+    }
+    const sprint = await createProjectSprint(request, createProjectSprintRequest)
+
+    const addStageToProjectSprintRequest: AddStageToProjectSprintRequest = {
+      id: sprint.id,
+      name: "In Transit",
+      onTop: true
+    }
+    const stage = await addStageToProjectSprint(request, addStageToProjectSprintRequest)
+
+    const body: UpdateStageFromProjectSprintRequest = {
+      id: sprint.id,
+      stageId: stage.id,
+      name: "Staging"
+    }
+    const response = await request.put('/api/projects/sprints/update-stage', {
+      ...useToken(),
+      data: body
+    });
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const stages = await getProjectStages(request, body.id)
+    expect(stages).not.toStrictEqual([
+      {
+        id: stage.id,
+        name: createProjectSprintRequest.name,
+      }
+    ])
+    expect(stages).toStrictEqual([
+      {
+        id: stage.id,
+        name: body.name,
+      }
+    ])
+  })
+
   test('should delete project sprint', async ({ request }) => {
     const projectSprint = await createProjectSprint(request, {
       projectId: PROJECT_ID,
@@ -194,5 +283,35 @@ test.describe('should allow operations on the project sprint entity', () => {
         endDate: null,
       }
     ])
+  })
+
+  test('should remove stage from project sprint', async ({ request }) => {
+    const createProjectSprintRequest: CreateProjectSprintRequest = {
+      projectId: PROJECT_ID,
+      name: "Sprint 2",
+      startDate: "2024-01-12",
+      endDate: "2024-01-26"
+    }
+    const sprint = await createProjectSprint(request, createProjectSprintRequest)
+
+    const addStageToProjectSprintRequest: AddStageToProjectSprintRequest = {
+      id: sprint.id,
+      name: "In Transit",
+      onTop: true
+    }
+    const stage = await addStageToProjectSprint(request, addStageToProjectSprintRequest)
+
+    const response = await request.delete(
+      `/api/projects/sprints/${sprint.id}/remove-stage/${stage.id}`,
+      useToken());
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const stages = await getProjectStages(request, sprint.id)
+    expect(stages).toHaveLength(0)
   })
 })

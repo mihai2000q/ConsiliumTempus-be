@@ -12,7 +12,7 @@ internal static partial class Utils
     {
         internal static void AssertFromCreateCommand(
             CreateProjectTaskCommand command,
-            Domain.Project.Entities.ProjectStage stage,
+            Domain.ProjectSprint.Entities.ProjectStage stage,
             UserAggregate user)
         {
             var task = command.OnTop ? stage.Tasks[0] : stage.Tasks[^1];
@@ -42,11 +42,11 @@ internal static partial class Utils
 
         internal static void AssertFromDeleteCommand(
             ProjectTaskAggregate task,
-            Domain.Project.Entities.ProjectStage stage,
             DeleteProjectTaskCommand command)
         {
             task.Id.Value.Should().Be(command.Id);
-            stage.Id.Value.Should().Be(command.StageId);
+            
+            var stage = task.Stage;
 
             stage.Tasks.Should().NotContain(task);
             var customOrderPosition = 0;

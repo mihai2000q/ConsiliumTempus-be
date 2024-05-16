@@ -20,17 +20,26 @@ internal static class UpdateWorkspaceCommandValidatorData
             Add(command);
         }
     }
+    
+    internal class GetInvalidIdCommands : TheoryData<UpdateWorkspaceCommand, string>
+    {
+        public GetInvalidIdCommands()
+        {
+            var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand(id: Guid.Empty);
+            Add(command, nameof(command.Id));
+        }
+    }
 
-    internal class GetInvalidNameCommands : TheoryData<UpdateWorkspaceCommand, string, int>
+    internal class GetInvalidNameCommands : TheoryData<UpdateWorkspaceCommand, string>
     {
         public GetInvalidNameCommands()
         {
             var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand(name: "");
-            Add(command, nameof(command.Name), 1);
+            Add(command, nameof(command.Name));
 
             command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand(
                 name: new string('a', PropertiesValidation.Workspace.NameMaximumLength + 1));
-            Add(command, nameof(command.Name), 1);
+            Add(command, nameof(command.Name));
         }
     }
 }

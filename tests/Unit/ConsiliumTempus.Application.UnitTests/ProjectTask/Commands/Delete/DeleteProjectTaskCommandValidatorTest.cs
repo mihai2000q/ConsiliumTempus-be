@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
-using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands;
 using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.Delete;
 
 namespace ConsiliumTempus.Application.UnitTests.ProjectTask.Commands.Delete;
@@ -27,11 +26,9 @@ public class DeleteProjectTaskCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(DeleteProjectTaskCommandValidatorData.GetInvalidIdCommands))]
-    [ClassData(typeof(DeleteProjectTaskCommandValidatorData.GetInvalidProjectStageIdCommands))]
     public async Task ValidateDeleteProjectTaskCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         DeleteProjectTaskCommand command,
-        string property,
-        int expectedErrors)
+        string property)
     {
         // Arrange - parameterized
 
@@ -40,7 +37,7 @@ public class DeleteProjectTaskCommandValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(expectedErrors);
+        outcome.Errors.Should().HaveCount(1);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

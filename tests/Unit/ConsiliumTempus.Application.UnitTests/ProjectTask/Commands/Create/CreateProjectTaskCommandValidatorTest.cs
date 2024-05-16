@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.ProjectTask.Commands.Create;
-using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands;
 using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.Create;
 
 namespace ConsiliumTempus.Application.UnitTests.ProjectTask.Commands.Create;
@@ -30,8 +29,7 @@ public class CreateProjectTaskCommandValidatorTest
     [ClassData(typeof(CreateProjectTaskCommandValidatorData.GetInvalidNameCommands))]
     public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
         CreateProjectTaskCommand command,
-        string property,
-        int expectedErrors)
+        string property)
     {
         // Arrange - parameterized
 
@@ -40,7 +38,7 @@ public class CreateProjectTaskCommandValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(expectedErrors);
+        outcome.Errors.Should().HaveCount(1);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

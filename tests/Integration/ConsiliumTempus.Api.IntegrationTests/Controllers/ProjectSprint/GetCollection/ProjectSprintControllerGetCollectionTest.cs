@@ -1,10 +1,10 @@
 ﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Project.Entities.Sprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using ConsiliumTempus.Common.IntegrationTests.Project.Entities.Sprint;
+using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.GetCollection;
 

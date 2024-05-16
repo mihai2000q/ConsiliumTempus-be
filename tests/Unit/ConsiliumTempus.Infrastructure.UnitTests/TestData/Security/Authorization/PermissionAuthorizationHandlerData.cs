@@ -39,12 +39,11 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Query);
             Add(Permissions.UpdateProjectSprint, RequestLocation.Body);
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route);
-            
-            Add(Permissions.CreateProjectStage, RequestLocation.Body);
-            Add(Permissions.ReadCollectionProjectStage, RequestLocation.Query);
-            Add(Permissions.UpdateProjectStage, RequestLocation.Body);
-            Add(Permissions.DeleteProjectStage, RequestLocation.Route);
-            
+
+            Add(Permissions.AddStageToProjectSprint, RequestLocation.Body);
+            Add(Permissions.UpdateStageFromProjectSprint, RequestLocation.Body);
+            Add(Permissions.RemoveStageFromProjectSprint, RequestLocation.Route);
+
             Add(Permissions.CreateProjectTask, RequestLocation.Body);
             Add(Permissions.ReadProjectTask, RequestLocation.Route);
             Add(Permissions.ReadCollectionProjectTask, RequestLocation.Query);
@@ -72,12 +71,11 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Query, "projectId");
             Add(Permissions.UpdateProjectSprint, RequestLocation.Body, null);
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route, null);
-            
-            Add(Permissions.CreateProjectStage, RequestLocation.Body, "projectSprintId");
-            Add(Permissions.ReadCollectionProjectStage, RequestLocation.Query, "projectSprintId");
-            Add(Permissions.UpdateProjectStage, RequestLocation.Body, null);
-            Add(Permissions.DeleteProjectStage, RequestLocation.Route, null);
-            
+
+            Add(Permissions.AddStageToProjectSprint, RequestLocation.Body, null);
+            Add(Permissions.UpdateStageFromProjectSprint, RequestLocation.Body, null);
+            Add(Permissions.RemoveStageFromProjectSprint, RequestLocation.Route, null);
+
             Add(Permissions.CreateProjectTask, RequestLocation.Body, "projectStageId");
             Add(Permissions.ReadProjectTask, RequestLocation.Route, null);
             Add(Permissions.ReadCollectionProjectTask, RequestLocation.Query, "projectStageId");
@@ -105,12 +103,11 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Query, "projectId", StringIdType.Project);
             Add(Permissions.UpdateProjectSprint, RequestLocation.Body, null, StringIdType.ProjectSprint);
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route, null, StringIdType.ProjectSprint);
-            
-            Add(Permissions.CreateProjectStage, RequestLocation.Body, "projectSprintId", StringIdType.ProjectSprint);
-            Add(Permissions.ReadCollectionProjectStage, RequestLocation.Query, "projectSprintId", StringIdType.ProjectSprint);
-            Add(Permissions.UpdateProjectStage, RequestLocation.Body, null, StringIdType.ProjectStage);
-            Add(Permissions.DeleteProjectStage, RequestLocation.Route, null, StringIdType.ProjectStage);
-            
+
+            Add(Permissions.AddStageToProjectSprint, RequestLocation.Body, null, StringIdType.ProjectSprint);
+            Add(Permissions.UpdateStageFromProjectSprint, RequestLocation.Body, null, StringIdType.ProjectSprint);
+            Add(Permissions.RemoveStageFromProjectSprint, RequestLocation.Route, null, StringIdType.ProjectSprint);
+
             Add(Permissions.CreateProjectTask, RequestLocation.Body, "projectStageId", StringIdType.ProjectStage);
             Add(Permissions.ReadProjectTask, RequestLocation.Route, null, StringIdType.ProjectTask);
             Add(Permissions.ReadCollectionProjectTask, RequestLocation.Query, "projectStageId", StringIdType.ProjectStage);

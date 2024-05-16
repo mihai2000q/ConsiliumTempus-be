@@ -1,7 +1,8 @@
 ﻿using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Events;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
 using MediatR;
 
@@ -11,7 +12,7 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
 {
     public Task Handle(ProjectCreated notification, CancellationToken cancellationToken)
     {
-        var sprint = ProjectSprint.Create(
+        var sprint = ProjectSprintAggregate.Create(
             Name.Create(Constants.ProjectSprint.Name),
             notification.Project);
         notification.Project.AddSprint(sprint);

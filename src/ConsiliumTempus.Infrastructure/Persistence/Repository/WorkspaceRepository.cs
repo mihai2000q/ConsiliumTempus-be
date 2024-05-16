@@ -2,6 +2,8 @@
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
@@ -33,8 +35,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         CancellationToken cancellationToken = default)
     {
         var projectSprint = await dbContext.ProjectSprints
-            .Include(ps => ps.Project)
-            .ThenInclude(p => p.Workspace)
+            .Include(ps => ps.Project.Workspace)
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
 
         return projectSprint?.Project.Workspace;
@@ -43,10 +44,8 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
     public async Task<WorkspaceAggregate?> GetByProjectStage(ProjectStageId id,
         CancellationToken cancellationToken = default)
     {
-        var projectStage = await dbContext.ProjectStages
-            .Include(ps => ps.Sprint)
-            .ThenInclude(ps => ps.Project)
-            .ThenInclude(p => p.Workspace)
+        var projectStage = await dbContext.Set<ProjectStage>()
+            .Include(ps => ps.Sprint.Project.Workspace)
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
 
         return projectStage?.Sprint.Project.Workspace;
@@ -56,10 +55,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         CancellationToken cancellationToken = default)
     {
         var projectTask = await dbContext.ProjectTasks
-            .Include(pt => pt.Stage)
-            .ThenInclude(ps => ps.Sprint)
-            .ThenInclude(ps => ps.Project)
-            .ThenInclude(p => p.Workspace)
+            .Include(pt => pt.Stage.Sprint.Project.Workspace)
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
 
         return projectTask?.Stage.Sprint.Project.Workspace;
@@ -98,7 +94,6 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .Include(w => w.Owner)
             .Include(w => w.Memberships)
             .ThenInclude(m => m.User)
-            .Include(w => w.Memberships)
             .Where(w => w.Memberships.Any(m => m.User == user))
             .ToListAsync(cancellationToken);
     }
