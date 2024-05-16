@@ -28,7 +28,7 @@ public sealed class GetCollectionWorkspaceQueryHandler(
         {
             new Filters.Workspace.NameFilter(query.Name)
         };
-        
+
         var workspaces = await workspaceRepository.GetListByUser(
             user,
             paginationInfo,
@@ -39,7 +39,13 @@ public sealed class GetCollectionWorkspaceQueryHandler(
             user,
             filters,
             cancellationToken);
-        
+
+        workspaces = query.IsPersonalWorkspaceFirst
+            ? workspaces
+                .OrderByDescending(w => w.Owner == user && w.IsPersonal.Value)
+                .ToList()
+            : workspaces;
+
         return new GetCollectionWorkspaceResult(
             workspaces,
             workspacesCount,

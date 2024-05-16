@@ -19,6 +19,7 @@ public static class WorkspaceRequestFactory
     }
 
     public static GetCollectionWorkspaceRequest CreateGetCollectionWorkspaceRequest(
+        bool isPersonalWorkspaceFirst = false,
         int? pageSize = null,
         int? currentPage = null,
         string? order = null,
@@ -26,6 +27,7 @@ public static class WorkspaceRequestFactory
     {
         return new GetCollectionWorkspaceRequest
         {
+            IsPersonalWorkspaceFirst = isPersonalWorkspaceFirst,
             PageSize = pageSize,
             CurrentPage = currentPage,
             Order = order,

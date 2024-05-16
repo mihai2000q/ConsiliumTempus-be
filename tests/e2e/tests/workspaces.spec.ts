@@ -62,6 +62,36 @@ test.describe('should allow operations on the workspace entity', () => {
       expect(json.workspaces).toHaveLength(2)
     })
 
+    test('should get collection of workspaces with personal workspace on top', async ({ request }) => {
+      const createWorkspaceRequest: CreateWorkspaceRequest = {
+        name: "Some Workspace",
+      }
+      await createWorkspace(request, createWorkspaceRequest)
+
+      const response = await request.get('/api/workspaces', useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json).toStrictEqual({
+        workspaces: [
+          {
+            id: expect.any(String),
+            name: PersonalWorkspaceName,
+            description: expect.any(String)
+          },
+          {
+            id: expect.any(String),
+            name: createWorkspaceRequest.name,
+            description: ""
+          }
+        ],
+        totalCount: 2,
+        totalPages: null
+      })
+      expect(json.workspaces).toHaveLength(2)
+    })
+
     test('should get collection of workspaces ordered by create date time descending', async ({ request }) => {
       const createWorkspaceRequests = await createWorkspaces(request, 2)
 

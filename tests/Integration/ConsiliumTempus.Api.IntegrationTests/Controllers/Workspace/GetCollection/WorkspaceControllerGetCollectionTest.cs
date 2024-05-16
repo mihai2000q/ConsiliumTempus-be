@@ -46,6 +46,36 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
             expectedWorkspaces.Count,
             null);
     }
+    
+    [Fact]
+    public async Task GetCollectionWorkspace_WhenRequestHasIsPersonalWorkspaceFirst_ShouldReturnWorkspacesWithPersonalWorkspaceFirst()
+    {
+        // Arrange
+        var user = WorkspaceData.Users.First();
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
+            isPersonalWorkspaceFirst: true);
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Get($"api/Workspaces" +
+                                       $"?isPersonalWorkspaceFirst={request.IsPersonalWorkspaceFirst}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
+        var expectedWorkspaces = user.Memberships.Select(m => m.Workspace).ToList();
+
+        response!.Workspaces.First().IsPersonal.Should().BeTrue();
+        
+        response.Workspaces.First().Owner.Id.Should().Be(user.Id.Value);
+        response.Workspaces.First().Owner.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+        
+        Utils.Workspace.AssertGetCollectionResponse(
+            response,
+            expectedWorkspaces,
+            expectedWorkspaces.Count,
+            null);
+    }
 
     [Fact]
     public async Task GetCollectionWorkspace_WhenRequestHasNameFilter_ShouldReturnWorkspacesFilteredByName()
@@ -95,7 +125,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
             expectedWorkspaces, 
             expectedWorkspaces.Count,
             null,
-            true);
+            isOrdered: true);
     }
 
     [Fact]

@@ -11,5 +11,11 @@ public sealed record GetCollectionWorkspaceResponse(
     public sealed record WorkspaceResponse(
         Guid Id,
         string Name,
-        string Description);
+        string Description,
+        bool IsPersonal,
+        Owner Owner);
+
+    public sealed record Owner(
+        Guid Id,
+        string Name);
 }
