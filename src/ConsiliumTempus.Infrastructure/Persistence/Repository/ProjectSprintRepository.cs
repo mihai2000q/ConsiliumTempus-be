@@ -15,8 +15,9 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
             .Include(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
-    
-    public Task<ProjectSprintAggregate?> GetWithWorkspace(ProjectSprintId id,
+
+    public Task<ProjectSprintAggregate?> GetWithWorkspace(
+        ProjectSprintId id, 
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectSprints
@@ -25,7 +26,19 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 
-    public Task<List<ProjectSprintAggregate>> GetListByProject(ProjectId projectId,
+    public Task<ProjectSprintAggregate?> GetWithTasksAndWorkspace(
+        ProjectSprintId id, 
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.ProjectSprints
+            .Include(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
+            .ThenInclude(s => s.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
+            .Include(ps => ps.Project.Workspace)
+            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
+    }
+
+    public Task<List<ProjectSprintAggregate>> GetListByProject(
+        ProjectId projectId, 
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectSprints

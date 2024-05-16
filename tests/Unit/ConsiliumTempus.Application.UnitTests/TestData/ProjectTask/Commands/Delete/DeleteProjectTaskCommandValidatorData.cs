@@ -11,29 +11,19 @@ internal static class DeleteProjectTaskCommandValidatorData
         {
             var command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand();
             Add(command);
-            
+
             command = new DeleteProjectTaskCommand(
-                Guid.NewGuid(),
                 Guid.NewGuid());
             Add(command);
         }
     }
-    
+
     internal class GetInvalidIdCommands : TheoryData<DeleteProjectTaskCommand, string>
     {
         public GetInvalidIdCommands()
         {
             var command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand(id: Guid.Empty);
             Add(command, nameof(command.Id));
-        }
-    }
-
-    internal class GetInvalidProjectStageIdCommands : TheoryData<DeleteProjectTaskCommand, string>
-    {
-        public GetInvalidProjectStageIdCommands()
-        {
-            var command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand(projectStageId: Guid.Empty);
-            Add(command, nameof(command.StageId));
         }
     }
 }

@@ -1,26 +1,24 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ErrorOr;
 using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 
-public sealed class DeleteProjectTaskCommandHandler(IProjectStageRepository projectStageRepository)
+public sealed class DeleteProjectTaskCommandHandler(IProjectTaskRepository projectTaskRepository)
     : IRequestHandler<DeleteProjectTaskCommand, ErrorOr<DeleteProjectTaskResult>>
 {
-    public async Task<ErrorOr<DeleteProjectTaskResult>> Handle(DeleteProjectTaskCommand command, CancellationToken cancellationToken)
+    public async Task<ErrorOr<DeleteProjectTaskResult>> Handle(DeleteProjectTaskCommand command, 
+        CancellationToken cancellationToken)
     {
-        var stage = await projectStageRepository.GetWithTasksAndWorkspace(
-            ProjectStageId.Create(command.StageId),
+        var task = await projectTaskRepository.GetWithStageAndWorkspace(
+            ProjectTaskId.Create(command.Id),
             cancellationToken);
-        if (stage is null) return Errors.ProjectStage.NotFound;
-
-        var task = stage.Tasks.SingleOrDefault(t => t.Id.Value == command.Id);
         if (task is null) return Errors.ProjectTask.NotFound;
         
-        stage.RemoveTask(task);
-        stage.Sprint.Project.RefreshActivity();
+        task.Stage.RemoveTask(task);
+        task.Stage.Sprint.Project.RefreshActivity();
 
         return new DeleteProjectTaskResult();
     }

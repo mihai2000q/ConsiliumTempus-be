@@ -17,12 +17,8 @@ public static class ProjectTaskCommandFactory
             onTop);
     }
     
-    public static DeleteProjectTaskCommand CreateDeleteProjectTaskCommand(
-        Guid? id = null,
-        Guid? projectStageId = null)
+    public static DeleteProjectTaskCommand CreateDeleteProjectTaskCommand(Guid? id = null)
     {
-        return new DeleteProjectTaskCommand(
-            id ?? Guid.NewGuid(),
-            projectStageId ?? Guid.NewGuid());
+        return new DeleteProjectTaskCommand(id ?? Guid.NewGuid());
     }
 }

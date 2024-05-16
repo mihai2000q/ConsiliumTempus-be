@@ -27,7 +27,10 @@ public static class ProjectStageFactory
         Enumerable
             .Range(0, tasksCount)
             .ToList()
-            .ForEach(i => stage.AddTask(ProjectTaskFactory.Create(customOrderPosition: i)));
+            .ForEach(i => stage.AddTask(ProjectTaskFactory.Create(
+                name: Constants.ProjectTask.Name + i,
+                customOrderPosition: i, 
+                stage: stage)));
 
         return stage;
     }

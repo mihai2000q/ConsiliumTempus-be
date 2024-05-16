@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
@@ -18,8 +19,29 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .SingleOrDefaultAsync(cancellationToken);
     }
 
+    public Task<ProjectTaskAggregate?> GetWithStageAndWorkspace(
+        ProjectTaskId id,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.ProjectTasks
+            .Include(t => t.Stage)
+            .ThenInclude(s => s.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
+            .Include(t => t.Stage.Sprint.Project.Workspace)
+            .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
+    }
+
+    public Task<ProjectStage?> GetStageWithTasksAndWorkspace(
+        ProjectStageId id,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.Set<ProjectStage>()
+            .Include(s => s.Sprint.Project.Workspace)
+            .Include(s => s.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
+            .SingleOrDefaultAsync(s => s.Id == id, cancellationToken);
+    }
+
     public Task<List<ProjectTaskAggregate>> GetListByStage(
-        ProjectStageId stageId, 
+        ProjectStageId stageId,
         IReadOnlyList<IFilter<ProjectTaskAggregate>> filters,
         CancellationToken cancellationToken = default)
     {
@@ -28,9 +50,9 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .ApplyFilters(filters)
             .ToListAsync(cancellationToken);
     }
-    
+
     public Task<int> GetListByStageCount(
-        ProjectStageId stageId, 
+        ProjectStageId stageId,
         IReadOnlyList<IFilter<ProjectTaskAggregate>> filters,
         CancellationToken cancellationToken = default)
     {
@@ -39,15 +61,5 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .Where(t => t.Stage.Id == stageId)
             .ApplyFilters(filters)
             .CountAsync(cancellationToken);
-    }
-
-    public async Task Add(ProjectTaskAggregate task, CancellationToken cancellationToken = default)
-    {
-        await dbContext.ProjectTasks.AddAsync(task, cancellationToken);
-    }
-
-    public void Remove(ProjectTaskAggregate task)
-    {
-        dbContext.ProjectTasks.Remove(task);
     }
 }

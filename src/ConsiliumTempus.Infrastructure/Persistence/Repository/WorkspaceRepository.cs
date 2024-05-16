@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User;
@@ -43,7 +44,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
     public async Task<WorkspaceAggregate?> GetByProjectStage(ProjectStageId id,
         CancellationToken cancellationToken = default)
     {
-        var projectStage = await dbContext.ProjectStages
+        var projectStage = await dbContext.Set<ProjectStage>()
             .Include(ps => ps.Sprint.Project.Workspace)
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
 

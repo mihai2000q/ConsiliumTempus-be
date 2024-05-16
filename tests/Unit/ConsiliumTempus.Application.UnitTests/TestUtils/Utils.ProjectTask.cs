@@ -42,11 +42,11 @@ internal static partial class Utils
 
         internal static void AssertFromDeleteCommand(
             ProjectTaskAggregate task,
-            Domain.ProjectSprint.Entities.ProjectStage stage,
             DeleteProjectTaskCommand command)
         {
             task.Id.Value.Should().Be(command.Id);
-            stage.Id.Value.Should().Be(command.StageId);
+            
+            var stage = task.Stage;
 
             stage.Tasks.Should().NotContain(task);
             var customOrderPosition = 0;

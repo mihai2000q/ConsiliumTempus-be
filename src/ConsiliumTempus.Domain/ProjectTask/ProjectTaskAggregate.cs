@@ -83,9 +83,4 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     {
         _comments.Add(comment);
     }
-
-    public void DecrementCustomOrderPosition()
-    {
-        CustomOrderPosition = CustomOrderPosition.Create(CustomOrderPosition.Value - 1);
-    }
 }

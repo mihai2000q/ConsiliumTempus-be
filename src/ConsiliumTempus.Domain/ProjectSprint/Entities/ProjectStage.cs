@@ -65,10 +65,12 @@ public sealed class ProjectStage : Entity<ProjectStageId>
     
     public void RemoveTask(ProjectTaskAggregate task)
     {
-        if (!_tasks.Remove(task)) return;
+        _tasks.Remove(task);
         for (var i = task.CustomOrderPosition.Value; i < _tasks.Count; i++)
         {
-            _tasks[i].DecrementCustomOrderPosition();
+            _tasks[i].Update(
+                _tasks[i].Name, 
+                _tasks[i].CustomOrderPosition - CustomOrderPosition.Create(1));
         }
     }
 }
