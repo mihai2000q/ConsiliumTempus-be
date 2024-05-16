@@ -28,11 +28,13 @@ public static class ProjectTaskRequestFactory
 
     public static CreateProjectTaskRequest CreateCreateProjectTaskRequest(
         Guid? projectStageId = null,
-        string name = Constants.ProjectTask.Name)
+        string name = Constants.ProjectTask.Name,
+        bool onTop = false)
     {
         return new CreateProjectTaskRequest(
             projectStageId ?? Guid.NewGuid(),
-            name);
+            name,
+            onTop);
     }
     
     public static DeleteProjectTaskRequest CreateDeleteProjectTaskRequest(

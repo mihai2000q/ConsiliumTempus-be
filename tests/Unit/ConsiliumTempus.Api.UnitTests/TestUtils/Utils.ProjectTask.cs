@@ -19,6 +19,7 @@ internal static partial class Utils
             GetProjectTaskRequest request)
         {
             query.Id.Should().Be(request.Id);
+
             return true;
         }
 
@@ -35,6 +36,8 @@ internal static partial class Utils
         {
             command.ProjectStageId.Should().Be(request.ProjectStageId);
             command.Name.Should().Be(request.Name);
+            command.OnTop.Should().Be(request.OnTop);
+
             return true;
         }
 

@@ -2,4 +2,5 @@
 
 public sealed record CreateProjectTaskRequest(
     Guid ProjectStageId,
-    string Name);
+    string Name,
+    bool OnTop);
