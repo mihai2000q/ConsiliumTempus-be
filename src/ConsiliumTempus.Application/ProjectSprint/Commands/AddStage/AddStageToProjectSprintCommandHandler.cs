@@ -1,4 +1,4 @@
-using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
@@ -6,12 +6,12 @@ using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ErrorOr;
 using MediatR;
 
-namespace ConsiliumTempus.Application.Project.Entities.Stage.Commands.Create;
+namespace ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
 
-public sealed class CreateProjectStageCommandHandler(IProjectSprintRepository projectSprintRepository)
-    : IRequestHandler<CreateProjectStageCommand, ErrorOr<CreateProjectStageResult>>
+public sealed class AddStageToProjectSprintCommandHandler(IProjectSprintRepository projectSprintRepository)
+    : IRequestHandler<AddStageToProjectSprintCommand, ErrorOr<AddStageToProjectSprintResult>>
 {
-    public async Task<ErrorOr<CreateProjectStageResult>> Handle(CreateProjectStageCommand command,
+    public async Task<ErrorOr<AddStageToProjectSprintResult>> Handle(AddStageToProjectSprintCommand command,
         CancellationToken cancellationToken)
     {
         var sprint = await projectSprintRepository.GetWithWorkspace(
@@ -26,6 +26,6 @@ public sealed class CreateProjectStageCommandHandler(IProjectSprintRepository pr
         sprint.AddStage(stage, command.OnTop);
         sprint.Project.RefreshActivity();
 
-        return new CreateProjectStageResult();
+        return new AddStageToProjectSprintResult();
     }
 }
