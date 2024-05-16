@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,7 +38,7 @@ public class ProjectSprintControllerRemoveStageTest(WebAppFactory factory)
         response!.Message.Should().Be("Stage has been successfully removed from Project Sprint!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.ProjectStages.Should().HaveCount(ProjectSprintData.ProjectStages.Length - 1);
+        dbContext.Set<ProjectStage>().Should().HaveCount(ProjectSprintData.ProjectStages.Length - 1);
         var newSprint = await dbContext.ProjectSprints
             .Include(ps => ps.Stages)
             .Include(ps => ps.Project.Workspace)
@@ -64,7 +65,7 @@ public class ProjectSprintControllerRemoveStageTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.SingleOrDefault(p => p.Id == ProjectSprintId.Create(request.Id))
             .Should().NotBeNull();
-        dbContext.ProjectStages.SingleOrDefault(p => p.Id == ProjectStageId.Create(request.StageId))
+        dbContext.Set<ProjectStage>().SingleOrDefault(p => p.Id == ProjectStageId.Create(request.StageId))
             .Should().BeNull();
     }
 

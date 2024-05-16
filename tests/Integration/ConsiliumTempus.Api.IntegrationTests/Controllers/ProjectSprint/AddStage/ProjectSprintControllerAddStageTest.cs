@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +34,7 @@ public class ProjectSprintControllerAddStageTest(WebAppFactory factory)
         response!.Message.Should().Be("Stage has been successfully added to Project Sprint!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.ProjectStages.Should().HaveCount(ProjectSprintData.ProjectStages.Length + 1);
+        dbContext.Set<ProjectStage>().Should().HaveCount(ProjectSprintData.ProjectStages.Length + 1);
         var newSprint = await dbContext.ProjectSprints
             .Include(ps => ps.Stages)
             .Include(ps => ps.Project.Workspace)

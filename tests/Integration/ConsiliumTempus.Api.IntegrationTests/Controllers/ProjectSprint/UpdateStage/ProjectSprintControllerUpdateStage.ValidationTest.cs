@@ -1,13 +1,8 @@
-﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.ProjectSprint.AddStage;
-using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
-using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
-using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.UpdateStage;
 
