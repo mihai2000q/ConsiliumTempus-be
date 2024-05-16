@@ -52,7 +52,6 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
         var newPreservedWorkspaces = dbContext.Workspaces
             .Include(w => w.Memberships)
             .ThenInclude(m => m.User)
-            .Include(w => w.Memberships)
             .Include(w => w.Owner)
             .Where(w => preservedWorkspaces.Contains(w))
             .ToList();

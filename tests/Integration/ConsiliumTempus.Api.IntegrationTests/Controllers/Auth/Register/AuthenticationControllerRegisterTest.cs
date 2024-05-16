@@ -32,9 +32,7 @@ public class AuthenticationControllerRegisterTest(WebAppFactory factory)
         dbContext.Users.Should().HaveCount(AuthData.Users.Length + 1);
         var user = dbContext.Users
             .Include(u => u.Memberships)
-            .ThenInclude(m => m.Workspace)
-            .ThenInclude(w => w.Owner)
-            .Include(u => u.Memberships)
+            .ThenInclude(m => m.Workspace.Owner)
             .Single(u => u.Credentials.Email == request.Email.ToLower());
         Utils.User.AssertRegistration(user, request);
 

@@ -38,8 +38,7 @@ public class ProjectSprintControllerUpdateStageTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var newSprint = await dbContext.ProjectSprints
             .Include(ps => ps.Stages)
-            .Include(ps => ps.Project)
-            .ThenInclude(p => p.Workspace)
+            .Include(ps => ps.Project.Workspace)
             .SingleAsync(ps => ps.Id == sprint.Id);
         Utils.ProjectSprint.AssertUpdatedStage(newSprint, request);
     }

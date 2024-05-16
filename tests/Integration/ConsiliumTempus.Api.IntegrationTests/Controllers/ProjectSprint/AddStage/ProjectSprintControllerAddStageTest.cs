@@ -36,8 +36,7 @@ public class ProjectSprintControllerAddStageTest(WebAppFactory factory)
         dbContext.ProjectStages.Should().HaveCount(ProjectSprintData.ProjectStages.Length + 1);
         var newSprint = await dbContext.ProjectSprints
             .Include(ps => ps.Stages)
-            .Include(ps => ps.Project)
-            .ThenInclude(p => p.Workspace)
+            .Include(ps => ps.Project.Workspace)
             .SingleAsync(ps => ps.Id == sprint.Id);
         Utils.ProjectSprint.AssertAddedStage(newSprint, request);
     }
