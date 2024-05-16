@@ -16,6 +16,7 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
@@ -40,6 +41,9 @@ public sealed class ProjectSprintMappingConfig : IRegister
         config.NewConfig<GetProjectSprintRequest, GetProjectSprintQuery>();
 
         config.NewConfig<ProjectSprintAggregate, GetProjectSprintResponse>()
+            .Map(dest => dest.Name, src => src.Name.Value);
+        config.NewConfig<ProjectStage, GetProjectSprintResponse.ProjectStageResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value);
     }
 

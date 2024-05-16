@@ -6,4 +6,10 @@ namespace ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 public sealed record GetProjectSprintResponse(
     string Name,
     DateOnly? StartDate,
-    DateOnly? EndDate);
+    DateOnly? EndDate,
+    List<GetProjectSprintResponse.ProjectStageResponse> Stages)
+{
+    public sealed record ProjectStageResponse(
+        Guid Id,
+        string Name);
+}

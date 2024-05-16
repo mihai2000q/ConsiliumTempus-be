@@ -17,12 +17,12 @@ public class ProjectSprintControllerGetTest(WebAppFactory factory)
     public async Task GetProjectSprint_WhenSuccessful_ShouldReturnSprint()
     {
         // Arrange
-        var projectSprint = ProjectSprintData.ProjectSprints.First();
+        var sprint = ProjectSprintData.ProjectSprints.First();
         var request = ProjectSprintRequestFactory.CreateGetProjectSprintRequest(
-            projectSprint.Id.Value);
+            sprint.Id.Value);
 
         // Act
-        Client.UseCustomToken(projectSprint.Project.Workspace.Memberships[0].User);
+        Client.UseCustomToken(sprint.Project.Workspace.Memberships[0].User);
         var outcome = await Client.Get($"api/projects/sprints/{request.Id}");
 
         // Assert
@@ -30,7 +30,7 @@ public class ProjectSprintControllerGetTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<GetProjectSprintResponse>();
         Utils.ProjectSprint.AssertGetResponse(
             response!,
-            projectSprint);
+            sprint);
     }
 
     [Fact]

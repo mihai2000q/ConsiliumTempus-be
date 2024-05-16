@@ -15,6 +15,7 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -112,6 +113,9 @@ internal static partial class Utils
             response.Name.Should().Be(sprint.Name.Value);
             response.StartDate.Should().Be(sprint.StartDate);
             response.EndDate.Should().Be(sprint.EndDate);
+            response.Stages
+                .Zip(sprint.Stages)
+                .Should().AllSatisfy(x => AssertProjectStageResponse(x.First, x.Second));
         }
 
         internal static void AssertGetCollectionResponse(
@@ -130,6 +134,14 @@ internal static partial class Utils
             response.Name.Should().Be(projectSprint.Name.Value);
             response.StartDate.Should().Be(projectSprint.StartDate);
             response.EndDate.Should().Be(projectSprint.EndDate);
+        }
+        
+        private static void AssertProjectStageResponse(
+            GetProjectSprintResponse.ProjectStageResponse response,
+            ProjectStage projectStage)
+        {
+            response.Id.Should().Be(projectStage.Id.Value);
+            response.Name.Should().Be(projectStage.Name.Value);
         }
     }
 }
