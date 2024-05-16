@@ -10,16 +10,17 @@ internal static partial class Utils
 {
     internal static class ProjectTask
     {
-        internal static bool AssertFromCreateCommand(
-            ProjectTaskAggregate task,
+        internal static void AssertFromCreateCommand(
             CreateProjectTaskCommand command,
             Domain.Project.Entities.ProjectStage stage,
             UserAggregate user)
         {
+            var task = command.OnTop ? stage.Tasks[0] : stage.Tasks[^1];
+            
             task.Id.Value.Should().NotBeEmpty();
             task.Name.Value.Should().Be(command.Name);
             task.Description.Value.Should().Be(string.Empty);
-            task.CustomOrderPosition.Value.Should().Be(stage.Tasks.Count);
+            task.CustomOrderPosition.Value.Should().Be(command.OnTop ? 0 : stage.Tasks.Count - 1);
             task.IsCompleted.Value.Should().Be(false);
             task.CreatedBy.Should().Be(user);
             task.Asignee.Should().BeNull();
@@ -31,8 +32,12 @@ internal static partial class Utils
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             task.Comments.Should().BeEmpty();
             task.DomainEvents.Should().BeEmpty();
+            
+            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
-            return true;
+            var count = 0;
+            stage.Tasks.Should().AllSatisfy(t => t.CustomOrderPosition.Value.Should().Be(count++));
         }
 
         internal static void AssertFromDeleteCommand(

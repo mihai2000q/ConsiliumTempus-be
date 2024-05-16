@@ -49,9 +49,18 @@ public sealed class ProjectStage : Entity<ProjectStageId>
         CustomOrderPosition = customOrderPosition;
     }
 
-    public void AddTask(ProjectTaskAggregate taskAggregate)
+    public void AddTask(ProjectTaskAggregate task, bool onTop = false)
     {
-        _tasks.Add(taskAggregate);
+        if (onTop)
+        {
+            _tasks.ForEach(t => 
+                t.Update(t.Name, t.CustomOrderPosition + CustomOrderPosition.Create(1)));
+            _tasks.Insert(0, task);
+        }
+        else
+        {
+            _tasks.Add(task);
+        }
     }
     
     public void RemoveTask(ProjectTaskAggregate task)

@@ -71,8 +71,8 @@ public sealed class ProjectSprint : Entity<ProjectSprintId>, ITimestamps
     {
         if (onTop)
         {
-            _stages.ForEach(s => s
-                .Update(s.Name, s.CustomOrderPosition + CustomOrderPosition.Create(1)));
+            _stages.ForEach(s => 
+                s.Update(s.Name, s.CustomOrderPosition + CustomOrderPosition.Create(1)));
             _stages.Insert(0, stage);
         }
         else
