@@ -21,8 +21,7 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
     {
         return dbContext.ProjectSprints
             .Include(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
-            .Include(ps => ps.Project)
-            .ThenInclude(p => p.Workspace)
+            .Include(ps => ps.Project.Workspace)
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 
