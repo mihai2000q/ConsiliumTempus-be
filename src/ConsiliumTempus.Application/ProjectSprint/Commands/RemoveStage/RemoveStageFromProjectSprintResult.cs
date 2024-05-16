@@ -1,4 +1,4 @@
 ﻿namespace ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 
 public sealed record RemoveStageFromProjectSprintResult(
-    string Message = "Stage removed successfully from Project Sprint!");
+    string Message = "Stage has been successfully removed from Project Sprint!");

@@ -29,7 +29,7 @@ public sealed class ProjectStageConfiguration : IEntityTypeConfiguration<Project
             .HasColumnName(nameof(CustomOrderPosition));
 
         builder.HasOne(s => s.Sprint)
-            .WithMany(sp => sp.Stages);
+            .WithMany(ps => ps.Stages);
 
         builder.HasMany(s => s.Tasks)
             .WithOne(s => s.Stage);

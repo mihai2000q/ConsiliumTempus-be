@@ -65,7 +65,7 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
         );
     }
 
-    [HttpPost("{id:guid}/Add-Stage")]
+    [HttpPost("Add-Stage")]
     public async Task<IActionResult> AddStage(AddStageToProjectSprintRequest request, CancellationToken cancellationToken)
     {
         var command = Mapper.Map<AddStageToProjectSprintCommand>(request);
@@ -90,7 +90,7 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
         );
     }
 
-    [HttpPut("{id:guid}/Update-Stage/{stageId:guid}")]
+    [HttpPut("Update-Stage")]
     public async Task<IActionResult> UpdateStage(UpdateStageFromProjectSprintRequest request,
         CancellationToken cancellationToken)
     {

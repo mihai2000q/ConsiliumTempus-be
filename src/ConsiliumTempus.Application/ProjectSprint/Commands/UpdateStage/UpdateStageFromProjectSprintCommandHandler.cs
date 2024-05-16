@@ -16,7 +16,7 @@ public sealed class UpdateStageFromProjectSprintCommandHandler(IProjectSprintRep
         var sprint = await projectSprintRepository.GetWithWorkspace(
             ProjectSprintId.Create(command.Id),
             cancellationToken);
-        if (sprint is null) return Errors.ProjectStage.NotFound;
+        if (sprint is null) return Errors.ProjectSprint.NotFound;
 
         var stage = sprint.Stages.SingleOrDefault(s => s.Id.Value == command.StageId);
         if (stage is null) return Errors.ProjectStage.NotFound;

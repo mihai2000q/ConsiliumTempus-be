@@ -48,11 +48,9 @@ public static class ProjectSprintRequestFactory
         bool onTop = false)
     {
         return new AddStageToProjectSprintRequest(
+            id ?? Guid.NewGuid(),
             name,
-            onTop)
-        {
-            Id = id ?? Guid.NewGuid()
-        };
+            onTop);
     }
 
     public static UpdateProjectSprintRequest CreateUpdateProjectSprintRequest(
@@ -68,17 +66,15 @@ public static class ProjectSprintRequestFactory
             endDate);
     }
 
-    public static UpdateStageFromProjectSprintRequest CreateUpdateStageToProjectSprintRequest(
+    public static UpdateStageFromProjectSprintRequest CreateUpdateStageFromProjectSprintRequest(
         Guid? id = null,
         Guid? stageId = null,
         string name = Constants.ProjectStage.Name)
     {
         return new UpdateStageFromProjectSprintRequest(
-            name)
-        {
-            Id = id ?? Guid.NewGuid(),
-            StageId = stageId ?? Guid.NewGuid()
-        };
+            id ?? Guid.NewGuid(),
+            stageId ?? Guid.NewGuid(),
+            name);
     }
 
     public static DeleteProjectSprintRequest CreateDeleteProjectSprintRequest(Guid? id = null)
