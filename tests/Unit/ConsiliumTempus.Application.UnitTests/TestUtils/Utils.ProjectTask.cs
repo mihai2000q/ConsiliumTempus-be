@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
+using ConsiliumTempus.Application.ProjectTask.Commands.Update;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
 using FluentAssertions.Extensions;
@@ -16,14 +17,14 @@ internal static partial class Utils
             UserAggregate user)
         {
             var task = command.OnTop ? stage.Tasks[0] : stage.Tasks[^1];
-            
+
             task.Id.Value.Should().NotBeEmpty();
             task.Name.Value.Should().Be(command.Name);
             task.Description.Value.Should().Be(string.Empty);
             task.CustomOrderPosition.Value.Should().Be(command.OnTop ? 0 : stage.Tasks.Count - 1);
             task.IsCompleted.Value.Should().Be(false);
             task.CreatedBy.Should().Be(user);
-            task.Asignee.Should().BeNull();
+            task.Assignee.Should().BeNull();
             task.Reviewer.Should().BeNull();
             task.DueDate.Should().BeNull();
             task.EstimatedDuration.Should().BeNull();
@@ -32,7 +33,7 @@ internal static partial class Utils
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             task.Comments.Should().BeEmpty();
             task.DomainEvents.Should().BeEmpty();
-            
+
             stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
@@ -45,7 +46,7 @@ internal static partial class Utils
             DeleteProjectTaskCommand command)
         {
             task.Id.Value.Should().Be(command.Id);
-            
+
             var stage = task.Stage;
 
             stage.Tasks.Should().NotContain(task);
@@ -55,6 +56,20 @@ internal static partial class Utils
 
             stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        }
+
+        internal static void AssertFromUpdateCommand(
+            ProjectTaskAggregate task,
+            UpdateProjectTaskCommand command,
+            UserAggregate assignee)
+        {
+            task.Name.Value.Should().Be(command.Name);
+            task.IsCompleted.Value.Should().Be(command.IsCompleted);
+            task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
 
         internal static void AssertProjectTask(
@@ -67,7 +82,7 @@ internal static partial class Utils
             outcome.CustomOrderPosition.Should().Be(expected.CustomOrderPosition);
             outcome.IsCompleted.Should().Be(expected.IsCompleted);
             outcome.CreatedBy.Should().Be(expected.CreatedBy);
-            outcome.Asignee.Should().Be(expected.Asignee);
+            outcome.Assignee.Should().Be(expected.Assignee);
             outcome.Reviewer.Should().Be(expected.Reviewer);
             outcome.DueDate.Should().Be(expected.DueDate);
             outcome.EstimatedDuration.Should().Be(expected.EstimatedDuration);

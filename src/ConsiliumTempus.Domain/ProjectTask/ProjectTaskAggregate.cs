@@ -44,7 +44,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public CustomOrderPosition CustomOrderPosition { get; private set; } = default!;
     public IsCompleted IsCompleted { get; private set; } = default!;
     public UserAggregate CreatedBy { get; init; } = default!;
-    public UserAggregate? Asignee { get; private set; }
+    public UserAggregate? Assignee { get; private set; }
     public UserAggregate? Reviewer { get; private set; }
     public DateOnly? DueDate { get; private set; }
     public TimeSpan? EstimatedDuration { get; private set; }
@@ -72,11 +72,21 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             DateTime.UtcNow);
     }
 
-    public void Update(Name name, CustomOrderPosition customOrderPosition)
+    public void Update(
+        Name name, 
+        CustomOrderPosition customOrderPosition,
+        IsCompleted isCompleted,
+        UserAggregate? assignee)
     {
         Name = name;
         CustomOrderPosition = customOrderPosition;
+        Assignee = assignee;
         UpdatedDateTime = DateTime.UtcNow;
+    }
+    
+    public void UpdateCustomOrderPosition(CustomOrderPosition customOrderPosition)
+    {
+        CustomOrderPosition = customOrderPosition;
     }
 
     public void AddComment(ProjectTaskComment comment)

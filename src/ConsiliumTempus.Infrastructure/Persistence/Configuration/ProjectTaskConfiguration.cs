@@ -41,7 +41,7 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
         builder.HasOne(t => t.CreatedBy)
             .WithMany();
 
-        builder.HasOne(t => t.Asignee)
+        builder.HasOne(t => t.Assignee)
             .WithMany();
 
         builder.HasOne(t => t.Reviewer)
