@@ -3,8 +3,12 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Create;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
+using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -53,6 +57,32 @@ public sealed class ProjectTaskController(IMapper mapper, ISender mediator) : Ap
 
         return result.Match(
             createResult => Ok(Mapper.Map<CreateProjectTaskResponse>(createResult)),
+            Problem
+        );
+    }
+    
+    [HasPermission(Permissions.UpdateProjectTask)]
+    [HttpPut]
+    public async Task<IActionResult> Update(UpdateProjectTaskRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateProjectTaskCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateResult => Ok(Mapper.Map<UpdateProjectTaskResponse>(updateResult)),
+            Problem
+        );
+    }
+    
+    [HasPermission(Permissions.UpdateProjectTask)]
+    [HttpPut]
+    public async Task<IActionResult> UpdateOverview(UpdateOverviewProjectTaskRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateOverviewProjectTaskCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateOverviewResult => Ok(Mapper.Map<UpdateOverviewProjectTaskResponse>(updateOverviewResult)),
             Problem
         );
     }

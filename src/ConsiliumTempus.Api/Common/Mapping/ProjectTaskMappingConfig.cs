@@ -3,8 +3,12 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Create;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
+using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -20,6 +24,8 @@ public sealed class ProjectTaskMappingConfig : IRegister
         GetMappings(config);
         GetCollectionMappings(config);
         CreateMappings(config);
+        UpdateMappings(config);
+        UpdateOverviewMappings(config);
         DeleteMappings(config);
     }
 
@@ -47,6 +53,20 @@ public sealed class ProjectTaskMappingConfig : IRegister
         config.NewConfig<CreateProjectTaskRequest, CreateProjectTaskCommand>();
 
         config.NewConfig<CreateProjectTaskResult, CreateProjectTaskResponse>();
+    }
+    
+    private static void UpdateMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateProjectTaskRequest, UpdateProjectTaskCommand>();
+
+        config.NewConfig<UpdateProjectTaskResult, UpdateProjectTaskResponse>();
+    }
+    
+    private static void UpdateOverviewMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateOverviewProjectTaskRequest, UpdateOverviewProjectTaskCommand>();
+
+        config.NewConfig<UpdateOverviewProjectTaskResult, UpdateOverviewProjectTaskResponse>();
     }
 
     private static void DeleteMappings(TypeAdapterConfig config)
