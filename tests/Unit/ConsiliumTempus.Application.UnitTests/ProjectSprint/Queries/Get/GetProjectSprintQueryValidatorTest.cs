@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 
-namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Queries.Get;
+namespace ConsiliumTempus.Application.UnitTests.ProjectSprint.Queries.Get;
 
 public class GetProjectSprintQueryValidatorTest
 {

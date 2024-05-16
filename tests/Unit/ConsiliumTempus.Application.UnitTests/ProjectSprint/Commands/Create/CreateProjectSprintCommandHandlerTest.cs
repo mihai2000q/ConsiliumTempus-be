@@ -5,9 +5,10 @@ using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint;
 using NSubstitute.ReturnsExtensions;
 
-namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Commands.Create;
+namespace ConsiliumTempus.Application.UnitTests.ProjectSprint.Commands.Create;
 
 public class CreateProjectSprintCommandHandlerTest
 {
@@ -46,7 +47,7 @@ public class CreateProjectSprintCommandHandlerTest
             .GetWithWorkspace(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
         await _projectSprintRepository
             .Received(1)
-            .Add(Arg.Is<ProjectSprint>(ps =>
+            .Add(Arg.Is<ProjectSprintAggregate>(ps =>
                 Utils.ProjectSprint.AssertFromCreateCommand(ps, command, project)));
 
         outcome.IsError.Should().BeFalse();

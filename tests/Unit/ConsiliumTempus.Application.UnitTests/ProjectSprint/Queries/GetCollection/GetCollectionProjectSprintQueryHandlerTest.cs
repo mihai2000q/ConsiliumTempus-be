@@ -3,7 +3,7 @@ using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 
-namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Queries.GetCollection;
+namespace ConsiliumTempus.Application.UnitTests.ProjectSprint.Queries.GetCollection;
 
 public class GetCollectionProjectSprintQueryHandlerTest
 {

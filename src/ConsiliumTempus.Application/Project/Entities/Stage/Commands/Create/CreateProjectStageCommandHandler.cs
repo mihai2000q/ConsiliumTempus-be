@@ -1,7 +1,6 @@
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ErrorOr;
@@ -15,7 +14,7 @@ public sealed class CreateProjectStageCommandHandler(IProjectSprintRepository pr
     public async Task<ErrorOr<CreateProjectStageResult>> Handle(CreateProjectStageCommand command,
         CancellationToken cancellationToken)
     {
-        var sprint = await projectSprintRepository.GetWithStagesAndWorkspace(
+        var sprint = await projectSprintRepository.GetWithWorkspace(
             ProjectSprintId.Create(command.ProjectSprintId),
             cancellationToken);
         if (sprint is null) return Errors.ProjectSprint.NotFound;

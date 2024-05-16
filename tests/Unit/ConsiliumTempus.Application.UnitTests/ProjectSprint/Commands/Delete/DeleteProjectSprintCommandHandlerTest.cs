@@ -3,11 +3,11 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using NSubstitute.ReturnsExtensions;
 
-namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Commands.Delete;
+namespace ConsiliumTempus.Application.UnitTests.ProjectSprint.Commands.Delete;
 
 public class DeleteProjectSprintCommandHandlerTest
 {
@@ -44,7 +44,7 @@ public class DeleteProjectSprintCommandHandlerTest
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
         _projectSprintRepository
             .Received(1)
-            .Remove(Arg.Is<ProjectSprint>(ps => Utils.ProjectSprint.AssertFromDeleteCommand(ps, command)));
+            .Remove(Arg.Is<ProjectSprintAggregate>(ps => Utils.ProjectSprint.AssertFromDeleteCommand(ps, command)));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectSprintResult());
@@ -69,7 +69,7 @@ public class DeleteProjectSprintCommandHandlerTest
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
         _projectSprintRepository
             .DidNotReceive()
-            .Remove(Arg.Any<ProjectSprint>());
+            .Remove(Arg.Any<ProjectSprintAggregate>());
 
         outcome.IsError.Should().BeTrue();
         outcome.ValidateError(Errors.ProjectSprint.NotFound);

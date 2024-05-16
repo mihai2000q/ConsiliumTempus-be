@@ -1,7 +1,7 @@
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Sprint.Commands;
 
-namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Commands.Create;
+namespace ConsiliumTempus.Application.UnitTests.ProjectSprint.Commands.Create;
 
 public class CreateProjectSprintCommandValidatorTest
 {

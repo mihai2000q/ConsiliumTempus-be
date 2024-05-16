@@ -29,4 +29,8 @@
         <ProjectReference Include="..\ConsiliumTempus.Common.UnitTests\ConsiliumTempus.Common.UnitTests.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="ProjectSprint\" />
+    </ItemGroup>
+
 </Project>

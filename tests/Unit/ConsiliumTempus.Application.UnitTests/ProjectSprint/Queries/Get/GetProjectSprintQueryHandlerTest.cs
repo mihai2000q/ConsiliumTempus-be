@@ -3,11 +3,10 @@ using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project.Entities.Sprint;
 using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using NSubstitute.ReturnsExtensions;
 
-namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Queries.Get;
+namespace ConsiliumTempus.Application.UnitTests.ProjectSprint.Queries.Get;
 
 public class GetProjectSprintQueryHandlerTest
 {

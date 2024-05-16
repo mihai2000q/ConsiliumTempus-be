@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.UnitTests.TestData.Project.Entities.Sprint.Commands;
 
-namespace ConsiliumTempus.Application.UnitTests.Project.Entities.Sprint.Commands.Update;
+namespace ConsiliumTempus.Application.UnitTests.ProjectSprint.Commands.Update;
 
 public class UpdateProjectSprintCommandValidatorTest
 {
