@@ -31,8 +31,7 @@ public class UpdateCurrentUserCommandValidatorTest
     [ClassData(typeof(UpdateCurrentUserCommandValidatorData.GetInvalidDateOfBirthCommands))]
     public async Task ValidateUpdateCurrentUserCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         UpdateCurrentUserCommand command,
-        string property,
-        int expectedErrors)
+        string property)
     {
         // Arrange - parameterized
         
@@ -41,7 +40,7 @@ public class UpdateCurrentUserCommandValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(expectedErrors);
+        outcome.Errors.Should().HaveCount(1);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

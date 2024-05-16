@@ -28,8 +28,7 @@ public class CreateWorkspaceCommandValidatorTest
     [ClassData(typeof(CreateWorkspaceCommandValidatorData.GetInvalidNameCommands))]
     public async Task ValidateCreateWorkspaceCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         CreateWorkspaceCommand command, 
-        string property, 
-        int expectedErrors)
+        string property)
     {
         // Arrange - parameterized
         
@@ -38,7 +37,7 @@ public class CreateWorkspaceCommandValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(expectedErrors);
+        outcome.Errors.Should().HaveCount(1);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

@@ -22,49 +22,49 @@ internal static class UpdateCurrentUserCommandValidatorData
         }
     }
     
-    internal class GetInvalidFirstNameCommands : TheoryData<UpdateCurrentUserCommand, string, int>
+    internal class GetInvalidFirstNameCommands : TheoryData<UpdateCurrentUserCommand, string>
     {
         public GetInvalidFirstNameCommands()
         {
             var command = UserCommandFactory.CreateUpdateUserCommand(firstName: "");
-            Add(command, nameof(command.FirstName), 1);
+            Add(command, nameof(command.FirstName));
 
             command = UserCommandFactory.CreateUpdateUserCommand(
                 firstName: new string('a', PropertiesValidation.User.FirstNameMaximumLength + 1));
-            Add(command, nameof(command.FirstName), 1);
+            Add(command, nameof(command.FirstName));
         }
     }
 
-    internal class GetInvalidLastNameCommands : TheoryData<UpdateCurrentUserCommand, string, int>
+    internal class GetInvalidLastNameCommands : TheoryData<UpdateCurrentUserCommand, string>
     {
         public GetInvalidLastNameCommands()
         {
             var command = UserCommandFactory.CreateUpdateUserCommand(lastName: "");
-            Add(command, nameof(command.LastName), 1);
+            Add(command, nameof(command.LastName));
 
             command = UserCommandFactory.CreateUpdateUserCommand(
                 lastName: new string('a', PropertiesValidation.User.LastNameMaximumLength + 1));
-            Add(command, nameof(command.LastName), 1);
+            Add(command, nameof(command.LastName));
         }
     }
 
-    internal class GetInvalidRoleCommands : TheoryData<UpdateCurrentUserCommand, string, int>
+    internal class GetInvalidRoleCommands : TheoryData<UpdateCurrentUserCommand, string>
     {
         public GetInvalidRoleCommands()
         {
             var command = UserCommandFactory.CreateUpdateUserCommand(
                 role: new string('a', PropertiesValidation.User.RoleMaximumLength + 1));
-            Add(command, nameof(command.Role), 1);
+            Add(command, nameof(command.Role));
         }
     }
 
-    internal class GetInvalidDateOfBirthCommands : TheoryData<UpdateCurrentUserCommand, string, int>
+    internal class GetInvalidDateOfBirthCommands : TheoryData<UpdateCurrentUserCommand, string>
     {
         public GetInvalidDateOfBirthCommands()
         {
             var command = UserCommandFactory.CreateUpdateUserCommand(
                 dateOfBirth: DateOnly.FromDateTime(DateTime.UtcNow));
-            Add(command, nameof(command.DateOfBirth), 1);
+            Add(command, nameof(command.DateOfBirth));
         }
     }
 }
