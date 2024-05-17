@@ -26,8 +26,8 @@ internal static partial class Utils
             else
                 user.Role!.Value.Should().Be(command.Role);
             user.DateOfBirth.Should().Be(command.DateOfBirth);
-            user.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            user.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
 
             user.DomainEvents.Should().HaveCount(1);
             user.DomainEvents[0].Should().BeOfType<UserRegistered>();
@@ -45,7 +45,7 @@ internal static partial class Utils
             else
                 user.Role!.Value.Should().Be(command.Role);
             user.DateOfBirth.Should().Be(command.DateOfBirth);
-            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
         }
 
         internal static void AssertUser(UserAggregate outcome, UserAggregate expected)
@@ -56,8 +56,8 @@ internal static partial class Utils
             outcome.LastName.Should().Be(expected.LastName);
             outcome.Role.Should().Be(expected.Role);
             outcome.DateOfBirth.Should().Be(expected.DateOfBirth);
-            outcome.CreatedDateTime.Should().BeCloseTo(expected.CreatedDateTime, TimeSpan.FromMinutes(1));
-            outcome.UpdatedDateTime.Should().BeCloseTo(expected.UpdatedDateTime, TimeSpan.FromMinutes(1));
+            outcome.CreatedDateTime.Should().BeCloseTo(expected.CreatedDateTime, 10.Seconds());
+            outcome.UpdatedDateTime.Should().BeCloseTo(expected.UpdatedDateTime, 10.Seconds());
             outcome.Memberships.Should().BeEquivalentTo(expected.Memberships);
         }
     }

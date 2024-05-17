@@ -32,8 +32,8 @@ internal static partial class Utils
             project.IsPrivate.Value.Should().Be(command.IsPrivate);
             project.IsFavorite.Value.Should().Be(false);
             project.Sprints.Should().BeEmpty();
-            project.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            project.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
             project.Workspace.Should().Be(workspace);
 
             project.DomainEvents.Should().HaveCount(1);
@@ -50,7 +50,7 @@ internal static partial class Utils
         {
             project.Id.Value.Should().Be(command.Id);
 
-            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
 
             return true;
         }
@@ -62,10 +62,10 @@ internal static partial class Utils
             project.Id.Value.Should().Be(command.Id);
             project.Name.Value.Should().Be(command.Name);
             project.IsFavorite.Value.Should().Be(command.IsFavorite);
-            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
 
-            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
         }
         
         internal static void AssertFromUpdateOverviewCommand(
@@ -74,10 +74,10 @@ internal static partial class Utils
         {
             project.Id.Value.Should().Be(command.Id);
             project.Description.Value.Should().Be(command.Description);
-            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
 
-            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
         }
 
         internal static void AssertProject(
