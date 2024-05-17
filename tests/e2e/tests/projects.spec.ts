@@ -7,6 +7,8 @@ import {
   create2ProjectsIn2DifferentWorkspaces,
   createProject,
   createProjects,
+  getProject,
+  getProjectOverview,
   getProjects
 } from "../utils/projects.utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
@@ -43,21 +45,12 @@ test.describe('should allow operations on the project entity', () => {
 
     expect(await response.json()).toStrictEqual({
       name: project.name,
-      description: "",
       isPrivate: createRequest.isPrivate,
-      isFavorite: expect.any(Boolean),
-      sprints: [
-        {
-          id: expect.any(String),
-          name: ProjectSprintName,
-          startDate: null,
-          endDate: null,
-        }
-      ]
+      isFavorite: expect.any(Boolean)
     })
   })
 
-  test.skip('should get overview project', async ({ request }) => {
+  test('should get overview project', async ({ request }) => {
     const createRequest: CreateProjectRequest = {
       workspaceId: WORKSPACE_ID,
       name: "Project",
@@ -91,6 +84,7 @@ test.describe('should allow operations on the project entity', () => {
       expect(response.ok()).toBeTruthy()
 
       const json = await response.json()
+      expect(json.projects).toHaveLength(1)
       expect(json).toStrictEqual({
         projects: [
           {
@@ -104,7 +98,6 @@ test.describe('should allow operations on the project entity', () => {
         totalCount: 1,
         totalPages: null
       })
-      expect(json.projects).toHaveLength(1)
     })
 
     test('should get collection of projects filtered by workspace', async ({ request }) => {
@@ -118,6 +111,7 @@ test.describe('should allow operations on the project entity', () => {
       expect(response.ok()).toBeTruthy()
 
       const json = await response.json()
+      expect(json.projects).toHaveLength(1)
       expect(json).toStrictEqual({
         projects: [
           {
@@ -131,7 +125,6 @@ test.describe('should allow operations on the project entity', () => {
         totalCount: 1,
         totalPages: null
       })
-      expect(json.projects).toHaveLength(1)
     })
 
     test('should get collection of projects filtered by name', async ({ request }) => {
@@ -156,6 +149,7 @@ test.describe('should allow operations on the project entity', () => {
       expect(response.ok()).toBeTruthy()
 
       const json = await response.json()
+      expect(json.projects).toHaveLength(2)
       expect(json).toStrictEqual({
         projects: expect.arrayContaining([
           {
@@ -176,7 +170,6 @@ test.describe('should allow operations on the project entity', () => {
         totalCount: 2,
         totalPages: null
       })
-      expect(json.projects).toHaveLength(2)
     })
 
     test('should get collection of projects ordered by name ascending', async ({ request }) => {
@@ -191,6 +184,7 @@ test.describe('should allow operations on the project entity', () => {
       expect(response.ok()).toBeTruthy()
 
       const json = await response.json()
+      expect(json.projects).toHaveLength(totalCount)
       expect(json).toStrictEqual({
         projects: [
           {
@@ -211,7 +205,6 @@ test.describe('should allow operations on the project entity', () => {
         totalCount: totalCount,
         totalPages: null
       })
-      expect(json.projects).toHaveLength(totalCount)
     })
 
     test('should get collection of projects paginated and ordered by name ascending', async ({ request }) => {
@@ -242,12 +235,12 @@ test.describe('should allow operations on the project entity', () => {
         })
 
       const json = await response.json()
+      expect(json.projects).toHaveLength(totalCount < pageSize ? totalCount : pageSize)
       expect(json).toStrictEqual({
         projects: expectedProjects,
         totalCount: totalCount,
         totalPages: Math.ceil(totalCount / pageSize),
       })
-      expect(json.projects).toHaveLength(totalCount < pageSize ? totalCount : pageSize)
     })
   })
 
@@ -305,17 +298,12 @@ test.describe('should allow operations on the project entity', () => {
       message: expect.any(String)
     })
 
-    const projects = await getProjects(request)
-    expect(projects).toHaveLength(1)
-    expect(projects).toStrictEqual([
-      {
-        id: expect.any(String),
-        name: updateProjectRequest.name,
-        description: "",
-        isPrivate: createProjectRequest.isPrivate,
-        isFavorite: updateProjectRequest.isFavorite
-      }
-    ])
+    const projects = await getProject(request, project.id)
+    expect(projects).toStrictEqual({
+      name: updateProjectRequest.name,
+      isFavorite: updateProjectRequest.isFavorite,
+      isPrivate: createProjectRequest.isPrivate
+    })
   })
 
   test('should update project overview', async ({ request }) => {
@@ -341,17 +329,10 @@ test.describe('should allow operations on the project entity', () => {
       message: expect.any(String)
     })
 
-    const projects = await getProjects(request)
-    expect(projects).toHaveLength(1)
-    expect(projects).toStrictEqual([
-      {
-        id: expect.any(String),
-        name: createProjectRequest.name,
-        description: updateOverviewProjectRequest.description,
-        isPrivate: createProjectRequest.isPrivate,
-        isFavorite: false
-      }
-    ])
+    const projectOverview = await getProjectOverview(request, project.id)
+    expect(projectOverview).toStrictEqual({
+      description: updateOverviewProjectRequest.description,
+    })
   })
 
   test('should delete project', async ({ request }) => {
