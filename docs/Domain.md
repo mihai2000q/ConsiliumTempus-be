@@ -98,23 +98,23 @@ Those include:
 ## Database Diagrams
 
 The database diagrams show the relations that the above entities have inside the database.
-For a full picture of the database diagram, check this out [Database Diagram](Database.Diagram.md).
+For a full picture of the database diagram, check this out [Database Diagram](database-diagrams/Database.Diagram.md).
 <br>
 For individual diagrams (they exclude additional info about external entities, 
 except the primary key and direct relations), check below:
 
 - Aggregates
-  - [Project Diagram](domain/diagrams/aggregates/Diagram.Project.md)
-  - [Project Sprint Diagram](domain/diagrams/aggregates/Diagram.ProjectSprint.md)
-  - [Project Task Diagram](domain/diagrams/aggregates/Diagram.ProjectTask.md)
-  - [User Diagram](domain/diagrams/aggregates/Diagram.User.md)
-  - [Workspace Diagram](domain/diagrams/aggregates/Diagram.Workspace.md)
+  - [Project Diagram](database-diagrams/aggregates/Diagram.Project.md)
+  - [Project Sprint Diagram](database-diagrams/aggregates/Diagram.ProjectSprint.md)
+  - [Project Task Diagram](database-diagrams/aggregates/Diagram.ProjectTask.md)
+  - [User Diagram](database-diagrams/aggregates/Diagram.User.md)
+  - [Workspace Diagram](database-diagrams/aggregates/Diagram.Workspace.md)
 - Entities
-  - [Membership Diagram](domain/diagrams/entities/Diagram.Membership.md)
-  - [Permission Diagram](domain/diagrams/entities/Diagram.Permission.md)
-  - [Refresh Token Diagram](domain/diagrams/entities/Diagram.RefreshToken.md)
-  - [Workspace Role Diagram](domain/diagrams/entities/Diagram.WorkspaceRole.md)
+  - [Membership Diagram](database-diagrams/entities/Diagram.Membership.md)
+  - [Permission Diagram](database-diagrams/entities/Diagram.Permission.md)
+  - [Refresh Token Diagram](database-diagrams/entities/Diagram.RefreshToken.md)
+  - [Workspace Role Diagram](database-diagrams/entities/Diagram.WorkspaceRole.md)
   - Project Sprint Entities
-    - [Project Stage Diagram](domain/diagrams/entities/project-sprint/Diagram.ProjectStage.md)
+    - [Project Stage Diagram](database-diagrams/entities/project-sprint/Diagram.ProjectStage.md)
   - Project Task Entities
-    - [Project Task Comment Diagram](domain/diagrams/entities/project-task/Diagram.ProjectTaskComment.md)
+    - [Project Task Comment Diagram](database-diagrams/entities/project-task/Diagram.ProjectTaskComment.md)

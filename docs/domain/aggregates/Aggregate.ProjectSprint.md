@@ -28,7 +28,7 @@ class ProjectSprint
 }
 ```
 
-For database design checkout the [Project Sprint Diagram](../diagrams/aggregates/Diagram.ProjectSprint.md).
+For database design checkout the [Project Sprint Diagram](../../database-diagrams/aggregates/Diagram.ProjectSprint.md).
 
 ### Entities
 

@@ -34,7 +34,7 @@ class ProjectTask
 }
 ```
 
-For database design checkout the [Project Task Diagram](../diagrams/aggregates/Diagram.ProjectTask.md).
+For database design checkout the [Project Task Diagram](../../database-diagrams/aggregates/Diagram.ProjectTask.md).
 
 ### Entities
 

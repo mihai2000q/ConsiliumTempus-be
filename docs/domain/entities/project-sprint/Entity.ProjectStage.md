@@ -24,7 +24,7 @@ class ProjectStage
 }
 ```
 
-For database design checkout the [Project Stage Diagram](../../diagrams/entities/project-sprint/Diagram.ProjectStage.md).
+For database design checkout the [Project Stage Diagram](../../../database-diagrams/entities/project-sprint/Diagram.ProjectStage.md).
 
 ### Properties Validation
 

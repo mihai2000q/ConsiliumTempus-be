@@ -30,7 +30,7 @@ class Project
 }
 ```
 
-For database design checkout the [Project Diagram](../diagrams/aggregates/Diagram.Project.md).
+For database design checkout the [Project Diagram](../../database-diagrams/aggregates/Diagram.Project.md).
 
 ### Properties Validation
 

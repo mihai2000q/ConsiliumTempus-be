@@ -26,4 +26,4 @@ class RefreshToken
 }
 ```
 
-For database design, check out the [Refresh Token Diagram](../diagrams/entities/Diagram.RefreshToken.md).
+For database design, check out the [Refresh Token Diagram](../../database-diagrams/entities/Diagram.RefreshToken.md).
