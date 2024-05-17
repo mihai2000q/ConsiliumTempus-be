@@ -69,6 +69,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Workspaces
+            .Include(w => w.Owner)
             .Where(w => w.Memberships.Any(m => m.User == user))
             .ApplyFilters(filters)
             .ApplyOrder(order)

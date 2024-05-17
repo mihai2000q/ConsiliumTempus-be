@@ -9,6 +9,7 @@ using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using Mapster;
 
@@ -43,7 +44,11 @@ public sealed class WorkspaceMappingConfig : IRegister
         config.NewConfig<WorkspaceAggregate, GetCollectionWorkspaceResponse.WorkspaceResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value);
+            .Map(dest => dest.Description, src => src.Description.Value)
+            .Map(dest => dest.IsPersonal, src => src.IsPersonal.Value);
+        config.NewConfig<UserAggregate, GetCollectionWorkspaceResponse.Owner>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value);
     }
 
     private static void CreateMappings(TypeAdapterConfig config)

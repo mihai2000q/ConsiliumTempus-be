@@ -11,12 +11,14 @@ public static class WorkspaceQueryFactory
     }
 
     public static GetCollectionWorkspaceQuery CreateGetCollectionWorkspaceQuery(
+        bool isPersonalWorkspaceFirst = false,
         int? pageSize = null,
         int? currentPage = null,
         string? order = null,
         string? name = null)
     {
         return new GetCollectionWorkspaceQuery(
+            isPersonalWorkspaceFirst,
             pageSize,
             currentPage,
             order,

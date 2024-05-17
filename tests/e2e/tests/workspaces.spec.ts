@@ -48,14 +48,86 @@ test.describe('should allow operations on the workspace entity', () => {
           {
             id: expect.any(String),
             name: PersonalWorkspaceName,
-            description: expect.any(String)
+            description: expect.any(String),
+            isPersonal: true,
+            owner: expect.any(Object)
           },
           {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
-            description: ""
+            description: "",
+            isPersonal: false,
+            owner: expect.any(Object)
           }
         ]),
+        totalCount: 2,
+        totalPages: null
+      })
+      expect(json.workspaces).toHaveLength(2)
+    })
+
+    test('should get collection of workspaces and place the personal workspace first', async ({ request }) => {
+      const createWorkspaceRequest: CreateWorkspaceRequest = {
+        name: "Some Workspace",
+      }
+      await createWorkspace(request, createWorkspaceRequest)
+
+      const response = await request.get('/api/workspaces?isPersonalWorkspaceFirst=true', useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json).toStrictEqual({
+        workspaces: [
+          {
+            id: expect.any(String),
+            name: PersonalWorkspaceName,
+            description: expect.any(String),
+            isPersonal: true,
+            owner: expect.any(Object)
+          },
+          {
+            id: expect.any(String),
+            name: createWorkspaceRequest.name,
+            description: "",
+            isPersonal: false,
+            owner: expect.any(Object)
+          }
+        ],
+        totalCount: 2,
+        totalPages: null
+      })
+      expect(json.workspaces).toHaveLength(2)
+    })
+
+    test('should get collection of workspaces with personal workspace on top', async ({ request }) => {
+      const createWorkspaceRequest: CreateWorkspaceRequest = {
+        name: "Some Workspace",
+      }
+      await createWorkspace(request, createWorkspaceRequest)
+
+      const response = await request.get('/api/workspaces', useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json).toStrictEqual({
+        workspaces: [
+          {
+            id: expect.any(String),
+            name: PersonalWorkspaceName,
+            description: expect.any(String),
+            isPersonal: true,
+            owner: expect.any(Object)
+          },
+          {
+            id: expect.any(String),
+            name: createWorkspaceRequest.name,
+            description: "",
+            isPersonal: false,
+            owner: expect.any(Object)
+          }
+        ],
         totalCount: 2,
         totalPages: null
       })
@@ -75,17 +147,23 @@ test.describe('should allow operations on the workspace entity', () => {
           {
             id: expect.any(String),
             name: createWorkspaceRequests[1].name,
-            description: ""
+            description: "",
+            isPersonal: false,
+            owner: expect.any(Object)
           },
           {
             id: expect.any(String),
             name: createWorkspaceRequests[0].name,
-            description: ""
+            description: "",
+            isPersonal: false,
+            owner: expect.any(Object)
           },
           {
             id: expect.any(String),
             name: PersonalWorkspaceName,
-            description: expect.any(String)
+            description: expect.any(String),
+            isPersonal: true,
+            owner: expect.any(Object)
           }
         ],
         totalCount: 3,
@@ -110,7 +188,9 @@ test.describe('should allow operations on the workspace entity', () => {
           {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
-            description: ""
+            description: "",
+            isPersonal: false,
+            owner: expect.any(Object)
           }
         ],
         totalCount: 1,
@@ -137,12 +217,16 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: r.name,
             description: "",
+            isPersonal: false,
+            owner: expect.any(Object)
           }
         })
       expectedWorkspaces.unshift({
         id: expect.any(String),
         name: PersonalWorkspaceName,
-        description: expect.any(String)
+        description: expect.any(String),
+        isPersonal: true,
+        owner: expect.any(Object)
       })
 
       const json = await response.json()
@@ -175,7 +259,9 @@ test.describe('should allow operations on the workspace entity', () => {
       {
         id: expect.any(String),
         name: createWorkspaceRequest.name,
-        description: ""
+        description: "",
+        isPersonal: false,
+        owner: expect.any(Object)
       }
     ]))
   })
@@ -208,7 +294,9 @@ test.describe('should allow operations on the workspace entity', () => {
       {
         id: body.id,
         name: body.name,
-        description: body.description
+        description: body.description,
+        isPersonal: false,
+        owner: expect.any(Object)
       }
     ]))
   })

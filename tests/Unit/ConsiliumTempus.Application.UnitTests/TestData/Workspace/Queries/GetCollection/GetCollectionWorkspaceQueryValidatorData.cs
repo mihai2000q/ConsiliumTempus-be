@@ -14,6 +14,7 @@ internal static class GetCollectionWorkspaceQueryValidatorData
             Add(query);
 
             query = new GetCollectionWorkspaceQuery(
+                true,
                 10,
                 2,
                 "name.asc",

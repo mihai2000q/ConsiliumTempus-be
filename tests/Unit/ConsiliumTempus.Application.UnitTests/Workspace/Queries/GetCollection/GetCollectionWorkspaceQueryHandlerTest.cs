@@ -11,6 +11,7 @@ using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.Orders;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Queries.GetCollection;
 
@@ -42,7 +43,9 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .GetCurrentUser()
             .Returns(user);
 
+        var personalWorkspace = WorkspaceFactory.Create(owner: user, isPersonal: true);
         var workspaces = WorkspaceFactory.CreateList();
+        workspaces.Add(personalWorkspace);
         _workspaceRepository
             .GetListByUser(
                 Arg.Any<UserAggregate>(),
@@ -84,6 +87,11 @@ public class GetCollectionWorkspaceQueryHandlerTest
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Workspaces.Should().BeEquivalentTo(workspaces);
+        if (query.IsPersonalWorkspaceFirst)
+        {
+            outcome.Value.Workspaces.Should().HaveElementAt(0, personalWorkspace);
+        }
+
         outcome.Value.TotalCount.Should().Be(workspacesCount);
         if (query.PageSize is null || query.CurrentPage is null)
             outcome.Value.TotalPages.Should().BeNull();
@@ -96,6 +104,10 @@ public class GetCollectionWorkspaceQueryHandlerTest
     {
         // Arrange
         var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery();
+
+        _currentUserProvider
+            .GetCurrentUser()
+            .ReturnsNull();
 
         // Act
         var outcome = await _uut.Handle(query, default);

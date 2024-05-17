@@ -29,6 +29,7 @@ internal static partial class Utils
             GetCollectionWorkspaceQuery query,
             GetCollectionWorkspaceRequest request)
         {
+            query.IsPersonalWorkspaceFirst.Should().Be(request.IsPersonalWorkspaceFirst);
             query.PageSize.Should().Be(request.PageSize);
             query.CurrentPage.Should().Be(request.CurrentPage);
             query.Order.Should().Be(request.Order);
@@ -87,6 +88,10 @@ internal static partial class Utils
             response.Id.Should().Be(workspace.Id.Value.ToString());
             response.Name.Should().Be(workspace.Name.Value);
             response.Description.Should().Be(workspace.Description.Value);
+            response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
+
+            var owner = workspace.Owner;
+            response.Owner.Name.Should().Be(owner.FirstName.Value + " " + owner.LastName.Value);
         }
     }
 }
