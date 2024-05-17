@@ -30,7 +30,7 @@ public class AddStageToProjectSprintCommandHandlerTest
         AddStageToProjectSprintCommand command)
     {
         // Arrange
-        var sprint = ProjectSprintFactory.CreateWithStages();
+        var sprint = ProjectSprintFactory.Create();
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);

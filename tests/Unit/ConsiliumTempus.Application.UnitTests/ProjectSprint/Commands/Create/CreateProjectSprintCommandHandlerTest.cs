@@ -1,9 +1,11 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
+using ConsiliumTempus.Application.UnitTests.TestData.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint;
 using NSubstitute.ReturnsExtensions;
@@ -27,15 +29,15 @@ public class CreateProjectSprintCommandHandlerTest
 
     #endregion
 
-    [Fact]
-    public async Task HandleCreateProjectSprintCommand_WhenIsSuccessful_ShouldAddAndReturnSuccessResult()
+    [Theory]
+    [ClassData(typeof(CreateProjectSprintCommandHandlerData.GetCommands))]
+    public async Task HandleCreateProjectSprintCommand_WhenIsSuccessful_ShouldAddAndReturnSuccessResult(
+        CreateProjectSprintCommand command,
+        ProjectAggregate project)
     {
         // Arrange
-        var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand();
-
-        var project = ProjectFactory.Create();
         _projectRepository
-            .GetWithWorkspace(Arg.Any<ProjectId>())
+            .GetWithStagesAndWorkspace(Arg.Any<ProjectId>())
             .Returns(project);
 
         // Act
@@ -44,7 +46,7 @@ public class CreateProjectSprintCommandHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
+            .GetWithStagesAndWorkspace(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
         await _projectSprintRepository
             .Received(1)
             .Add(Arg.Is<ProjectSprintAggregate>(ps =>
@@ -61,7 +63,7 @@ public class CreateProjectSprintCommandHandlerTest
         var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand();
 
         _projectRepository
-            .GetWithWorkspace(Arg.Any<ProjectId>())
+            .GetWithStagesAndWorkspace(Arg.Any<ProjectId>())
             .ReturnsNull();
 
         // Act
@@ -70,7 +72,7 @@ public class CreateProjectSprintCommandHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
+            .GetWithStagesAndWorkspace(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
         _projectSprintRepository.DidNotReceive();
 
         outcome.ValidateError(Errors.Project.NotFound);

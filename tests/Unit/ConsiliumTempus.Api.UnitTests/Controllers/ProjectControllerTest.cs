@@ -46,7 +46,7 @@ public class ProjectControllerTest
         // Arrange
         var request = ProjectRequestFactory.CreateGetProjectRequest();
 
-        var project = ProjectFactory.Create();
+        var project = ProjectFactory.CreateWithSprints();
         _mediator
             .Send(Arg.Any<GetProjectQuery>())
             .Returns(project);

@@ -34,6 +34,15 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .Include(p => p.Workspace)
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
+    
+    public async Task<ProjectAggregate?> GetWithStagesAndWorkspace(ProjectId id, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Projects
+            .Include(p => p.Workspace)
+            .Include(p => p.Sprints)
+            .ThenInclude(ps => ps.Stages)
+            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+    }
 
     public Task<List<ProjectAggregate>> GetListByUser(
         UserId userId,
@@ -59,14 +68,6 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
             .ApplyFilters(filters)
             .CountAsync(cancellationToken);
-    }
-
-    public Task<List<ProjectAggregate>> GetListByUser(UserId userId,
-        CancellationToken cancellationToken = default)
-    {
-        return dbContext.Projects
-            .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
-            .ToListAsync(cancellationToken);
     }
 
     public async Task Add(ProjectAggregate project, CancellationToken cancellationToken = default)

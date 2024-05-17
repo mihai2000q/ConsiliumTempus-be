@@ -43,7 +43,10 @@ internal static partial class Utils
             projectSprint.Name.Value.Should().Be(command.Name);
             projectSprint.StartDate.Should().Be(command.StartDate);
             projectSprint.EndDate.Should().Be(command.EndDate);
-            projectSprint.Stages.Should().BeEmpty();
+            if (command.KeepPreviousStages && project.Sprints.Count != 0)
+                projectSprint.Stages.Should().BeEquivalentTo(project.Sprints[^1].Stages);
+            else
+                projectSprint.Stages.Should().BeEmpty();
             projectSprint.DomainEvents.Should().BeEmpty();
 
             projectSprint.Project.Should().Be(project);

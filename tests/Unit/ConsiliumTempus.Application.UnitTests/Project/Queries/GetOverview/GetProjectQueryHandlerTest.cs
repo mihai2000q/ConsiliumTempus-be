@@ -29,7 +29,7 @@ public class GetOverviewProjectQueryHandlerTest
         // Arrange
         var query = ProjectQueryFactory.CreateGetOverviewProjectQuery();
 
-        var project = ProjectFactory.Create();
+        var project = ProjectFactory.CreateWithSprints();
         _projectRepository
             .Get(Arg.Any<ProjectId>())
             .Returns(project);

@@ -9,10 +9,12 @@ namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 public interface IProjectRepository
 {
     Task<ProjectAggregate?> Get(ProjectId projectId, CancellationToken cancellationToken = default);
-    
+
     Task<ProjectAggregate?> GetWithSprints(ProjectId projectId, CancellationToken cancellationToken = default);
 
     Task<ProjectAggregate?> GetWithWorkspace(ProjectId id, CancellationToken cancellationToken = default);
+
+    Task<ProjectAggregate?> GetWithStagesAndWorkspace(ProjectId id, CancellationToken cancellationToken = default);
 
     Task<List<ProjectAggregate>> GetListByUser(
         UserId userId,
@@ -20,13 +22,11 @@ public interface IProjectRepository
         IOrder<ProjectAggregate>? order,
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default);
-    
+
     Task<int> GetListByUserCount(
         UserId userId,
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default);
-
-    Task<List<ProjectAggregate>> GetListByUser(UserId userId, CancellationToken cancellationToken = default);
 
     Task Add(ProjectAggregate project, CancellationToken cancellationToken = default);
 

@@ -27,7 +27,7 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
     public async Task HandleRemoveStageFromProjectSprintCommand_WhenSuccessful_ShouldRemoveAndReturnSuccessResponse()
     {
         // Arrange
-        var sprint = ProjectSprintFactory.CreateWithStages();
+        var sprint = ProjectSprintFactory.Create();
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);
@@ -78,7 +78,7 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
         // Arrange
         var command = ProjectSprintCommandFactory.CreateRemoveStageFromProjectSprintCommand();
 
-        var sprint = ProjectSprintFactory.CreateWithStages();
+        var sprint = ProjectSprintFactory.Create();
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);

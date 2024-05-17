@@ -82,6 +82,11 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>, ITimestamp
             _stages.Add(stage);
         }
     }
+    
+    public void AddStages(IReadOnlyList<ProjectStage> stages)
+    {
+        _stages.AddRange(stages);
+    }
 
     public void RemoveStage(ProjectStage stage)
     {
