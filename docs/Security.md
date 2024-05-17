@@ -35,7 +35,7 @@ This security method is used to manage conflicts of interest and fraud or tamper
 However, these roles are exclusive to the [Workspace](domain/aggregates/Aggregate.Workspace) component.
 If the user is not in a workspace, he cannot create any project, portfolio or add any tasks.
 So he basically cannot use the application to its fullest
-(thankfully, all users must have a workspace, and one is created upon registering).
+(thankfully, all users must have a workspace, and one is created upon registration).
 
 ## Workspace Roles
 
@@ -52,45 +52,55 @@ The workspace roles are:
 The permissions will be classified on their respective component:
 
 - Workspace
-    - Read
-    - Update
-    - Delete
+  - Read
+  - Update
+  - Delete
 - Project
-    - Create
-    - Read
-    - Read Collection
-    - Update
-    - Delete
+  - Create
+  - Read
+  - Read Collection
+  - Update
+  - Delete
 - Project Sprint
-    - Create
-    - Read
-    - Read Collection
-    - Update
-    - Delete
-- Project Stage
-    - Create
-    - Update
-    - Delete
+  - Create
+  - Read
+  - Read Collection
+  - Update
+  - Delete
+  - Add Stage
+  - Remove Stage
+  - Update Stage
+- Project Task
+  - Create
+  - Read
+  - Read Collection
+  - Update
+  - Delete
 
 ## Workspace Roles to Permissions
 
 The Access Control List of the system is the following:
 
-|                                | View | Member | Admin |
-|--------------------------------|------|--------|-------|
-| Read Workspace                 | X    | X      | X     |
-| Update Workspace               |      | X      | X     |
-| Delete Workspace               |      |        | X     |
-| Create Project                 |      |        | X     |
-| Read Project                   | X    | X      | X     |
-| Read Collection Project        | X    | X      | X     |
-| Update Project                 |      | X      | X     |
-| Delete Project                 |      |        | X     |
-| Create Project Sprint          |      |        | X     |
-| Read Project Sprint            | X    | X      | X     |
-| Read Collection Project Sprint | X    | X      | X     |
-| Update Project Sprint          |      | X      | X     |
-| Delete Project Sprint          |      |        | X     |
-| Create Project Stage           |      |        | X     |
-| Update Project Stage           |      | X      | X     |
-| Delete Project Stage           |      |        | X     |
+|                                  | View | Member | Admin |
+|----------------------------------|------|--------|-------|
+| Read Workspace                   | X    | X      | X     |
+| Update Workspace                 |      | X      | X     |
+| Delete Workspace                 |      |        | X     |
+| Create Project                   |      |        | X     |
+| Read Project                     | X    | X      | X     |
+| Read Collection Project          | X    | X      | X     |
+| Update Project                   |      | X      | X     |
+| Delete Project                   |      |        | X     |
+| Create Project Sprint            |      |        | X     |
+| Read Project Sprint              | X    | X      | X     |
+| Read Collection Project Sprint   | X    | X      | X     |
+| Update Project Sprint            |      | X      | X     |
+| Delete Project Sprint            |      |        | X     |
+| Add Stage To Project Sprint      |      |        | X     |
+| Remove Stage From Project Sprint |      |        | X     |
+| Update Stage From Project Sprint |      |        | X     |
+| Create Project Task              |      | X      | X     |
+| Read Project Task                | X    | X      | X     |
+| Read Collection Project Task     | X    | X      | X     |
+| Update Project Task              |      | X      | X     |
+| Delete Project Task              |      | X      | X     |
