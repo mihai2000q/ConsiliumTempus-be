@@ -13,13 +13,13 @@ internal static class GetCollectionProjectQueryHandlerData
             Add(query);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                order: "last_activity.asc");
+                orders: "last_activity.asc, name.asc");
             Add(query);
             
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 pageSize: 12,
                 currentPage: 1,
-                order: "name.desc",
+                orders: "name.desc",
                 name: "Some Project");
             Add(query);
         }

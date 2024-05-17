@@ -70,5 +70,25 @@ internal static partial class Utils
             outcome.Memberships.Should().BeEquivalentTo(expected.Memberships);
             outcome.Projects.Should().BeEquivalentTo(expected.Projects);
         }
+
+        internal static void AssertGetCollectionResult(
+            GetCollectionWorkspaceResult result,
+            GetCollectionWorkspaceQuery query,
+            List<WorkspaceAggregate> workspaces,
+            int workspacesCount,
+            WorkspaceAggregate personalWorkspace)
+        {
+            result.Workspaces.Should().BeEquivalentTo(workspaces);
+            if (query.IsPersonalWorkspaceFirst)
+            {
+                result.Workspaces.Should().HaveElementAt(0, personalWorkspace);
+            }
+
+            result.TotalCount.Should().Be(workspacesCount);
+            if (query.PageSize is null || query.CurrentPage is null)
+                result.TotalPages.Should().BeNull();
+            else
+                result.TotalPages.Should().Be((int)Math.Ceiling((double)workspacesCount / query.PageSize.Value));
+        }
     }
 }

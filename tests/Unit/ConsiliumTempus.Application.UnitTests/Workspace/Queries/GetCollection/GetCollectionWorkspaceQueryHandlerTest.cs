@@ -50,7 +50,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .GetListByUser(
                 Arg.Any<UserAggregate>(),
                 Arg.Any<PaginationInfo?>(),
-                Arg.Any<IOrder<WorkspaceAggregate>?>(),
+                Arg.Any<IReadOnlyList<IOrder<WorkspaceAggregate>>>(),
                 Arg.Any<IEnumerable<IFilter<WorkspaceAggregate>>>())
             .Returns(workspaces);
 
@@ -73,8 +73,8 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .GetListByUser(
                 Arg.Is<UserAggregate>(u => u == user),
                 Arg.Is<PaginationInfo?>(p => p.AssertPagination(query.PageSize, query.CurrentPage)),
-                Arg.Is<IOrder<WorkspaceAggregate>?>(o =>
-                    o.AssertOrder(query.Order, WorkspaceOrder.OrderProperties)),
+                Arg.Is<IReadOnlyList<IOrder<WorkspaceAggregate>>>(o =>
+                    o.AssertOrders(query.Orders, WorkspaceOrder.OrderProperties)),
                 Arg.Is<IEnumerable<IFilter<WorkspaceAggregate>>>(filters =>
                     Utils.Workspace.AssertGetCollectionFilters(filters, query)));
 
@@ -86,17 +86,12 @@ public class GetCollectionWorkspaceQueryHandlerTest
                     Utils.Workspace.AssertGetCollectionFilters(filters, query)));
 
         outcome.IsError.Should().BeFalse();
-        outcome.Value.Workspaces.Should().BeEquivalentTo(workspaces);
-        if (query.IsPersonalWorkspaceFirst)
-        {
-            outcome.Value.Workspaces.Should().HaveElementAt(0, personalWorkspace);
-        }
-
-        outcome.Value.TotalCount.Should().Be(workspacesCount);
-        if (query.PageSize is null || query.CurrentPage is null)
-            outcome.Value.TotalPages.Should().BeNull();
-        else
-            outcome.Value.TotalPages.Should().Be((int)Math.Ceiling((double)workspacesCount / query.PageSize.Value));
+        Utils.Workspace.AssertGetCollectionResult(
+            outcome.Value, 
+            query, 
+            workspaces, 
+            workspacesCount, 
+            personalWorkspace);
     }
 
     [Fact]

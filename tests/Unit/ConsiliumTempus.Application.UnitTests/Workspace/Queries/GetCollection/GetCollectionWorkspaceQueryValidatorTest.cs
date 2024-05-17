@@ -25,7 +25,7 @@ public class GetCollectionWorkspaceQueryValidatorTest
     }
     
     [Theory]
-    [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidOrderQueries))]
+    [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidOrdersQueries))]
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidNameQueries))]
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidPageSizeQueries))]
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidCurrentPageQueries))]

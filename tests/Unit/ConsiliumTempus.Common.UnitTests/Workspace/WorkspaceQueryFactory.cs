@@ -14,14 +14,14 @@ public static class WorkspaceQueryFactory
         bool isPersonalWorkspaceFirst = false,
         int? pageSize = null,
         int? currentPage = null,
-        string? order = null,
+        string? orders = null,
         string? name = null)
     {
         return new GetCollectionWorkspaceQuery(
             isPersonalWorkspaceFirst,
             pageSize,
             currentPage,
-            order,
+            orders,
             name);
     }
 }

@@ -17,39 +17,59 @@ internal static class GetCollectionWorkspaceQueryValidatorData
                 true,
                 10,
                 2,
-                "name.asc",
+                "name.asc, last_activity.desc",
                 "proj");
             Add(query);
         }
     }
 
-    internal class GetInvalidOrderQueries : TheoryData<GetCollectionWorkspaceQuery, string, int>
+    internal class GetInvalidOrdersQueries : TheoryData<GetCollectionWorkspaceQuery, string, int>
     {
-        public GetInvalidOrderQueries()
+        public GetInvalidOrdersQueries()
         {
             var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
-                order: "");
-            Add(query, nameof(query.Order), 1);
+                orders: "");
+            Add(query, nameof(query.Orders), 1);
 
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
-                order: "something");
-            Add(query, nameof(query.Order), 1);
+                orders: "something");
+            Add(query, nameof(query.Orders), 1);
 
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
-                order: "something.");
-            Add(query, nameof(query.Order), 2);
+                orders: "something, another thing, something else");
+            Add(query, nameof(query.Orders), 1);
 
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
-                order: "something.descending");
-            Add(query, nameof(query.Order), 2);
+                orders: "something.");
+            Add(query, nameof(query.Orders), 2);
 
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
-                order: "LastActivity.desc");
-            Add(query, nameof(query.Order), 1);
+                orders: "something.descending");
+            Add(query, nameof(query.Orders), 2);
 
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
-                order: "not_a_property.asc");
-            Add(query, nameof(query.Order), 1);
+                orders: "name.asc, last_activity.descending");
+            Add(query, nameof(query.Orders), 1);
+
+            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                orders: "LastActivity.desc");
+            Add(query, nameof(query.Orders), 1);
+
+            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                orders: "last_activity.desc, Name.asc");
+            Add(query, nameof(query.Orders), 1);
+
+            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                orders: "not_a_property.asc");
+            Add(query, nameof(query.Orders), 1);
+
+            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                orders: "name.asc, not_a_property.asc");
+            Add(query, nameof(query.Orders), 1);
+
+            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                orders: "name.asc, name.desc");
+            Add(query, nameof(query.Orders), 1);
         }
     }
 

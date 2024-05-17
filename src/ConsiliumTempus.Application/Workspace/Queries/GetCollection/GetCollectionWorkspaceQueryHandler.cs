@@ -23,7 +23,7 @@ public sealed class GetCollectionWorkspaceQueryHandler(
         if (user is null) return Errors.User.NotFound;
 
         var paginationInfo = PaginationInfo.Create(query.PageSize, query.CurrentPage);
-        var order = WorkspaceOrder.Parse(query.Order);
+        var orders = WorkspaceOrder.Parse(query.Orders);
         var filters = new List<IFilter<WorkspaceAggregate>>
         {
             new Filters.Workspace.NameFilter(query.Name)
@@ -32,7 +32,7 @@ public sealed class GetCollectionWorkspaceQueryHandler(
         var workspaces = await workspaceRepository.GetListByUser(
             user,
             paginationInfo,
-            order,
+            orders,
             filters,
             cancellationToken);
         var workspacesCount = await workspaceRepository.GetListByUserCount(
