@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Project.Create;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
@@ -28,7 +28,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectSprintResponse>();
         response!.Message.Should().Be("Project Sprint has been created successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
@@ -56,7 +56,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectSprintResponse>();
         response!.Message.Should().Be("Project Sprint has been created successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
@@ -87,7 +87,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectSprintResponse>();
         response!.Message.Should().Be("Project Sprint has been created successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();

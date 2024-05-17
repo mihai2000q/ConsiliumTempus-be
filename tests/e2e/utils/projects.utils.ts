@@ -3,6 +3,18 @@ import { useToken } from "./utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
 import { createWorkspace, getPersonalWorkspace } from "./workspaces.utils";
 
+export async function getProject(request: APIRequestContext, projectId: string) {
+  const response = await request.get(`/api/projects/${projectId}`, useToken())
+  expect(response.ok()).toBeTruthy()
+  return await response.json()
+}
+
+export async function getProjectOverview(request: APIRequestContext, projectId: string) {
+  const response = await request.get(`/api/projects/overview/${projectId}`, useToken())
+  expect(response.ok()).toBeTruthy()
+  return await response.json()
+}
+
 export async function getProjects(request: APIRequestContext) {
   const response = await request.get('/api/projects', useToken())
   expect(response.ok()).toBeTruthy()

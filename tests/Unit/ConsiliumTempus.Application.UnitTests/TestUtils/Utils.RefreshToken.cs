@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.User;
+using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -13,11 +14,11 @@ internal static partial class Utils
         {
             refreshToken.Value.Should().NotBeNullOrWhiteSpace().And.HaveLength(36);
             refreshToken.JwtId.ToString().Should().Be(jwtId);
-            refreshToken.ExpiryDateTime.Should().BeCloseTo(DateTime.UtcNow.AddDays(7), TimeSpan.FromMinutes(1));
+            refreshToken.ExpiryDateTime.Should().BeCloseTo(DateTime.UtcNow.AddDays(7), 10.Seconds());
             refreshToken.IsInvalidated.Should().BeFalse();
             refreshToken.RefreshTimes.Should().Be(0);
-            refreshToken.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            refreshToken.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
             refreshToken.User.Should().Be(user);
             refreshToken.DomainEvents.Should().BeEmpty();
         }
@@ -31,7 +32,7 @@ internal static partial class Utils
             refreshToken.JwtId.ToString().Should().Be(jwtId);
             refreshToken.IsInvalidated.Should().BeFalse();
             refreshToken.RefreshTimes.Should().Be(usedTimes);
-            refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
         }
     }
 }

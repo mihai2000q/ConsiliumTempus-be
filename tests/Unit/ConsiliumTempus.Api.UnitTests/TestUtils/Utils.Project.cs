@@ -99,7 +99,6 @@ internal static partial class Utils
             ProjectAggregate project)
         {
             response.Name.Should().Be(project.Name.Value);
-            response.Description.Should().Be(project.Description.Value);
             response.IsFavorite.Should().Be(project.IsFavorite.Value);
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
         }

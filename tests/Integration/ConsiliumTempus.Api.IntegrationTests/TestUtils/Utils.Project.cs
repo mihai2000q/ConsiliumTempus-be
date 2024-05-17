@@ -6,7 +6,6 @@ using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.ProjectSprint;
 using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -20,16 +19,8 @@ internal static partial class Utils
             ProjectAggregate project)
         {
             response.Name.Should().Be(project.Name.Value);
-            response.Description.Should().Be(project.Description.Value);
             response.IsFavorite.Should().Be(project.IsFavorite.Value);
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
-            response.Sprints
-                .Zip(project.Sprints
-                    .OrderBy(s => s.StartDate)
-                    .ThenBy(s => s.EndDate)
-                    .ThenBy(s => s.Name.Value)
-                    .ThenBy(s => s.CreatedDateTime))
-                .Should().AllSatisfy(p => AssertProjectSprintResponse(p.First, p.Second));
         }
 
         internal static void AssertGetOverviewProjectResponse(
@@ -101,7 +92,7 @@ internal static partial class Utils
 
             newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         }
-        
+
         internal static void AssertUpdateOverview(
             ProjectAggregate project,
             ProjectAggregate newProject,
@@ -117,16 +108,6 @@ internal static partial class Utils
             newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
             newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-        }
-
-        private static void AssertProjectSprintResponse(
-            GetProjectResponse.ProjectSprintResponse sprintResponse,
-            ProjectSprintAggregate sprint)
-        {
-            sprintResponse.Id.Should().Be(sprint.Id.Value);
-            sprintResponse.Name.Should().Be(sprint.Name.Value);
-            sprintResponse.StartDate.Should().Be(sprint.StartDate);
-            sprintResponse.EndDate.Should().Be(sprint.EndDate);
         }
 
         private static void AssertProjectResponse(

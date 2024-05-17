@@ -30,13 +30,13 @@ internal static partial class Utils
             task.DueDate.Should().BeNull();
             task.EstimatedDuration.Should().BeNull();
             task.Stage.Should().Be(stage);
-            task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
             task.Comments.Should().BeEmpty();
             task.DomainEvents.Should().BeEmpty();
 
-            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
 
             var count = 0;
             stage.Tasks.Should().AllSatisfy(t => t.CustomOrderPosition.Value.Should().Be(count++));
@@ -55,8 +55,8 @@ internal static partial class Utils
             stage.Tasks.Should().AllSatisfy(t =>
                 t.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
 
-            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
         }
 
         internal static void AssertFromUpdateCommand(
@@ -69,8 +69,8 @@ internal static partial class Utils
             task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
-            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
         }
         
         internal static void AssertFromUpdateOverviewCommand(
@@ -83,8 +83,8 @@ internal static partial class Utils
             task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
 
-            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
         }
 
         internal static void AssertProjectTask(

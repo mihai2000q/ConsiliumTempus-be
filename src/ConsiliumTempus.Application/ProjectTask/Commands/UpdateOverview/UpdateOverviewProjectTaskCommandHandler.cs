@@ -10,10 +10,10 @@ namespace ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 
 public sealed class UpdateOverviewProjectTaskCommandHandler(
     IProjectTaskRepository projectTaskRepository,
-    IUserRepository userRepository) 
+    IUserRepository userRepository)
     : IRequestHandler<UpdateOverviewProjectTaskCommand, ErrorOr<UpdateOverviewProjectTaskResult>>
 {
-    public async Task<ErrorOr<UpdateOverviewProjectTaskResult>> Handle(UpdateOverviewProjectTaskCommand command, 
+    public async Task<ErrorOr<UpdateOverviewProjectTaskResult>> Handle(UpdateOverviewProjectTaskCommand command,
         CancellationToken cancellationToken)
     {
         var task = await projectTaskRepository.GetWithStageAndWorkspace(
@@ -24,11 +24,12 @@ public sealed class UpdateOverviewProjectTaskCommandHandler(
         var assignee = command.AssigneeId is not null
             ? await userRepository.Get(UserId.Create(command.AssigneeId.Value), cancellationToken)
             : null;
-        
+
         task.UpdateOverview(
             Name.Create(command.Name),
             Description.Create(command.Description),
             assignee);
+        task.Stage.Sprint.Project.RefreshActivity();
 
         return new UpdateOverviewProjectTaskResult();
     }

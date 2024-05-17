@@ -67,6 +67,7 @@ test.describe('should allow operations on the project sprint entity', () => {
     expect(response.ok()).toBeTruthy()
 
     const json = await response.json()
+    expect(json.sprints).toHaveLength(2);
     expect(json).toStrictEqual({
       sprints: [
         {
@@ -83,7 +84,6 @@ test.describe('should allow operations on the project sprint entity', () => {
         }
       ]
     })
-    expect(json.sprints).toHaveLength(2);
   })
 
   test.describe(`should allow creation of project sprint`, () => {
@@ -188,28 +188,64 @@ test.describe('should allow operations on the project sprint entity', () => {
     }
     const sprint = await createProjectSprint(request, createProjectSprintRequest)
 
-    const body: AddStageToProjectSprintRequest = {
+    const addStageToProjectSprintRequest1: AddStageToProjectSprintRequest = {
+      id: sprint.id,
+      name: "In Transit",
+      onTop: false
+    }
+    const response1 = await request.post('/api/projects/sprints/add-stage', {
+      ...useToken(),
+      data: addStageToProjectSprintRequest1
+    });
+
+    const addStageToProjectSprintRequest2: AddStageToProjectSprintRequest = {
+      id: sprint.id,
+      name: "In Transit",
+      onTop: false
+    }
+    const response2 = await request.post('/api/projects/sprints/add-stage', {
+      ...useToken(),
+      data: addStageToProjectSprintRequest1
+    });
+
+    const addStageToProjectSprintRequest3: AddStageToProjectSprintRequest = {
       id: sprint.id,
       name: "In Transit",
       onTop: true
     }
-    const response = await request.post('/api/projects/sprints/add-stage', {
+    const response3 = await request.post('/api/projects/sprints/add-stage', {
       ...useToken(),
-      data: body
+      data: addStageToProjectSprintRequest1
     });
 
-    expect(response.ok()).toBeTruthy()
+    expect(response1.ok()).toBeTruthy()
+    expect(response2.ok()).toBeTruthy()
+    expect(response3.ok()).toBeTruthy()
 
-    expect(await response.json()).toStrictEqual({
+    expect(await response1.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+    expect(await response2.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+    expect(await response3.json()).toStrictEqual({
       message: expect.any(String)
     })
 
-    const stages = await getProjectStages(request, body.id)
-    expect(stages).toHaveLength(1)
+    const stages = await getProjectStages(request, addStageToProjectSprintRequest1.id)
+    expect(stages).toHaveLength(3)
     expect(stages).toStrictEqual([
       {
         id: expect.any(String),
-        name: body.name,
+        name: addStageToProjectSprintRequest3.name,
+      },
+      {
+        id: expect.any(String),
+        name: addStageToProjectSprintRequest1.name,
+      },
+      {
+        id: expect.any(String),
+        name: addStageToProjectSprintRequest2.name,
       }
     ])
   })

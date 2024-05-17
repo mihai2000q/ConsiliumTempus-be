@@ -65,9 +65,7 @@ public static class ProjectTaskRequestFactory
             assigneeId);
     }
 
-    public static DeleteProjectTaskRequest CreateDeleteProjectTaskRequest(
-        Guid? id = null,
-        Guid? projectStageId = null)
+    public static DeleteProjectTaskRequest CreateDeleteProjectTaskRequest(Guid? id = null)
     {
         return new DeleteProjectTaskRequest
         {
