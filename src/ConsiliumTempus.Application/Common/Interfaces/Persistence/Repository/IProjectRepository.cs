@@ -19,7 +19,7 @@ public interface IProjectRepository
     Task<List<ProjectAggregate>> GetListByUser(
         UserId userId,
         PaginationInfo? paginationInfo,
-        IOrder<ProjectAggregate>? order,
+        IReadOnlyList<IOrder<ProjectAggregate>> orders,
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default);
 
