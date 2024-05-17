@@ -53,6 +53,7 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
         builder.OwnsMany(t => t.Comments, ConfigureComments);
 
         builder.Navigation(t => t.Comments).AutoInclude(false);
+        builder.Navigation(t => t.Assignee).AutoInclude();
     }
 
     private static void ConfigureComments(OwnedNavigationBuilder<ProjectTaskAggregate, ProjectTaskComment> builder)

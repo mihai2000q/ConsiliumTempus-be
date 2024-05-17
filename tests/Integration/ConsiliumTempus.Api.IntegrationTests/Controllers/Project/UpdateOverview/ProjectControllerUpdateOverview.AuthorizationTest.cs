@@ -17,7 +17,7 @@ public class ProjectControllerUpdateOverviewAuthorizationTest(WebAppFactory fact
     }
 
     [Fact]
-    public async Task UpdateOverviewProject_WhenWithMemberRole_ShouldReturnForbiddenResponse()
+    public async Task UpdateOverviewProject_WhenWithMemberRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(ProjectData.Users[3]);
     }

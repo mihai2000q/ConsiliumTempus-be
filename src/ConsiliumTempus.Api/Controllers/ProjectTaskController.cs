@@ -75,7 +75,7 @@ public sealed class ProjectTaskController(IMapper mapper, ISender mediator) : Ap
     }
     
     [HasPermission(Permissions.UpdateProjectTask)]
-    [HttpPut]
+    [HttpPut("Overview")]
     public async Task<IActionResult> UpdateOverview(UpdateOverviewProjectTaskRequest request, CancellationToken cancellationToken)
     {
         var command = Mapper.Map<UpdateOverviewProjectTaskCommand>(request);

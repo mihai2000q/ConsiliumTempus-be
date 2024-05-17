@@ -48,6 +48,7 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         return dbContext.ProjectTasks
             .Where(t => t.Stage.Id == stageId)
             .ApplyFilters(filters)
+            .OrderBy(t => t.CustomOrderPosition.Value)
             .ToListAsync(cancellationToken);
     }
 
