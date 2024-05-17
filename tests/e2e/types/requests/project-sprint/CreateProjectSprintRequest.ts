@@ -3,4 +3,5 @@ export default interface CreateProjectSprintRequest {
   name: string,
   startDate: string|null,
   endDate: string|null,
+  keepPreviousStages?: boolean|undefined
 }

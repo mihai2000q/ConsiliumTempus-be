@@ -115,7 +115,10 @@ internal class ProjectSprintData : ITestData
         ProjectFactory.Create(
             Workspaces[1],
             "Win Champions League",
-            "Just an idea on how to win the football league")
+            "Just an idea on how to win the football league"),
+        ProjectFactory.Create(
+            Workspaces[0],
+            "Do Something with your life?")
     ];
 
     public static ProjectSprintAggregate[] ProjectSprints { get; } =
@@ -125,11 +128,6 @@ internal class ProjectSprintData : ITestData
             "Sprint 1 - Qualify on Quarters",
             new DateOnly(2024, 01, 1),
             new DateOnly(2024, 01, 15)),
-        ProjectSprintFactory.Create(
-            Projects[0],
-            "Sprint 2 - Qualify in Semi Finals",
-            new DateOnly(2024, 01, 16),
-            new DateOnly(2024, 01, 30)),
         ProjectSprintFactory.Create(
             Projects[1],
             "Get the champs lig finals")

@@ -35,7 +35,68 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
         var createdSprint = await dbContext.ProjectSprints
             .Include(ps => ps.Project.Workspace)
+            .Include(ps => ps.Stages)
             .SingleAsync(ps => ps.Name.Value == request.Name);
+        Utils.ProjectSprint.AssertCreation(createdSprint, request);
+    }
+    
+    [Fact]
+    public async Task CreateProjectSprint_WhenRequestHasKeepPreviousStages_ShouldCreateKeepStagesAndReturnSuccessResponse()
+    {
+        // Arrange
+        var project = ProjectSprintData.Projects.First();
+        var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
+            project.Id.Value,
+            keepPreviousStages: true);
+
+        // Act
+        Client.UseCustomToken(ProjectSprintData.Users.First());
+        var outcome = await Client.Post("api/projects/sprints", request);
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
+        response!.Message.Should().Be("Project Sprint has been created successfully!");
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
+        var createdSprint = await dbContext.ProjectSprints
+            .Include(ps => ps.Project.Workspace)
+            .Include(ps => ps.Stages)
+            .SingleAsync(ps => ps.Name.Value == request.Name);
+        Utils.ProjectSprint.AssertCreation(
+            createdSprint,
+            request,
+            project.Sprints[^1]);
+    }
+    
+    [Fact]
+    public async Task CreateProjectSprint_WhenRequestHasKeepPreviousStagesIsFirstSprint_ShouldCreateAndReturnSuccessResponse()
+    {
+        // Arrange
+        var project = ProjectSprintData.Projects[2];
+        var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
+            project.Id.Value,
+            keepPreviousStages: true);
+
+        // Act
+        Client.UseCustomToken(ProjectSprintData.Users.First());
+        var outcome = await Client.Post("api/projects/sprints", request);
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectResponse>();
+        response!.Message.Should().Be("Project Sprint has been created successfully!");
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
+        var createdSprint = await dbContext.ProjectSprints
+            .Include(ps => ps.Project.Workspace)
+            .Include(ps => ps.Stages)
+            .SingleAsync(ps => ps.Name.Value == request.Name);
+        project.Sprints.Should().BeEmpty();
         Utils.ProjectSprint.AssertCreation(createdSprint, request);
     }
 
