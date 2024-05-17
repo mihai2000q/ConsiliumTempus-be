@@ -66,47 +66,13 @@ test.describe('should allow operations on the workspace entity', () => {
       expect(json.workspaces).toHaveLength(2)
     })
 
-    test('should get collection of workspaces and place the personal workspace first', async ({ request }) => {
+    test('should get collection of workspaces with the personal workspace on top', async ({ request }) => {
       const createWorkspaceRequest: CreateWorkspaceRequest = {
         name: "Some Workspace",
       }
       await createWorkspace(request, createWorkspaceRequest)
 
       const response = await request.get('/api/workspaces?isPersonalWorkspaceFirst=true', useToken())
-
-      expect(response.ok()).toBeTruthy()
-
-      const json = await response.json()
-      expect(json).toStrictEqual({
-        workspaces: [
-          {
-            id: expect.any(String),
-            name: PersonalWorkspaceName,
-            description: expect.any(String),
-            isPersonal: true,
-            owner: expect.any(Object)
-          },
-          {
-            id: expect.any(String),
-            name: createWorkspaceRequest.name,
-            description: "",
-            isPersonal: false,
-            owner: expect.any(Object)
-          }
-        ],
-        totalCount: 2,
-        totalPages: null
-      })
-      expect(json.workspaces).toHaveLength(2)
-    })
-
-    test('should get collection of workspaces with personal workspace on top', async ({ request }) => {
-      const createWorkspaceRequest: CreateWorkspaceRequest = {
-        name: "Some Workspace",
-      }
-      await createWorkspace(request, createWorkspaceRequest)
-
-      const response = await request.get('/api/workspaces', useToken())
 
       expect(response.ok()).toBeTruthy()
 
