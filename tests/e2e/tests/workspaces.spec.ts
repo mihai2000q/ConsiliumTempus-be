@@ -48,14 +48,48 @@ test.describe('should allow operations on the workspace entity', () => {
           {
             id: expect.any(String),
             name: PersonalWorkspaceName,
-            description: expect.any(String)
+            description: expect.any(String),
+            isPersonal: true
           },
           {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
-            description: ""
+            description: "",
+            isPersonal: false
           }
         ]),
+        totalCount: 2,
+        totalPages: null
+      })
+      expect(json.workspaces).toHaveLength(2)
+    })
+
+    test('should get collection of workspaces and place the personal workspace first', async ({ request }) => {
+      const createWorkspaceRequest: CreateWorkspaceRequest = {
+        name: "Some Workspace",
+      }
+      await createWorkspace(request, createWorkspaceRequest)
+
+      const response = await request.get('/api/workspaces?isPersonalWorkspaceFirst=true', useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json).toStrictEqual({
+        workspaces: [
+          {
+            id: expect.any(String),
+            name: PersonalWorkspaceName,
+            description: expect.any(String),
+            isPersonal: true
+          },
+          {
+            id: expect.any(String),
+            name: createWorkspaceRequest.name,
+            description: "",
+            isPersonal: false
+          }
+        ],
         totalCount: 2,
         totalPages: null
       })
@@ -78,12 +112,14 @@ test.describe('should allow operations on the workspace entity', () => {
           {
             id: expect.any(String),
             name: PersonalWorkspaceName,
-            description: expect.any(String)
+            description: expect.any(String),
+            isPersonal: true
           },
           {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
-            description: ""
+            description: "",
+            isPersonal: false
           }
         ],
         totalCount: 2,
@@ -105,17 +141,20 @@ test.describe('should allow operations on the workspace entity', () => {
           {
             id: expect.any(String),
             name: createWorkspaceRequests[1].name,
-            description: ""
+            description: "",
+            isPersonal: false
           },
           {
             id: expect.any(String),
             name: createWorkspaceRequests[0].name,
-            description: ""
+            description: "",
+            isPersonal: false
           },
           {
             id: expect.any(String),
             name: PersonalWorkspaceName,
-            description: expect.any(String)
+            description: expect.any(String),
+            isPersonal: true
           }
         ],
         totalCount: 3,
@@ -140,7 +179,8 @@ test.describe('should allow operations on the workspace entity', () => {
           {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
-            description: ""
+            description: "",
+            isPersonal: false
           }
         ],
         totalCount: 1,
@@ -167,12 +207,14 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: r.name,
             description: "",
+            isPersonal: false
           }
         })
       expectedWorkspaces.unshift({
         id: expect.any(String),
         name: PersonalWorkspaceName,
-        description: expect.any(String)
+        description: expect.any(String),
+        isPersonal: true
       })
 
       const json = await response.json()
@@ -205,7 +247,8 @@ test.describe('should allow operations on the workspace entity', () => {
       {
         id: expect.any(String),
         name: createWorkspaceRequest.name,
-        description: ""
+        description: "",
+        isPersonal: false
       }
     ]))
   })
@@ -238,7 +281,8 @@ test.describe('should allow operations on the workspace entity', () => {
       {
         id: body.id,
         name: body.name,
-        description: body.description
+        description: body.description,
+        isPersonal: false
       }
     ]))
   })
