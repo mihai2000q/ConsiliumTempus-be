@@ -10,6 +10,7 @@ class ProjectSprint
     ProjectSprint Create()
     void Update()
     void AddStage()
+    void AddStages()
     void RemoveStage()
 }
 ```
@@ -27,7 +28,11 @@ class ProjectSprint
 }
 ```
 
-For database design checkout the [Project Sprint Diagram](../../diagrams/entities/project/Diagram.ProjectSprint.md).
+For database design checkout the [Project Sprint Diagram](../diagrams/aggregates/Diagram.ProjectSprint.md).
+
+### Entities
+
+- [Project Stage](../entities/project-sprint/Entity.ProjectStage.md)
 
 ### Properties Validation
 

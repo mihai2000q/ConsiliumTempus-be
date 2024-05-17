@@ -118,13 +118,15 @@ POST {{host}}/api/projects/sprints
 #### Create Project Sprint Request
 
 Sends body data that the new project sprint needs to be created.
+It can also specify if the stages of the previous sprint (if any) can be kept/copied.
 
 ```json
 {
   "projectId": "10000000-0000-0000-0000-000000000000",
   "name": "Project Sprint Name",
   "startDate": "2024-01-01",
-  "endDate": "2024-01-14"
+  "endDate": "2024-01-14",
+  "keepPreviousStages": true
 }
 ```
 

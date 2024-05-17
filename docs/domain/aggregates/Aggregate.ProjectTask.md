@@ -9,7 +9,8 @@ class ProjectTask
 {
     ProjectTask Create()
     void Update()
-    void DecrementCustomOrderPosition()
+    void UpdateOverview()
+    void UpdatetCustomOrderPosition()
     void AddComment()
 }
 ```
@@ -35,18 +36,17 @@ class ProjectTask
 
 For database design checkout the [Project Task Diagram](../diagrams/aggregates/Diagram.ProjectTask.md).
 
+### Entities
+
+- [Project Task Comment](../entities/project-task/Entity.ProjectTaskComment.md)
+
 ### Properties Validation
 
 - The **Name** cannot be longer than 100 characters
-- The **Description** cannot be longer than 1000 characters
 
 ### Domain Errors
 
 - **Not Found** when the project cannot be found
-
-### Entities
-
-- [Project Task Comment](../entities/project-task/Entity.ProjectTaskComment.md)
 
 ### Value Objects
 

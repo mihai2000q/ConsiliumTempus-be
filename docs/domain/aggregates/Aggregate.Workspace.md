@@ -40,7 +40,7 @@ For database design checkout the [Workspace Diagram](../diagrams/aggregates/Diag
 ### Domain Errors
 
 - **Not Found** when the workspace cannot be found
-- **Personal Workspace** when the workspace is personal
+- **Personal Workspace** when the workspace is personal (used to restrict deletion)
 
 ### Value Objects
 

@@ -9,7 +9,6 @@ class ProjectStage
 {
     ProjectStage Create()
     void Update()
-    void DecrementCustomOrderPosition()
     void AddTask()
     void RemoveTask()
 }
@@ -25,7 +24,7 @@ class ProjectStage
 }
 ```
 
-For database design checkout the [Project Stage Diagram](../../diagrams/entities/project/Diagram.ProjectStage.md).
+For database design checkout the [Project Stage Diagram](../../diagrams/entities/project-sprint/Diagram.ProjectStage.md).
 
 ### Properties Validation
 

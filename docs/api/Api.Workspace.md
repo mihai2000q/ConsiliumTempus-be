@@ -62,6 +62,7 @@ Sends optional query parameters for ordering, filtering, and page-based paginati
 - _**currentPage**_ is used to specify the current page
 - _**order**_ is used to order the collection
 - _**name**_ is used to filter by name
+- _**isPersonalWorkspaceFirst**_ is used to place the personal workspace of the user on top of the others
 
 #### Get Collection Workspace Response
 

@@ -36,6 +36,9 @@ For database design, check out the [User Diagram](../diagrams/aggregates/Diagram
 ### Value Objects
 
 - **Credentials**, which holds the *Email* and *Password*
+- **FirstName**, which holds a string encapsulated *Value*
+- **LastName**, which holds a string encapsulated *Value*
+- **Role**, which holds a string encapsulated *Value*
 
 ### Properties Validation
 

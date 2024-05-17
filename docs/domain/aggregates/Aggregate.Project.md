@@ -9,6 +9,7 @@ class Project
 {
     Project Create()
     void Update()
+    void UpdateOverview()
     void AddSprint()
     void RefreshActivity()
 }
@@ -31,15 +32,9 @@ class Project
 
 For database design checkout the [Project Diagram](../diagrams/aggregates/Diagram.Project.md).
 
-### Entities
-
-- [Project Sprint](../entities/project/Entity.ProjectSprint.md)
-- [Project Stage](../entities/project/Entity.ProjectStage.md)
-
 ### Properties Validation
 
 - The **Name** cannot be longer than 100 characters
-- The **Description** cannot be longer than 1000 characters
 
 ### Domain Errors
 

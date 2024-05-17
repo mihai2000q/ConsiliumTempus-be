@@ -17,13 +17,13 @@ representing the relationships of the aggregates with other aggregates and/or en
 
 ## General
 
-Each aggregate, entity or value object has an empty private constructor 
+Each aggregate, entity or value object has an empty private constructor
 so that the Entity Framework Core can initialize them.
 
 ## Aggregates
 
 All Aggregates inherit from the **Aggregate Root** class, which requires a unique class to be the Id.
-This Id has to inherit from the **Aggregate Root Id**, which is a value object 
+This Id has to inherit from the **Aggregate Root Id**, which is a value object
 (they won't be included in the value object lists as they are required and part of all the aggregates).
 **Aggregate Root** is also essentially an **Entity** at its roots,
 however, an **Aggregate** will usually be a model that contains all the relations of multiple entities.
@@ -36,10 +36,11 @@ The aforementioned refers to the constraints that each property has
 
 The aggregates are:
 
+- [Project Aggregate](domain/aggregates/Aggregate.Project.md)
+- [Project Sprint Aggregate](domain/aggregates/Aggregate.Project.md)
+- [Project Task Aggregate](domain/aggregates/Aggregate.ProjectTask.md)
 - [User Aggregate](domain/aggregates/Aggregate.User)
 - [Workspace Aggregate](domain/aggregates/Aggregate.Workspace)
-- [Project Aggregate](domain/aggregates/Aggregate.Project.md)
-- [Project Task Aggregate](domain/aggregates/Aggregate.ProjectTask.md)
 
 ## Entities
 
@@ -57,19 +58,19 @@ The entities are:
 
 ## Value Objects
 
-Essentially, a value object holds only values and, by definition, 
+Essentially, a value object holds only values and, by definition,
 two value objets are equal only if all the values are equal with one another.
 
 Typically, the value objects will be flattened on the object before persisting in the database.
 
 The value objects are:
 
+- **CustomOrderPosition**, which encapsulates an int *Value,* and it's used to achieve custom ordering
 - **Description**, which encapsulates a string *Value*
 - **IsFavorite**, which encapsulates a boolean *Value*
 - **IsPrivate**, which encapsulates a boolean *Value*
 - **Message**, which encapsulates a string *Value*
 - **Name**, which encapsulates a string *Value*
-- **CustomOrderPosition**, which encapsulates an int *Value,* and it's used to achieve custom ordering
 
 ## Domain Errors
 
@@ -82,6 +83,7 @@ These errors are not tied to any aggregate, therefore notable and only used in t
 ## Enums
 
 The enums defined in the Domain of the application are:
+
 - **OrderType**, which is used to determine whether the order should be ascending or descending
 - **Permissions**, which are used on the Presentation Layer for Authorization
 
@@ -102,17 +104,17 @@ For individual diagrams (they exclude additional info about external entities,
 except the primary key and direct relations), check below:
 
 - Aggregates
+  - [Project Diagram](domain/diagrams/aggregates/Diagram.Project.md)
+  - [Project Sprint Diagram](domain/diagrams/aggregates/Diagram.ProjectSprint.md)
+  - [Project Task Diagram](domain/diagrams/aggregates/Diagram.ProjectTask.md)
   - [User Diagram](domain/diagrams/aggregates/Diagram.User.md)
   - [Workspace Diagram](domain/diagrams/aggregates/Diagram.Workspace.md)
-  - [Project Diagram](domain/diagrams/aggregates/Diagram.Project.md)
-  - [Project Task Diagram](domain/diagrams/aggregates/Diagram.ProjectTask.md)
 - Entities
-  - [Refresh Token Diagram](domain/diagrams/entities/Diagram.RefreshToken.md)
   - [Membership Diagram](domain/diagrams/entities/Diagram.Membership.md)
   - [Permission Diagram](domain/diagrams/entities/Diagram.Permission.md)
+  - [Refresh Token Diagram](domain/diagrams/entities/Diagram.RefreshToken.md)
   - [Workspace Role Diagram](domain/diagrams/entities/Diagram.WorkspaceRole.md)
-  - Project Entities
-    - [Project Sprint Diagram](domain/diagrams/entities/project/Diagram.ProjectSprint.md)
-    - [Project Stage Diagram](domain/diagrams/entities/project/Diagram.ProjectStage.md)
+  - Project Sprint Entities
+    - [Project Stage Diagram](domain/diagrams/entities/project-sprint/Diagram.ProjectStage.md)
   - Project Task Entities
     - [Project Task Comment Diagram](domain/diagrams/entities/project-task/Diagram.ProjectTaskComment.md)
