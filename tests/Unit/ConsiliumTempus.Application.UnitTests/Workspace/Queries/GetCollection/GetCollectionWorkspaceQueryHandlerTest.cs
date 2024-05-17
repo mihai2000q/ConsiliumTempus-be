@@ -87,7 +87,11 @@ public class GetCollectionWorkspaceQueryHandlerTest
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Workspaces.Should().BeEquivalentTo(workspaces);
-        outcome.Value.Workspaces.Should().HaveElementAt(0, personalWorkspace);
+        if (query.IsPersonalWorkspaceFirst)
+        {
+            outcome.Value.Workspaces.Should().HaveElementAt(0, personalWorkspace);
+        }
+
         outcome.Value.TotalCount.Should().Be(workspacesCount);
         if (query.PageSize is null || query.CurrentPage is null)
             outcome.Value.TotalPages.Should().BeNull();

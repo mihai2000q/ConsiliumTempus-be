@@ -21,6 +21,10 @@ internal static class GetCollectionWorkspaceQueryHandlerData
                 pageSize: 25,
                 currentPage: 1);
             Add(query);
+            
+            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                isPersonalWorkspaceFirst: true);
+            Add(query);
         }
     }
 }
