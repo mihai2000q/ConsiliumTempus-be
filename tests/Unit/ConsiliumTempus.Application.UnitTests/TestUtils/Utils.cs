@@ -21,15 +21,25 @@ internal static partial class Utils
         return true;
     }
 
-    internal static bool AssertOrder<TEntity>(
-        this IOrder<TEntity>? order,
-        string? stringOrder,
+    internal static bool AssertOrders<TEntity>(
+        this IReadOnlyList<IOrder<TEntity>> orders,
+        string? stringOrders,
         IEnumerable<OrderProperty<TEntity>> orderProperties)
     {
-        if (stringOrder is null) return order is null;
-        var split = stringOrder.Split(Order<object>.Separator);
+        if (stringOrders is null) return orders.Count == 0;
+        return orders
+            .Zip(stringOrders.Split(Order<object>.ListSeparator))
+            .All(x => x.First.AssertOrder(x.Second, orderProperties));
+    }
 
-        order!.Type
+    private static bool AssertOrder<TEntity>(
+        this IOrder<TEntity> order,
+        string stringOrder,
+        IEnumerable<OrderProperty<TEntity>> orderProperties)
+    {
+        var split = stringOrder.Trim().Split(Order<object>.Separator);
+
+        order.Type
             .Should()
             .Be(split[1] == Order<object>.Descending ? OrderType.Descending : OrderType.Ascending);
 

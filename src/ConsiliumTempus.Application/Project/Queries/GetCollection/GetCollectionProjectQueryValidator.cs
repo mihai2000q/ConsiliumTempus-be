@@ -15,8 +15,8 @@ public sealed class GetCollectionProjectQueryValidator : AbstractValidator<GetCo
         RuleFor(q => q.CurrentPage)
             .GreaterThan(0);
 
-        RuleFor(q => q.Order)
-            .HasOrderFormat(ProjectOrder.OrderProperties);
+        RuleFor(q => q.Orders)
+            .HasOrdersFormat(ProjectOrder.OrderProperties);
 
         RuleFor(q => q.Name)
             .MaximumLength(PropertiesValidation.Project.NameMaximumLength);

@@ -108,17 +108,44 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         // Arrange
         var user = WorkspaceData.Users.First();
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
-            order: "name.asc");
+            orders: "name.asc");
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/Workspaces?order={request.Order}");
+        var outcome = await Client.Get($"api/Workspaces?orders={request.Orders}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
         var expectedWorkspaces = user.Memberships.Select(m => m.Workspace)
             .OrderBy(w => w.Name.Value)
+            .ToList();
+        Utils.Workspace.AssertGetCollectionResponse(
+            response!, 
+            expectedWorkspaces, 
+            expectedWorkspaces.Count,
+            null,
+            isOrdered: true);
+    }
+    
+    [Fact]
+    public async Task GetCollectionWorkspace_WhenRequestHasNameAscAndLastActivityAscOrder_ShouldReturnWorkspacesOrderedByNameAscending()
+    {
+        // Arrange
+        var user = WorkspaceData.Users.First();
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
+            orders: "name.asc , last_activity.asc");
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Get($"api/Workspaces?orders={request.Orders}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
+        var expectedWorkspaces = user.Memberships.Select(m => m.Workspace)
+            .OrderBy(w => w.Name.Value)
+            .ThenBy(w => w.LastActivity)
             .ToList();
         Utils.Workspace.AssertGetCollectionResponse(
             response!, 
@@ -134,13 +161,14 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         // Arrange
         var user = WorkspaceData.Users.First();
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
-            order: "name.desc",
+            orders: "name.desc",
             pageSize: 2,
             currentPage: 1);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/Workspaces?order={request.Order}" +
+        var outcome = await Client.Get($"api/Workspaces" +
+                                       $"?orders={request.Orders}" +
                                        $"&pageSize={request.PageSize}" +
                                        $"&currentPage={request.CurrentPage}");
 

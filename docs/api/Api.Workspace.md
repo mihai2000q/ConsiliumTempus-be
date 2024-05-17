@@ -51,7 +51,7 @@ Returns the workspace data.
 Anyone logged in can request this data, but it will return only the workspaces that are linked to this user.
 
 ```js
-GET {{host}}/api/workspaces?pageSize=2&currentPage=1order=name.asc&name=worksp
+GET {{host}}/api/workspaces?pageSize=2&currentPage=1orders=name.asc, updated_date_time.desc&name=worksp
 ```
 
 ### Get Collection Workspace Request
@@ -60,7 +60,7 @@ Sends optional query parameters for ordering, filtering, and page-based paginati
 
 - _**pageSize**_ is used to specify the size of the page
 - _**currentPage**_ is used to specify the current page
-- _**order**_ is used to order the collection
+- _**orders**_ is used to order the collection
 - _**name**_ is used to filter by name
 - _**isPersonalWorkspaceFirst**_ is used to place the personal workspace of the user on top of the others
 

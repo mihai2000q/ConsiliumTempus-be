@@ -14,11 +14,11 @@ public class WorkspaceControllerGetCollectionValidationTest(WebAppFactory factor
     public async Task GetCollectionWorkspace_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(order: "name.asc");
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(orders: "name.asc");
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
-        var outcome = await Client.Get($"api/workspaces?order={request.Order}");
+        var outcome = await Client.Get($"api/workspaces?orders={request.Orders}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -29,13 +29,14 @@ public class WorkspaceControllerGetCollectionValidationTest(WebAppFactory factor
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
-            order: "something wrong",
+            orders: "something ,  wrong",
             pageSize: -1,
             currentPage: 0);
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
-        var outcome = await Client.Get($"api/workspaces?order={request.Order}" +
+        var outcome = await Client.Get($"api/workspaces" +
+                                       $"?orders={request.Orders}" +
                                        $"&pageSize={request.PageSize}" +
                                        $"&currentPage={request.CurrentPage}");
 

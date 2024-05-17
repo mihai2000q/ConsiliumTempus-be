@@ -1,33 +1,20 @@
 ﻿using System.Linq.Expressions;
 using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Common.Orders.Properties;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.Common.Orders;
 
-public sealed class WorkspaceOrder : Order<WorkspaceAggregate>
+public abstract class WorkspaceOrder : Order<WorkspaceAggregate>
 {
-    private static class Properties
-    {
-        public sealed record NameOrderProperty()
-            : OrderProperty<WorkspaceAggregate>(nameof(WorkspaceAggregate.Name), p => p.Name.Value);
-
-        public sealed record LastActivityProperty()
-            : OrderProperty<WorkspaceAggregate>(nameof(WorkspaceAggregate.LastActivity), p => p.LastActivity);
-
-        public sealed record UpdatedDateTimeProperty()
-            : OrderProperty<WorkspaceAggregate>(nameof(WorkspaceAggregate.UpdatedDateTime), p => p.UpdatedDateTime);
-
-        public sealed record CreatedDateTimeProperty()
-            : OrderProperty<WorkspaceAggregate>(nameof(WorkspaceAggregate.CreatedDateTime), p => p.CreatedDateTime);
-    }
-    
     public static readonly IReadOnlyList<OrderProperty<WorkspaceAggregate>> OrderProperties =
     [
-        new Properties.NameOrderProperty(),
-        new Properties.LastActivityProperty(),
-        new Properties.UpdatedDateTimeProperty(),
-        new Properties.CreatedDateTimeProperty()
+        new OrderProperties.Workspace.NameOrderProperty(),
+        new OrderProperties.Workspace.LastActivityProperty(),
+        new OrderProperties.Workspace.UpdatedDateTimeProperty(),
+        new OrderProperties.Workspace.CreatedDateTimeProperty()
     ];
 
     private static readonly IReadOnlyDictionary<string, Expression<Func<WorkspaceAggregate, object?>>>
@@ -38,11 +25,8 @@ public sealed class WorkspaceOrder : Order<WorkspaceAggregate>
     {
     }
     
-    public static WorkspaceOrder? Parse(string? order)
+    public static IReadOnlyList<IOrder<WorkspaceAggregate>> Parse(string? orders)
     {
-        var orderParsed = Parse(order, StringToPropertySelector);
-        return orderParsed is not null
-            ? new WorkspaceOrder(orderParsed.PropertySelector, orderParsed.Type)
-            : null;
+        return Parse(orders, StringToPropertySelector);
     }
 }

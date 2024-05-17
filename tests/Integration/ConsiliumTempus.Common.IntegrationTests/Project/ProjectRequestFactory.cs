@@ -30,7 +30,7 @@ public static class ProjectRequestFactory
     public static GetCollectionProjectRequest CreateGetCollectionProjectRequest(
         int? pageSize = null,
         int? currentPage = null,
-        string? order = null,
+        string? orders = null,
         Guid? workspaceId = null,
         string? name = null,
         bool? isFavorite = null,
@@ -40,7 +40,7 @@ public static class ProjectRequestFactory
         {
             PageSize = pageSize,
             CurrentPage = currentPage,
-            Order = order,
+            Orders = orders,
             WorkspaceId = workspaceId,
             Name = name,
             IsFavorite = isFavorite,

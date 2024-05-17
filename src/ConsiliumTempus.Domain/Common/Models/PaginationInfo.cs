@@ -2,8 +2,8 @@
 
 public sealed class PaginationInfo
 {
-    public int PageSize { get; init; }
-    public int CurrentPage { get; init; }
+    public int PageSize { get; }
+    public int CurrentPage { get; }
 
     private PaginationInfo(int pageSize, int currentPage)
     {

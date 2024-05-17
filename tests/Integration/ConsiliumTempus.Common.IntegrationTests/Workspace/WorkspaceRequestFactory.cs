@@ -22,7 +22,7 @@ public static class WorkspaceRequestFactory
         bool isPersonalWorkspaceFirst = false,
         int? pageSize = null,
         int? currentPage = null,
-        string? order = null,
+        string? orders = null,
         string? name = null)
     {
         return new GetCollectionWorkspaceRequest
@@ -30,7 +30,7 @@ public static class WorkspaceRequestFactory
             IsPersonalWorkspaceFirst = isPersonalWorkspaceFirst,
             PageSize = pageSize,
             CurrentPage = currentPage,
-            Order = order,
+            Orders = orders,
             Name = name
         };
     }

@@ -10,7 +10,7 @@ public sealed record GetCollectionWorkspaceRequest
     
     [FromQuery] public int? CurrentPage { get; init; }
     
-    [FromQuery] public string? Order { get; init; }
+    [FromQuery] public string? Orders { get; init; }
     
     [FromQuery] public string? Name { get; init; }
 }

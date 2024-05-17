@@ -13,7 +13,7 @@ public interface IWorkspaceRepository
     Task<List<WorkspaceAggregate>> GetListByUser(
         UserAggregate user, 
         PaginationInfo? paginationInfo,
-        IOrder<WorkspaceAggregate>? order,
+        IReadOnlyList<IOrder<WorkspaceAggregate>> orders,
         IEnumerable<IFilter<WorkspaceAggregate>> filters,
         CancellationToken cancellationToken = default);
     

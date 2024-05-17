@@ -47,14 +47,14 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
     public Task<List<ProjectAggregate>> GetListByUser(
         UserId userId,
         PaginationInfo? paginationInfo,
-        IOrder<ProjectAggregate>? order,
+        IReadOnlyList<IOrder<ProjectAggregate>> orders,
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default)
     {
         return dbContext.Projects
             .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
             .ApplyFilters(filters)
-            .ApplyOrder(order)
+            .ApplyOrders(orders)
             .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);
     }

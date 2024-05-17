@@ -8,7 +8,7 @@ public sealed record GetCollectionProjectRequest
 
     [FromQuery] public int? CurrentPage { get; init; }
 
-    [FromQuery] public string? Order { get; init; }
+    [FromQuery] public string? Orders { get; init; }
 
     [FromQuery] public Guid? WorkspaceId { get; init; }
 

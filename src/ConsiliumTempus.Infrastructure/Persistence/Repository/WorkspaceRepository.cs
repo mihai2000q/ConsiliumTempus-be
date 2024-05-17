@@ -64,7 +64,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
     public async Task<List<WorkspaceAggregate>> GetListByUser(
         UserAggregate user,
         PaginationInfo? paginationInfo,
-        IOrder<WorkspaceAggregate>? order,
+        IReadOnlyList<IOrder<WorkspaceAggregate>> orders,
         IEnumerable<IFilter<WorkspaceAggregate>> filters,
         CancellationToken cancellationToken = default)
     {
@@ -72,7 +72,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .Include(w => w.Owner)
             .Where(w => w.Memberships.Any(m => m.User == user))
             .ApplyFilters(filters)
-            .ApplyOrder(order)
+            .ApplyOrders(orders)
             .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);
     }

@@ -13,11 +13,11 @@ internal static class GetCollectionWorkspaceQueryHandlerData
             Add(query);
 
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
-                order: "name.asc");
+                orders: "name.asc");
             Add(query);
             
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
-                order: "last_activity.desc",
+                orders: "last_activity.desc, name.asc",
                 pageSize: 25,
                 currentPage: 1);
             Add(query);

@@ -7,6 +7,7 @@ namespace ConsiliumTempus.Domain.Common.Models;
 
 public class Order<TEntity> : IOrder<TEntity>
 {
+    public const string ListSeparator = ",";
     public const string Separator = ".";
     public const string Descending = "desc";
     public const string Ascending = "asc";
@@ -28,26 +29,35 @@ public class Order<TEntity> : IOrder<TEntity>
         Type = orderType;
     }
 
-    protected static IOrder<TEntity>? Parse(
-        string? order,
+    protected static IReadOnlyList<IOrder<TEntity>> Parse(
+        string? orders,
         IReadOnlyDictionary<string, Expression<Func<TEntity, object?>>> stringToPropertySelector)
     {
-        if (order is null) return null;
+        if (orders is null) return [];
 
-        var splitOrder = order.Split(Separator);
-        if (!stringToPropertySelector.TryGetValue(splitOrder[0], out var propertySelector)) return null;
-
-        var orderType = StringToOrderType[splitOrder[1]];
-
-        return new Order<TEntity>(propertySelector, orderType);
+        return orders.Split(ListSeparator)
+            .Select(stringOrder => ParseOrder(stringOrder, stringToPropertySelector))
+            .ToList();
     }
 
     protected static IReadOnlyDictionary<string, Expression<Func<TEntity, object?>>> ToDictionary(
         IEnumerable<OrderProperty<TEntity>> enumerable)
     {
         return enumerable
-            .Select(op => 
+            .Select(op =>
                 new KeyValuePair<string, Expression<Func<TEntity, object?>>>(op.Identifier, op.PropertySelector))
             .ToDictionary();
+    }
+
+    private static Order<TEntity> ParseOrder(
+        string order,
+        IReadOnlyDictionary<string, Expression<Func<TEntity, object?>>> stringToPropertySelector)
+    {
+        var splitOrder = order.Trim().Split(Separator);
+
+        var propertySelector = stringToPropertySelector[splitOrder[0]];
+        var orderType = StringToOrderType[splitOrder[1]];
+
+        return new Order<TEntity>(propertySelector, orderType);
     }
 }

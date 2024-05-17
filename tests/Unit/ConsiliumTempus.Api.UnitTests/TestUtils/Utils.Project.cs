@@ -44,7 +44,7 @@ internal static partial class Utils
         {
             query.PageSize.Should().Be(request.PageSize);
             query.CurrentPage.Should().Be(request.CurrentPage);
-            query.Order.Should().Be(request.Order);
+            query.Orders.Should().Be(request.Orders);
             query.WorkspaceId.Should().Be(request.WorkspaceId);
             query.Name.Should().Be(request.Name);
             query.IsFavorite.Should().Be(request.IsFavorite);
