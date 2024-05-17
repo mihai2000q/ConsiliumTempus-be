@@ -16,13 +16,13 @@ This class implements basic functionality for all the controllers that are and w
 It is intended to be extended by all the controllers (Template Design Pattern).
 
 The template Api Controller resolves the following:
-- it sets the REST Api route to `{{controller}}s` to sub controllers, 
+- it sets the RESTful Api route to `{{controller}}s` to sub controllers, 
 where **controller** is the name of the controller 
 (i.e., for a User Controller the route would be `{{host}}/api/users` <<**Notice** the api prefix>>)
-- it seeks authorization via a token by default (see below for a valid token),
+- it seeks authentication via a token by default (see below for a valid token),
 otherwise the user should make use of the *Allow Anonymous* attribute
 - it injects the mapper and the mediator
-- it contains a solution to returning validation problems, conflicts, etc.
+- it contains a solution for returning validation problems, conflicts, etc.
 
 ## Authentication
 
@@ -37,7 +37,8 @@ One way to add one inside Postman is to go to the *Authorization* tab and under 
   - **iss** (Issuer) of the application (can be found in the Jwt Settings inside the `appsettings.json`)
   - **aud** (Audience) of the application (can be found in the Jwt Settings inside the `appsettings.json`)
 
-**NOTICE**: The claims are case-sensitive, therefore, they should match with the database data.
+**NOTICE**: The claims are case-sensitive, therefore, they should match with the database data 
+(except for **sub** and **jti**).
 
 An example can be found below: 
 (for a better view of the payload check the Api Auth [documentation](api/Api.Auth.md/#auth))
@@ -64,12 +65,3 @@ Below, you will find complete documentation on each Controller of the Api Layer:
 - [Project Sprint](api/Api.ProjectSprint.md)
 - [User](api/Api.User.md)
 - [Workspace](api/Api.Workspace.md)
-
-## Dto
-
-A **Data Transfer Object** (Dto) 
-is usually an aggregate that has undergone mapping so that it can be sent as an Api Response. 
-
-A full list of these Dtos can be found below:
-- [User](api/dto/Dto.User.md)
-- [Workspace](api/dto/Dto.Workspace.md)

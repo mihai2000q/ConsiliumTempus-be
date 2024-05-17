@@ -22,4 +22,4 @@ class WorkspaceRole
 }
 ```
 
-For database design, check out the [Workspace Role Diagram](../diagrams/entities/Diagram.WorkspaceRole.md).
+For database design, check out the [Workspace Role Diagram](../../database-diagrams/entities/Diagram.WorkspaceRole.md).

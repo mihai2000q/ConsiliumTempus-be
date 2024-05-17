@@ -20,4 +20,4 @@ class Permission
 }
 ```
 
-For database design, check out the [Permission Diagram](../diagrams/entities/Diagram.Permission.md).
+For database design, check out the [Permission Diagram](../../database-diagrams/entities/Diagram.Permission.md).

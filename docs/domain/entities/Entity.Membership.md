@@ -24,4 +24,4 @@ class Membership
 }
 ```
 
-For database design, check out the [Membership Diagram](../diagrams/entities/Diagram.Membership.md).
+For database design, check out the [Membership Diagram](../../database-diagrams/entities/Diagram.Membership.md).

@@ -12,16 +12,17 @@
     * [Collections](#collections)
 * [End-To-End Testing](#end-to-end-testing)
 
-The backend of the application is tested using the **xUnit** framework. 
+The backend of the application is tested using the **xUnit** framework.
 The tests are divided into Unit and Integration Tests.
 
 ## Unit Testing
 
-The Unit tests are designed to test single units of code in isolation. 
-They are quick and facile to create, and help find and fix bugs early in the development cycle. 
-They can be typically run using the IDE by right-clicking any of them. 
+The Unit tests are designed to test single units of code in isolation.
+They are quick and facile to create, and help find and fix bugs early in the development cycle.
+They can be typically run using the IDE by right-clicking any of them.
 
 Otherwise, to run all the unit tests, the following command can be used in the terminal:
+
 ```sh
 dotnet test --filter "FullyQualifiedName~UnitTests"
 ```
@@ -29,7 +30,7 @@ dotnet test --filter "FullyQualifiedName~UnitTests"
 ### Coding Convention
 
 There is exactly one test class for each important class, excluding POJOs
-(i.e., for each handler there will be a corresponding test class). 
+(i.e., for each handler there will be a corresponding test class).
 <br> 
 The name of the test **class** will be the class under testing followed by the suffix "Test." 
 <br>
@@ -81,17 +82,18 @@ public class RegisterCommandHandlerTest
 
 ## Integration Testing
 
-Integration testing is a type of software testing where components of the software are gradually integrated 
-and then tested as a unified group. 
-Usually these components are already working well individually (Unit Tests), 
+Integration testing is a type of software testing where components of the software are gradually integrated
+and then tested as a unified group.
+Usually these components are already working well individually (Unit Tests),
 but they may break when integrated with other components.
 
-In order for an integration test to run accordingly, it needs a backing database, however, 
-it should not interfere with the development environment. 
-For those reasons, the tests have been designed so that they open a new Docker container on each run. 
+In order for an integration test to run accordingly, it needs a backing database, however,
+it should not interfere with the development environment.
+For those reasons, the tests have been designed so that they open a new Docker container on each run.
 Additionally, all tests will share the same database, however, it will reset the state between each run.
 
-Inside the Api Layer a configuration file is proposed for this Integration Testing environment, `appsettings.Testing.json`.
+Inside the Api Layer a configuration file is proposed for this Integration Testing
+environment, `appsettings.Testing.json`.
 
 To run the Integration Tests, type the following in the terminal:
 
@@ -102,7 +104,7 @@ dotnet test --filter "FullyQualifiedName~IntegrationTests"
 ### Coding Convention
 
 The name of the test **class** will be the class under testing followed by the suffix "Test"
-(the project already mentions that it is an integration Test). 
+(the project already mentions that it is an integration Test).
 <br>
 The name of the **variable** component under testing is going to be called **sut** (System Under Testing).  
 The name of the test **methods** can be _T1_T2_, where _T1_ is the scenario that is being tested,
@@ -166,49 +168,51 @@ The core components are:
 Together, they provide all the functionalities to write Api Integration Tests.
 Also, keep in mind that a test should be part of a *Collection*.
 
-Unlike the other layers, the Api replaces the *SUT* variable component with the **Client**; 
+Unlike the other layers, the Api replaces the *SUT* variable component with the **Client**;
 therefore, it does not need the *Setup* region either.
 
 #### Web App Factory
 
 The **Web App Factory** class creates a Docker Container per *Collection* with the following credentials, by default:
+
 - **password** = StrongPassword123 (can be changed inside the Constants class)
 - **username** = sa
 - **database name** = master
- 
+
 Inside the constructor it removes all "real"
 instances of the database context and injects the above-mentioned container.
-On construction, the Testing Environment is set to take in the parameters in the `appsettings.Testing.json`, 
+On construction, the Testing Environment is set to take in the parameters in the `appsettings.Testing.json`,
 and the **Test Auth Handler** is invoked to add authentication to the tests.
 It also implements the Async Lifetime interface from the **xUnit Framework**
 which provides two methods for initialization and dispose.
 When initializing, it applies the following:
+
 - apply the migrations to the database
-- create a database connection to start the **Respawner** 
-that will reset the state of the container after each running method
+- create a database connection to start the **Respawner**
+  that will reset the state of the container after each running method
 
 #### Base Integration Test
 
 This class also implements the Async Lifetime so that it can reset the Database on disposing
 (which happens after each method runs).
-This class also instantiates the **App Http Client** and the Jwt Settings from the Testing configuration 
+This class also instantiates the **App Http Client** and the Jwt Settings from the Testing configuration
 (`appsettings.Testing.json`).
-The database is capable of reinitializing state, 
-therefore, inside the initialize task method, 
-it will add datasets from one class that implements **ITestData** interface, 
+The database is capable of reinitializing state,
+therefore, inside the initialize task method,
+it will add datasets from one class that implements **ITestData** interface,
 that should be coming from the Test Data package.
 Inside the implementation of **ITestData** one can return multiple datasets
 that will be then split and imported inside the Database (generally only one dataset per test collection).
-To add more datasets, go to the `TestData` package inside the project 
-create a class that imports the above-mentioned interface, and return collections of objects. 
+To add more datasets, go to the `TestData` package inside the project
+create a class that imports the above-mentioned interface, and return collections of objects.
 Each collection represents one table, and each test must have a dataset.
 
-The **Base Integration Test** class is intended 
+The **Base Integration Test** class is intended
 to be extended for each test so that the **Client** and the **Docker Container** are properly initialized.
 
 #### App Http Client
 
-The **App Http Client** represents a wrapper class for the *Http Client* provided by dotnet core. 
+The **App Http Client** represents a wrapper class for the *Http Client* provided by dotnet core.
 Besides wrapping, it also provides a way to create custom tokens based on email.
 To use a custom Token for each test method, make use of the method `UseCustomToken` and pass the email of the user.
 
@@ -216,23 +220,22 @@ To use a custom Token for each test method, make use of the method `UseCustomTok
 
 This class is used by the Web App Factory to let the Client bypass any Authentication Layer that requires it.
 In other words, some endpoints will require some type of authorization and others might just accept anonymous requests.
-However, those that require authorization will, typically, require a Token as well 
+However, those that require authorization will, typically, require a Token as well
 (which is already provided and discussed in the [Base Integration Test](#base-integration-test) class).
 
-The Handler also makes use of the **Token Provider** interface, 
-that is injecting a singleton service which provides a custom token 
+The Handler also makes use of the **Token Provider** interface,
+that is injecting a singleton service which provides a custom token
 (the method: *Use Custom Token* from the App Http Client class makes use of this provider).
 
 #### Collections
 
 Each package of the integration tests is generally going to share the initial database state
-and then use **Respawner** to reinitialize the state. 
-More precise, the testing strategy is one container per collection. 
+and then use **Respawner** to reinitialize the state.
+More precise, the testing strategy is one container per collection.
 To create a collection, go to `TestCollection` and add one that extends the `ICollectionFixture<WebAppFactory>`.
 
 Generally, for an integration test to work,
 it will need to be part of a *Collection* and extend the *Base Integration Test* class
-
 
 ## End-To-End Testing
 
@@ -249,6 +252,7 @@ first they have to make sure their docker environment works accordingly.
 To do that, follow the instructions inside the [Readme](../README.md/#docker-containers) file.
 
 For Recapitulation purposes:
+
 - create a secret key
 - create a `.env` file
 - open the containers (`docker compose up -d`)
@@ -256,7 +260,7 @@ For Recapitulation purposes:
 
 #### Node Environment
 
-Make sure Node.js is installed on the system, 
+Make sure Node.js is installed on the system,
 then proceed to install all the dependencies inside the `tests/e2e` directory:
 
 ```sh
@@ -275,13 +279,13 @@ Finally, the tests can be run either via the IDE, or the command line:
 npx playwright test
 ```
 
-They can also be run with the `--ui` flag to enable the UI Mode, 
+They can also be run with the `--ui` flag to enable the UI Mode,
 which enables the developer to sort of _"time-travel"_, debug, enable watch mode, see live changes and more.
 
 ### Conventions
 
 Normally, to write e2e tests, all that is needed is the documentation for requests, responses, and endpoint examples.
-Additionally, the tests are structured exactly like the docs, i.e., auth test or user test 
+Additionally, the tests are structured exactly like the docs, i.e., auth test or user test
 (also, for playwright to work, the name should be followed by **.spec**, resulting in: **auth.spec**).
 
 To be noted that most of the tests will follow a happy-path scenario,
@@ -296,5 +300,5 @@ Also, add the function inside the Matchers interface inside the `global.d.ts` fi
 
 #### Utils
 
-A way to use a custom token has been provided inside the `utils/utils.ts`. 
+A way to use a custom token has been provided inside the `utils/utils.ts`.
 It is recommended to use it with the spread operator (...) inside the **options** object of the request.

@@ -21,7 +21,6 @@
 
 This is the controller that takes care of creating, reading, updating and deleting a Workspace.
 
-
 ### Get
 
 Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
@@ -34,7 +33,7 @@ GET {{host}}/api/workspaces/{id}
 
 #### Get Workspace Request
 
-Sends the id of the object inside the route request.
+Sends the id of the workspace inside the route request.
 
 #### Get Workspace Response
 
@@ -46,7 +45,6 @@ Returns the workspace data.
   "description": "This is the description of the workspace"
 }
 ```
-
 
 ### Get Collection
 
@@ -64,6 +62,7 @@ Sends optional query parameters for ordering, filtering, and page-based paginati
 - _**currentPage**_ is used to specify the current page
 - _**order**_ is used to order the collection
 - _**name**_ is used to filter by name
+- _**isPersonalWorkspaceFirst**_ is used to place the personal workspace of the user on top of the others
 
 #### Get Collection Workspace Response
 
@@ -75,19 +74,28 @@ Returns the workspaces.
     {
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Workspace 1",
-      "description": "This is the first workspace"
+      "description": "This is the first workspace",
+      "isPersonal": true,
+      "owner": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Michael Jordan"
+      }
     },
     {
       "id": "20000000-0000-0000-0000-000000000000",
       "name": "Workspace 2",
-      "description": "This is the second workspace"
+      "description": "This is the second workspace",
+      "isPersonal": false,
+      "owner": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Andreas Donner"
+      }
     }
   ],
   "totalCount": 4,
   "totalPages": 2
 }
 ```
-
 
 ### Create
 
@@ -103,15 +111,13 @@ Sends body data that the new workspace needs to be created.
 
 ```json
 {
-  "name": "Workspace Name",
-  "description": "This is the description of the workspace"
+  "name": "Workspace Name"
 }
 ```
 
 #### Create Workspace Response
 
 Returns a confirmation message that the workspace has been created successfully.
-
 
 ### Update
 
@@ -139,10 +145,9 @@ Sends body data that the new workspace needs to be updated.
 
 Returns a confirmation message that the workspace has been updated successfully.
 
-
 ### Delete
 
-Only admin users that are part of the workspace can delete it 
+Only admin users that are part of the workspace can delete it
 ([Delete Workspace Permission](../Security.md/#permissions)).
 
 ```js

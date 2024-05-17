@@ -1,28 +1,28 @@
 # Consilium Tempus API
 
 - [Auth](#auth)
-    - [Register](#register)
-        - [Register Request](#register-request)
-        - [Register Response](#register-response)
-    - [Login](#login)
-        - [Login Request](#login-request)
-        - [Login Response](#login-response)
-    - [Refresh](#refresh)
-        - [Refresh Request](#refresh-request)
-        - [Refresh Response](#refresh-response)
+  - [Register](#register)
+    - [Register Request](#register-request)
+    - [Register Response](#register-response)
+  - [Login](#login)
+    - [Login Request](#login-request)
+    - [Login Response](#login-response)
+  - [Refresh](#refresh)
+    - [Refresh Request](#refresh-request)
+    - [Refresh Response](#refresh-response)
 
 ## Auth
 
-To use the application, the user should first register. 
+To use the application, the user should first register.
 When registering, a **User** will be created and an _Access Token_ will be returned as a result.
 Alternatively, if the user already exists, use their credentials to login and get a new token.
-The developer can test 
+The developer can test
 whether the generated token worked accordingly by grabbing the token hash and decode it on [jwt.io](https://jwt.io).
 See the example below:
 
 ![Decoded Jwt Token](../images/api/auth-jwt-token.png)
 
-Also, the token is short-lived; therefore, when it expires, it can be refreshed using the _Refresh Token_, 
+Also, the token is short-lived; therefore, when it expires, it can be refreshed using the _Refresh Token_,
 which has a long lifetime.
 
 ### Register
@@ -63,7 +63,6 @@ Returns an access token and a refresh token.
 }
 ```
 
-
 ### Login
 
 Anyone can login.
@@ -97,7 +96,6 @@ Returns an access token and a refresh token.
   "refreshToken": "88882448-bd63-4731-8a05-f6333b6d22e2"
 }
 ```
-
 
 ### Refresh
 

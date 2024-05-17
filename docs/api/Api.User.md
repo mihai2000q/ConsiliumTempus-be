@@ -9,13 +9,12 @@
   * [Update Current](#update)
     * [Update Current User Request](#update-user-request)
     * [Update Current User Response](#update-user-response)
-  * [Delete](#delete)
-    * [Delete User Response](#delete-user-response)
+  * [Delete Current](#delete-current)
+    * [Delete Current User Response](#delete-current-user-response)
 
 ## User
 
 This is the controller that takes care of reading, updating and deleting a User.
-
 
 ### Get
 
@@ -45,7 +44,6 @@ Returns the user data.
 }
 ```
 
-
 ### Get Current
 
 Returns the current user based on the token provided.
@@ -69,10 +67,9 @@ Returns the current user data.
 }
 ```
 
-
 ### Update
 
-Only the owner of this endpoint (the user in question) can update their data 
+Only the owner of this endpoint (the user in question) can update their data
 (which is implicit, because the id is not passed, but read from the token).
 
 ```js
@@ -94,17 +91,16 @@ Sends body data that the new user needs to be updated.
 
 #### Update User Response
 
-Returns the new user [Dto](dto/Dto.User.md).
+Returns a confirmation message that the user has been updated successfully.
 
+### Delete Current
 
-### Delete
-
-Only the owner can update their data (which is implicit, because the id is not passed, but read from the token).
+Only the owner can delete their data (which is implicit, because the id is not passed, but read from the token).
 
 ```js
 DELETE {{host}}/api/users
 ```
 
-#### Delete User Response
+#### Delete Current User Response
 
 Returns a confirmation message that the user has been deleted successfully.

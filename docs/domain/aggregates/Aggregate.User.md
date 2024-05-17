@@ -31,11 +31,14 @@ class User
 }
 ```
 
-For database design, check out the [User Diagram](../diagrams/aggregates/Diagram.User.md).
+For database design, check out the [User Diagram](../../database-diagrams/aggregates/Diagram.User.md).
 
 ### Value Objects
 
 - **Credentials**, which holds the *Email* and *Password*
+- **FirstName**, which holds a string encapsulated *Value*
+- **LastName**, which holds a string encapsulated *Value*
+- **Role**, which holds a string encapsulated *Value*
 
 ### Properties Validation
 
