@@ -7,5 +7,6 @@ public sealed record CreateProjectSprintCommand(
     Guid ProjectId,
     string Name,
     DateOnly? StartDate,
-    DateOnly? EndDate)
+    DateOnly? EndDate,
+    bool KeepPreviousStages)
     : IRequest<ErrorOr<CreateProjectSprintResult>>;

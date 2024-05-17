@@ -12,7 +12,7 @@ import {
 } from "../utils/project-sprint.utils";
 import CreateProjectSprintRequest from "../types/requests/project-sprint/CreateProjectSprintRequest";
 import UpdateProjectSprintRequest from "../types/requests/project-sprint/UpdateProjectSprintRequest";
-import { ProjectSprintName } from "../utils/constants";
+import { ProjectSprintName, ProjectStageName1, ProjectStageName2, ProjectStageName3 } from "../utils/constants";
 import AddStageToProjectSprintRequest from "../types/requests/project-sprint/AddStageToProjectSprintRequest";
 import UpdateStageFromProjectSprintRequest from "../types/requests/project-sprint/UpdateStageFromProjectSprintRequest";
 
@@ -86,40 +86,97 @@ test.describe('should allow operations on the project sprint entity', () => {
     expect(json.sprints).toHaveLength(2);
   })
 
-  test('should create project sprint', async ({ request }) => {
-    const body: CreateProjectSprintRequest = {
-      projectId: PROJECT_ID,
-      name: "Sprint 2",
-      startDate: "2024-01-12",
-      endDate: "2024-01-26"
-    }
-    const response = await request.post('/api/projects/sprints', {
-      ...useToken(),
-      data: body
-    });
+  test.describe(`should allow creation of project sprint`, () => {
+    test('should create project sprint', async ({ request }) => {
+      const body: CreateProjectSprintRequest = {
+        projectId: PROJECT_ID,
+        name: "Sprint 2",
+        startDate: "2024-01-12",
+        endDate: "2024-01-26"
+      }
+      const response = await request.post('/api/projects/sprints', {
+        ...useToken(),
+        data: body
+      });
 
-    expect(response.ok()).toBeTruthy()
+      expect(response.ok()).toBeTruthy()
 
-    expect(await response.json()).toStrictEqual({
-      message: expect.any(String)
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const sprints = await getProjectSprints(request, PROJECT_ID)
+      expect(sprints).toHaveLength(2)
+      expect(sprints).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: ProjectSprintName,
+          startDate: null,
+          endDate: null,
+        },
+        {
+          id: expect.any(String),
+          name: body.name,
+          startDate: body.startDate,
+          endDate: body.endDate
+        }
+      ])
     })
 
-    const sprints = await getProjectSprints(request, PROJECT_ID)
-    expect(sprints).toHaveLength(2)
-    expect(sprints).toStrictEqual([
-      {
-        id: expect.any(String),
-        name: ProjectSprintName,
-        startDate: null,
-        endDate: null,
-      },
-      {
-        id: expect.any(String),
-        name: body.name,
-        startDate: body.startDate,
-        endDate: body.endDate
+    test('should create project sprint and keep previous stages', async ({ request }) => {
+      const body: CreateProjectSprintRequest = {
+        projectId: PROJECT_ID,
+        name: "Sprint 2",
+        startDate: "2024-01-12",
+        endDate: "2024-01-26",
+        keepPreviousStages: true
       }
-    ])
+      const response = await request.post('/api/projects/sprints', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const sprints = await getProjectSprints(request, PROJECT_ID)
+      expect(sprints).toHaveLength(2)
+      expect(sprints).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: ProjectSprintName,
+          startDate: null,
+          endDate: null,
+        },
+        {
+          id: expect.any(String),
+          name: body.name,
+          startDate: body.startDate,
+          endDate: body.endDate
+        }
+      ])
+      const createdSprint = sprints.filter((s: { name: string; }) => s.name == body.name)[0]
+
+      const stages = await getProjectStages(request, createdSprint.id)
+      expect(stages).toHaveLength(3);
+      expect(stages).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: ProjectStageName1
+        },
+        {
+          id: expect.any(String),
+          name: ProjectStageName2
+        },
+        {
+          id: expect.any(String),
+          name: ProjectStageName3
+        },
+      ])
+    })
   })
 
   test('should add stage to project sprint', async ({ request }) => {

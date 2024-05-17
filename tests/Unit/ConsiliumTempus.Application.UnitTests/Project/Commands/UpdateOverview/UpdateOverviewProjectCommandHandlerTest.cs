@@ -27,7 +27,7 @@ public class UpdateOverviewProjectCommandHandlerTest
     public async Task HandleUpdateOverviewProjectCommand_WhenIsSuccessful_ShouldUpdateOverviewProjectAndReturnSuccess()
     {
         // Arrange
-        var project = ProjectFactory.Create();
+        var project = ProjectFactory.CreateWithSprints();
         _projectRepository
             .GetWithWorkspace(Arg.Any<ProjectId>())
             .Returns(project);

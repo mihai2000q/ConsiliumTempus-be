@@ -33,13 +33,15 @@ public static class ProjectSprintRequestFactory
         Guid? projectId = null,
         string name = Constants.ProjectSprint.Name,
         DateOnly? startDate = null,
-        DateOnly? endDate = null)
+        DateOnly? endDate = null,
+        bool keepPreviousStages = false)
     {
         return new CreateProjectSprintRequest(
             projectId ?? Guid.NewGuid(),
             name,
             startDate,
-            endDate);
+            endDate,
+            keepPreviousStages);
     }
 
     public static AddStageToProjectSprintRequest CreateAddStageToProjectSprintRequest(

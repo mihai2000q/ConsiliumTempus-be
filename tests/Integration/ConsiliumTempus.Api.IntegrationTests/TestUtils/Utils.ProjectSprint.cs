@@ -42,12 +42,22 @@ internal static partial class Utils
 
         internal static void AssertCreation(
             ProjectSprintAggregate sprint,
-            CreateProjectSprintRequest request)
+            CreateProjectSprintRequest request,
+            ProjectSprintAggregate? previousSprint = null)
         {
             sprint.Name.Value.Should().Be(request.Name);
             sprint.StartDate.Should().Be(request.StartDate);
             sprint.EndDate.Should().Be(request.EndDate);
             sprint.Project.Id.Value.Should().Be(request.ProjectId);
+
+            if (request.KeepPreviousStages && previousSprint is not null)
+            {
+                sprint.Stages.Should().BeEquivalentTo(previousSprint.Stages);
+            }
+            else
+            {
+                sprint.Stages.Should().BeEmpty();
+            }
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());

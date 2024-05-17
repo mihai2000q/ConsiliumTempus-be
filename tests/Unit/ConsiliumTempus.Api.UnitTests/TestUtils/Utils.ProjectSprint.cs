@@ -49,6 +49,7 @@ internal static partial class Utils
             command.Name.Should().Be(request.Name);
             command.StartDate.Should().Be(request.StartDate);
             command.EndDate.Should().Be(request.EndDate);
+            command.KeepPreviousStages.Should().Be(request.KeepPreviousStages);
 
             return true;
         }

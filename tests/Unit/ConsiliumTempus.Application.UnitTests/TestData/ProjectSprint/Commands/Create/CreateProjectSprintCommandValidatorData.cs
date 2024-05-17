@@ -17,7 +17,8 @@ internal static class CreateProjectSprintCommandValidatorData
                 Guid.NewGuid(),
                 "New Project Sprint",
                 new DateOnly(2022, 11, 12),
-                new DateOnly(2022, 11, 26));
+                new DateOnly(2022, 11, 26),
+                true);
             Add(command);
         }
     }

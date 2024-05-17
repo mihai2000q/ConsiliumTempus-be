@@ -47,7 +47,7 @@ public class ProjectSprintControllerTest
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetProjectSprintRequest();
 
-        var sprint = ProjectSprintFactory.CreateWithStages();
+        var sprint = ProjectSprintFactory.Create();
         _mediator
             .Send(Arg.Any<GetProjectSprintQuery>())
             .Returns(sprint);

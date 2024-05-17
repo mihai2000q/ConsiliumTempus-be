@@ -19,7 +19,7 @@ public class ProjectCreatedHandlerTest
     {
         // Arrange
         var user = UserFactory.Create();
-        var project = ProjectFactory.Create(user: user, sprintsCount: 0);
+        var project = ProjectFactory.CreateWithSprints(user: user, sprintsCount: 0);
         var notification = new ProjectCreated(project, user);
 
         // Act

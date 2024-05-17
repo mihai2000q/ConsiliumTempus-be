@@ -28,7 +28,7 @@ public class DeleteProjectCommandHandlerTest
     public async Task HandleDeleteProjectCommand_WhenIsSuccessful_ShouldDeleteProjectAndReturnSuccess()
     {
         // Arrange
-        var project = ProjectFactory.Create();
+        var project = ProjectFactory.CreateWithSprints();
         _projectRepository
             .GetWithWorkspace(Arg.Any<ProjectId>())
             .Returns(project);

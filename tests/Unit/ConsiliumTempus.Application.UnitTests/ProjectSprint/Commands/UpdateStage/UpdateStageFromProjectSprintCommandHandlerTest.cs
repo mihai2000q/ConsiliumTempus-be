@@ -27,7 +27,7 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
     public async Task HandleUpdateStageFromProjectSprintCommand_WhenSuccessful_ShouldUpdateAndReturnSuccessResponse()
     {
         // Arrange
-        var sprint = ProjectSprintFactory.CreateWithStages();
+        var sprint = ProjectSprintFactory.Create();
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);
@@ -78,7 +78,7 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
         // Arrange
         var command = ProjectSprintCommandFactory.CreateUpdateStageFromProjectSprintCommand();
 
-        var sprint = ProjectSprintFactory.CreateWithStages();
+        var sprint = ProjectSprintFactory.Create();
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);
