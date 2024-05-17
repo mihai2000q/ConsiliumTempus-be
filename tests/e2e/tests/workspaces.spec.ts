@@ -49,13 +49,15 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: PersonalWorkspaceName,
             description: expect.any(String),
-            isPersonal: true
+            isPersonal: true,
+            owner: expect.any(Object)
           },
           {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
             description: "",
-            isPersonal: false
+            isPersonal: false,
+            owner: expect.any(Object)
           }
         ]),
         totalCount: 2,
@@ -81,13 +83,15 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: PersonalWorkspaceName,
             description: expect.any(String),
-            isPersonal: true
+            isPersonal: true,
+            owner: expect.any(Object)
           },
           {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
             description: "",
-            isPersonal: false
+            isPersonal: false,
+            owner: expect.any(Object)
           }
         ],
         totalCount: 2,
@@ -113,13 +117,15 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: PersonalWorkspaceName,
             description: expect.any(String),
-            isPersonal: true
+            isPersonal: true,
+            owner: expect.any(Object)
           },
           {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
             description: "",
-            isPersonal: false
+            isPersonal: false,
+            owner: expect.any(Object)
           }
         ],
         totalCount: 2,
@@ -142,19 +148,22 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: createWorkspaceRequests[1].name,
             description: "",
-            isPersonal: false
+            isPersonal: false,
+            owner: expect.any(Object)
           },
           {
             id: expect.any(String),
             name: createWorkspaceRequests[0].name,
             description: "",
-            isPersonal: false
+            isPersonal: false,
+            owner: expect.any(Object)
           },
           {
             id: expect.any(String),
             name: PersonalWorkspaceName,
             description: expect.any(String),
-            isPersonal: true
+            isPersonal: true,
+            owner: expect.any(Object)
           }
         ],
         totalCount: 3,
@@ -180,7 +189,8 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
             description: "",
-            isPersonal: false
+            isPersonal: false,
+            owner: expect.any(Object)
           }
         ],
         totalCount: 1,
@@ -207,14 +217,16 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: r.name,
             description: "",
-            isPersonal: false
+            isPersonal: false,
+            owner: expect.any(Object)
           }
         })
       expectedWorkspaces.unshift({
         id: expect.any(String),
         name: PersonalWorkspaceName,
         description: expect.any(String),
-        isPersonal: true
+        isPersonal: true,
+        owner: expect.any(Object)
       })
 
       const json = await response.json()
@@ -248,7 +260,8 @@ test.describe('should allow operations on the workspace entity', () => {
         id: expect.any(String),
         name: createWorkspaceRequest.name,
         description: "",
-        isPersonal: false
+        isPersonal: false,
+        owner: expect.any(Object)
       }
     ]))
   })
@@ -282,7 +295,8 @@ test.describe('should allow operations on the workspace entity', () => {
         id: body.id,
         name: body.name,
         description: body.description,
-        isPersonal: false
+        isPersonal: false,
+        owner: expect.any(Object)
       }
     ]))
   })
