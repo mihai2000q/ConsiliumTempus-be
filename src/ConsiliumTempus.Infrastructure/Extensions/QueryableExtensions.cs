@@ -16,14 +16,17 @@ public static class QueryableExtensions
             current.WhereIf(filter.CanBeFiltered, filter.Predicate));
     }
 
-    public static IQueryable<TSource> ApplyOrder<TSource>(
+    public static IQueryable<TSource> ApplyOrders<TSource>(
         this IQueryable<TSource> queryable,
-        IOrder<TSource>? order)
+        IReadOnlyList<IOrder<TSource>> orders)
     {
-        if (order is null) return queryable;
-        return order.Type == OrderType.Descending
-            ? queryable.OrderByDescending(order.PropertySelector)
-            : queryable.OrderBy(order.PropertySelector);
+        var orderedQueryable = queryable.ApplyOrder(orders[0]);
+        for (var i = 1; i < orders.Count; i++)
+        {
+            orderedQueryable = orderedQueryable.ThenApplyOrder(orders[i]);
+        }
+
+        return orderedQueryable;
     }
 
     public static IQueryable<TSource> Paginate<TSource>(
@@ -43,5 +46,23 @@ public static class QueryableExtensions
         Expression<Func<TSource, bool>> predicate)
     {
         return condition ? queryable.Where(predicate) : queryable;
+    }
+
+    private static IOrderedQueryable<TSource> ApplyOrder<TSource>(
+        this IQueryable<TSource> queryable,
+        IOrder<TSource> order)
+    {
+        return order.Type == OrderType.Descending
+            ? queryable.OrderByDescending(order.PropertySelector)
+            : queryable.OrderBy(order.PropertySelector);
+    }
+
+    private static IOrderedQueryable<TSource> ThenApplyOrder<TSource>(
+        this IOrderedQueryable<TSource> queryable,
+        IOrder<TSource> order)
+    {
+        return order.Type == OrderType.Descending
+            ? queryable.ThenByDescending(order.PropertySelector)
+            : queryable.ThenBy(order.PropertySelector);
     }
 }
