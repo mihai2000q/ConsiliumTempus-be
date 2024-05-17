@@ -5,4 +5,5 @@ namespace ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed record GetProjectTaskResponse(
     string Name,
-    string Description);
+    string Description,
+    bool IsCompleted);

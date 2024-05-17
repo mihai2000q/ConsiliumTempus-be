@@ -86,6 +86,7 @@ internal static partial class Utils
         {
             response.Name.Should().Be(task.Name.Value);
             response.Description.Should().Be(task.Description.Value);
+            response.IsCompleted.Should().Be(task.IsCompleted.Value);
         }
 
         internal static void AssertGetCollectionResponse(

@@ -35,7 +35,8 @@ public sealed class ProjectTaskMappingConfig : IRegister
 
         config.NewConfig<ProjectTaskAggregate, GetProjectTaskResponse>()
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value);
+            .Map(dest => dest.Description, src => src.Description.Value)
+            .Map(dest => dest.IsCompleted, src => src.IsCompleted.Value);
     }
 
     private static void GetCollectionMappings(TypeAdapterConfig config)

@@ -21,6 +21,7 @@ internal static partial class Utils
         {
             response.Name.Should().Be(sprint.Name.Value);
             response.Description.Should().Be(sprint.Description.Value);
+            response.IsCompleted.Should().Be(sprint.IsCompleted.Value);
         }
         
         internal static void AssertGetCollectionResponse(
