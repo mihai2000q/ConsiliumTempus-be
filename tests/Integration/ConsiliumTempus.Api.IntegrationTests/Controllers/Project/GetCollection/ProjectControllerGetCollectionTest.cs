@@ -139,11 +139,11 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         // Arrange
         var user = ProjectData.Users.First();
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            order: "name.desc");
+            orders: "name.desc");
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?order={request.Order}");
+        var outcome = await Client.Get($"api/projects?orders={request.Orders}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -151,6 +151,34 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         var expectedProjects = ProjectData.Projects
             .Where(p => p.Workspace.Memberships.Any(m => m.User == user))
             .OrderByDescending(p => p.Name.Value)
+            .ToList();
+        Utils.Project.AssertGetCollectionResponse(
+            response!,
+            expectedProjects,
+            expectedProjects.Count,
+            null,
+            true);
+    }
+    
+    [Fact]
+    public async Task GetCollectionProject_WhenRequestHasNameDescAndLastActivityAscOrder_ShouldReturnProjectsOrderedByDescendingName()
+    {
+        // Arrange
+        var user = ProjectData.Users.First();
+        var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
+            orders: "name.desc, last_activity.asc");
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Get($"api/projects?orders={request.Orders}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
+        var expectedProjects = ProjectData.Projects
+            .Where(p => p.Workspace.Memberships.Any(m => m.User == user))
+            .OrderByDescending(p => p.Name.Value)
+            .ThenBy(p => p.LastActivity)
             .ToList();
         Utils.Project.AssertGetCollectionResponse(
             response!,
@@ -168,13 +196,14 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
             pageSize: 2,
             currentPage: 2,
-            order: "name.asc");
+            orders: "name.asc");
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?pageSize={request.PageSize}" +
+        var outcome = await Client.Get($"api/projects" +
+                                       $"?pageSize={request.PageSize}" +
                                        $"&currentPage={request.CurrentPage}" +
-                                       $"&order={request.Order}");
+                                       $"&orders={request.Orders}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);

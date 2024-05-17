@@ -86,7 +86,7 @@ Anyone that is part of the workspace can read the projects
 in case the workspace Id is mentioned, otherwise any logged-in user will get their projects.
 
 ```js
-GET {{host}}/api/projects?pageSize=2&currentPage=1&order=name.desc&workspaceId=10000000-0000-0000-0000-000000000000&name=project&isFavorite=true&isPrivate=false
+GET {{host}}/api/projects?pageSize=2&currentPage=1&orders=name.desc, last_activity.asc&workspaceId=10000000-0000-0000-0000-000000000000&name=project&isFavorite=true&isPrivate=false
 ```
 
 #### Get Collection Request
@@ -95,7 +95,7 @@ it sends optional query parameters to paginate, order or filter the projects by 
 
 - _**pageSize**_ is used to specify the size of the page
 - _**currentPage**_ is used to specify the current page
-- _**order**_ is used to order the collection
+- _**orders**_ is used to order the collection
 - _**workspaceId**_ is used to order the projects by workspace
 - _**name**_ is used to filter by name
 - _**isFavorite**_ is used to filter by favorites

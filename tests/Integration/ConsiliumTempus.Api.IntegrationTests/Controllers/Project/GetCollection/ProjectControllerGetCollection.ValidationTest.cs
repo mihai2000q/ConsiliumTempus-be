@@ -15,10 +15,11 @@ public class ProjectControllerGetCollectionValidationTest(WebAppFactory factory)
     public async Task GetCollectionProject_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
+        var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(orders: "name.asc");
 
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
-        var outcome = await Client.Get("api/projects");
+        var outcome = await Client.Get($"api/projects?orders={request.Orders}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -33,7 +34,9 @@ public class ProjectControllerGetCollectionValidationTest(WebAppFactory factory)
             pageSize: -1);
 
         // Act
-        var outcome = await Client.Get($"api/projects?name={request.Name}");
+        var outcome = await Client.Get($"api/projects" +
+                                       $"?name={request.Name}" +
+                                       $"&pageSize={request.PageSize}");
 
         // Assert
         await outcome.ValidateValidationErrors();

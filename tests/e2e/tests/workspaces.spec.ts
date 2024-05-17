@@ -103,7 +103,7 @@ test.describe('should allow operations on the workspace entity', () => {
     test('should get collection of workspaces ordered by create date time descending', async ({ request }) => {
       const createWorkspaceRequests = await createWorkspaces(request, 2)
 
-      const response = await request.get('/api/workspaces?order=created_date_time.desc', useToken())
+      const response = await request.get('/api/workspaces?orders=created_date_time.desc', useToken())
 
       expect(response.ok()).toBeTruthy()
 
@@ -171,7 +171,7 @@ test.describe('should allow operations on the workspace entity', () => {
 
       const pageSize = 6
       const currentPage = 1
-      const response = await request.get(`/api/workspaces?order=name.asc&pageSize=${pageSize}&currentPage=${currentPage}`, useToken())
+      const response = await request.get(`/api/workspaces?orders=name.asc&pageSize=${pageSize}&currentPage=${currentPage}`, useToken())
 
       expect(response.ok()).toBeTruthy()
 

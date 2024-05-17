@@ -32,7 +32,7 @@ internal static partial class Utils
             query.IsPersonalWorkspaceFirst.Should().Be(request.IsPersonalWorkspaceFirst);
             query.PageSize.Should().Be(request.PageSize);
             query.CurrentPage.Should().Be(request.CurrentPage);
-            query.Order.Should().Be(request.Order);
+            query.Orders.Should().Be(request.Orders);
             query.Name.Should().Be(request.Name);
 
             return true;

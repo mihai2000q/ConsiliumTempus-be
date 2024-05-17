@@ -20,6 +20,7 @@ public static class QueryableExtensions
         this IQueryable<TSource> queryable,
         IReadOnlyList<IOrder<TSource>> orders)
     {
+        if (orders.Count == 0) return queryable;
         var orderedQueryable = queryable.ApplyOrder(orders[0]);
         for (var i = 1; i < orders.Count; i++)
         {
