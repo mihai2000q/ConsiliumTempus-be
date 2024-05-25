@@ -12,7 +12,6 @@ import {
   getProjects
 } from "../utils/projects.utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
-import { ProjectSprintName } from "../utils/constants";
 import UpdateProjectRequest from "../types/requests/project/UpdateProjectRequest";
 import UpdateOverviewProjectRequest from "../types/requests/project/UpdateOverviewProjectRequest";
 

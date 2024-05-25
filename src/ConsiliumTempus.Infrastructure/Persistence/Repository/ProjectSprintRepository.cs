@@ -26,13 +26,12 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 
-    public Task<ProjectSprintAggregate?> GetWithTasksAndWorkspace(
+    public Task<ProjectSprintAggregate?> GetWithSprintsAndWorkspace(
         ProjectSprintId id, 
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectSprints
-            .Include(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
-            .ThenInclude(s => s.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
+            .Include(ps => ps.Project.Sprints)
             .Include(ps => ps.Project.Workspace)
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }

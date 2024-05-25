@@ -42,6 +42,27 @@ public class ProjectSprintControllerDeleteTest(WebAppFactory factory)
         project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
         project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
     }
+    
+    [Fact]
+    public async Task DeleteProjectSprint_WhenTheProjectHasOnlyOneSprint_ShouldReturnOnlyOneSprintError()
+    {
+        // Arrange
+        var sprint = ProjectSprintData.ProjectSprints[2];
+        var request = ProjectSprintRequestFactory.CreateDeleteProjectSprintRequest(id: sprint.Id.Value);
+
+        // Act
+        Client.UseCustomToken(ProjectSprintData.Users[1]);
+        var outcome = await Client.Delete($"api/projects/sprints/{request.Id}");
+
+        // Assert
+        await outcome.ValidateError(Errors.ProjectSprint.OnlyOneSprint);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length);
+        dbContext.ProjectSprints.AsEnumerable()
+            .SingleOrDefault(p => p.Id.Value == request.Id)
+            .Should().NotBeNull();
+    }
 
     [Fact]
     public async Task DeleteProjectSprint_WhenIsNotFound_ShouldReturnNotFoundError()

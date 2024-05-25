@@ -30,7 +30,7 @@ public class DeleteProjectSprintCommandHandlerTest
         // Arrange
         var projectSprint = ProjectSprintFactory.Create();
         _projectSprintRepository
-            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
+            .GetWithSprintsAndWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(projectSprint);
 
         var command = ProjectSprintCommandFactory.CreateDeleteProjectSprintCommand(projectSprint.Id.Value);
@@ -41,13 +41,40 @@ public class DeleteProjectSprintCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+            .GetWithSprintsAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
         _projectSprintRepository
             .Received(1)
-            .Remove(Arg.Is<ProjectSprintAggregate>(ps => Utils.ProjectSprint.AssertFromDeleteCommand(ps, command)));
+            .Remove(Arg.Is<ProjectSprintAggregate>(ps =>
+                Utils.ProjectSprint.AssertFromDeleteCommand(ps, command)));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectSprintResult());
+    }
+    
+    [Fact]
+    public async Task HandleDeleteProjectSprintCommand_WhenThereIsOnlyOneSprint_ShouldReturnOnlyOneSprintError()
+    {
+        // Arrange
+        var projectSprint = ProjectSprintFactory.Create(sprintsCount: 1);
+        _projectSprintRepository
+            .GetWithSprintsAndWorkspace(Arg.Any<ProjectSprintId>())
+            .Returns(projectSprint);
+
+        var command = ProjectSprintCommandFactory.CreateDeleteProjectSprintCommand(projectSprint.Id.Value);
+
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Assert
+        await _projectSprintRepository
+            .Received(1)
+            .GetWithSprintsAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+        _projectSprintRepository
+            .DidNotReceive()
+            .Remove(Arg.Any<ProjectSprintAggregate>());
+
+        outcome.IsError.Should().BeTrue();
+        outcome.ValidateError(Errors.ProjectSprint.OnlyOneSprint);
     }
 
     [Fact]
@@ -57,7 +84,7 @@ public class DeleteProjectSprintCommandHandlerTest
         var command = ProjectSprintCommandFactory.CreateDeleteProjectSprintCommand();
 
         _projectSprintRepository
-            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
+            .GetWithSprintsAndWorkspace(Arg.Any<ProjectSprintId>())
             .ReturnsNull();
 
         // Act
@@ -66,7 +93,7 @@ public class DeleteProjectSprintCommandHandlerTest
         // Assert
         await _projectSprintRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+            .GetWithSprintsAndWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
         _projectSprintRepository
             .DidNotReceive()
             .Remove(Arg.Any<ProjectSprintAggregate>());

@@ -129,6 +129,9 @@ internal class ProjectSprintData : ITestData
             new DateOnly(2024, 01, 1),
             new DateOnly(2024, 01, 15)),
         ProjectSprintFactory.Create(
+            Projects[0],
+            "Sprint 2 - Qualify on Semi Finals"),
+        ProjectSprintFactory.Create(
             Projects[1],
             "Get the champs lig finals")
     ];
