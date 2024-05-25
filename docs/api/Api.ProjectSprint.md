@@ -37,7 +37,7 @@ Anyone that is part of a workspace can access the project sprints
 ([Get Project Sprint Permission](../Security.md/#permissions)).
 
 ```js
-POST {{host}}/api/projects/sprints/{id}
+GET {{host}}/api/projects/sprints/{id}
 ```
 
 - **id** is a 36 characters strings
@@ -74,7 +74,7 @@ Anyone that is part of a workspace can access the project sprints
 ([Get Collection Project Sprint Permission](../Security.md/#permissions)).
 
 ```js
-POST {{host}}/api/projects/sprints?projectId=10000000-0000-0000-0000-000000000000
+GET {{host}}/api/projects/sprints?projectId=10000000-0000-0000-0000-000000000000
 ```
 
 #### Get Collection Project Sprint Request

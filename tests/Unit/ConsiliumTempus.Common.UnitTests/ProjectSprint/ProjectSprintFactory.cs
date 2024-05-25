@@ -14,11 +14,12 @@ public static class ProjectSprintFactory
         ProjectAggregate? project = null,
         DateOnly? startDate = null,
         DateOnly? endDate = null,
-        int stagesCount = 5)
+        int stagesCount = 5,
+        int sprintsCount = 5)
     {
         var sprint = ProjectSprintAggregate.Create(
             Name.Create(name),
-            project ?? ProjectFactory.CreateWithSprints(),
+            project ?? ProjectFactory.CreateWithSprints(sprintsCount: sprintsCount),
             startDate,
             endDate);
 

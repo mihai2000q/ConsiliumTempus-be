@@ -129,6 +129,11 @@ internal class ProjectSprintData : ITestData
             new DateOnly(2024, 01, 1),
             new DateOnly(2024, 01, 15)),
         ProjectSprintFactory.Create(
+            Projects[0],
+            "Sprint 2 - Qualify on Semi Finals",
+            new DateOnly(2024, 01, 16),
+            new DateOnly(2024, 01, 30)),
+        ProjectSprintFactory.Create(
             Projects[1],
             "Get the champs lig finals")
     ];
@@ -144,6 +149,17 @@ internal class ProjectSprintData : ITestData
             1),
         ProjectStageFactory.Create(
             ProjectSprints[0],
+            "Done",
+            2),
+        ProjectStageFactory.Create(
+            ProjectSprints[1],
+            "To do"),
+        ProjectStageFactory.Create(
+            ProjectSprints[1],
+            "In Progress",
+            1),
+        ProjectStageFactory.Create(
+            ProjectSprints[1],
             "Done",
             2)
     ];

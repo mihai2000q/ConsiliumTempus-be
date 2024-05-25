@@ -41,3 +41,4 @@ For database design checkout the [Project Sprint Diagram](../../database-diagram
 ### Domain Errors
 
 - **Not Found** when the project sprint cannot be found
+- **Only One Sprint** when the project does not have more than one sprint
