@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using ConsiliumTempus.Domain.User;
-using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
@@ -50,7 +49,7 @@ internal static partial class Utils
                 .Should()
                 .Be(accessToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
             newRefreshToken.RefreshTimes.Should().Be(1);
-            newRefreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newRefreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
     }
 }

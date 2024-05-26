@@ -6,7 +6,6 @@ using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
-using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -23,9 +22,9 @@ internal static partial class Utils
             workspace.Description.Value.Should().BeEmpty();
             workspace.Owner.Should().Be(user);
             workspace.IsPersonal.Value.Should().Be(false);
-            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-            workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.DomainEvents.Should().BeEmpty();
 
             workspace.Memberships.Should().HaveCount(1);
@@ -33,8 +32,8 @@ internal static partial class Utils
             workspace.Memberships[0].User.Should().Be(user);
             workspace.Memberships[0].Workspace.Should().Be(workspace);
             workspace.Memberships[0].WorkspaceRole.Should().Be(WorkspaceRole.Admin);
-            workspace.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-            workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            workspace.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.Projects.Should().BeEmpty();
 
             return true;
@@ -47,7 +46,7 @@ internal static partial class Utils
             workspace.Id.Value.Should().Be(command.Id);
             workspace.Name.Value.Should().Be(command.Name);
             workspace.Description.Value.Should().Be(command.Description);
-            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static bool AssertGetCollectionFilters(

@@ -6,7 +6,6 @@ using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
-using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
@@ -62,12 +61,12 @@ internal static partial class Utils
             project.Description.Value.Should().BeEmpty();
             project.IsFavorite.Value.Should().Be(false);
             project.IsPrivate.Value.Should().Be(request.IsPrivate);
-            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            project.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             project.Workspace.Id.Value.Should().Be(request.WorkspaceId);
-            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             project.Sprints.Should().HaveCount(1);
             project.Sprints[0].Stages.Should().HaveCount(Constants.ProjectStage.Names.Length);
@@ -87,10 +86,10 @@ internal static partial class Utils
             // changed
             newProject.Name.Value.Should().Be(request.Name);
             newProject.IsFavorite.Value.Should().Be(request.IsFavorite);
-            newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdateOverview(
@@ -104,10 +103,10 @@ internal static partial class Utils
 
             // changed
             newProject.Description.Value.Should().Be(request.Description);
-            newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         private static void AssertProjectResponse(

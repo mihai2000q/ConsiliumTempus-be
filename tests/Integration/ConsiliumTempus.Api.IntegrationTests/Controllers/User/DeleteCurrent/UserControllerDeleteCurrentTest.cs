@@ -6,7 +6,6 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
-using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.DeleteCurrent;
@@ -76,7 +75,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
                     newOwnerMembership.WorkspaceRole.Should().NotBe(WorkspaceRole.Admin);
                     var newOwner = w.Memberships.Single(m => m.Id == newOwnerMembership.Id);
                     newOwner.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
-                    newOwner.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+                    newOwner.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
                 }
             });
     }

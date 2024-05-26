@@ -3,7 +3,6 @@ using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.Events;
-using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -26,8 +25,8 @@ internal static partial class Utils
             else
                 user.Role!.Value.Should().Be(command.Role);
             user.DateOfBirth.Should().Be(command.DateOfBirth);
-            user.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            user.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             user.DomainEvents.Should().HaveCount(1);
             user.DomainEvents[0].Should().BeOfType<UserRegistered>();
@@ -45,7 +44,7 @@ internal static partial class Utils
             else
                 user.Role!.Value.Should().Be(command.Role);
             user.DateOfBirth.Should().Be(command.DateOfBirth);
-            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUser(UserAggregate outcome, UserAggregate expected)
@@ -56,8 +55,8 @@ internal static partial class Utils
             outcome.LastName.Should().Be(expected.LastName);
             outcome.Role.Should().Be(expected.Role);
             outcome.DateOfBirth.Should().Be(expected.DateOfBirth);
-            outcome.CreatedDateTime.Should().BeCloseTo(expected.CreatedDateTime, 10.Seconds());
-            outcome.UpdatedDateTime.Should().BeCloseTo(expected.UpdatedDateTime, 10.Seconds());
+            outcome.CreatedDateTime.Should().BeCloseTo(expected.CreatedDateTime, TimeSpanPrecision);
+            outcome.UpdatedDateTime.Should().BeCloseTo(expected.UpdatedDateTime, TimeSpanPrecision);
             outcome.Memberships.Should().BeEquivalentTo(expected.Memberships);
         }
     }

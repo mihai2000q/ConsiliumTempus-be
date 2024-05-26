@@ -5,7 +5,6 @@ using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
-using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
@@ -56,15 +55,15 @@ internal static partial class Utils
             workspace.Description.Value.Should().BeEmpty();
             workspace.Owner.Should().Be(user);
             workspace.IsPersonal.Value.Should().Be(false);
-            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             workspace.Memberships.Should().HaveCount(1);
             workspace.Memberships[0].User.Should().Be(user);
             workspace.Memberships[0].WorkspaceRole.Should().Be(WorkspaceRole.Admin);
-            workspace.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            workspace.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdated(
@@ -79,8 +78,8 @@ internal static partial class Utils
             // changed
             newWorkspace.Name.Value.Should().Be(request.Name);
             newWorkspace.Description.Value.Should().Be(request.Description);
-            newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         private static void AssertWorkspaceResponse(

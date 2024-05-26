@@ -8,7 +8,6 @@ using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
-using ConsiliumTempus.Domain.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectTask.Update;

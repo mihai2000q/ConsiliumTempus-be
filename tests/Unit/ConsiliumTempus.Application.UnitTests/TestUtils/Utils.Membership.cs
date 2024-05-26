@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
-using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -15,8 +14,8 @@ internal static partial class Utils
             string workspaceDescription)
         {
             membership.Id.Should().Be((user.Id, membership.Workspace.Id));
-            membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-            membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             membership.User.Should().Be(user);
             membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
             membership.DomainEvents.Should().BeEmpty();
@@ -26,9 +25,9 @@ internal static partial class Utils
             membership.Workspace.Description.Value.Should().Be(workspaceDescription);
             membership.Workspace.Owner.Should().Be(user);
             membership.Workspace.IsPersonal.Value.Should().Be(true);
-            membership.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-            membership.Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-            membership.Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            membership.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            membership.Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            membership.Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
     }
 }

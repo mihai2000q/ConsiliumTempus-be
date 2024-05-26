@@ -4,7 +4,6 @@ using ConsiliumTempus.Application.ProjectTask.Commands.Update;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
-using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -30,13 +29,13 @@ internal static partial class Utils
             task.DueDate.Should().BeNull();
             task.EstimatedDuration.Should().BeNull();
             task.Stage.Should().Be(stage);
-            task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Comments.Should().BeEmpty();
             task.DomainEvents.Should().BeEmpty();
 
-            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             var count = 0;
             stage.Tasks.Should().AllSatisfy(t => t.CustomOrderPosition.Value.Should().Be(count++));
@@ -55,8 +54,8 @@ internal static partial class Utils
             stage.Tasks.Should().AllSatisfy(t =>
                 t.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
 
-            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertFromUpdateCommand(
@@ -67,10 +66,10 @@ internal static partial class Utils
             task.Name.Value.Should().Be(command.Name);
             task.IsCompleted.Value.Should().Be(command.IsCompleted);
             task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
         
         internal static void AssertFromUpdateOverviewCommand(
@@ -81,10 +80,10 @@ internal static partial class Utils
             task.Name.Value.Should().Be(command.Name);
             task.Description.Value.Should().Be(command.Description);
             task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertProjectTask(

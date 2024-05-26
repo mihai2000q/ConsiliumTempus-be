@@ -6,7 +6,6 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
-using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Delete;
@@ -39,8 +38,8 @@ public class ProjectSprintControllerDeleteTest(WebAppFactory factory)
         var project = dbContext.Projects
             .Include(p => p.Workspace)
             .Single(p => p == sprint.Project);
-        project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-        project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+        project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+        project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
     }
     
     [Fact]

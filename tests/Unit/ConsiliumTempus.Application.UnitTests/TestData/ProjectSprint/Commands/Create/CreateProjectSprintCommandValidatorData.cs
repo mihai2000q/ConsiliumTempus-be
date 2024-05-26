@@ -13,6 +13,14 @@ internal static class CreateProjectSprintCommandValidatorData
             var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand();
             Add(command);
 
+            command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
+                startDate: new DateOnly(2022, 10, 10));
+            Add(command);
+
+            command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
+                endDate: new DateOnly(2022, 10, 10));
+            Add(command);
+
             command = new CreateProjectSprintCommand(
                 Guid.NewGuid(),
                 "New Project Sprint",
@@ -42,6 +50,22 @@ internal static class CreateProjectSprintCommandValidatorData
             command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
                 name: new string('a', PropertiesValidation.ProjectSprint.NameMaximumLength + 1));
             Add(command, nameof(command.Name));
+        }
+    }
+
+    internal class GetInvalidStartEndDatesCommands : TheoryData<CreateProjectSprintCommand, string>
+    {
+        public GetInvalidStartEndDatesCommands()
+        {
+            var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
+                startDate: new DateOnly(2022, 10, 10),
+                endDate: new DateOnly(2022, 10, 10));
+            Add(command, "");
+
+            command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
+                startDate: new DateOnly(2022, 10, 10),
+                endDate: new DateOnly(2022, 10, 9));
+            Add(command, "");
         }
     }
 }
