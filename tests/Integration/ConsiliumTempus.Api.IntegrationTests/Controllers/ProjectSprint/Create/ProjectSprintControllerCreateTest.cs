@@ -23,7 +23,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(project.Id.Value);
 
         var previousSprintEndDate = project.Sprints
-            .IfNotEmpty(sprints => sprints[^1].EndDate);
+            .IfNotEmpty(sprints => sprints[0].EndDate);
 
         // Act
         Client.UseCustomToken(ProjectSprintData.Users.First());
@@ -59,7 +59,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
             keepPreviousStages: true);
 
         var previousSprintEndDate = project.Sprints
-            .IfNotEmpty(sprints => sprints[^1].EndDate);
+            .IfNotEmpty(sprints => sprints[0].EndDate);
 
         // Act
         Client.UseCustomToken(ProjectSprintData.Users[1]);
@@ -95,7 +95,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
             keepPreviousStages: true);
 
         var previousSprintEndDate = project.Sprints
-            .IfNotEmpty(sprints => sprints[^1].EndDate);
+            .IfNotEmpty(sprints => sprints[0].EndDate);
 
         // Act
         Client.UseCustomToken(ProjectSprintData.Users.First());

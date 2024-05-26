@@ -30,15 +30,15 @@ public sealed class CreateProjectSprintCommandHandler(
 
         project.Sprints.IfNotEmpty(sprints =>
         {
-            var lastSprint = sprints[^1];
-            if (lastSprint.EndDate is null)
-                lastSprint.Update(lastSprint.Name, lastSprint.StartDate, DateOnly.FromDateTime(DateTime.UtcNow));
+            var previousSprint = sprints[0];
+            if (previousSprint.EndDate is null)
+                previousSprint.Update(previousSprint.Name, previousSprint.StartDate, DateOnly.FromDateTime(DateTime.UtcNow));
         });
 
         if (command.KeepPreviousStages)
             project.Sprints
                 .IfNotEmpty(sprints =>
-                    projectSprint.AddStages(sprints[^1].Stages));
+                    projectSprint.AddStages(sprints[0].Stages));
 
         await projectSprintRepository.Add(projectSprint, cancellationToken);
 

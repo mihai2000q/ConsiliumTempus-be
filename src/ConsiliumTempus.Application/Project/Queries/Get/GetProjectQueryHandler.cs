@@ -13,7 +13,7 @@ public sealed class GetProjectQueryHandler(
 {
     public async Task<ErrorOr<ProjectAggregate>> Handle(GetProjectQuery query, CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetWithSprints(ProjectId.Create(query.Id), cancellationToken);
+        var project = await projectRepository.Get(ProjectId.Create(query.Id), cancellationToken);
         return project is null ? Errors.Project.NotFound : project;
     }
 }

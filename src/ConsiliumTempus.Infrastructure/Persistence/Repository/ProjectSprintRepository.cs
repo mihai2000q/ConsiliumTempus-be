@@ -42,10 +42,10 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
     {
         return dbContext.ProjectSprints
             .Where(ps => ps.Project.Id == projectId)
-            .OrderBy(s => s.StartDate)
-            .ThenBy(s => s.EndDate)
-            .ThenBy(s => s.Name.Value)
-            .ThenBy(s => s.CreatedDateTime)
+            .OrderByDescending(s => s.StartDate)
+            .ThenByDescending(s => s.EndDate)
+            .ThenByDescending(s => s.Name.Value)
+            .ThenByDescending(s => s.CreatedDateTime)
             .ToListAsync(cancellationToken);
     }
 

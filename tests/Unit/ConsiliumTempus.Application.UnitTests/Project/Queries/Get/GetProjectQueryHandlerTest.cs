@@ -31,7 +31,7 @@ public class GetProjectQueryHandlerTest
 
         var project = ProjectFactory.CreateWithSprints();
         _projectRepository
-            .GetWithSprints(Arg.Any<ProjectId>())
+            .Get(Arg.Any<ProjectId>())
             .Returns(project);
         // Act
         var outcome = await _uut.Handle(query, default);
@@ -39,7 +39,7 @@ public class GetProjectQueryHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithSprints(Arg.Is<ProjectId>(id => query.Id == id.Value));
+            .Get(Arg.Is<ProjectId>(id => query.Id == id.Value));
 
         outcome.IsError.Should().BeFalse();
         Utils.Project.AssertProject(outcome.Value, project);
@@ -52,7 +52,7 @@ public class GetProjectQueryHandlerTest
         var query = ProjectQueryFactory.CreateGetProjectQuery();
 
         _projectRepository
-            .GetWithSprints(Arg.Any<ProjectId>())
+            .Get(Arg.Any<ProjectId>())
             .ReturnsNull();
 
         // Act
@@ -61,7 +61,7 @@ public class GetProjectQueryHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithSprints(Arg.Is<ProjectId>(id => query.Id == id.Value));
+            .Get(Arg.Is<ProjectId>(id => query.Id == id.Value));
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

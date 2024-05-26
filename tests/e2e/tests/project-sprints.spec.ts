@@ -74,7 +74,7 @@ test.describe('should allow operations on the project sprint entity', () => {
           id: expect.any(String),
           name: ProjectSprintName,
           startDate: expect.any(String),
-          endDate: null,
+          endDate: new Date().toISOString().slice(0, 10),
         },
         {
           id: expect.any(String),
@@ -112,7 +112,7 @@ test.describe('should allow operations on the project sprint entity', () => {
           id: expect.any(String),
           name: ProjectSprintName,
           startDate: expect.any(String),
-          endDate: null,
+          endDate: new Date().toISOString().slice(0, 10),
         },
         {
           id: expect.any(String),
@@ -149,7 +149,7 @@ test.describe('should allow operations on the project sprint entity', () => {
           id: expect.any(String),
           name: ProjectSprintName,
           startDate: expect.any(String),
-          endDate: null,
+          endDate: new Date().toISOString().slice(0, 10),
         },
         {
           id: expect.any(String),
@@ -263,7 +263,7 @@ test.describe('should allow operations on the project sprint entity', () => {
       id: sprint.id,
       name: "Sprint 2 - Updated",
       startDate: null,
-      endDate: null
+      endDate: new Date().toISOString().slice(0, 10)
     }
     const response = await request.put('/api/projects/sprints', {
       ...useToken(),
@@ -284,7 +284,7 @@ test.describe('should allow operations on the project sprint entity', () => {
         id: expect.any(String),
         name: ProjectSprintName,
         startDate: expect.any(String),
-        endDate: null,
+        endDate: new Date().toISOString().slice(0, 10),
       },
       {
         id: body.id,
@@ -373,7 +373,7 @@ test.describe('should allow operations on the project sprint entity', () => {
         id: expect.any(String),
         name: ProjectSprintName,
         startDate: expect.any(String),
-        endDate: null,
+        endDate: new Date().toISOString().slice(0, 10),
       }
     ])
   })

@@ -36,7 +36,7 @@ public class CreateProjectSprintCommandHandlerTest
         ProjectAggregate project)
     {
         // Arrange
-        var previousSprintEndDate = project.Sprints.IfNotEmpty(sprints => sprints[^1].EndDate);
+        var previousSprintEndDate = project.Sprints.IfNotEmpty(sprints => sprints[0].EndDate);
 
         _projectRepository
             .GetWithStagesAndWorkspace(Arg.Any<ProjectId>())

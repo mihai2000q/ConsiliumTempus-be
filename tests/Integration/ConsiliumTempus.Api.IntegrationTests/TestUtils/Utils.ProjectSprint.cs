@@ -33,10 +33,10 @@ internal static partial class Utils
         {
             response.Sprints.Should().HaveCount(sprints.Count);
             response.Sprints
-                .Zip(sprints.OrderBy(s => s.StartDate)
-                    .ThenBy(s => s.EndDate)
-                    .ThenBy(s => s.Name.Value)
-                    .ThenBy(s => s.CreatedDateTime))
+                .Zip(sprints.OrderByDescending(s => s.StartDate)
+                    .ThenByDescending(s => s.EndDate)
+                    .ThenByDescending(s => s.Name.Value)
+                    .ThenByDescending(s => s.CreatedDateTime))
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
         }
 
@@ -52,7 +52,7 @@ internal static partial class Utils
             sprint.Project.Id.Value.Should().Be(request.ProjectId);
             if (request.KeepPreviousStages && project.Sprints.Count != 0)
             {
-                sprint.Stages.Should().BeEquivalentTo(project.Sprints[^1].Stages);
+                sprint.Stages.Should().BeEquivalentTo(project.Sprints[0].Stages);
             }
             else
             {
@@ -61,10 +61,10 @@ internal static partial class Utils
 
             if (project.Sprints.Count != 0)
                 if (previousSprintEndDate is null)
-                    sprint.Project.Sprints.OrderBy(s => s.StartDate).ToList()[^2].EndDate
+                    sprint.Project.Sprints.OrderByDescending(s => s.StartDate).ToList()[1].EndDate
                         .Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
                 else
-                    sprint.Project.Sprints.OrderBy(s => s.StartDate).ToList()[^2].EndDate
+                    sprint.Project.Sprints.OrderByDescending(s => s.StartDate).ToList()[1].EndDate
                         .Should().Be(previousSprintEndDate);
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
