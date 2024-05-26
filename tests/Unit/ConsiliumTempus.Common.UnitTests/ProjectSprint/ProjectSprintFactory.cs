@@ -37,11 +37,12 @@ public static class ProjectSprintFactory
     public static List<ProjectSprintAggregate> CreateList(
         int count = 5,
         string name = Constants.ProjectSprint.Name,
-        ProjectAggregate? project = null)
+        ProjectAggregate? project = null,
+        DateOnly? endDate = null)
     {
         return Enumerable
             .Range(0, count)
-            .Select(i => Create(name + i, project))
+            .Select(i => Create(name + i, project, endDate: endDate))
             .ToList();
     }
 }

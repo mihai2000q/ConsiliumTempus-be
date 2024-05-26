@@ -14,7 +14,6 @@ using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.ProjectSprint;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;

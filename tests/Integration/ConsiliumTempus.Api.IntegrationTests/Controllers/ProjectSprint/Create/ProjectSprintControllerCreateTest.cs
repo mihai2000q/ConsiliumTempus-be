@@ -37,9 +37,9 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
             .Include(ps => ps.Project.Workspace)
             .Include(ps => ps.Stages)
             .SingleAsync(ps => ps.Name.Value == request.Name);
-        Utils.ProjectSprint.AssertCreation(createdSprint, request);
+        Utils.ProjectSprint.AssertCreation(createdSprint, request, project);
     }
-    
+
     [Fact]
     public async Task CreateProjectSprint_WhenRequestHasKeepPreviousStages_ShouldCreateKeepStagesAndReturnSuccessResponse()
     {
@@ -63,16 +63,19 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
         var createdSprint = await dbContext.ProjectSprints
             .Include(ps => ps.Project.Workspace)
+            .Include(ps => ps.Project.Sprints
+                .OrderBy(s => s.StartDate)
+                .ThenBy(s => s.EndDate))
             .Include(ps => ps.Stages)
             .SingleAsync(ps => ps.Name.Value == request.Name);
         Utils.ProjectSprint.AssertCreation(
             createdSprint,
             request,
-            project.Sprints[^1]);
+            project);
     }
-    
+
     [Fact]
-    public async Task CreateProjectSprint_WhenRequestHasKeepPreviousStagesIsFirstSprint_ShouldCreateAndReturnSuccessResponse()
+    public async Task CreateProjectSprint_WhenRequestHasKeepPreviousStagesAndIsFirstSprint_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
         var project = ProjectSprintData.Projects[2];
@@ -97,7 +100,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
             .Include(ps => ps.Stages)
             .SingleAsync(ps => ps.Name.Value == request.Name);
         project.Sprints.Should().BeEmpty();
-        Utils.ProjectSprint.AssertCreation(createdSprint, request);
+        Utils.ProjectSprint.AssertCreation(createdSprint, request, project);
     }
 
     [Fact]

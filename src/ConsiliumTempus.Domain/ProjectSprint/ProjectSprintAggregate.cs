@@ -21,8 +21,8 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>, ITimestamp
         ProjectAggregate project,
         DateTime createdDateTime,
         DateTime updatedDateTime,
-        DateOnly? startDate = null,
-        DateOnly? endDate = null) : base(id)
+        DateOnly? startDate,
+        DateOnly? endDate) : base(id)
     {
         Name = name;
         Project = project;

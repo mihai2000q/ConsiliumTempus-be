@@ -24,6 +24,15 @@ internal static class CreateProjectSprintCommandHandlerData
                 keepPreviousStages: true);
             project = ProjectFactory.Create();
             Add(command, project);
+            
+            command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
+                startDate: new DateOnly(2024, 10, 12));
+            Add(command, project);
+            
+            command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
+                startDate: new DateOnly(2024, 10, 12));
+            project = ProjectFactory.CreateWithSprints(sprintEndDate: new DateOnly(2024, 10, 13));
+            Add(command, project);
         }
     }
 }

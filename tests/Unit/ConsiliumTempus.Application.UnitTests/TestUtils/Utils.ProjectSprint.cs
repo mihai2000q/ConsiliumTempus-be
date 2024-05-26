@@ -37,11 +37,12 @@ internal static partial class Utils
         internal static bool AssertFromCreateCommand(
             ProjectSprintAggregate projectSprint,
             CreateProjectSprintCommand command,
-            ProjectAggregate project)
+            ProjectAggregate project,
+            DateOnly? previousSprintEndDate)
         {
             projectSprint.Id.Value.Should().NotBeEmpty();
             projectSprint.Name.Value.Should().Be(command.Name);
-            projectSprint.StartDate.Should().Be(command.StartDate);
+            projectSprint.StartDate.Should().Be(command.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow));
             projectSprint.EndDate.Should().Be(command.EndDate);
             if (command.KeepPreviousStages && project.Sprints.Count != 0)
                 projectSprint.Stages.Should().BeEquivalentTo(project.Sprints[^1].Stages);
@@ -51,11 +52,17 @@ internal static partial class Utils
 
             projectSprint.Project.Should().Be(project);
             projectSprint.Project.LastActivity
-                .Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
+                .Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             projectSprint.Project.Workspace.LastActivity
-                .Should().BeCloseTo(DateTime.UtcNow, 10.Seconds());
-
+                .Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            
+            if (project.Sprints.Count != 0)
+                if (previousSprintEndDate is null) 
+                    project.Sprints[^1].EndDate.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
+                else 
+                    project.Sprints[^1].EndDate.Should().Be(previousSprintEndDate);
+            
             return true;
         }
 

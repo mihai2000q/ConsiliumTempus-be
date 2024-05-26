@@ -6,4 +6,11 @@ public static class ListExtensions
     {
         if (list.Count != 0) action.Invoke(list);
     }
+
+    public static TReturn? IfNotEmpty<TSource, TReturn>(
+        this IReadOnlyList<TSource> list,
+        Func<IReadOnlyList<TSource>, TReturn> action)
+    {
+        return list.Count != 0 ? action.Invoke(list) : default;
+    }
 }

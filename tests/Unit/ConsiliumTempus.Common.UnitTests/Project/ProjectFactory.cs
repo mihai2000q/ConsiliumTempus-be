@@ -33,7 +33,8 @@ public static class ProjectFactory
         bool isPrivate = false,
         UserAggregate? user = null,
         WorkspaceAggregate? workspace = null,
-        int sprintsCount = 5)
+        int sprintsCount = 5,
+        DateOnly? sprintEndDate = null)
     {
         var project = ProjectAggregate.Create(
             Name.Create(name),
@@ -42,7 +43,7 @@ public static class ProjectFactory
             user ?? UserFactory.Create());
 
         ProjectSprintFactory
-            .CreateList(sprintsCount, project: project)
+            .CreateList(sprintsCount, project: project, endDate: sprintEndDate)
             .ForEach(project.AddSprint);
 
         project.ClearDomainEvents();
