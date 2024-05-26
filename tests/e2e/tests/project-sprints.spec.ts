@@ -73,7 +73,7 @@ test.describe('should allow operations on the project sprint entity', () => {
         {
           id: expect.any(String),
           name: ProjectSprintName,
-          startDate: null,
+          startDate: expect.any(String),
           endDate: null,
         },
         {
@@ -111,7 +111,7 @@ test.describe('should allow operations on the project sprint entity', () => {
         {
           id: expect.any(String),
           name: ProjectSprintName,
-          startDate: null,
+          startDate: expect.any(String),
           endDate: null,
         },
         {
@@ -148,7 +148,7 @@ test.describe('should allow operations on the project sprint entity', () => {
         {
           id: expect.any(String),
           name: ProjectSprintName,
-          startDate: null,
+          startDate: expect.any(String),
           endDate: null,
         },
         {
@@ -283,7 +283,7 @@ test.describe('should allow operations on the project sprint entity', () => {
       {
         id: expect.any(String),
         name: ProjectSprintName,
-        startDate: null,
+        startDate: expect.any(String),
         endDate: null,
       },
       {
@@ -372,7 +372,7 @@ test.describe('should allow operations on the project sprint entity', () => {
       {
         id: expect.any(String),
         name: ProjectSprintName,
-        startDate: null,
+        startDate: expect.any(String),
         endDate: null,
       }
     ])

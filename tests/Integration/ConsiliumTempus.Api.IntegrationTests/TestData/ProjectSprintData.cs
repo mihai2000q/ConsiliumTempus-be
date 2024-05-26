@@ -131,10 +131,12 @@ internal class ProjectSprintData : ITestData
         ProjectSprintFactory.Create(
             Projects[0],
             "Sprint 2 - Qualify on Semi Finals",
-            new DateOnly(2024, 01, 16)),
+            new DateOnly(2024, 01, 16),
+            new DateOnly(2024, 01, 30)),
         ProjectSprintFactory.Create(
             Projects[1],
-            "Get the champs lig finals")
+            "Get the champs lig finals",
+            new DateOnly(2024, 01, 16))
     ];
     
     public static ProjectStage[] ProjectStages { get; } =
@@ -159,6 +161,17 @@ internal class ProjectSprintData : ITestData
             1),
         ProjectStageFactory.Create(
             ProjectSprints[1],
+            "Done",
+            2),
+        ProjectStageFactory.Create(
+            ProjectSprints[2],
+            "To do"),
+        ProjectStageFactory.Create(
+            ProjectSprints[2],
+            "In Progress",
+            2),
+        ProjectStageFactory.Create(
+            ProjectSprints[2],
             "Done",
             2)
     ];

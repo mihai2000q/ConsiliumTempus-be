@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,9 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         var project = ProjectSprintData.Projects.First();
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(project.Id.Value);
 
+        var previousSprintEndDate = project.Sprints
+            .IfNotEmpty(sprints => sprints[^1].EndDate);
+
         // Act
         Client.UseCustomToken(ProjectSprintData.Users.First());
         var outcome = await Client.Post("api/projects/sprints", request);
@@ -35,22 +39,30 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
         var createdSprint = await dbContext.ProjectSprints
             .Include(ps => ps.Project.Workspace)
+            .Include(ps => ps.Project.Sprints)
             .Include(ps => ps.Stages)
             .SingleAsync(ps => ps.Name.Value == request.Name);
-        Utils.ProjectSprint.AssertCreation(createdSprint, request, project);
+        Utils.ProjectSprint.AssertCreation(
+            createdSprint,
+            request,
+            project,
+            previousSprintEndDate);
     }
 
     [Fact]
     public async Task CreateProjectSprint_WhenRequestHasKeepPreviousStages_ShouldCreateKeepStagesAndReturnSuccessResponse()
     {
         // Arrange
-        var project = ProjectSprintData.Projects.First();
+        var project = ProjectSprintData.Projects[1];
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
             project.Id.Value,
             keepPreviousStages: true);
 
+        var previousSprintEndDate = project.Sprints
+            .IfNotEmpty(sprints => sprints[^1].EndDate);
+
         // Act
-        Client.UseCustomToken(ProjectSprintData.Users.First());
+        Client.UseCustomToken(ProjectSprintData.Users[1]);
         var outcome = await Client.Post("api/projects/sprints", request);
 
         // Assert
@@ -63,15 +75,14 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
         var createdSprint = await dbContext.ProjectSprints
             .Include(ps => ps.Project.Workspace)
-            .Include(ps => ps.Project.Sprints
-                .OrderBy(s => s.StartDate)
-                .ThenBy(s => s.EndDate))
+            .Include(ps => ps.Project.Sprints)
             .Include(ps => ps.Stages)
             .SingleAsync(ps => ps.Name.Value == request.Name);
         Utils.ProjectSprint.AssertCreation(
             createdSprint,
             request,
-            project);
+            project,
+            previousSprintEndDate);
     }
 
     [Fact]
@@ -83,6 +94,9 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
             project.Id.Value,
             keepPreviousStages: true);
 
+        var previousSprintEndDate = project.Sprints
+            .IfNotEmpty(sprints => sprints[^1].EndDate);
+
         // Act
         Client.UseCustomToken(ProjectSprintData.Users.First());
         var outcome = await Client.Post("api/projects/sprints", request);
@@ -97,10 +111,15 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
         var createdSprint = await dbContext.ProjectSprints
             .Include(ps => ps.Project.Workspace)
+            .Include(ps => ps.Project.Sprints)
             .Include(ps => ps.Stages)
             .SingleAsync(ps => ps.Name.Value == request.Name);
         project.Sprints.Should().BeEmpty();
-        Utils.ProjectSprint.AssertCreation(createdSprint, request, project);
+        Utils.ProjectSprint.AssertCreation(
+            createdSprint,
+            request,
+            project,
+            previousSprintEndDate);
     }
 
     [Fact]

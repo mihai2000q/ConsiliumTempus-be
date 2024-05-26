@@ -44,7 +44,7 @@ internal static partial class Utils
             ProjectSprintAggregate sprint,
             CreateProjectSprintRequest request,
             ProjectAggregate project,
-            DateOnly? previousSprintEndDate = null)
+            DateOnly? previousSprintEndDate)
         {
             sprint.Name.Value.Should().Be(request.Name);
             sprint.StartDate.Should().Be(request.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow));
@@ -61,9 +61,11 @@ internal static partial class Utils
 
             if (project.Sprints.Count != 0)
                 if (previousSprintEndDate is null)
-                    sprint.Project.Sprints[^1].EndDate.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
+                    sprint.Project.Sprints.OrderBy(s => s.StartDate).ToList()[^2].EndDate
+                        .Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
                 else
-                    sprint.Project.Sprints[^1].EndDate.Should().Be(previousSprintEndDate);
+                    sprint.Project.Sprints.OrderBy(s => s.StartDate).ToList()[^2].EndDate
+                        .Should().Be(previousSprintEndDate);
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
