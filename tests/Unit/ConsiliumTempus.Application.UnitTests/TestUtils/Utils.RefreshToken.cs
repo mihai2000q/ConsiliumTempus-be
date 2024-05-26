@@ -11,6 +11,7 @@ internal static partial class Utils
             string jwtId,
             UserAggregate user)
         {
+            refreshToken.Id.Should().NotBeEmpty();
             refreshToken.Value.Should().NotBeNullOrWhiteSpace().And.HaveLength(36);
             refreshToken.JwtId.ToString().Should().Be(jwtId);
             refreshToken.ExpiryDateTime.Should().BeCloseTo(DateTime.UtcNow.AddDays(7), TimeSpanPrecision);

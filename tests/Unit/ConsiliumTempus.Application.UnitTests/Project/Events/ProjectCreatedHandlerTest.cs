@@ -27,40 +27,43 @@ public class ProjectCreatedHandlerTest
 
         // Assert
         project.Sprints.Should().HaveCount(1);
-        project.Sprints[0].Id.Value.ToString().Should().NotBeNullOrWhiteSpace();
-        project.Sprints[0].Project.Should().Be(project);
-        project.Sprints[0].Name.Value.Should().Be(Constants.ProjectSprint.Name);
-        project.Sprints[0].StartDate.Should().BeNull();
-        project.Sprints[0].EndDate.Should().BeNull();
-        project.Sprints[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-        project.Sprints[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+        var sprint = project.Sprints[0];
+        sprint.Id.Value.ToString().Should().NotBeEmpty();
+        sprint.Project.Should().Be(project);
+        sprint.Name.Value.Should().Be(Constants.ProjectSprint.Name);
+        sprint.StartDate.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
+        sprint.EndDate.Should().BeNull();
+        sprint.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+        sprint.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
         var count = 0;
-        project.Sprints[0].Stages.Should().HaveCount(Constants.ProjectStage.Names.Length);
-        project.Sprints[0].Stages
-            .ToList()
-            .ForEach(stage =>
+        sprint.Stages.Should().HaveCount(Constants.ProjectStage.Names.Length);
+        sprint.Stages
+            .Should()
+            .AllSatisfy(stage =>
             {
-                stage.Id.Value.ToString().Should().NotBeNullOrWhiteSpace();
+                stage.Id.Value.ToString().Should().NotBeEmpty();
+                // ReSharper disable once AccessToModifiedClosure
                 stage.CustomOrderPosition.Value.Should().Be(count++);
                 stage.Sprint.Should().Be(project.Sprints[0]);
             });
-        project.Sprints[0].Stages
+        sprint.Stages
             .Zip(Constants.ProjectStage.Names)
-            .ToList()
-            .ForEach(x => x.First.Name.Value.Should().Be(x.Second));
+            .Should()
+            .AllSatisfy(x => x.First.Name.Value.Should().Be(x.Second));
 
         count = 0;
-        project.Sprints[0].Stages[0].Tasks.Should().HaveCount(Constants.ProjectTask.Names.Length);
-        project.Sprints[0].Stages[0].Tasks
+        var stage = sprint.Stages[0];
+        stage.Tasks.Should().HaveCount(Constants.ProjectTask.Names.Length);
+        stage.Tasks
             .Zip(Constants.ProjectTask.Names)
-            .ToList()
-            .ForEach(x => x.First.Name.Value.Should().Be(x.Second));
-        project.Sprints[0].Stages[0].Tasks
-            .ToList()
-            .ForEach(task =>
+            .Should()
+            .AllSatisfy(x => x.First.Name.Value.Should().Be(x.Second));
+        stage.Tasks
+            .Should()
+            .AllSatisfy(task =>
             {
-                task.Id.Value.ToString().Should().NotBeNullOrWhiteSpace();
+                task.Id.Value.ToString().Should().NotBeEmpty();
                 task.Description.Value.Should().BeEmpty();
                 task.IsCompleted.Value.Should().BeFalse();
                 task.CreatedBy.Should().Be(user);

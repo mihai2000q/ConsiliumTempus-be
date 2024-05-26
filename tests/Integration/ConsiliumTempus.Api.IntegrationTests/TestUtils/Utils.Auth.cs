@@ -24,11 +24,11 @@ internal static partial class Utils
             const int claimsSize = 3 + 3;
             outcomeToken.Claims.Should().HaveCount(claimsSize);
             outcomeToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Sub).Value
-                .Should().NotBeNullOrWhiteSpace();
+                .Should().NotBeEmpty();
             outcomeToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Email).Value
                 .Should().Be(user.Credentials.Email);
             outcomeToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Jti).Value
-                .Should().NotBeNullOrWhiteSpace();
+                .Should().NotBeEmpty();
         }
     }
 }
