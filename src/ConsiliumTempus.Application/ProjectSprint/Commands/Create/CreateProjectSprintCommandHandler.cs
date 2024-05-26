@@ -25,13 +25,20 @@ public sealed class CreateProjectSprintCommandHandler(
         var projectSprint = ProjectSprintAggregate.Create(
             Name.Create(command.Name),
             project,
-            command.StartDate,
+            command.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow),
             command.EndDate);
+
+        project.Sprints.IfNotEmpty(sprints =>
+        {
+            var previousSprint = sprints[0];
+            if (previousSprint.EndDate is null)
+                previousSprint.Update(previousSprint.Name, previousSprint.StartDate, DateOnly.FromDateTime(DateTime.UtcNow));
+        });
 
         if (command.KeepPreviousStages)
             project.Sprints
                 .IfNotEmpty(sprints =>
-                    projectSprint.AddStages(sprints[^1].Stages));
+                    projectSprint.AddStages(sprints[0].Stages));
 
         await projectSprintRepository.Add(projectSprint, cancellationToken);
 

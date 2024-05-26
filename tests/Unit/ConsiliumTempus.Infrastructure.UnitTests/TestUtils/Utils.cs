@@ -17,7 +17,7 @@ internal static partial class Utils
         outcomeToken.Issuer.Should().Be(jwtSettings.Issuer);
         outcomeToken.Audiences.Should().HaveCount(1);
         outcomeToken.Audiences.First().Should().Be(jwtSettings.Audience);
-        outcomeToken.ValidTo.Should().BeCloseTo(DateTime.UtcNow.AddMinutes(jwtSettings.ExpiryMinutes), 1.Minutes());
+        outcomeToken.ValidTo.Should().BeCloseTo(DateTime.UtcNow.AddMinutes(jwtSettings.ExpiryMinutes), 15.Seconds());
 
         // The 3 below and the 3 from above
         const int claimsSize = 3 + 3;

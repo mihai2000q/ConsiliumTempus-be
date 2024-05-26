@@ -17,17 +17,6 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
         return await dbContext.Projects.FindAsync([id], cancellationToken);
     }
 
-    public async Task<ProjectAggregate?> GetWithSprints(ProjectId id, CancellationToken cancellationToken = default)
-    {
-        return await dbContext.Projects
-            .Include(p => p.Sprints
-                .OrderBy(s => s.StartDate)
-                .ThenBy(s => s.EndDate)
-                .ThenBy(s => s.Name.Value)
-                .ThenBy(s => s.CreatedDateTime))
-            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
-    }
-
     public async Task<ProjectAggregate?> GetWithWorkspace(ProjectId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.Projects
@@ -40,10 +29,10 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
         return await dbContext.Projects
             .Include(p => p.Workspace)
             .Include(p => p.Sprints
-                .OrderBy(s => s.StartDate)
-                .ThenBy(s => s.EndDate)
-                .ThenBy(s => s.Name.Value)
-                .ThenBy(s => s.CreatedDateTime))
+                .OrderByDescending(s => s.StartDate)
+                .ThenByDescending(s => s.EndDate)
+                .ThenByDescending(s => s.Name.Value)
+                .ThenByDescending(s => s.CreatedDateTime))
             .ThenInclude(ps => ps.Stages)
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }

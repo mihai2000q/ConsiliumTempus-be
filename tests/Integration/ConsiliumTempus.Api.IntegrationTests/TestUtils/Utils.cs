@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 using ErrorOr;
+using FluentAssertions.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,8 @@ namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
 internal static partial class Utils
 {
+    internal static readonly TimeSpan TimeSpanPrecision = 1.Minutes();
+    
     private static readonly Dictionary<ErrorType, HttpStatusCode> ErrorCodeToHttpStatusMap = new()
     {
         { ErrorType.Validation, HttpStatusCode.BadRequest },

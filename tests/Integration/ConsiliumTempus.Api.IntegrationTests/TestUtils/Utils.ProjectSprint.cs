@@ -5,9 +5,9 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
-using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
@@ -33,34 +33,42 @@ internal static partial class Utils
         {
             response.Sprints.Should().HaveCount(sprints.Count);
             response.Sprints
-                .Zip(sprints.OrderBy(s => s.StartDate)
-                    .ThenBy(s => s.EndDate)
-                    .ThenBy(s => s.Name.Value)
-                    .ThenBy(s => s.CreatedDateTime))
+                .Zip(sprints.OrderByDescending(s => s.StartDate)
+                    .ThenByDescending(s => s.EndDate)
+                    .ThenByDescending(s => s.Name.Value)
+                    .ThenByDescending(s => s.CreatedDateTime))
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
         }
 
         internal static void AssertCreation(
             ProjectSprintAggregate sprint,
             CreateProjectSprintRequest request,
-            ProjectSprintAggregate? previousSprint = null)
+            ProjectAggregate project,
+            DateOnly? previousSprintEndDate)
         {
             sprint.Name.Value.Should().Be(request.Name);
-            sprint.StartDate.Should().Be(request.StartDate);
+            sprint.StartDate.Should().Be(request.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow));
             sprint.EndDate.Should().Be(request.EndDate);
             sprint.Project.Id.Value.Should().Be(request.ProjectId);
-
-            if (request.KeepPreviousStages && previousSprint is not null)
+            if (request.KeepPreviousStages && project.Sprints.Count != 0)
             {
-                sprint.Stages.Should().BeEquivalentTo(previousSprint.Stages);
+                sprint.Stages.Should().BeEquivalentTo(project.Sprints[0].Stages);
             }
             else
             {
                 sprint.Stages.Should().BeEmpty();
             }
 
-            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            if (project.Sprints.Count != 0)
+                if (previousSprintEndDate is null)
+                    sprint.Project.Sprints.OrderByDescending(s => s.StartDate).ToList()[1].EndDate
+                        .Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
+                else
+                    sprint.Project.Sprints.OrderByDescending(s => s.StartDate).ToList()[1].EndDate
+                        .Should().Be(previousSprintEndDate);
+
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertAddedStage(
@@ -76,8 +84,8 @@ internal static partial class Utils
                 .OrderBy(s => s.CustomOrderPosition.Value)
                 .Should().AllSatisfy(s => s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
 
-            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdated(
@@ -94,10 +102,10 @@ internal static partial class Utils
             newSprint.Name.Value.Should().Be(request.Name);
             newSprint.StartDate.Should().Be(request.StartDate);
             newSprint.EndDate.Should().Be(request.EndDate);
-            newSprint.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newSprint.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            newSprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            newSprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newSprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newSprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdatedStage(
@@ -108,8 +116,8 @@ internal static partial class Utils
             var stage = sprint.Stages.Single(s => s.Id.Value == request.StageId);
             stage.Name.Value.Should().Be(request.Name);
 
-            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertRemovedStage(
@@ -118,14 +126,14 @@ internal static partial class Utils
         {
             sprint.Id.Value.Should().Be(request.Id);
             sprint.Stages.Should().NotContain(s => s.Id.Value == request.StageId);
-            
+
             var customOrderPosition = 0;
             sprint.Stages
                 .OrderBy(s => s.CustomOrderPosition.Value)
                 .Should().AllSatisfy(s => s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
 
-            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         private static void AssertResponse(
@@ -137,7 +145,7 @@ internal static partial class Utils
             response.StartDate.Should().Be(projectSprint.StartDate);
             response.EndDate.Should().Be(projectSprint.EndDate);
         }
-        
+
         private static void AssertProjectStageResponse(
             GetProjectSprintResponse.ProjectStageResponse response,
             ProjectStage projectStage)

@@ -87,7 +87,7 @@ public class UserDeletedHandlerTest
                 var newOwner = w.Memberships.Single(m => m.Id == oldMembership.Id);
                 newOwner.WorkspaceRole.Should().NotBe(oldMembership.WorkspaceRole);
                 newOwner.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
-                newOwner.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+                newOwner.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 15.Seconds());
                 w.Owner.Should().Be(oldMembership.User);
             }
         });

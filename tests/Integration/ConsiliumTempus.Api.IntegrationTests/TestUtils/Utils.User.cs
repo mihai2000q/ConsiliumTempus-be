@@ -6,7 +6,6 @@ using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
-using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
@@ -50,8 +49,8 @@ internal static partial class Utils
             else
                 user.Role!.Value.Should().Be(request.Role);
             user.DateOfBirth.Should().Be(request.DateOfBirth);
-            user.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
-            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            user.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             user.Memberships.Should().HaveCount(1);
             user.Memberships[0].User.Should().Be(user);
@@ -75,7 +74,7 @@ internal static partial class Utils
         {
             // unchanged
             newUser.Id.Should().Be(user.Id);
-            newUser.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newUser.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newUser.Credentials.Should().Be(user.Credentials);
 
             // changed
@@ -86,7 +85,7 @@ internal static partial class Utils
             else
                 newUser.Role!.Value.Should().Be(request.Role);
             newUser.DateOfBirth.Should().Be(request.DateOfBirth);
-            newUser.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 1.Minutes());
+            newUser.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
     }
 }

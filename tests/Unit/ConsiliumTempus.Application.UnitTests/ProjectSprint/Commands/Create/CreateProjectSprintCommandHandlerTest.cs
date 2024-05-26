@@ -1,8 +1,8 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestData.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
-using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
@@ -36,6 +36,8 @@ public class CreateProjectSprintCommandHandlerTest
         ProjectAggregate project)
     {
         // Arrange
+        var previousSprintEndDate = project.Sprints.IfNotEmpty(sprints => sprints[0].EndDate);
+
         _projectRepository
             .GetWithStagesAndWorkspace(Arg.Any<ProjectId>())
             .Returns(project);
@@ -50,7 +52,7 @@ public class CreateProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .Add(Arg.Is<ProjectSprintAggregate>(ps =>
-                Utils.ProjectSprint.AssertFromCreateCommand(ps, command, project)));
+                Utils.ProjectSprint.AssertFromCreateCommand(ps, command, project, previousSprintEndDate)));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new CreateProjectSprintResult());

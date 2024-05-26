@@ -1,11 +1,14 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
 internal static partial class Utils
 {
+    private static readonly TimeSpan TimeSpanPrecision = 15.Seconds();
+
     internal static void ValidateError<T>(this ErrorOr<T> error, Error expectedError)
     {
         error.IsError.Should().BeTrue();

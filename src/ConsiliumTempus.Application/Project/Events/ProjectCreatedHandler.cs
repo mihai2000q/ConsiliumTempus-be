@@ -14,7 +14,8 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
     {
         var sprint = ProjectSprintAggregate.Create(
             Name.Create(Constants.ProjectSprint.Name),
-            notification.Project);
+            notification.Project,
+            DateOnly.FromDateTime(DateTime.UtcNow));
         notification.Project.AddSprint(sprint);
 
         var count = 0;
