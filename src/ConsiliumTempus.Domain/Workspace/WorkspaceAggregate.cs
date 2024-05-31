@@ -21,6 +21,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         Description description,
         UserAggregate owner,
         IsPersonal isPersonal,
+        IsFavorite isFavorite,
         DateTime lastActivity,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
@@ -29,6 +30,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
         Description = description;
         Owner = owner;
         IsPersonal = isPersonal;
+        IsFavorite = isFavorite;
         LastActivity = lastActivity;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
@@ -40,6 +42,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
     public IsPersonal IsPersonal { get; private set; } = default!;
+    public IsFavorite IsFavorite { get; private set; } = default!;
     public UserAggregate Owner { get; private set; } = default!;
     public DateTime LastActivity { get; private set; }
     public DateTime CreatedDateTime { get; init; }
@@ -58,6 +61,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
             Description.Create(string.Empty), 
             owner,
             isPersonal,
+            IsFavorite.Create(false),
             DateTime.UtcNow,
             DateTime.UtcNow,
             DateTime.UtcNow);
