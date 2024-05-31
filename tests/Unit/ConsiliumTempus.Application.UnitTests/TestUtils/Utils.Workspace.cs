@@ -21,6 +21,7 @@ internal static partial class Utils
             workspace.Name.Value.Should().Be(command.Name);
             workspace.Description.Value.Should().BeEmpty();
             workspace.Owner.Should().Be(user);
+            workspace.IsFavorite.Value.Should().Be(false);
             workspace.IsPersonal.Value.Should().Be(false);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -63,6 +64,7 @@ internal static partial class Utils
             outcome.Id.Should().Be(expected.Id);
             outcome.Name.Should().Be(expected.Name);
             outcome.Description.Should().Be(expected.Description);
+            outcome.IsFavorite.Should().Be(expected.IsFavorite);
             outcome.LastActivity.Should().Be(expected.LastActivity);
             outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
             outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);

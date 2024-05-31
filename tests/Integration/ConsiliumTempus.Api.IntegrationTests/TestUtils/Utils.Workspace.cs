@@ -17,6 +17,8 @@ internal static partial class Utils
             WorkspaceAggregate workspace)
         {
             response.Name.Should().Be(workspace.Name.Value);
+            response.IsFavorite.Should().Be(workspace.IsFavorite.Value);
+            response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
             response.Description.Should().Be(workspace.Description.Value);
         }
 
@@ -89,6 +91,12 @@ internal static partial class Utils
             response.Id.Should().Be(workspace.Id.ToString());
             response.Name.Should().Be(workspace.Name.Value);
             response.Description.Should().Be(workspace.Description.Value);
+            response.IsFavorite.Should().Be(workspace.IsFavorite.Value);
+            response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
+
+            var owner = workspace.Owner;
+            response.Owner.Id.Should().Be(owner.Id.Value);
+            response.Owner.Name.Should().Be(owner.FirstName + " " + owner.LastName);
         }
     }
 }

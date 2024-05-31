@@ -12,6 +12,7 @@ public sealed record GetCollectionWorkspaceResponse(
         Guid Id,
         string Name,
         string Description,
+        bool IsFavorite,
         bool IsPersonal,
         Owner Owner);
 
