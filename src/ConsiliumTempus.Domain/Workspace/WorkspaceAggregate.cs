@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
@@ -8,7 +9,7 @@ using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Workspace;
 
-public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>
+public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private WorkspaceAggregate()

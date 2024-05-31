@@ -74,7 +74,8 @@ internal class WorkspaceData : ITestData
             "Some Group That I Want To Delete"),
         WorkspaceFactory.Create(
             Users[0],
-            "Test Test"),
+            "Test Test",
+            isFavorite: true),
         WorkspaceFactory.Create(
             Users[0],
             "Hi There")
