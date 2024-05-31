@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
-import { createWorkspace, createWorkspaces, getWorkspaces } from "../utils/workspaces.utils";
+import { createWorkspace, createWorkspaces, getPersonalWorkspace, getWorkspaces } from "../utils/workspaces.utils";
 import { PersonalWorkspaceName } from "../utils/constants";
 import { deleteUser, registerUser } from "../utils/users.utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
@@ -18,8 +18,7 @@ test.describe('should allow operations on the workspace entity', () => {
   })
 
   test('should get workspace', async ({ request }) => {
-    const workspaces = await getWorkspaces(request);
-    const workspace = workspaces[0]
+    const workspace = await getPersonalWorkspace(request);
 
     const response = await request.get(`/api/workspaces/${workspace.id}`, useToken())
 
@@ -28,6 +27,8 @@ test.describe('should allow operations on the workspace entity', () => {
     expect(await response.json()).toStrictEqual({
       name: workspace.name,
       description: workspace.description,
+      isPersonal: true,
+      isFavorite: false
     })
   })
 
@@ -49,6 +50,7 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: PersonalWorkspaceName,
             description: expect.any(String),
+            isFavorite: false,
             isPersonal: true,
             owner: expect.any(Object)
           },
@@ -56,6 +58,7 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
             description: "",
+            isFavorite: false,
             isPersonal: false,
             owner: expect.any(Object)
           }
@@ -83,6 +86,7 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: PersonalWorkspaceName,
             description: expect.any(String),
+            isFavorite: false,
             isPersonal: true,
             owner: expect.any(Object)
           },
@@ -90,6 +94,7 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
             description: "",
+            isFavorite: false,
             isPersonal: false,
             owner: expect.any(Object)
           }
@@ -114,6 +119,7 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: createWorkspaceRequests[1].name,
             description: "",
+            isFavorite: false,
             isPersonal: false,
             owner: expect.any(Object)
           },
@@ -121,6 +127,7 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: createWorkspaceRequests[0].name,
             description: "",
+            isFavorite: false,
             isPersonal: false,
             owner: expect.any(Object)
           },
@@ -128,6 +135,7 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: PersonalWorkspaceName,
             description: expect.any(String),
+            isFavorite: false,
             isPersonal: true,
             owner: expect.any(Object)
           }
@@ -155,6 +163,7 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: createWorkspaceRequest.name,
             description: "",
+            isFavorite: false,
             isPersonal: false,
             owner: expect.any(Object)
           }
@@ -183,6 +192,7 @@ test.describe('should allow operations on the workspace entity', () => {
             id: expect.any(String),
             name: r.name,
             description: "",
+            isFavorite: false,
             isPersonal: false,
             owner: expect.any(Object)
           }
@@ -191,6 +201,7 @@ test.describe('should allow operations on the workspace entity', () => {
         id: expect.any(String),
         name: PersonalWorkspaceName,
         description: expect.any(String),
+        isFavorite: false,
         isPersonal: true,
         owner: expect.any(Object)
       })
@@ -226,6 +237,7 @@ test.describe('should allow operations on the workspace entity', () => {
         id: expect.any(String),
         name: createWorkspaceRequest.name,
         description: "",
+        isFavorite: false,
         isPersonal: false,
         owner: expect.any(Object)
       }
@@ -261,6 +273,7 @@ test.describe('should allow operations on the workspace entity', () => {
         id: body.id,
         name: body.name,
         description: body.description,
+        isFavorite: false,
         isPersonal: false,
         owner: expect.any(Object)
       }

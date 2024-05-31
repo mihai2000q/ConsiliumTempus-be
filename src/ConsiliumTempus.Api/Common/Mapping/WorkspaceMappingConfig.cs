@@ -33,6 +33,8 @@ public sealed class WorkspaceMappingConfig : IRegister
 
         config.NewConfig<WorkspaceAggregate, GetWorkspaceResponse>()
             .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.IsFavorite, src => src.IsFavorite.Value)
+            .Map(dest => dest.IsPersonal, src => src.IsPersonal.Value)
             .Map(dest => dest.Description, src => src.Description.Value);
     }
 
@@ -45,6 +47,7 @@ public sealed class WorkspaceMappingConfig : IRegister
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
+            .Map(dest => dest.IsFavorite, src => src.IsFavorite.Value)
             .Map(dest => dest.IsPersonal, src => src.IsPersonal.Value);
         config.NewConfig<UserAggregate, GetCollectionWorkspaceResponse.Owner>()
             .Map(dest => dest.Id, src => src.Id.Value)

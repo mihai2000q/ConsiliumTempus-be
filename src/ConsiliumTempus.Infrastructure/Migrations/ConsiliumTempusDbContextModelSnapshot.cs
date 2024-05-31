@@ -684,23 +684,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.IsFavorite", "IsFavorite", b1 =>
-                        {
-                            b1.Property<Guid>("ProjectAggregateId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<bool>("Value")
-                                .HasColumnType("bit")
-                                .HasColumnName("IsFavorite");
-
-                            b1.HasKey("ProjectAggregateId");
-
-                            b1.ToTable("Project");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProjectAggregateId");
-                        });
-
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.IsPrivate", "IsPrivate", b1 =>
                         {
                             b1.Property<Guid>("ProjectAggregateId")
@@ -727,6 +710,23 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Description");
+
+                            b1.HasKey("ProjectAggregateId");
+
+                            b1.ToTable("Project");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectAggregateId");
+                        });
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.IsFavorite", "IsFavorite", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectAggregateId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<bool>("Value")
+                                .HasColumnType("bit")
+                                .HasColumnName("IsFavorite");
 
                             b1.HasKey("ProjectAggregateId");
 
@@ -1180,6 +1180,23 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("WorkspaceAggregateId");
                         });
 
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.IsFavorite", "IsFavorite", b1 =>
+                        {
+                            b1.Property<Guid>("WorkspaceAggregateId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<bool>("Value")
+                                .HasColumnType("bit")
+                                .HasColumnName("IsFavorite");
+
+                            b1.HasKey("WorkspaceAggregateId");
+
+                            b1.ToTable("Workspace");
+
+                            b1.WithOwner()
+                                .HasForeignKey("WorkspaceAggregateId");
+                        });
+
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Name", "Name", b1 =>
                         {
                             b1.Property<Guid>("WorkspaceAggregateId")
@@ -1200,6 +1217,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         });
 
                     b.Navigation("Description")
+                        .IsRequired();
+
+                    b.Navigation("IsFavorite")
                         .IsRequired();
 
                     b.Navigation("IsPersonal")

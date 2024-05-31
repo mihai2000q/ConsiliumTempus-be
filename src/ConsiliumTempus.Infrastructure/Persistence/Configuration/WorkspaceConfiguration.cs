@@ -30,8 +30,12 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
             .Property(d => d.Value)
             .HasColumnName(nameof(Description));
 
+        builder.OwnsOne(w => w.IsFavorite)
+            .Property(f => f.Value)
+            .HasColumnName(nameof(IsFavorite));
+
         builder.OwnsOne(w => w.IsPersonal)
-            .Property(n => n.Value)
+            .Property(p => p.Value)
             .HasColumnName(nameof(IsPersonal));
 
         builder.HasOne(w => w.Owner)

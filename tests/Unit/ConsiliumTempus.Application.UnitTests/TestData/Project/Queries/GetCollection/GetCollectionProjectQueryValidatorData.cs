@@ -14,7 +14,11 @@ internal static class GetCollectionProjectQueryValidatorData
             Add(query);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "name.asc, last_activity.desc  , created_date_time.asc");
+                orders: "name.asc, last_activity.asc  , created_date_time.asc, updated_date_time.asc");
+            Add(query);
+            
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                orders: "name.desc, last_activity.desc, created_date_time.desc, updated_date_time.desc");
             Add(query);
 
             query = new GetCollectionProjectQuery(
