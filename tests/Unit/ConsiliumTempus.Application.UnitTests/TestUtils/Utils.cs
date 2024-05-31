@@ -26,12 +26,12 @@ internal static partial class Utils
 
     internal static bool AssertOrders<TEntity>(
         this IReadOnlyList<IOrder<TEntity>> orders,
-        string? stringOrders,
+        string[]? stringOrders,
         IEnumerable<OrderProperty<TEntity>> orderProperties)
     {
         if (stringOrders is null) return orders.Count == 0;
         return orders
-            .Zip(stringOrders.Split(Order<object>.ListSeparator))
+            .Zip(stringOrders)
             .All(x => x.First.AssertOrder(x.Second, orderProperties));
     }
 

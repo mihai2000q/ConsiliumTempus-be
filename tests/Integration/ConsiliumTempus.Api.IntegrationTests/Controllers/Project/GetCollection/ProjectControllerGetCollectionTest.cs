@@ -139,11 +139,11 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         // Arrange
         var user = ProjectData.Users.First();
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            orders: "name.desc");
+            orderBy: ["name.desc"]);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?orders={request.Orders}");
+        var outcome = await Client.Get($"api/projects?{request.OrderBy?.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -159,18 +159,18 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
             null,
             true);
     }
-    
+
     [Fact]
     public async Task GetCollectionProject_WhenRequestHasNameDescAndLastActivityAscOrder_ShouldReturnProjectsOrderedByDescendingName()
     {
         // Arrange
         var user = ProjectData.Users.First();
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            orders: "name.desc, last_activity.asc");
+            orderBy: ["name.desc", " last_activity.asc"]);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?orders={request.Orders}");
+        var outcome = await Client.Get($"api/projects?{request.OrderBy?.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -196,14 +196,14 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
             pageSize: 2,
             currentPage: 2,
-            orders: "name.asc");
+            orderBy: ["name.asc"]);
 
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Get($"api/projects" +
                                        $"?pageSize={request.PageSize}" +
                                        $"&currentPage={request.CurrentPage}" +
-                                       $"&orders={request.Orders}");
+                                       $"&{request.OrderBy?.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);

@@ -21,7 +21,7 @@ public static class ProjectQueryFactory
     public static GetCollectionProjectQuery CreateGetCollectionProjectQuery(
         int? pageSize = null,
         int? currentPage = null,
-        string? orders = null,
+        string[]? orders = null,
         Guid? workspaceId = null,
         string? name = null,
         bool? isFavorite = null,

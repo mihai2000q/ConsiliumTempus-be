@@ -25,7 +25,7 @@ public abstract class WorkspaceOrder : Order<WorkspaceAggregate>
     {
     }
     
-    public static IReadOnlyList<IOrder<WorkspaceAggregate>> Parse(string? orders)
+    public static IReadOnlyList<IOrder<WorkspaceAggregate>> Parse(string[]? orders)
     {
         return Parse(orders, StringToPropertySelector);
     }

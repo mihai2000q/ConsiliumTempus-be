@@ -25,7 +25,7 @@ public abstract class ProjectOrder : Order<ProjectAggregate>
     {
     }
 
-    public static IReadOnlyList<IOrder<ProjectAggregate>> Parse(string? orders)
+    public static IReadOnlyList<IOrder<ProjectAggregate>> Parse(string[]? orders)
     {
         return Parse(orders, StringToPropertySelector);
     }

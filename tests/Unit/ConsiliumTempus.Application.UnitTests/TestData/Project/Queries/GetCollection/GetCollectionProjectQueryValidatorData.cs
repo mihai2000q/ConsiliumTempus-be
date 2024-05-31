@@ -14,17 +14,17 @@ internal static class GetCollectionProjectQueryValidatorData
             Add(query);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "name.asc, last_activity.asc  , created_date_time.asc, updated_date_time.asc");
+                orders: ["name.asc", "last_activity.asc", "created_date_time.asc", "updated_date_time.asc"]);
             Add(query);
             
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "name.desc, last_activity.desc, created_date_time.desc, updated_date_time.desc");
+                orders: ["name.desc", "last_activity.desc", "created_date_time.desc", "updated_date_time.desc"]);
             Add(query);
 
             query = new GetCollectionProjectQuery(
                 10,
                 2,
-                "name.desc",
+                ["name.desc"],
                 Guid.NewGuid(),
                 "New Project",
                 false,
@@ -66,43 +66,43 @@ internal static class GetCollectionProjectQueryValidatorData
         public GetInvalidOrdersQueries()
         {
             var query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "");
+                orders: [""]);
             Add(query, nameof(query.Orders), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "something");
+                orders: ["something"]);
             Add(query, nameof(query.Orders), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "something,another");
+                orders: ["something,another"]);
             Add(query, nameof(query.Orders), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "something.");
+                orders: ["something."]);
             Add(query, nameof(query.Orders), 2);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "something.descending");
+                orders: ["something.descending"]);
             Add(query, nameof(query.Orders), 2);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "LastActivity.desc");
+                orders: ["LastActivity.desc"]);
             Add(query, nameof(query.Orders), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "last_activity.desc, name.ascending");
+                orders: ["last_activity.desc", "name.ascending"]);
             Add(query, nameof(query.Orders), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "not_a_property.asc");
+                orders: ["not_a_property.asc"]);
             Add(query, nameof(query.Orders), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "name.asc, not_property.desc");
+                orders: ["name.asc", "not_property.desc"]);
             Add(query, nameof(query.Orders), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orders: "name.asc, name.desc");
+                orders: ["name.asc", "name.desc"]);
             Add(query, nameof(query.Orders), 1);
         }
     }

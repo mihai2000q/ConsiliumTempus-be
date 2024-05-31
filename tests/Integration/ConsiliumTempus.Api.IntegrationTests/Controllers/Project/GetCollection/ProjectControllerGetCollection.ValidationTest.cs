@@ -15,11 +15,11 @@ public class ProjectControllerGetCollectionValidationTest(WebAppFactory factory)
     public async Task GetCollectionProject_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(orders: "name.asc");
+        var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(orderBy: ["name.asc"]);
 
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
-        var outcome = await Client.Get($"api/projects?orders={request.Orders}");
+        var outcome = await Client.Get($"api/projects?{request.OrderBy?.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);

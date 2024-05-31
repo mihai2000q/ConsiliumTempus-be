@@ -7,6 +7,6 @@ public sealed record GetCollectionWorkspaceQuery(
     bool IsPersonalWorkspaceFirst,
     int? PageSize,
     int? CurrentPage,
-    string? Orders,
+    string[]? Orders,
     string? Name) 
     : IRequest<ErrorOr<GetCollectionWorkspaceResult>>;

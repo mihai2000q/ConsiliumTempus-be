@@ -29,8 +29,8 @@ public static class FluentValidationExtensions
         return ruleBuilder.LessThan(DateOnly.FromDateTime(DateTime.UtcNow));
     }
     
-    public static IRuleBuilderOptions<T, string?> HasOrdersFormat<T, TEntity>(
-        this IRuleBuilder<T, string?> ruleBuilder,
+    public static IRuleBuilderOptions<T, string[]?> HasOrdersFormat<T, TEntity>(
+        this IRuleBuilder<T, string[]?> ruleBuilder,
         IReadOnlyList<OrderProperty<TEntity>> orderProperties)
     {
         return ruleBuilder
@@ -52,12 +52,10 @@ public static class FluentValidationExtensions
     }
 
     private static bool ForAll(
-        this string? orders,
+        this string[]? orders,
         Func<string, bool> validator)
     {
-        return orders is null || 
-               orders.Split(Order<object>.ListSeparator)
-                   .All(o => validator(o.Trim()));
+        return orders is null || orders.All(validator);
     }
 
     private static bool PropertyOrderTypeSeparatorValidation(string order)
@@ -79,7 +77,7 @@ public static class FluentValidationExtensions
         var propertyOrderType = order.Split(Order<object>.Separator);
         if (propertyOrderType.Length != 2) return true;
                 
-        var property = propertyOrderType[0];
+        var property = propertyOrderType[0].Trim();
         return !property.Any(char.IsUpper);
     }
 
@@ -90,17 +88,17 @@ public static class FluentValidationExtensions
         var propertyOrderType = order.Split(Order<object>.Separator);
         if (propertyOrderType.Length != 2) return true;
                 
-        var property = propertyOrderType[0];
+        var property = propertyOrderType[0].Trim();
         return property.Any(char.IsUpper) || 
                orderProperties.Any(op => op.Identifier == property);
     }
 
-    private static bool OrdersRepetitionValidation(this string? orders)
+    private static bool OrdersRepetitionValidation(this string[]? orders)
     {
         if (orders is null) return true;
 
         var propertyIdentifiers = new List<string>();
-        foreach (var order in orders.Split(Order<object>.ListSeparator))
+        foreach (var order in orders)
         {
             var propertyOrderType = order.Trim().Split(Order<object>.Separator);
             if (propertyOrderType.Length != 2) return true;

@@ -14,7 +14,7 @@ public static class WorkspaceQueryFactory
         bool isPersonalWorkspaceFirst = false,
         int? pageSize = null,
         int? currentPage = null,
-        string? orders = null,
+        string[]? orders = null,
         string? name = null)
     {
         return new GetCollectionWorkspaceQuery(

@@ -7,7 +7,6 @@ namespace ConsiliumTempus.Domain.Common.Models;
 
 public class Order<TEntity> : IOrder<TEntity>
 {
-    public const string ListSeparator = ",";
     public const string Separator = ".";
     public const string Descending = "desc";
     public const string Ascending = "asc";
@@ -30,12 +29,12 @@ public class Order<TEntity> : IOrder<TEntity>
     }
 
     protected static IReadOnlyList<IOrder<TEntity>> Parse(
-        string? orders,
+        string[]? orders,
         IReadOnlyDictionary<string, Expression<Func<TEntity, object?>>> stringToPropertySelector)
     {
         if (orders is null) return [];
 
-        return orders.Split(ListSeparator)
+        return orders
             .Select(stringOrder => ParseOrder(stringOrder, stringToPropertySelector))
             .ToList();
     }

@@ -52,7 +52,8 @@ public sealed class ProjectMappingConfig : IRegister
 
     private static void GetCollectionMappings(TypeAdapterConfig config)
     {
-        config.NewConfig<GetCollectionProjectRequest, GetCollectionProjectQuery>();
+        config.NewConfig<GetCollectionProjectRequest, GetCollectionProjectQuery>()
+            .Map(dest => dest.Orders, src => src.OrderBy);
 
         config.NewConfig<GetCollectionProjectResult, GetCollectionProjectResponse>();
         config.NewConfig<ProjectAggregate, GetCollectionProjectResponse.ProjectResponse>()

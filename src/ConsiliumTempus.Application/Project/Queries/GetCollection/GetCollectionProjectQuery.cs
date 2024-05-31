@@ -6,7 +6,7 @@ namespace ConsiliumTempus.Application.Project.Queries.GetCollection;
 public sealed record GetCollectionProjectQuery(
     int? PageSize,
     int? CurrentPage,
-    string? Orders,
+    string[]? Orders,
     Guid? WorkspaceId,
     string? Name,
     bool? IsFavorite,
