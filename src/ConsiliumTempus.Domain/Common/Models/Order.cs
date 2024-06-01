@@ -4,12 +4,15 @@ using ConsiliumTempus.Domain.Common.Interfaces;
 
 namespace ConsiliumTempus.Domain.Common.Models;
 
-public class Order<TEntity> : IOrder<TEntity>
+public static class Order
 {
     public const string Separator = ".";
     public const string Descending = "desc";
     public const string Ascending = "asc";
+}
 
+public class Order<TEntity> : IOrder<TEntity>
+{
     public Expression<Func<TEntity, object?>> PropertySelector { get; }
 
     public OrderType Type { get; }
@@ -35,12 +38,12 @@ public class Order<TEntity> : IOrder<TEntity>
         string order,
         IReadOnlyList<OrderProperty<TEntity>> orderProperties)
     {
-        var splitOrder = order.Trim().Split(Separator);
+        var splitOrder = order.Trim().Split(Order.Separator);
 
         var propertySelector = orderProperties
             .Single(op => op.Identifier == splitOrder[0])
             .PropertySelector;
-        var orderType = splitOrder[1] == Descending ? OrderType.Descending : OrderType.Ascending;
+        var orderType = splitOrder[1] == Order.Descending ? OrderType.Descending : OrderType.Ascending;
 
         return new Order<TEntity>(propertySelector, orderType);
     }

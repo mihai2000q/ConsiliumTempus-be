@@ -2,12 +2,12 @@
 
 public abstract class ValueObject : IEquatable<ValueObject>
 {
+    protected abstract IEnumerable<object?> GetEqualityComponents();
+    
     public bool Equals(ValueObject? other)
     {
         return Equals((object?)other);
     }
-
-    protected abstract IEnumerable<object?> GetEqualityComponents();
 
     public override bool Equals(object? obj)
     {
@@ -19,14 +19,16 @@ public abstract class ValueObject : IEquatable<ValueObject>
             .SequenceEqual(valueObject.GetEqualityComponents());
     }
 
-    public static bool operator ==(ValueObject left, ValueObject right)
+    public static bool operator ==(ValueObject? left, ValueObject? right)
     {
-        return Equals(left, right);
+        if (left is null && right is null) return true;
+        return left is not null && left.Equals(right);
     }
 
-    public static bool operator !=(ValueObject left, ValueObject right)
+    public static bool operator !=(ValueObject? left, ValueObject? right)
     {
-        return !Equals(left, right);
+        if (left is null && right is null) return true;
+        return left is not null && left.Equals(right);
     }
 
     public override int GetHashCode()
