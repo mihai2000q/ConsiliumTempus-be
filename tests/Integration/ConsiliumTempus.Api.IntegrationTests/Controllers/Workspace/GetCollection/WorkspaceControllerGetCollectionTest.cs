@@ -78,22 +78,23 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionWorkspace_WhenRequestHasNameFilter_ShouldReturnWorkspacesFilteredByName()
+    public async Task GetCollectionWorkspace_WhenRequestHasSearchNameContains_ShouldReturnWorkspacesFilteredByName()
     {
         // Arrange
+        const string searchName = "sOme";
         var user = WorkspaceData.Users.First();
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
-            name: "sOme");
+            search: [$"name ct {searchName}"]);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/Workspaces?name={request.Name}");
+        var outcome = await Client.Get($"api/Workspaces?{request.Search?.ToSearchQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
         var expectedWorkspaces = user.Memberships.Select(m => m.Workspace)
-            .Where(w => w.Name.Value.ToLower().Contains(request.Name!.ToLower()))
+            .Where(w => w.Name.Value.ToLower().Contains(searchName.ToLower()))
             .ToList();
         Utils.Workspace.AssertGetCollectionResponse(
             response!,

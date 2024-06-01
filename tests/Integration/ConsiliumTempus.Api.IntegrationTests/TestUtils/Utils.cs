@@ -53,4 +53,9 @@ internal static partial class Utils
     {
         return string.Join('&', orderBy.Select(o => $"orderBy={o}"));
     }
+    
+    internal static string ToSearchQueryParam(this string[] search)
+    {
+        return string.Join('&', search.Select(s => $"search={s}"));
+    }
 }

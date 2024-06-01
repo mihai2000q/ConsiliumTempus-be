@@ -3,7 +3,6 @@ using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Project;
-using ConsiliumTempus.Domain.Common.Validation;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.GetCollection;
 
@@ -30,13 +29,11 @@ public class ProjectControllerGetCollectionValidationTest(WebAppFactory factory)
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            name: new string('*', PropertiesValidation.Project.NameMaximumLength + 1),
             pageSize: -1);
 
         // Act
         var outcome = await Client.Get($"api/projects" +
-                                       $"?name={request.Name}" +
-                                       $"&pageSize={request.PageSize}");
+                                       $"?pageSize={request.PageSize}");
 
         // Assert
         await outcome.ValidateValidationErrors();

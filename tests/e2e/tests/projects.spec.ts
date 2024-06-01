@@ -141,7 +141,7 @@ test.describe('should allow operations on the project entity', () => {
       await createProject(request, createProjectRequest2)
 
       const response = await request.get(
-        `/api/projects?name=proj`,
+        `/api/projects?search=name ct proj`,
         useToken()
       )
 

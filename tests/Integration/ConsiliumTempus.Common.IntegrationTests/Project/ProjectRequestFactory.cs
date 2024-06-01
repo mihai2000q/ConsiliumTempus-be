@@ -32,10 +32,7 @@ public static class ProjectRequestFactory
         int? currentPage = null,
         string[]? orderBy = null,
         string[]? search = null,
-        Guid? workspaceId = null,
-        string? name = null,
-        bool? isFavorite = null,
-        bool? isPrivate = null)
+        Guid? workspaceId = null)
     {
         return new GetCollectionProjectRequest
         {

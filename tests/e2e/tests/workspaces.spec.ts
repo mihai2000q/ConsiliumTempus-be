@@ -152,7 +152,7 @@ test.describe('should allow operations on the workspace entity', () => {
       }
       await createWorkspace(request, createWorkspaceRequest)
 
-      const response = await request.get('/api/workspaces?name=some works', useToken())
+      const response = await request.get('/api/workspaces?search=name ct some works', useToken())
 
       expect(response.ok()).toBeTruthy()
 
