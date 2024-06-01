@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Validation;
 
@@ -54,19 +55,19 @@ internal static class UpdateProjectSprintCommandValidatorData
         }
     }
 
-    internal class GetInvalidStartEndDatesCommands : TheoryData<UpdateProjectSprintCommand, string>
+    internal class GetInvalidStartEndDateCommands : TheoryData<UpdateProjectSprintCommand, string>
     {
-        public GetInvalidStartEndDatesCommands()
+        public GetInvalidStartEndDateCommands()
         {
             var command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand(
                 startDate: new DateOnly(2022, 10, 10),
                 endDate: new DateOnly(2022, 10, 10));
-            Add(command, "");
+            Add(command, nameof(command.StartDate).And(nameof(command.EndDate)));
 
             command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand(
                 startDate: new DateOnly(2022, 10, 10),
                 endDate: new DateOnly(2022, 10, 9));
-            Add(command, "");
+            Add(command, nameof(command.StartDate).And(nameof(command.EndDate)));
         }
     }
 }

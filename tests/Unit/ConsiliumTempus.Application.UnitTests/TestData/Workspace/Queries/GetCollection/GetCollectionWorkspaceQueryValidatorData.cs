@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.Workspace.Queries.GetCollection;
@@ -42,15 +43,31 @@ internal static class GetCollectionWorkspaceQueryValidatorData
         }
     }
 
+    internal class GetInvalidPageSizeAndCurrentPageQueries : TheoryData<GetCollectionWorkspaceQuery, string, short>
+    {
+        public GetInvalidPageSizeAndCurrentPageQueries()
+        {
+            var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                pageSize: 1);
+            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)), 1);
+
+            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                currentPage: 1);
+            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)), 1);
+        }
+    }
+
     internal class GetInvalidPageSizeQueries : TheoryData<GetCollectionWorkspaceQuery, string, int>
     {
         public GetInvalidPageSizeQueries()
         {
             var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                currentPage: 1,
                 pageSize: 0);
             Add(query, nameof(query.PageSize), 1);
 
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                currentPage: 1,
                 pageSize: -1);
             Add(query, nameof(query.PageSize), 1);
         }
@@ -61,10 +78,12 @@ internal static class GetCollectionWorkspaceQueryValidatorData
         public GetInvalidCurrentPageQueries()
         {
             var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                pageSize: 20,
                 currentPage: 0);
             Add(query, nameof(query.CurrentPage), 1);
 
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                pageSize: 20,
                 currentPage: -1);
             Add(query, nameof(query.CurrentPage), 1);
         }
@@ -75,7 +94,7 @@ internal static class GetCollectionWorkspaceQueryValidatorData
         public GetInvalidOrderByQueries()
         {
             const string correct = "name.asc";
-            
+
             // Separator Validation
             var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
                 orderBy: [""]);

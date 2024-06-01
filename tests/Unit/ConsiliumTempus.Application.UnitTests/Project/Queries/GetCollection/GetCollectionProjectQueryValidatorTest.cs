@@ -25,6 +25,7 @@ public class GetCollectionProjectQueryValidatorTest
     }
     
     [Theory]
+    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidPageSizeAndCurrentPageQueries))]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidPageSizeQueries))]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidCurrentPageQueries))]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidOrderByQueries))]

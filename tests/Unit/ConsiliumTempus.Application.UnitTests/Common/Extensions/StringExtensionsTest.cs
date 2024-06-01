@@ -7,15 +7,28 @@ public class StringExtensionsTest
 {
     [Theory]
     [ClassData(typeof(StringExtensionsData.GetValidToId))]
-    public void ToBackingField_WhenValid_ShouldReturnStringWithIdNotation(string input, string expected)
+    public void ToId_WhenValid_ShouldReturnStringWithIdNotation(string input, string expected)
     {
         // Arrange - parameterized
 
         // Act
-        var outcome1 = input.ToId();
+        var outcome = input.ToId();
 
         // Assert
-        outcome1.Should().Be(expected);
+        outcome.Should().Be(expected);
+    }
+    
+    [Theory]
+    [ClassData(typeof(StringExtensionsData.GetValidAnd))]
+    public void And_WhenValid_ShouldConcat2StringsWithAndSymbol(string input1, string input2, string expected)
+    {
+        // Arrange - parameterized
+
+        // Act
+        var outcome = input1.And(input2);
+
+        // Assert
+        outcome.Should().Be(expected);
     }
 
     [Theory]
@@ -25,10 +38,10 @@ public class StringExtensionsTest
         // Arrange - parameterized
 
         // Act
-        var outcome1 = input.ToBackingField();
+        var outcome = input.ToBackingField();
 
         // Assert
-        outcome1.Should().Be(expected);
+        outcome.Should().Be(expected);
     }
 
     [Theory]
@@ -38,10 +51,10 @@ public class StringExtensionsTest
         // Arrange - parameterized
 
         // Act
-        var outcome1 = input.ToIdBackingField();
+        var outcome = input.ToIdBackingField();
 
         // Assert
-        outcome1.Should().Be(expected);
+        outcome.Should().Be(expected);
     }
 
     [Theory]
@@ -51,10 +64,10 @@ public class StringExtensionsTest
         // Arrange - parameterized
 
         // Act
-        var outcome1 = input.TruncateAggregate();
+        var outcome = input.TruncateAggregate();
 
         // Assert
-        outcome1.Should().Be(expected);
+        outcome.Should().Be(expected);
     }
 
     [Fact]

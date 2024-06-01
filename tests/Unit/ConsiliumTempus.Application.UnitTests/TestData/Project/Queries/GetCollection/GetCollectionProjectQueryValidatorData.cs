@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Project.Queries.GetCollection;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.Project;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Queries.GetCollection;
@@ -44,15 +45,31 @@ internal static class GetCollectionProjectQueryValidatorData
         }
     }
 
+    internal class GetInvalidPageSizeAndCurrentPageQueries : TheoryData<GetCollectionProjectQuery, string, short>
+    {
+        public GetInvalidPageSizeAndCurrentPageQueries()
+        {
+            var query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                pageSize: 1);
+            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                currentPage: 1);
+            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)), 1);
+        }
+    }
+
     internal class GetInvalidPageSizeQueries : TheoryData<GetCollectionProjectQuery, string, short>
     {
         public GetInvalidPageSizeQueries()
         {
             var query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                currentPage: 1,
                 pageSize: -1);
             Add(query, nameof(query.PageSize), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                currentPage: 1,
                 pageSize: 0);
             Add(query, nameof(query.PageSize), 1);
         }
@@ -63,10 +80,12 @@ internal static class GetCollectionProjectQueryValidatorData
         public GetInvalidCurrentPageQueries()
         {
             var query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                pageSize: 20,
                 currentPage: -1);
             Add(query, nameof(query.CurrentPage), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                pageSize: 20,
                 currentPage: 0);
             Add(query, nameof(query.CurrentPage), 1);
         }
@@ -77,7 +96,7 @@ internal static class GetCollectionProjectQueryValidatorData
         public GetInvalidOrderByQueries()
         {
             const string correct = "name.asc";
-            
+
             // Separator Validation
             var query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 orderBy: [""]);
@@ -99,7 +118,7 @@ internal static class GetCollectionProjectQueryValidatorData
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 orderBy: ["name.descending"]);
             Add(query, nameof(query.OrderBy), 1);
-            
+
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 orderBy: [correct, "last_activity.descending"]);
             Add(query, nameof(query.OrderBy), 1);
@@ -108,7 +127,7 @@ internal static class GetCollectionProjectQueryValidatorData
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 orderBy: ["LastActivity.desc"]);
             Add(query, nameof(query.OrderBy), 1);
-            
+
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 orderBy: [correct, "LastActivity.desc"]);
             Add(query, nameof(query.OrderBy), 1);
