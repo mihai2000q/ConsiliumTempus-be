@@ -31,6 +31,7 @@ public static class ProjectRequestFactory
         int? pageSize = null,
         int? currentPage = null,
         string[]? orderBy = null,
+        string[]? search = null,
         Guid? workspaceId = null,
         string? name = null,
         bool? isFavorite = null,
@@ -41,10 +42,8 @@ public static class ProjectRequestFactory
             PageSize = pageSize,
             CurrentPage = currentPage,
             OrderBy = orderBy,
-            WorkspaceId = workspaceId,
-            Name = name,
-            IsFavorite = isFavorite,
-            IsPrivate = isPrivate,
+            Search = search,
+            WorkspaceId = workspaceId
         };
     }
 

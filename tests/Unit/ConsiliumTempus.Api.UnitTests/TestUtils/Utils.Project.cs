@@ -46,9 +46,7 @@ internal static partial class Utils
             query.CurrentPage.Should().Be(request.CurrentPage);
             query.OrderBy.Should().BeEquivalentTo(request.OrderBy);
             query.WorkspaceId.Should().Be(request.WorkspaceId);
-            query.Name.Should().Be(request.Name);
-            query.IsFavorite.Should().Be(request.IsFavorite);
-            query.IsPrivate.Should().Be(request.IsPrivate);
+            query.Search.Should().BeEquivalentTo(request.Search);
 
             return true;
         }

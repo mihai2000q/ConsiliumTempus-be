@@ -23,7 +23,7 @@ public static class WorkspaceRequestFactory
         int? pageSize = null,
         int? currentPage = null,
         string[]? orderBy = null,
-        string? name = null)
+        string[]? search = null)
     {
         return new GetCollectionWorkspaceRequest
         {
@@ -31,7 +31,7 @@ public static class WorkspaceRequestFactory
             PageSize = pageSize,
             CurrentPage = currentPage,
             OrderBy = orderBy,
-            Name = name
+            Search = search
         };
     }
 

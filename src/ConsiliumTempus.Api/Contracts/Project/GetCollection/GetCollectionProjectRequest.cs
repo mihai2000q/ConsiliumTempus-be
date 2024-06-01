@@ -10,11 +10,7 @@ public sealed record GetCollectionProjectRequest
 
     [FromQuery] public string[]? OrderBy { get; init; }
 
+    [FromQuery] public string[]? Search { get; init; }
+    
     [FromQuery] public Guid? WorkspaceId { get; init; }
-
-    [FromQuery] public string? Name { get; init; }
-
-    [FromQuery] public bool? IsFavorite { get; init; }
-
-    [FromQuery] public bool? IsPrivate { get; init; }
 }

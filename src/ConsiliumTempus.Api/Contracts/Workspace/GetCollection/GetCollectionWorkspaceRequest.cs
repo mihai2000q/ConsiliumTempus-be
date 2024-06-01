@@ -12,5 +12,5 @@ public sealed record GetCollectionWorkspaceRequest
     
     [FromQuery] public string[]? OrderBy { get; init; }
     
-    [FromQuery] public string? Name { get; init; }
+    [FromQuery] public string[]? Search { get; init; }
 }
