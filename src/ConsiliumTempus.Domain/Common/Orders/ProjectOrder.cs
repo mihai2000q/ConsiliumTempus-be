@@ -16,17 +16,14 @@ public abstract class ProjectOrder : Order<ProjectAggregate>
         new OrderProperties.Project.CreatedDateTimeProperty(),
         new OrderProperties.Project.UpdatedDateTimeProperty()
     ];
-
-    private static readonly IReadOnlyDictionary<string, Expression<Func<ProjectAggregate, object?>>>
-        StringToPropertySelector = ToDictionary(OrderProperties);
     
     private ProjectOrder(Expression<Func<ProjectAggregate, object?>> propertySelector, OrderType orderType)
         : base(propertySelector, orderType)
     {
     }
 
-    public static IReadOnlyList<IOrder<ProjectAggregate>> Parse(string? orders)
+    public static IReadOnlyList<IOrder<ProjectAggregate>> Parse(string[]? orders)
     {
-        return Parse(orders, StringToPropertySelector);
+        return Parse(orders, OrderProperties);
     }
 }

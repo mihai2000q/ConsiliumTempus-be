@@ -48,4 +48,14 @@ internal static partial class Utils
         var errorCodes = error?.Extensions["errors"] as JsonElement?;
         errorCodes?.ValueKind.Should().Be(JsonValueKind.Object);
     }
+
+    internal static string ToOrderByQueryParam(this string[] orderBy)
+    {
+        return string.Join('&', orderBy.Select(o => $"orderBy={o}"));
+    }
+    
+    internal static string ToSearchQueryParam(this string[] search)
+    {
+        return string.Join('&', search.Select(s => $"search={s}"));
+    }
 }

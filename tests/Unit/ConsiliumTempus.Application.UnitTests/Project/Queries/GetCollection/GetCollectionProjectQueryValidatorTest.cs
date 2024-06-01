@@ -25,10 +25,11 @@ public class GetCollectionProjectQueryValidatorTest
     }
     
     [Theory]
+    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidPageSizeAndCurrentPageQueries))]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidPageSizeQueries))]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidCurrentPageQueries))]
-    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidOrdersQueries))]
-    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidNameQueries))]
+    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidOrderByQueries))]
+    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidSearchQueries))]
     public async Task ValidateGetCollectionProjectQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionProjectQuery query, 
         string property,

@@ -27,7 +27,7 @@ public class UpdateProjectSprintCommandValidatorTest
     [Theory]
     [ClassData(typeof(UpdateProjectSprintCommandValidatorData.GetInvalidIdCommands))]
     [ClassData(typeof(UpdateProjectSprintCommandValidatorData.GetInvalidNameCommands))]
-    [ClassData(typeof(UpdateProjectSprintCommandValidatorData.GetInvalidStartEndDatesCommands))]
+    [ClassData(typeof(UpdateProjectSprintCommandValidatorData.GetInvalidStartEndDateCommands))]
     public async Task ValidateUpdateProjectSprintCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         UpdateProjectSprintCommand command, 
         string property)

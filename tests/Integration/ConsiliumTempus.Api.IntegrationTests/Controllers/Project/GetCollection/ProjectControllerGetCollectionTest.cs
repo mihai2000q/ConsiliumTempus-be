@@ -62,22 +62,23 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionProject_WhenRequestHasName_ShouldReturnProjectsFilteredByName()
+    public async Task GetCollectionProject_WhenRequestHasSearchNameContains_ShouldReturnProjectsFilteredByName()
     {
         // Arrange
+        const string searchName = "win";
         var user = ProjectData.Users.First();
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            name: "win");
+            search: [$"name ct {searchName}"]);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?name={request.Name}");
+        var outcome = await Client.Get($"api/projects?{request.Search?.ToSearchQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
         var expectedProjects = GetFilteredProjects(user, p =>
-            p.Name.Value.ToLower().Contains(request.Name?.ToLower() ?? ""));
+            p.Name.Value.ToLower().Contains(searchName));
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
@@ -86,22 +87,23 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionProject_WhenRequestHasIsFavorite_ShouldReturnProjectsFilteredByIsFavorite()
+    public async Task GetCollectionProject_WhenRequestHasSearchIsFavoriteEqual_ShouldReturnProjectsFilteredByIsFavorite()
     {
         // Arrange
+        const bool searchIsFavorite = true;
         var user = ProjectData.Users.First();
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            isFavorite: true);
+            search: [$"is_favorite eq {searchIsFavorite}"]);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?isFavorite={request.IsFavorite}");
+        var outcome = await Client.Get($"api/projects?{request.Search?.ToSearchQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
-        var expectedProjects = GetFilteredProjects(user, p =>
-            p.IsFavorite.Value == request.IsFavorite);
+        var expectedProjects = GetFilteredProjects(user, p => 
+            p.IsFavorite.Value == searchIsFavorite);
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
@@ -110,22 +112,23 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionProject_WhenRequestHasIsPrivate_ShouldReturnProjectsFilteredByIsPrivate()
+    public async Task GetCollectionProject_WhenRequestHasSearchIsPrivateEqual_ShouldReturnProjectsFilteredByIsPrivate()
     {
         // Arrange
+        const bool searchIsPrivate = false;
         var user = ProjectData.Users.First();
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            isPrivate: false);
+            search: [$"is_private eq {searchIsPrivate}"]);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?isPrivate={request.IsPrivate}");
+        var outcome = await Client.Get($"api/projects?{request.Search?.ToSearchQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
         var expectedProjects = GetFilteredProjects(user, p =>
-            p.IsPrivate.Value == request.IsPrivate);
+            p.IsPrivate.Value == searchIsPrivate);
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
@@ -139,11 +142,11 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         // Arrange
         var user = ProjectData.Users.First();
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            orders: "name.desc");
+            orderBy: ["name.desc"]);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?orders={request.Orders}");
+        var outcome = await Client.Get($"api/projects?{request.OrderBy?.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -159,18 +162,18 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
             null,
             true);
     }
-    
+
     [Fact]
     public async Task GetCollectionProject_WhenRequestHasNameDescAndLastActivityAscOrder_ShouldReturnProjectsOrderedByDescendingName()
     {
         // Arrange
         var user = ProjectData.Users.First();
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            orders: "name.desc, last_activity.asc");
+            orderBy: ["name.desc", " last_activity.asc"]);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?orders={request.Orders}");
+        var outcome = await Client.Get($"api/projects?{request.OrderBy?.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -196,14 +199,14 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
             pageSize: 2,
             currentPage: 2,
-            orders: "name.asc");
+            orderBy: ["name.asc"]);
 
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Get($"api/projects" +
                                        $"?pageSize={request.PageSize}" +
                                        $"&currentPage={request.CurrentPage}" +
-                                       $"&orders={request.Orders}");
+                                       $"&{request.OrderBy?.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);

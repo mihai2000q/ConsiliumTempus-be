@@ -3,7 +3,6 @@ using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Project;
-using ConsiliumTempus.Domain.Common.Validation;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.GetCollection;
 
@@ -15,11 +14,11 @@ public class ProjectControllerGetCollectionValidationTest(WebAppFactory factory)
     public async Task GetCollectionProject_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(orders: "name.asc");
+        var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(orderBy: ["name.asc"]);
 
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
-        var outcome = await Client.Get($"api/projects?orders={request.Orders}");
+        var outcome = await Client.Get($"api/projects?{request.OrderBy?.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -30,13 +29,11 @@ public class ProjectControllerGetCollectionValidationTest(WebAppFactory factory)
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            name: new string('*', PropertiesValidation.Project.NameMaximumLength + 1),
             pageSize: -1);
 
         // Act
         var outcome = await Client.Get($"api/projects" +
-                                       $"?name={request.Name}" +
-                                       $"&pageSize={request.PageSize}");
+                                       $"?pageSize={request.PageSize}");
 
         // Assert
         await outcome.ValidateValidationErrors();

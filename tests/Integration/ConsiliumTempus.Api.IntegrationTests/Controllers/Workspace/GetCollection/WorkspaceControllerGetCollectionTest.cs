@@ -46,7 +46,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
             expectedWorkspaces.Count,
             null);
     }
-    
+
     [Fact]
     public async Task GetCollectionWorkspace_WhenRequestHasIsPersonalWorkspaceFirst_ShouldReturnWorkspacesWithPersonalWorkspaceFirst()
     {
@@ -66,10 +66,10 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         var expectedWorkspaces = user.Memberships.Select(m => m.Workspace).ToList();
 
         response!.Workspaces.First().IsPersonal.Should().BeTrue();
-        
+
         response.Workspaces.First().Owner.Id.Should().Be(user.Id.Value);
         response.Workspaces.First().Owner.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
-        
+
         Utils.Workspace.AssertGetCollectionResponse(
             response,
             expectedWorkspaces,
@@ -78,22 +78,23 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionWorkspace_WhenRequestHasNameFilter_ShouldReturnWorkspacesFilteredByName()
+    public async Task GetCollectionWorkspace_WhenRequestHasSearchNameContains_ShouldReturnWorkspacesFilteredByName()
     {
         // Arrange
+        const string searchName = "sOme";
         var user = WorkspaceData.Users.First();
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
-            name: "sOme");
+            search: [$"name ct {searchName}"]);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/Workspaces?name={request.Name}");
+        var outcome = await Client.Get($"api/Workspaces?{request.Search?.ToSearchQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionWorkspaceResponse>();
         var expectedWorkspaces = user.Memberships.Select(m => m.Workspace)
-            .Where(w => w.Name.Value.ToLower().Contains(request.Name!.ToLower()))
+            .Where(w => w.Name.Value.ToLower().Contains(searchName.ToLower()))
             .ToList();
         Utils.Workspace.AssertGetCollectionResponse(
             response!,
@@ -108,11 +109,11 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         // Arrange
         var user = WorkspaceData.Users.First();
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
-            orders: "name.asc");
-
+            orderBy: ["name.asc"]);
+        
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/Workspaces?orders={request.Orders}");
+        var outcome = await Client.Get($"api/Workspaces?{request.OrderBy?.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -121,24 +122,24 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
             .OrderBy(w => w.Name.Value)
             .ToList();
         Utils.Workspace.AssertGetCollectionResponse(
-            response!, 
-            expectedWorkspaces, 
+            response!,
+            expectedWorkspaces,
             expectedWorkspaces.Count,
             null,
             isOrdered: true);
     }
-    
+
     [Fact]
     public async Task GetCollectionWorkspace_WhenRequestHasNameAscAndLastActivityAscOrder_ShouldReturnWorkspacesOrderedByNameAscending()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
-            orders: "name.asc , last_activity.asc");
+            orderBy: ["name.asc", "last_activity.asc"]);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/Workspaces?orders={request.Orders}");
+        var outcome = await Client.Get($"api/Workspaces?{request.OrderBy?.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -148,8 +149,8 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
             .ThenBy(w => w.LastActivity)
             .ToList();
         Utils.Workspace.AssertGetCollectionResponse(
-            response!, 
-            expectedWorkspaces, 
+            response!,
+            expectedWorkspaces,
             expectedWorkspaces.Count,
             null,
             isOrdered: true);
@@ -161,14 +162,14 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         // Arrange
         var user = WorkspaceData.Users.First();
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
-            orders: "name.desc",
+            orderBy: ["name.desc"],
             pageSize: 2,
             currentPage: 1);
 
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Get($"api/Workspaces" +
-                                       $"?orders={request.Orders}" +
+                                       $"?{request.OrderBy?.ToOrderByQueryParam()}" +
                                        $"&pageSize={request.PageSize}" +
                                        $"&currentPage={request.CurrentPage}");
 
@@ -183,10 +184,10 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
             .Skip(request.PageSize!.Value * (request.CurrentPage!.Value - 1))
             .Take(request.PageSize.Value)
             .ToList();
-        
+
         Utils.Workspace.AssertGetCollectionResponse(
-            response!, 
-            expectedWorkspaces, 
+            response!,
+            expectedWorkspaces,
             workspaces.Count,
             workspaces.Count / request.PageSize,
             isOrdered: true);

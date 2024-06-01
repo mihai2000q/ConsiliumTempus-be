@@ -32,8 +32,8 @@ internal static partial class Utils
             query.IsPersonalWorkspaceFirst.Should().Be(request.IsPersonalWorkspaceFirst);
             query.PageSize.Should().Be(request.PageSize);
             query.CurrentPage.Should().Be(request.CurrentPage);
-            query.Orders.Should().Be(request.Orders);
-            query.Name.Should().Be(request.Name);
+            query.OrderBy.Should().BeEquivalentTo(request.OrderBy);
+            query.Search.Should().BeEquivalentTo(request.Search);
 
             return true;
         }

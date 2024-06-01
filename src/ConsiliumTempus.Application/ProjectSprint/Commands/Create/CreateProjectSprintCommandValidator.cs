@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Validation;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.Create;
@@ -16,6 +17,7 @@ public sealed class CreateProjectSprintCommandValidator : AbstractValidator<Crea
 
         RuleFor(c => c)
             .Must(c => c.StartDate is null || c.EndDate is null || c.StartDate < c.EndDate)
-            .WithMessage("The 'EndDate' must be bigger than the 'StartDate'");
+            .WithMessage("The 'EndDate' must be bigger than the 'StartDate'")
+            .WithName(nameof(CreateProjectSprintCommand.StartDate).And(nameof(CreateProjectSprintCommand.EndDate)));
     }
 }

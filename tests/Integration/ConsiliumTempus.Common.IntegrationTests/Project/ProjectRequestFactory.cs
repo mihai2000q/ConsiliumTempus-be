@@ -30,21 +30,17 @@ public static class ProjectRequestFactory
     public static GetCollectionProjectRequest CreateGetCollectionProjectRequest(
         int? pageSize = null,
         int? currentPage = null,
-        string? orders = null,
-        Guid? workspaceId = null,
-        string? name = null,
-        bool? isFavorite = null,
-        bool? isPrivate = null)
+        string[]? orderBy = null,
+        string[]? search = null,
+        Guid? workspaceId = null)
     {
         return new GetCollectionProjectRequest
         {
             PageSize = pageSize,
             CurrentPage = currentPage,
-            Orders = orders,
-            WorkspaceId = workspaceId,
-            Name = name,
-            IsFavorite = isFavorite,
-            IsPrivate = isPrivate
+            OrderBy = orderBy,
+            Search = search,
+            WorkspaceId = workspaceId
         };
     }
 

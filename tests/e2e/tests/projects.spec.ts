@@ -141,7 +141,7 @@ test.describe('should allow operations on the project entity', () => {
       await createProject(request, createProjectRequest2)
 
       const response = await request.get(
-        `/api/projects?name=proj`,
+        `/api/projects?search=name ct proj`,
         useToken()
       )
 
@@ -176,7 +176,7 @@ test.describe('should allow operations on the project entity', () => {
       const createProjectRequests = await createProjects(request, totalCount)
 
       const response = await request.get(
-        `/api/projects?orders=name.asc`,
+        `/api/projects?orderBy=name.asc`,
         useToken()
       )
 
@@ -213,7 +213,7 @@ test.describe('should allow operations on the project entity', () => {
       const pageSize = 2
       const currentPage = 1
       const response = await request.get(
-        `/api/projects?orders=name.asc&pageSize=${pageSize}&currentPage=${currentPage}`,
+        `/api/projects?orderBy=name.asc&pageSize=${pageSize}&currentPage=${currentPage}`,
         useToken()
       )
 

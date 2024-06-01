@@ -14,11 +14,11 @@ public class WorkspaceControllerGetCollectionValidationTest(WebAppFactory factor
     public async Task GetCollectionWorkspace_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(orders: "name.asc");
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(orderBy: ["name.asc"]);
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
-        var outcome = await Client.Get($"api/workspaces?orders={request.Orders}");
+        var outcome = await Client.Get($"api/workspaces?{request.OrderBy?.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -29,14 +29,14 @@ public class WorkspaceControllerGetCollectionValidationTest(WebAppFactory factor
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
-            orders: "something ,  wrong",
+            orderBy: ["something", "wrong"],
             pageSize: -1,
             currentPage: 0);
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
         var outcome = await Client.Get($"api/workspaces" +
-                                       $"?orders={request.Orders}" +
+                                       $"?{request.OrderBy?.ToOrderByQueryParam()}" +
                                        $"&pageSize={request.PageSize}" +
                                        $"&currentPage={request.CurrentPage}");
 

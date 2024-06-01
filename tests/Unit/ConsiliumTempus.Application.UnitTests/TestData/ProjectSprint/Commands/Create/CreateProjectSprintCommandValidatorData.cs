@@ -1,3 +1,4 @@
+using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Validation;
@@ -53,19 +54,19 @@ internal static class CreateProjectSprintCommandValidatorData
         }
     }
 
-    internal class GetInvalidStartEndDatesCommands : TheoryData<CreateProjectSprintCommand, string>
+    internal class GetInvalidStartEndDateCommands : TheoryData<CreateProjectSprintCommand, string>
     {
-        public GetInvalidStartEndDatesCommands()
+        public GetInvalidStartEndDateCommands()
         {
             var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
                 startDate: new DateOnly(2022, 10, 10),
                 endDate: new DateOnly(2022, 10, 10));
-            Add(command, "");
+            Add(command, nameof(command.StartDate).And(nameof(command.EndDate)));
 
             command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
                 startDate: new DateOnly(2022, 10, 10),
                 endDate: new DateOnly(2022, 10, 9));
-            Add(command, "");
+            Add(command, nameof(command.StartDate).And(nameof(command.EndDate)));
         }
     }
 }

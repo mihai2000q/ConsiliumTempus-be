@@ -12,8 +12,7 @@ public static class QueryableExtensions
         IEnumerable<IFilter<TSource>> filters
     ) where TSource : notnull
     {
-        return filters.Aggregate(queryable, (current, filter) =>
-            current.WhereIf(filter.CanBeFiltered, filter.Predicate));
+        return filters.Aggregate(queryable, (query, filter) => query.Where(filter.Predicate));
     }
 
     public static IQueryable<TSource> ApplyOrders<TSource>(

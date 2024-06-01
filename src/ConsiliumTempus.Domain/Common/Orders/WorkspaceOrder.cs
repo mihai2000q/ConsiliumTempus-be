@@ -16,17 +16,14 @@ public abstract class WorkspaceOrder : Order<WorkspaceAggregate>
         new OrderProperties.Workspace.UpdatedDateTimeProperty(),
         new OrderProperties.Workspace.CreatedDateTimeProperty()
     ];
-
-    private static readonly IReadOnlyDictionary<string, Expression<Func<WorkspaceAggregate, object?>>>
-        StringToPropertySelector = ToDictionary(OrderProperties);
     
     private WorkspaceOrder(Expression<Func<WorkspaceAggregate, object?>> propertySelector, OrderType orderType) 
         : base(propertySelector, orderType)
     {
     }
     
-    public static IReadOnlyList<IOrder<WorkspaceAggregate>> Parse(string? orders)
+    public static IReadOnlyList<IOrder<WorkspaceAggregate>> Parse(string[]? orders)
     {
-        return Parse(orders, StringToPropertySelector);
+        return Parse(orders, OrderProperties);
     }
 }

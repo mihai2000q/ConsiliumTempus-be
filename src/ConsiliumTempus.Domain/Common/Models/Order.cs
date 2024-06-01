@@ -1,24 +1,18 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 
 namespace ConsiliumTempus.Domain.Common.Models;
 
-public class Order<TEntity> : IOrder<TEntity>
+public static class Order
 {
-    public const string ListSeparator = ",";
     public const string Separator = ".";
     public const string Descending = "desc";
     public const string Ascending = "asc";
+}
 
-    [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-    private static readonly Dictionary<string, OrderType> StringToOrderType = new()
-    {
-        { Descending, OrderType.Descending },
-        { Ascending, OrderType.Ascending }
-    };
-
+public class Order<TEntity> : IOrder<TEntity>
+{
     public Expression<Func<TEntity, object?>> PropertySelector { get; }
 
     public OrderType Type { get; }
@@ -30,33 +24,26 @@ public class Order<TEntity> : IOrder<TEntity>
     }
 
     protected static IReadOnlyList<IOrder<TEntity>> Parse(
-        string? orders,
-        IReadOnlyDictionary<string, Expression<Func<TEntity, object?>>> stringToPropertySelector)
+        string[]? orders,
+        IReadOnlyList<OrderProperty<TEntity>> orderProperties)
     {
         if (orders is null) return [];
 
-        return orders.Split(ListSeparator)
-            .Select(stringOrder => ParseOrder(stringOrder, stringToPropertySelector))
+        return orders
+            .Select(stringOrder => ParseOrder(stringOrder, orderProperties))
             .ToList();
-    }
-
-    protected static IReadOnlyDictionary<string, Expression<Func<TEntity, object?>>> ToDictionary(
-        IEnumerable<OrderProperty<TEntity>> enumerable)
-    {
-        return enumerable
-            .Select(op =>
-                new KeyValuePair<string, Expression<Func<TEntity, object?>>>(op.Identifier, op.PropertySelector))
-            .ToDictionary();
     }
 
     private static Order<TEntity> ParseOrder(
         string order,
-        IReadOnlyDictionary<string, Expression<Func<TEntity, object?>>> stringToPropertySelector)
+        IReadOnlyList<OrderProperty<TEntity>> orderProperties)
     {
-        var splitOrder = order.Trim().Split(Separator);
+        var splitOrder = order.Trim().Split(Order.Separator);
 
-        var propertySelector = stringToPropertySelector[splitOrder[0]];
-        var orderType = StringToOrderType[splitOrder[1]];
+        var propertySelector = orderProperties
+            .Single(op => op.Identifier == splitOrder[0])
+            .PropertySelector;
+        var orderType = splitOrder[1] == Order.Descending ? OrderType.Descending : OrderType.Ascending;
 
         return new Order<TEntity>(propertySelector, orderType);
     }

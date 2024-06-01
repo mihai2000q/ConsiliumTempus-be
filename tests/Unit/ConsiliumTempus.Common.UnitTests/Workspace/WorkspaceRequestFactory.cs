@@ -22,16 +22,16 @@ public static class WorkspaceRequestFactory
         bool isPersonalWorkspaceFirst = false,
         int? pageSize = null,
         int? currentPage = null,
-        string? orders = null,
-        string? name = null)
+        string[]? orderBy = null,
+        string[]? search = null)
     {
         return new GetCollectionWorkspaceRequest
         {
             IsPersonalWorkspaceFirst = isPersonalWorkspaceFirst,
             PageSize = pageSize,
             CurrentPage = currentPage,
-            Orders = orders,
-            Name = name
+            OrderBy = orderBy,
+            Search = search
         };
     }
 

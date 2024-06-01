@@ -6,6 +6,7 @@ using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.Orders;
@@ -74,23 +75,23 @@ public class GetCollectionWorkspaceQueryHandlerTest
                 Arg.Is<UserAggregate>(u => u == user),
                 Arg.Is<PaginationInfo?>(p => p.AssertPagination(query.PageSize, query.CurrentPage)),
                 Arg.Is<IReadOnlyList<IOrder<WorkspaceAggregate>>>(o =>
-                    o.AssertOrders(query.Orders, WorkspaceOrder.OrderProperties)),
-                Arg.Is<IEnumerable<IFilter<WorkspaceAggregate>>>(filters =>
-                    Utils.Workspace.AssertGetCollectionFilters(filters, query)));
+                    o.AssertOrders(query.OrderBy, WorkspaceOrder.OrderProperties)),
+                Arg.Is<IReadOnlyList<IFilter<WorkspaceAggregate>>>(filters =>
+                    filters.AssertFilters(query.Search, WorkspaceFilter.FilterProperties)));
 
         await _workspaceRepository
             .Received(1)
             .GetListByUserCount(
                 Arg.Is<UserAggregate>(u => u == user),
-                Arg.Is<IEnumerable<IFilter<WorkspaceAggregate>>>(filters =>
-                    Utils.Workspace.AssertGetCollectionFilters(filters, query)));
+                Arg.Is<IReadOnlyList<IFilter<WorkspaceAggregate>>>(filters =>
+                    filters.AssertFilters(query.Search, WorkspaceFilter.FilterProperties)));
 
         outcome.IsError.Should().BeFalse();
         Utils.Workspace.AssertGetCollectionResult(
-            outcome.Value, 
-            query, 
-            workspaces, 
-            workspacesCount, 
+            outcome.Value,
+            query,
+            workspaces,
+            workspacesCount,
             personalWorkspace);
     }
 

@@ -7,7 +7,6 @@ public abstract record OrderProperty<TEntity>(
     Expression<Func<TEntity, object?>> PropertySelector)
 {
     public string Identifier { get; } = UpperCamelCaseToSnakeCase(Identifier);
-    public Expression<Func<TEntity, object?>> PropertySelector { get; } = PropertySelector;
 
     private static string UpperCamelCaseToSnakeCase(string str)
     {
