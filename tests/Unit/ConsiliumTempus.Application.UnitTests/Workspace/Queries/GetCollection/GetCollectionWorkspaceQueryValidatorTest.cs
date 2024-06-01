@@ -25,10 +25,10 @@ public class GetCollectionWorkspaceQueryValidatorTest
     }
     
     [Theory]
-    [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidOrderByQueries))]
-    [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidNameQueries))]
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidPageSizeQueries))]
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidCurrentPageQueries))]
+    [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidOrderByQueries))]
+    [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidSearchQueries))]
     public async Task ValidateGetCollectionWorkspaceQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionWorkspaceQuery query, 
         string property,

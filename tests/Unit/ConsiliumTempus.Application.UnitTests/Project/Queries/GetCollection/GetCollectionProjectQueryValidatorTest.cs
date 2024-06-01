@@ -28,7 +28,7 @@ public class GetCollectionProjectQueryValidatorTest
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidPageSizeQueries))]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidCurrentPageQueries))]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidOrderByQueries))]
-    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidNameQueries))]
+    [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidSearchQueries))]
     public async Task ValidateGetCollectionProjectQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionProjectQuery query, 
         string property,

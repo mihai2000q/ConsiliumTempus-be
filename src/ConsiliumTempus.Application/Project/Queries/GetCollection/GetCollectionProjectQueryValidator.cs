@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Orders;
-using ConsiliumTempus.Domain.Common.Validation;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.Project.Queries.GetCollection;
@@ -18,7 +18,7 @@ public sealed class GetCollectionProjectQueryValidator : AbstractValidator<GetCo
         RuleFor(q => q.OrderBy)
             .HasOrderByFormat(ProjectOrder.OrderProperties);
 
-        RuleFor(q => q.Name)
-            .MaximumLength(PropertiesValidation.Project.NameMaximumLength);
+        RuleFor(q => q.Search)
+            .HasSearchFormat(ProjectFilter.FilterProperties);
     }
 }

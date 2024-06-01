@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.Project;
-using ConsiliumTempus.Domain.Common.Validation;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Queries.GetCollection;
 
@@ -14,21 +13,33 @@ internal static class GetCollectionProjectQueryValidatorData
             Add(query);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                orderBy: [],
+                search: []);
+            Add(query);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 orderBy: ["name.asc", "last_activity.asc", "created_date_time.asc", "updated_date_time.asc"]);
             Add(query);
-            
+
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 orderBy: ["name.desc", "last_activity.desc", "created_date_time.desc", "updated_date_time.desc"]);
+            Add(query);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search:
+                [
+                    "name ct something", "name sw something", "name eq something", "name neq something",
+                    "is_favorite eq true", "is_favorite neq false",
+                    "is_private eq true", "is_private neq false",
+                ]);
             Add(query);
 
             query = new GetCollectionProjectQuery(
                 10,
                 2,
                 ["name.desc"],
-                Guid.NewGuid(),
-                "New Project",
-                false,
-                true);
+                ["name sw New Project"],
+                Guid.NewGuid());
             Add(query);
         }
     }
@@ -65,6 +76,9 @@ internal static class GetCollectionProjectQueryValidatorData
     {
         public GetInvalidOrderByQueries()
         {
+            const string correct = "name.asc";
+            
+            // Separator Validation
             var query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 orderBy: [""]);
             Add(query, nameof(query.OrderBy), 1);
@@ -74,46 +88,125 @@ internal static class GetCollectionProjectQueryValidatorData
             Add(query, nameof(query.OrderBy), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orderBy: ["something,another"]);
+                orderBy: [correct, "something", "another"]);
+            Add(query, nameof(query.OrderBy), 1);
+
+            // Order Type Validation
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                orderBy: ["name."]);
             Add(query, nameof(query.OrderBy), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orderBy: ["something."]);
-            Add(query, nameof(query.OrderBy), 2);
-
+                orderBy: ["name.descending"]);
+            Add(query, nameof(query.OrderBy), 1);
+            
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orderBy: ["something.descending"]);
-            Add(query, nameof(query.OrderBy), 2);
+                orderBy: [correct, "last_activity.descending"]);
+            Add(query, nameof(query.OrderBy), 1);
 
+            // Snake Case Validation
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 orderBy: ["LastActivity.desc"]);
             Add(query, nameof(query.OrderBy), 1);
-
+            
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orderBy: ["last_activity.desc", "name.ascending"]);
+                orderBy: [correct, "LastActivity.desc"]);
             Add(query, nameof(query.OrderBy), 1);
 
+            // Property Validation
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 orderBy: ["not_a_property.asc"]);
             Add(query, nameof(query.OrderBy), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                orderBy: ["name.asc", "not_property.desc"]);
+                orderBy: [correct, "not_property.desc"]);
             Add(query, nameof(query.OrderBy), 1);
 
+            // Repetition Validation
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 orderBy: ["name.asc", "name.desc"]);
             Add(query, nameof(query.OrderBy), 1);
         }
     }
 
-    internal class GetInvalidNameQueries : TheoryData<GetCollectionProjectQuery, string, short>
+    internal class GetInvalidSearchQueries : TheoryData<GetCollectionProjectQuery, string, short>
     {
-        public GetInvalidNameQueries()
+        public GetInvalidSearchQueries()
         {
+            const string correct = "name eq something";
+
+            // Separator Validation
             var query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                name: new string('*', PropertiesValidation.Project.NameMaximumLength + 1));
-            Add(query, nameof(query.Name), 1);
+                search: [""]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: ["name"]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: ["name eq"]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: ["name eq "]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: ["name eq     "]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: ["name eq     "]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: [correct, "name eq     "]);
+            Add(query, nameof(query.Search), 1);
+
+            // Snake Case Validation
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: ["Name eq something"]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: [correct, "Name eq something"]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: ["NotProperty eq something"]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: [correct, "NotProperty eq something"]);
+            Add(query, nameof(query.Search), 1);
+
+            // Property Validation
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: ["not_a_property eq something"]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: [correct, "not_a_property eq something"]);
+            Add(query, nameof(query.Search), 1);
+
+            // Operator Validation
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: ["name smth something"]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: [correct, "name smth something"]);
+            Add(query, nameof(query.Search), 1);
+
+            // Operator And Type Validation
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: ["name lte something"]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: [correct, "name lte something"]);
+            Add(query, nameof(query.Search), 1);
         }
     }
 }

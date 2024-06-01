@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Models;
+﻿using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.Common.Models;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.Common.Extensions;
@@ -52,17 +53,37 @@ public static class FluentValidationExtensions
             .WithMessage("The elements of '{PropertyName}' must not repeat themselves");
     }
 
-    private static bool ForAll(
-        this string[]? orders,
-        Func<string, bool> validator)
+    public static IRuleBuilderOptions<T, string[]?> HasSearchFormat<T, TEntity>(
+        this IRuleBuilder<T, string[]?> ruleBuilder,
+        IReadOnlyList<FilterProperty<TEntity>> filterProperties)
     {
-        return orders is null || orders.All(validator);
+        return ruleBuilder
+            .Must(search => search.ForAll(SearchValidation.SeparatorValidation))
+            .WithMessage(
+                "The elements of '{PropertyName}' must have the following format: {Property} {Operator} {Value} " +
+                "(separated by whitespaces)")
+            .Must(search => search.ForAll(SearchValidation.SnakeCaseValidation))
+            .WithMessage(
+                "The elements of '{PropertyName}' must have the following format: {Property} {Operator} {Value}, " +
+                "where 'Property' must be in snake case")
+            .Must(search => search.ForAll(f => SearchValidation.PropertyValidation(f, filterProperties)))
+            .WithMessage(
+                "The elements of '{PropertyName}' must have the following format: {Property} {Operator} {Value}, " +
+                $"where 'Property' must be a property of the entity: {typeof(TEntity).Name} " +
+                "(available properties: " +
+                $"{string.Join(", ", filterProperties.Select(x => x.Identifier))})")
+            .Must(search => search.ForAll(SearchValidation.OperatorValidation))
+            .WithMessage(
+                "The elements of '{PropertyName}' must have the following format: {Property} {Operator} {Value}, " +
+                "where 'Operator' must be one of the following: " +
+                $"{string.Join(", ", Filter.OperatorToFilterOperator.Keys)}")
+            .Must(search => search.ForAll(f => SearchValidation.OperatorAndValueTypeValidation(f, filterProperties)))
+            .WithMessage("The '{PropertyName}' must have a supported combination of Type and Operator")
+            .Must(search => search.ForAll(f => SearchValidation.ValueParsingValidation(f, filterProperties)))
+            .WithMessage("The Value from the '{PropertyName}', given the type of the filter proposed, cannot be parsed");
     }
 
-    private static bool PropertyOrderTypeSeparatorValidation(string order)
-    {
-        return order.Split(Order<object>.Separator).Length == 2;
-    }
+    private static bool ForAll(this string[]? str, Func<string, bool> validator) => str is null || str.All(validator);
 
     private static class OrderByValidation
     {
@@ -117,18 +138,135 @@ public static class FluentValidationExtensions
         }
     }
 
-    private static bool OrdersRepetitionValidation(this string[]? orders)
+    private static class SearchValidation
     {
-        if (orders is null) return true;
-
-        var propertyIdentifiers = new List<string>();
-        foreach (var order in orders)
+        internal static bool SeparatorValidation(string filter)
         {
-            var propertyOrderType = order.Trim().Split(Order<object>.Separator);
-            if (propertyOrderType.Length != 2) return true;
-            propertyIdentifiers.Add(propertyOrderType[0]);
+            return SplitFilter(filter) is not null;
         }
-        
-        return propertyIdentifiers.SequenceEqual(propertyIdentifiers.Distinct());
+
+        internal static bool SnakeCaseValidation(string filter)
+        {
+            var parsedFilter = SplitFilter(filter);
+            return parsedFilter is null || 
+                   !parsedFilter.Value.PropertyIdentifier.Any(char.IsUpper);
+        }
+
+        internal static bool PropertyValidation<TEntity>(
+            string filter,
+            IReadOnlyList<FilterProperty<TEntity>> filterProperties)
+        {
+            var parsedFilter = SplitFilter(filter);
+            if (parsedFilter is null) return true;
+
+            var property = filterProperties
+                .SingleOrDefault(fp => fp.Identifier == parsedFilter.Value.PropertyIdentifier);
+            return parsedFilter.Value.PropertyIdentifier.Any(char.IsUpper) || 
+                   property is not null;
+        }
+
+        internal static bool OperatorValidation(string filter)
+        {
+            var parsedFilter = SplitFilter(filter);
+            return parsedFilter is null ||
+                   Filter.OperatorToFilterOperator.TryGetValue(parsedFilter.Value.Operator, out _);
+        }
+
+        internal static bool OperatorAndValueTypeValidation<TEntity>(
+            string filter,
+            IReadOnlyList<FilterProperty<TEntity>> filterProperties)
+        {
+            var parsedFilter = SplitFilter(filter);
+            if (parsedFilter is null) return true;
+
+            var property = filterProperties
+                .SingleOrDefault(fp => fp.Identifier == parsedFilter.Value.PropertyIdentifier);
+            return property is null ||
+                   !Filter.OperatorToFilterOperator.TryGetValue(parsedFilter.Value.Operator, out var filterOperator) ||
+                   (SupportedOperatorsByType.ContainsKey(property.PropertySelector.ReturnType) && 
+                    SupportedOperatorsByType[property.PropertySelector.ReturnType].Contains(filterOperator));
+        }
+
+        internal static bool ValueParsingValidation<TEntity>(
+            string filter,
+            IReadOnlyList<FilterProperty<TEntity>> filterProperties)
+        {
+            var parsedFilter = SplitFilter(filter);
+            if (parsedFilter is null) return true;
+
+            var property = filterProperties
+                .SingleOrDefault(fp => fp.Identifier == parsedFilter.Value.PropertyIdentifier);
+            if (property is null || !SupportedOperatorsByType.ContainsKey(property.PropertySelector.ReturnType))
+                return true;
+
+            var type = property.PropertySelector.ReturnType;
+            return type switch
+            {
+                not null when type == typeof(bool) => bool.TryParse(parsedFilter.Value.Value, out _),
+                not null when type == typeof(DateTime) => DateTime.TryParse(parsedFilter.Value.Value, out _),
+                not null when type == typeof(decimal) => decimal.TryParse(parsedFilter.Value.Value, out _),
+                not null when type == typeof(int) => int.TryParse(parsedFilter.Value.Value, out _),
+                _ => true
+            };
+        }
+
+        private static (string PropertyIdentifier, string Operator, string Value)? SplitFilter(string filter)
+        {
+            filter = filter.Trim();
+            var result = new List<string>();
+
+            var current = "";
+            for (var i = 0; i < filter.Length; i++)
+                if (filter[i] == Filter.Separator)
+                {
+                    result.Add(current);
+                    current = "";
+                    if (result.Count != 2 || i == filter.Length - 1) continue;
+                    result.Add(filter[(i + 1)..]);
+                    break;
+                }
+                else
+                    current += filter[i];
+
+            if (result.Count != 3) return null;
+
+            return (result[0], result[1], result[2]);
+        }
+
+        private static readonly Dictionary<Type, List<FilterOperator>> SupportedOperatorsByType = new()
+        {
+            {
+                typeof(string), [
+                    FilterOperator.Equal, FilterOperator.NotEqual,
+                    FilterOperator.Contains, FilterOperator.StartsWith
+                ]
+            },
+            {
+                typeof(bool),
+                [FilterOperator.Equal, FilterOperator.NotEqual]
+            },
+            {
+                typeof(DateTime),
+                [
+                    FilterOperator.Equal, FilterOperator.NotEqual,
+                    FilterOperator.GreaterThan, FilterOperator.GreaterThanOrEqual,
+                    FilterOperator.LessThan, FilterOperator.LessThanOrEqual
+                ]
+            },
+            {
+                typeof(decimal), [
+                    FilterOperator.Equal, FilterOperator.NotEqual,
+                    FilterOperator.GreaterThan, FilterOperator.GreaterThanOrEqual,
+                    FilterOperator.LessThan, FilterOperator.LessThanOrEqual
+                ]
+            },
+            {
+                typeof(int), [
+                    FilterOperator.Equal, FilterOperator.NotEqual,
+                    FilterOperator.GreaterThan, FilterOperator.GreaterThanOrEqual,
+                    FilterOperator.LessThan, FilterOperator.LessThanOrEqual
+                ]
+            },
+        };
     }
 }
