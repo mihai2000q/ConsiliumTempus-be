@@ -3,6 +3,7 @@ using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 
@@ -16,6 +17,7 @@ public interface IProjectRepository
 
     Task<List<ProjectAggregate>> GetListByUser(
         UserId userId,
+        WorkspaceId? workspaceId,
         PaginationInfo? paginationInfo,
         IReadOnlyList<IOrder<ProjectAggregate>> orders,
         IEnumerable<IFilter<ProjectAggregate>> filters,
@@ -23,6 +25,7 @@ public interface IProjectRepository
 
     Task<int> GetListByUserCount(
         UserId userId,
+        WorkspaceId? workspaceId,
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default);
 

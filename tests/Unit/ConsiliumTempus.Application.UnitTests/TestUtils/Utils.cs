@@ -50,4 +50,45 @@ internal static partial class Utils
             .Single(op => op.Identifier == split[0])
             .PropertySelector == order.PropertySelector;
     }
+    
+    internal static bool AssertFilters<TEntity>(
+        this IReadOnlyList<IFilter<TEntity>> filters,
+        string[]? search,
+        IEnumerable<FilterProperty<TEntity>> filterProperties)
+    {
+        if (search is null) return filters.Count == 0;
+        return filters
+            .Zip(search)
+            .All(x => x.First.AssertFilter(x.Second, filterProperties));
+    }
+
+    private static bool AssertFilter<TEntity>(
+        this IFilter<TEntity> filter,
+        string stringFilter,
+        IEnumerable<FilterProperty<TEntity>> filterProperties)
+    {
+        var (propertyIdentifier, @operator, value) = SplitFilter(stringFilter);
+
+        return true;
+    }
+    
+    private static (string, string, string) SplitFilter(string filter)
+    {
+        var result = new List<string>();
+
+        var current = "";
+        for (var i = 0; i < filter.Length; i++)
+            if (filter[i] == Filter.Separator)
+            {
+                result.Add(current);
+                current = "";
+                if (result.Count != 2) continue;
+                result.Add(filter[(i + 1)..]);
+                break;
+            }
+            else
+                current += filter[i];
+
+        return (result[0], result[1], result[2]);
+    }
 }

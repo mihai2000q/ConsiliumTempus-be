@@ -2,10 +2,8 @@
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Filters;
-using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.Orders;
-using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ErrorOr;
 using MediatR;
@@ -24,23 +22,20 @@ public sealed class GetCollectionProjectQueryHandler(
         var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
 
         var paginationInfo = PaginationInfo.Create(query.PageSize, query.CurrentPage);
-        var filters = new List<IFilter<ProjectAggregate>>
-        {
-            new Filters.Project.WorkspaceFilter(query.WorkspaceId.IfNotNull(WorkspaceId.Create)),
-            new Filters.Project.NameFilter(query.Name),
-            new Filters.Project.IsFavoriteFilter(query.IsFavorite),
-            new Filters.Project.IsPrivateFilter(query.IsPrivate)
-        };
         var orders = ProjectOrder.Parse(query.OrderBy);
+        var filters = ProjectFilter.Parse(query.Search);
+        var workspaceId = query.WorkspaceId.IfNotNull(WorkspaceId.Create);
 
         var projects = await projectRepository.GetListByUser(
             user.Id,
+            workspaceId,
             paginationInfo,
             orders,
             filters,
             cancellationToken);
         var totalCount = await projectRepository.GetListByUserCount(
             user.Id,
+            workspaceId,
             filters,
             cancellationToken);
 
