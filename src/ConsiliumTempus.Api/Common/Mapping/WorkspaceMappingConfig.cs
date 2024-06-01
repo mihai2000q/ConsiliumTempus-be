@@ -40,8 +40,7 @@ public sealed class WorkspaceMappingConfig : IRegister
 
     private static void GetCollectionMappings(TypeAdapterConfig config)
     {
-        config.NewConfig<GetCollectionWorkspaceRequest, GetCollectionWorkspaceQuery>()
-            .Map(dest => dest.Orders, src => src.OrderBy);
+        config.NewConfig<GetCollectionWorkspaceRequest, GetCollectionWorkspaceQuery>();
 
         config.NewConfig<GetCollectionWorkspaceResult, GetCollectionWorkspaceResponse>();
         config.NewConfig<WorkspaceAggregate, GetCollectionWorkspaceResponse.WorkspaceResponse>()

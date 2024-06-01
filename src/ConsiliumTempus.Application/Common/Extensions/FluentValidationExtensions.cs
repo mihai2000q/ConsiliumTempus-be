@@ -28,26 +28,27 @@ public static class FluentValidationExtensions
     {
         return ruleBuilder.LessThan(DateOnly.FromDateTime(DateTime.UtcNow));
     }
-    
-    public static IRuleBuilderOptions<T, string[]?> HasOrdersFormat<T, TEntity>(
+
+    public static IRuleBuilderOptions<T, string[]?> HasOrderByFormat<T, TEntity>(
         this IRuleBuilder<T, string[]?> ruleBuilder,
         IReadOnlyList<OrderProperty<TEntity>> orderProperties)
     {
         return ruleBuilder
-            .Must(orders => orders.ForAll(PropertyOrderTypeSeparatorValidation))
-            .WithMessage("The elements of '{PropertyName}' must have the following format: {Property1}.{OrderType1}," +
-                         "{Property2}.{OrderType2},...")
-            .Must(orders => orders.ForAll(OrderTypeValidation))
+            .Must(orders => orders.ForAll(OrderByValidation.SeparatorValidation))
+            .WithMessage("The elements of '{PropertyName}' must have the following format: {Property}.{OrderType} " +
+                         "(separated by a '.')")
+            .Must(orders => orders.ForAll(OrderByValidation.OrderTypeValidation))
             .WithMessage("The elements of '{PropertyName}' must have the following format: {Property}.{OrderType}, " +
                          "where 'OrderType' must be either 'desc' or 'asc'")
-            .Must(orders => orders.ForAll(SnakeCaseValidation))
+            .Must(orders => orders.ForAll(OrderByValidation.SnakeCaseValidation))
             .WithMessage("The elements of '{PropertyName}' must have the following format: {Property}.{OrderType}, " +
                          "where 'Property' must be in snake_case")
-            .Must(orders => orders.ForAll(order => order.PropertyValidation(orderProperties)))
+            .Must(orders => orders.ForAll(order => OrderByValidation.PropertyValidation(order, orderProperties)))
             .WithMessage("The elements of '{PropertyName}' must have the following format: {Property}.{OrderType}, " +
                          $"where 'Property' must be a property of the entity: {typeof(TEntity).Name} " +
-                         $"(available properties: {string.Join(", ", orderProperties.Select(x => x.Identifier))})")
-            .Must(OrdersRepetitionValidation)
+                         "(available properties: " +
+                         $"{string.Join(", ", orderProperties.Select(x => x.Identifier))})")
+            .Must(OrderByValidation.OrdersRepetitionValidation)
             .WithMessage("The elements of '{PropertyName}' must not repeat themselves");
     }
 
@@ -63,34 +64,57 @@ public static class FluentValidationExtensions
         return order.Split(Order<object>.Separator).Length == 2;
     }
 
-    private static bool OrderTypeValidation(this string order)
+    private static class OrderByValidation
     {
-        var propertyOrderType = order.Split(Order<object>.Separator);
-        if (propertyOrderType.Length != 2) return true;
-                
-        var orderType = propertyOrderType[1];
-        return orderType is Order<object>.Descending or Order<object>.Ascending;
-    }
+        internal static bool SeparatorValidation(string order)
+        {
+            return order.Split(Order.Separator).Length == 2;
+        }
 
-    private static bool SnakeCaseValidation(this string order)
-    {
-        var propertyOrderType = order.Split(Order<object>.Separator);
-        if (propertyOrderType.Length != 2) return true;
-                
-        var property = propertyOrderType[0].Trim();
-        return !property.Any(char.IsUpper);
-    }
+        internal static bool OrderTypeValidation(string order)
+        {
+            var propertyOrderType = order.Split(Order.Separator);
+            if (propertyOrderType.Length != 2) return true;
 
-    private static bool PropertyValidation<TEntity>(
-        this string order, 
-        IReadOnlyList<OrderProperty<TEntity>> orderProperties)
-    {
-        var propertyOrderType = order.Split(Order<object>.Separator);
-        if (propertyOrderType.Length != 2) return true;
-                
-        var property = propertyOrderType[0].Trim();
-        return property.Any(char.IsUpper) || 
-               orderProperties.Any(op => op.Identifier == property);
+            var orderType = propertyOrderType[1];
+            return orderType is Order.Descending or Order.Ascending;
+        }
+
+        internal static bool SnakeCaseValidation(string order)
+        {
+            var propertyOrderType = order.Split(Order.Separator);
+            if (propertyOrderType.Length != 2) return true;
+
+            var property = propertyOrderType[0].Trim();
+            return !property.Any(char.IsUpper);
+        }
+
+        internal static bool PropertyValidation<TEntity>(
+            string order,
+            IReadOnlyList<OrderProperty<TEntity>> orderProperties)
+        {
+            var propertyOrderType = order.Split(Order.Separator);
+            if (propertyOrderType.Length != 2) return true;
+
+            var property = propertyOrderType[0].Trim();
+            return property.Any(char.IsUpper) ||
+                   orderProperties.Any(op => op.Identifier == property);
+        }
+
+        internal static bool OrdersRepetitionValidation(string[]? orders)
+        {
+            if (orders is null) return true;
+
+            var propertyIdentifiers = new List<string>();
+            foreach (var order in orders)
+            {
+                var propertyOrderType = order.Trim().Split(Order.Separator);
+                if (propertyOrderType.Length != 2) return true;
+                propertyIdentifiers.Add(propertyOrderType[0]);
+            }
+
+            return propertyIdentifiers.SequenceEqual(propertyIdentifiers.Distinct());
+        }
     }
 
     private static bool OrdersRepetitionValidation(this string[]? orders)

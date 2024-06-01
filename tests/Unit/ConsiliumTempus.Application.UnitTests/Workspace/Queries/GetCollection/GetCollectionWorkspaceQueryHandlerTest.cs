@@ -74,7 +74,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
                 Arg.Is<UserAggregate>(u => u == user),
                 Arg.Is<PaginationInfo?>(p => p.AssertPagination(query.PageSize, query.CurrentPage)),
                 Arg.Is<IReadOnlyList<IOrder<WorkspaceAggregate>>>(o =>
-                    o.AssertOrders(query.Orders, WorkspaceOrder.OrderProperties)),
+                    o.AssertOrders(query.OrderBy, WorkspaceOrder.OrderProperties)),
                 Arg.Is<IEnumerable<IFilter<WorkspaceAggregate>>>(filters =>
                     Utils.Workspace.AssertGetCollectionFilters(filters, query)));
 

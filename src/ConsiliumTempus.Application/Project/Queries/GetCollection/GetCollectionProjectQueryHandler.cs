@@ -24,7 +24,6 @@ public sealed class GetCollectionProjectQueryHandler(
         var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
 
         var paginationInfo = PaginationInfo.Create(query.PageSize, query.CurrentPage);
-        var orders = ProjectOrder.Parse(query.Orders);
         var filters = new List<IFilter<ProjectAggregate>>
         {
             new Filters.Project.WorkspaceFilter(query.WorkspaceId.IfNotNull(WorkspaceId.Create)),
@@ -32,6 +31,7 @@ public sealed class GetCollectionProjectQueryHandler(
             new Filters.Project.IsFavoriteFilter(query.IsFavorite),
             new Filters.Project.IsPrivateFilter(query.IsPrivate)
         };
+        var orders = ProjectOrder.Parse(query.OrderBy);
 
         var projects = await projectRepository.GetListByUser(
             user.Id,

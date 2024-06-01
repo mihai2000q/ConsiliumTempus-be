@@ -15,8 +15,8 @@ public sealed class GetCollectionWorkspaceQueryValidator : AbstractValidator<Get
         RuleFor(q => q.CurrentPage)
             .GreaterThan(0);
 
-        RuleFor(q => q.Orders)
-            .HasOrdersFormat(WorkspaceOrder.OrderProperties);
+        RuleFor(q => q.OrderBy)
+            .HasOrderByFormat(WorkspaceOrder.OrderProperties);
 
         RuleFor(q => q.Name)
             .MaximumLength(PropertiesValidation.Workspace.NameMaximumLength);
