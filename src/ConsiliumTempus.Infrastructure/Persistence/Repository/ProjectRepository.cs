@@ -4,6 +4,7 @@ using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +40,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
 
     public Task<List<ProjectAggregate>> GetListByUser(
         UserId userId,
+        WorkspaceId? workspaceId,
         PaginationInfo? paginationInfo,
         IReadOnlyList<IOrder<ProjectAggregate>> orders,
         IEnumerable<IFilter<ProjectAggregate>> filters,
@@ -46,6 +48,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
     {
         return dbContext.Projects
             .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
+            .WhereIf(workspaceId is not null, p => p.Workspace.Id == workspaceId!)
             .ApplyFilters(filters)
             .ApplyOrders(orders)
             .Paginate(paginationInfo)
@@ -54,11 +57,13 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
 
     public Task<int> GetListByUserCount(
         UserId userId,
+        WorkspaceId? workspaceId,
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default)
     {
         return dbContext.Projects
             .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
+            .WhereIf(workspaceId is not null, p => p.Workspace.Id == workspaceId!)
             .ApplyFilters(filters)
             .CountAsync(cancellationToken);
     }
