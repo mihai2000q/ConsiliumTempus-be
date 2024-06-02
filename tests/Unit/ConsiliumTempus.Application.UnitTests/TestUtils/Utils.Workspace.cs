@@ -75,10 +75,6 @@ internal static partial class Utils
             }
 
             result.TotalCount.Should().Be(workspacesCount);
-            if (query.PageSize is null || query.CurrentPage is null)
-                result.TotalPages.Should().BeNull();
-            else
-                result.TotalPages.Should().Be((int)Math.Ceiling((double)workspacesCount / query.PageSize.Value));
         }
     }
 }

@@ -63,8 +63,7 @@ test.describe('should allow operations on the workspace entity', () => {
             owner: expect.any(Object)
           }
         ]),
-        totalCount: 2,
-        totalPages: null
+        totalCount: 2
       })
       expect(json.workspaces).toHaveLength(2)
     })
@@ -99,8 +98,7 @@ test.describe('should allow operations on the workspace entity', () => {
             owner: expect.any(Object)
           }
         ],
-        totalCount: 2,
-        totalPages: null
+        totalCount: 2
       })
       expect(json.workspaces).toHaveLength(2)
     })
@@ -140,8 +138,7 @@ test.describe('should allow operations on the workspace entity', () => {
             owner: expect.any(Object)
           }
         ],
-        totalCount: 3,
-        totalPages: null
+        totalCount: 3
       })
       expect(json.workspaces).toHaveLength(3)
     })
@@ -168,8 +165,7 @@ test.describe('should allow operations on the workspace entity', () => {
             owner: expect.any(Object)
           }
         ],
-        totalCount: 1,
-        totalPages: null
+        totalCount: 1
       })
       expect(json.workspaces).toHaveLength(1)
     })
@@ -209,8 +205,7 @@ test.describe('should allow operations on the workspace entity', () => {
       const json = await response.json()
       expect(json).toStrictEqual({
         workspaces: expectedWorkspaces,
-        totalCount: totalCount,
-        totalPages: Math.ceil(totalCount / pageSize),
+        totalCount: totalCount
       })
       expect(json.workspaces).toHaveLength(totalCount < pageSize ? totalCount : pageSize)
     })

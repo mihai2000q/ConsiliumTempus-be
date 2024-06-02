@@ -94,8 +94,7 @@ test.describe('should allow operations on the project entity', () => {
             isFavorite: false,
           }
         ],
-        totalCount: 1,
-        totalPages: null
+        totalCount: 1
       })
     })
 
@@ -121,8 +120,7 @@ test.describe('should allow operations on the project entity', () => {
             isFavorite: false,
           }
         ],
-        totalCount: 1,
-        totalPages: null
+        totalCount: 1
       })
     })
 
@@ -166,8 +164,7 @@ test.describe('should allow operations on the project entity', () => {
             isFavorite: false,
           },
         ]),
-        totalCount: 2,
-        totalPages: null
+        totalCount: 2
       })
     })
 
@@ -201,8 +198,7 @@ test.describe('should allow operations on the project entity', () => {
             isFavorite: false,
           },
         ],
-        totalCount: totalCount,
-        totalPages: null
+        totalCount: totalCount
       })
     })
 
@@ -237,8 +233,7 @@ test.describe('should allow operations on the project entity', () => {
       expect(json.projects).toHaveLength(totalCount < pageSize ? totalCount : pageSize)
       expect(json).toStrictEqual({
         projects: expectedProjects,
-        totalCount: totalCount,
-        totalPages: Math.ceil(totalCount / pageSize),
+        totalCount: totalCount
       })
     })
   })

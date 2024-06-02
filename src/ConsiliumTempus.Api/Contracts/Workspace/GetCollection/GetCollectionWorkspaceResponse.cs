@@ -5,8 +5,7 @@ namespace ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed record GetCollectionWorkspaceResponse(
     List<GetCollectionWorkspaceResponse.WorkspaceResponse> Workspaces,
-    int TotalCount,
-    int? TotalPages)
+    int TotalCount)
 {
     public sealed record WorkspaceResponse(
         Guid Id,

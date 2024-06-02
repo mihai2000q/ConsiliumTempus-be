@@ -10,13 +10,11 @@ public static class WorkspaceResultFactory
 {
     public static GetCollectionWorkspaceResult CreateGetCollectionWorkspaceResult(
         List<WorkspaceAggregate>? workspaces = null,
-        int totalCount = 25,
-        int? totalPages = null)
+        int totalCount = 25)
     {
         return new GetCollectionWorkspaceResult(
             workspaces ?? WorkspaceFactory.CreateList(),
-            totalCount,
-            totalPages);
+            totalCount);
     }
     
     public static CreateWorkspaceResult CreateCreateWorkspaceResult()
