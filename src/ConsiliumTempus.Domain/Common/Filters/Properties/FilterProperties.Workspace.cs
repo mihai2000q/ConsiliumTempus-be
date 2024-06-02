@@ -10,5 +10,9 @@ internal static partial class FilterProperties
         internal sealed class NameFilterProperty() : FilterProperty<WorkspaceAggregate>(
             nameof(WorkspaceAggregate.Name),
             w => w.Name.Value);
+        
+        internal sealed class IsFavoriteProperty() : FilterProperty<WorkspaceAggregate>(
+            nameof(WorkspaceAggregate.IsFavorite),
+            w => w.IsFavorite.Value);
     }
 }
