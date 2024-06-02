@@ -21,13 +21,8 @@ public interface IWorkspaceRepository
         UserAggregate user, 
         IEnumerable<IFilter<WorkspaceAggregate>> filters,
         CancellationToken cancellationToken = default);
-    
-    Task<List<WorkspaceAggregate>> GetFavorites(
-        UserAggregate user, 
-        CancellationToken cancellationToken = default);
 
-    Task<List<WorkspaceAggregate>> GetListByUserWithMemberships(
-        UserAggregate user,
+    Task<List<WorkspaceAggregate>> GetListByUserWithMemberships(UserAggregate user,
         CancellationToken cancellationToken = default);
 
     Task Add(WorkspaceAggregate workspace, CancellationToken cancellationToken = default);

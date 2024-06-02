@@ -88,16 +88,6 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .CountAsync(cancellationToken);
     }
 
-    public async Task<List<WorkspaceAggregate>> GetFavorites(
-        UserAggregate user,
-        CancellationToken cancellationToken = default)
-    {
-        return await dbContext.Workspaces
-            .Where(w => w.Memberships.Any(m => m.User == user))
-            .Where(w => w.IsFavorite.Value)
-            .ToListAsync(cancellationToken);
-    }
-
     public async Task<List<WorkspaceAggregate>> GetListByUserWithMemberships(UserAggregate user,
         CancellationToken cancellationToken = default)
     {
