@@ -41,7 +41,6 @@ public sealed class GetCollectionProjectQueryHandler(
 
         return new GetCollectionProjectResult(
             projects,
-            totalCount,
-            paginationInfo?.GetTotalPages(totalCount));
+            totalCount);
     }
 }

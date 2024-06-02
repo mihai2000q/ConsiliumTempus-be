@@ -43,7 +43,6 @@ public sealed class GetCollectionWorkspaceQueryHandler(
 
         return new GetCollectionWorkspaceResult(
             workspaces,
-            workspacesCount,
-            paginationInfo?.GetTotalPages(workspacesCount));
+            workspacesCount);
     }
 }

@@ -115,7 +115,6 @@ internal static partial class Utils
             response.Projects.Zip(result.Projects)
                 .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
             response.TotalCount.Should().Be(result.TotalCount);
-            response.TotalPages.Should().Be(result.TotalPages);
         }
 
         private static void AssertProjectResponse(

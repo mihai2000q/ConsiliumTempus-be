@@ -11,13 +11,11 @@ public static class ProjectResultFactory
 {
     public static GetCollectionProjectResult CreateGetCollectionProjectResult(
         List<ProjectAggregate>? projects = null,
-        int totalCount = 25,
-        int? totalPages = null)
+        int totalCount = 25)
     {
         return new GetCollectionProjectResult(
             projects ?? ProjectFactory.CreateList(),
-            totalCount,
-            totalPages);
+            totalCount);
     }
 
     public static CreateProjectResult CreateCreateProjectResult()

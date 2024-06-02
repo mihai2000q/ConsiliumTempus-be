@@ -89,9 +89,5 @@ public class GetCollectionProjectQueryHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Projects.Should().BeEquivalentTo(projects);
         outcome.Value.TotalCount.Should().Be(projectsCount);
-        if (query.PageSize is null || query.CurrentPage is null)
-            outcome.Value.TotalPages.Should().BeNull();
-        else
-            outcome.Value.TotalPages.Should().Be((int)Math.Ceiling((double)projectsCount / query.PageSize!.Value));
     }
 }

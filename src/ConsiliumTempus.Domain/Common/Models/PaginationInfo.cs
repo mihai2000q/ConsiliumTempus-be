@@ -16,11 +16,6 @@ public sealed class PaginationInfo
         if (pageSize is null || currentPage is null) return default;
         return new PaginationInfo(pageSize.Value, currentPage.Value);
     }
-
-    public int GetTotalPages(int totalCount)
-    {
-        return (int)Math.Ceiling((decimal)totalCount / PageSize);
-    }
     
     public void Deconstruct(out int pageSize, out int currentPage)
     {

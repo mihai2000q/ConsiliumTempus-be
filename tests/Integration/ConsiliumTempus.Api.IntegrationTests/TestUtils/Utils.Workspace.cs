@@ -44,7 +44,6 @@ internal static partial class Utils
             }
 
             response.TotalCount.Should().Be(totalCount);
-            response.TotalPages.Should().Be(totalPages);
         }
 
         internal static void AssertCreation(
