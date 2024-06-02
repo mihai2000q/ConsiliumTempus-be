@@ -33,7 +33,6 @@ internal static partial class Utils
             GetCollectionProjectResponse response,
             IReadOnlyList<ProjectAggregate> projects,
             int totalCount,
-            int? totalPages,
             bool isOrdered = false)
         {
             response.Projects.Should().HaveCount(projects.Count);

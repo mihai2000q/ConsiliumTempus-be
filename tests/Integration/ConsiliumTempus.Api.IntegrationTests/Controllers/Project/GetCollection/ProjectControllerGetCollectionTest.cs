@@ -33,8 +33,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
-            expectedProjects.Count,
-            null);
+            expectedProjects.Count);
     }
 
     [Fact]
@@ -57,8 +56,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
-            expectedProjects.Count,
-            null);
+            expectedProjects.Count);
     }
 
     [Fact]
@@ -82,8 +80,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
-            expectedProjects.Count,
-            null);
+            expectedProjects.Count);
     }
 
     [Fact]
@@ -107,8 +104,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
-            expectedProjects.Count,
-            null);
+            expectedProjects.Count);
     }
 
     [Fact]
@@ -132,8 +128,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
-            expectedProjects.Count,
-            null);
+            expectedProjects.Count);
     }
 
     [Fact]
@@ -159,7 +154,6 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
             response!,
             expectedProjects,
             expectedProjects.Count,
-            null,
             true);
     }
 
@@ -187,7 +181,6 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
             response!,
             expectedProjects,
             expectedProjects.Count,
-            null,
             true);
     }
 
@@ -225,7 +218,6 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
             response!,
             expectedProjects,
             userProjects.Count,
-            (int)Math.Ceiling((double)userProjects.Count / request.PageSize.Value),
             true);
     }
 

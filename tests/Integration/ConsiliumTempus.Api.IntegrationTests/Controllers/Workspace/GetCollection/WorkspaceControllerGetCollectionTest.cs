@@ -43,8 +43,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         Utils.Workspace.AssertGetCollectionResponse(
             response!,
             expectedWorkspaces,
-            expectedWorkspaces.Count,
-            null);
+            expectedWorkspaces.Count);
     }
 
     [Fact]
@@ -73,8 +72,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         Utils.Workspace.AssertGetCollectionResponse(
             response,
             expectedWorkspaces,
-            expectedWorkspaces.Count,
-            null);
+            expectedWorkspaces.Count);
     }
 
     [Fact]
@@ -99,8 +97,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         Utils.Workspace.AssertGetCollectionResponse(
             response!,
             expectedWorkspaces,
-            expectedWorkspaces.Count,
-            null);
+            expectedWorkspaces.Count);
     }
 
     [Fact]
@@ -125,8 +122,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
             response!,
             expectedWorkspaces,
             expectedWorkspaces.Count,
-            null,
-            isOrdered: true);
+            true);
     }
 
     [Fact]
@@ -152,8 +148,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
             response!,
             expectedWorkspaces,
             expectedWorkspaces.Count,
-            null,
-            isOrdered: true);
+            true);
     }
 
     [Fact]
@@ -189,7 +184,6 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
             response!,
             expectedWorkspaces,
             workspaces.Count,
-            workspaces.Count / request.PageSize,
-            isOrdered: true);
+            true);
     }
 }

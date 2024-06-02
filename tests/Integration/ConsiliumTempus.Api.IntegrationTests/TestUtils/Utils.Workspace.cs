@@ -26,7 +26,6 @@ internal static partial class Utils
             GetCollectionWorkspaceResponse response,
             List<WorkspaceAggregate> workspaces,
             int totalCount,
-            int? totalPages,
             bool isOrdered = false)
         {
             response.Workspaces.Should().HaveCount(workspaces.Count);
