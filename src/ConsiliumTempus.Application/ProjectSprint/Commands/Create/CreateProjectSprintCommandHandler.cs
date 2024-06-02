@@ -1,9 +1,11 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ErrorOr;
 using MediatR;
 
@@ -36,9 +38,18 @@ public sealed class CreateProjectSprintCommandHandler(
         });
 
         if (command.KeepPreviousStages)
+        {
             project.Sprints
                 .IfNotEmpty(sprints =>
                     projectSprint.AddStages(sprints[0].Stages));
+        }
+        else
+        {
+            projectSprint.AddStage(ProjectStage.Create(
+                Name.Create(Constants.ProjectStage.Names[0]),
+                CustomOrderPosition.Create(0), 
+                projectSprint));
+        }
 
         await projectSprintRepository.Add(projectSprint, cancellationToken);
 

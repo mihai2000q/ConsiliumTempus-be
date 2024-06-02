@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
 using ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
+using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 
@@ -43,10 +44,23 @@ internal static partial class Utils
             projectSprint.Name.Value.Should().Be(command.Name);
             projectSprint.StartDate.Should().Be(command.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow));
             projectSprint.EndDate.Should().Be(command.EndDate);
-            if (command.KeepPreviousStages && project.Sprints.Count != 0)
-                projectSprint.Stages.Should().BeEquivalentTo(project.Sprints[0].Stages);
+            if (command.KeepPreviousStages)
+            {
+                if (project.Sprints.Count != 0)
+                    projectSprint.Stages.Should().BeEquivalentTo(project.Sprints[0].Stages);
+                else
+                    projectSprint.Stages.Should().BeEmpty();
+            }
             else
-                projectSprint.Stages.Should().BeEmpty();
+            {
+                projectSprint.Stages.Should().HaveCount(1);
+                projectSprint.Stages[0].Id.Value.Should().NotBeEmpty();
+                projectSprint.Stages[0].Name.Value.Should().Be(Constants.ProjectStage.Names[0]);
+                projectSprint.Stages[0].CustomOrderPosition.Value.Should().Be(0);
+                projectSprint.Stages[0].Sprint.Should().Be(projectSprint);
+                projectSprint.Stages[0].Tasks.Should().BeEmpty();
+            }
+
             projectSprint.DomainEvents.Should().BeEmpty();
 
             projectSprint.Project.Should().Be(project);

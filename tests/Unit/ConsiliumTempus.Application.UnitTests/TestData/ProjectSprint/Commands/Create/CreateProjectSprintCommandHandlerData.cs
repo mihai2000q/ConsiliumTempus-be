@@ -12,23 +12,23 @@ internal static class CreateProjectSprintCommandHandlerData
         public GetCommands()
         {
             var project = ProjectFactory.CreateWithSprints();
-            
+
             var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand();
             Add(command, project);
-            
+
             command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
                 keepPreviousStages: true);
             Add(command, project);
-            
+
             command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
                 keepPreviousStages: true);
             project = ProjectFactory.Create();
             Add(command, project);
-            
+
             command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
                 startDate: new DateOnly(2024, 10, 12));
             Add(command, project);
-            
+
             command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
                 startDate: new DateOnly(2024, 10, 12));
             project = ProjectFactory.CreateWithSprints(sprintEndDate: new DateOnly(2024, 10, 13));

@@ -50,7 +50,12 @@ test.describe('should allow operations on the project sprint entity', () => {
       name: createProjectSprintRequest.name,
       startDate: createProjectSprintRequest.startDate,
       endDate: createProjectSprintRequest.endDate,
-      stages: []
+      stages: [
+        {
+          id: expect.any(String),
+          name: ProjectStageName1
+        }
+      ]
     })
   })
 
@@ -190,7 +195,7 @@ test.describe('should allow operations on the project sprint entity', () => {
 
     const addStageToProjectSprintRequest1: AddStageToProjectSprintRequest = {
       id: sprint.id,
-      name: "In Transit",
+      name: "In Transit1",
       onTop: false
     }
     const response1 = await request.post('/api/projects/sprints/add-stage', {
@@ -200,22 +205,22 @@ test.describe('should allow operations on the project sprint entity', () => {
 
     const addStageToProjectSprintRequest2: AddStageToProjectSprintRequest = {
       id: sprint.id,
-      name: "In Transit",
+      name: "In Transit2",
       onTop: false
     }
     const response2 = await request.post('/api/projects/sprints/add-stage', {
       ...useToken(),
-      data: addStageToProjectSprintRequest1
+      data: addStageToProjectSprintRequest2
     });
 
     const addStageToProjectSprintRequest3: AddStageToProjectSprintRequest = {
       id: sprint.id,
-      name: "In Transit",
+      name: "In Transit3",
       onTop: true
     }
     const response3 = await request.post('/api/projects/sprints/add-stage', {
       ...useToken(),
-      data: addStageToProjectSprintRequest1
+      data: addStageToProjectSprintRequest3
     });
 
     expect(response1.ok()).toBeTruthy()
@@ -233,11 +238,15 @@ test.describe('should allow operations on the project sprint entity', () => {
     })
 
     const stages = await getProjectStages(request, addStageToProjectSprintRequest1.id)
-    expect(stages).toHaveLength(3)
+    expect(stages).toHaveLength(4)
     expect(stages).toStrictEqual([
       {
         id: expect.any(String),
         name: addStageToProjectSprintRequest3.name,
+      },
+      {
+        id: expect.any(String),
+        name: ProjectStageName1,
       },
       {
         id: expect.any(String),
@@ -328,18 +337,18 @@ test.describe('should allow operations on the project sprint entity', () => {
     })
 
     const stages = await getProjectStages(request, body.id)
-    expect(stages).not.toStrictEqual([
+    expect(stages).not.toStrictEqual(expect.arrayContaining([
       {
         id: stage.id,
         name: createProjectSprintRequest.name,
       }
-    ])
-    expect(stages).toStrictEqual([
+    ]))
+    expect(stages).toStrictEqual(expect.arrayContaining([
       {
         id: stage.id,
         name: body.name,
       }
-    ])
+    ]))
   })
 
   test('should delete project sprint', async ({ request }) => {
@@ -390,7 +399,7 @@ test.describe('should allow operations on the project sprint entity', () => {
     const addStageToProjectSprintRequest: AddStageToProjectSprintRequest = {
       id: sprint.id,
       name: "In Transit",
-      onTop: true
+      onTop: false
     }
     const stage = await addStageToProjectSprint(request, addStageToProjectSprintRequest)
 
@@ -405,6 +414,18 @@ test.describe('should allow operations on the project sprint entity', () => {
     })
 
     const stages = await getProjectStages(request, sprint.id)
-    expect(stages).toHaveLength(0)
+    expect(stages).toHaveLength(1)
+    expect(stages).not.toStrictEqual([
+      {
+        id: expect.any(String),
+        name: addStageToProjectSprintRequest.name
+      }
+    ])
+    expect(stages).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: ProjectStageName1
+      }
+    ])
   })
 })
