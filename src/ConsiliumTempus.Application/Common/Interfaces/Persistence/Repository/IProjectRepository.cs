@@ -29,6 +29,10 @@ public interface IProjectRepository
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default);
 
+    Task<List<ProjectAggregate>> GetFavorites(
+        UserId userId,
+        CancellationToken cancellationToken = default);
+
     Task Add(ProjectAggregate project, CancellationToken cancellationToken = default);
 
     void Remove(ProjectAggregate project);
