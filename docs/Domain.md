@@ -30,9 +30,12 @@ however, an **Aggregate** will usually be a model that contains all the relation
 
 Each aggregate can have its own set of **entities** or **value objects**.
 
-Each aggregate has a set of possible *errors*, *filters*, *orders*, *order properties* or *properties validation*.
+Each aggregate has a set of possible *errors*, *filters*, 
+*filter properties*, *orders*, *order properties* or *properties validation*.
 The aforementioned refers to the constraints that each property has
 (i.e., the name cannot be longer than 100 characters).
+
+To allow a new order or filter for a property for an entity that already supports it, add a new filter/order property.
 
 The aggregates are:
 

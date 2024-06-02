@@ -33,3 +33,4 @@ For database design checkout the [Project Stage Diagram](../../../database-diagr
 ### Domain Errors
 
 - **Not Found** when the project stage cannot be found
+- **Only One Stage** when the project sprint only has one stage

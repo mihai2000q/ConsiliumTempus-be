@@ -23,7 +23,7 @@ public sealed class WorkspaceMappingConfig : IRegister
         GetMappings(config);
         GetCollectionMappings(config);
         CreateMappings(config);
-        PutMappings(config);
+        UpdateMappings(config);
         DeleteMappings(config);
     }
 
@@ -61,7 +61,7 @@ public sealed class WorkspaceMappingConfig : IRegister
         config.NewConfig<CreateWorkspaceResult, CreateWorkspaceResponse>();
     }
 
-    private static void PutMappings(TypeAdapterConfig config)
+    private static void UpdateMappings(TypeAdapterConfig config)
     {
         config.NewConfig<UpdateWorkspaceRequest, UpdateWorkspaceCommand>();
 

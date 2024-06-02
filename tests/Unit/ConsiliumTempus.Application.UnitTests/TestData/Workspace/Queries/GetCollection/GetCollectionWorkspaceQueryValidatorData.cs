@@ -30,6 +30,7 @@ internal static class GetCollectionWorkspaceQueryValidatorData
                 search:
                 [
                     "name ct something", "name sw something", "name eq something", "name neq something",
+                    "is_favorite eq false", "is_favorite neq true",
                 ]);
             Add(query);
 

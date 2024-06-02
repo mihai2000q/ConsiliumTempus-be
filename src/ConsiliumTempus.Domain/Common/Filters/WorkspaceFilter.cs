@@ -11,6 +11,7 @@ public abstract class WorkspaceFilter : Filter<WorkspaceAggregate>
     public static readonly IReadOnlyList<FilterProperty<WorkspaceAggregate>> FilterProperties =
     [
         new FilterProperties.Workspace.NameFilterProperty(),
+        new FilterProperties.Workspace.IsFavoriteProperty()
     ];
 
     private WorkspaceFilter(Expression<Func<WorkspaceAggregate, bool>> predicate) : base(predicate)
