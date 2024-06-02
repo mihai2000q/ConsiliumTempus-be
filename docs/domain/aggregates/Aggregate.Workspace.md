@@ -53,6 +53,7 @@ otherwise they can be part of other people's personal workspaces, but they can't
 ### Filters
 
 - **Name** to filter by name
+- **IsFavorite** to filter by favorite
 
 ### Orders
 
