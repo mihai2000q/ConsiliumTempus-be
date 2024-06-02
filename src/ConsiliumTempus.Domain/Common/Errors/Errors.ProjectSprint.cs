@@ -20,5 +20,9 @@ public static partial class Errors
         public static Error NotFound => Error.NotFound(
             "ProjectStage.NotFound",
             "Project Stage could not be found");
+
+        public static Error OnlyOneStage => Error.NotFound(
+            "ProjectStage.OnlyOneStage",
+            "Each Project Sprint should have at least one project stage");
     }
 }
