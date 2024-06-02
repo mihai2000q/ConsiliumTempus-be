@@ -45,7 +45,7 @@ public class ProjectSprintControllerRemoveStageTest(WebAppFactory factory)
             .SingleAsync(ps => ps.Id == sprint.Id);
         Utils.ProjectSprint.AssertRemovedStage(newSprint, request);
     }
-    
+
     [Fact]
     public async Task RemoveStageFromProjectSprint_WhenStageIsNotFound_ShouldReturnStageNotFoundError()
     {
@@ -67,6 +67,27 @@ public class ProjectSprintControllerRemoveStageTest(WebAppFactory factory)
             .Should().NotBeNull();
         dbContext.Set<ProjectStage>().SingleOrDefault(p => p.Id == ProjectStageId.Create(request.StageId))
             .Should().BeNull();
+    }
+    
+    [Fact]
+    public async Task RemoveStageFromProjectSprint_WhenThereIsOnlyOneStage_ShouldReturnOnlyOneStageError()
+    {
+        // Arrange
+        var sprint = ProjectSprintData.ProjectSprints[1];
+        var request = ProjectSprintRequestFactory.CreateRemoveStageFromProjectSprintRequest(
+            id: sprint.Id.Value);
+
+        // Act
+        Client.UseCustomToken(ProjectSprintData.Users.First());
+        var outcome = await Client.Delete("api/projects/sprints" +
+                                          $"/{request.Id}/Remove-Stage/{request.StageId}");
+
+        // Assert
+        await outcome.ValidateError(Errors.ProjectStage.OnlyOneStage);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.ProjectSprints.SingleOrDefault(p => p.Id == ProjectSprintId.Create(request.Id))
+            .Should().NotBeNull();
     }
 
     [Fact]

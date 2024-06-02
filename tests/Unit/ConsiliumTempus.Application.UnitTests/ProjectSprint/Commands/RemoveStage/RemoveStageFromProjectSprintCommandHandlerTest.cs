@@ -50,6 +50,31 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
 
         Utils.ProjectSprint.AssertRemoveStageCommand(expectedStageToRemove, command);
     }
+    
+    [Fact]
+    public async Task HandleRemoveStageFromProjectSprintCommand_WhenThereIsOnlyOneStage_ShouldReturnOnlyOneStageError()
+    {
+        // Arrange
+        var sprint = ProjectSprintFactory.Create(stagesCount: 1);
+        _projectSprintRepository
+            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
+            .Returns(sprint);
+
+        var expectedStageToRemove = sprint.Stages[0];
+
+        var command = ProjectSprintCommandFactory.CreateRemoveStageFromProjectSprintCommand(
+            stageId: expectedStageToRemove.Id.Value);
+
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Assert
+        await _projectSprintRepository
+            .Received(1)
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+
+        outcome.ValidateError(Errors.ProjectStage.OnlyOneStage);
+    }
 
     [Fact]
     public async Task HandleRemoveStageFromProjectSprintCommand_WhenSprintIsNotFound_ShouldReturnSprintNotFoundError()

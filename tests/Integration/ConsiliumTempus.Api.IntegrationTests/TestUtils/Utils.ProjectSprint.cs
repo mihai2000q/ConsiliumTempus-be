@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
+using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
@@ -50,13 +51,17 @@ internal static partial class Utils
             sprint.StartDate.Should().Be(request.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow));
             sprint.EndDate.Should().Be(request.EndDate);
             sprint.Project.Id.Value.Should().Be(request.ProjectId);
-            if (request.KeepPreviousStages && project.Sprints.Count != 0)
+            if (request.KeepPreviousStages)
             {
-                sprint.Stages.Should().BeEquivalentTo(project.Sprints[0].Stages);
+                if (project.Sprints.Count != 0)
+                    sprint.Stages.Should().BeEquivalentTo(project.Sprints[0].Stages);
+                else
+                    sprint.Stages.Should().BeEmpty();
             }
             else
             {
-                sprint.Stages.Should().BeEmpty();
+                sprint.Stages.Should().HaveCount(1);
+                sprint.Stages[0].Name.Value.Should().Be(Constants.ProjectStage.Names[0]);
             }
 
             if (project.Sprints.Count != 0)

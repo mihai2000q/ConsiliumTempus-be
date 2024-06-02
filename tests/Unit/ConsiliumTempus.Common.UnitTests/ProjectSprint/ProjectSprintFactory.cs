@@ -17,17 +17,20 @@ public static class ProjectSprintFactory
         int stagesCount = 5,
         int sprintsCount = 5)
     {
+        project ??= ProjectFactory.CreateWithSprints(sprintsCount: sprintsCount - 1);
         var sprint = ProjectSprintAggregate.Create(
             Name.Create(name),
-            project ?? ProjectFactory.CreateWithSprints(sprintsCount: sprintsCount),
+            project,
             startDate,
             endDate);
+
+        project.AddSprint(sprint);
 
         Enumerable
             .Range(0, stagesCount)
             .ToList()
             .ForEach(i => sprint.AddStage(ProjectStageFactory.Create(
-                sprint, 
+                sprint,
                 Constants.ProjectStage.Name + i,
                 i)));
 

@@ -138,7 +138,7 @@ internal class ProjectSprintData : ITestData
             "Get the champs lig finals",
             new DateOnly(2024, 01, 16))
     ];
-    
+
     public static ProjectStage[] ProjectStages { get; } =
     [
         ProjectStageFactory.Create(
@@ -152,6 +152,11 @@ internal class ProjectSprintData : ITestData
             ProjectSprints[0],
             "Done",
             2),
+
+        ProjectStageFactory.Create(
+            ProjectSprints[1],
+            "Single Stage"),
+
         ProjectStageFactory.Create(
             ProjectSprints[2],
             "To do"),
