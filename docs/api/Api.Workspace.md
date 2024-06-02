@@ -42,7 +42,9 @@ Returns the workspace data.
 ```json
 {
   "name": "Workspace Name",
-  "description": "This is the description of the workspace"
+  "description": "This is the description of the workspace",
+  "isFavorite": true,
+  "isPersonal": false
 }
 ```
 
@@ -51,7 +53,7 @@ Returns the workspace data.
 Anyone logged in can request this data, but it will return only the workspaces that are linked to this user.
 
 ```js
-GET {{host}}/api/workspaces?pageSize=2&currentPage=1orders=name.asc, updated_date_time.desc&name=worksp
+GET {{host}}/api/workspaces?pageSize=2&currentPage=1orderBy=name.asc&orderBy=updated_date_time.desc&search=name ct worksp
 ```
 
 ### Get Collection Workspace Request
@@ -60,8 +62,8 @@ Sends optional query parameters for ordering, filtering, and page-based paginati
 
 - _**pageSize**_ is used to specify the size of the page
 - _**currentPage**_ is used to specify the current page
-- _**orders**_ is used to order the collection
-- _**name**_ is used to filter by name
+- _**orderBy**_ is used to order the collection
+- _**search**_ is used to filter the collection
 - _**isPersonalWorkspaceFirst**_ is used to place the personal workspace of the user on top of the others
 
 #### Get Collection Workspace Response
@@ -76,6 +78,7 @@ Returns the workspaces.
       "name": "Workspace 1",
       "description": "This is the first workspace",
       "isPersonal": true,
+      "isFavorite": true,
       "owner": {
         "id": "10000000-0000-0000-0000-000000000000",
         "name": "Michael Jordan"
@@ -86,14 +89,14 @@ Returns the workspaces.
       "name": "Workspace 2",
       "description": "This is the second workspace",
       "isPersonal": false,
+      "isFavorite": true,
       "owner": {
         "id": "10000000-0000-0000-0000-000000000000",
         "name": "Andreas Donner"
       }
     }
   ],
-  "totalCount": 4,
-  "totalPages": 2
+  "totalCount": 4
 }
 ```
 
