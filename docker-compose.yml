@@ -25,3 +25,5 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - ./sample-data:/mnt/sample-data
