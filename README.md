@@ -164,6 +164,12 @@ And the body of the request shall be:
 It will return an Invalid Credentials Error, however, 
 now you know that you have a working connection to the API and to the database.
 
+### Sample Data
+
+Inside the `sample-data` directory there are `.sql` files intended to insert into the Database with sample data,
+that can be used for both backend and frontend development. 
+To insert it, run the `add-sample-data` script.
+
 ## Testing
 
 The backend of the application is tested using the **xUnit** framework. 
