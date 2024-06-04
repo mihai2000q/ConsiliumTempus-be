@@ -122,6 +122,7 @@ internal class ProjectTaskData : ITestData
     [
         ProjectSprintFactory.Create(
             Projects[0],
+            Audit.Create(Users[0]),
             "Sprint 1 - Qualify on Quarters",
             new DateOnly(2024, 01, 1),
             new DateOnly(2024, 01, 15))

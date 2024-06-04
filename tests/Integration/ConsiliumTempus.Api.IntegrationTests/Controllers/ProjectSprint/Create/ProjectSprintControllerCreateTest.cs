@@ -25,8 +25,10 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         var previousSprintEndDate = project.Sprints
             .IfNotEmpty(sprints => sprints[0].EndDate);
 
+        var user = ProjectSprintData.Users.First();
+        
         // Act
-        Client.UseCustomToken(ProjectSprintData.Users.First());
+        Client.UseCustomToken(user);
         var outcome = await Client.Post("api/projects/sprints", request);
 
         // Assert
@@ -46,6 +48,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
             createdSprint,
             request,
             project,
+            user,
             previousSprintEndDate);
     }
 
@@ -61,8 +64,10 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         var previousSprintEndDate = project.Sprints
             .IfNotEmpty(sprints => sprints[0].EndDate);
 
+        var user = ProjectSprintData.Users[1];
+        
         // Act
-        Client.UseCustomToken(ProjectSprintData.Users[1]);
+        Client.UseCustomToken(user);
         var outcome = await Client.Post("api/projects/sprints", request);
 
         // Assert
@@ -82,6 +87,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
             createdSprint,
             request,
             project,
+            user,
             previousSprintEndDate);
     }
 
@@ -97,8 +103,10 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         var previousSprintEndDate = project.Sprints
             .IfNotEmpty(sprints => sprints[0].EndDate);
 
+        var user = ProjectSprintData.Users.First();
+        
         // Act
-        Client.UseCustomToken(ProjectSprintData.Users.First());
+        Client.UseCustomToken(user);
         var outcome = await Client.Post("api/projects/sprints", request);
 
         // Assert
@@ -119,6 +127,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
             createdSprint,
             request,
             project,
+            user,
             previousSprintEndDate);
     }
 

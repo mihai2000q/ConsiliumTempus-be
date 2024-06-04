@@ -9,6 +9,7 @@ using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
@@ -37,7 +38,7 @@ internal static partial class Utils
                 .Zip(sprints.OrderByDescending(s => s.StartDate)
                     .ThenByDescending(s => s.EndDate)
                     .ThenByDescending(s => s.Name.Value)
-                    .ThenByDescending(s => s.CreatedDateTime))
+                    .ThenByDescending(s => s.Audit.CreatedDateTime))
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
         }
 
@@ -45,6 +46,7 @@ internal static partial class Utils
             ProjectSprintAggregate sprint,
             CreateProjectSprintRequest request,
             ProjectAggregate project,
+            UserAggregate user,
             DateOnly? previousSprintEndDate)
         {
             sprint.Name.Value.Should().Be(request.Name);
@@ -72,6 +74,11 @@ internal static partial class Utils
                     sprint.Project.Sprints.OrderByDescending(s => s.StartDate).ToList()[1].EndDate
                         .Should().Be(previousSprintEndDate);
 
+            sprint.Audit.CreatedBy.Should().Be(user);
+            sprint.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            sprint.Audit.UpdatedBy.Should().Be(user);
+            sprint.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
@@ -96,18 +103,20 @@ internal static partial class Utils
         internal static void AssertUpdated(
             ProjectSprintAggregate sprint,
             ProjectSprintAggregate newSprint,
-            UpdateProjectSprintRequest request)
+            UpdateProjectSprintRequest request,
+            UserAggregate user)
         {
             // unchanged
             newSprint.Id.Value.Should().Be(request.Id);
-            newSprint.CreatedDateTime.Should().Be(sprint.CreatedDateTime);
+            newSprint.Audit.CreatedDateTime.Should().Be(sprint.Audit.CreatedDateTime);
             newSprint.Project.Should().Be(sprint.Project);
 
             // changed
             newSprint.Name.Value.Should().Be(request.Name);
             newSprint.StartDate.Should().Be(request.StartDate);
             newSprint.EndDate.Should().Be(request.EndDate);
-            newSprint.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newSprint.Audit.UpdatedBy.Should().Be(user);
+            newSprint.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             newSprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newSprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
