@@ -18,9 +18,9 @@ public class ProjectCreatedHandlerTest
     public async Task HandleProjectCreated_WhenSuccessful_ShouldAddSprintsStagesAndTasksToTheProject()
     {
         // Arrange
-        var user = UserFactory.Create();
-        var project = ProjectFactory.CreateWithSprints(user: user, sprintsCount: 0);
-        var notification = new ProjectCreated(project, user);
+        var owner = UserFactory.Create();
+        var project = ProjectFactory.CreateWithSprints(owner: owner, sprintsCount: 0);
+        var notification = new ProjectCreated(project);
 
         // Act
         await _uut.Handle(notification, default);
@@ -66,7 +66,7 @@ public class ProjectCreatedHandlerTest
                 task.Id.Value.ToString().Should().NotBeEmpty();
                 task.Description.Value.Should().BeEmpty();
                 task.IsCompleted.Value.Should().BeFalse();
-                task.CreatedBy.Should().Be(user);
+                task.CreatedBy.Should().Be(owner);
                 task.CustomOrderPosition.Value.Should().Be(count++);
                 task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
                 task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));

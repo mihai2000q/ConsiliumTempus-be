@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Project.Enums;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.Common.Extensions;
@@ -80,7 +81,8 @@ public static class FluentValidationExtensions
             .Must(search => search.ForAll(f => SearchValidation.OperatorAndValueTypeValidation(f, filterProperties)))
             .WithMessage("The '{PropertyName}' must have a supported combination of Type and Operator")
             .Must(search => search.ForAll(f => SearchValidation.ValueParsingValidation(f, filterProperties)))
-            .WithMessage("The Value from the '{PropertyName}', given the type of the filter proposed, cannot be parsed");
+            .WithMessage(
+                "The Value from the '{PropertyName}', given the type of the filter proposed, cannot be parsed");
     }
 
     private static bool ForAll(this string[]? str, Func<string, bool> validator) => str is null || str.All(validator);
@@ -148,7 +150,7 @@ public static class FluentValidationExtensions
         internal static bool SnakeCaseValidation(string filter)
         {
             var parsedFilter = SplitFilter(filter);
-            return parsedFilter is null || 
+            return parsedFilter is null ||
                    !parsedFilter.Value.PropertyIdentifier.Any(char.IsUpper);
         }
 
@@ -161,7 +163,7 @@ public static class FluentValidationExtensions
 
             var property = filterProperties
                 .SingleOrDefault(fp => fp.Identifier == parsedFilter.Value.PropertyIdentifier);
-            return parsedFilter.Value.PropertyIdentifier.Any(char.IsUpper) || 
+            return parsedFilter.Value.PropertyIdentifier.Any(char.IsUpper) ||
                    property is not null;
         }
 
@@ -183,7 +185,7 @@ public static class FluentValidationExtensions
                 .SingleOrDefault(fp => fp.Identifier == parsedFilter.Value.PropertyIdentifier);
             return property is null ||
                    !Filter.OperatorToFilterOperator.TryGetValue(parsedFilter.Value.Operator, out var filterOperator) ||
-                   (SupportedOperatorsByType.ContainsKey(property.PropertySelector.ReturnType) && 
+                   (SupportedOperatorsByType.ContainsKey(property.PropertySelector.ReturnType) &&
                     SupportedOperatorsByType[property.PropertySelector.ReturnType].Contains(filterOperator));
         }
 
@@ -206,6 +208,8 @@ public static class FluentValidationExtensions
                 not null when type == typeof(DateTime) => DateTime.TryParse(parsedFilter.Value.Value, out _),
                 not null when type == typeof(decimal) => decimal.TryParse(parsedFilter.Value.Value, out _),
                 not null when type == typeof(int) => int.TryParse(parsedFilter.Value.Value, out _),
+                not null when type == typeof(ProjectLifecycle) =>
+                    Enum.TryParse<ProjectLifecycle>(parsedFilter.Value.Value, true, out _),
                 _ => true
             };
         }
@@ -242,18 +246,6 @@ public static class FluentValidationExtensions
                 ]
             },
             {
-                typeof(bool),
-                [FilterOperator.Equal, FilterOperator.NotEqual]
-            },
-            {
-                typeof(DateTime),
-                [
-                    FilterOperator.Equal, FilterOperator.NotEqual,
-                    FilterOperator.GreaterThan, FilterOperator.GreaterThanOrEqual,
-                    FilterOperator.LessThan, FilterOperator.LessThanOrEqual
-                ]
-            },
-            {
                 typeof(decimal), [
                     FilterOperator.Equal, FilterOperator.NotEqual,
                     FilterOperator.GreaterThan, FilterOperator.GreaterThanOrEqual,
@@ -267,6 +259,16 @@ public static class FluentValidationExtensions
                     FilterOperator.LessThan, FilterOperator.LessThanOrEqual
                 ]
             },
+            {
+                typeof(DateTime),
+                [
+                    FilterOperator.Equal, FilterOperator.NotEqual,
+                    FilterOperator.GreaterThan, FilterOperator.GreaterThanOrEqual,
+                    FilterOperator.LessThan, FilterOperator.LessThanOrEqual
+                ]
+            },
+            { typeof(bool), [FilterOperator.Equal, FilterOperator.NotEqual] },
+            { typeof(ProjectLifecycle), [FilterOperator.Equal, FilterOperator.NotEqual] }
         };
     }
 }

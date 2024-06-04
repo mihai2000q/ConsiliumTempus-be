@@ -14,14 +14,14 @@ public static class ProjectFactory
     public static ProjectAggregate Create(
         string name = Constants.Project.Name,
         bool isPrivate = false,
-        UserAggregate? user = null,
+        UserAggregate? owner = null,
         WorkspaceAggregate? workspace = null)
     {
         var project = ProjectAggregate.Create(
             Name.Create(name),
             IsPrivate.Create(isPrivate),
             workspace ?? WorkspaceFactory.Create(),
-            user ?? UserFactory.Create());
+            owner ?? UserFactory.Create());
 
         project.ClearDomainEvents();
 
@@ -31,7 +31,7 @@ public static class ProjectFactory
     public static ProjectAggregate CreateWithSprints(
         string name = Constants.Project.Name,
         bool isPrivate = false,
-        UserAggregate? user = null,
+        UserAggregate? owner = null,
         WorkspaceAggregate? workspace = null,
         int sprintsCount = 5,
         DateOnly? sprintEndDate = null)
@@ -40,7 +40,7 @@ public static class ProjectFactory
             Name.Create(name),
             IsPrivate.Create(isPrivate),
             workspace ?? WorkspaceFactory.Create(),
-            user ?? UserFactory.Create());
+            owner ?? UserFactory.Create());
 
         ProjectSprintFactory
             .CreateList(sprintsCount, project: project, endDate: sprintEndDate)

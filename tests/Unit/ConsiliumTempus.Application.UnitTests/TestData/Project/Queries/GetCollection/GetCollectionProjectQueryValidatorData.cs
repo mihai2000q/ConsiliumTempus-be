@@ -32,6 +32,7 @@ internal static class GetCollectionProjectQueryValidatorData
                     "name ct something", "name sw something", "name eq something", "name neq something",
                     "is_favorite eq true", "is_favorite neq false",
                     "is_private eq true", "is_private neq false",
+                    "lifecycle eq active", "lifecycle neq archived", "lifecycle eq upcoming"
                 ]);
             Add(query);
 
