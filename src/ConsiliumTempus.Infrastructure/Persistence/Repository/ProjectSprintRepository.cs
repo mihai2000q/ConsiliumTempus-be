@@ -57,5 +57,6 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
     public void Remove(ProjectSprintAggregate sprint)
     {
         dbContext.Remove(sprint);
+        dbContext.Remove(sprint.Audit);
     }
 }
