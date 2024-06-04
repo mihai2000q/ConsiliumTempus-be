@@ -6,7 +6,9 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.User.Events;
 
-public sealed class UserDeletedHandler(IWorkspaceRepository workspaceRepository)
+public sealed class UserDeletedHandler(
+    IUserRepository userRepository,
+    IWorkspaceRepository workspaceRepository)
     : INotificationHandler<UserDeleted>
 {
     public async Task Handle(UserDeleted notification, CancellationToken cancellationToken)
@@ -32,5 +34,8 @@ public sealed class UserDeletedHandler(IWorkspaceRepository workspaceRepository)
                 workspace.UpdateIsPersonal(IsPersonal.Create(false));
             }
         }
+
+        await userRepository.NullifyAuditsByUser(notification.User, cancellationToken);
+        await userRepository.RemoveProjectsByOwner(notification.User, cancellationToken);
     }
 }

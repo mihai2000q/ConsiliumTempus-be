@@ -9,6 +9,7 @@ class Audit
 {
     Audit Create()
     void Update()
+    void Nullify()
 }
 ```
 

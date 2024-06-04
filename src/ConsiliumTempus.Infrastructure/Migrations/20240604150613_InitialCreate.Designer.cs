@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240604142720_InitialCreate")]
+    [Migration("20240604150613_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

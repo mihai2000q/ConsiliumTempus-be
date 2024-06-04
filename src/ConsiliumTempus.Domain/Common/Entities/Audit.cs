@@ -24,7 +24,7 @@ public sealed class Audit : Entity<Guid>
         UpdatedDateTime = updatedDateTime;
     }
 
-    public UserAggregate? CreatedBy { get; init; }
+    public UserAggregate? CreatedBy { get; private set; }
     public DateTime CreatedDateTime { get; init; }
     public UserAggregate? UpdatedBy { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
@@ -43,5 +43,11 @@ public sealed class Audit : Entity<Guid>
     {
         UpdatedBy = updatedBy;
         UpdatedDateTime = DateTime.UtcNow;
+    }
+    
+    public void Nullify()
+    {
+        CreatedBy = null;
+        UpdatedBy = null;
     }
 }

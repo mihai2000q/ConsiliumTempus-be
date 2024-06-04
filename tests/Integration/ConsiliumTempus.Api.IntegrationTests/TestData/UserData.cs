@@ -1,8 +1,12 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
+using ConsiliumTempus.Common.IntegrationTests.Project;
+using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -16,7 +20,9 @@ internal class UserData : ITestData
         [
             Users,
             Workspaces,
-            Memberships
+            Memberships,
+            Projects,
+            ProjectSprints
         ];
     }
 
@@ -116,5 +122,25 @@ internal class UserData : ITestData
             Users[5],
             Workspaces[0],
             WorkspaceRole.Admin)
+    ];
+
+    public static ProjectAggregate[] Projects { get; } =
+    [
+        ProjectFactory.Create(
+            Workspaces[0],
+            Users[0],
+            "Win NBA",
+            "This is an elaborate plan to win NBA",
+            true)
+    ];
+
+    public static ProjectSprintAggregate[] ProjectSprints { get; } =
+    [
+        ProjectSprintFactory.Create(
+            Projects[0],
+            Audit.Create(Users[0]),
+            "Sprint 1 - Qualify on Semi Finals",
+            new DateOnly(2024, 01, 16),
+            new DateOnly(2024, 01, 30)),
     ];
 }

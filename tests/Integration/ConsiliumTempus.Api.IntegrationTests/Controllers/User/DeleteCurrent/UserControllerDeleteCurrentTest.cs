@@ -78,6 +78,11 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
                     newOwner.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
                 }
             });
+
+        dbContext.Set<Audit>()
+            .Where(a => a.CreatedBy == null || a.UpdatedBy == null)
+            .ToList()
+            .Should().NotBeEmpty();
     }
 
     [Fact]
