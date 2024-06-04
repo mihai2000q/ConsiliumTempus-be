@@ -34,7 +34,7 @@ public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Projec
 
         builder.HasOne(s => s.Audit)
             .WithMany()
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder.Navigation(s => s.Audit).AutoInclude();
     }
 }

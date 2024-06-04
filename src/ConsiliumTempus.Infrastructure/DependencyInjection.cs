@@ -107,7 +107,6 @@ public static class DependencyInjection
 
     private static void AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IAuditRepository, AuditRepository>();
         services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<IProjectSprintRepository, ProjectSprintRepository>();
         services.AddScoped<IProjectTaskRepository, ProjectTaskRepository>();

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240604135010_InitialCreate")]
+    [Migration("20240604142720_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -983,7 +983,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
                         .WithMany()
                         .HasForeignKey("AuditId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")

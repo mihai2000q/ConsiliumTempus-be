@@ -980,7 +980,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
                         .WithMany()
                         .HasForeignKey("AuditId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")

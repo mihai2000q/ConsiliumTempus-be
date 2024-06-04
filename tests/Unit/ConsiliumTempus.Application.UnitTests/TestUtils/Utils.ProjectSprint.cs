@@ -74,7 +74,7 @@ internal static partial class Utils
                 projectSprint.Stages[0].Tasks.Should().BeEmpty();
             }
 
-            projectSprint.Audit.CreatedBy.Should().Be(user);
+            projectSprint.Audit!.CreatedBy.Should().Be(user);
             projectSprint.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             projectSprint.Audit.UpdatedBy.Should().Be(user);
             projectSprint.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -136,7 +136,7 @@ internal static partial class Utils
             sprint.StartDate.Should().Be(command.StartDate);
             sprint.EndDate.Should().Be(command.EndDate);
             
-            sprint.Audit.UpdatedBy.Should().Be(user);
+            sprint.Audit!.UpdatedBy.Should().Be(user);
             sprint.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
