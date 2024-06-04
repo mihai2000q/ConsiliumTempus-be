@@ -33,7 +33,8 @@ public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Projec
             .WithOne(s => s.Sprint);
 
         builder.HasOne(s => s.Audit)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
         builder.Navigation(s => s.Audit).AutoInclude();
     }
 }
@@ -64,5 +65,9 @@ public sealed class ProjectStageConfiguration : IEntityTypeConfiguration<Project
 
         builder.HasMany(s => s.Tasks)
             .WithOne(s => s.Stage);
+
+        builder.HasOne(s => s.Audit)
+            .WithMany();
+        builder.Navigation(s => s.Audit).AutoInclude();
     }
 }

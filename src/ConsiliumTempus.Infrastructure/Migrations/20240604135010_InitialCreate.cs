@@ -237,8 +237,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_ProjectSprint_Audit_AuditId",
                         column: x => x.AuditId,
                         principalTable: "Audit",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ProjectSprint_Project_ProjectId",
                         column: x => x.ProjectId,
@@ -282,11 +281,18 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CustomOrderPosition = table.Column<int>(type: "int", nullable: false),
-                    SprintId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SprintId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProjectStage", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectStage_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProjectStage_ProjectSprint_SprintId",
                         column: x => x.SprintId,
@@ -495,6 +501,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "IX_ProjectSprint_ProjectId",
                 table: "ProjectSprint",
                 column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectStage_AuditId",
+                table: "ProjectStage",
+                column: "AuditId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectStage_SprintId",

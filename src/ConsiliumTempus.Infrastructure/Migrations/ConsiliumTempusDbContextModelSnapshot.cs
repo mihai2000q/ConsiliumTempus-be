@@ -533,10 +533,15 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("AuditId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("SprintId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuditId");
 
                     b.HasIndex("SprintId");
 
@@ -911,6 +916,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectSprint.Entities.ProjectStage", b =>
                 {
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
+                        .WithMany()
+                        .HasForeignKey("AuditId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ConsiliumTempus.Domain.ProjectSprint.ProjectSprintAggregate", "Sprint")
                         .WithMany("Stages")
                         .HasForeignKey("SprintId")
@@ -953,6 +964,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("ProjectStageId");
                         });
 
+                    b.Navigation("Audit");
+
                     b.Navigation("CustomOrderPosition")
                         .IsRequired();
 
@@ -967,7 +980,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
                         .WithMany()
                         .HasForeignKey("AuditId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")
