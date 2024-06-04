@@ -19,13 +19,12 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
     public async Task CreateProjectSprint_WhenSucceeds_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
+        var user = ProjectSprintData.Users.First();
         var project = ProjectSprintData.Projects.First();
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(project.Id.Value);
 
         var previousSprintEndDate = project.Sprints
             .IfNotEmpty(sprints => sprints[0].EndDate);
-
-        var user = ProjectSprintData.Users.First();
         
         // Act
         Client.UseCustomToken(user);
@@ -56,6 +55,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
     public async Task CreateProjectSprint_WhenRequestHasKeepPreviousStages_ShouldCreateKeepStagesAndReturnSuccessResponse()
     {
         // Arrange
+        var user = ProjectSprintData.Users[1];
         var project = ProjectSprintData.Projects[1];
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
             project.Id.Value,
@@ -63,8 +63,6 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
 
         var previousSprintEndDate = project.Sprints
             .IfNotEmpty(sprints => sprints[0].EndDate);
-
-        var user = ProjectSprintData.Users[1];
         
         // Act
         Client.UseCustomToken(user);
@@ -95,6 +93,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
     public async Task CreateProjectSprint_WhenRequestHasKeepPreviousStagesAndIsFirstSprint_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
+        var user = ProjectSprintData.Users.First();
         var project = ProjectSprintData.Projects[2];
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
             project.Id.Value,
@@ -102,8 +101,6 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
 
         var previousSprintEndDate = project.Sprints
             .IfNotEmpty(sprints => sprints[0].EndDate);
-
-        var user = ProjectSprintData.Users.First();
         
         // Act
         Client.UseCustomToken(user);

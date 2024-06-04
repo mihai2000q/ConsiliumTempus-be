@@ -20,11 +20,10 @@ public class ProjectSprintControllerUpdateTest(WebAppFactory factory)
     {
         // Arrange
         var sprint = ProjectSprintData.ProjectSprints.First();
+        var user = sprint.Project.Workspace.Memberships[0].User;
         var request = ProjectSprintRequestFactory.CreateUpdateProjectSprintRequest(
             sprint.Id.Value);
-
-        var user = sprint.Project.Workspace.Memberships[0].User;
-
+        
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Put("api/projects/sprints", request);

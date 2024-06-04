@@ -149,29 +149,36 @@ internal class ProjectSprintData : ITestData
     [
         ProjectStageFactory.Create(
             ProjectSprints[0],
+            Audit.Create(Users[0]),
             "To do"),
         ProjectStageFactory.Create(
             ProjectSprints[0],
+            Audit.Create(Users[0]),
             "In Progress",
             1),
         ProjectStageFactory.Create(
             ProjectSprints[0],
+            Audit.Create(Users[0]),
             "Done",
             2),
 
         ProjectStageFactory.Create(
             ProjectSprints[1],
+            Audit.Create(Users[0]),
             "Single Stage"),
 
         ProjectStageFactory.Create(
             ProjectSprints[2],
+            Audit.Create(Users[1]),
             "To do"),
         ProjectStageFactory.Create(
             ProjectSprints[2],
+            Audit.Create(Users[1]),
             "In Progress",
             2),
         ProjectStageFactory.Create(
             ProjectSprints[2],
+            Audit.Create(Users[1]),
             "Done",
             2)
     ];

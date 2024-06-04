@@ -9,6 +9,7 @@ using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
+using ConsiliumTempus.Domain.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.AddStage;
@@ -21,36 +22,38 @@ public class ProjectSprintControllerAddStageTest(WebAppFactory factory)
     public async Task AddStageToProjectSprint_WhenSucceeds_ShouldAddStageAndReturnSuccessResponse()
     {
         // Arrange
+        var user = ProjectSprintData.Users.First();
         var sprint = ProjectSprintData.ProjectSprints.First();
         var request = ProjectSprintRequestFactory.CreateAddStageToProjectSprintRequest(sprint.Id.Value);
-
+        
         // Act
-        Client.UseCustomToken(ProjectSprintData.Users.First());
+        Client.UseCustomToken(user);
         var outcome = await Client.Post("api/projects/sprints/Add-Stage", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        await AssertSuccess(outcome, request, sprint);
+        await AssertSuccess(outcome, request, sprint, user);
     }
 
     [Fact]
     public async Task AddStageToProjectSprint_WhenRequestHasOnTop_ShouldAddStageAndReturnSuccessResponse()
     {
         // Arrange
+        var user = ProjectSprintData.Users.First();
         var sprint = ProjectSprintData.ProjectSprints.First();
         var request = ProjectSprintRequestFactory.CreateAddStageToProjectSprintRequest(
             sprint.Id.Value,
             onTop: true);
 
         // Act
-        Client.UseCustomToken(ProjectSprintData.Users.First());
+        Client.UseCustomToken(user);
         var outcome = await Client.Post("api/projects/sprints/Add-Stage", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        await AssertSuccess(outcome, request, sprint);
+        await AssertSuccess(outcome, request, sprint, user);
     }
 
     [Fact]
@@ -73,7 +76,8 @@ public class ProjectSprintControllerAddStageTest(WebAppFactory factory)
     private async Task AssertSuccess(
         HttpResponseMessage outcome,
         AddStageToProjectSprintRequest request,
-        ProjectSprintAggregate sprint)
+        ProjectSprintAggregate sprint,
+        UserAggregate createdBy)
     {
         var response = await outcome.Content.ReadFromJsonAsync<AddStageToProjectSprintResponse>();
         response!.Message.Should().Be("Stage has been successfully added to Project Sprint!");
@@ -84,6 +88,6 @@ public class ProjectSprintControllerAddStageTest(WebAppFactory factory)
             .Include(ps => ps.Stages)
             .Include(ps => ps.Project.Workspace)
             .SingleAsync(ps => ps.Id == sprint.Id);
-        Utils.ProjectSprint.AssertAddedStage(newSprint, request);
+        Utils.ProjectSprint.AssertAddedStage(newSprint, request, createdBy);
     }
 }

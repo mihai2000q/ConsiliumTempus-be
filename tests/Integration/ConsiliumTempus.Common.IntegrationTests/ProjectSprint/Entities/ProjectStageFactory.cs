@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Common.IntegrationTests.TestConstants;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
@@ -10,6 +11,7 @@ public static class ProjectStageFactory
 {
     public static ProjectStage Create(
         ProjectSprintAggregate projectSprint,
+        Audit audit,
         string name = Constants.ProjectStage.Name,
         int customOrderPosition = 0)
     {
@@ -19,6 +21,7 @@ public static class ProjectStageFactory
         DomainFactory.SetProperty(ref stage, nameof(stage.Name), Name.Create(name));
         DomainFactory.SetProperty(ref stage, nameof(stage.CustomOrderPosition), CustomOrderPosition.Create(customOrderPosition));
         DomainFactory.SetProperty(ref stage, nameof(stage.Sprint), projectSprint);
+        DomainFactory.SetProperty(ref stage, nameof(stage.Audit), audit);
 
         return stage;
     }

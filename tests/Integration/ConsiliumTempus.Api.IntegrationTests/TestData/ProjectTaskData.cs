@@ -132,13 +132,16 @@ internal class ProjectTaskData : ITestData
     [
         ProjectStageFactory.Create(
             ProjectSprints[0],
+            Audit.Create(Users[0]),
             "To do"),
         ProjectStageFactory.Create(
             ProjectSprints[0],
+            Audit.Create(Users[0]),
             "In Progress",
             1),
         ProjectStageFactory.Create(
             ProjectSprints[0],
+            Audit.Create(Users[0]),
             "Done",
             2)
     ];
