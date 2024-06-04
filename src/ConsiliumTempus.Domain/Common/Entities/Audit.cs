@@ -29,19 +29,19 @@ public sealed class Audit : Entity<Guid>
     public UserAggregate? UpdatedBy { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
 
-    public static Audit Create(UserAggregate user)
+    public static Audit Create(UserAggregate createdBy)
     {
         return new Audit(
             Guid.NewGuid(),
-            user,
+            createdBy,
             DateTime.UtcNow,
-            user,
+            createdBy,
             DateTime.UtcNow);
     }
 
-    public void Update(UserAggregate user)
+    public void Update(UserAggregate updatedBy)
     {
-        UpdatedBy = user;
+        UpdatedBy = updatedBy;
         UpdatedDateTime = DateTime.UtcNow;
     }
 }
