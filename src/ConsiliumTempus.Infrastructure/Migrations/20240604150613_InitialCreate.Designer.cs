@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240604110053_InitialCreate")]
+    [Migration("20240604150613_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -536,10 +536,15 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("AuditId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("SprintId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuditId");
 
                     b.HasIndex("SprintId");
 
@@ -551,8 +556,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid>("AuditId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateOnly?>("EndDate")
                         .HasColumnType("date");
@@ -563,10 +568,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<DateOnly?>("StartDate")
                         .HasColumnType("date");
 
-                    b.Property<DateTime>("UpdatedDateTime")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("AuditId");
 
                     b.HasIndex("ProjectId");
 
@@ -915,6 +919,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectSprint.Entities.ProjectStage", b =>
                 {
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
+                        .WithMany()
+                        .HasForeignKey("AuditId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ConsiliumTempus.Domain.ProjectSprint.ProjectSprintAggregate", "Sprint")
                         .WithMany("Stages")
                         .HasForeignKey("SprintId")
@@ -957,6 +967,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("ProjectStageId");
                         });
 
+                    b.Navigation("Audit");
+
                     b.Navigation("CustomOrderPosition")
                         .IsRequired();
 
@@ -968,6 +980,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectSprint.ProjectSprintAggregate", b =>
                 {
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
+                        .WithMany()
+                        .HasForeignKey("AuditId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
                     b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")
                         .WithMany("Sprints")
                         .HasForeignKey("ProjectId")
@@ -992,6 +1010,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("ProjectSprintAggregateId");
                         });
+
+                    b.Navigation("Audit");
 
                     b.Navigation("Name")
                         .IsRequired();

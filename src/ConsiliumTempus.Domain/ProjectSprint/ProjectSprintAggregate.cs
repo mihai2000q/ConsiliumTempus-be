@@ -1,14 +1,15 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
+using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Domain.ProjectSprint;
 
-public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>, ITimestamps
+public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectSprintAggregate()
@@ -19,17 +20,15 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>, ITimestamp
         ProjectSprintId id,
         Name name,
         ProjectAggregate project,
-        DateTime createdDateTime,
-        DateTime updatedDateTime,
         DateOnly? startDate,
-        DateOnly? endDate) : base(id)
+        DateOnly? endDate,
+        Audit audit) : base(id)
     {
         Name = name;
         Project = project;
-        CreatedDateTime = createdDateTime;
-        UpdatedDateTime = updatedDateTime;
         StartDate = startDate;
         EndDate = endDate;
+        Audit = audit;
     }
 
     private readonly List<ProjectStage> _stages = [];
@@ -39,12 +38,12 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>, ITimestamp
     public DateOnly? EndDate { get; private set; }
     public ProjectAggregate Project { get; init; } = default!;
     public IReadOnlyList<ProjectStage> Stages => _stages.AsReadOnly();
-    public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; private set; }
+    public Audit Audit { get; } = default!;
 
     public static ProjectSprintAggregate Create(
         Name name,
         ProjectAggregate project,
+        UserAggregate createdBy,
         DateOnly? startDate = null,
         DateOnly? endDate = null)
     {
@@ -52,29 +51,29 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>, ITimestamp
             ProjectSprintId.CreateUnique(),
             name,
             project,
-            DateTime.UtcNow,
-            DateTime.UtcNow,
             startDate,
-            endDate);
+            endDate,
+            Audit.Create(createdBy));
     }
 
     public void Update(
         Name name,
         DateOnly? startDate,
-        DateOnly? endDate)
+        DateOnly? endDate,
+        UserAggregate updatedBy)
     {
         Name = name;
         StartDate = startDate;
         EndDate = endDate;
-        UpdatedDateTime = DateTime.UtcNow;
+        Audit.Update(updatedBy);
     }
 
     public void AddStage(ProjectStage stage, bool onTop = false)
     {
         if (onTop)
         {
-            _stages.ForEach(s => 
-                s.Update(s.Name, s.CustomOrderPosition + CustomOrderPosition.Create(1)));
+            _stages.ForEach(s =>
+                s.UpdateWithoutAudit(s.Name, s.CustomOrderPosition + CustomOrderPosition.Create(1)));
             _stages.Insert(0, stage);
         }
         else
@@ -82,7 +81,7 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>, ITimestamp
             _stages.Add(stage);
         }
     }
-    
+
     public void AddStages(IReadOnlyList<ProjectStage> stages)
     {
         _stages.AddRange(stages);
@@ -94,7 +93,7 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>, ITimestamp
         for (var i = stage.CustomOrderPosition.Value; i < _stages.Count; i++)
         {
             var s = _stages[i];
-            s.Update(s.Name, s.CustomOrderPosition - CustomOrderPosition.Create(1));
+            s.UpdateWithoutAudit(s.Name, s.CustomOrderPosition - CustomOrderPosition.Create(1));
         }
     }
 }

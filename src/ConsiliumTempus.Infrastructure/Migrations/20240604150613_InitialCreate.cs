@@ -228,12 +228,16 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     StartDate = table.Column<DateOnly>(type: "date", nullable: true),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: true),
                     ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProjectSprint", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectSprint_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ProjectSprint_Project_ProjectId",
                         column: x => x.ProjectId,
@@ -277,11 +281,18 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CustomOrderPosition = table.Column<int>(type: "int", nullable: false),
-                    SprintId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SprintId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProjectStage", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectStage_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProjectStage_ProjectSprint_SprintId",
                         column: x => x.SprintId,
@@ -482,9 +493,19 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "WorkspaceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectSprint_AuditId",
+                table: "ProjectSprint",
+                column: "AuditId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProjectSprint_ProjectId",
                 table: "ProjectSprint",
                 column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectStage_AuditId",
+                table: "ProjectStage",
+                column: "AuditId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectStage_SprintId",
@@ -582,9 +603,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "WorkspaceRoleHasPermission");
 
             migrationBuilder.DropTable(
-                name: "Audit");
-
-            migrationBuilder.DropTable(
                 name: "ProjectTask");
 
             migrationBuilder.DropTable(
@@ -598,6 +616,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProjectSprint");
+
+            migrationBuilder.DropTable(
+                name: "Audit");
 
             migrationBuilder.DropTable(
                 name: "Project");

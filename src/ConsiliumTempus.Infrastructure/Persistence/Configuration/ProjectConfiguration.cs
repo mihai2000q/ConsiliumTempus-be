@@ -71,7 +71,8 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
         builder.HasOne(s => s.Project)
             .WithMany(t => t.Statuses);
 
-        builder.HasOne(s => s.Audit);
+        builder.HasOne(s => s.Audit)
+            .WithMany();
         builder.Navigation(s => s.Audit).AutoInclude();
     }
 }

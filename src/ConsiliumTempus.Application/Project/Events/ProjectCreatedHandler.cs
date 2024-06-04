@@ -15,12 +15,17 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
         var sprint = ProjectSprintAggregate.Create(
             Name.Create(Constants.ProjectSprint.Name),
             notification.Project,
+            notification.Project.Owner,
             DateOnly.FromDateTime(DateTime.UtcNow));
         notification.Project.AddSprint(sprint);
 
         var count = 0;
         Constants.ProjectStage.Names
-            .Select(name => ProjectStage.Create(Name.Create(name), CustomOrderPosition.Create(count++), sprint))
+            .Select(name => ProjectStage.Create(
+                Name.Create(name),
+                CustomOrderPosition.Create(count++), 
+                sprint,
+                notification.Project.Owner))
             .ToList()
             .ForEach(stage => sprint.AddStage(stage));
 

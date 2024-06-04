@@ -33,8 +33,11 @@ public class ProjectCreatedHandlerTest
         sprint.Name.Value.Should().Be(Constants.ProjectSprint.Name);
         sprint.StartDate.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
         sprint.EndDate.Should().BeNull();
-        sprint.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-        sprint.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+
+        sprint.Audit.CreatedBy.Should().Be(owner);
+        sprint.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+        sprint.Audit.UpdatedBy.Should().Be(owner);
+        sprint.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
         var count = 0;
         sprint.Stages.Should().HaveCount(Constants.ProjectStage.Names.Length);
@@ -46,6 +49,11 @@ public class ProjectCreatedHandlerTest
                 // ReSharper disable once AccessToModifiedClosure
                 stage.CustomOrderPosition.Value.Should().Be(count++);
                 stage.Sprint.Should().Be(project.Sprints[0]);
+                
+                stage.Audit.CreatedBy.Should().Be(owner);
+                stage.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+                stage.Audit.UpdatedBy.Should().Be(owner);
+                stage.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             });
         sprint.Stages
             .Zip(Constants.ProjectStage.Names)

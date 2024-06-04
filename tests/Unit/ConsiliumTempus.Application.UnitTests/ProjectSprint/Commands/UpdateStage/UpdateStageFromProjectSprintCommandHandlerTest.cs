@@ -1,7 +1,9 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using NSubstitute.ReturnsExtensions;
@@ -12,13 +14,15 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
 {
     #region Setup
 
+    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IProjectSprintRepository _projectSprintRepository;
     private readonly UpdateStageFromProjectSprintCommandHandler _uut;
 
     public UpdateStageFromProjectSprintCommandHandlerTest()
     {
+        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _projectSprintRepository = Substitute.For<IProjectSprintRepository>();
-        _uut = new UpdateStageFromProjectSprintCommandHandler(_projectSprintRepository);
+        _uut = new UpdateStageFromProjectSprintCommandHandler(_currentUserProvider, _projectSprintRepository);
     }
 
     #endregion
@@ -32,6 +36,11 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);
 
+        var user = UserFactory.Create();
+        _currentUserProvider
+            .GetCurrentUserAfterPermissionCheck()
+            .Returns(user);
+
         var expectedStageToUpdate = sprint.Stages[0];
 
         var command = ProjectSprintCommandFactory.CreateUpdateStageFromProjectSprintCommand(
@@ -44,11 +53,14 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+        await _currentUserProvider
+            .Received(1)
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateStageFromProjectSprintResult());
 
-        Utils.ProjectSprint.AssertUpdateStageCommand(expectedStageToUpdate, command);
+        Utils.ProjectSprint.AssertUpdateStageCommand(expectedStageToUpdate, command, user);
     }
 
     [Fact]
@@ -68,6 +80,7 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+        _currentUserProvider.DidNotReceive();
 
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }
@@ -90,6 +103,7 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+        _currentUserProvider.DidNotReceive();
 
         outcome.ValidateError(Errors.ProjectStage.NotFound);
     }

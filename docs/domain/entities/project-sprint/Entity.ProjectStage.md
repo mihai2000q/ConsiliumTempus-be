@@ -9,6 +9,7 @@ class ProjectStage
 {
     ProjectStage Create()
     void Update()
+    void UpdateWithoutAudit()
     void AddTask()
     void RemoveTask()
 }
@@ -20,6 +21,7 @@ class ProjectStage
   "name": { "value": "Stage 1" },
   "customOrderPosition": { "value": 0 },
   "sprint": {},
+  "audit": {},
   "tasks": [{}]
 }
 ```

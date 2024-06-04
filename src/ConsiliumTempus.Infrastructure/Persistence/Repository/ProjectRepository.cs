@@ -35,7 +35,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
                 .OrderByDescending(s => s.StartDate)
                 .ThenByDescending(s => s.EndDate)
                 .ThenByDescending(s => s.Name.Value)
-                .ThenByDescending(s => s.CreatedDateTime))
+                .ThenByDescending(s => s.Audit.CreatedDateTime))
             .ThenInclude(ps => ps.Stages)
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }

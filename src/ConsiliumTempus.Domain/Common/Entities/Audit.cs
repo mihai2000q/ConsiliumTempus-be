@@ -24,24 +24,30 @@ public sealed class Audit : Entity<Guid>
         UpdatedDateTime = updatedDateTime;
     }
 
-    public UserAggregate? CreatedBy { get; init; }
+    public UserAggregate? CreatedBy { get; private set; }
     public DateTime CreatedDateTime { get; init; }
     public UserAggregate? UpdatedBy { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
 
-    public static Audit Create(UserAggregate user)
+    public static Audit Create(UserAggregate createdBy)
     {
         return new Audit(
             Guid.NewGuid(),
-            user,
+            createdBy,
             DateTime.UtcNow,
-            user,
+            createdBy,
             DateTime.UtcNow);
     }
 
-    public void Update(UserAggregate user)
+    public void Update(UserAggregate updatedBy)
     {
-        UpdatedBy = user;
+        UpdatedBy = updatedBy;
         UpdatedDateTime = DateTime.UtcNow;
+    }
+    
+    public void Nullify()
+    {
+        CreatedBy = null;
+        UpdatedBy = null;
     }
 }

@@ -34,14 +34,20 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
         return Id.GetHashCode();
     }
 
-    public static bool operator ==(Entity<TId> left, Entity<TId> right)
+    public static bool operator ==(Entity<TId>? left, Entity<TId>? right)
     {
-        return Equals(left, right);
+        if (left is null && right is null) return true;
+        return left is not null && left.Equals(right);
     }
 
-    public static bool operator !=(Entity<TId> left, Entity<TId> right)
+    public static bool operator !=(Entity<TId>? left, Entity<TId>? right)
     {
-        return !Equals(left, right);
+        return left switch
+        {
+            null when right is null => false,
+            null => true,
+            _ => !left.Equals(right)
+        };
     }
 
     public void AddDomainEvent(IDomainEvent domainEvent)

@@ -20,14 +20,15 @@ public class ProjectSprintControllerUpdateStageTest(WebAppFactory factory)
     public async Task UpdateStageFromProjectSprint_WhenSucceeds_ShouldUpdateStageAndReturnSuccessResponse()
     {
         // Arrange
+        var user = ProjectSprintData.Users.First();
         var sprint = ProjectSprintData.ProjectSprints.First();
         var stage = sprint.Stages[0];
         var request = ProjectSprintRequestFactory.CreateUpdateStageFromProjectSprintRequest(
             id: sprint.Id.Value,
             stageId: stage.Id.Value);
-
+        
         // Act
-        Client.UseCustomToken(ProjectSprintData.Users.First());
+        Client.UseCustomToken(user);
         var outcome = await Client.Put("api/projects/sprints/Update-Stage", request);
 
         // Assert
@@ -41,7 +42,7 @@ public class ProjectSprintControllerUpdateStageTest(WebAppFactory factory)
             .Include(ps => ps.Stages)
             .Include(ps => ps.Project.Workspace)
             .SingleAsync(ps => ps.Id == sprint.Id);
-        Utils.ProjectSprint.AssertUpdatedStage(newSprint, request);
+        Utils.ProjectSprint.AssertUpdatedStage(newSprint, request, user);
     }
     
     [Fact]

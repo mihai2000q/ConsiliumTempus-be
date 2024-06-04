@@ -20,11 +20,12 @@ public class ProjectSprintControllerUpdateTest(WebAppFactory factory)
     {
         // Arrange
         var sprint = ProjectSprintData.ProjectSprints.First();
+        var user = sprint.Project.Workspace.Memberships[0].User;
         var request = ProjectSprintRequestFactory.CreateUpdateProjectSprintRequest(
             sprint.Id.Value);
-
+        
         // Act
-        Client.UseCustomToken(sprint.Project.Workspace.Memberships[0].User);
+        Client.UseCustomToken(user);
         var outcome = await Client.Put("api/projects/sprints", request);
 
         // Assert
@@ -40,7 +41,8 @@ public class ProjectSprintControllerUpdateTest(WebAppFactory factory)
         Utils.ProjectSprint.AssertUpdated(
             sprint,
             newSprint,
-            request);
+            request,
+            user);
     }
 
     [Fact]

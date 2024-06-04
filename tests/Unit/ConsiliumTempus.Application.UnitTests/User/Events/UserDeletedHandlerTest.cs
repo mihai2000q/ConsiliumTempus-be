@@ -13,13 +13,15 @@ public class UserDeletedHandlerTest
 {
     #region Setup
 
+    private readonly IUserRepository _userRepository;
     private readonly IWorkspaceRepository _workspaceRepository;
     private readonly UserDeletedHandler _uut;
 
     public UserDeletedHandlerTest()
     {
+        _userRepository = Substitute.For<IUserRepository>();
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
-        _uut = new UserDeletedHandler(_workspaceRepository);
+        _uut = new UserDeletedHandler(_userRepository, _workspaceRepository);
     }
 
     #endregion
@@ -48,6 +50,13 @@ public class UserDeletedHandlerTest
         await _uut.Handle(new UserDeleted(user), default);
 
         // Assert
+        await _userRepository
+            .Received(1)
+            .NullifyAuditsByUser(user);
+        await _userRepository
+            .Received(1)
+            .RemoveProjectsByOwner(user);
+        
         await _workspaceRepository
             .Received(1)
             .GetListByUserWithMemberships(Arg.Is<UserAggregate>(u => u == user));

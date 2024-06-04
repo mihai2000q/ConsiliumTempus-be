@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Domain.ProjectSprint.Entities;
 
@@ -17,11 +19,13 @@ public sealed class ProjectStage : Entity<ProjectStageId>
         ProjectStageId id,
         Name name,
         CustomOrderPosition customOrderPosition,
-        ProjectSprintAggregate sprint) : base(id)
+        ProjectSprintAggregate sprint,
+        Audit audit) : base(id)
     {
         Name = name;
         CustomOrderPosition = customOrderPosition;
         Sprint = sprint;
+        Audit = audit;
     }
 
     private readonly List<ProjectTaskAggregate> _tasks = [];
@@ -29,21 +33,34 @@ public sealed class ProjectStage : Entity<ProjectStageId>
     public Name Name { get; private set; } = default!;
     public CustomOrderPosition CustomOrderPosition { get; private set; } = default!;
     public ProjectSprintAggregate Sprint { get; init; } = default!;
+    public Audit Audit { get; init; } = default!;
     public IReadOnlyList<ProjectTaskAggregate> Tasks => _tasks.AsReadOnly();
 
     public static ProjectStage Create(
         Name name,
         CustomOrderPosition customOrderPosition,
-        ProjectSprintAggregate sprint)
+        ProjectSprintAggregate sprint,
+        UserAggregate createdBy)
     {
         return new ProjectStage(
             ProjectStageId.CreateUnique(),
             name,
             customOrderPosition,
-            sprint);
+            sprint,
+            Audit.Create(createdBy));
     }
 
-    public void Update(Name name, CustomOrderPosition customOrderPosition)
+    public void Update(
+        Name name, 
+        CustomOrderPosition customOrderPosition,
+        UserAggregate updatedBy)
+    {
+        Name = name;
+        CustomOrderPosition = customOrderPosition;
+        Audit.Update(updatedBy);
+    }
+    
+    public void UpdateWithoutAudit(Name name, CustomOrderPosition customOrderPosition)
     {
         Name = name;
         CustomOrderPosition = customOrderPosition;
