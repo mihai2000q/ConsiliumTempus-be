@@ -18,11 +18,12 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
     public async Task CreateProject_WhenSucceeds_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
+        var user = ProjectData.Users.First();
         var workspaceId = ProjectData.Workspaces.First().Id.Value;
         var request = ProjectRequestFactory.CreateCreateProjectRequest(workspaceId);
 
         // Act
-        Client.UseCustomToken(ProjectData.Users.First());
+        Client.UseCustomToken(user);
         var outcome = await Client.Post("api/projects", request);
 
         // Assert
@@ -34,12 +35,13 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length + 1);
         var createdProject = await dbContext.Projects
+            .Include(p => p.Owner)
             .Include(p => p.Workspace)
             .Include(p => p.Sprints)
             .ThenInclude(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
             .ThenInclude(ps => ps.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
             .SingleAsync(p => p.Name.Value == request.Name);
-        Utils.Project.AssertCreation(createdProject, request);
+        Utils.Project.AssertCreation(createdProject, request, user);
     }
 
     [Fact]

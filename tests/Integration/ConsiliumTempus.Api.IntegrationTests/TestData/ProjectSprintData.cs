@@ -109,15 +109,18 @@ internal class ProjectSprintData : ITestData
     [
         ProjectFactory.Create(
             Workspaces[0],
+            Users[0],
             "Win NBA",
             "This is an elaborate plan to win NBA",
             true),
         ProjectFactory.Create(
             Workspaces[1],
+            Users[1],
             "Win Champions League",
             "Just an idea on how to win the football league"),
         ProjectFactory.Create(
             Workspaces[0],
+            Users[0],
             "Do Something with your life?")
     ];
 

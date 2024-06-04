@@ -5,6 +5,7 @@ using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -103,34 +104,42 @@ internal class ProjectData : ITestData
     [
         ProjectFactory.Create(
             Workspaces[0],
+            Users[0],
             "Win NBA",
             "This is an elaborate plan to win NBA",
             true),
         ProjectFactory.Create(
             Workspaces[1],
+            Users[1],
             "Win Champions League",
             "Just an idea on how to win the football league",
             true),
         ProjectFactory.Create(
             Workspaces[0],
+            Users[0],
             "Win Another Tournament"),
         ProjectFactory.Create(
             Workspaces[2],
+            Users[0],
             "Get a house",
             "this is actually really important",
             false,
             true),
         ProjectFactory.Create(
             Workspaces[2],
+            Users[0],
             "Start a retiring investment plan",
             "",
             false,
-            true),
+            true,
+            ProjectLifecycle.Upcoming),
         ProjectFactory.Create(
             Workspaces[2],
+            Users[0],
             "Start a new life",
             "criminal activity",
             false,
-            true)
+            true,
+            ProjectLifecycle.Archived)
     ];
 }
