@@ -54,6 +54,7 @@ Typically, the entities will be persisted in the database on another table.
 
 The entities are:
 
+- [Audit](domain/entities/Entity.Audit.md)
 - [Membership](domain/entities/Entity.Membership.md)
 - [Permission](domain/entities/Entity.Permission.md)
 - [Refresh Token](domain/entities/Entity.RefreshToken.md)
@@ -74,6 +75,7 @@ The value objects are:
 - **IsPrivate**, which encapsulates a boolean *Value*
 - **Message**, which encapsulates a string *Value*
 - **Name**, which encapsulates a string *Value*
+- **Title**, which encapsulates a string *Value*
 
 ## Domain Errors
 
@@ -87,6 +89,8 @@ These errors are not tied to any aggregate, therefore notable and only used in t
 
 The enums defined in the Domain of the application are:
 
+- **FilterOperator**, which is used to represent the different numerous operators that can be used for filtering 
+(i.e., equal or less than)
 - **OrderType**, which is used to determine whether the order should be ascending or descending
 - **Permissions**, which are used on the Presentation Layer for Authorization
 
@@ -113,10 +117,13 @@ except the primary key and direct relations), check below:
   - [User Diagram](database-diagrams/aggregates/Diagram.User.md)
   - [Workspace Diagram](database-diagrams/aggregates/Diagram.Workspace.md)
 - Entities
+  - [Audit Diagram](database-diagrams/entities/Diagram.Audit.md)
   - [Membership Diagram](database-diagrams/entities/Diagram.Membership.md)
   - [Permission Diagram](database-diagrams/entities/Diagram.Permission.md)
   - [Refresh Token Diagram](database-diagrams/entities/Diagram.RefreshToken.md)
   - [Workspace Role Diagram](database-diagrams/entities/Diagram.WorkspaceRole.md)
+  - Project Entities
+    - [Project Status Diagram](database-diagrams/entities/project/Diagram.ProjectStatus.md)
   - Project Sprint Entities
     - [Project Stage Diagram](database-diagrams/entities/project-sprint/Diagram.ProjectStage.md)
   - Project Task Entities

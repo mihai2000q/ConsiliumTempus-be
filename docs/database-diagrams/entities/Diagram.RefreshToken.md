@@ -8,4 +8,4 @@
 
 ### Diagram
 
-<img src="../../images/domain/diagrams/entities/diagram.refresh-token.png" alt="Refresh Token Diagram" width="75%"/>
+<img src="../../images/database-diagrams/entities/diagram.refresh-token.png" alt="Refresh Token Diagram" width="75%"/>

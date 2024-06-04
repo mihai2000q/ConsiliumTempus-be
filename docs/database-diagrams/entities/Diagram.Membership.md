@@ -10,4 +10,4 @@
 
 ### Diagram
 
-<img src="../../images/domain/diagrams/entities/diagram.membership.png" alt="Membership Diagram" width="75%"/>
+<img src="../../images/database-diagrams/entities/diagram.membership.png" alt="Membership Diagram" width="75%"/>

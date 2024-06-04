@@ -9,4 +9,4 @@
 
 ### Diagram
 
-<img src="../../images/domain/diagrams/entities/diagram.workspace-role.png" alt="Workspace Role Diagram" width="75%"/>
+<img src="../../images/database-diagrams/entities/diagram.workspace-role.png" alt="Workspace Role Diagram" width="75%"/>

@@ -9,4 +9,4 @@
 
 ### Diagram
 
-<img src="../../../images/domain/diagrams/entities/project-task/diagram.project-task-comment.png" alt="Project Task Comment Diagram" width="75%"/>
+<img src="../../../images/database-diagrams/entities/project-task/diagram.project-task-comment.png" alt="Project Task Comment Diagram" width="75%"/>

@@ -8,4 +8,4 @@
 
 ### Diagram
 
-<img src="../../images/domain/diagrams/entities/diagram.permission.png" alt="Permission Diagram" width="75%"/>
+<img src="../../images/database-diagrams/entities/diagram.permission.png" alt="Permission Diagram" width="75%"/>

@@ -18,5 +18,9 @@ internal static partial class FilterProperties
         internal sealed class IsPrivateProperty() : FilterProperty<ProjectAggregate>(
             nameof(ProjectAggregate.IsPrivate),
             p => p.IsPrivate.Value);
+        
+        internal sealed class LifecycleProperty() : FilterProperty<ProjectAggregate>(
+            nameof(ProjectAggregate.Lifecycle),
+            p => p.Lifecycle);
     }
 }

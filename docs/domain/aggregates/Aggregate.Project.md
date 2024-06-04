@@ -10,8 +10,10 @@ class Project
     Project Create()
     void Update()
     void UpdateOverview()
-    void AddSprint()
     void RefreshActivity()
+    void AddSprint()
+    void AddStatus()
+    void RemoveStats()
 }
 ```
 
@@ -22,11 +24,14 @@ class Project
   "description": { "value": "This is the description of the project" },
   "isFavorite": { "value": false },
   "isPrivate": { "value": true },
+  "owner": {},
+  "lifecycle": "Active",
   "lastActivity": "2020-01-01T00:00:00.0000000Z",
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
   "workspace": {},
-  "sprints": [{}]
+  "sprints": [{}],
+  "statuses": [{}]
 }
 ```
 
@@ -42,13 +47,14 @@ For database design checkout the [Project Diagram](../../database-diagrams/aggre
 
 ### Domain Events
 
-- **Project Created** when the project gets created, it will also create sprints, stages and tasks as examples for user 
+- **Project Created** when the project gets created, it will also create sprints, stages and tasks as examples for user. 
 
 ### Filters
 
 - **Name** to filter by name
 - **IsFavorite** to filter by favorites
 - **IsPrivate** to filter by accessibility
+- **Lifecycle** to filter by lifecycle
 
 ### Orders
 
@@ -56,3 +62,8 @@ For database design checkout the [Project Diagram](../../database-diagrams/aggre
 - **LastActivity** to order by activity
 - **UpdatedDateTime** to order by last modified date
 - **CreatedDateTime** to order by creation time
+
+### Enums
+
+- **ProjectLifecycle** to represent the current lifecycle of the project (i.e., active or archived)
+- **ProjectStatusType** to represent the current status of the project (i.e., off track or completed)

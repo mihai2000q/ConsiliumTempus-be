@@ -13,6 +13,7 @@ public abstract class ProjectFilter : Filter<ProjectAggregate>
         new FilterProperties.Project.NameFilterProperty(),
         new FilterProperties.Project.IsFavoriteProperty(),
         new FilterProperties.Project.IsPrivateProperty(),
+        new FilterProperties.Project.LifecycleProperty()
     ];
 
     private ProjectFilter(Expression<Func<ProjectAggregate, bool>> predicate) : base(predicate)

@@ -9,4 +9,4 @@
 
 ### Diagram
 
-<img src="../../images/domain/diagrams/aggregates/diagram.project-sprint.png" alt="Project Sprint Diagram" width="75%"/>
+<img src="../../images/database-diagrams/aggregates/diagram.project-sprint.png" alt="Project Sprint Diagram" width="75%"/>
