@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
@@ -7,7 +8,9 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 
-public sealed class UpdateProjectSprintCommandHandler(IProjectSprintRepository projectSprintRepository)
+public sealed class UpdateProjectSprintCommandHandler(
+    ICurrentUserProvider currentUserProvider,
+    IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<UpdateProjectSprintCommand, ErrorOr<UpdateProjectSprintResult>>
 {
     public async Task<ErrorOr<UpdateProjectSprintResult>> Handle(UpdateProjectSprintCommand command,
@@ -17,12 +20,15 @@ public sealed class UpdateProjectSprintCommandHandler(IProjectSprintRepository p
             ProjectSprintId.Create(command.Id),
             cancellationToken);
         if (sprint is null) return Errors.ProjectSprint.NotFound;
-        
+
+        var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
+
         sprint.Update(
             Name.Create(command.Name),
             command.StartDate,
-            command.EndDate);
-        
+            command.EndDate,
+            user);
+
         sprint.Project.RefreshActivity();
 
         return new UpdateProjectSprintResult();

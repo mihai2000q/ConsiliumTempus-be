@@ -7,6 +7,7 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -38,6 +39,7 @@ internal static partial class Utils
             ProjectSprintAggregate projectSprint,
             CreateProjectSprintCommand command,
             ProjectAggregate project,
+            UserAggregate user,
             DateOnly? previousSprintEndDate)
         {
             projectSprint.Id.Value.Should().NotBeEmpty();
@@ -60,6 +62,11 @@ internal static partial class Utils
                 projectSprint.Stages[0].Sprint.Should().Be(projectSprint);
                 projectSprint.Stages[0].Tasks.Should().BeEmpty();
             }
+
+            projectSprint.Audit.CreatedBy.Should().Be(user);
+            projectSprint.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            projectSprint.Audit.UpdatedBy.Should().Be(user);
+            projectSprint.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             projectSprint.DomainEvents.Should().BeEmpty();
 
@@ -110,13 +117,16 @@ internal static partial class Utils
 
         internal static void AssertFromUpdateCommand(
             ProjectSprintAggregate sprint,
-            UpdateProjectSprintCommand command)
+            UpdateProjectSprintCommand command,
+            UserAggregate user)
         {
             sprint.Id.Value.Should().Be(command.Id);
             sprint.Name.Value.Should().Be(command.Name);
             sprint.StartDate.Should().Be(command.StartDate);
             sprint.EndDate.Should().Be(command.EndDate);
-            sprint.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            
+            sprint.Audit.UpdatedBy.Should().Be(user);
+            sprint.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -142,8 +152,7 @@ internal static partial class Utils
             outcome.StartDate.Should().Be(expected.StartDate);
             outcome.EndDate.Should().Be(expected.EndDate);
             outcome.Project.Should().Be(expected.Project);
-            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
-            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Audit.Should().Be(expected.Audit);
             outcome.Stages.Should().BeEquivalentTo(expected.Stages);
         }
     }
