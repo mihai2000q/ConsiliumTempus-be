@@ -45,7 +45,7 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
             .OrderByDescending(s => s.StartDate)
             .ThenByDescending(s => s.EndDate)
             .ThenByDescending(s => s.Name.Value)
-            .ThenByDescending(s => s.CreatedDateTime)
+            .ThenByDescending(s => s.Audit.CreatedDateTime)
             .ToListAsync(cancellationToken);
     }
 

@@ -15,9 +15,11 @@ public sealed class AuditConfiguration : IEntityTypeConfiguration<Audit>
         builder.HasOne(a => a.CreatedBy)
             .WithMany()
             .OnDelete(DeleteBehavior.NoAction);
+        builder.Navigation(a => a.CreatedBy).AutoInclude();
 
         builder.HasOne(a => a.UpdatedBy)
             .WithMany()
             .OnDelete(DeleteBehavior.NoAction);
+        builder.Navigation(a => a.UpdatedBy).AutoInclude();
     }
 }

@@ -31,6 +31,10 @@ public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Projec
 
         builder.HasMany(s => s.Stages)
             .WithOne(s => s.Sprint);
+
+        builder.HasOne(s => s.Audit)
+            .WithMany();
+        builder.Navigation(s => s.Audit).AutoInclude();
     }
 }
 
