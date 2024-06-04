@@ -112,6 +112,7 @@ internal class ProjectTaskData : ITestData
     [
         ProjectFactory.Create(
             Workspaces[0],
+            Users[0],
             "Win NBA",
             "This is an elaborate plan to win NBA",
             true)

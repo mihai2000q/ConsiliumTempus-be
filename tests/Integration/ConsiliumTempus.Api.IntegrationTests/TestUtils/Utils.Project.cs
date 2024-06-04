@@ -6,6 +6,8 @@ using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Enums;
+using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
@@ -54,15 +56,21 @@ internal static partial class Utils
             response.TotalCount.Should().Be(totalCount);
         }
 
-        internal static void AssertCreation(ProjectAggregate project, CreateProjectRequest request)
+        internal static void AssertCreation(
+            ProjectAggregate project,
+            CreateProjectRequest request,
+            UserAggregate owner)
         {
             project.Name.Value.Should().Be(request.Name);
             project.Description.Value.Should().BeEmpty();
             project.IsFavorite.Value.Should().Be(false);
             project.IsPrivate.Value.Should().Be(request.IsPrivate);
+            project.Owner.Should().Be(owner);
+            project.Lifecycle.Should().Be(ProjectLifecycle.Active);
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Statuses.Should().BeEmpty();
 
             project.Workspace.Id.Value.Should().Be(request.WorkspaceId);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
@@ -18,14 +19,17 @@ internal static partial class Utils
             ProjectAggregate project,
             CreateProjectCommand command,
             WorkspaceAggregate workspace,
-            UserAggregate user)
+            UserAggregate owner)
         {
             project.Id.Value.Should().NotBeEmpty();
             project.Name.Value.Should().Be(command.Name);
             project.Description.Value.Should().BeEmpty();
             project.IsPrivate.Value.Should().Be(command.IsPrivate);
             project.IsFavorite.Value.Should().Be(false);
+            project.Owner.Should().Be(owner);
+            project.Lifecycle.Should().Be(ProjectLifecycle.Active);
             project.Sprints.Should().BeEmpty();
+            project.Statuses.Should().BeEmpty();
             project.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.Should().Be(workspace);
@@ -33,7 +37,6 @@ internal static partial class Utils
             project.DomainEvents.Should().HaveCount(1);
             project.DomainEvents[0].Should().BeOfType<ProjectCreated>();
             ((ProjectCreated)project.DomainEvents[0]).Project.Should().Be(project);
-            ((ProjectCreated)project.DomainEvents[0]).User.Should().Be(user);
 
             return true;
         }

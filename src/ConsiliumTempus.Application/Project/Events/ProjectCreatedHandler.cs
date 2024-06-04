@@ -32,7 +32,7 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
                 Name.Create(name),
                 Description.Create(string.Empty),
                 CustomOrderPosition.Create(count++),
-                notification.User,
+                notification.Project.Owner,
                 stage)));
 
         return Task.CompletedTask;

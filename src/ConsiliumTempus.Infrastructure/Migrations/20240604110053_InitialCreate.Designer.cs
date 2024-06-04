@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240531090548_InitialCreate")]
+    [Migration("20240604110053_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,6 +24,32 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Audit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("Audit", (string)null);
+                });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Membership", b =>
                 {
@@ -484,6 +510,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<DateTime>("LastActivity")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Lifecycle")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("datetime2");
 
@@ -491,6 +523,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("WorkspaceId");
 
@@ -628,6 +662,23 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.ToTable("Workspace", (string)null);
                 });
 
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Audit", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("UpdatedBy");
+                });
+
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Membership", b =>
                 {
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "User")
@@ -681,6 +732,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>
                 {
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", "Workspace")
                         .WithMany("Projects")
                         .HasForeignKey("WorkspaceId")
@@ -758,6 +815,85 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("ProjectAggregateId");
                         });
 
+                    b.OwnsMany("ConsiliumTempus.Domain.Project.Entities.ProjectStatus", "Statuses", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid>("AuditId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid>("ProjectId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Status")
+                                .HasColumnType("int");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("AuditId");
+
+                            b1.HasIndex("ProjectId");
+
+                            b1.ToTable("ProjectStatus", (string)null);
+
+                            b1.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
+                                .WithMany()
+                                .HasForeignKey("AuditId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.WithOwner("Project")
+                                .HasForeignKey("ProjectId");
+
+                            b1.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Title", "Title", b2 =>
+                                {
+                                    b2.Property<Guid>("ProjectStatusId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<string>("Value")
+                                        .IsRequired()
+                                        .HasMaxLength(100)
+                                        .HasColumnType("nvarchar(100)")
+                                        .HasColumnName("Title");
+
+                                    b2.HasKey("ProjectStatusId");
+
+                                    b2.ToTable("ProjectStatus");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("ProjectStatusId");
+                                });
+
+                            b1.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b2 =>
+                                {
+                                    b2.Property<Guid>("ProjectStatusId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<string>("Value")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)")
+                                        .HasColumnName("Description");
+
+                                    b2.HasKey("ProjectStatusId");
+
+                                    b2.ToTable("ProjectStatus");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("ProjectStatusId");
+                                });
+
+                            b1.Navigation("Audit");
+
+                            b1.Navigation("Description")
+                                .IsRequired();
+
+                            b1.Navigation("Project");
+
+                            b1.Navigation("Title")
+                                .IsRequired();
+                        });
+
                     b.Navigation("Description")
                         .IsRequired();
 
@@ -769,6 +905,10 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.Navigation("Name")
                         .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("Statuses");
 
                     b.Navigation("Workspace");
                 });

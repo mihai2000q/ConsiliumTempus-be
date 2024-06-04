@@ -13,4 +13,4 @@
 
 ### Diagram
 
-<img src="../../images/domain/diagrams/aggregates/diagram.user.png" alt="User Diagram" width="75%"/>
+<img src="../../images/database-diagrams/aggregates/diagram.user.png" alt="User Diagram" width="75%"/>

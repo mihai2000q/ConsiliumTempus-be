@@ -10,4 +10,4 @@
 
 ### Diagram
 
-<img src="../../images/domain/diagrams/aggregates/diagram.project-task.png" alt="Project Task Diagram" width="75%"/>
+<img src="../../images/database-diagrams/aggregates/diagram.project-task.png" alt="Project Task Diagram" width="75%"/>

@@ -11,4 +11,4 @@
 
 ### Diagram
 
-<img src="../../images/domain/diagrams/aggregates/diagram.workspace.png" alt="Workspace Diagram" width="75%"/>
+<img src="../../images/database-diagrams/aggregates/diagram.workspace.png" alt="Workspace Diagram" width="75%"/>

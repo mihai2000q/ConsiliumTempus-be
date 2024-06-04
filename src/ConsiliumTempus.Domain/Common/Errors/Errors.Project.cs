@@ -10,4 +10,11 @@ public static partial class Errors
             "Project.NotFound",
             "Project could not be found");
     }
+    
+    public static class ProjectStatus
+    {
+        public static Error NotFound => Error.NotFound(
+            "ProjectStatus.NotFound",
+            "Project status could not be found");
+    }
 }

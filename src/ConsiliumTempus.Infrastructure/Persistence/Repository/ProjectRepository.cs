@@ -15,7 +15,9 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
 {
     public async Task<ProjectAggregate?> Get(ProjectId id, CancellationToken cancellationToken = default)
     {
-        return await dbContext.Projects.FindAsync([id], cancellationToken);
+        return await dbContext.Projects
+            .Include(p => p.Statuses.OrderByDescending(s => s.Audit.CreatedDateTime))
+            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
     public async Task<ProjectAggregate?> GetWithWorkspace(ProjectId id, CancellationToken cancellationToken = default)
@@ -47,6 +49,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
         CancellationToken cancellationToken = default)
     {
         return dbContext.Projects
+            .Include(p => p.Statuses.OrderByDescending(s => s.Audit.CreatedDateTime))
             .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
             .WhereIf(workspaceId is not null, p => p.Workspace.Id == workspaceId!)
             .ApplyFilters(filters)

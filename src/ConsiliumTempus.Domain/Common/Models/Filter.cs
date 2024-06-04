@@ -2,6 +2,7 @@
 using System.Reflection;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Project.Enums;
 
 namespace ConsiliumTempus.Domain.Common.Models;
 
@@ -100,6 +101,7 @@ public class Filter<TEntity>(Expression<Func<TEntity, bool>> predicate) : IFilte
             not null when type == typeof(DateTime) => Expression.Constant(DateTime.Parse(value)),
             not null when type == typeof(decimal) => Expression.Constant(decimal.Parse(value)),
             not null when type == typeof(int) => Expression.Constant(int.Parse(value)),
+            not null when type == typeof(ProjectLifecycle) => Expression.Constant(Enum.Parse<ProjectLifecycle>(value, true)),
             _ => Expression.Constant(value)
         };
     }
