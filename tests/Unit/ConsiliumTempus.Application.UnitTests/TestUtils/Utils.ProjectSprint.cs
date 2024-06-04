@@ -17,7 +17,9 @@ internal static partial class Utils
     {
         internal static void AssertAddStageCommand(
             ProjectSprintAggregate sprint,
-            AddStageToProjectSprintCommand command)
+            AddStageToProjectSprintCommand command,
+            UserAggregate createdBy,
+            UserAggregate sprintCreatedBy)
         {
             var projectStage = command.OnTop ? sprint.Stages[0] : sprint.Stages[^1];
 
@@ -28,11 +30,20 @@ internal static partial class Utils
             projectStage.Tasks.Should().BeEmpty();
             projectStage.DomainEvents.Should().BeEmpty();
 
+            projectStage.Audit.CreatedBy.Should().Be(createdBy);
+            projectStage.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            projectStage.Audit.UpdatedBy.Should().Be(createdBy);
+            projectStage.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             var count = 0;
-            sprint.Stages.Should().AllSatisfy(stage => stage.CustomOrderPosition.Value.Should().Be(count++));
+            sprint.Stages.Should().AllSatisfy(stage =>
+            {
+                stage.CustomOrderPosition.Value.Should().Be(count++);
+                stage.Audit.UpdatedBy.Should().Be(stage == projectStage ? createdBy : sprintCreatedBy);
+            });
         }
 
         internal static bool AssertFromCreateCommand(
@@ -134,10 +145,14 @@ internal static partial class Utils
 
         internal static void AssertUpdateStageCommand(
             Domain.ProjectSprint.Entities.ProjectStage stage,
-            UpdateStageFromProjectSprintCommand command)
+            UpdateStageFromProjectSprintCommand command,
+            UserAggregate updatedBy)
         {
             stage.Id.Value.Should().Be(command.StageId);
             stage.Name.Value.Should().Be(command.Name);
+
+            stage.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            stage.Audit.UpdatedBy.Should().Be(updatedBy);
 
             stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

@@ -57,7 +57,8 @@ public sealed class CreateProjectSprintCommandHandler(
             projectSprint.AddStage(ProjectStage.Create(
                 Name.Create(Constants.ProjectStage.Names[0]),
                 CustomOrderPosition.Create(0),
-                projectSprint));
+                projectSprint,
+                user));
         }
 
         await projectSprintRepository.Add(projectSprint, cancellationToken);

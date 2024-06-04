@@ -6,7 +6,9 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 
-public sealed class RemoveStageFromProjectSprintCommandHandler(IProjectSprintRepository projectSprintRepository)
+public sealed class RemoveStageFromProjectSprintCommandHandler(
+    IAuditRepository auditRepository,
+    IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<RemoveStageFromProjectSprintCommand, ErrorOr<RemoveStageFromProjectSprintResult>>
 {
     public async Task<ErrorOr<RemoveStageFromProjectSprintResult>> Handle(RemoveStageFromProjectSprintCommand command,
@@ -23,6 +25,9 @@ public sealed class RemoveStageFromProjectSprintCommandHandler(IProjectSprintRep
 
         sprint.RemoveStage(stage);
         sprint.Project.RefreshActivity();
+        
+        // Cascade deactivated for sprint as the stage has audit too (avoid cycles)
+        auditRepository.Remove(sprint.Audit); 
 
         return new RemoveStageFromProjectSprintResult();
     }

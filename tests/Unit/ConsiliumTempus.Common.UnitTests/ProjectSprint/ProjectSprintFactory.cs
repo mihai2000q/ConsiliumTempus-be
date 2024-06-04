@@ -37,7 +37,8 @@ public static class ProjectSprintFactory
             .ForEach(i => sprint.AddStage(ProjectStageFactory.Create(
                 sprint,
                 Constants.ProjectStage.Name + i,
-                i)));
+                i,
+                createdBy)));
 
         return sprint;
     }
