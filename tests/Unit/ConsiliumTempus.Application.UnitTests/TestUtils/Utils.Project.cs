@@ -1,7 +1,10 @@
-﻿using ConsiliumTempus.Application.Project.Commands.Create;
+﻿using ConsiliumTempus.Application.Project.Commands.AddStatus;
+using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Enums;
@@ -15,6 +18,27 @@ internal static partial class Utils
 {
     internal static class Project
     {
+        internal static void AssertFromAddStatusCommand(
+            ProjectAggregate project,
+            AddStatusToProjectCommand command,
+            UserAggregate user)
+        {
+            project.Id.Value.Should().Be(command.Id);
+            
+            project.Statuses.Should().HaveCount(1);
+            var status = project.Statuses[0];
+            status.Id.Value.Should().NotBeEmpty();
+            status.Title.Value.Should().Be(command.Title);
+            status.Status.ToString().ToLower().Should().Be(command.Status.ToLower());
+            status.Description.Value.Should().Be(command.Description);
+            status.Project.Should().Be(project);
+            status.Audit.ShouldBeCreated(user);
+            status.DomainEvents.Should().BeEmpty();
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
         internal static bool AssertFromCreateCommand(
             ProjectAggregate project,
             CreateProjectCommand command,
@@ -38,6 +62,8 @@ internal static partial class Utils
             project.DomainEvents[0].Should().BeOfType<ProjectCreated>();
             ((ProjectCreated)project.DomainEvents[0]).Project.Should().Be(project);
 
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
             return true;
         }
 
@@ -50,6 +76,17 @@ internal static partial class Utils
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             return true;
+        }
+        
+        internal static void AssertFromRemoveStatusCommand(
+            ProjectAggregate project,
+            RemoveStatusFromProjectCommand command)
+        {
+            project.Id.Value.Should().Be(command.Id);
+            project.Statuses.Should().NotContain(s => s.Id.Value == command.StatusId);
+            
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertFromUpdateCommand(
@@ -72,6 +109,22 @@ internal static partial class Utils
             project.Id.Value.Should().Be(command.Id);
             project.Description.Value.Should().Be(command.Description);
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static void AssertFromUpdateStatusCommand(
+            ProjectAggregate project,
+            UpdateStatusFromProjectCommand command,
+            UserAggregate updatedBy)
+        {
+            project.Id.Value.Should().Be(command.Id);
+            var status = project.Statuses.Single(s => s.Id.Value == command.StatusId);
+            status.Title.Value.Should().Be(command.Title);
+            status.Status.ToString().ToLower().Should().Be(command.Status.ToLower());
+            status.Description.Value.Should().Be(command.Description);
+            status.Audit.ShouldBeUpdated(updatedBy);
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

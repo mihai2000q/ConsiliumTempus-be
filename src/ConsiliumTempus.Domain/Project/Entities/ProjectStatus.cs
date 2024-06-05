@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Entities;
-using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.Enums;
@@ -28,6 +27,7 @@ public sealed class ProjectStatus : Entity<ProjectStatusId>
         Status = status;
         Description = description;
         Project = project;
+        Audit = audit;
     }
 
     public Title Title { get; private set; } = default!;

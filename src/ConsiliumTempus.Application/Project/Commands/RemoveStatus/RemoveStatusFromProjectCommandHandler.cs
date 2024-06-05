@@ -6,8 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 
-public sealed class RemoveStatusFromProjectCommandHandler(
-    IProjectRepository projectRepository)
+public sealed class RemoveStatusFromProjectCommandHandler(IProjectRepository projectRepository)
     : IRequestHandler<RemoveStatusFromProjectCommand, ErrorOr<RemoveStatusFromProjectResult>>
 {
     public async Task<ErrorOr<RemoveStatusFromProjectResult>> Handle(RemoveStatusFromProjectCommand command,

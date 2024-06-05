@@ -225,6 +225,15 @@ internal static class GetCollectionWorkspaceQueryValidatorData
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
                 search: [correct, "name lte something"]);
             Add(query, nameof(query.Search), 1);
+            
+            // Parse Validation
+            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                search: ["is_favorite eq something"]);
+            Add(query, nameof(query.Search), 1);
+            
+            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                search: [correct, "is_favorite eq something"]);
+            Add(query, nameof(query.Search), 1);
         }
     }
 }
