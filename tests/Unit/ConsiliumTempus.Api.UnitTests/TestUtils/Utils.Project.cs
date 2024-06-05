@@ -1,14 +1,20 @@
-﻿using ConsiliumTempus.Api.Contracts.Project.Create;
+﻿using ConsiliumTempus.Api.Contracts.Project.AddStatus;
+using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
+using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
@@ -62,6 +68,18 @@ internal static partial class Utils
             return true;
         }
 
+        internal static bool AssertAddStatusCommand(
+            AddStatusToProjectCommand command,
+            AddStatusToProjectRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.Title.Should().Be(request.Title);
+            command.Status.Should().Be(request.Status);
+            command.Description.Should().Be(request.Description);
+
+            return true;
+        }
+
         internal static bool AssertUpdateCommand(
             UpdateProjectCommand command,
             UpdateProjectRequest request)
@@ -72,7 +90,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static bool AssertUpdateOverviewCommand(
             UpdateOverviewProjectCommand command,
             UpdateOverviewProjectRequest request)
@@ -83,11 +101,34 @@ internal static partial class Utils
             return true;
         }
 
+        internal static bool AssertUpdateStatusCommand(
+            UpdateStatusFromProjectCommand command,
+            UpdateStatusFromProjectRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.StatusId.Should().Be(request.StatusId);
+            command.Title.Should().Be(request.Title);
+            command.Status.Should().Be(request.Status);
+            command.Description.Should().Be(request.Description);
+
+            return true;
+        }
+
         internal static bool AssertDeleteCommand(
             DeleteProjectCommand command,
             DeleteProjectRequest request)
         {
             command.Id.Should().Be(request.Id);
+
+            return true;
+        }
+
+        internal static bool AssertRemoveStatusCommand(
+            RemoveStatusFromProjectCommand command,
+            RemoveStatusFromProjectRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.StatusId.Should().Be(request.StatusId);
 
             return true;
         }

@@ -13,15 +13,24 @@
   * [Create](#create)
     * [Create Project Request](#create-project-request)
     * [Create Project Response](#create-project-response)
+  * [Add Status](#add-status)
+    * [Add Status To Project Request](#add-status-to-project-request)
+    * [Add Status To Project Response](#add-status-to-project-response)
   * [Update](#update)
     * [Update Project Request](#update-project-request)
     * [Update Project Response](#update-project-response)
   * [Update Overview](#update-overview)
     * [Update Overview Project Request](#update-overview-project-request)
     * [Update Overview Project Response](#update-overview-project-response)
+  * [Update Status](#update-status)
+    * [Update Status To Project Request](#update-status-from-project-request)
+    * [Update Status To Project Response](#update-status-from-project-response)
   * [Delete](#delete)
     * [Delete Project Request](#delete-project-request)
     * [Delete Project Response](#delete-project-response)
+  * [Remove Status](#remove-status)
+    * [Remove Status To Project Request](#remove-status-from-project-request)
+    * [Remove Status To Project Response](#remove-status-from-project-response)
 
 ## Project
 
@@ -150,6 +159,32 @@ Sends body data that the new project needs to be created.
 
 Returns a confirmation message that the project has been created successfully.
 
+### Add Status
+
+Only admin users that are part of the workspace can add a status to the project
+([Add Status To Project Permission](../Security.md/#permissions)).
+
+```js
+POST {{host}}/api/projects/add-status
+```
+
+#### Add Status To Project Request
+
+Sends body data that the new project status needs to be created.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "title": "Status Update",
+  "status": "AtRisk",
+  "description": "This status marks the start of a new beginning"
+}
+```
+
+#### Add Status To Project Response
+
+Returns a confirmation message that the project status has been added successfully.
+
 ### Update
 
 All members that are part of the workspace can update a project
@@ -199,6 +234,34 @@ Sends body data that the project overview needs to be updated.
 
 Returns a confirmation message that the project overview has been updated successfully.
 
+### Update Status
+
+Only members and admin users that are part of the workspace can update a status from the project
+([Update Status To Project Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/projects/update-status
+```
+
+#### Update Status From Project Request
+
+Sends body data that the project status needs to be updated.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "statusId": "11000000-0000-0000-0000-000000000000",
+  "title": "Status Update",
+  "status": "AtRisk",
+  "description": "This status marks the start of a new beginning"
+}
+```
+
+#### Update Status From Project Response
+
+Returns a confirmation message that the project status has been updated successfully.
+
+
 ### Delete
 
 Only admin users that are part of the workspace can delete a project
@@ -212,8 +275,28 @@ DELETE {{host}}/api/projects/{id}
 
 #### Delete Project Request
 
-Sends the id of the sprint inside the route request.
+Sends the id of the project inside the route request.
 
 #### Delete Project Response
 
 Returns a confirmation message that the project has been deleted successfully.
+
+### Remove Status
+
+Only admin users that are part of the workspace can remove a status from the project
+([Remove Status To Project Permission](../Security.md/#permissions)).
+
+```js
+DELETE {{host}}/api/projects/{id}/remove-status/{statusId}
+```
+
+- **id** is a 36-character string
+- **statusId** is a 36-character string
+
+#### Remove Status From Project Request
+
+Sends the id of the project and the id of the status inside the route request.
+
+#### Remove Status From Project Response
+
+Returns a confirmation message that the project status has been removed successfully.

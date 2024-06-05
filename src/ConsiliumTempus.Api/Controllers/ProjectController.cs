@@ -1,15 +1,21 @@
 ﻿using ConsiliumTempus.Api.Common.Attributes;
+using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
+using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
@@ -74,7 +80,19 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
             Problem
         );
     }
-    
+
+    [HttpPost("Add-Status")]
+    public async Task<IActionResult> AddStatus(AddStatusToProjectRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<AddStatusToProjectCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            addStatusResult => Ok(Mapper.Map<AddStatusToProjectResponse>(addStatusResult)),
+            Problem
+        );
+    }
+
     [HasPermission(Permissions.UpdateProject)]
     [HttpPut]
     public async Task<IActionResult> Update(UpdateProjectRequest request, CancellationToken cancellationToken)
@@ -87,16 +105,30 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
             Problem
         );
     }
-    
+
     [HasPermission(Permissions.UpdateProject)]
     [HttpPut("Overview")]
-    public async Task<IActionResult> UpdateOverview(UpdateOverviewProjectRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateOverview(UpdateOverviewProjectRequest request,
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<UpdateOverviewProjectCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
             updateOverviewResult => Ok(Mapper.Map<UpdateOverviewProjectResponse>(updateOverviewResult)),
+            Problem
+        );
+    }
+
+    [HttpPut("Update-Status")]
+    public async Task<IActionResult> UpdateStatus(UpdateStatusFromProjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateStatusFromProjectCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateStatusResult => Ok(Mapper.Map<UpdateStatusFromProjectResponse>(updateStatusResult)),
             Problem
         );
     }
@@ -110,6 +142,18 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
         return result.Match(
             deleteResult => Ok(Mapper.Map<DeleteProjectResponse>(deleteResult)),
+            Problem
+        );
+    }
+
+    [HttpDelete("{id:guid}/Remove-Status/{statusId:guid}")]
+    public async Task<IActionResult> RemoveStatus(RemoveStatusFromProjectRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<RemoveStatusFromProjectCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateStatusResult => Ok(Mapper.Map<RemoveStatusFromProjectResponse>(updateStatusResult)),
             Problem
         );
     }

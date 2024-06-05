@@ -1,17 +1,23 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
+using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
+using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
@@ -225,6 +231,53 @@ public class ProjectControllerTest
 
         outcome.ValidateError(error);
     }
+    
+    [Fact]
+    public async Task AddStatus_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateAddStatusToProjectRequest();
+
+        var result = ProjectResultFactory.CreateAddStatusToProjectResult();
+        _mediator
+            .Send(Arg.Any<AddStatusToProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.AddStatus(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<AddStatusToProjectCommand>(command => 
+                Utils.Project.AssertAddStatusCommand(command, request)));
+
+        var response = outcome.ToResponse<AddStatusToProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task AddStatus_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateAddStatusToProjectRequest();
+
+        var error = Errors.Project.NotFound;
+        _mediator
+            .Send(Arg.Any<AddStatusToProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.AddStatus(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<AddStatusToProjectCommand>(command =>
+                Utils.Project.AssertAddStatusCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
 
     [Fact]
     public async Task Update_WhenIsSuccessful_ShouldReturnResponse()
@@ -319,6 +372,53 @@ public class ProjectControllerTest
     }
 
     [Fact]
+    public async Task UpdateStatus_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdateStatusFromProjectRequest();
+
+        var result = ProjectResultFactory.CreateUpdateStatusFromProjectResult();
+        _mediator
+            .Send(Arg.Any<UpdateStatusFromProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.UpdateStatus(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateStatusFromProjectCommand>(command => 
+                Utils.Project.AssertUpdateStatusCommand(command, request)));
+
+        var response = outcome.ToResponse<UpdateStatusFromProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task UpdateStatus_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdateStatusFromProjectRequest();
+
+        var error = Errors.Project.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdateStatusFromProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.UpdateStatus(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateStatusFromProjectCommand>(command =>
+                Utils.Project.AssertUpdateStatusCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
     public async Task Delete_WhenIsSuccessful_ShouldReturnSuccess()
     {
         // Arrange
@@ -359,6 +459,53 @@ public class ProjectControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task RemoveStatus_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateRemoveStatusFromProjectRequest();
+
+        var result = ProjectResultFactory.CreateRemoveStatusFromProjectResult();
+        _mediator
+            .Send(Arg.Any<RemoveStatusFromProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.RemoveStatus(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<RemoveStatusFromProjectCommand>(command => 
+                Utils.Project.AssertRemoveStatusCommand(command, request)));
+
+        var response = outcome.ToResponse<RemoveStatusFromProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task RemoveStatus_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateRemoveStatusFromProjectRequest();
+
+        var error = Errors.Project.NotFound;
+        _mediator
+            .Send(Arg.Any<RemoveStatusFromProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.RemoveStatus(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<RemoveStatusFromProjectCommand>(command =>
+                Utils.Project.AssertRemoveStatusCommand(command, request)));
 
         outcome.ValidateError(error);
     }

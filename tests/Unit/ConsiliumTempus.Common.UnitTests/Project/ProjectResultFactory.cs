@@ -1,7 +1,10 @@
-﻿using ConsiliumTempus.Application.Project.Commands.Create;
+﻿using ConsiliumTempus.Application.Project.Commands.AddStatus;
+using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Domain.Project;
 
@@ -23,6 +26,11 @@ public static class ProjectResultFactory
         return new CreateProjectResult();
     }
 
+    public static AddStatusToProjectResult CreateAddStatusToProjectResult()
+    {
+        return new AddStatusToProjectResult();
+    }
+
     public static UpdateProjectResult CreateUpdateProjectResult()
     {
         return new UpdateProjectResult();
@@ -33,8 +41,18 @@ public static class ProjectResultFactory
         return new UpdateOverviewProjectResult();
     }
 
+    public static UpdateStatusFromProjectResult CreateUpdateStatusFromProjectResult()
+    {
+        return new UpdateStatusFromProjectResult();
+    }
+
     public static DeleteProjectResult CreateDeleteProjectResult()
     {
         return new DeleteProjectResult();
+    }
+
+    public static RemoveStatusFromProjectResult CreateRemoveStatusFromProjectResult()
+    {
+        return new RemoveStatusFromProjectResult();
     }
 }
