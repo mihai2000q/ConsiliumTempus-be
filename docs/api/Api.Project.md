@@ -10,6 +10,9 @@
   * [Get Collection](#get-collection)
     * [Get Collection Request](#get-collection-request)
     * [Get Collection Response](#get-collection-response)
+  * [Get Statuses](#get-statuses)
+    * [Get Statuses From Project Request](#get-statuses-from-project-request)
+    * [Get Statuses From Project Request](#get-statuses-from-project-response)
   * [Create](#create)
     * [Create Project Request](#create-project-request)
     * [Create Project Response](#create-project-response)
@@ -23,14 +26,14 @@
     * [Update Overview Project Request](#update-overview-project-request)
     * [Update Overview Project Response](#update-overview-project-response)
   * [Update Status](#update-status)
-    * [Update Status To Project Request](#update-status-from-project-request)
-    * [Update Status To Project Response](#update-status-from-project-response)
+    * [Update Status From Project Request](#update-status-from-project-request)
+    * [Update Status From Project Response](#update-status-from-project-response)
   * [Delete](#delete)
     * [Delete Project Request](#delete-project-request)
     * [Delete Project Response](#delete-project-response)
   * [Remove Status](#remove-status)
-    * [Remove Status To Project Request](#remove-status-from-project-request)
-    * [Remove Status To Project Response](#remove-status-from-project-response)
+    * [Remove Status From Project Request](#remove-status-from-project-request)
+    * [Remove Status From Project Response](#remove-status-from-project-response)
 
 ## Project
 
@@ -59,7 +62,30 @@ Returns a project.
 {
   "name": "Project Name 1",
   "isFavorite": false,
-  "isPrivate": true
+  "lifecycle": "Active",
+  "owner": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Michael Jordan",
+    "email": "michael@jordan.com"
+  },
+  "isPrivate": true,
+  "latestStatus": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "title": "Status 2",
+    "status": "OnTrack",
+    "createdBy": {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "name": "Michael Jordan",
+      "email": "michael@jordan.com"
+    },
+    "createdDateTime": "2020-01-01T00:00:00.0000000Z",
+    "updatedBy": {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "name": "Michael Jordan",
+      "email": "michael@jordan.com"
+    },
+    "updatedDateTime": "2020-01-01T00:00:00.0000000Z"
+  }
 }
 ```
 
@@ -100,7 +126,7 @@ GET {{host}}/api/projects?pageSize=2&currentPage=1&orderBy=name.desc&orderBy=las
 
 #### Get Collection Request
 
-it sends optional query parameters to paginate, order or filter the projects by workspace, name, etc.
+It sends optional query parameters to paginate, order or filter the projects by workspace, name, etc.
 
 - _**pageSize**_ is used to specify the size of the page
 - _**currentPage**_ is used to specify the current page
@@ -110,7 +136,7 @@ it sends optional query parameters to paginate, order or filter the projects by 
 
 #### Get Collection Response
 
-Returns the projects, their total count and total pages, if paginated.
+Returns the projects and their total count.
 
 ```json
 {
@@ -120,14 +146,99 @@ Returns the projects, their total count and total pages, if paginated.
       "name": "Project Name 1",
       "description": "This is the first project",
       "isFavorite": true,
-      "isPrivate": false
+      "lifecycle": "Active",
+      "owner": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Michael Jordan",
+        "email": "michael@jordan.com"
+      },
+      "isPrivate": false,
+      "latestStatus": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "status": "Completed",
+        "updatedDateTime": "2020-01-01T00:00:00.0000000Z"
+      }
     },
     {
       "id": "20000000-0000-0000-0000-000000000000",
       "name": "Project Name 2",
       "description": "This is the second project",
       "isFavorite": true,
-      "isPrivate": false
+      "lifecycle": "Archived",
+      "owner": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Michael Jordan",
+        "email": "michael@jordan.com"
+      },
+      "isPrivate": false,
+      "latestStatus": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "status": "Completed",
+        "updatedDateTime": "2020-01-01T00:00:00.0000000Z"
+      }
+    }
+  ],
+  "totalCount": 5
+}
+```
+
+### Get Statuses
+
+Anyone that is part of the workspace can read the project statuses
+([Read Project Statuses Permission](../Security.md/#permissions)),
+
+```js
+GET {{host}}/api/projects/{id}/statuses
+```
+
+- **id** is a 36-character string
+
+#### Get Statuses From Project Request
+
+It sends the id of the project on the route of the request.
+
+#### Get Statuses From Project Response
+
+Returns the project statuses and their total count.
+
+```json
+{
+  "statuses": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "title": "Status 1",
+      "status": "OffTrack",
+      "description": "This is the description of the first status",
+      "createdBy": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Michael Jordan",
+        "email": "michael@jordan.com"
+      },
+      "createdDateTime": "2020-01-01T00:00:00.0000000Z",
+      "updatedBy": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Michael Jordan",
+        "email": "michael@jordan.com"
+      },
+      "updatedDateTime": "2020-01-01T00:00:00.0000000Z"
+    },
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "title": "Status 2",
+      "status": "OnTrack",
+      "description": "This is the description of the second status",
+      "createdBy": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Michael Jordan",
+        "email": "michael@jordan.com"
+      },
+      "createdDateTime": "2020-01-01T00:00:00.0000000Z",
+      "updatedBy": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Michael Jordan",
+        "email": "michael@jordan.com"
+      },
+      "updatedDateTime": "2020-01-01T00:00:00.0000000Z"
     }
   ],
   "totalCount": 5
@@ -260,7 +371,6 @@ Sends body data that the project status needs to be updated.
 #### Update Status From Project Response
 
 Returns a confirmation message that the project status has been updated successfully.
-
 
 ### Delete
 

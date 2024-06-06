@@ -68,7 +68,7 @@ Sends optional query parameters for ordering, filtering, and page-based paginati
 
 #### Get Collection Workspace Response
 
-Returns the workspaces.
+Returns the workspaces and their total count.
 
 ```json
 {

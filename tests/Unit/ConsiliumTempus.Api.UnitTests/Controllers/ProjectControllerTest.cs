@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
@@ -21,6 +22,7 @@ using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
+using ConsiliumTempus.Application.Project.Queries.GetStatuses;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
@@ -183,6 +185,53 @@ public class ProjectControllerTest
             .Received(1)
             .Send(Arg.Is<GetCollectionProjectQuery>(q =>
                 Utils.Project.AssertGetCollectionProjectQuery(q, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task GetStatuses_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateGetStatusesFromProjectRequest();
+
+        var result = ProjectResultFactory.CreateGetStatusesFromProjectResult();
+        _mediator
+            .Send(Arg.Any<GetStatusesFromProjectQuery>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.GetStatuses(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetStatusesFromProjectQuery>(q =>
+                Utils.Project.AssertGetStatusesFromProjectQuery(q, request)));
+
+        var response = outcome.ToResponse<GetStatusesFromProjectResponse>();
+        Utils.Project.AsserGetStatusesResponse(response, result);
+    }
+
+    [Fact]
+    public async Task GetStatuses_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateGetStatusesFromProjectRequest();
+
+        var error = Errors.Project.NotFound;
+        _mediator
+            .Send(Arg.Any<GetStatusesFromProjectQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetStatuses(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetStatusesFromProjectQuery>(q =>
+                Utils.Project.AssertGetStatusesFromProjectQuery(q, request)));
 
         outcome.ValidateError(error);
     }

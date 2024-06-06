@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
@@ -19,6 +20,7 @@ using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
+using ConsiliumTempus.Application.Project.Queries.GetStatuses;
 using ConsiliumTempus.Domain.Common.Enums;
 using MapsterMapper;
 using MediatR;
@@ -64,6 +66,18 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
         return result.Match(
             getCollectionResult => Ok(Mapper.Map<GetCollectionProjectResponse>(getCollectionResult)),
+            Problem
+        );
+    }
+
+    [HttpGet("{id:guid}/Statuses")]
+    public async Task<IActionResult> GetStatuses(GetStatusesFromProjectRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<GetStatusesFromProjectQuery>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            getStatusesResult => Ok(Mapper.Map<GetStatusesFromProjectResponse>(getStatusesResult)),
             Problem
         );
     }
@@ -153,7 +167,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            updateStatusResult => Ok(Mapper.Map<RemoveStatusFromProjectResponse>(updateStatusResult)),
+            removeStatusResult => Ok(Mapper.Map<RemoveStatusFromProjectResponse>(removeStatusResult)),
             Problem
         );
     }

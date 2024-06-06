@@ -6,7 +6,10 @@ using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
+using ConsiliumTempus.Application.Project.Queries.GetStatuses;
+using ConsiliumTempus.Common.UnitTests.Project.Entities;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Entities;
 
 namespace ConsiliumTempus.Common.UnitTests.Project;
 
@@ -18,6 +21,15 @@ public static class ProjectResultFactory
     {
         return new GetCollectionProjectResult(
             projects ?? ProjectFactory.CreateList(),
+            totalCount);
+    }
+
+    public static GetStatusesFromProjectResult CreateGetStatusesFromProjectResult(
+        List<ProjectStatus>? statuses = null,
+        int totalCount = 25)
+    {
+        return new GetStatusesFromProjectResult(
+            statuses ?? ProjectStatusFactory.CreateList(),
             totalCount);
     }
 

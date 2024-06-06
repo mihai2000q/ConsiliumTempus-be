@@ -24,4 +24,12 @@ public static class ProjectStatusFactory
             project ?? ProjectFactory.Create(),
             createdBy ?? UserFactory.Create());
     }
+    
+    public static List<ProjectStatus> CreateList(int count = 5)
+    {
+        return Enumerable
+            .Range(0, count)
+            .Select(_ => Create())
+            .ToList();
+    }
 }

@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
@@ -48,6 +49,15 @@ public static class ProjectRequestFactory
             OrderBy = orderBy,
             Search = search,
             WorkspaceId = workspaceId
+        };
+    }
+
+    public static GetStatusesFromProjectRequest CreateGetStatusesFromProjectRequest(
+        Guid? id = null)
+    {
+        return new GetStatusesFromProjectRequest
+        {
+            Id = id ?? Guid.NewGuid()
         };
     }
 
