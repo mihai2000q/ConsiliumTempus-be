@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
+using ConsiliumTempus.Application.Project.Queries.GetStatuses;
 
 namespace ConsiliumTempus.Common.UnitTests.Project;
 
@@ -31,5 +32,12 @@ public static class ProjectQueryFactory
             orderBy,
             search,
             workspaceId);
+    }
+    
+    public static GetStatusesFromProjectQuery CreateGetStatusesFromProjectQuery(
+        Guid? id = null)
+    {
+        return new GetStatusesFromProjectQuery(
+            id ?? Guid.NewGuid());
     }
 }

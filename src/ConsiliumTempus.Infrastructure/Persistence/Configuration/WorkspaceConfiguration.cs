@@ -41,5 +41,6 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
         builder.HasOne(w => w.Owner)
             .WithMany()
             .OnDelete(DeleteBehavior.NoAction);
+        builder.Navigation(w => w.Owner).AutoInclude();
     }
 }

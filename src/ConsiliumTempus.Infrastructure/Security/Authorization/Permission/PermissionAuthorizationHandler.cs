@@ -71,7 +71,11 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.UpdateProject or
             Permissions.DeleteProject or
             Permissions.CreateProjectSprint or
-            Permissions.ReadCollectionProjectSprint => await workspaceProvider.GetByProject(ProjectId.Create(guidId)),
+            Permissions.ReadCollectionProjectSprint or
+            Permissions.AddStatusToProject or 
+            Permissions.ReadStatusesFromProject or 
+            Permissions.RemoveStatusFromProject or 
+            Permissions.UpdateStatusFromProject => await workspaceProvider.GetByProject(ProjectId.Create(guidId)),
 
             Permissions.ReadProjectSprint or
             Permissions.UpdateProjectSprint or
@@ -106,6 +110,11 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.ReadCollectionProject => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<WorkspaceAggregate>()),
             Permissions.UpdateProject => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProject => HttpRequestReader.GetStringIdFromRoute(request),
+            
+            Permissions.AddStatusToProject => await HttpRequestReader.GetStringIdFromBody(request),
+            Permissions.ReadStatusesFromProject => HttpRequestReader.GetStringIdFromRoute(request),
+            Permissions.UpdateStatusFromProject => await HttpRequestReader.GetStringIdFromBody(request),
+            Permissions.RemoveStatusFromProject => HttpRequestReader.GetStringIdFromRoute(request),
 
             Permissions.CreateProjectSprint => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<ProjectAggregate>()),
             Permissions.ReadProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),

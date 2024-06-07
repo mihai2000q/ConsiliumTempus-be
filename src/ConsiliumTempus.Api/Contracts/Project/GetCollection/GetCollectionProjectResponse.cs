@@ -12,5 +12,18 @@ public sealed record GetCollectionProjectResponse(
         string Name,
         string Description,
         bool IsFavorite,
-        bool IsPrivate);
+        string Lifecycle,
+        UserResponse Owner,
+        bool IsPrivate,
+        ProjectStatusResponse? LatestStatus);
+
+    public sealed record UserResponse(
+        Guid Id,
+        string Name,
+        string Email);
+
+    public sealed record ProjectStatusResponse(
+        Guid Id,
+        string Status,
+        DateTime UpdatedDateTime);
 }

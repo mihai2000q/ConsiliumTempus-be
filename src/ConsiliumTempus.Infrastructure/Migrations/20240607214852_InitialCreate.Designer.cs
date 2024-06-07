@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240604150613_InitialCreate")]
+    [Migration("20240607214852_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -135,66 +135,86 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             Id = 9,
-                            Name = "CreateProjectSprint"
+                            Name = "AddStatusToProject"
                         },
                         new
                         {
                             Id = 10,
-                            Name = "ReadProjectSprint"
+                            Name = "ReadStatusesFromProject"
                         },
                         new
                         {
                             Id = 11,
-                            Name = "ReadCollectionProjectSprint"
+                            Name = "UpdateStatusFromProject"
                         },
                         new
                         {
                             Id = 12,
-                            Name = "UpdateProjectSprint"
+                            Name = "RemoveStatusFromProject"
                         },
                         new
                         {
                             Id = 13,
-                            Name = "DeleteProjectSprint"
+                            Name = "CreateProjectSprint"
                         },
                         new
                         {
                             Id = 14,
-                            Name = "AddStageToProjectSprint"
+                            Name = "ReadProjectSprint"
                         },
                         new
                         {
                             Id = 15,
-                            Name = "UpdateStageFromProjectSprint"
+                            Name = "ReadCollectionProjectSprint"
                         },
                         new
                         {
                             Id = 16,
-                            Name = "RemoveStageFromProjectSprint"
+                            Name = "UpdateProjectSprint"
                         },
                         new
                         {
                             Id = 17,
-                            Name = "CreateProjectTask"
+                            Name = "DeleteProjectSprint"
                         },
                         new
                         {
                             Id = 18,
-                            Name = "ReadProjectTask"
+                            Name = "AddStageToProjectSprint"
                         },
                         new
                         {
                             Id = 19,
-                            Name = "ReadCollectionProjectTask"
+                            Name = "UpdateStageFromProjectSprint"
                         },
                         new
                         {
                             Id = 20,
-                            Name = "UpdateProjectTask"
+                            Name = "RemoveStageFromProjectSprint"
                         },
                         new
                         {
                             Id = 21,
+                            Name = "CreateProjectTask"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Name = "ReadProjectTask"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Name = "ReadCollectionProjectTask"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Name = "UpdateProjectTask"
+                        },
+                        new
+                        {
+                            Id = 25,
                             Name = "DeleteProjectTask"
                         });
                 });
@@ -305,22 +325,22 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 1,
-                            PermissionId = 10
+                            PermissionId = 14
                         },
                         new
                         {
                             WorkspaceRoleId = 1,
-                            PermissionId = 11
+                            PermissionId = 15
                         },
                         new
                         {
                             WorkspaceRoleId = 1,
-                            PermissionId = 18
+                            PermissionId = 22
                         },
                         new
                         {
                             WorkspaceRoleId = 1,
-                            PermissionId = 19
+                            PermissionId = 23
                         },
                         new
                         {
@@ -360,7 +380,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 2,
-                            PermissionId = 12
+                            PermissionId = 14
                         },
                         new
                         {
@@ -370,12 +390,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 2,
-                            PermissionId = 17
-                        },
-                        new
-                        {
-                            WorkspaceRoleId = 2,
-                            PermissionId = 18
+                            PermissionId = 16
                         },
                         new
                         {
@@ -385,12 +400,27 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 2,
-                            PermissionId = 20
+                            PermissionId = 21
                         },
                         new
                         {
                             WorkspaceRoleId = 2,
-                            PermissionId = 21
+                            PermissionId = 22
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 23
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 24
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 25
                         },
                         new
                         {
@@ -445,12 +475,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 3,
-                            PermissionId = 11
+                            PermissionId = 12
                         },
                         new
                         {
                             WorkspaceRoleId = 3,
-                            PermissionId = 12
+                            PermissionId = 11
                         },
                         new
                         {
@@ -496,7 +526,50 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 3,
                             PermissionId = 21
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 22
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 23
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 24
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 25
                         });
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectStatus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuditId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuditId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectStatus", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>
@@ -734,6 +807,68 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectStatus", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
+                        .WithMany()
+                        .HasForeignKey("AuditId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")
+                        .WithMany("Statuses")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Title", "Title", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectStatusId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
+                                .HasColumnName("Title");
+
+                            b1.HasKey("ProjectStatusId");
+
+                            b1.ToTable("ProjectStatus");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectStatusId");
+                        });
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectStatusId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Description");
+
+                            b1.HasKey("ProjectStatusId");
+
+                            b1.ToTable("ProjectStatus");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectStatusId");
+                        });
+
+                    b.Navigation("Audit");
+
+                    b.Navigation("Description")
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Title")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>
                 {
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Owner")
@@ -819,85 +954,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("ProjectAggregateId");
                         });
 
-                    b.OwnsMany("ConsiliumTempus.Domain.Project.Entities.ProjectStatus", "Statuses", b1 =>
-                        {
-                            b1.Property<Guid>("Id")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<Guid>("AuditId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<Guid>("ProjectId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<int>("Status")
-                                .HasColumnType("int");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("AuditId");
-
-                            b1.HasIndex("ProjectId");
-
-                            b1.ToTable("ProjectStatus", (string)null);
-
-                            b1.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
-                                .WithMany()
-                                .HasForeignKey("AuditId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b1.WithOwner("Project")
-                                .HasForeignKey("ProjectId");
-
-                            b1.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Title", "Title", b2 =>
-                                {
-                                    b2.Property<Guid>("ProjectStatusId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<string>("Value")
-                                        .IsRequired()
-                                        .HasMaxLength(100)
-                                        .HasColumnType("nvarchar(100)")
-                                        .HasColumnName("Title");
-
-                                    b2.HasKey("ProjectStatusId");
-
-                                    b2.ToTable("ProjectStatus");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ProjectStatusId");
-                                });
-
-                            b1.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b2 =>
-                                {
-                                    b2.Property<Guid>("ProjectStatusId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<string>("Value")
-                                        .IsRequired()
-                                        .HasColumnType("nvarchar(max)")
-                                        .HasColumnName("Description");
-
-                                    b2.HasKey("ProjectStatusId");
-
-                                    b2.ToTable("ProjectStatus");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ProjectStatusId");
-                                });
-
-                            b1.Navigation("Audit");
-
-                            b1.Navigation("Description")
-                                .IsRequired();
-
-                            b1.Navigation("Project");
-
-                            b1.Navigation("Title")
-                                .IsRequired();
-                        });
-
                     b.Navigation("Description")
                         .IsRequired();
 
@@ -911,8 +967,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
-
-                    b.Navigation("Statuses");
 
                     b.Navigation("Workspace");
                 });
@@ -1397,6 +1451,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>
                 {
                     b.Navigation("Sprints");
+
+                    b.Navigation("Statuses");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectSprint.Entities.ProjectStage", b =>

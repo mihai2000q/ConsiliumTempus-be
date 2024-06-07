@@ -4,16 +4,20 @@ import { expect } from "../utils/matchers";
 import { deleteUser, registerUser } from "../utils/users.utils";
 import { getPersonalWorkspace } from "../utils/workspaces.utils";
 import {
+  addProjectStatus,
   create2ProjectsIn2DifferentWorkspaces,
   createProject,
   createProjects,
   getProject,
   getProjectOverview,
-  getProjects
+  getProjects, getProjectStatus,
+  getProjectStatuses
 } from "../utils/projects.utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
 import UpdateProjectRequest from "../types/requests/project/UpdateProjectRequest";
 import UpdateOverviewProjectRequest from "../types/requests/project/UpdateOverviewProjectRequest";
+import AddStatusToProjectRequest from "../types/requests/project/AddStatusToProjectRequest";
+import UpdateStatusFromProjectRequest from "../types/requests/project/UpdateStatusFromProjectRequest";
 
 test.describe('should allow operations on the project entity', () => {
   let WORKSPACE_ID: string
@@ -44,8 +48,11 @@ test.describe('should allow operations on the project entity', () => {
 
     expect(await response.json()).toStrictEqual({
       name: project.name,
+      isFavorite: false,
+      lifecycle: 'Active',
+      owner: expect.any(Object),
       isPrivate: createRequest.isPrivate,
-      isFavorite: expect.any(Boolean)
+      latestStatus: null
     })
   })
 
@@ -90,8 +97,11 @@ test.describe('should allow operations on the project entity', () => {
             id: expect.any(String),
             name: createProjectRequest.name,
             description: "",
-            isPrivate: createProjectRequest.isPrivate,
             isFavorite: false,
+            lifecycle: 'Active',
+            owner: expect.any(Object),
+            isPrivate: createProjectRequest.isPrivate,
+            latestStatus: null
           }
         ],
         totalCount: 1
@@ -116,8 +126,11 @@ test.describe('should allow operations on the project entity', () => {
             id: expect.any(String),
             name: createProjectRequest1.name,
             description: "",
-            isPrivate: createProjectRequest1.isPrivate,
             isFavorite: false,
+            lifecycle: 'Active',
+            owner: expect.any(Object),
+            isPrivate: createProjectRequest1.isPrivate,
+            latestStatus: null
           }
         ],
         totalCount: 1
@@ -153,15 +166,21 @@ test.describe('should allow operations on the project entity', () => {
             id: expect.any(String),
             name: createProjectRequest1.name,
             description: "",
-            isPrivate: createProjectRequest1.isPrivate,
             isFavorite: false,
+            lifecycle: 'Active',
+            owner: expect.any(Object),
+            isPrivate: createProjectRequest1.isPrivate,
+            latestStatus: null
           },
           {
             id: expect.any(String),
             name: createProjectRequest2.name,
             description: "",
-            isPrivate: createProjectRequest2.isPrivate,
             isFavorite: false,
+            lifecycle: 'Active',
+            owner: expect.any(Object),
+            isPrivate: createProjectRequest2.isPrivate,
+            latestStatus: null
           },
         ]),
         totalCount: 2
@@ -187,15 +206,21 @@ test.describe('should allow operations on the project entity', () => {
             id: expect.any(String),
             name: createProjectRequests[0].name,
             description: "",
-            isPrivate: createProjectRequests[0].isPrivate,
             isFavorite: false,
+            lifecycle: 'Active',
+            owner: expect.any(Object),
+            isPrivate: createProjectRequests[0].isPrivate,
+            latestStatus: null
           },
           {
             id: expect.any(String),
             name: createProjectRequests[1].name,
             description: "",
-            isPrivate: createProjectRequests[1].isPrivate,
             isFavorite: false,
+            lifecycle: 'Active',
+            owner: expect.any(Object),
+            isPrivate: createProjectRequests[1].isPrivate,
+            latestStatus: null
           },
         ],
         totalCount: totalCount
@@ -215,17 +240,19 @@ test.describe('should allow operations on the project entity', () => {
 
       expect(response.ok()).toBeTruthy()
 
-
       const start = pageSize * (currentPage - 1)
       const expectedProjects = createProjectRequests
         .slice(start, start + pageSize)
-        .map(r => {
+        .map(request => {
           return {
             id: expect.any(String),
-            name: r.name,
+            name: request.name,
             description: "",
-            isPrivate: r.isPrivate,
-            isFavorite: false
+            isFavorite: false,
+            lifecycle: 'Active',
+            owner: expect.any(Object),
+            isPrivate: request.isPrivate,
+            latestStatus: null
           }
         })
 
@@ -235,6 +262,45 @@ test.describe('should allow operations on the project entity', () => {
         projects: expectedProjects,
         totalCount: totalCount
       })
+    })
+  })
+
+  test('should get statuses from project', async ({ request }) => {
+    const createProjectRequest: CreateProjectRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "Project",
+      isPrivate: true
+    }
+    const project = await createProject(request, createProjectRequest)
+
+    const AddStatusToProjectRequest: AddStatusToProjectRequest = {
+      id: project.id,
+      title: "New Project Status",
+      status: "OnTrack",
+      description: "This is the description of the new status"
+    }
+    const status = await addProjectStatus(request, AddStatusToProjectRequest)
+
+    const response = await request.get(`/api/projects/${project.id}/statuses`, useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    const json = await response.json()
+    expect(json.statuses).toHaveLength(1)
+    expect(json).toStrictEqual({
+      statuses: [
+        {
+          id: expect.any(String),
+          title: status.title,
+          status: status.status,
+          description: status.description,
+          createdBy: status.createdBy,
+          createdDateTime: status.createdDateTime,
+          updatedBy: status.updatedBy,
+          updatedDateTime: status.updatedDateTime,
+        }
+      ],
+      totalCount: 1
     })
   })
 
@@ -262,8 +328,52 @@ test.describe('should allow operations on the project entity', () => {
         id: expect.any(String),
         name: body.name,
         description: "",
+        isFavorite: false,
+        lifecycle: 'Active',
+        owner: expect.any(Object),
         isPrivate: body.isPrivate,
-        isFavorite: false
+        latestStatus: null
+      }
+    ])
+  })
+
+  test('should add status to project', async ({ request }) => {
+    const createProjectRequest: CreateProjectRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "Project",
+      isPrivate: true
+    }
+    const project = await createProject(request, createProjectRequest)
+
+    const body: AddStatusToProjectRequest = {
+      id: project.id,
+      title: "New Project Status",
+      status: "OnTrack",
+      description: "This is the description of the new status"
+    }
+    const response = await request.post('/api/projects/add-status', {
+      ...useToken(),
+      data: body
+    });
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const statuses = await getProjectStatuses(request, body.id)
+    expect(statuses).toHaveLength(1)
+    expect(statuses).toStrictEqual([
+      {
+        id: expect.any(String),
+        title: body.title,
+        status: body.status,
+        description: body.description,
+        createdBy: expect.any(Object),
+        createdDateTime: expect.any(String),
+        updatedBy: expect.any(Object),
+        updatedDateTime: expect.any(String),
       }
     ])
   })
@@ -296,7 +406,10 @@ test.describe('should allow operations on the project entity', () => {
     expect(projects).toStrictEqual({
       name: updateProjectRequest.name,
       isFavorite: updateProjectRequest.isFavorite,
-      isPrivate: createProjectRequest.isPrivate
+      lifecycle: 'Active',
+      owner: expect.any(Object),
+      isPrivate: createProjectRequest.isPrivate,
+      latestStatus: null
     })
   })
 
@@ -329,6 +442,53 @@ test.describe('should allow operations on the project entity', () => {
     })
   })
 
+  test('should update status from project', async ({ request }) => {
+    const createProjectRequest: CreateProjectRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "Project",
+      isPrivate: true
+    }
+    const project = await createProject(request, createProjectRequest)
+
+    const AddStatusToProjectRequest: AddStatusToProjectRequest = {
+      id: project.id,
+      title: "Project Status",
+      status: "OnTrack",
+      description: "This is the description of the new status"
+    }
+    const status = await addProjectStatus(request, AddStatusToProjectRequest);
+
+    const body: UpdateStatusFromProjectRequest = {
+      id: project.id,
+      statusId: status.id,
+      title: "New Project Status",
+      status: "OffTrack",
+      description: "We are officially doomed"
+    }
+    const response = await request.put('/api/projects/update-status', {
+      ...useToken(),
+      data: body
+    });
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const statuses = await getProjectStatus(request, body.id, body.statusId)
+    expect(statuses).toStrictEqual({
+      id: expect.any(String),
+      title: body.title,
+      status: body.status,
+      description: body.description,
+      createdBy: status.createdBy,
+      createdDateTime: status.createdDateTime,
+      updatedBy: expect.any(Object),
+      updatedDateTime: expect.any(String),
+    })
+  })
+
   test('should delete project', async ({ request }) => {
     const project = await createProject(request, {
       workspaceId: WORKSPACE_ID,
@@ -346,5 +506,36 @@ test.describe('should allow operations on the project entity', () => {
 
     const projects = await getProjects(request)
     expect(projects).toHaveLength(0)
+  })
+
+  test('should remove status from project', async ({ request }) => {
+    const createProjectRequest: CreateProjectRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "Project",
+      isPrivate: true
+    }
+    const project = await createProject(request, createProjectRequest)
+
+    const AddStatusToProjectRequest: AddStatusToProjectRequest = {
+      id: project.id,
+      title: "Project Status",
+      status: "OnTrack",
+      description: "This is the description of the new status"
+    }
+    const status = await addProjectStatus(request, AddStatusToProjectRequest);
+
+    const response = await request.delete(
+      `/api/projects/${project.id}/remove-status/${status.id}`,
+      useToken()
+    )
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const statuses = await getProjectStatuses(request, project.id)
+    expect(statuses).toHaveLength(0)
   })
 })

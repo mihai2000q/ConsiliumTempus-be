@@ -1,5 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
+using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.User;
 using ErrorOr;
 using FluentAssertions.Extensions;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +12,7 @@ namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 internal static partial class Utils
 {
     internal static readonly TimeSpan TimeSpanPrecision = 1.Minutes();
-    
+
     private static readonly Dictionary<ErrorType, HttpStatusCode> ErrorCodeToHttpStatusMap = new()
     {
         { ErrorType.Validation, HttpStatusCode.BadRequest },
@@ -49,11 +51,25 @@ internal static partial class Utils
         errorCodes?.ValueKind.Should().Be(JsonValueKind.Object);
     }
 
+    internal static void ShouldBeCreated(this Audit audit, UserAggregate createdBy)
+    {
+        audit.CreatedBy.Should().Be(createdBy);
+        audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        audit.UpdatedBy.Should().Be(createdBy);
+        audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+    }
+
+    internal static void ShouldBeUpdated(this Audit audit, UserAggregate updatedBy)
+    {
+        audit.UpdatedBy.Should().Be(updatedBy);
+        audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+    }
+
     internal static string ToOrderByQueryParam(this string[] orderBy)
     {
         return string.Join('&', orderBy.Select(o => $"orderBy={o}"));
     }
-    
+
     internal static string ToSearchQueryParam(this string[] search)
     {
         return string.Join('&', search.Select(s => $"search={s}"));

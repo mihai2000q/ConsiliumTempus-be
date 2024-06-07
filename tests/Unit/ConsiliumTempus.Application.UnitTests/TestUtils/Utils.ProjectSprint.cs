@@ -15,7 +15,7 @@ internal static partial class Utils
 {
     internal static class ProjectSprint
     {
-        internal static void AssertAddStageCommand(
+        internal static void AssertFromAddStageCommand(
             ProjectSprintAggregate sprint,
             AddStageToProjectSprintCommand command,
             UserAggregate createdBy,
@@ -27,13 +27,9 @@ internal static partial class Utils
             projectStage.Name.Value.Should().Be(command.Name);
             projectStage.CustomOrderPosition.Value.Should().Be(command.OnTop ? 0 : sprint.Stages.Count - 1);
             projectStage.Sprint.Should().Be(sprint);
+            projectStage.Audit.ShouldBeCreated(createdBy);
             projectStage.Tasks.Should().BeEmpty();
             projectStage.DomainEvents.Should().BeEmpty();
-
-            projectStage.Audit.CreatedBy.Should().Be(createdBy);
-            projectStage.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            projectStage.Audit.UpdatedBy.Should().Be(createdBy);
-            projectStage.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -50,7 +46,7 @@ internal static partial class Utils
             ProjectSprintAggregate projectSprint,
             CreateProjectSprintCommand command,
             ProjectAggregate project,
-            UserAggregate user,
+            UserAggregate createdBy,
             DateOnly? previousSprintEndDate)
         {
             projectSprint.Id.Value.Should().NotBeEmpty();
@@ -74,10 +70,7 @@ internal static partial class Utils
                 projectSprint.Stages[0].Tasks.Should().BeEmpty();
             }
 
-            projectSprint.Audit!.CreatedBy.Should().Be(user);
-            projectSprint.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            projectSprint.Audit.UpdatedBy.Should().Be(user);
-            projectSprint.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            projectSprint.Audit.ShouldBeCreated(createdBy);
 
             projectSprint.DomainEvents.Should().BeEmpty();
 
@@ -109,7 +102,7 @@ internal static partial class Utils
             return true;
         }
 
-        internal static void AssertRemoveStageCommand(
+        internal static void AssertFromRemoveStageCommand(
             Domain.ProjectSprint.Entities.ProjectStage stage,
             RemoveStageFromProjectSprintCommand command)
         {
@@ -129,21 +122,20 @@ internal static partial class Utils
         internal static void AssertFromUpdateCommand(
             ProjectSprintAggregate sprint,
             UpdateProjectSprintCommand command,
-            UserAggregate user)
+            UserAggregate updatedBy)
         {
             sprint.Id.Value.Should().Be(command.Id);
             sprint.Name.Value.Should().Be(command.Name);
             sprint.StartDate.Should().Be(command.StartDate);
             sprint.EndDate.Should().Be(command.EndDate);
             
-            sprint.Audit!.UpdatedBy.Should().Be(user);
-            sprint.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            sprint.Audit.ShouldBeUpdated(updatedBy);
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
-        internal static void AssertUpdateStageCommand(
+        internal static void AssertFromUpdateStageCommand(
             Domain.ProjectSprint.Entities.ProjectStage stage,
             UpdateStageFromProjectSprintCommand command,
             UserAggregate updatedBy)

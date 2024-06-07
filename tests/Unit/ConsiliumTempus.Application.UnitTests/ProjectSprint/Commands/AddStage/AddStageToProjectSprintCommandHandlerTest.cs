@@ -56,7 +56,7 @@ public class AddStageToProjectSprintCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new AddStageToProjectSprintResult());
 
-        Utils.ProjectSprint.AssertAddStageCommand(sprint, command, createdBy, sprintCreatedBy);
+        Utils.ProjectSprint.AssertFromAddStageCommand(sprint, command, createdBy, sprintCreatedBy);
     }
     
     [Fact]

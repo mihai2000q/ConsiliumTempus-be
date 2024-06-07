@@ -16,7 +16,8 @@ public static class AccessControlList
     private static readonly List<Permissions> MemberPermissions =
     [
         Permissions.ReadWorkspace, Permissions.UpdateWorkspace,
-        Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject,
+        Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject, 
+        Permissions.ReadStatusesFromProject, Permissions.UpdateStatusFromProject,
         Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint,
         Permissions.UpdateStageFromProjectSprint,
         Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask, Permissions.UpdateProjectTask, Permissions.DeleteProjectTask,
@@ -26,6 +27,7 @@ public static class AccessControlList
     [
         Permissions.ReadWorkspace, Permissions.UpdateWorkspace, Permissions.DeleteWorkspace,
         Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject, Permissions.DeleteProject,
+        Permissions.AddStatusToProject, Permissions.ReadStatusesFromProject, Permissions.RemoveStatusFromProject, Permissions.UpdateStatusFromProject,
         Permissions.CreateProjectSprint, Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint, Permissions.DeleteProjectSprint,
         Permissions.AddStageToProjectSprint, Permissions.UpdateStageFromProjectSprint, Permissions.RemoveStageFromProjectSprint,
         Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask, Permissions.UpdateProjectTask, Permissions.DeleteProjectTask,

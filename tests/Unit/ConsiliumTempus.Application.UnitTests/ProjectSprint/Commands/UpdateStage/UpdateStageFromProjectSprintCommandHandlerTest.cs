@@ -60,7 +60,7 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateStageFromProjectSprintResult());
 
-        Utils.ProjectSprint.AssertUpdateStageCommand(expectedStageToUpdate, command, user);
+        Utils.ProjectSprint.AssertFromUpdateStageCommand(expectedStageToUpdate, command, user);
     }
 
     [Fact]

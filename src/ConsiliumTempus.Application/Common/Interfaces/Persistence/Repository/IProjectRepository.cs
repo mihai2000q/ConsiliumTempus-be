@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -10,6 +11,10 @@ namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 public interface IProjectRepository
 {
     Task<ProjectAggregate?> Get(ProjectId projectId, CancellationToken cancellationToken = default);
+
+    Task<List<ProjectStatus>> GetStatuses(ProjectId id, CancellationToken cancellationToken = default);
+    
+    Task<int> GetStatusesCount(ProjectId id, CancellationToken cancellationToken = default);
 
     Task<ProjectAggregate?> GetWithWorkspace(ProjectId id, CancellationToken cancellationToken = default);
 

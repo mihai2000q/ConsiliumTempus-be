@@ -44,7 +44,7 @@ The owner will, most of the time, be able to delete the data that they have adde
 The workspace roles are:
 
 - **View**, they can mostly just read information
-- **Member**, they can, in most of the cases, read, add, update data and sometimes delete
+- **Member**, they can, in most of the cases, read, update and sometimes even add data
 - **Admin**, they can do everything
 
 ## Permissions
@@ -61,6 +61,10 @@ The permissions will be classified on their respective component:
   - Read Collection
   - Update
   - Delete
+  - Add Status
+  - Read Statuses
+  - Remove Status
+  - Update Status
 - Project Sprint
   - Create
   - Read
@@ -91,6 +95,10 @@ The Access Control List of the system is the following:
 | Read Collection Project          | X    | X      | X     |
 | Update Project                   |      | X      | X     |
 | Delete Project                   |      |        | X     |
+| Add Status To Project            |      |        | X     |
+| Read Statuses From Project       |      | X      | X     |
+| Remove Status From Project       |      |        | X     |
+| Update Status From Project       |      | X      | X     |
 | Create Project Sprint            |      |        | X     |
 | Read Project Sprint              | X    | X      | X     |
 | Read Collection Project Sprint   | X    | X      | X     |

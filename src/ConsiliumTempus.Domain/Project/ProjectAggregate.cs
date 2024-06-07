@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
@@ -46,7 +45,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     }
 
     private readonly List<ProjectSprintAggregate> _sprints = [];
-    private readonly List<ProjectStatus> _status = [];
+    private readonly List<ProjectStatus> _statuses = [];
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
@@ -57,7 +56,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     public DateTime LastActivity { get; private set; }
     public WorkspaceAggregate Workspace { get; init; } = default!;
     public IReadOnlyList<ProjectSprintAggregate> Sprints => _sprints.AsReadOnly();
-    public IReadOnlyList<ProjectStatus> Statuses => _status.AsReadOnly();
+    public IReadOnlyList<ProjectStatus> Statuses => _statuses.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
 
@@ -112,11 +111,11 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
 
     public void AddStatus(ProjectStatus status)
     {
-        _status.Add(status);
+        _statuses.Add(status);
     }
 
     public void RemoveStatus(ProjectStatus status)
     {
-        _status.Remove(status);
+        _statuses.Remove(status);
     }
 }

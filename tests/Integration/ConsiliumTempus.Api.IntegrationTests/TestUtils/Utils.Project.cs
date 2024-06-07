@@ -1,11 +1,16 @@
-﻿using ConsiliumTempus.Api.Contracts.Project.Create;
+﻿using ConsiliumTempus.Api.Contracts.Project.AddStatus;
+using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
+using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
+using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.User;
 
@@ -21,7 +26,13 @@ internal static partial class Utils
         {
             response.Name.Should().Be(project.Name.Value);
             response.IsFavorite.Should().Be(project.IsFavorite.Value);
+            response.Lifecycle.Should().Be(project.Lifecycle.ToString());
+            AssertUserResponse(response.Owner, project.Owner);
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
+            if (project.Statuses.Count == 0)
+                response.LatestStatus.Should().BeNull();
+            else
+                AssertProjectStatusResponse(response.LatestStatus!, GetLatestStatus(project));
         }
 
         internal static void AssertGetOverviewProjectResponse(
@@ -35,7 +46,6 @@ internal static partial class Utils
             GetCollectionProjectResponse response,
             IReadOnlyList<ProjectAggregate> projects,
             int totalCount,
-            int? totalPages,
             bool isOrdered = false)
         {
             response.Projects.Should().HaveCount(projects.Count);
@@ -53,6 +63,18 @@ internal static partial class Utils
                     .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
             }
 
+            response.TotalCount.Should().Be(totalCount);
+        }
+
+        internal static void AssertGetStatusesResponse(
+            GetStatusesFromProjectResponse response,
+            IReadOnlyList<ProjectStatus> statuses,
+            int totalCount)
+        {
+            response.Statuses
+                .OrderBy(s => s.Id)
+                .Zip(statuses.OrderBy(s => s.Id.Value))
+                .Should().AllSatisfy(p => AssertProjectStatusResponse(p.First, p.Second));
             response.TotalCount.Should().Be(totalCount);
         }
 
@@ -79,6 +101,24 @@ internal static partial class Utils
             project.Sprints[0].Stages.Should().HaveCount(Constants.ProjectStage.Names.Length);
             project.Sprints[0].Stages[0].Tasks
                 .Should().HaveCount(Constants.ProjectTask.Names.Length);
+        }
+
+        internal static void AssertAddStatus(
+            ProjectAggregate project,
+            AddStatusToProjectRequest request,
+            UserAggregate createdBy)
+        {
+            project.Id.Value.Should().Be(request.Id);
+            var status = project.Statuses.Single(s => s.Title.Value == request.Title);
+            status.Id.Value.Should().NotBeEmpty();
+            status.Title.Value.Should().Be(request.Title);
+            status.Status.ToString().ToLower().Should().Be(request.Status.ToLower());
+            status.Description.Value.Should().Be(request.Description);
+            status.Project.Should().Be(project);
+            status.Audit.ShouldBeCreated(createdBy);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdate(
@@ -116,6 +156,59 @@ internal static partial class Utils
             newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
+        internal static void AssertUpdateStatus(
+            ProjectAggregate project,
+            UpdateStatusFromProjectRequest request,
+            UserAggregate updatedBy)
+        {
+            project.Id.Value.Should().Be(request.Id);
+            var status = project.Statuses.Single(s => s.Title.Value == request.Title);
+            status.Id.Value.Should().Be(request.StatusId);
+            status.Title.Value.Should().Be(request.Title);
+            status.Status.ToString().ToLower().Should().Be(request.Status.ToLower());
+            status.Description.Value.Should().Be(request.Description);
+            status.Audit.ShouldBeUpdated(updatedBy);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static void AssertRemoveStatus(
+            ProjectAggregate project,
+            RemoveStatusFromProjectRequest request)
+        {
+            project.Id.Value.Should().Be(request.Id);
+            project.Statuses.Should().NotContain(s => s.Id.Value == request.StatusId);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        private static void AssertProjectStatusResponse(
+            GetProjectResponse.ProjectStatusResponse response,
+            ProjectStatus projectStatus)
+        {
+            response.Id.Should().Be(projectStatus.Id.Value);
+            response.Title.Should().Be(projectStatus.Title.Value);
+            response.Status.Should().Be(projectStatus.Status.ToString());
+            AssertUserResponse(response.CreatedBy, projectStatus.Audit.CreatedBy);
+            response.CreatedDateTime.Should().Be(projectStatus.Audit.CreatedDateTime);
+            AssertUserResponse(response.UpdatedBy, projectStatus.Audit.UpdatedBy);
+            response.UpdatedDateTime.Should().Be(projectStatus.Audit.UpdatedDateTime);
+        }
+
+        private static void AssertUserResponse(
+            GetProjectResponse.UserResponse? userResponse,
+            UserAggregate? user)
+        {
+            if (userResponse is null) user.Should().BeNull();
+            if (user is null) userResponse.Should().BeNull();
+
+            userResponse!.Id.Should().Be(user!.Id.Value);
+            userResponse.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            userResponse.Email.Should().Be(user.Credentials.Email);
+        }
+
         private static void AssertProjectResponse(
             GetCollectionProjectResponse.ProjectResponse projectResponse,
             ProjectAggregate project)
@@ -124,7 +217,64 @@ internal static partial class Utils
             projectResponse.Name.Should().Be(project.Name.Value);
             projectResponse.Description.Should().Be(project.Description.Value);
             projectResponse.IsFavorite.Should().Be(project.IsFavorite.Value);
+            projectResponse.Lifecycle.Should().Be(project.Lifecycle.ToString());
+            AssertUserResponse(projectResponse.Owner, project.Owner);
             projectResponse.IsPrivate.Should().Be(project.IsPrivate.Value);
+            if (project.Statuses.Count == 0)
+                projectResponse.LatestStatus.Should().BeNull();
+            else
+                AssertProjectStatusResponse(projectResponse.LatestStatus!, GetLatestStatus(project));
+        }
+
+        private static void AssertUserResponse(
+            GetCollectionProjectResponse.UserResponse userResponse,
+            UserAggregate user)
+        {
+            userResponse.Id.Should().Be(user.Id.Value);
+            userResponse.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            userResponse.Email.Should().Be(user.Credentials.Email);
+        }
+
+        private static void AssertProjectStatusResponse(
+            GetCollectionProjectResponse.ProjectStatusResponse response,
+            ProjectStatus projectStatus)
+        {
+            response.Id.Should().Be(projectStatus.Id.Value);
+            response.Status.Should().Be(projectStatus.Status.ToString());
+            response.UpdatedDateTime.Should().Be(projectStatus.Audit.UpdatedDateTime);
+        }
+
+        private static void AssertProjectStatusResponse(
+            GetStatusesFromProjectResponse.ProjectStatusResponse response,
+            ProjectStatus projectStatus)
+        {
+            response.Id.Should().Be(projectStatus.Id.Value);
+            response.Title.Should().Be(projectStatus.Title.Value);
+            response.Status.Should().Be(projectStatus.Status.ToString());
+            response.Description.Should().Be(projectStatus.Description.Value);
+            AssertUserResponse(response.CreatedBy, projectStatus.Audit.CreatedBy);
+            response.CreatedDateTime.Should().Be(projectStatus.Audit.CreatedDateTime);
+            AssertUserResponse(response.UpdatedBy, projectStatus.Audit.UpdatedBy);
+            response.UpdatedDateTime.Should().Be(projectStatus.Audit.UpdatedDateTime);
+        }
+
+        private static void AssertUserResponse(
+            GetStatusesFromProjectResponse.UserResponse? userResponse,
+            UserAggregate? user)
+        {
+            if (userResponse is null) user.Should().BeNull();
+            if (user is null) userResponse.Should().BeNull();
+
+            userResponse!.Id.Should().Be(user!.Id.Value);
+            userResponse.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            userResponse.Email.Should().Be(user.Credentials.Email);
+        }
+
+        private static ProjectStatus GetLatestStatus(ProjectAggregate project)
+        {
+            return project.Statuses
+                .OrderByDescending(s => s.Audit.CreatedDateTime)
+                .First();
         }
     }
 }

@@ -48,7 +48,7 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new RemoveStageFromProjectSprintResult());
 
-        Utils.ProjectSprint.AssertRemoveStageCommand(expectedStageToRemove, command);
+        Utils.ProjectSprint.AssertFromRemoveStageCommand(expectedStageToRemove, command);
     }
     
     [Fact]

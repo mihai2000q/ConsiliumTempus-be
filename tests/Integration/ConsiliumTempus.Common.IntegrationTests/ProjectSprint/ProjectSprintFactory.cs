@@ -4,7 +4,6 @@ using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
-using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 

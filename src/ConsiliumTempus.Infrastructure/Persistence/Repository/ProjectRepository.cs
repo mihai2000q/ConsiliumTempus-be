@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -19,14 +20,30 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .Include(p => p.Statuses.OrderByDescending(s => s.Audit.CreatedDateTime))
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
+    
+    public async Task<List<ProjectStatus>> GetStatuses(ProjectId id, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Set<ProjectStatus>()
+            .Where(ps => ps.Project.Id == id)
+            .OrderByDescending(ps => ps.Audit.CreatedDateTime)
+            .ToListAsync(cancellationToken);
+    }
+    
+    public async Task<int> GetStatusesCount(ProjectId id, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Set<ProjectStatus>()
+            .Where(ps => ps.Project.Id == id)
+            .CountAsync(cancellationToken);
+    }
 
     public async Task<ProjectAggregate?> GetWithWorkspace(ProjectId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.Projects
+            .Include(p => p.Statuses)
             .Include(p => p.Workspace)
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
-    
+
     public async Task<ProjectAggregate?> GetWithStagesAndWorkspace(ProjectId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.Projects
