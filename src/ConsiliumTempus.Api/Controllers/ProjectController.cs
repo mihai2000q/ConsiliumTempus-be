@@ -70,6 +70,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasPermission(Permissions.ReadStatusesFromProject)]
     [HttpGet("{id:guid}/Statuses")]
     public async Task<IActionResult> GetStatuses(GetStatusesFromProjectRequest request, CancellationToken cancellationToken)
     {
@@ -95,6 +96,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasPermission(Permissions.AddStatusToProject)]
     [HttpPost("Add-Status")]
     public async Task<IActionResult> AddStatus(AddStatusToProjectRequest request, CancellationToken cancellationToken)
     {
@@ -134,6 +136,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasPermission(Permissions.UpdateStatusFromProject)]
     [HttpPut("Update-Status")]
     public async Task<IActionResult> UpdateStatus(UpdateStatusFromProjectRequest request,
         CancellationToken cancellationToken)
@@ -160,6 +163,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasPermission(Permissions.RemoveStatusFromProject)]
     [HttpDelete("{id:guid}/Remove-Status/{statusId:guid}")]
     public async Task<IActionResult> RemoveStatus(RemoveStatusFromProjectRequest request, CancellationToken cancellationToken)
     {

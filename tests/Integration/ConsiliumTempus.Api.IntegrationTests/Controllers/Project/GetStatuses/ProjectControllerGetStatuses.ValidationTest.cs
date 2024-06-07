@@ -19,7 +19,7 @@ public class ProjectControllerGetStatusesValidationTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
-        var outcome = await Client.Get($"api/projects/{request.Id}/statuses");
+        var outcome = await Client.Get($"api/projects/{request.Id}/Statuses");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -32,7 +32,7 @@ public class ProjectControllerGetStatusesValidationTest(WebAppFactory factory)
         var request = ProjectRequestFactory.CreateGetStatusesFromProjectRequest(Guid.Empty);
 
         // Act
-        var outcome = await Client.Get($"api/projects/{request.Id}/statuses");
+        var outcome = await Client.Get($"api/projects/{request.Id}/Statuses");
 
         // Assert
         await outcome.ValidateValidationErrors();

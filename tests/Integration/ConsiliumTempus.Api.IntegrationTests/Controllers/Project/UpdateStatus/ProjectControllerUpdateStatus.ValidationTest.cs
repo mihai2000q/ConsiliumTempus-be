@@ -22,7 +22,7 @@ public class ProjectControllerUpdateStatusValidationTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
-        var outcome = await Client.Put("api/projects/update-status", request);
+        var outcome = await Client.Put("api/projects/Update-Status", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -37,7 +37,7 @@ public class ProjectControllerUpdateStatusValidationTest(WebAppFactory factory)
             statusId: Guid.Empty);
 
         // Act
-        var outcome = await Client.Put("api/projects/update-status", request);
+        var outcome = await Client.Put("api/projects/Update-Status", request);
 
         // Assert
         await outcome.ValidateValidationErrors();

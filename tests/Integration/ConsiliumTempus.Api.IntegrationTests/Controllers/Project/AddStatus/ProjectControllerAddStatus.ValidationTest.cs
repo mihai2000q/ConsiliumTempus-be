@@ -19,7 +19,7 @@ public class ProjectControllerAddStatusValidationTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
-        var outcome = await Client.Post("api/projects/add-status", request);
+        var outcome = await Client.Post("api/projects/Add-Status", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -34,7 +34,7 @@ public class ProjectControllerAddStatusValidationTest(WebAppFactory factory)
             title: string.Empty);
 
         // Act
-        var outcome = await Client.Post("api/projects/add-status", request);
+        var outcome = await Client.Post("api/projects/Add-Status", request);
 
         // Assert
         await outcome.ValidateValidationErrors();

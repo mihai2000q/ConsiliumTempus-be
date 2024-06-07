@@ -29,7 +29,7 @@ public class ProjectControllerRemoveStatusTest(WebAppFactory factory)
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Delete("api/projects/" +
-                                          $"{request.Id}/remove-status/{request.StatusId}");
+                                          $"{request.Id}/Remove-Status/{request.StatusId}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -50,12 +50,14 @@ public class ProjectControllerRemoveStatusTest(WebAppFactory factory)
     public async Task RemoveStatusFromProject_WhenStatusIsNotFound_ShouldReturnStatusNotFoundError()
     {
         // Arrange
+        var user = ProjectData.Users.First();
         var project = ProjectData.Projects.First();
         var request = ProjectRequestFactory.CreateRemoveStatusFromProjectRequest(project.Id.Value);
 
         // Act
+        Client.UseCustomToken(user);
         var outcome = await Client.Delete("api/projects/" +
-                                          $"{request.Id}/remove-status/{request.StatusId}");
+                                          $"{request.Id}/Remove-Status/{request.StatusId}");
 
         // Assert
         await outcome.ValidateError(Errors.ProjectStatus.NotFound);
@@ -77,7 +79,7 @@ public class ProjectControllerRemoveStatusTest(WebAppFactory factory)
 
         // Act
         var outcome = await Client.Delete("api/projects/" +
-                                          $"{request.Id}/remove-status/{request.StatusId}");
+                                          $"{request.Id}/Remove-Status/{request.StatusId}");
 
         // Assert
         await outcome.ValidateError(Errors.Project.NotFound);

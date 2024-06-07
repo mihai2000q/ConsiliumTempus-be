@@ -152,7 +152,7 @@ internal static partial class Utils
         {
             response.Name.Should().Be(project.Name.Value);
             response.IsFavorite.Should().Be(project.IsFavorite.Value);
-            response.Lifecycle.Should().Be(project.Lifecycle);
+            response.Lifecycle.Should().Be(project.Lifecycle.ToString());
             AssertUserResponse(response.Owner, project.Owner);
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
             if (project.Statuses.Count == 0)
@@ -192,7 +192,7 @@ internal static partial class Utils
         {
             response.Id.Should().Be(projectStatus.Id.Value);
             response.Title.Should().Be(projectStatus.Title.Value);
-            response.Status.Should().Be(projectStatus.Status);
+            response.Status.Should().Be(projectStatus.Status.ToString());
             AssertUserResponse(response.CreatedBy, projectStatus.Audit.CreatedBy);
             response.CreatedDateTime.Should().Be(projectStatus.Audit.CreatedDateTime);
             AssertUserResponse(response.UpdatedBy, projectStatus.Audit.UpdatedBy);
@@ -217,7 +217,7 @@ internal static partial class Utils
         {
             response.Name.Should().Be(project.Name.Value);
             response.IsFavorite.Should().Be(project.IsFavorite.Value);
-            response.Lifecycle.Should().Be(project.Lifecycle);
+            response.Lifecycle.Should().Be(project.Lifecycle.ToString());
             AssertUserResponse(response.Owner, project.Owner);
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
             if (project.Statuses.Count == 0)
@@ -245,7 +245,7 @@ internal static partial class Utils
             ProjectStatus projectStatus)
         {
             response.Id.Should().Be(projectStatus.Id.Value);
-            response.Status.Should().Be(projectStatus.Status);
+            response.Status.Should().Be(projectStatus.Status.ToString());
             response.UpdatedDateTime.Should().Be(projectStatus.Audit.UpdatedDateTime);
         }
 
@@ -255,7 +255,7 @@ internal static partial class Utils
         {
             response.Id.Should().Be(projectStatus.Id.Value);
             response.Title.Should().Be(projectStatus.Title.Value);
-            response.Status.Should().Be(projectStatus.Status);
+            response.Status.Should().Be(projectStatus.Status.ToString());
             response.Description.Should().Be(projectStatus.Description.Value);
             AssertUserResponse(response.CreatedBy, projectStatus.Audit.CreatedBy);
             response.CreatedDateTime.Should().Be(projectStatus.Audit.CreatedDateTime);

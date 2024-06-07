@@ -23,7 +23,7 @@ public class ProjectControllerRemoveStatusValidationTest(WebAppFactory factory)
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
         var outcome = await Client.Delete("api/projects/" +
-                                          $"{request.Id}/remove-status/{request.StatusId}");
+                                          $"{request.Id}/Remove-Status/{request.StatusId}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -39,7 +39,7 @@ public class ProjectControllerRemoveStatusValidationTest(WebAppFactory factory)
 
         // Act
         var outcome = await Client.Delete("api/projects/" +
-                                          $"{request.Id}/remove-status/{request.StatusId}");
+                                          $"{request.Id}/Remove-Status/{request.StatusId}");
 
         // Assert
         await outcome.ValidateValidationErrors();

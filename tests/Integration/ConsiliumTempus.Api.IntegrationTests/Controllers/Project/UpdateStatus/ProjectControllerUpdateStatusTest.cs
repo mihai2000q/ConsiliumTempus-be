@@ -28,7 +28,7 @@ public class ProjectControllerUpdateStatusTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/projects/update-status", request);
+        var outcome = await Client.Put("api/projects/Update-Status", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -48,11 +48,13 @@ public class ProjectControllerUpdateStatusTest(WebAppFactory factory)
     public async Task UpdateStatusFromProject_WhenStatusIsNotFound_ShouldReturnStatusNotFoundError()
     {
         // Arrange
+        var user = ProjectData.Users.First();
         var project = ProjectData.Projects.First();
         var request = ProjectRequestFactory.CreateUpdateStatusFromProjectRequest(project.Id.Value);
 
         // Act
-        var outcome = await Client.Put("api/projects/update-status", request);
+        Client.UseCustomToken(user);
+        var outcome = await Client.Put("api/projects/Update-Status", request);
 
         // Assert
         await outcome.ValidateError(Errors.ProjectStatus.NotFound);
@@ -73,7 +75,7 @@ public class ProjectControllerUpdateStatusTest(WebAppFactory factory)
         var request = ProjectRequestFactory.CreateUpdateStatusFromProjectRequest();
 
         // Act
-        var outcome = await Client.Put("api/projects/update-status", request);
+        var outcome = await Client.Put("api/projects/Update-Status", request);
 
         // Assert
         await outcome.ValidateError(Errors.Project.NotFound);

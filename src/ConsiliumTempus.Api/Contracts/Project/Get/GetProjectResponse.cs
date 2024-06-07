@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Project.Enums;
 
 namespace ConsiliumTempus.Api.Contracts.Project.Get;
 
@@ -7,7 +6,7 @@ namespace ConsiliumTempus.Api.Contracts.Project.Get;
 public sealed record GetProjectResponse(
     string Name,
     bool IsFavorite,
-    ProjectLifecycle Lifecycle,
+    string Lifecycle,
     GetProjectResponse.UserResponse Owner,
     bool IsPrivate,
     GetProjectResponse.ProjectStatusResponse? LatestStatus)
@@ -15,7 +14,7 @@ public sealed record GetProjectResponse(
     public sealed record ProjectStatusResponse(
         Guid Id,
         string Title,
-        ProjectStatusType Status,
+        string Status,
         UserResponse? CreatedBy,
         DateTime CreatedDateTime,
         UserResponse? UpdatedBy,

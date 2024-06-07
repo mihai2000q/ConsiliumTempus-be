@@ -25,7 +25,7 @@ public class ProjectControllerAddStatusTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Post("api/projects/add-status", request);
+        var outcome = await Client.Post("api/projects/Add-Status", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -49,7 +49,7 @@ public class ProjectControllerAddStatusTest(WebAppFactory factory)
         var request = ProjectRequestFactory.CreateAddStatusToProjectRequest();
 
         // Act
-        var outcome = await Client.Post("api/projects/add-status", request);
+        var outcome = await Client.Post("api/projects/Add-Status", request);
 
         // Assert
         await outcome.ValidateError(Errors.Project.NotFound);
