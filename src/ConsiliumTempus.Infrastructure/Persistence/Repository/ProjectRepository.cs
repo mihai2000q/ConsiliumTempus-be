@@ -39,10 +39,11 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
     public async Task<ProjectAggregate?> GetWithWorkspace(ProjectId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.Projects
+            .Include(p => p.Statuses)
             .Include(p => p.Workspace)
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
-    
+
     public async Task<ProjectAggregate?> GetWithStagesAndWorkspace(ProjectId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.Projects

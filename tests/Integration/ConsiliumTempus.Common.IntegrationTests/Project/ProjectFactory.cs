@@ -1,8 +1,6 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Common.IntegrationTests.TestConstants;
+﻿using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User;
@@ -21,8 +19,7 @@ public static class ProjectFactory
         bool isPrivate = false,
         ProjectLifecycle lifecycle = ProjectLifecycle.Active,
         DateTime? createdDateTime = null,
-        DateTime? updatedDateTime = null,
-        List<ProjectStatus>? statuses = null)
+        DateTime? updatedDateTime = null)
     {
         var project = DomainFactory.GetObjectInstance<ProjectAggregate>();
 
@@ -36,7 +33,6 @@ public static class ProjectFactory
         DomainFactory.SetProperty(ref project, nameof(project.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref project, nameof(project.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref project, nameof(project.Workspace), workspace);
-        DomainFactory.SetField(ref project, nameof(project.Statuses).ToBackingField(), statuses ?? []);
 
         return project;
     }

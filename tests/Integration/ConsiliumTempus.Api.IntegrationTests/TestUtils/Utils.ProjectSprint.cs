@@ -46,7 +46,7 @@ internal static partial class Utils
             ProjectSprintAggregate sprint,
             CreateProjectSprintRequest request,
             ProjectAggregate project,
-            UserAggregate user,
+            UserAggregate createdBy,
             DateOnly? previousSprintEndDate)
         {
             sprint.Name.Value.Should().Be(request.Name);
@@ -74,10 +74,7 @@ internal static partial class Utils
                     sprint.Project.Sprints.OrderByDescending(s => s.StartDate).ToList()[1].EndDate
                         .Should().Be(previousSprintEndDate);
 
-            sprint.Audit.CreatedBy.Should().Be(user);
-            sprint.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            sprint.Audit.UpdatedBy.Should().Be(user);
-            sprint.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            sprint.Audit.ShouldBeCreated(createdBy);
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -92,10 +89,7 @@ internal static partial class Utils
             var newStage = sprint.Stages.Single(s => s.Name.Value == request.Name);
             newStage.CustomOrderPosition.Value.Should().Be(request.OnTop ? 0 : sprint.Stages.Count - 1);
 
-            newStage.Audit.CreatedBy.Should().Be(createdBy);
-            newStage.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            newStage.Audit.UpdatedBy.Should().Be(createdBy);
-            newStage.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newStage.Audit.ShouldBeCreated(createdBy);
 
             var customOrderPosition = 0;
             sprint.Stages
@@ -110,7 +104,7 @@ internal static partial class Utils
             ProjectSprintAggregate sprint,
             ProjectSprintAggregate newSprint,
             UpdateProjectSprintRequest request,
-            UserAggregate user)
+            UserAggregate updatedby)
         {
             // unchanged
             newSprint.Id.Value.Should().Be(request.Id);
@@ -121,8 +115,7 @@ internal static partial class Utils
             newSprint.Name.Value.Should().Be(request.Name);
             newSprint.StartDate.Should().Be(request.StartDate);
             newSprint.EndDate.Should().Be(request.EndDate);
-            newSprint.Audit.UpdatedBy.Should().Be(user);
-            newSprint.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newSprint.Audit.ShouldBeUpdated(updatedby);
 
             newSprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newSprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -137,8 +130,7 @@ internal static partial class Utils
             var stage = sprint.Stages.Single(s => s.Id.Value == request.StageId);
             stage.Name.Value.Should().Be(request.Name);
             
-            stage.Audit.UpdatedBy.Should().Be(updatedBy);
-            stage.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            stage.Audit.ShouldBeUpdated(updatedBy);
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

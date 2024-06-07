@@ -6,6 +6,7 @@ using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
@@ -21,7 +22,8 @@ internal class ProjectData : ITestData
             Users,
             Workspaces,
             Memberships,
-            Projects
+            Projects,
+            Statuses
         ];
     }
 
@@ -108,16 +110,7 @@ internal class ProjectData : ITestData
             Users[0],
             "Win NBA",
             "This is an elaborate plan to win NBA",
-            true,
-            statuses: [
-                ProjectStatusFactory.Create(
-                    AuditFactory.Create(Users[0], Users[0])),
-                ProjectStatusFactory.Create(
-                    AuditFactory.Create(Users[0], Users[0]),
-                    "Another status update",
-                    "Project is off track officially... training is too hard",
-                    ProjectStatusType.OffTrack),
-            ]),
+            true),
         ProjectFactory.Create(
             Workspaces[1],
             Users[1],
@@ -151,5 +144,19 @@ internal class ProjectData : ITestData
             false,
             true,
             ProjectLifecycle.Archived)
+    ];
+
+    public static ProjectStatus[] Statuses { get; } =
+    [
+        ProjectStatusFactory.Create(
+            Projects[0],
+            AuditFactory.Create(Users[0], Users[0]),
+            "This is a status update"),
+        ProjectStatusFactory.Create(
+            Projects[0],
+            AuditFactory.Create(Users[0], Users[0]),
+            "Another status update",
+            "Project is off track officially... training is too hard",
+            ProjectStatusType.OffTrack),
     ];
 }

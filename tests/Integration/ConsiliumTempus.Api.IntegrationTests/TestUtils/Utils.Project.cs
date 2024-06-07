@@ -1,10 +1,13 @@
-﻿using ConsiliumTempus.Api.Contracts.Project.Create;
+﻿using ConsiliumTempus.Api.Contracts.Project.AddStatus;
+using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
+using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
@@ -100,6 +103,24 @@ internal static partial class Utils
                 .Should().HaveCount(Constants.ProjectTask.Names.Length);
         }
 
+        internal static void AssertAddStatus(
+            ProjectAggregate project,
+            AddStatusToProjectRequest request,
+            UserAggregate createdBy)
+        {
+            project.Id.Value.Should().Be(request.Id);
+            var status = project.Statuses.Single(s => s.Title.Value == request.Title);
+            status.Id.Value.Should().NotBeEmpty();
+            status.Title.Value.Should().Be(request.Title);
+            status.Status.ToString().ToLower().Should().Be(request.Status.ToLower());
+            status.Description.Value.Should().Be(request.Description);
+            status.Project.Should().Be(project);
+            status.Audit.ShouldBeCreated(createdBy);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
         internal static void AssertUpdate(
             ProjectAggregate project,
             ProjectAggregate newProject,
@@ -135,6 +156,34 @@ internal static partial class Utils
             newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
+        internal static void AssertUpdateStatus(
+            ProjectAggregate project,
+            UpdateStatusFromProjectRequest request,
+            UserAggregate updatedBy)
+        {
+            project.Id.Value.Should().Be(request.Id);
+            var status = project.Statuses.Single(s => s.Title.Value == request.Title);
+            status.Id.Value.Should().Be(request.StatusId);
+            status.Title.Value.Should().Be(request.Title);
+            status.Status.ToString().ToLower().Should().Be(request.Status.ToLower());
+            status.Description.Value.Should().Be(request.Description);
+            status.Audit.ShouldBeUpdated(updatedBy);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static void AssertRemoveStatus(
+            ProjectAggregate project,
+            RemoveStatusFromProjectRequest request)
+        {
+            project.Id.Value.Should().Be(request.Id);
+            project.Statuses.Should().NotContain(s => s.Id.Value == request.StatusId);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
         private static void AssertProjectStatusResponse(
             GetProjectResponse.ProjectStatusResponse response,
             ProjectStatus projectStatus)
@@ -164,7 +213,9 @@ internal static partial class Utils
             GetCollectionProjectResponse.ProjectResponse projectResponse,
             ProjectAggregate project)
         {
+            projectResponse.Id.Should().Be(project.Id.Value);
             projectResponse.Name.Should().Be(project.Name.Value);
+            projectResponse.Description.Should().Be(project.Description.Value);
             projectResponse.IsFavorite.Should().Be(project.IsFavorite.Value);
             projectResponse.Lifecycle.Should().Be(project.Lifecycle);
             AssertUserResponse(projectResponse.Owner, project.Owner);
@@ -173,11 +224,6 @@ internal static partial class Utils
                 projectResponse.LatestStatus.Should().BeNull();
             else
                 AssertProjectStatusResponse(projectResponse.LatestStatus!, GetLatestStatus(project));
-            projectResponse.Id.Should().Be(project.Id.Value);
-            projectResponse.Name.Should().Be(project.Name.Value);
-            projectResponse.Description.Should().Be(project.Description.Value);
-            projectResponse.IsFavorite.Should().Be(project.IsFavorite.Value);
-            projectResponse.IsPrivate.Should().Be(project.IsPrivate.Value);
         }
 
         private static void AssertUserResponse(

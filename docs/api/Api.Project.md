@@ -185,7 +185,7 @@ Returns the projects and their total count.
 ### Get Statuses
 
 Anyone that is part of the workspace can read the project statuses
-([Read Project Statuses Permission](../Security.md/#permissions)),
+([Read Statuses From Project Permission](../Security.md/#permissions)),
 
 ```js
 GET {{host}}/api/projects/{id}/statuses
