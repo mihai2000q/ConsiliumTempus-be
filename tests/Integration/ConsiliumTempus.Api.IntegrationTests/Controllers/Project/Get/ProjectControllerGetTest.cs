@@ -18,8 +18,7 @@ public class ProjectControllerGetTest(WebAppFactory factory)
     {
         // Arrange
         var project = ProjectData.Projects.First();
-        var request = ProjectRequestFactory.CreateGetProjectRequest(
-            project.Id.Value);
+        var request = ProjectRequestFactory.CreateGetProjectRequest(project.Id.Value);
 
         // Act
         Client.UseCustomToken(ProjectData.Users.First());

@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
 using ConsiliumTempus.Common.IntegrationTests.Project;
+using ConsiliumTempus.Common.IntegrationTests.Project.Entities;
 using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;
@@ -107,7 +108,16 @@ internal class ProjectData : ITestData
             Users[0],
             "Win NBA",
             "This is an elaborate plan to win NBA",
-            true),
+            true,
+            statuses: [
+                ProjectStatusFactory.Create(
+                    AuditFactory.Create(Users[0], Users[0])),
+                ProjectStatusFactory.Create(
+                    AuditFactory.Create(Users[0], Users[0]),
+                    "Another status update",
+                    "Project is off track officially... training is too hard",
+                    ProjectStatusType.OffTrack),
+            ]),
         ProjectFactory.Create(
             Workspaces[1],
             Users[1],

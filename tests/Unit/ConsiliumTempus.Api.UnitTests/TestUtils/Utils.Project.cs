@@ -177,7 +177,7 @@ internal static partial class Utils
             response.TotalCount.Should().Be(result.TotalCount);
         }
         
-        internal static void AsserGetStatusesResponse(
+        internal static void AssertGetStatusesResponse(
             GetStatusesFromProjectResponse response,
             GetStatusesFromProjectResult result)
         {

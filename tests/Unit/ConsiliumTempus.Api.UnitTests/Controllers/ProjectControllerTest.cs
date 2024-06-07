@@ -210,7 +210,7 @@ public class ProjectControllerTest
                 Utils.Project.AssertGetStatusesFromProjectQuery(q, request)));
 
         var response = outcome.ToResponse<GetStatusesFromProjectResponse>();
-        Utils.Project.AsserGetStatusesResponse(response, result);
+        Utils.Project.AssertGetStatusesResponse(response, result);
     }
 
     [Fact]
