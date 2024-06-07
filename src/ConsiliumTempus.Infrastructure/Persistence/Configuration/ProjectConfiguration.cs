@@ -41,15 +41,19 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
         builder.HasOne(p => p.Owner)
             .WithMany()
             .OnDelete(DeleteBehavior.NoAction);
+        builder.Navigation(p => p.Owner).AutoInclude();
 
         builder.HasOne(p => p.Workspace)
             .WithMany(w => w.Projects);
 
-        builder.OwnsMany(p => p.Statuses, ConfigureStatuses);
-        builder.Navigation(p => p.Statuses).AutoInclude(false);
+        builder.HasMany(p => p.Statuses)
+            .WithOne(ps => ps.Project);
     }
+}
 
-    private static void ConfigureStatuses(OwnedNavigationBuilder<ProjectAggregate, ProjectStatus> builder)
+public sealed class ProjectStatusConfiguration : IEntityTypeConfiguration<ProjectStatus>
+{
+    public void Configure(EntityTypeBuilder<ProjectStatus> builder)
     {
         builder.ToTable(nameof(ProjectStatus));
 
