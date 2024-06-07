@@ -12,6 +12,11 @@ public enum Permissions
     ReadCollectionProject,
     UpdateProject,
     DeleteProject,
+    // Project - Project Status
+    AddStatusToProject,
+    ReadStatusesFromProject,
+    UpdateStatusFromProject,
+    RemoveStatusFromProject,
     // Project Sprint
     CreateProjectSprint,
     ReadProjectSprint,

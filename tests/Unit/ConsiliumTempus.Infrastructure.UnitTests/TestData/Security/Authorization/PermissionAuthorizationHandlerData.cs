@@ -33,6 +33,11 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.ReadCollectionProject, RequestLocation.Query);
             Add(Permissions.UpdateProject, RequestLocation.Body);
             Add(Permissions.DeleteProject, RequestLocation.Route);
+            
+            Add(Permissions.AddStatusToProject, RequestLocation.Body);
+            Add(Permissions.ReadStatusesFromProject, RequestLocation.Route);
+            Add(Permissions.UpdateProject, RequestLocation.Body);
+            Add(Permissions.DeleteProject, RequestLocation.Route);
 
             Add(Permissions.CreateProjectSprint, RequestLocation.Body);
             Add(Permissions.ReadProjectSprint, RequestLocation.Route);
@@ -72,6 +77,11 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.UpdateProjectSprint, RequestLocation.Body, null);
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route, null);
 
+            Add(Permissions.AddStatusToProject, RequestLocation.Body, null);
+            Add(Permissions.ReadStatusesFromProject, RequestLocation.Route, null);
+            Add(Permissions.UpdateProject, RequestLocation.Body, null);
+            Add(Permissions.DeleteProject, RequestLocation.Route, null);            
+            
             Add(Permissions.AddStageToProjectSprint, RequestLocation.Body, null);
             Add(Permissions.UpdateStageFromProjectSprint, RequestLocation.Body, null);
             Add(Permissions.RemoveStageFromProjectSprint, RequestLocation.Route, null);
@@ -97,6 +107,11 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.ReadCollectionProject, RequestLocation.Query, "workspaceId", StringIdType.Workspace);
             Add(Permissions.UpdateProject, RequestLocation.Body, null, StringIdType.Project);
             Add(Permissions.DeleteProject, RequestLocation.Route, null, StringIdType.Project);
+            
+            Add(Permissions.AddStatusToProject, RequestLocation.Body, null, StringIdType.Project);
+            Add(Permissions.ReadStatusesFromProject, RequestLocation.Route, null, StringIdType.Project);
+            Add(Permissions.UpdateProject, RequestLocation.Body, null, StringIdType.Project);
+            Add(Permissions.DeleteProject, RequestLocation.Route, null, StringIdType.Project);   
 
             Add(Permissions.CreateProjectSprint, RequestLocation.Body, "projectId", StringIdType.Project);
             Add(Permissions.ReadProjectSprint, RequestLocation.Route, null, StringIdType.ProjectSprint);
