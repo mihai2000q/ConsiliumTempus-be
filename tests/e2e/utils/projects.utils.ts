@@ -22,6 +22,12 @@ export async function getProjects(request: APIRequestContext) {
   return (await response.json()).projects
 }
 
+export async function getProjectStatus(request: APIRequestContext, projectId: string, projectStatusId: string) {
+  const response = await request.get(`/api/projects/${projectId}/statuses`, useToken())
+  expect(response.ok()).toBeTruthy()
+  return (await response.json()).statuses.filter((ps: { id: string }) => ps.id === projectStatusId)[0]
+}
+
 export async function getProjectStatuses(request: APIRequestContext, projectId: string) {
   const response = await request.get(`/api/projects/${projectId}/statuses`, useToken())
   expect(response.ok()).toBeTruthy()

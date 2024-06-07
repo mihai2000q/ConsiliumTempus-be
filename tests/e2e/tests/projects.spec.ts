@@ -10,7 +10,8 @@ import {
   createProjects,
   getProject,
   getProjectOverview,
-  getProjects, getProjectStatuses
+  getProjects, getProjectStatus,
+  getProjectStatuses
 } from "../utils/projects.utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
 import UpdateProjectRequest from "../types/requests/project/UpdateProjectRequest";
@@ -327,8 +328,11 @@ test.describe('should allow operations on the project entity', () => {
         id: expect.any(String),
         name: body.name,
         description: "",
+        isFavorite: false,
+        lifecycle: 'Active',
+        owner: expect.any(Object),
         isPrivate: body.isPrivate,
-        isFavorite: false
+        latestStatus: null
       }
     ])
   })
@@ -402,7 +406,10 @@ test.describe('should allow operations on the project entity', () => {
     expect(projects).toStrictEqual({
       name: updateProjectRequest.name,
       isFavorite: updateProjectRequest.isFavorite,
-      isPrivate: createProjectRequest.isPrivate
+      lifecycle: 'Active',
+      owner: expect.any(Object),
+      isPrivate: createProjectRequest.isPrivate,
+      latestStatus: null
     })
   })
 
@@ -469,20 +476,17 @@ test.describe('should allow operations on the project entity', () => {
       message: expect.any(String)
     })
 
-    const statuses = await getProjectStatuses(request, body.id)
-    expect(statuses).toHaveLength(1)
-    expect(statuses).toStrictEqual([
-      {
-        id: expect.any(String),
-        title: body.title,
-        status: body.status,
-        description: body.description,
-        createdBy: status.createdBy,
-        createdDateTime: status.createdDateTime,
-        updatedBy: expect.any(Object),
-        updatedDateTime: expect.any(String),
-      }
-    ])
+    const statuses = await getProjectStatus(request, body.id, body.statusId)
+    expect(statuses).toStrictEqual({
+      id: expect.any(String),
+      title: body.title,
+      status: body.status,
+      description: body.description,
+      createdBy: status.createdBy,
+      createdDateTime: status.createdDateTime,
+      updatedBy: expect.any(Object),
+      updatedDateTime: expect.any(String),
+    })
   })
 
   test('should delete project', async ({ request }) => {
@@ -532,6 +536,6 @@ test.describe('should allow operations on the project entity', () => {
     })
 
     const statuses = await getProjectStatuses(request, project.id)
-    expect(statuses).toBeEmpty()
+    expect(statuses).toHaveLength(0)
   })
 })
