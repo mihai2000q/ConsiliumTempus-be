@@ -30,7 +30,6 @@ internal static class GetCollectionProjectQueryValidatorData
                 search:
                 [
                     "name ct something", "name sw something", "name eq something", "name neq something",
-                    "is_favorite eq true", "is_favorite neq false",
                     "is_private eq true", "is_private neq false",
                     "lifecycle eq active", "lifecycle neq archived", "lifecycle eq uPcOmING"
                 ]);
@@ -230,7 +229,7 @@ internal static class GetCollectionProjectQueryValidatorData
             
             // Parse Validation
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                search: ["is_favorite eq something"]);
+                search: ["is_private eq something"]);
             Add(query, nameof(query.Search), 1);
             
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
@@ -238,7 +237,7 @@ internal static class GetCollectionProjectQueryValidatorData
             Add(query, nameof(query.Search), 1);
             
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                search: [correct, "is_favorite eq something"]);
+                search: [correct, "is_private eq something"]);
             Add(query, nameof(query.Search), 1);
         }
     }

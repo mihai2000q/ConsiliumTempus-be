@@ -89,5 +89,6 @@ public class GetCollectionProjectQueryHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Projects.Should().BeEquivalentTo(projects);
         outcome.Value.TotalCount.Should().Be(projectsCount);
+        outcome.Value.CurrentUser.Should().Be(user);
     }
 }

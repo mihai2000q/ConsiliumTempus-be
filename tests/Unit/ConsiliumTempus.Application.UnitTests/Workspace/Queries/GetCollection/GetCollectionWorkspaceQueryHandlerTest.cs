@@ -92,7 +92,8 @@ public class GetCollectionWorkspaceQueryHandlerTest
             query,
             workspaces,
             workspacesCount,
-            personalWorkspace);
+            personalWorkspace,
+            user);
     }
 
     [Fact]
