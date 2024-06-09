@@ -33,6 +33,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
+            user,
             expectedProjects.Count);
     }
 
@@ -56,6 +57,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
+            user,
             expectedProjects.Count);
     }
 
@@ -80,30 +82,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
-            expectedProjects.Count);
-    }
-
-    [Fact]
-    public async Task GetCollectionProject_WhenRequestHasSearchIsFavoriteEqual_ShouldReturnProjectsFilteredByIsFavorite()
-    {
-        // Arrange
-        const bool searchIsFavorite = true;
-        var user = ProjectData.Users.First();
-        var request = ProjectRequestFactory.CreateGetCollectionProjectRequest(
-            search: [$"is_favorite eq {searchIsFavorite}"]);
-
-        // Act
-        Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?{request.Search?.ToSearchQueryParam()}");
-
-        // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
-        var expectedProjects = GetFilteredProjects(user, p => 
-            p.IsFavorite.Value == searchIsFavorite);
-        Utils.Project.AssertGetCollectionResponse(
-            response!,
-            expectedProjects,
+            user,
             expectedProjects.Count);
     }
 
@@ -128,6 +107,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
+            user,
             expectedProjects.Count);
     }
 
@@ -153,6 +133,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
+            user,
             expectedProjects.Count,
             true);
     }
@@ -180,6 +161,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
+            user,
             expectedProjects.Count,
             true);
     }
@@ -217,6 +199,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         Utils.Project.AssertGetCollectionResponse(
             response!,
             expectedProjects,
+            user,
             userProjects.Count,
             true);
     }

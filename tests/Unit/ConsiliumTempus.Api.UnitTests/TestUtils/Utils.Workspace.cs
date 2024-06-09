@@ -8,6 +8,7 @@ using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
@@ -67,12 +68,12 @@ internal static partial class Utils
 
         internal static void AssertGetResponse(
             GetWorkspaceResponse response,
-            WorkspaceAggregate workspace)
+            GetWorkspaceResult result)
         {
-            response.Name.Should().Be(workspace.Name.Value);
-            response.IsFavorite.Should().Be(workspace.IsFavorite.Value);
-            response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
-            response.Description.Should().Be(workspace.Description.Value);
+            response.Name.Should().Be(result.Workspace.Name.Value);
+            response.IsFavorite.Should().Be(result.Workspace.IsFavorite(result.CurrentUser));
+            response.IsPersonal.Should().Be(result.Workspace.IsPersonal.Value);
+            response.Description.Should().Be(result.Workspace.Description.Value);
         }
 
         internal static void AssertGetCollectionResponse(
@@ -80,17 +81,19 @@ internal static partial class Utils
             GetCollectionWorkspaceResult result)
         {
             response.Workspaces.Zip(result.Workspaces)
-                .Should().AllSatisfy(p => AssertWorkspaceResponse(p.First, p.Second));
+                .Should().AllSatisfy(p => AssertWorkspaceResponse(p.First, p.Second, result.CurrentUser));
+            response.TotalCount.Should().Be(result.TotalCount);
         }
 
         private static void AssertWorkspaceResponse(
             GetCollectionWorkspaceResponse.WorkspaceResponse response,
-            WorkspaceAggregate workspace)
+            WorkspaceAggregate workspace,
+            UserAggregate currentUser)
         {
             response.Id.Should().Be(workspace.Id.Value.ToString());
             response.Name.Should().Be(workspace.Name.Value);
             response.Description.Should().Be(workspace.Description.Value);
-            response.IsFavorite.Should().Be(workspace.IsFavorite.Value);
+            response.IsFavorite.Should().Be(workspace.IsFavorite(currentUser));
             response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
 
             var owner = workspace.Owner;

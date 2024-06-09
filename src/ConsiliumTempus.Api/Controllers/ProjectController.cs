@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Common.Attributes;
+using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
@@ -38,7 +39,10 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
-            project => Ok(Mapper.Map<GetProjectResponse>(project)),
+            getResult => Ok(Mapper
+                .From(getResult)
+                .AddParameters(ProjectMappingConfig.CurrentUser, getResult.CurrentUser)
+                .AdaptToType<GetProjectResponse>()),
             Problem
         );
     }
@@ -65,14 +69,18 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
-            getCollectionResult => Ok(Mapper.Map<GetCollectionProjectResponse>(getCollectionResult)),
+            getCollectionResult => Ok(Mapper
+                .From(getCollectionResult)
+                .AddParameters(ProjectMappingConfig.CurrentUser, getCollectionResult.CurrentUser)
+                .AdaptToType<GetCollectionProjectResponse>()),
             Problem
         );
     }
 
     [HasPermission(Permissions.ReadStatusesFromProject)]
     [HttpGet("{id:guid}/Statuses")]
-    public async Task<IActionResult> GetStatuses(GetStatusesFromProjectRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetStatuses(GetStatusesFromProjectRequest request,
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<GetStatusesFromProjectQuery>(request);
         var result = await Mediator.Send(command, cancellationToken);
@@ -165,7 +173,8 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
     [HasPermission(Permissions.RemoveStatusFromProject)]
     [HttpDelete("{id:guid}/Remove-Status/{statusId:guid}")]
-    public async Task<IActionResult> RemoveStatus(RemoveStatusFromProjectRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> RemoveStatus(RemoveStatusFromProjectRequest request,
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<RemoveStatusFromProjectCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);

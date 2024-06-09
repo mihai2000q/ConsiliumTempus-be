@@ -18,6 +18,8 @@ namespace ConsiliumTempus.Api.Common.Mapping;
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed class WorkspaceMappingConfig : IRegister
 {
+    public const string CurrentUser = "CurrentUser";
+
     public void Register(TypeAdapterConfig config)
     {
         GetMappings(config);
@@ -31,11 +33,12 @@ public sealed class WorkspaceMappingConfig : IRegister
     {
         config.NewConfig<GetWorkspaceRequest, GetWorkspaceQuery>();
 
-        config.NewConfig<WorkspaceAggregate, GetWorkspaceResponse>()
-            .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.IsFavorite, src => src.IsFavorite.Value)
-            .Map(dest => dest.IsPersonal, src => src.IsPersonal.Value)
-            .Map(dest => dest.Description, src => src.Description.Value);
+        config.NewConfig<GetWorkspaceResult, GetWorkspaceResponse>()
+            .Map(dest => dest.Name, src => src.Workspace.Name.Value)
+            .Map(dest => dest.IsFavorite,
+                src => src.Workspace.IsFavorite((UserAggregate)MapContext.Current!.Parameters[CurrentUser]))
+            .Map(dest => dest.IsPersonal, src => src.Workspace.IsPersonal.Value)
+            .Map(dest => dest.Description, src => src.Workspace.Description.Value);
     }
 
     private static void GetCollectionMappings(TypeAdapterConfig config)
@@ -47,7 +50,8 @@ public sealed class WorkspaceMappingConfig : IRegister
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.IsFavorite, src => src.IsFavorite.Value)
+            .Map(dest => dest.IsFavorite, 
+                src => src.IsFavorite((UserAggregate)MapContext.Current!.Parameters[CurrentUser]))
             .Map(dest => dest.IsPersonal, src => src.IsPersonal.Value);
         config.NewConfig<UserAggregate, GetCollectionWorkspaceResponse.Owner>()
             .Map(dest => dest.Id, src => src.Id.Value)

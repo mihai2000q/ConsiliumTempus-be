@@ -13,10 +13,10 @@ public static class WorkspaceFactory
         string name = Constants.Workspace.Name,
         string description = Constants.Workspace.Description,
         bool isPersonal = false,
-        bool isFavorite = false,
         DateTime? lastActivity = null,
         DateTime? createdDateTime = null,
-        DateTime? updatedDateTime = null)
+        DateTime? updatedDateTime = null,
+        List<UserAggregate>? favorites = null)
     {
         var workspace = DomainFactory.GetObjectInstance<WorkspaceAggregate>();
 
@@ -25,10 +25,10 @@ public static class WorkspaceFactory
         DomainFactory.SetProperty(ref workspace, nameof(workspace.Description), Description.Create(description));
         DomainFactory.SetProperty(ref workspace, nameof(workspace.Owner), owner);
         DomainFactory.SetProperty(ref workspace, nameof(workspace.IsPersonal), IsPersonal.Create(isPersonal));
-        DomainFactory.SetProperty(ref workspace, nameof(workspace.IsFavorite), IsFavorite.Create(isFavorite));
         DomainFactory.SetProperty(ref workspace, nameof(workspace.LastActivity), lastActivity ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref workspace, nameof(workspace.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
         DomainFactory.SetProperty(ref workspace, nameof(workspace.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
+        DomainFactory.SetProperty(ref workspace, nameof(workspace.Favorites), favorites ?? null);
 
         return workspace;
     }
