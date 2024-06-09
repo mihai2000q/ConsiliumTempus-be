@@ -1,7 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Relations;
-using ConsiliumTempus.Infrastructure.Security.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,6 +12,7 @@ public sealed class WorkspaceRoleHasPermissionConfiguration : IEntityTypeConfigu
     {
         builder.ToTable(nameof(WorkspaceRoleHasPermission));
 
+        builder.Ignore(w => w.Id);
         builder.HasKey(w => new { w.WorkspaceRoleId, w.PermissionId });
 
         builder.HasOne<WorkspaceRole>()
@@ -23,7 +23,7 @@ public sealed class WorkspaceRoleHasPermissionConfiguration : IEntityTypeConfigu
             .WithMany()
             .HasForeignKey(w => w.PermissionId);
 
-        foreach (var roleHasPermission in AccessControlList.RoleHasPermissions)
+        foreach (var roleHasPermission in WorkspaceRoleHasPermission.DefaultData)
         {
             roleHasPermission.Value.ForEach(p => builder.HasData(Create(roleHasPermission.Key, p)));
         }
