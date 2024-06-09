@@ -12,10 +12,6 @@ public interface IProjectRepository
 {
     Task<ProjectAggregate?> Get(ProjectId projectId, CancellationToken cancellationToken = default);
 
-    Task<List<ProjectStatus>> GetStatuses(ProjectId id, CancellationToken cancellationToken = default);
-    
-    Task<int> GetStatusesCount(ProjectId id, CancellationToken cancellationToken = default);
-
     Task<ProjectAggregate?> GetWithWorkspace(ProjectId id, CancellationToken cancellationToken = default);
 
     Task<ProjectAggregate?> GetWithStagesAndWorkspace(ProjectId id, CancellationToken cancellationToken = default);
@@ -33,6 +29,10 @@ public interface IProjectRepository
         WorkspaceId? workspaceId,
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default);
+
+    Task<List<ProjectStatus>> GetStatuses(ProjectId id, CancellationToken cancellationToken = default);
+
+    Task<int> GetStatusesCount(ProjectId id, CancellationToken cancellationToken = default);
 
     Task Add(ProjectAggregate project, CancellationToken cancellationToken = default);
 
