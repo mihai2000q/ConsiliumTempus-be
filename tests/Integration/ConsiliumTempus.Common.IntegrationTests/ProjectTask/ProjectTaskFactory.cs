@@ -20,20 +20,17 @@ public static class ProjectTaskFactory
         DateTime? createdDateTime = null,
         DateTime? updatedDateTime = null)
     {
-        var task = DomainFactory.GetObjectInstance<ProjectTaskAggregate>();
-
-        DomainFactory.SetProperty(ref task, nameof(task.Id), ProjectTaskId.CreateUnique());
-        DomainFactory.SetProperty(ref task, nameof(task.Name), Name.Create(name));
-        DomainFactory.SetProperty(ref task, nameof(task.Description), Description.Create(description));
-        DomainFactory.SetProperty(ref task, nameof(task.CustomOrderPosition), CustomOrderPosition.Create(customOrderPosition));
-        DomainFactory.SetProperty(ref task, nameof(task.IsCompleted), IsCompleted.Create(isCompleted));
-        DomainFactory.SetProperty(ref task, nameof(task.IsCompleted), IsCompleted.Create(isCompleted));
-        DomainFactory.SetProperty(ref task, nameof(task.CreatedBy), createdBy);
-        DomainFactory.SetProperty(ref task, nameof(task.Assignee), assignee);
-        DomainFactory.SetProperty(ref task, nameof(task.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
-        DomainFactory.SetProperty(ref task, nameof(task.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
-        DomainFactory.SetProperty(ref task, nameof(task.Stage), stage);
-
-        return task;
+        return EntityBuilder<ProjectTaskAggregate>.Empty()
+            .WithProperty(nameof(ProjectTaskAggregate.Id), ProjectTaskId.CreateUnique())
+            .WithProperty(nameof(ProjectTaskAggregate.Name), Name.Create(name))
+            .WithProperty(nameof(ProjectTaskAggregate.Description), Description.Create(description))
+            .WithProperty(nameof(ProjectTaskAggregate.CustomOrderPosition), CustomOrderPosition.Create(customOrderPosition))
+            .WithProperty(nameof(ProjectTaskAggregate.IsCompleted), IsCompleted.Create(isCompleted))
+            .WithProperty(nameof(ProjectTaskAggregate.CreatedBy), createdBy)
+            .WithProperty(nameof(ProjectTaskAggregate.Assignee), assignee)
+            .WithProperty(nameof(ProjectTaskAggregate.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(ProjectTaskAggregate.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(ProjectTaskAggregate.Stage), stage)
+            .Build();
     }
 }

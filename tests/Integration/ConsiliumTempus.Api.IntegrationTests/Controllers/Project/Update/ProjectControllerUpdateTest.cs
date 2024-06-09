@@ -19,11 +19,12 @@ public class ProjectControllerUpdateTest(WebAppFactory factory)
     public async Task UpdateProject_WhenSucceeds_ShouldUpdateAndReturnSuccessResponse()
     {
         // Arrange
+        var user = ProjectData.Users.First();
         var project = ProjectData.Projects.First();
         var request = ProjectRequestFactory.CreateUpdateProjectRequest(project.Id.Value);
 
         // Act
-        Client.UseCustomToken(ProjectData.Users.First());
+        Client.UseCustomToken(user);
         var outcome = await Client.Put("api/projects", request);
 
         // Assert
@@ -36,7 +37,7 @@ public class ProjectControllerUpdateTest(WebAppFactory factory)
         var updatedProject = await dbContext.Projects
             .Include(p => p.Workspace)
             .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
-        Utils.Project.AssertUpdate(project, updatedProject, request);
+        Utils.Project.AssertUpdate(project, updatedProject, request, user);
     }
 
     [Fact]

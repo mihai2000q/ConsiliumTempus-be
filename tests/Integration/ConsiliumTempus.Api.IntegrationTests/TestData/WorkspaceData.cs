@@ -75,7 +75,7 @@ internal class WorkspaceData : ITestData
         WorkspaceFactory.Create(
             Users[0],
             "Test Test",
-            isFavorite: true),
+            favorites: [Users[0]]),
         WorkspaceFactory.Create(
             Users[0],
             "Hi There")

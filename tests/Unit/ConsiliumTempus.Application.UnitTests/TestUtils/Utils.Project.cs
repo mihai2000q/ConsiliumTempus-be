@@ -5,6 +5,7 @@ using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
+using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Enums;
@@ -49,7 +50,8 @@ internal static partial class Utils
             project.Name.Value.Should().Be(command.Name);
             project.Description.Value.Should().BeEmpty();
             project.IsPrivate.Value.Should().Be(command.IsPrivate);
-            project.IsFavorite.Value.Should().Be(false);
+            project.Favorites.Should().BeEmpty();
+            project.IsFavorite(owner).Should().Be(false);
             project.Owner.Should().Be(owner);
             project.Lifecycle.Should().Be(ProjectLifecycle.Active);
             project.Sprints.Should().BeEmpty();
@@ -91,11 +93,12 @@ internal static partial class Utils
 
         internal static void AssertFromUpdateCommand(
             ProjectAggregate project,
-            UpdateProjectCommand command)
+            UpdateProjectCommand command,
+            UserAggregate currentUser)
         {
             project.Id.Value.Should().Be(command.Id);
             project.Name.Value.Should().Be(command.Name);
-            project.IsFavorite.Value.Should().Be(command.IsFavorite);
+            project.IsFavorite(currentUser).Should().Be(command.IsFavorite);
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -131,19 +134,23 @@ internal static partial class Utils
         }
 
         internal static void AssertProject(
-            ProjectAggregate outcome,
-            ProjectAggregate expected)
+            GetProjectResult outcome,
+            ProjectAggregate expected,
+            UserAggregate currentUser)
         {
-            outcome.Id.Should().Be(expected.Id);
-            outcome.Name.Should().Be(expected.Name);
-            outcome.Description.Should().Be(expected.Description);
-            outcome.IsFavorite.Should().Be(expected.IsFavorite);
-            outcome.IsPrivate.Should().Be(expected.IsPrivate);
-            outcome.LastActivity.Should().Be(expected.LastActivity);
-            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
-            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
-            outcome.Workspace.Should().Be(expected.Workspace);
-            outcome.Sprints.Should().BeEquivalentTo(expected.Sprints);
+            outcome.Project.Id.Should().Be(expected.Id);
+            outcome.Project.Name.Should().Be(expected.Name);
+            outcome.Project.Description.Should().Be(expected.Description);
+            outcome.Project.Favorites.Should().BeEquivalentTo(expected.Favorites);
+            outcome.Project.IsFavorite(currentUser).Should().Be(expected.IsFavorite(currentUser));
+            outcome.Project.IsPrivate.Should().Be(expected.IsPrivate);
+            outcome.Project.LastActivity.Should().Be(expected.LastActivity);
+            outcome.Project.CreatedDateTime.Should().Be(expected.CreatedDateTime);
+            outcome.Project.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Project.Workspace.Should().Be(expected.Workspace);
+            outcome.Project.Sprints.Should().BeEquivalentTo(expected.Sprints);
+
+            outcome.CurrentUser.Should().Be(currentUser);
         }
 
         internal static void AssertProjectOverview(

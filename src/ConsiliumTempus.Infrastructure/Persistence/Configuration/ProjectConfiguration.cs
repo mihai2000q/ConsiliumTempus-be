@@ -4,6 +4,8 @@ using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.User.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -30,10 +32,6 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
             .Property(d => d.Value)
             .HasColumnName(nameof(Description));
 
-        builder.OwnsOne(p => p.IsFavorite)
-            .Property(f => f.Value)
-            .HasColumnName(nameof(IsFavorite));
-
         builder.OwnsOne(p => p.IsPrivate)
             .Property(p => p.Value)
             .HasColumnName(nameof(IsPrivate));
@@ -48,6 +46,16 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
 
         builder.HasMany(p => p.Statuses)
             .WithOne(ps => ps.Project);
+
+        builder.HasMany(p => p.Favorites)
+            .WithMany()
+            .UsingEntity(b =>
+            {
+                b.ToTable("UserHasFavoriteProject");
+
+                b.Property(nameof(ProjectAggregate).ToId())
+                    .HasColumnName(nameof(ProjectId));
+            });
     }
 }
 

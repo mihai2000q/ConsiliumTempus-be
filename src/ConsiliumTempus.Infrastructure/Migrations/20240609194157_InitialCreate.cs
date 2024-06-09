@@ -114,7 +114,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsPersonal = table.Column<bool>(type: "bit", nullable: false),
-                    IsFavorite = table.Column<bool>(type: "bit", nullable: false),
                     OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LastActivity = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -194,7 +193,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsFavorite = table.Column<bool>(type: "bit", nullable: false),
                     IsPrivate = table.Column<bool>(type: "bit", nullable: false),
                     OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Lifecycle = table.Column<int>(type: "int", nullable: false),
@@ -213,6 +211,30 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Project_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserHasFavoriteWorkspace",
+                columns: table => new
+                {
+                    FavoritesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserHasFavoriteWorkspace", x => new { x.FavoritesId, x.WorkspaceId });
+                    table.ForeignKey(
+                        name: "FK_UserHasFavoriteWorkspace_User_FavoritesId",
+                        column: x => x.FavoritesId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserHasFavoriteWorkspace_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,
                         principalTable: "Workspace",
                         principalColumn: "Id",
@@ -270,6 +292,30 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_ProjectStatus_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Project",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserHasFavoriteProject",
+                columns: table => new
+                {
+                    FavoritesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserHasFavoriteProject", x => new { x.FavoritesId, x.ProjectId });
+                    table.ForeignKey(
+                        name: "FK_UserHasFavoriteProject_Project_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Project",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserHasFavoriteProject_User_FavoritesId",
+                        column: x => x.FavoritesId,
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -579,6 +625,16 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "Id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserHasFavoriteProject_ProjectId",
+                table: "UserHasFavoriteProject",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserHasFavoriteWorkspace_WorkspaceId",
+                table: "UserHasFavoriteWorkspace",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Workspace_Id",
                 table: "Workspace",
                 column: "Id");
@@ -608,6 +664,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");
+
+            migrationBuilder.DropTable(
+                name: "UserHasFavoriteProject");
+
+            migrationBuilder.DropTable(
+                name: "UserHasFavoriteWorkspace");
 
             migrationBuilder.DropTable(
                 name: "WorkspaceRoleHasPermission");

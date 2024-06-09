@@ -148,17 +148,17 @@ internal static partial class Utils
 
         internal static void AssertGetProjectResponse(
             GetProjectResponse response,
-            ProjectAggregate project)
+            GetProjectResult result)
         {
-            response.Name.Should().Be(project.Name.Value);
-            response.IsFavorite.Should().Be(project.IsFavorite.Value);
-            response.Lifecycle.Should().Be(project.Lifecycle.ToString());
-            AssertUserResponse(response.Owner, project.Owner);
-            response.IsPrivate.Should().Be(project.IsPrivate.Value);
-            if (project.Statuses.Count == 0)
+            response.Name.Should().Be(result.Project.Name.Value);
+            response.IsFavorite.Should().Be(result.Project.IsFavorite(result.CurrentUser));
+            response.Lifecycle.Should().Be(result.Project.Lifecycle.ToString());
+            AssertUserResponse(response.Owner, result.Project.Owner);
+            response.IsPrivate.Should().Be(result.Project.IsPrivate.Value);
+            if (result.Project.Statuses.Count == 0)
                 response.LatestStatus.Should().BeNull();
             else
-                AssertProjectStatusResponse(response.LatestStatus!, project.Statuses[0]);
+                AssertProjectStatusResponse(response.LatestStatus!, result.Project.Statuses[0]);
         }
 
         internal static void AssertGetOverviewProjectResponse(
@@ -173,7 +173,7 @@ internal static partial class Utils
             GetCollectionProjectResult result)
         {
             response.Projects.Zip(result.Projects)
-                .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
+                .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second, result.CurrentUser));
             response.TotalCount.Should().Be(result.TotalCount);
         }
         
@@ -213,10 +213,13 @@ internal static partial class Utils
         
         private static void AssertProjectResponse(
             GetCollectionProjectResponse.ProjectResponse response,
-            ProjectAggregate project)
+            ProjectAggregate project,
+            UserAggregate currentUser)
         {
+            response.Id.Should().Be(project.Id.Value);
             response.Name.Should().Be(project.Name.Value);
-            response.IsFavorite.Should().Be(project.IsFavorite.Value);
+            response.Description.Should().Be(project.Description.Value);
+            response.IsFavorite.Should().Be(project.IsFavorite(currentUser));
             response.Lifecycle.Should().Be(project.Lifecycle.ToString());
             AssertUserResponse(response.Owner, project.Owner);
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
@@ -224,11 +227,6 @@ internal static partial class Utils
                 response.LatestStatus.Should().BeNull();
             else
                 AssertProjectStatusResponse(response.LatestStatus!, project.Statuses[0]);
-            response.Id.Should().Be(project.Id.Value);
-            response.Name.Should().Be(project.Name.Value);
-            response.Description.Should().Be(project.Description.Value);
-            response.IsFavorite.Should().Be(project.IsFavorite.Value);
-            response.IsPrivate.Should().Be(project.IsPrivate.Value);
         }
         
         private static void AssertUserResponse(

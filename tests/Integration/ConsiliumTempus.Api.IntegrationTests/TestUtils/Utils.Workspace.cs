@@ -14,10 +14,11 @@ internal static partial class Utils
     {
         internal static void AssertGetResponse(
             GetWorkspaceResponse response,
-            WorkspaceAggregate workspace)
+            WorkspaceAggregate workspace,
+            UserAggregate currentUser)
         {
             response.Name.Should().Be(workspace.Name.Value);
-            response.IsFavorite.Should().Be(workspace.IsFavorite.Value);
+            response.IsFavorite.Should().Be(workspace.IsFavorite(currentUser));
             response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
             response.Description.Should().Be(workspace.Description.Value);
         }
@@ -26,21 +27,21 @@ internal static partial class Utils
             GetCollectionWorkspaceResponse response,
             List<WorkspaceAggregate> workspaces,
             int totalCount,
-            int? totalPages,
+            UserAggregate user,
             bool isOrdered = false)
         {
             response.Workspaces.Should().HaveCount(workspaces.Count);
             if (isOrdered)
             {
                 response.Workspaces.Zip(workspaces)
-                    .Should().AllSatisfy(x => AssertWorkspaceResponse(x.First, x.Second));
+                    .Should().AllSatisfy(x => AssertWorkspaceResponse(x.First, x.Second, user));
             }
             else
             {
                 response.Workspaces
                     .OrderBy(w => w.Id)
                     .Zip(workspaces.OrderBy(w => w.Id.Value))
-                    .Should().AllSatisfy(x => AssertWorkspaceResponse(x.First, x.Second));
+                    .Should().AllSatisfy(x => AssertWorkspaceResponse(x.First, x.Second, user));
             }
 
             response.TotalCount.Should().Be(totalCount);
@@ -85,12 +86,13 @@ internal static partial class Utils
 
         private static void AssertWorkspaceResponse(
             GetCollectionWorkspaceResponse.WorkspaceResponse response,
-            WorkspaceAggregate workspace)
+            WorkspaceAggregate workspace,
+            UserAggregate currentUser)
         {
             response.Id.Should().Be(workspace.Id.ToString());
             response.Name.Should().Be(workspace.Name.Value);
             response.Description.Should().Be(workspace.Description.Value);
-            response.IsFavorite.Should().Be(workspace.IsFavorite.Value);
+            response.IsFavorite.Should().Be(workspace.IsFavorite(currentUser));
             response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
 
             var owner = workspace.Owner;

@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Common.Attributes;
+using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
@@ -26,7 +27,9 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
-            workspace => Ok(Mapper.Map<GetWorkspaceResponse>(workspace)),
+            getResult => Ok(Mapper.From(getResult)
+                .AddParameters(WorkspaceMappingConfig.CurrentUser, getResult.CurrentUser)
+                .AdaptToType<GetWorkspaceResponse>()),
             Problem
         );
     }
@@ -39,7 +42,9 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
-            getCollectionResult => Ok(Mapper.Map<GetCollectionWorkspaceResponse>(getCollectionResult)),
+            getCollectionResult => Ok(Mapper.From(getCollectionResult)
+                .AddParameters(WorkspaceMappingConfig.CurrentUser, getCollectionResult.CurrentUser)
+                .AdaptToType<GetCollectionWorkspaceResponse>()),
             Problem
         );
     }

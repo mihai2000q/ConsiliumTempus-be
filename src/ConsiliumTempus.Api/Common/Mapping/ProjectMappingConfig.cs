@@ -31,6 +31,8 @@ namespace ConsiliumTempus.Api.Common.Mapping;
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed class ProjectMappingConfig : IRegister
 {
+    public const string CurrentUser = "CurrentUser";
+    
     public void Register(TypeAdapterConfig config)
     {
         GetMappings(config);
@@ -50,12 +52,14 @@ public sealed class ProjectMappingConfig : IRegister
     {
         config.NewConfig<GetProjectRequest, GetProjectQuery>();
 
-        config.NewConfig<ProjectAggregate, GetProjectResponse>()
-            .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.IsFavorite, src => src.IsFavorite.Value)
-            .Map(dest => dest.Lifecycle, src => src.Lifecycle.ToString())
-            .Map(dest => dest.IsPrivate, src => src.IsPrivate.Value)
-            .Map(dest => dest.LatestStatus, src => src.Statuses.Count == 0 ? null : src.Statuses[0]);
+        config.NewConfig<GetProjectResult, GetProjectResponse>()
+            .Map(dest => dest.Name, src => src.Project.Name.Value)
+            .Map(dest => dest.IsFavorite, 
+                src => src.Project.IsFavorite((UserAggregate)MapContext.Current!.Parameters[CurrentUser]))
+            .Map(dest => dest.Lifecycle, src => src.Project.Lifecycle.ToString())
+            .Map(dest => dest.IsPrivate, src => src.Project.IsPrivate.Value)
+            .Map(dest => dest.Owner, src => src.Project.Owner)
+            .Map(dest => dest.LatestStatus, src => src.Project.Statuses.Count == 0 ? null : src.Project.Statuses[0]);
         config.NewConfig<ProjectStatus, GetProjectResponse.ProjectStatusResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Id, src => src.Id.Value)
@@ -88,7 +92,8 @@ public sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.IsFavorite, src => src.IsFavorite.Value)
+            .Map(dest => dest.IsFavorite, 
+                src => src.IsFavorite((UserAggregate)MapContext.Current!.Parameters[CurrentUser]))
             .Map(dest => dest.Lifecycle, src => src.Lifecycle.ToString())
             .Map(dest => dest.IsPrivate, src => src.IsPrivate.Value)
             .Map(dest => dest.LatestStatus, src => src.Statuses.Count == 0 ? null : src.Statuses[0]);

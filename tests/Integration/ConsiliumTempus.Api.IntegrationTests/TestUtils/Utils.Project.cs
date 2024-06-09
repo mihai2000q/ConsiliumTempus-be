@@ -22,10 +22,11 @@ internal static partial class Utils
     {
         internal static void AssertGetProjectResponse(
             GetProjectResponse response,
-            ProjectAggregate project)
+            ProjectAggregate project,
+            UserAggregate user)
         {
             response.Name.Should().Be(project.Name.Value);
-            response.IsFavorite.Should().Be(project.IsFavorite.Value);
+            response.IsFavorite.Should().Be(project.IsFavorite(user));
             response.Lifecycle.Should().Be(project.Lifecycle.ToString());
             AssertUserResponse(response.Owner, project.Owner);
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
@@ -45,6 +46,7 @@ internal static partial class Utils
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectResponse response,
             IReadOnlyList<ProjectAggregate> projects,
+            UserAggregate user,
             int totalCount,
             bool isOrdered = false)
         {
@@ -53,14 +55,14 @@ internal static partial class Utils
             {
                 response.Projects
                     .Zip(projects)
-                    .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
+                    .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second, user));
             }
             else
             {
                 response.Projects
                     .OrderBy(p => p.Id)
                     .Zip(projects.OrderBy(p => p.Id.Value))
-                    .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second));
+                    .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second, user));
             }
 
             response.TotalCount.Should().Be(totalCount);
@@ -85,7 +87,7 @@ internal static partial class Utils
         {
             project.Name.Value.Should().Be(request.Name);
             project.Description.Value.Should().BeEmpty();
-            project.IsFavorite.Value.Should().Be(false);
+            project.IsFavorite(owner).Should().Be(false);
             project.IsPrivate.Value.Should().Be(request.IsPrivate);
             project.Owner.Should().Be(owner);
             project.Lifecycle.Should().Be(ProjectLifecycle.Active);
@@ -124,7 +126,8 @@ internal static partial class Utils
         internal static void AssertUpdate(
             ProjectAggregate project,
             ProjectAggregate newProject,
-            UpdateProjectRequest request)
+            UpdateProjectRequest request,
+            UserAggregate user)
         {
             // unchanged
             newProject.Id.Value.Should().Be(request.Id);
@@ -132,7 +135,7 @@ internal static partial class Utils
 
             // changed
             newProject.Name.Value.Should().Be(request.Name);
-            newProject.IsFavorite.Value.Should().Be(request.IsFavorite);
+            newProject.IsFavorite(user).Should().Be(request.IsFavorite);
             newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
@@ -211,12 +214,13 @@ internal static partial class Utils
 
         private static void AssertProjectResponse(
             GetCollectionProjectResponse.ProjectResponse projectResponse,
-            ProjectAggregate project)
+            ProjectAggregate project,
+            UserAggregate user)
         {
             projectResponse.Id.Should().Be(project.Id.Value);
             projectResponse.Name.Should().Be(project.Name.Value);
             projectResponse.Description.Should().Be(project.Description.Value);
-            projectResponse.IsFavorite.Should().Be(project.IsFavorite.Value);
+            projectResponse.IsFavorite.Should().Be(project.IsFavorite(user));
             projectResponse.Lifecycle.Should().Be(project.Lifecycle.ToString());
             AssertUserResponse(projectResponse.Owner, project.Owner);
             projectResponse.IsPrivate.Should().Be(project.IsPrivate.Value);

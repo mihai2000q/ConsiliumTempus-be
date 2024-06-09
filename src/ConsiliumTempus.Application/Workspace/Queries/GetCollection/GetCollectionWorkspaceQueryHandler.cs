@@ -43,6 +43,7 @@ public sealed class GetCollectionWorkspaceQueryHandler(
 
         return new GetCollectionWorkspaceResult(
             workspaces,
-            workspacesCount);
+            workspacesCount,
+            user);
     }
 }

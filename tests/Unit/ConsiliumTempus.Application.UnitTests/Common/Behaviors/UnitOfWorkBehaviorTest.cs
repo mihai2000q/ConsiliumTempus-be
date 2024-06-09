@@ -6,7 +6,6 @@ using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.Workspace;
 using MediatR;
 
 namespace ConsiliumTempus.Application.UnitTests.Common.Behaviors;
@@ -78,13 +77,13 @@ public class UnitOfWorkBehaviorTest
     public async Task WhenItIsNotCommand_ShouldInvokeNextBehavior()
     {
         // Arrange
-        var uut = new UnitOfWorkBehavior<GetWorkspaceQuery, ErrorOr<WorkspaceAggregate>>(_unitOfWork);
-        var nextBehavior = Substitute.For<RequestHandlerDelegate<ErrorOr<WorkspaceAggregate>>>();
+        var uut = new UnitOfWorkBehavior<GetWorkspaceQuery, ErrorOr<GetWorkspaceResult>>(_unitOfWork);
+        var nextBehavior = Substitute.For<RequestHandlerDelegate<ErrorOr<GetWorkspaceResult>>>();
 
-        var workspace = WorkspaceFactory.Create();
+        var result = WorkspaceResultFactory.CreateGetWorkspaceResult();
         nextBehavior
             .Invoke()
-            .Returns(workspace);
+            .Returns(result);
 
         var query = WorkspaceQueryFactory.CreateGetWorkspaceQuery();
 
@@ -98,6 +97,6 @@ public class UnitOfWorkBehaviorTest
         _unitOfWork.DidNotReceive();
 
         outcome.IsError.Should().BeFalse();
-        outcome.Value.Should().Be(workspace);
+        outcome.Value.Should().Be(result);
     }
 }

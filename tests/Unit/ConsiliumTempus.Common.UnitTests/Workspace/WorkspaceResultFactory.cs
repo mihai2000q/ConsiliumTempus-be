@@ -1,20 +1,34 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Common.UnitTests.Workspace;
 
 public static class WorkspaceResultFactory
 {
+    public static GetWorkspaceResult CreateGetWorkspaceResult(
+        WorkspaceAggregate? workspace = null,
+        UserAggregate? user = null)
+    {
+        return new GetWorkspaceResult(
+            workspace ?? WorkspaceFactory.Create(),
+            user ?? UserFactory.Create());
+    }
+    
     public static GetCollectionWorkspaceResult CreateGetCollectionWorkspaceResult(
         List<WorkspaceAggregate>? workspaces = null,
-        int totalCount = 25)
+        int totalCount = 25,
+        UserAggregate? currentUser = null)
     {
         return new GetCollectionWorkspaceResult(
             workspaces ?? WorkspaceFactory.CreateList(),
-            totalCount);
+            totalCount,
+            currentUser ?? UserFactory.Create());
     }
     
     public static CreateWorkspaceResult CreateCreateWorkspaceResult()

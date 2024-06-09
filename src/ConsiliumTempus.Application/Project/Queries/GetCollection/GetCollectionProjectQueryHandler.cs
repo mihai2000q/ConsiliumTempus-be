@@ -41,6 +41,7 @@ public sealed class GetCollectionProjectQueryHandler(
 
         return new GetCollectionProjectResult(
             projects,
-            totalCount);
+            totalCount,
+            user);
     }
 }

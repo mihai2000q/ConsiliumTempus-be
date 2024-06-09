@@ -17,17 +17,18 @@ public class ProjectControllerGetTest(WebAppFactory factory)
     public async Task GetProject_WhenSucceeds_ShouldReturnProject()
     {
         // Arrange
+        var user = ProjectData.Users.First();
         var project = ProjectData.Projects.First();
         var request = ProjectRequestFactory.CreateGetProjectRequest(project.Id.Value);
 
         // Act
-        Client.UseCustomToken(ProjectData.Users.First());
+        Client.UseCustomToken(user);
         var outcome = await Client.Get($"api/projects/{request.Id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetProjectResponse>();
-        Utils.Project.AssertGetProjectResponse(response!, project);
+        Utils.Project.AssertGetProjectResponse(response!, project, user);
     }
 
     [Fact]

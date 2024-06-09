@@ -16,15 +16,13 @@ public static class ProjectSprintFactory
         DateOnly? startDate = null,
         DateOnly? endDate = null)
     {
-        var sprint = DomainFactory.GetObjectInstance<ProjectSprintAggregate>();
-        
-        DomainFactory.SetProperty(ref sprint, nameof(sprint.Id), ProjectSprintId.CreateUnique());
-        DomainFactory.SetProperty(ref sprint, nameof(sprint.Name), Name.Create(name));
-        DomainFactory.SetProperty(ref sprint, nameof(sprint.StartDate), startDate);
-        DomainFactory.SetProperty(ref sprint, nameof(sprint.EndDate), endDate);
-        DomainFactory.SetProperty(ref sprint, nameof(sprint.Audit), audit);
-        DomainFactory.SetProperty(ref sprint, nameof(sprint.Project), project);
-
-        return sprint;
+        return EntityBuilder<ProjectSprintAggregate>.Empty()
+            .WithProperty(nameof(ProjectSprintAggregate.Id), ProjectSprintId.CreateUnique())
+            .WithProperty(nameof(ProjectSprintAggregate.Name), Name.Create(name))
+            .WithProperty(nameof(ProjectSprintAggregate.StartDate), startDate)
+            .WithProperty(nameof(ProjectSprintAggregate.EndDate), endDate)
+            .WithProperty(nameof(ProjectSprintAggregate.Audit), audit)
+            .WithProperty(nameof(ProjectSprintAggregate.Project), project)
+            .Build();
     }
 }

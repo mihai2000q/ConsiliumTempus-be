@@ -11,10 +11,6 @@ internal static partial class FilterProperties
             nameof(ProjectAggregate.Name),
             p => p.Name.Value);
         
-        internal sealed class IsFavoriteProperty() : FilterProperty<ProjectAggregate>(
-            nameof(ProjectAggregate.IsFavorite),
-            p => p.IsFavorite.Value);
-        
         internal sealed class IsPrivateProperty() : FilterProperty<ProjectAggregate>(
             nameof(ProjectAggregate.IsPrivate),
             p => p.IsPrivate.Value);

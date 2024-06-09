@@ -11,14 +11,12 @@ public static class AuditFactory
         DateTime? createdDateTime = null,
         DateTime? updatedDateTime = null)
     {
-        var audit = DomainFactory.GetObjectInstance<Audit>();
-
-        DomainFactory.SetProperty(ref audit, nameof(audit.Id), Guid.NewGuid());
-        DomainFactory.SetProperty(ref audit, nameof(audit.CreatedBy), createdBy);
-        DomainFactory.SetProperty(ref audit, nameof(audit.UpdatedBy), updatedBy);
-        DomainFactory.SetProperty(ref audit, nameof(audit.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
-        DomainFactory.SetProperty(ref audit, nameof(audit.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
-
-        return audit;
+        return EntityBuilder<Audit>.Empty()
+            .WithProperty(nameof(Audit.Id), Guid.NewGuid())
+            .WithProperty(nameof(Audit.CreatedBy), createdBy)
+            .WithProperty(nameof(Audit.UpdatedBy), updatedBy)
+            .WithProperty(nameof(Audit.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(Audit.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
+            .Build();
     }
 }

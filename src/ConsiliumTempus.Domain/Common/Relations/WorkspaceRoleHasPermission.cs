@@ -1,15 +1,18 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Domain.Common.Relations;
 
-public sealed class WorkspaceRoleHasPermission
+public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private WorkspaceRoleHasPermission()
     {
     }
 
-    private WorkspaceRoleHasPermission(int workspaceRoleId, int permissionId)
+    private WorkspaceRoleHasPermission(int workspaceRoleId, int permissionId) : base((workspaceRoleId, permissionId))
     {
         WorkspaceRoleId = workspaceRoleId;
         PermissionId = permissionId;
@@ -22,4 +25,41 @@ public sealed class WorkspaceRoleHasPermission
     {
         return new WorkspaceRoleHasPermission(roleId, permissionId);
     }
+
+    private static readonly List<Permissions> ViewPermissions =
+    [
+        Permissions.ReadWorkspace,
+        Permissions.ReadProject, Permissions.ReadCollectionProject,
+        Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint,
+        Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask
+    ];
+
+    private static readonly List<Permissions> MemberPermissions =
+    [
+        Permissions.ReadWorkspace, Permissions.UpdateWorkspace,
+        Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject,
+        Permissions.ReadStatusesFromProject, Permissions.UpdateStatusFromProject,
+        Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint, Permissions.UpdateStageFromProjectSprint,
+        Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask,
+        Permissions.UpdateProjectTask, Permissions.DeleteProjectTask,
+    ];
+
+    private static readonly List<Permissions> AdminPermissions =
+    [
+        Permissions.ReadWorkspace, Permissions.UpdateWorkspace, Permissions.DeleteWorkspace,
+        Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadCollectionProject,
+        Permissions.UpdateProject, Permissions.DeleteProject,
+        Permissions.AddStatusToProject, Permissions.ReadStatusesFromProject, Permissions.RemoveStatusFromProject, Permissions.UpdateStatusFromProject,
+        Permissions.CreateProjectSprint, Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint, Permissions.DeleteProjectSprint,
+        Permissions.AddStageToProjectSprint, Permissions.UpdateStageFromProjectSprint, Permissions.RemoveStageFromProjectSprint,
+        Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask,
+        Permissions.UpdateProjectTask, Permissions.DeleteProjectTask,
+    ];
+
+    public static readonly Dictionary<WorkspaceRole, List<Permissions>> DefaultData = new()
+    {
+        { WorkspaceRole.View, ViewPermissions },
+        { WorkspaceRole.Member, MemberPermissions },
+        { WorkspaceRole.Admin, AdminPermissions },
+    };
 }

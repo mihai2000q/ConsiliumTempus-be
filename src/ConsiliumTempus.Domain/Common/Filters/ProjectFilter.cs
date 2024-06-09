@@ -11,7 +11,6 @@ public abstract class ProjectFilter : Filter<ProjectAggregate>
     public static readonly IReadOnlyList<FilterProperty<ProjectAggregate>> FilterProperties =
     [
         new FilterProperties.Project.NameFilterProperty(),
-        new FilterProperties.Project.IsFavoriteProperty(),
         new FilterProperties.Project.IsPrivateProperty(),
         new FilterProperties.Project.LifecycleProperty()
     ];

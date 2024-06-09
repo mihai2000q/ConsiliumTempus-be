@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
@@ -19,7 +20,7 @@ internal static partial class Utils
             workspace.Name.Value.Should().Be(command.Name);
             workspace.Description.Value.Should().BeEmpty();
             workspace.Owner.Should().Be(user);
-            workspace.IsFavorite.Value.Should().Be(false);
+            workspace.IsFavorite(user).Should().Be(false);
             workspace.IsPersonal.Value.Should().Be(false);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -34,6 +35,7 @@ internal static partial class Utils
             workspace.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.Projects.Should().BeEmpty();
+            workspace.Favorites.Should().BeEmpty();
 
             return true;
         }
@@ -48,17 +50,23 @@ internal static partial class Utils
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
-        internal static void AssertWorkspace(WorkspaceAggregate outcome, WorkspaceAggregate expected)
+        internal static void AssertWorkspace(
+            GetWorkspaceResult outcome, 
+            WorkspaceAggregate expected,
+            UserAggregate user)
         {
-            outcome.Id.Should().Be(expected.Id);
-            outcome.Name.Should().Be(expected.Name);
-            outcome.Description.Should().Be(expected.Description);
-            outcome.IsFavorite.Should().Be(expected.IsFavorite);
-            outcome.LastActivity.Should().Be(expected.LastActivity);
-            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
-            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
-            outcome.Memberships.Should().BeEquivalentTo(expected.Memberships);
-            outcome.Projects.Should().BeEquivalentTo(expected.Projects);
+            outcome.Workspace.Id.Should().Be(expected.Id);
+            outcome.Workspace.Name.Should().Be(expected.Name);
+            outcome.Workspace.Description.Should().Be(expected.Description);
+            outcome.Workspace.IsFavorite(user).Should().Be(expected.IsFavorite(user));
+            outcome.Workspace.LastActivity.Should().Be(expected.LastActivity);
+            outcome.Workspace.CreatedDateTime.Should().Be(expected.CreatedDateTime);
+            outcome.Workspace.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Workspace.Memberships.Should().BeEquivalentTo(expected.Memberships);
+            outcome.Workspace.Projects.Should().BeEquivalentTo(expected.Projects);
+            outcome.Workspace.Favorites.Should().BeEquivalentTo(expected.Favorites);
+
+            outcome.CurrentUser.Should().Be(user);
         }
 
         internal static void AssertGetCollectionResult(
@@ -66,7 +74,8 @@ internal static partial class Utils
             GetCollectionWorkspaceQuery query,
             List<WorkspaceAggregate> workspaces,
             int workspacesCount,
-            WorkspaceAggregate personalWorkspace)
+            WorkspaceAggregate personalWorkspace,
+            UserAggregate currentUser)
         {
             result.Workspaces.Should().BeEquivalentTo(workspaces);
             if (query.IsPersonalWorkspaceFirst)
@@ -75,6 +84,7 @@ internal static partial class Utils
             }
 
             result.TotalCount.Should().Be(workspacesCount);
+            result.CurrentUser.Should().Be(currentUser);
         }
     }
 }

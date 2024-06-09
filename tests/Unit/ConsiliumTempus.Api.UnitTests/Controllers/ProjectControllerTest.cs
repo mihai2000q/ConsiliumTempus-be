@@ -54,10 +54,10 @@ public class ProjectControllerTest
         // Arrange
         var request = ProjectRequestFactory.CreateGetProjectRequest();
 
-        var project = ProjectFactory.CreateWithSprints();
+        var result = ProjectResultFactory.CreateGetProjectResult();
         _mediator
             .Send(Arg.Any<GetProjectQuery>())
-            .Returns(project);
+            .Returns(result);
 
         // Act
         var outcome = await _uut.Get(request, default);
@@ -69,7 +69,7 @@ public class ProjectControllerTest
                 Utils.Project.AssertGetProjectQuery(q, request)));
 
         var response = outcome.ToResponse<GetProjectResponse>();
-        Utils.Project.AssertGetProjectResponse(response, project);
+        Utils.Project.AssertGetProjectResponse(response, result);
     }
 
     [Fact]

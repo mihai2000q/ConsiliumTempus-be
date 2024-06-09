@@ -126,15 +126,13 @@ internal class ProjectData : ITestData
             Users[0],
             "Get a house",
             "this is actually really important",
-            false,
-            true),
+            favorites: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
             "Start a retiring investment plan",
             "",
             false,
-            true,
             ProjectLifecycle.Upcoming),
         ProjectFactory.Create(
             Workspaces[2],
@@ -142,8 +140,8 @@ internal class ProjectData : ITestData
             "Start a new life",
             "criminal activity",
             false,
-            true,
-            ProjectLifecycle.Archived)
+            ProjectLifecycle.Archived,
+            favorites: [Users[0]]),
     ];
 
     public static ProjectStatus[] Statuses { get; } =

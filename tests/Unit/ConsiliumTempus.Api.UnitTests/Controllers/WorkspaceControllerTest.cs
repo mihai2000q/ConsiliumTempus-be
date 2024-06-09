@@ -41,10 +41,10 @@ public class WorkspaceControllerTest
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetWorkspaceRequest();
 
-        var workspace = WorkspaceFactory.Create();
+        var result = WorkspaceResultFactory.CreateGetWorkspaceResult();
         _mediator
             .Send(Arg.Any<GetWorkspaceQuery>())
-            .Returns(workspace);
+            .Returns(result);
 
         // Act
         var outcome = await _uut.Get(request, default);
@@ -55,7 +55,7 @@ public class WorkspaceControllerTest
             .Send(Arg.Is<GetWorkspaceQuery>(query => Utils.Workspace.AssertGetQuery(query, request)));
 
         var response = outcome.ToResponse<GetWorkspaceResponse>();
-        Utils.Workspace.AssertGetResponse(response, workspace);
+        Utils.Workspace.AssertGetResponse(response, result);
     }
 
     [Fact]

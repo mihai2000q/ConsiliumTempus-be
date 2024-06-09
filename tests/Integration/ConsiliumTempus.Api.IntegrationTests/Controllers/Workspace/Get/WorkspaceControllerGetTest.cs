@@ -17,17 +17,18 @@ public class WorkspaceControllerGetTest(WebAppFactory factory)
     public async Task GetWorkspace_WhenItSucceeds_ShouldReturnWorkspace()
     {
         // Arrange
+        var user = WorkspaceData.Users[0];
         var workspace = WorkspaceData.Workspaces.First();
         var query = WorkspaceRequestFactory.CreateGetWorkspaceRequest(workspace.Id.Value);
 
         // Act
-        Client.UseCustomToken(WorkspaceData.Users[0]);
+        Client.UseCustomToken(user);
         var outcome = await Client.Get($"api/workspaces/{query.Id}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetWorkspaceResponse>();
-        Utils.Workspace.AssertGetResponse(response!, workspace);
+        Utils.Workspace.AssertGetResponse(response!, workspace, user);
     }
 
     [Fact]

@@ -19,7 +19,9 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
 {
     public async Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default)
     {
-        return await dbContext.Workspaces.FindAsync([id], cancellationToken);
+        return await dbContext.Workspaces
+            .Include(w => w.Favorites)
+            .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
     }
 
     public async Task<WorkspaceAggregate?> GetByProject(ProjectId id, CancellationToken cancellationToken = default)
@@ -31,7 +33,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         return project?.Workspace;
     }
 
-    public async Task<WorkspaceAggregate?> GetByProjectSprint(ProjectSprintId id,
+    public async Task<WorkspaceAggregate?> GetByProjectSprint(ProjectSprintId id, 
         CancellationToken cancellationToken = default)
     {
         var projectSprint = await dbContext.ProjectSprints
@@ -41,7 +43,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         return projectSprint?.Project.Workspace;
     }
 
-    public async Task<WorkspaceAggregate?> GetByProjectStage(ProjectStageId id,
+    public async Task<WorkspaceAggregate?> GetByProjectStage(ProjectStageId id, 
         CancellationToken cancellationToken = default)
     {
         var projectStage = await dbContext.Set<ProjectStage>()
@@ -69,6 +71,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Workspaces
+            .Include(w => w.Favorites)
             .Where(w => w.Memberships.Any(m => m.User == user))
             .ApplyFilters(filters)
             .ApplyOrders(orders)

@@ -17,15 +17,13 @@ public static class ProjectStatusFactory
         string description = Constants.ProjectStatus.Description,
         ProjectStatusType status = ProjectStatusType.AtRisk)
     {
-        var projectStatus = DomainFactory.GetObjectInstance<ProjectStatus>();
-
-        DomainFactory.SetProperty(ref projectStatus, nameof(projectStatus.Id), ProjectStatusId.CreateUnique());
-        DomainFactory.SetProperty(ref projectStatus, nameof(projectStatus.Title), Title.Create(title));
-        DomainFactory.SetProperty(ref projectStatus, nameof(projectStatus.Status), status);
-        DomainFactory.SetProperty(ref projectStatus, nameof(projectStatus.Description), Description.Create(description));
-        DomainFactory.SetProperty(ref projectStatus, nameof(projectStatus.Project), project);
-        DomainFactory.SetProperty(ref projectStatus, nameof(projectStatus.Audit), audit);
-
-        return projectStatus;
+        return EntityBuilder<ProjectStatus>.Empty()
+            .WithProperty(nameof(ProjectStatus.Id), ProjectStatusId.CreateUnique())
+            .WithProperty(nameof(ProjectStatus.Title), Title.Create(title))
+            .WithProperty(nameof(ProjectStatus.Status), status)
+            .WithProperty(nameof(ProjectStatus.Description), Description.Create(description))
+            .WithProperty(nameof(ProjectStatus.Project), project)
+            .WithProperty(nameof(ProjectStatus.Audit), audit)
+            .Build();
     }
 }

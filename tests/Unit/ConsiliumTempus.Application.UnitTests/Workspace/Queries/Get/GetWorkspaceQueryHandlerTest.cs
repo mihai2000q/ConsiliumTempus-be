@@ -1,6 +1,8 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -11,13 +13,15 @@ public class GetWorkspaceQueryHandlerTest
 {
     #region Setup
 
+    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IWorkspaceRepository _workspaceRepository;
     private readonly GetWorkspaceQueryHandler _uut;
 
     public GetWorkspaceQueryHandlerTest()
     {
+        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
-        _uut = new GetWorkspaceQueryHandler(_workspaceRepository);
+        _uut = new GetWorkspaceQueryHandler(_currentUserProvider, _workspaceRepository);
     }
 
     #endregion
@@ -32,6 +36,12 @@ public class GetWorkspaceQueryHandlerTest
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);
+
+        var user = UserFactory.Create();
+        _currentUserProvider
+            .GetCurrentUserAfterPermissionCheck()
+            .Returns(user);
+        
         // Act
         var outcome = await _uut.Handle(query, default);
 
@@ -41,7 +51,7 @@ public class GetWorkspaceQueryHandlerTest
             .Get(Arg.Is<WorkspaceId>(id => query.Id == id.Value));
 
         outcome.IsError.Should().BeFalse();
-        Utils.Workspace.AssertWorkspace(outcome.Value, workspace);
+        Utils.Workspace.AssertWorkspace(outcome.Value, workspace, user);
     }
 
     [Fact]

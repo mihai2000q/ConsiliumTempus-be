@@ -23,7 +23,6 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         ProjectId id,
         Name name,
         Description description,
-        IsFavorite isFavorite,
         IsPrivate isPrivate,
         UserAggregate owner,
         ProjectLifecycle lifecycle,
@@ -34,7 +33,6 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     {
         Name = name;
         Description = description;
-        IsFavorite = isFavorite;
         IsPrivate = isPrivate;
         Owner = owner;
         Lifecycle = lifecycle;
@@ -46,10 +44,10 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
 
     private readonly List<ProjectSprintAggregate> _sprints = [];
     private readonly List<ProjectStatus> _statuses = [];
+    private readonly List<UserAggregate> _favorites = [];
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
-    public IsFavorite IsFavorite { get; private set; } = default!;
     public IsPrivate IsPrivate { get; private set; } = default!;
     public UserAggregate Owner { get; private set; } = default!;
     public ProjectLifecycle Lifecycle { get; private set; }
@@ -57,6 +55,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     public WorkspaceAggregate Workspace { get; init; } = default!;
     public IReadOnlyList<ProjectSprintAggregate> Sprints => _sprints.AsReadOnly();
     public IReadOnlyList<ProjectStatus> Statuses => _statuses.AsReadOnly();
+    public IReadOnlyList<UserAggregate> Favorites => _favorites.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
 
@@ -70,7 +69,6 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
             ProjectId.CreateUnique(),
             name,
             Description.Create(string.Empty),
-            IsFavorite.Create(false),
             isPrivate,
             owner,
             ProjectLifecycle.Active,
@@ -84,10 +82,18 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         return project;
     }
 
-    public void Update(Name name, IsFavorite isFavorite)
+    public bool IsFavorite(UserAggregate user)
+    {
+        return _favorites.SingleOrDefault(u => u == user) is not null;
+    }
+
+    public void Update(Name name, bool isFavorite, UserAggregate user)
     {
         Name = name;
-        IsFavorite = isFavorite;
+        if (isFavorite)
+            _favorites.Add(user);
+        else
+            _favorites.Remove(user);
         UpdatedDateTime = DateTime.UtcNow;
         RefreshActivity();
     }
