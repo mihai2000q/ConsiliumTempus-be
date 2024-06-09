@@ -15,14 +15,12 @@ public static class ProjectStageFactory
         string name = Constants.ProjectStage.Name,
         int customOrderPosition = 0)
     {
-        var stage = DomainFactory.GetObjectInstance<ProjectStage>();
-
-        DomainFactory.SetProperty(ref stage, nameof(stage.Id), ProjectStageId.CreateUnique());
-        DomainFactory.SetProperty(ref stage, nameof(stage.Name), Name.Create(name));
-        DomainFactory.SetProperty(ref stage, nameof(stage.CustomOrderPosition), CustomOrderPosition.Create(customOrderPosition));
-        DomainFactory.SetProperty(ref stage, nameof(stage.Sprint), projectSprint);
-        DomainFactory.SetProperty(ref stage, nameof(stage.Audit), audit);
-
-        return stage;
+        return EntityBuilder<ProjectStage>.Empty()
+            .WithProperty(nameof(ProjectStage.Id), ProjectStageId.CreateUnique())
+            .WithProperty(nameof(ProjectStage.Name), Name.Create(name))
+            .WithProperty(nameof(ProjectStage.CustomOrderPosition), CustomOrderPosition.Create(customOrderPosition))
+            .WithProperty(nameof(ProjectStage.Sprint), projectSprint)
+            .WithProperty(nameof(ProjectStage.Audit), audit)
+            .Build();
     }
 }

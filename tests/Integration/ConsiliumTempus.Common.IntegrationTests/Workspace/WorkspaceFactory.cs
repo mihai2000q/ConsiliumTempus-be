@@ -18,18 +18,16 @@ public static class WorkspaceFactory
         DateTime? updatedDateTime = null,
         List<UserAggregate>? favorites = null)
     {
-        var workspace = DomainFactory.GetObjectInstance<WorkspaceAggregate>();
-
-        DomainFactory.SetProperty(ref workspace, nameof(workspace.Id), WorkspaceId.CreateUnique());
-        DomainFactory.SetProperty(ref workspace, nameof(workspace.Name), Name.Create(name));
-        DomainFactory.SetProperty(ref workspace, nameof(workspace.Description), Description.Create(description));
-        DomainFactory.SetProperty(ref workspace, nameof(workspace.Owner), owner);
-        DomainFactory.SetProperty(ref workspace, nameof(workspace.IsPersonal), IsPersonal.Create(isPersonal));
-        DomainFactory.SetProperty(ref workspace, nameof(workspace.LastActivity), lastActivity ?? DateTime.UtcNow);
-        DomainFactory.SetProperty(ref workspace, nameof(workspace.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
-        DomainFactory.SetProperty(ref workspace, nameof(workspace.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
-        DomainFactory.SetProperty(ref workspace, nameof(workspace.Favorites), favorites ?? null);
-
-        return workspace;
+        return EntityBuilder<WorkspaceAggregate>.Empty()
+            .WithProperty(nameof(WorkspaceAggregate.Id), WorkspaceId.CreateUnique())
+            .WithProperty(nameof(WorkspaceAggregate.Name), Name.Create(name))
+            .WithProperty(nameof(WorkspaceAggregate.Description), Description.Create(description))
+            .WithProperty(nameof(WorkspaceAggregate.Owner), owner)
+            .WithProperty(nameof(WorkspaceAggregate.IsPersonal), IsPersonal.Create(isPersonal))
+            .WithProperty(nameof(WorkspaceAggregate.LastActivity), lastActivity ?? DateTime.UtcNow)
+            .WithProperty(nameof(WorkspaceAggregate.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(WorkspaceAggregate.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(WorkspaceAggregate.Favorites), favorites ?? [])
+            .Build();
     }
 }

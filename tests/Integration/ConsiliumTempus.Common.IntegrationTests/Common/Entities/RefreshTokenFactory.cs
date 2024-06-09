@@ -14,17 +14,15 @@ public static class RefreshTokenFactory
         DateTime? createdDateTime = null,
         DateTime? updatedDateTime = null)
     {
-        var refreshToken = DomainFactory.GetObjectInstance<RefreshToken>();
-
-        DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.Id), Guid.NewGuid());
-        DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.JwtId), jwtId);
-        DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.ExpiryDateTime), expiryDateTime ?? DateTime.UtcNow.AddDays(7));
-        DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.IsInvalidated), isInvalidated);
-        DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.RefreshTimes), refreshTimes);
-        DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
-        DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
-        DomainFactory.SetProperty(ref refreshToken, nameof(refreshToken.User), user);
-
-        return refreshToken;
+        return EntityBuilder<RefreshToken>.Empty()
+            .WithProperty(nameof(RefreshToken.Id), Guid.NewGuid())
+            .WithProperty(nameof(RefreshToken.JwtId), jwtId)
+            .WithProperty(nameof(RefreshToken.ExpiryDateTime), expiryDateTime ?? DateTime.UtcNow.AddDays(7))
+            .WithProperty(nameof(RefreshToken.IsInvalidated), isInvalidated)
+            .WithProperty(nameof(RefreshToken.RefreshTimes), refreshTimes)
+            .WithProperty(nameof(RefreshToken.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(RefreshToken.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(RefreshToken.User), user)
+            .Build();
     }
 }

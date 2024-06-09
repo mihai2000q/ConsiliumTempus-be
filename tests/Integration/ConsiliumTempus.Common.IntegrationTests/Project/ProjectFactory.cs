@@ -21,19 +21,17 @@ public static class ProjectFactory
         DateTime? updatedDateTime = null,
         List<UserAggregate>? favorites = null)
     {
-        var project = DomainFactory.GetObjectInstance<ProjectAggregate>();
-
-        DomainFactory.SetProperty(ref project, nameof(project.Id), ProjectId.CreateUnique());
-        DomainFactory.SetProperty(ref project, nameof(project.Name), Name.Create(name));
-        DomainFactory.SetProperty(ref project, nameof(project.Description), Description.Create(description));
-        DomainFactory.SetProperty(ref project, nameof(project.IsPrivate), IsPrivate.Create(isPrivate));
-        DomainFactory.SetProperty(ref project, nameof(project.Owner), owner);
-        DomainFactory.SetProperty(ref project, nameof(project.Lifecycle), lifecycle);
-        DomainFactory.SetProperty(ref project, nameof(project.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
-        DomainFactory.SetProperty(ref project, nameof(project.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
-        DomainFactory.SetProperty(ref project, nameof(project.Workspace), workspace);
-        DomainFactory.SetProperty(ref project, nameof(project.Favorites), favorites ?? []);
-
-        return project;
+        return EntityBuilder<ProjectAggregate>.Empty()
+            .WithProperty(nameof(ProjectAggregate.Id), ProjectId.CreateUnique())
+            .WithProperty(nameof(ProjectAggregate.Name), Name.Create(name))
+            .WithProperty(nameof(ProjectAggregate.Description), Description.Create(description))
+            .WithProperty(nameof(ProjectAggregate.IsPrivate), IsPrivate.Create(isPrivate))
+            .WithProperty(nameof(ProjectAggregate.Owner), owner)
+            .WithProperty(nameof(ProjectAggregate.Lifecycle), lifecycle)
+            .WithProperty(nameof(ProjectAggregate.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(ProjectAggregate.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(ProjectAggregate.Workspace), workspace)
+            .WithProperty(nameof(ProjectAggregate.Favorites), favorites ?? [])
+            .Build();
     }
 }

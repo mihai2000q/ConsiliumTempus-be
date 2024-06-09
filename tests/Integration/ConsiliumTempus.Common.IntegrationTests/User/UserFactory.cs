@@ -15,17 +15,15 @@ public static class UserFactory
         DateTime? createdDateTime = null,
         DateTime? updatedDateTime = null)
     {
-        var user = DomainFactory.GetObjectInstance<UserAggregate>();
-
-        DomainFactory.SetProperty(ref user, nameof(user.Id), UserId.CreateUnique());
-        DomainFactory.SetProperty(ref user, nameof(user.Credentials), Credentials.Create(email, password));
-        DomainFactory.SetProperty(ref user, nameof(user.FirstName), FirstName.Create(firstName));
-        DomainFactory.SetProperty(ref user, nameof(user.LastName), LastName.Create(lastName));
-        DomainFactory.SetProperty(ref user, nameof(user.Role), role is null ? null : Role.Create(role));
-        DomainFactory.SetProperty(ref user, nameof(user.DateOfBirth), dateOfBirth);
-        DomainFactory.SetProperty(ref user, nameof(user.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
-        DomainFactory.SetProperty(ref user, nameof(user.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
-
-        return user;
+        return EntityBuilder<UserAggregate>.Empty()
+            .WithProperty(nameof(UserAggregate.Id), UserId.CreateUnique())
+            .WithProperty(nameof(UserAggregate.Credentials), Credentials.Create(email, password))
+            .WithProperty(nameof(UserAggregate.FirstName), FirstName.Create(firstName))
+            .WithProperty(nameof(UserAggregate.LastName), LastName.Create(lastName))
+            .WithProperty(nameof(UserAggregate.Role), role is null ? null : Role.Create(role))
+            .WithProperty(nameof(UserAggregate.DateOfBirth), dateOfBirth)
+            .WithProperty(nameof(UserAggregate.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(UserAggregate.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
+            .Build();
     }
 }

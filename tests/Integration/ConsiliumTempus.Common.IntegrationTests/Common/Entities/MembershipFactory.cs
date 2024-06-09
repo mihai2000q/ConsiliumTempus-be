@@ -14,15 +14,13 @@ public static class MembershipFactory
         DateTime? createdDateTime = null,
         DateTime? updatedDateTime = null)
     {
-        var membership = DomainFactory.GetObjectInstance<Membership>();
-
-        DomainFactory.SetField(ref membership, nameof(membership.WorkspaceRole).ToIdBackingField(), workspaceRole.Id);
-        DomainFactory.SetProperty(ref membership, nameof(membership.Id), (user.Id, workspace.Id));
-        DomainFactory.SetProperty(ref membership, nameof(membership.User), user);
-        DomainFactory.SetProperty(ref membership, nameof(membership.Workspace), workspace);
-        DomainFactory.SetProperty(ref membership, nameof(membership.CreatedDateTime), createdDateTime ?? DateTime.UtcNow);
-        DomainFactory.SetProperty(ref membership, nameof(membership.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow);
-
-        return membership;
+        return EntityBuilder<Membership>.Empty()
+            .WithProperty(nameof(Membership.Id), (user.Id, workspace.Id))
+            .WithProperty(nameof(Membership.User), user)
+            .WithProperty(nameof(Membership.Workspace), workspace)
+            .WithField(nameof(Membership.WorkspaceRole).ToIdBackingField(), workspaceRole.Id)
+            .WithProperty(nameof(Membership.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(Membership.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
+            .Build();
     }
 }
