@@ -30,10 +30,6 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
             .Property(d => d.Value)
             .HasColumnName(nameof(Description));
 
-        builder.OwnsOne(w => w.IsFavorite)
-            .Property(f => f.Value)
-            .HasColumnName(nameof(IsFavorite));
-
         builder.OwnsOne(w => w.IsPersonal)
             .Property(p => p.Value)
             .HasColumnName(nameof(IsPersonal));
@@ -42,5 +38,15 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
             .WithMany()
             .OnDelete(DeleteBehavior.NoAction);
         builder.Navigation(w => w.Owner).AutoInclude();
+
+        builder.HasMany(w => w.Favorites)
+            .WithMany()
+            .UsingEntity(b =>
+            {
+                b.ToTable("UserHasFavoriteWorkspace");
+
+                b.Property(nameof(WorkspaceAggregate).ToId())
+                    .HasColumnName(nameof(WorkspaceId));
+            });
     }
 }
