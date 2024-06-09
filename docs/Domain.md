@@ -71,7 +71,6 @@ The value objects are:
 
 - **CustomOrderPosition**, which encapsulates an int *Value,* and it's used to achieve custom ordering
 - **Description**, which encapsulates a string *Value*
-- **IsFavorite**, which encapsulates a boolean *Value*
 - **IsPrivate**, which encapsulates a boolean *Value*
 - **Message**, which encapsulates a string *Value*
 - **Name**, which encapsulates a string *Value*

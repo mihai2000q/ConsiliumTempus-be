@@ -22,7 +22,6 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
         Description description,
         UserAggregate owner,
         IsPersonal isPersonal,
-        IsFavorite isFavorite,
         DateTime lastActivity,
         DateTime createdDateTime,
         DateTime updatedDateTime) : base(id)
@@ -31,7 +30,6 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
         Description = description;
         Owner = owner;
         IsPersonal = isPersonal;
-        IsFavorite = isFavorite;
         LastActivity = lastActivity;
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
@@ -39,17 +37,18 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
 
     private readonly List<Membership> _memberships = [];
     private readonly List<ProjectAggregate> _projects = [];
+    private readonly List<UserAggregate> _favorites = [];
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
     public IsPersonal IsPersonal { get; private set; } = default!;
-    public IsFavorite IsFavorite { get; private set; } = default!;
     public UserAggregate Owner { get; private set; } = default!;
     public DateTime LastActivity { get; private set; }
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
     public IReadOnlyList<ProjectAggregate> Projects => _projects.AsReadOnly();
+    public IReadOnlyList<UserAggregate> Favorites => _favorites.AsReadOnly();
 
     public static WorkspaceAggregate Create(
         Name name,
@@ -62,12 +61,16 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
             Description.Create(string.Empty), 
             owner,
             isPersonal,
-            IsFavorite.Create(false),
             DateTime.UtcNow,
             DateTime.UtcNow,
             DateTime.UtcNow);
 
         return workspace;
+    }
+    
+    public bool IsFavorite(UserAggregate user)
+    {
+        return _favorites.SingleOrDefault(u => u == user) is not null;
     }
 
     public void Update(Name name, Description description)

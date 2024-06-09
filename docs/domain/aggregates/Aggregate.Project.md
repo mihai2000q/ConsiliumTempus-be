@@ -22,7 +22,6 @@ class Project
   "id": { "value": "00000000-0000-0000-0000-000000000000" },
   "name": "Project 1",
   "description": { "value": "This is the description of the project" },
-  "isFavorite": { "value": false },
   "isPrivate": { "value": true },
   "owner": {},
   "lifecycle": "Active",
@@ -31,7 +30,8 @@ class Project
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
   "workspace": {},
   "sprints": [{}],
-  "statuses": [{}]
+  "statuses": [{}],
+  "favorites": [{}]
 }
 ```
 
@@ -52,7 +52,6 @@ For database design checkout the [Project Diagram](../../database-diagrams/aggre
 ### Filters
 
 - **Name** to filter by name
-- **IsFavorite** to filter by favorites
 - **IsPrivate** to filter by accessibility
 - **Lifecycle** to filter by lifecycle
 

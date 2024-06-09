@@ -22,12 +22,12 @@ class Workspace
   "name": { "value": "Workspace 1" },
   "description": { "value": "This is the description of the workspace" },
   "isPersonal": { "value": true },
-  "isFavorite": { "value": true },
   "owner": {},
   "lastActivity": "2020-01-01T00:00:00.0000000Z",
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
-  "memberships": [{}]
+  "memberships": [{}],
+  "favorites": [{}]
 }
 ```
 
@@ -53,7 +53,7 @@ otherwise they can be part of other people's personal workspaces, but they can't
 ### Filters
 
 - **Name** to filter by name
-- **IsFavorite** to filter by favorite
+- **IsPersonal** to filter by the *IsPersonal* Property
 
 ### Orders
 
