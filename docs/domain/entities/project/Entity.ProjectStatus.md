@@ -23,7 +23,7 @@ class ProjectStatus
 }
 ```
 
-For database design checkout the [Project Status Diagram](../../../database-diagrams/entities/project/Diagram.ProjectStatus.md).
+For database design checkout the [Project Diagram](../../../database-diagrams/aggregates/Diagram.Project.md).
 
 ### Properties Validation
 

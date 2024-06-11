@@ -15,7 +15,7 @@ public sealed class ProjectTaskCommentId : ValueObject
         Value = value;
     }
 
-    public Guid Value { get; init; }
+    public Guid Value { get; }
 
     public static ProjectTaskCommentId CreateUnique()
     {

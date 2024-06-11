@@ -15,7 +15,7 @@ public sealed class ProjectStageId : ValueObject
         Value = value;
     }
 
-    public Guid Value { get; init; }
+    public Guid Value { get; }
 
     public static ProjectStageId CreateUnique()
     {

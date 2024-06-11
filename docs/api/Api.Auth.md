@@ -52,10 +52,6 @@ Sends data needed to create the user in body.
 
 Returns an access token and a refresh token.
 
-```js
-200 OK
-```
-
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzQyM2NkMS0wNGY1LTQ5ZjAtOWY1OS0yOGVjNDk1YjllNzAiLCJlbWFpbCI6IkZpcnN0TGFzdHlAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoiRmlyc3R5IiwiZmFtaWx5X25hbWUiOiJMYXN0eSIsImp0aSI6ImQzZWJlOTExLWFmNDktNDE3OC1iZmVmLWEwODljMDg5ZGI5ZSIsImV4cCI6MTcwMTIwMjQyNSwiaXNzIjoiQ29uc2lsaXVtVGVtcHVzIiwiYXVkIjoiQ29uc2lsaXVtVGVtcHVzIn0.KqiE-eQqyd-VtfMJB3x9dNW2wR6_TrkGpGZ-ZyxxPWI",
@@ -86,10 +82,6 @@ Sends credentials of user in body.
 
 Returns an access token and a refresh token.
 
-```js
-200 OK
-```
-
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzQyM2NkMS0wNGY1LTQ5ZjAtOWY1OS0yOGVjNDk1YjllNzAiLCJlbWFpbCI6IkZpcnN0TGFzdHlAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoiRmlyc3R5IiwiZmFtaWx5X25hbWUiOiJMYXN0eSIsImp0aSI6ImQzZWJlOTExLWFmNDktNDE3OC1iZmVmLWEwODljMDg5ZGI5ZSIsImV4cCI6MTcwMTIwMjQyNSwiaXNzIjoiQ29uc2lsaXVtVGVtcHVzIiwiYXVkIjoiQ29uc2lsaXVtVGVtcHVzIn0.KqiE-eQqyd-VtfMJB3x9dNW2wR6_TrkGpGZ-ZyxxPWI",
@@ -119,10 +111,6 @@ Sends access and refresh tokens in body.
 #### Refresh Response
 
 Returns new access token.
-
-```js
-200 OK
-```
 
 ```json
 {

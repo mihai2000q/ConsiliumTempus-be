@@ -24,7 +24,7 @@ class ProjectTaskComment
 }
 ```
 
-For database design checkout the [Project Task Comment Diagram](../../../database-diagrams/entities/project-task/Diagram.ProjectTaskComment.md).
+For database design checkout the [Project Task Diagram](../../../database-diagrams/aggregates/Diagram.ProjectTask.md).
 
 ### Properties Validation
 
