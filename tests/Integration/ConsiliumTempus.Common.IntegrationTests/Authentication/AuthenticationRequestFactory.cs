@@ -32,8 +32,8 @@ public static class AuthenticationRequestFactory
     }
 
     public static RefreshRequest CreateRefreshRequest(
-        string refreshToken,
-        string token)
+        string token,
+        Guid refreshToken)
     {
         return new RefreshRequest(token, refreshToken);
     }

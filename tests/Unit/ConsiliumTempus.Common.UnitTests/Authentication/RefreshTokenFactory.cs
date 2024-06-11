@@ -3,7 +3,7 @@ using ConsiliumTempus.Domain.Authentication;
 using ConsiliumTempus.Domain.Authentication.ValueObjects;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Common.UnitTests.Common.Entities;
+namespace ConsiliumTempus.Common.UnitTests.Authentication;
 
 public static class RefreshTokenFactory
 {

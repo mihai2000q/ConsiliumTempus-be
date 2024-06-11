@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Common.UnitTests.Common.Entities;
+﻿using ConsiliumTempus.Common.UnitTests.Authentication;
+using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Authentication;
 using ConsiliumTempus.Domain.User;
