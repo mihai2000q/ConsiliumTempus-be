@@ -87,13 +87,10 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    JwtId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ExpiryDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsInvalidated = table.Column<bool>(type: "bit", nullable: false),
-                    RefreshTimes = table.Column<long>(type: "bigint", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -149,6 +146,26 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_WorkspaceRoleHasPermission_WorkspaceRole_WorkspaceRoleId",
                         column: x => x.WorkspaceRoleId,
                         principalTable: "WorkspaceRole",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokenHistory",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    JwtId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RefreshTokenId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokenHistory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokenHistory_RefreshToken_RefreshTokenId",
+                        column: x => x.RefreshTokenId,
+                        principalTable: "RefreshToken",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -614,6 +631,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokenHistory_RefreshTokenId",
+                table: "RefreshTokenHistory",
+                column: "RefreshTokenId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
                 table: "User",
                 column: "Email",
@@ -663,7 +685,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "ProjectTaskComment");
 
             migrationBuilder.DropTable(
-                name: "RefreshToken");
+                name: "RefreshTokenHistory");
 
             migrationBuilder.DropTable(
                 name: "UserHasFavoriteProject");
@@ -676,6 +698,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProjectTask");
+
+            migrationBuilder.DropTable(
+                name: "RefreshToken");
 
             migrationBuilder.DropTable(
                 name: "Permission");

@@ -71,6 +71,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
         CancellationToken cancellationToken = default)
     {
         return dbContext.Projects
+            .IgnoreAutoIncludes()
             .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
             .WhereIf(workspaceId is not null, p => p.Workspace.Id == workspaceId!)
             .ApplyFilters(filters)
@@ -88,17 +89,18 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
     public async Task<int> GetStatusesCount(ProjectId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.Set<ProjectStatus>()
+            .IgnoreAutoIncludes()
             .Where(ps => ps.Project.Id == id)
             .CountAsync(cancellationToken);
     }
 
     public async Task Add(ProjectAggregate project, CancellationToken cancellationToken = default)
     {
-        await dbContext.AddAsync(project, cancellationToken);
+        await dbContext.Projects.AddAsync(project, cancellationToken);
     }
 
     public void Remove(ProjectAggregate project)
     {
-        dbContext.Remove(project);
+        dbContext.Projects.Remove(project);
     }
 }

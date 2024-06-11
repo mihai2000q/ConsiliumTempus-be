@@ -9,20 +9,20 @@ public static class AuthenticationResultFactory
 {
     public static RegisterResult CreateRegisterResult(
         string token = Constants.Auth.Token,
-        string refreshToken = Constants.Auth.RefreshToken)
+        Guid? refreshToken = null)
     {
         return new RegisterResult(
             token,
-            refreshToken);
+            refreshToken ?? Guid.NewGuid());
     }
     
     public static LoginResult CreateLoginResult(
         string token = Constants.Auth.Token,
-        string refreshToken = Constants.Auth.RefreshToken)
+        Guid? refreshToken = null)
     {
         return new LoginResult(
             token,
-            refreshToken);
+            refreshToken ?? Guid.NewGuid());
     }
     
     public static RefreshResult CreateRefreshResult(string token = Constants.Auth.Token)

@@ -58,7 +58,6 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectTasks
-            .Include(t => t.CreatedBy)
             .Where(t => t.Stage.Id == stageId)
             .ApplyFilters(filters)
             .CountAsync(cancellationToken);

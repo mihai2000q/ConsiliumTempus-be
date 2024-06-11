@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Authentication;
+using ConsiliumTempus.Domain.Authentication.ValueObjects;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,9 +8,10 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
 public sealed class RefreshTokenRepository(ConsiliumTempusDbContext dbContext) : IRefreshTokenRepository
 {
-    public Task<RefreshToken?> Get(Guid id, CancellationToken cancellationToken = default)
+    public Task<RefreshToken?> Get(RefreshTokenId id, CancellationToken cancellationToken = default)
     {
         return dbContext.Set<RefreshToken>()
+            .Include(rt => rt.History.OrderByDescending(h => h. CreatedDateTime))
             .Include(rt => rt.User)
             .SingleOrDefaultAsync(rt => rt.Id == id, cancellationToken);
     }

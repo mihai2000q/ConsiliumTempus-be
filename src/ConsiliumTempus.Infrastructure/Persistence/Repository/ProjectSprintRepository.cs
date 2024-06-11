@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
@@ -51,12 +52,12 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
 
     public async Task Add(ProjectSprintAggregate sprint, CancellationToken cancellationToken = default)
     {
-        await dbContext.AddAsync(sprint, cancellationToken);
+        await dbContext.ProjectSprints.AddAsync(sprint, cancellationToken);
     }
 
     public void Remove(ProjectSprintAggregate sprint)
     {
-        dbContext.Remove(sprint);
-        dbContext.Remove(sprint.Audit);
+        dbContext.ProjectSprints.Remove(sprint);
+        dbContext.Set<Audit>().Remove(sprint.Audit);
     }
 }
