@@ -5,5 +5,5 @@ namespace ConsiliumTempus.Application.Authentication.Commands.Refresh;
 
 public sealed record RefreshCommand(
     string Token,
-    string RefreshToken)
+    Guid RefreshToken)
     : IRequest<ErrorOr<RefreshResult>>;

@@ -11,7 +11,7 @@ public sealed class RefreshTokenRepository(ConsiliumTempusDbContext dbContext) :
     public Task<RefreshToken?> Get(RefreshTokenId id, CancellationToken cancellationToken = default)
     {
         return dbContext.Set<RefreshToken>()
-            .Include(rt => rt.History.OrderByDescending(h => h. CreatedDateTime))
+            .Include(rt => rt.History.OrderBy(h => h. CreatedDateTime))
             .Include(rt => rt.User)
             .SingleOrDefaultAsync(rt => rt.Id == id, cancellationToken);
     }

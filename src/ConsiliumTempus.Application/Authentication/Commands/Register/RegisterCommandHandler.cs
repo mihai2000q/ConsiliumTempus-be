@@ -1,7 +1,8 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
-using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Authentication;
+using ConsiliumTempus.Domain.Authentication.ValueObjects;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
@@ -35,10 +36,9 @@ public sealed class RegisterCommandHandler(
 
         var token = jwtTokenGenerator.GenerateToken(user);
         var jwtId = jwtTokenGenerator.GetJwtIdFromToken(token);
-
-        var refreshToken = RefreshToken.Create(jwtId, user);
+        var refreshToken = RefreshToken.Create(user, JwtId.Create(jwtId));
         await refreshTokenRepository.Add(refreshToken, cancellationToken);
 
-        return new RegisterResult(token, refreshToken.Value);
+        return new RegisterResult(token, refreshToken.Id.Value);
     }
 }

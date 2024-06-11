@@ -34,9 +34,9 @@ public sealed class RefreshToken : Entity<RefreshTokenId>
     public DateTime CreatedDateTime { get; init; }
     public UserAggregate User { get; init; } = default!;
     public IReadOnlyList<RefreshTokenHistory> History => _history.AsReadOnly();
-    public JwtId JwtId => _history[0].JwtId;
-    public DateTime UpdatedDateTime => _history[0].CreatedDateTime;
-    public int RefreshTimes => _history.Count;
+    public JwtId JwtId => _history[^1].JwtId;
+    public DateTime UpdatedDateTime => _history[^1].CreatedDateTime;
+    public int RefreshTimes => _history.Count - 1;
 
     public static RefreshToken Create(
         UserAggregate user,

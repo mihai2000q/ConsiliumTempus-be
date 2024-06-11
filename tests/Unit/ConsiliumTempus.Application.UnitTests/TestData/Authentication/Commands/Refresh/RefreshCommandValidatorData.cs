@@ -14,7 +14,7 @@ internal static class RefreshCommandValidatorData
 
             command = new RefreshCommand(
                 "this is a token",
-                "RefreshTokenId");
+                Guid.NewGuid());
             Add(command);
         }
     }
@@ -32,7 +32,7 @@ internal static class RefreshCommandValidatorData
     {
         public GetInvalidRefreshTokenCommands()
         {
-            var command = AuthenticationCommandFactory.CreateRefreshCommand(refreshToken: "");
+            var command = AuthenticationCommandFactory.CreateRefreshCommand(refreshToken: Guid.Empty);
             Add(command, nameof(command.RefreshToken));
         }
     }

@@ -6,5 +6,7 @@ public interface IJwtTokenGenerator
 {
     string GenerateToken(UserAggregate userAggregate);
 
-    string GetJwtIdFromToken(string token);
+    string GenerateToken(UserAggregate user, Guid jti);
+
+    Guid GetJwtIdFromToken(string token);
 }

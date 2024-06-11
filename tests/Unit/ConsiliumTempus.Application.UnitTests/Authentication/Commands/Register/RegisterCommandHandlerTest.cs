@@ -5,7 +5,7 @@ using ConsiliumTempus.Application.UnitTests.TestData.Authentication.Commands.Reg
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Authentication;
 using ConsiliumTempus.Common.UnitTests.User;
-using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Authentication;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
 
@@ -58,7 +58,7 @@ public class RegisterCommandHandlerTest
             .Returns(token)
             .AndDoes(user => userUsedForJwt = user.Arg<UserAggregate>());
 
-        var jwtId = new Guid().ToString();
+        var jwtId = Guid.NewGuid();
         _jwtTokenGenerator
             .GetJwtIdFromToken(token)
             .Returns(jwtId);
@@ -95,9 +95,9 @@ public class RegisterCommandHandlerTest
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(token);
+        outcome.Value.RefreshToken.Should().Be(refreshToken.Id.Value);
 
         Utils.RefreshToken.AssertCreation(refreshToken, jwtId, createdUser);
-        outcome.Value.RefreshToken.Should().Be(refreshToken.Value);
     }
 
     [Fact]
