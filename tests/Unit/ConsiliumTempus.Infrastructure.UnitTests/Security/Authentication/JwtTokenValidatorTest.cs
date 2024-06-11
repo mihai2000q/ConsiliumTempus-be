@@ -1,5 +1,7 @@
-﻿using ConsiliumTempus.Common.UnitTests.Common.Entities;
+﻿using ConsiliumTempus.Common.UnitTests.Authentication;
+using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Authentication;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
@@ -46,58 +48,20 @@ public class JwtTokenValidatorTest
         var refreshToken = RefreshTokenFactory.Create();
 
         // Act
-        var outcome = _uut.ValidateRefreshToken(refreshToken, refreshToken.JwtId.ToString());
+        var outcome = _uut.ValidateRefreshToken(refreshToken);
 
         // Assert
         outcome.Should().BeTrue();
     }
 
-    [Fact]
-    public void ValidateRefreshToken_WhenRefreshTokenIsNull_ShouldReturnFalse()
+    [Theory]
+    [ClassData(typeof(JwtTokenValidatorData.GetInvalidRefreshTokens))]
+    public void ValidateRefreshToken_WhenInvalid_ShouldReturnFalse(RefreshToken refreshToken)
     {
-        // Arrange
-
+        // Arrange - parameterized
+        
         // Act
-        var outcome = _uut.ValidateRefreshToken(null, "");
-
-        // Assert
-        outcome.Should().BeFalse();
-    }
-
-    [Fact]
-    public void ValidateRefreshToken_WhenRefreshTokenIsInvalidated_ShouldReturnFalse()
-    {
-        // Arrange
-        var refreshToken = RefreshTokenFactory.Create(invalidated: true);
-
-        // Act
-        var outcome = _uut.ValidateRefreshToken(refreshToken, refreshToken.JwtId.ToString());
-
-        // Assert
-        outcome.Should().BeFalse();
-    }
-
-    [Fact]
-    public void ValidateRefreshToken_WhenRefreshTokenIsExpired_ShouldReturnFalse()
-    {
-        // Arrange
-        var refreshToken = RefreshTokenFactory.Create(expiryDate: DateTime.UtcNow.AddSeconds(-1));
-
-        // Act
-        var outcome = _uut.ValidateRefreshToken(refreshToken, refreshToken.JwtId.ToString());
-
-        // Assert
-        outcome.Should().BeFalse();
-    }
-
-    [Fact]
-    public void ValidateRefreshToken_WhenJwtIdIsWrong_ShouldReturnFalse()
-    {
-        // Arrange
-        var refreshToken = RefreshTokenFactory.Create();
-
-        // Act
-        var outcome = _uut.ValidateRefreshToken(refreshToken, "wrong");
+        var outcome = _uut.ValidateRefreshToken(refreshToken);
 
         // Assert
         outcome.Should().BeFalse();

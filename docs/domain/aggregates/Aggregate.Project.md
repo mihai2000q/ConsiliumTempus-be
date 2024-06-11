@@ -37,6 +37,10 @@ class Project
 
 For database design checkout the [Project Diagram](../../database-diagrams/aggregates/Diagram.Project.md).
 
+### Entities
+
+- [Project Status](../entities/project/Entity.ProjectStatus.md)
+
 ### Properties Validation
 
 - The **Name** cannot be longer than 100 characters

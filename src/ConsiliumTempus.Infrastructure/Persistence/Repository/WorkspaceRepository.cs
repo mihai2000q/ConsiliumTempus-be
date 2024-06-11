@@ -102,7 +102,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
 
     public async Task Add(WorkspaceAggregate workspaceAggregate, CancellationToken cancellationToken = default)
     {
-        await dbContext.AddAsync(workspaceAggregate, cancellationToken);
+        await dbContext.Workspaces.AddAsync(workspaceAggregate, cancellationToken);
     }
 
     public void Remove(WorkspaceAggregate workspace)

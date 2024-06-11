@@ -5,7 +5,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Authentication;
-using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Authentication;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,7 +30,7 @@ public class AuthenticationControllerLoginTest(WebAppFactory factory)
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<LoginResponse>();
-        Utils.Auth.AssertToken(response?.Token, JwtSettings, user);
+        Utils.Auth.AssertToken(response!.Token, JwtSettings, user);
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Set<RefreshToken>().Should().HaveCount(AuthData.RefreshTokens.Length + 1);
@@ -41,8 +41,8 @@ public class AuthenticationControllerLoginTest(WebAppFactory factory)
             .LastAsync();
         Utils.RefreshToken.AssertCreation(
             refreshToken,
-            response?.RefreshToken,
-            response?.Token,
+            response!.RefreshToken,
+            response.Token,
             user);
     }
 

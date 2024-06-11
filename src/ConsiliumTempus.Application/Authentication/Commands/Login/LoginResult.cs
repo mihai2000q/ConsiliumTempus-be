@@ -2,4 +2,4 @@
 
 public sealed record LoginResult(
     string Token,
-    string RefreshToken);
+    Guid RefreshToken);

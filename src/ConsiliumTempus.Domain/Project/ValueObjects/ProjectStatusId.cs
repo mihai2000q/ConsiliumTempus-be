@@ -3,7 +3,7 @@ using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Domain.Project.ValueObjects;
 
-public sealed class ProjectStatusId : AggregateRootId<Guid>
+public sealed class ProjectStatusId : ValueObject
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectStatusId()
@@ -15,7 +15,7 @@ public sealed class ProjectStatusId : AggregateRootId<Guid>
         Value = value;
     }
 
-    public override Guid Value { get; protected set; }
+    public Guid Value { get; }
 
     public static ProjectStatusId CreateUnique()
     {

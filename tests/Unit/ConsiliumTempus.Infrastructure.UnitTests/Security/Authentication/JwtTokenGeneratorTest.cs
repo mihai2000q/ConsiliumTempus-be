@@ -44,12 +44,26 @@ public class JwtTokenGeneratorTest
         // Assert
         Utils.AssertToken(outcome, user, _jwtSettings);
     }
+    
+    [Fact]
+    public void WhenGenerateTokenWithJti_ShouldReturnNewTokenWithJti()
+    {
+        // Arrange
+        var user = UserFactory.Create();
+        var jti = Guid.NewGuid();
+
+        // Act
+        var outcome = _uut.GenerateToken(user, jti: jti);
+
+        // Assert
+        Utils.AssertToken(outcome, user, _jwtSettings, jti);
+    }
 
     [Fact]
     public void WhenGetJwtIdFromToken_ShouldReturnJti()
     {
         // Arrange
-        const string jti = "This is the JwtId";
+        var jti = Guid.NewGuid().ToString();
         var token = Utils.Token.GenerateToken(_jwtSettings, jti: jti);
 
         // Act

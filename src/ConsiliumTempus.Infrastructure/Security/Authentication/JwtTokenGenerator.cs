@@ -12,7 +12,12 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
 {
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
 
-    public string GenerateToken(UserAggregate userAggregate)
+    public string GenerateToken(UserAggregate user)
+    {
+        return GenerateToken(user, Guid.NewGuid());
+    }
+
+    public string GenerateToken(UserAggregate user, Guid jti)
     {
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
@@ -20,9 +25,9 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userAggregate.Id.Value.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, userAggregate.Credentials.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, user.Credentials.Email),
+            new Claim(JwtRegisteredClaimNames.Jti, jti.ToString())
         };
 
         var securityToken = new JwtSecurityToken(
@@ -35,12 +40,12 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTo
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }
 
-    public string GetJwtIdFromToken(string token)
+    public Guid GetJwtIdFromToken(string token)
     {
-        return new JwtSecurityTokenHandler()
+        return Guid.Parse(new JwtSecurityTokenHandler()
             .ReadJwtToken(token)
             .Claims
             .Single(c => c.Type == JwtRegisteredClaimNames.Jti)
-            .Value;
+            .Value);
     }
 }

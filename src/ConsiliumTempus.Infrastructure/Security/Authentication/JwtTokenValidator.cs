@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
-using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Authentication;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
@@ -17,12 +17,9 @@ public sealed class JwtTokenValidator(
 {
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
 
-    public bool ValidateRefreshToken(RefreshToken? refreshToken, string jwtId)
+    public bool ValidateRefreshToken(RefreshToken refreshToken)
     {
-        return refreshToken is not null &&
-               DateTime.UtcNow <= refreshToken.ExpiryDateTime &&
-               !refreshToken.IsInvalidated &&
-               refreshToken.JwtId.ToString() == jwtId;
+        return DateTime.UtcNow <= refreshToken.ExpiryDateTime && !refreshToken.IsInvalidated.Value;
     }
 
     public async Task<bool> ValidateAccessToken(string token)
@@ -50,7 +47,7 @@ public sealed class JwtTokenValidator(
     private static bool AreClaimsValid(Claim[] claims, UserAggregate user)
     {
         return GetClaim(claims, JwtRegisteredClaimNames.Email) == user.Credentials.Email &&
-               GetClaim(claims, JwtRegisteredClaimNames.Jti)?.Length == 36;
+               Guid.TryParse(GetClaim(claims, JwtRegisteredClaimNames.Jti), out _);
     }
 
     private static string? GetClaim(IEnumerable<Claim> claims, string type)

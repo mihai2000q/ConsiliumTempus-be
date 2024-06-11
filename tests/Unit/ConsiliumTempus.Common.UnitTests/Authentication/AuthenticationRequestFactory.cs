@@ -33,8 +33,8 @@ public static class AuthenticationRequestFactory
 
     public static RefreshRequest CreateRefreshRequest(
         string token = Constants.Auth.Token,
-        string refreshToken = Constants.Auth.RefreshToken)
+        Guid? refreshToken = null)
     {
-        return new RefreshRequest(token, refreshToken);
+        return new RefreshRequest(token, refreshToken ?? Guid.NewGuid());
     }
 }

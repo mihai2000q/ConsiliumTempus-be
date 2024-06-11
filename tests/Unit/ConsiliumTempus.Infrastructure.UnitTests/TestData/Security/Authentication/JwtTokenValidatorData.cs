@@ -1,4 +1,7 @@
-﻿using ConsiliumTempus.Common.UnitTests.User;
+﻿using ConsiliumTempus.Common.UnitTests.Authentication;
+using ConsiliumTempus.Common.UnitTests.Common.Entities;
+using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Authentication;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
 using ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
@@ -8,6 +11,18 @@ namespace ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authenticat
 
 internal static class JwtTokenValidatorData
 {
+    internal class GetInvalidRefreshTokens : TheoryData<RefreshToken>
+    {
+        public GetInvalidRefreshTokens()
+        {
+            var refreshToken = RefreshTokenFactory.Create(invalidated: true);
+            Add(refreshToken);
+            
+            refreshToken = RefreshTokenFactory.Create(expiryDate: DateTime.UtcNow.AddMilliseconds(-1));
+            Add(refreshToken);
+        }
+    }
+    
     internal class GetInvalidTokensByJwtSettings : TheoryData<string>
     {
         private readonly JwtSettings _jwtSettings = new()

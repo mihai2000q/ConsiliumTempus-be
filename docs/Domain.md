@@ -69,6 +69,9 @@ Typically, the value objects will be flattened on the object before persisting i
 
 The value objects are:
 
+- Authentication
+  - **IsInvalidated**, which encapsulates a boolean *Value*
+  - **JwtId**, which encapsulates a Guid *Value*
 - **CustomOrderPosition**, which encapsulates an int *Value,* and it's used to achieve custom ordering
 - **Description**, which encapsulates a string *Value*
 - **IsPrivate**, which encapsulates a boolean *Value*

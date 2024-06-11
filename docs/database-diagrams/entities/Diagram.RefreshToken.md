@@ -5,6 +5,7 @@
 ### Relationships
 
 - **Many-to-One** relationship with the [User](../../domain/aggregates/Aggregate.User.md) entity.
+- **One-to-Many** relationship with the [Refresh Token History](../../domain/entities/refresh-token/Entity.RefreshTokenHistory.md) entity.
 
 ### Diagram
 

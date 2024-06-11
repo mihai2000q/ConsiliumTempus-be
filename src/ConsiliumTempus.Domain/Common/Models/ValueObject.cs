@@ -27,12 +27,8 @@ public abstract class ValueObject : IEquatable<ValueObject>
 
     public static bool operator !=(ValueObject? left, ValueObject? right)
     {
-        return left switch
-        {
-            null when right is null => false,
-            null => true,
-            _ => !left.Equals(right)
-        };
+        if (left is null && right is null) return true;
+        return left is null || !left.Equals(right);
     }
 
     public override int GetHashCode()

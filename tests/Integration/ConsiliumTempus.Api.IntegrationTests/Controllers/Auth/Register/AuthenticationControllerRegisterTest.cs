@@ -5,7 +5,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Authentication;
-using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Authentication;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,7 +39,7 @@ public class AuthenticationControllerRegisterTest(WebAppFactory factory)
         // assert returned access token
         var response = await outcome.Content.ReadFromJsonAsync<RegisterResponse>();
         Utils.Auth.AssertToken(
-            response?.Token,
+            response!.Token,
             JwtSettings,
             user);
 
@@ -51,8 +51,8 @@ public class AuthenticationControllerRegisterTest(WebAppFactory factory)
             .LastAsync();
         Utils.RefreshToken.AssertCreation(
             refreshToken,
-            response?.RefreshToken,
-            response?.Token,
+            response.RefreshToken,
+            response.Token,
             user);
     }
 

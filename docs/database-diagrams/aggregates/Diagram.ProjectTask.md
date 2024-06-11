@@ -8,6 +8,12 @@
 - **One-to-Many** relationship with the [Project Task Comment](../../domain/entities/project-task/Entity.ProjectTaskComment.md) entity.
 - Three **Many-to-one** relationships with the [User](../../domain/aggregates/Aggregate.User.md) aggregate.
 
+### Owned Entities Relationships
+
+#### Project Task Comment
+
+- **Many-to-one** relationships with the [User](../../domain/aggregates/Aggregate.User.md) aggregate.
+
 ### Diagram
 
 <img src="../../images/database-diagrams/aggregates/diagram.project-task.png" alt="Project Task Diagram" width="75%"/>

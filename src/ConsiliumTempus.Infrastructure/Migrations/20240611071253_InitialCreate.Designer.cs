@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240609194157_InitialCreate")]
+    [Migration("20240611071253_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -228,18 +228,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("ExpiryDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsInvalidated")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("JwtId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("RefreshTimes")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
@@ -819,6 +807,71 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsMany("ConsiliumTempus.Domain.Common.Entities.RefreshTokenHistory", "History", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<DateTime>("CreatedDateTime")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<Guid>("RefreshTokenId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("RefreshTokenId");
+
+                            b1.ToTable("RefreshTokenHistory", (string)null);
+
+                            b1.WithOwner("RefreshToken")
+                                .HasForeignKey("RefreshTokenId");
+
+                            b1.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.JwtId", "JwtId", b2 =>
+                                {
+                                    b2.Property<Guid>("RefreshTokenHistoryId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<Guid>("Value")
+                                        .HasColumnType("uniqueidentifier")
+                                        .HasColumnName("JwtId");
+
+                                    b2.HasKey("RefreshTokenHistoryId");
+
+                                    b2.ToTable("RefreshTokenHistory");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("RefreshTokenHistoryId");
+                                });
+
+                            b1.Navigation("JwtId")
+                                .IsRequired();
+
+                            b1.Navigation("RefreshToken");
+                        });
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.IsInvalidated", "IsInvalidated", b1 =>
+                        {
+                            b1.Property<Guid>("RefreshTokenId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<bool>("Value")
+                                .HasColumnType("bit")
+                                .HasColumnName("IsInvalidated");
+
+                            b1.HasKey("RefreshTokenId");
+
+                            b1.ToTable("RefreshToken");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RefreshTokenId");
+                        });
+
+                    b.Navigation("History");
+
+                    b.Navigation("IsInvalidated")
                         .IsRequired();
 
                     b.Navigation("User");

@@ -1,10 +1,10 @@
-﻿using ConsiliumTempus.Domain.Common.Entities;
+﻿using ConsiliumTempus.Domain.Authentication;
 
 namespace ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
 
 public interface IJwtTokenValidator
 {
-    bool ValidateRefreshToken(RefreshToken? refreshToken, string jwtId);
+    bool ValidateRefreshToken(RefreshToken refreshToken);
 
     Task<bool> ValidateAccessToken(string token);
 }

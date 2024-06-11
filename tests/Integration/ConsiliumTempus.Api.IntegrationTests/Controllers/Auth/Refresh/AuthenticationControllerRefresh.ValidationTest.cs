@@ -17,8 +17,8 @@ public class AuthenticationControllerRefreshValidationTest(WebAppFactory factory
         var refreshToken = AuthData.RefreshTokens.First();
         var token = Utils.Token.GenerateValidToken(refreshToken.User, JwtSettings, refreshToken.JwtId.ToString());
         var request = AuthenticationRequestFactory.CreateRefreshRequest(
-            refreshToken.Value,
-            Utils.Token.SecurityTokenToStringToken(token));
+            Utils.Token.SecurityTokenToStringToken(token),
+            refreshToken.Id.Value);
 
         // Act
         var outcome = await Client.Put("/api/auth/Refresh", request);
@@ -31,7 +31,7 @@ public class AuthenticationControllerRefreshValidationTest(WebAppFactory factory
     public async Task Refresh_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
-        var request = AuthenticationRequestFactory.CreateRefreshRequest(refreshToken: "", token: "");
+        var request = AuthenticationRequestFactory.CreateRefreshRequest(refreshToken: Guid.Empty, token: "");
 
         // Act
         var outcome = await Client.Put("/api/auth/Refresh", request);

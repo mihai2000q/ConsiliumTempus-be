@@ -7,7 +7,7 @@ namespace ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 
 internal static partial class Utils
 {
-    internal static void AssertToken(string token, UserAggregate user, JwtSettings jwtSettings)
+    internal static void AssertToken(string token, UserAggregate user, JwtSettings jwtSettings, Guid? jti = null)
     {
         var handler = new JwtSecurityTokenHandler();
 
@@ -26,7 +26,11 @@ internal static partial class Utils
             .Should().Be(user.Id.Value.ToString());
         outcomeToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Email).Value
             .Should().Be(user.Credentials.Email);
-        outcomeToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Jti).Value
-            .Should().HaveLength(Guid.NewGuid().ToString().Length);
+        if (jti is not null)
+            outcomeToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Jti).Value
+                .Should().Be(jti.ToString());
+        else
+            outcomeToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Jti).Value
+                .Should().HaveLength(Guid.NewGuid().ToString().Length).And.NotBeEmpty();
     }
 }
