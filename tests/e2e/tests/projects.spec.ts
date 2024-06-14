@@ -10,7 +10,8 @@ import {
   createProjects,
   getProject,
   getProjectOverview,
-  getProjects, getProjectStatus,
+  getProjects,
+  getProjectStatus,
   getProjectStatuses
 } from "../utils/projects.utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
@@ -101,7 +102,8 @@ test.describe('should allow operations on the project entity', () => {
             lifecycle: 'Active',
             owner: expect.any(Object),
             isPrivate: createProjectRequest.isPrivate,
-            latestStatus: null
+            latestStatus: null,
+            createdDateTime: expect.any(String),
           }
         ],
         totalCount: 1
@@ -130,7 +132,8 @@ test.describe('should allow operations on the project entity', () => {
             lifecycle: 'Active',
             owner: expect.any(Object),
             isPrivate: createProjectRequest1.isPrivate,
-            latestStatus: null
+            latestStatus: null,
+            createdDateTime: expect.any(String),
           }
         ],
         totalCount: 1
@@ -170,7 +173,8 @@ test.describe('should allow operations on the project entity', () => {
             lifecycle: 'Active',
             owner: expect.any(Object),
             isPrivate: createProjectRequest1.isPrivate,
-            latestStatus: null
+            latestStatus: null,
+            createdDateTime: expect.any(String),
           },
           {
             id: expect.any(String),
@@ -180,7 +184,8 @@ test.describe('should allow operations on the project entity', () => {
             lifecycle: 'Active',
             owner: expect.any(Object),
             isPrivate: createProjectRequest2.isPrivate,
-            latestStatus: null
+            latestStatus: null,
+            createdDateTime: expect.any(String),
           },
         ]),
         totalCount: 2
@@ -210,7 +215,8 @@ test.describe('should allow operations on the project entity', () => {
             lifecycle: 'Active',
             owner: expect.any(Object),
             isPrivate: createProjectRequests[0].isPrivate,
-            latestStatus: null
+            latestStatus: null,
+            createdDateTime: expect.any(String),
           },
           {
             id: expect.any(String),
@@ -220,7 +226,8 @@ test.describe('should allow operations on the project entity', () => {
             lifecycle: 'Active',
             owner: expect.any(Object),
             isPrivate: createProjectRequests[1].isPrivate,
-            latestStatus: null
+            latestStatus: null,
+            createdDateTime: expect.any(String),
           },
         ],
         totalCount: totalCount
@@ -252,7 +259,8 @@ test.describe('should allow operations on the project entity', () => {
             lifecycle: 'Active',
             owner: expect.any(Object),
             isPrivate: request.isPrivate,
-            latestStatus: null
+            latestStatus: null,
+            createdDateTime: expect.any(String),
           }
         })
 
@@ -332,7 +340,8 @@ test.describe('should allow operations on the project entity', () => {
         lifecycle: 'Active',
         owner: expect.any(Object),
         isPrivate: body.isPrivate,
-        latestStatus: null
+        latestStatus: null,
+        createdDateTime: expect.any(String),
       }
     ])
   })

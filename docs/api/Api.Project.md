@@ -130,7 +130,7 @@ It sends optional query parameters to paginate, order or filter the projects by 
 
 - _**pageSize**_ is used to specify the size of the page
 - _**currentPage**_ is used to specify the current page
-- _**orders**_ is used to order the collection
+- _**orderBy**_ is used to order the collection
 - _**search**_ is used to filter the collection
 - _**workspaceId**_ is used to filter the projects by workspace
 
@@ -157,7 +157,8 @@ Returns the projects and their total count.
         "id": "10000000-0000-0000-0000-000000000000",
         "status": "Completed",
         "updatedDateTime": "2020-01-01T00:00:00.0000000Z"
-      }
+      },
+      "createdDateTime": "2020-01-01T00:00:00.0000000Z"
     },
     {
       "id": "20000000-0000-0000-0000-000000000000",
@@ -175,7 +176,8 @@ Returns the projects and their total count.
         "id": "10000000-0000-0000-0000-000000000000",
         "status": "Completed",
         "updatedDateTime": "2020-01-01T00:00:00.0000000Z"
-      }
+      },
+      "createdDateTime": "2020-01-01T00:00:00.0000000Z"
     }
   ],
   "totalCount": 5

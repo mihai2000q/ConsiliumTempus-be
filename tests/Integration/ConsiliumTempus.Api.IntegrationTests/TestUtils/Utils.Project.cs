@@ -228,6 +228,7 @@ internal static partial class Utils
                 projectResponse.LatestStatus.Should().BeNull();
             else
                 AssertProjectStatusResponse(projectResponse.LatestStatus!, GetLatestStatus(project));
+            projectResponse.CreatedDateTime.Should().Be(project.CreatedDateTime);
         }
 
         private static void AssertUserResponse(
