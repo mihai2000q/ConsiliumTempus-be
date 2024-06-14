@@ -183,6 +183,7 @@ public static class FluentValidationExtensions
 
             var property = filterProperties
                 .SingleOrDefault(fp => fp.Identifier == parsedFilter.Value.PropertyIdentifier);
+
             return property is null ||
                    !Filter.OperatorToFilterOperator.TryGetValue(parsedFilter.Value.Operator, out var filterOperator) ||
                    (SupportedOperatorsByType.ContainsKey(property.PropertySelector.ReturnType) &&
@@ -208,8 +209,10 @@ public static class FluentValidationExtensions
                 not null when type == typeof(DateTime) => DateTime.TryParse(parsedFilter.Value.Value, out _),
                 not null when type == typeof(decimal) => decimal.TryParse(parsedFilter.Value.Value, out _),
                 not null when type == typeof(int) => int.TryParse(parsedFilter.Value.Value, out _),
-                not null when type == typeof(ProjectLifecycle) =>
+                not null when type == typeof(ProjectLifecycle) => 
                     Enum.TryParse<ProjectLifecycle>(parsedFilter.Value.Value, true, out _),
+                not null when type == typeof(ProjectStatusType) => 
+                    Enum.TryParse<ProjectStatusType>(parsedFilter.Value.Value, true, out _),
                 _ => true
             };
         }
@@ -268,7 +271,8 @@ public static class FluentValidationExtensions
                 ]
             },
             { typeof(bool), [FilterOperator.Equal, FilterOperator.NotEqual] },
-            { typeof(ProjectLifecycle), [FilterOperator.Equal, FilterOperator.NotEqual] }
+            { typeof(ProjectLifecycle), [FilterOperator.Equal, FilterOperator.NotEqual] },
+            { typeof(ProjectStatusType), [FilterOperator.Equal, FilterOperator.NotEqual] }
         };
     }
 }

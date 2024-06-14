@@ -29,9 +29,36 @@ internal static class GetCollectionProjectQueryValidatorData
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 search:
                 [
+                    // Name
                     "name ct something", "name sw something", "name eq something", "name neq something",
+                    // Is Private
                     "is_private eq true", "is_private neq false",
-                    "lifecycle eq active", "lifecycle neq archived", "lifecycle eq uPcOmING"
+                    // Lifecycle
+                    "lifecycle eq active", "lifecycle neq archived", "lifecycle eq uPcOmING",
+                    // Latest Status
+                    "latest_status eq OnTrack", "latest_status eq AtRisk", "latest_status eq OffTrack",
+                    "latest_status eq OnHold", "latest_status eq completed",
+                    // Last Activity
+                    "last_activity eq 2024-07-23 17:00:48.2688790",
+                    "last_activity neq 2024-06-11 17:00:48.2688790",
+                    "last_activity lte 2023-06-11",
+                    "last_activity gte 2024-06-11 11:54:48.2688790",
+                    "last_activity gt 2025-06-11 17:00:48.2688790",
+                    "last_activity lt 2021-06-11 23:59:48",
+                    // Created Date Time
+                    "created_date_time eq 2024-06-11 17:00:48.2688790",
+                    "created_date_time neq 2024-06-11 17:00:48.2688790",
+                    "created_date_time lte 2023-06-11",
+                    "created_date_time gte 2024-06-11 11:54:48.2688790",
+                    "created_date_time gt 2025-06-11 17:00:48.2688790",
+                    "created_date_time lt 2021-06-11 23:59:48",
+                    // Updated Date Time
+                    "updated_date_time eq 2024-06-11 17:00:48.2688790",
+                    "updated_date_time neq 2024-06-11 17:00:48.2688790",
+                    "updated_date_time lte 2023-02-27",
+                    "updated_date_time gte 2024-06-11 11:54:48.2688790",
+                    "updated_date_time gt 2025-06-11 17:00:48.2688790",
+                    "updated_date_time lt 2021-06-11 23:59:48",
                 ]);
             Add(query);
 
@@ -224,18 +251,26 @@ internal static class GetCollectionProjectQueryValidatorData
             Add(query, nameof(query.Search), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                search: [correct, "name lte something"]);
+                search: [correct, "latest_status lte offtrack"]);
             Add(query, nameof(query.Search), 1);
-            
+
             // Parse Validation
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 search: ["is_private eq something"]);
             Add(query, nameof(query.Search), 1);
-            
+
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 search: ["lifecycle eq notACycle"]);
             Add(query, nameof(query.Search), 1);
-            
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: ["latest_status eq notAStatus"]);
+            Add(query, nameof(query.Search), 1);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search: ["last_activity eq 2024-02-31"]);
+            Add(query, nameof(query.Search), 1);
+
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 search: [correct, "is_private eq something"]);
             Add(query, nameof(query.Search), 1);

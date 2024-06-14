@@ -2,6 +2,7 @@
 using System.Reflection;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Enums;
 
 namespace ConsiliumTempus.Domain.Common.Models;
@@ -72,7 +73,7 @@ public class Filter<TEntity>(Expression<Func<TEntity, bool>> predicate) : IFilte
 
         return new Filter<TEntity>(predicate);
     }
-    
+
     private static (string, string, string) SplitFilter(string filter)
     {
         var result = new List<string>();
@@ -102,6 +103,7 @@ public class Filter<TEntity>(Expression<Func<TEntity, bool>> predicate) : IFilte
             not null when type == typeof(decimal) => Expression.Constant(decimal.Parse(value)),
             not null when type == typeof(int) => Expression.Constant(int.Parse(value)),
             not null when type == typeof(ProjectLifecycle) => Expression.Constant(Enum.Parse<ProjectLifecycle>(value, true)),
+            not null when type == typeof(ProjectStatusType) => Expression.Constant(Enum.Parse<ProjectStatusType>(value, true)),
             _ => Expression.Constant(value)
         };
     }

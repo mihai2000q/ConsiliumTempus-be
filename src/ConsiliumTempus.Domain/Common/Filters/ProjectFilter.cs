@@ -11,8 +11,12 @@ public abstract class ProjectFilter : Filter<ProjectAggregate>
     public static readonly IReadOnlyList<FilterProperty<ProjectAggregate>> FilterProperties =
     [
         new FilterProperties.Project.NameFilterProperty(),
+        new FilterProperties.Project.LifecycleProperty(),
         new FilterProperties.Project.IsPrivateProperty(),
-        new FilterProperties.Project.LifecycleProperty()
+        new FilterProperties.Project.LatestStatusProperty(),
+        new FilterProperties.Project.LastActivityProperty(),
+        new FilterProperties.Project.CreatedDateTimeProperty(),
+        new FilterProperties.Project.UpdatedDateTimeProperty(),
     ];
 
     private ProjectFilter(Expression<Func<ProjectAggregate, bool>> predicate) : base(predicate)

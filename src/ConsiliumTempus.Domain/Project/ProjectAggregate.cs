@@ -53,6 +53,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     public ProjectLifecycle Lifecycle { get; private set; }
     public DateTime LastActivity { get; private set; }
     public WorkspaceAggregate Workspace { get; init; } = default!;
+    public ProjectStatus? LatestStatus => _statuses.Count == 0 ? null : _statuses[0];
     public IReadOnlyList<ProjectSprintAggregate> Sprints => _sprints.AsReadOnly();
     public IReadOnlyList<ProjectStatus> Statuses => _statuses.AsReadOnly();
     public IReadOnlyList<UserAggregate> Favorites => _favorites.AsReadOnly();
