@@ -12,7 +12,7 @@ public sealed class RemoveStatusFromProjectCommandHandler(IProjectRepository pro
     public async Task<ErrorOr<RemoveStatusFromProjectResult>> Handle(RemoveStatusFromProjectCommand command,
         CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetWithWorkspace(
+        var project = await projectRepository.Get(
             ProjectId.Create(command.Id),
             cancellationToken);
         if (project is null) return Errors.Project.NotFound;

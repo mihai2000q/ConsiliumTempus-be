@@ -53,7 +53,8 @@ test.describe('should allow operations on the project entity', () => {
       lifecycle: 'Active',
       owner: expect.any(Object),
       isPrivate: createRequest.isPrivate,
-      latestStatus: null
+      latestStatus: null,
+      workspace: expect.any(Object)
     })
   })
 
@@ -419,7 +420,8 @@ test.describe('should allow operations on the project entity', () => {
       lifecycle: updateProjectRequest.lifecycle,
       owner: expect.any(Object),
       isPrivate: createProjectRequest.isPrivate,
-      latestStatus: null
+      latestStatus: null,
+      workspace: expect.any(Object)
     })
   })
 

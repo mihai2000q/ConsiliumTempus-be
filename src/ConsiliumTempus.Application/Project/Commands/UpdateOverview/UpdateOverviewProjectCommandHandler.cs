@@ -13,7 +13,7 @@ public sealed class UpdateOverviewProjectCommandHandler(IProjectRepository proje
     public async Task<ErrorOr<UpdateOverviewProjectResult>> Handle(UpdateOverviewProjectCommand command,
         CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetWithWorkspace(ProjectId.Create(command.Id), cancellationToken);
+        var project = await projectRepository.Get(ProjectId.Create(command.Id), cancellationToken);
         if (project is null) return Errors.Project.NotFound;
 
         project.UpdateOverview(

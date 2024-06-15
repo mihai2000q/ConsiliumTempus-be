@@ -23,6 +23,7 @@ using ConsiliumTempus.Application.Project.Queries.GetStatuses;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -157,6 +158,7 @@ internal static partial class Utils
             AssertUserResponse(response.Owner, result.Project.Owner);
             response.IsPrivate.Should().Be(result.Project.IsPrivate.Value);
             AssertProjectStatusResponse(response.LatestStatus, result.Project.LatestStatus);
+            AssertWorkspaceResponse(response.Workspace, result.Project.Workspace);
         }
 
         internal static void AssertGetOverviewProjectResponse(
@@ -201,6 +203,14 @@ internal static partial class Utils
             response.CreatedDateTime.Should().Be(projectStatus.Audit.CreatedDateTime);
             AssertUserResponse(response.UpdatedBy, projectStatus.Audit.UpdatedBy);
             response.UpdatedDateTime.Should().Be(projectStatus.Audit.UpdatedDateTime);
+        }
+        
+        private static void AssertWorkspaceResponse(
+            GetProjectResponse.WorkspaceResponse workspaceResponse,
+            WorkspaceAggregate workspace)
+        {
+            workspaceResponse.Id.Should().Be(workspace.Id.Value);
+            workspaceResponse.Name.Should().Be(workspace.Name.Value);
         }
 
         private static void AssertUserResponse(

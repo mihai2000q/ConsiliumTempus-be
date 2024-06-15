@@ -29,7 +29,7 @@ public class UpdateOverviewProjectCommandHandlerTest
         // Arrange
         var project = ProjectFactory.CreateWithSprints();
         _projectRepository
-            .GetWithWorkspace(Arg.Any<ProjectId>())
+            .Get(Arg.Any<ProjectId>())
             .Returns(project);
 
         var command = ProjectCommandFactory.CreateUpdateOverviewProjectCommand(id: project.Id.Value);
@@ -40,7 +40,7 @@ public class UpdateOverviewProjectCommandHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectId>(id => id.Value == command.Id));
+            .Get(Arg.Is<ProjectId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateOverviewProjectResult());
@@ -55,7 +55,7 @@ public class UpdateOverviewProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateUpdateOverviewProjectCommand();
 
         _projectRepository
-            .GetWithWorkspace(Arg.Any<ProjectId>())
+            .Get(Arg.Any<ProjectId>())
             .ReturnsNull();
 
         // Act
@@ -64,7 +64,7 @@ public class UpdateOverviewProjectCommandHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectId>(id => id.Value == command.Id));
+            .Get(Arg.Is<ProjectId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

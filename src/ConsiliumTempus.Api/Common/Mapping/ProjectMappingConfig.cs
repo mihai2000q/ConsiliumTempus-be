@@ -24,6 +24,7 @@ using ConsiliumTempus.Application.Project.Queries.GetStatuses;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.Workspace;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
@@ -59,7 +60,8 @@ public sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.Lifecycle, src => src.Project.Lifecycle.ToString())
             .Map(dest => dest.IsPrivate, src => src.Project.IsPrivate.Value)
             .Map(dest => dest.Owner, src => src.Project.Owner)
-            .Map(dest => dest.LatestStatus, src => src.Project.LatestStatus);
+            .Map(dest => dest.LatestStatus, src => src.Project.LatestStatus)
+            .Map(dest => dest.Workspace, src => src.Project.Workspace);
         config.NewConfig<ProjectStatus, GetProjectResponse.ProjectStatusResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Id, src => src.Id.Value)
@@ -73,6 +75,9 @@ public sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
+        config.NewConfig<WorkspaceAggregate, GetProjectResponse.WorkspaceResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Id, src => src.Name.Value);
     }
 
     private static void GetOverviewMappings(TypeAdapterConfig config)

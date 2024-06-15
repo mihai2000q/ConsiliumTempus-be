@@ -13,6 +13,7 @@ using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
@@ -34,6 +35,7 @@ internal static partial class Utils
                 response.LatestStatus.Should().BeNull();
             else
                 AssertProjectStatusResponse(response.LatestStatus!, GetLatestStatus(project));
+            AssertWorkspaceResponse(response.Workspace, project.Workspace);
         }
 
         internal static void AssertGetOverviewProjectResponse(
@@ -211,6 +213,14 @@ internal static partial class Utils
             userResponse!.Id.Should().Be(user!.Id.Value);
             userResponse.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
             userResponse.Email.Should().Be(user.Credentials.Email);
+        }
+
+        private static void AssertWorkspaceResponse(
+            GetProjectResponse.WorkspaceResponse workspaceResponse,
+            WorkspaceAggregate workspace)
+        {
+            workspaceResponse.Id.Should().Be(workspace.Id.Value);
+            workspaceResponse.Name.Should().Be(workspace.Name.Value);
         }
 
         private static void AssertProjectResponse(
