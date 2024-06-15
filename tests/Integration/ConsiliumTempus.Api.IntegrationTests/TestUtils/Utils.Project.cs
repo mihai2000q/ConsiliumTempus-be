@@ -135,6 +135,7 @@ internal static partial class Utils
 
             // changed
             newProject.Name.Value.Should().Be(request.Name);
+            newProject.Lifecycle.ToString().ToLower().Should().Be(request.Lifecycle.ToLower());
             newProject.IsFavorite(user).Should().Be(request.IsFavorite);
             newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

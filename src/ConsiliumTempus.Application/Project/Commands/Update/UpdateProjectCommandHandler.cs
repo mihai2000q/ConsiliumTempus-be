@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ErrorOr;
 using MediatR;
@@ -23,6 +24,7 @@ public sealed class UpdateProjectCommandHandler(
 
         project.Update(
             Name.Create(command.Name),
+            Enum.Parse<ProjectLifecycle>(command.Lifecycle),
             command.IsFavorite,
             user);
         

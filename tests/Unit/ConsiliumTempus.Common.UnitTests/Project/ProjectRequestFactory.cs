@@ -37,10 +37,7 @@ public static class ProjectRequestFactory
         int? currentPage = null,
         string[]? orderBy = null,
         string[]? search = null,
-        Guid? workspaceId = null,
-        string? name = null,
-        bool? isFavorite = null,
-        bool? isPrivate = null)
+        Guid? workspaceId = null)
     {
         return new GetCollectionProjectRequest
         {
@@ -88,11 +85,13 @@ public static class ProjectRequestFactory
     public static UpdateProjectRequest CreateUpdateProjectRequest(
         Guid? id = null,
         string name = Constants.Project.Name,
+        ProjectLifecycle lifecycle = ProjectLifecycle.Active,
         bool isFavorite = false)
     {
         return new UpdateProjectRequest(
             id ?? Guid.NewGuid(),
             name,
+            lifecycle.ToString(),
             isFavorite);
     }
 

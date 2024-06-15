@@ -398,6 +398,7 @@ test.describe('should allow operations on the project entity', () => {
     const updateProjectRequest: UpdateProjectRequest = {
       id: project.id,
       name: "This is my project now",
+      lifecycle: 'Archived',
       isFavorite: true
     }
     const response = await request.put('/api/projects', {
@@ -415,7 +416,7 @@ test.describe('should allow operations on the project entity', () => {
     expect(projects).toStrictEqual({
       name: updateProjectRequest.name,
       isFavorite: updateProjectRequest.isFavorite,
-      lifecycle: 'Active',
+      lifecycle: updateProjectRequest.lifecycle,
       owner: expect.any(Object),
       isPrivate: createProjectRequest.isPrivate,
       latestStatus: null
