@@ -40,6 +40,7 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedRefreshToken = await dbContext.Set<RefreshToken>()
+            .Include(rt => rt.History.OrderBy(h => h.CreatedDateTime))
             .SingleAsync(rt => rt.Id == RefreshTokenId.Create(request.RefreshToken));
 
         Utils.RefreshToken.AssertRefresh(refreshToken, updatedRefreshToken, response.Token);
