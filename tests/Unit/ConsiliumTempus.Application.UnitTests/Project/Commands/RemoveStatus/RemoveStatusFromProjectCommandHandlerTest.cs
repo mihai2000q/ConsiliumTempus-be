@@ -29,7 +29,7 @@ public class RemoveStatusFromProjectCommandHandlerTest
         // Arrange
         var project = ProjectFactory.CreateWithStatuses();
         _projectRepository
-            .GetWithWorkspace(Arg.Any<ProjectId>())
+            .Get(Arg.Any<ProjectId>())
             .Returns(project);
 
         var command = ProjectCommandFactory.CreateRemoveStatusFromProjectCommand(
@@ -42,7 +42,7 @@ public class RemoveStatusFromProjectCommandHandlerTest
         // Arrange
         await _projectRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
+            .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new RemoveStatusFromProjectResult());
@@ -56,7 +56,7 @@ public class RemoveStatusFromProjectCommandHandlerTest
         // Arrange
         var project = ProjectFactory.CreateWithStatuses();
         _projectRepository
-            .GetWithWorkspace(Arg.Any<ProjectId>())
+            .Get(Arg.Any<ProjectId>())
             .Returns(project);
 
         var command = ProjectCommandFactory.CreateRemoveStatusFromProjectCommand(id: project.Id.Value);
@@ -67,7 +67,7 @@ public class RemoveStatusFromProjectCommandHandlerTest
         // Arrange
         await _projectRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
+            .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
 
         outcome.ValidateError(Errors.ProjectStatus.NotFound);
     }
@@ -79,7 +79,7 @@ public class RemoveStatusFromProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateRemoveStatusFromProjectCommand();
 
         _projectRepository
-            .GetWithWorkspace(Arg.Any<ProjectId>())
+            .Get(Arg.Any<ProjectId>())
             .ReturnsNull();
 
         // Act
@@ -88,7 +88,7 @@ public class RemoveStatusFromProjectCommandHandlerTest
         // Arrange
         await _projectRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
+            .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

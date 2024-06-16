@@ -33,7 +33,7 @@ public class AddStatusToProjectCommandHandlerTest
         // Arrange
         var project = ProjectFactory.Create();
         _projectRepository
-            .GetWithWorkspace(Arg.Any<ProjectId>())
+            .Get(Arg.Any<ProjectId>())
             .Returns(project);
 
         var user = UserFactory.Create();
@@ -49,7 +49,7 @@ public class AddStatusToProjectCommandHandlerTest
         // Arrange
         await _projectRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
+            .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
 
         await _currentUserProvider
             .Received(1)
@@ -68,7 +68,7 @@ public class AddStatusToProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateAddStatusToProjectCommand();
 
         _projectRepository
-            .GetWithWorkspace(Arg.Any<ProjectId>())
+            .Get(Arg.Any<ProjectId>())
             .ReturnsNull();
 
         // Act
@@ -77,7 +77,7 @@ public class AddStatusToProjectCommandHandlerTest
         // Arrange
         await _projectRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
+            .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
         _currentUserProvider.DidNotReceive();
 
         outcome.ValidateError(Errors.Project.NotFound);

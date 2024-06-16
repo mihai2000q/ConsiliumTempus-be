@@ -2,6 +2,7 @@
 using System.Reflection;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Enums;
 
 namespace ConsiliumTempus.Domain.Common.Models;
@@ -62,6 +63,7 @@ public class Filter<TEntity>(Expression<Func<TEntity, bool>> predicate) : IFilte
         var propertyExpression = filterProperty.PropertySelector.Body;
         var valueExpression = GetValueExpression(filterProperty.PropertySelector.ReturnType, value.TrimStart());
         var expressionBody = GetExpressionBody(
+            identifier,
             propertyExpression,
             valueExpression,
             Filter.OperatorToFilterOperator[@operator]);
@@ -72,7 +74,7 @@ public class Filter<TEntity>(Expression<Func<TEntity, bool>> predicate) : IFilte
 
         return new Filter<TEntity>(predicate);
     }
-    
+
     private static (string, string, string) SplitFilter(string filter)
     {
         var result = new List<string>();
@@ -102,13 +104,56 @@ public class Filter<TEntity>(Expression<Func<TEntity, bool>> predicate) : IFilte
             not null when type == typeof(decimal) => Expression.Constant(decimal.Parse(value)),
             not null when type == typeof(int) => Expression.Constant(int.Parse(value)),
             not null when type == typeof(ProjectLifecycle) => Expression.Constant(Enum.Parse<ProjectLifecycle>(value, true)),
+            not null when type == typeof(ProjectStatusType) => Expression.Constant(Enum.Parse<ProjectStatusType>(value, true)),
             _ => Expression.Constant(value)
         };
     }
 
     private static Expression GetExpressionBody(
+        string identifier,
         Expression propertyExpression,
-        Expression valueExpression,
+        ConstantExpression valueExpression,
+        FilterOperator filterOperator)
+    {
+        if (propertyExpression.Type == typeof(Enumerable))
+        {
+            return GetEnumerableExpressionCall<ProjectStatus>(
+                identifier.ToUpper(), // TODO: From Snake Case to Pascal Case
+                nameof(Enumerable.Any), // TODO: More Options (add List operator)
+                valueExpression,
+                propertyExpression,
+                filterOperator);
+        }
+
+        return GetExpressionByFilterOperator(
+            propertyExpression,
+            valueExpression,
+            filterOperator);
+    }
+
+    private static MethodCallExpression GetEnumerableExpressionCall<TCollectionEntity>(
+        string entityName,
+        string method,
+        ConstantExpression valueExpression,
+        Expression propertyExpression,
+        FilterOperator filterOperator)
+    {
+        var param = Expression.Parameter(typeof(TCollectionEntity));
+        var property = Expression.Property(param, entityName);
+        var equality = GetExpressionByFilterOperator(property, valueExpression, filterOperator);
+
+        return Expression.Call(
+            typeof(Enumerable),
+            method,
+            [typeof(TCollectionEntity)],
+            propertyExpression,
+            Expression.Lambda<Func<TCollectionEntity, bool>>(equality, param)
+        );
+    }
+
+    private static Expression GetExpressionByFilterOperator(
+        Expression propertyExpression,
+        ConstantExpression valueExpression,
         FilterOperator filterOperator)
     {
         return filterOperator switch

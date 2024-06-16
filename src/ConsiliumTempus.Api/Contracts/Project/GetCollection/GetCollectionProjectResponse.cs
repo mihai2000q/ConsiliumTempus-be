@@ -15,7 +15,8 @@ public sealed record GetCollectionProjectResponse(
         string Lifecycle,
         UserResponse Owner,
         bool IsPrivate,
-        ProjectStatusResponse? LatestStatus);
+        ProjectStatusResponse? LatestStatus,
+        DateTime CreatedDateTime);
 
     public sealed record UserResponse(
         Guid Id,

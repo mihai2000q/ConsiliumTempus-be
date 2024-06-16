@@ -17,7 +17,7 @@ public sealed class UpdateStatusFromProjectCommandHandler(
     public async Task<ErrorOr<UpdateStatusFromProjectResult>> Handle(UpdateStatusFromProjectCommand command,
         CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetWithWorkspace(
+        var project = await projectRepository.Get(
             ProjectId.Create(command.Id),
             cancellationToken);
         if (project is null) return Errors.Project.NotFound;

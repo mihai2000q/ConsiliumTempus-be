@@ -23,6 +23,7 @@ using ConsiliumTempus.Application.Project.Queries.GetStatuses;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -60,7 +61,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static bool AssertGetStatusesFromProjectQuery(
             GetStatusesFromProjectQuery query,
             GetStatusesFromProjectRequest request)
@@ -99,6 +100,7 @@ internal static partial class Utils
         {
             command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
+            command.Lifecycle.Should().Be(request.Lifecycle);
             command.IsFavorite.Should().Be(request.IsFavorite);
 
             return true;
@@ -155,10 +157,8 @@ internal static partial class Utils
             response.Lifecycle.Should().Be(result.Project.Lifecycle.ToString());
             AssertUserResponse(response.Owner, result.Project.Owner);
             response.IsPrivate.Should().Be(result.Project.IsPrivate.Value);
-            if (result.Project.Statuses.Count == 0)
-                response.LatestStatus.Should().BeNull();
-            else
-                AssertProjectStatusResponse(response.LatestStatus!, result.Project.Statuses[0]);
+            AssertProjectStatusResponse(response.LatestStatus, result.Project.LatestStatus);
+            AssertWorkspaceResponse(response.Workspace, result.Project.Workspace);
         }
 
         internal static void AssertGetOverviewProjectResponse(
@@ -176,7 +176,7 @@ internal static partial class Utils
                 .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second, result.CurrentUser));
             response.TotalCount.Should().Be(result.TotalCount);
         }
-        
+
         internal static void AssertGetStatusesResponse(
             GetStatusesFromProjectResponse response,
             GetStatusesFromProjectResult result)
@@ -187,10 +187,16 @@ internal static partial class Utils
         }
 
         private static void AssertProjectStatusResponse(
-            GetProjectResponse.ProjectStatusResponse response,
-            ProjectStatus projectStatus)
+            GetProjectResponse.ProjectStatusResponse? response,
+            ProjectStatus? projectStatus)
         {
-            response.Id.Should().Be(projectStatus.Id.Value);
+            if (projectStatus is null)
+            {
+                response.Should().BeNull();
+                return;
+            }
+
+            response!.Id.Should().Be(projectStatus.Id.Value);
             response.Title.Should().Be(projectStatus.Title.Value);
             response.Status.Should().Be(projectStatus.Status.ToString());
             AssertUserResponse(response.CreatedBy, projectStatus.Audit.CreatedBy);
@@ -198,19 +204,30 @@ internal static partial class Utils
             AssertUserResponse(response.UpdatedBy, projectStatus.Audit.UpdatedBy);
             response.UpdatedDateTime.Should().Be(projectStatus.Audit.UpdatedDateTime);
         }
+        
+        private static void AssertWorkspaceResponse(
+            GetProjectResponse.WorkspaceResponse workspaceResponse,
+            WorkspaceAggregate workspace)
+        {
+            workspaceResponse.Id.Should().Be(workspace.Id.Value);
+            workspaceResponse.Name.Should().Be(workspace.Name.Value);
+        }
 
         private static void AssertUserResponse(
             GetProjectResponse.UserResponse? userResponse,
             UserAggregate? user)
         {
-            if (userResponse is null) user.Should().BeNull();
-            if (user is null) userResponse.Should().BeNull();
+            if (user is null)
+            {
+                userResponse.Should().BeNull();
+                return;
+            }
 
-            userResponse!.Id.Should().Be(user!.Id.Value);
+            userResponse!.Id.Should().Be(user.Id.Value);
             userResponse.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
             userResponse.Email.Should().Be(user.Credentials.Email);
         }
-        
+
         private static void AssertProjectResponse(
             GetCollectionProjectResponse.ProjectResponse response,
             ProjectAggregate project,
@@ -223,12 +240,10 @@ internal static partial class Utils
             response.Lifecycle.Should().Be(project.Lifecycle.ToString());
             AssertUserResponse(response.Owner, project.Owner);
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
-            if (project.Statuses.Count == 0)
-                response.LatestStatus.Should().BeNull();
-            else
-                AssertProjectStatusResponse(response.LatestStatus!, project.Statuses[0]);
+            AssertProjectStatusResponse(response.LatestStatus, project.LatestStatus);
+            response.CreatedDateTime.Should().Be(project.CreatedDateTime);
         }
-        
+
         private static void AssertUserResponse(
             GetCollectionProjectResponse.UserResponse userResponse,
             UserAggregate user)
@@ -239,10 +254,16 @@ internal static partial class Utils
         }
 
         private static void AssertProjectStatusResponse(
-            GetCollectionProjectResponse.ProjectStatusResponse response,
-            ProjectStatus projectStatus)
+            GetCollectionProjectResponse.ProjectStatusResponse? response,
+            ProjectStatus? projectStatus)
         {
-            response.Id.Should().Be(projectStatus.Id.Value);
+            if (projectStatus is null)
+            {
+                response.Should().BeNull();
+                return;
+            }
+
+            response!.Id.Should().Be(projectStatus.Id.Value);
             response.Status.Should().Be(projectStatus.Status.ToString());
             response.UpdatedDateTime.Should().Be(projectStatus.Audit.UpdatedDateTime);
         }
@@ -265,10 +286,13 @@ internal static partial class Utils
             GetStatusesFromProjectResponse.UserResponse? userResponse,
             UserAggregate? user)
         {
-            if (userResponse is null) user.Should().BeNull();
-            if (user is null) userResponse.Should().BeNull();
+            if (user is null)
+            {
+                userResponse.Should().BeNull();
+                return;
+            }
 
-            userResponse!.Id.Should().Be(user!.Id.Value);
+            userResponse!.Id.Should().Be(user.Id.Value);
             userResponse.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
             userResponse.Email.Should().Be(user.Credentials.Email);
         }

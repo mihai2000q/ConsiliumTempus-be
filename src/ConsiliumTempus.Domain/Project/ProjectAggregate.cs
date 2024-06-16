@@ -53,6 +53,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     public ProjectLifecycle Lifecycle { get; private set; }
     public DateTime LastActivity { get; private set; }
     public WorkspaceAggregate Workspace { get; init; } = default!;
+    public ProjectStatus? LatestStatus => _statuses.Count == 0 ? null : _statuses[0];
     public IReadOnlyList<ProjectSprintAggregate> Sprints => _sprints.AsReadOnly();
     public IReadOnlyList<ProjectStatus> Statuses => _statuses.AsReadOnly();
     public IReadOnlyList<UserAggregate> Favorites => _favorites.AsReadOnly();
@@ -87,9 +88,10 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         return _favorites.SingleOrDefault(u => u == user) is not null;
     }
 
-    public void Update(Name name, bool isFavorite, UserAggregate user)
+    public void Update(Name name, ProjectLifecycle lifecycle, bool isFavorite, UserAggregate user)
     {
         Name = name;
+        Lifecycle = lifecycle;
         if (isFavorite)
             _favorites.Add(user);
         else

@@ -9,7 +9,8 @@ public sealed record GetProjectResponse(
     string Lifecycle,
     GetProjectResponse.UserResponse Owner,
     bool IsPrivate,
-    GetProjectResponse.ProjectStatusResponse? LatestStatus)
+    GetProjectResponse.ProjectStatusResponse? LatestStatus,
+    GetProjectResponse.WorkspaceResponse Workspace)
 {
     public sealed record ProjectStatusResponse(
         Guid Id,
@@ -24,4 +25,8 @@ public sealed record GetProjectResponse(
         Guid Id,
         string Name,
         string Email);
+
+    public sealed record WorkspaceResponse(
+        Guid Id,
+        string Name);
 }

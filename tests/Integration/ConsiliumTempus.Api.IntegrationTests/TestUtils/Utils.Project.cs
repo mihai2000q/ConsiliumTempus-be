@@ -13,6 +13,7 @@ using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
@@ -34,6 +35,7 @@ internal static partial class Utils
                 response.LatestStatus.Should().BeNull();
             else
                 AssertProjectStatusResponse(response.LatestStatus!, GetLatestStatus(project));
+            AssertWorkspaceResponse(response.Workspace, project.Workspace);
         }
 
         internal static void AssertGetOverviewProjectResponse(
@@ -135,6 +137,7 @@ internal static partial class Utils
 
             // changed
             newProject.Name.Value.Should().Be(request.Name);
+            newProject.Lifecycle.ToString().ToLower().Should().Be(request.Lifecycle.ToLower());
             newProject.IsFavorite(user).Should().Be(request.IsFavorite);
             newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -212,6 +215,14 @@ internal static partial class Utils
             userResponse.Email.Should().Be(user.Credentials.Email);
         }
 
+        private static void AssertWorkspaceResponse(
+            GetProjectResponse.WorkspaceResponse workspaceResponse,
+            WorkspaceAggregate workspace)
+        {
+            workspaceResponse.Id.Should().Be(workspace.Id.Value);
+            workspaceResponse.Name.Should().Be(workspace.Name.Value);
+        }
+
         private static void AssertProjectResponse(
             GetCollectionProjectResponse.ProjectResponse projectResponse,
             ProjectAggregate project,
@@ -228,6 +239,7 @@ internal static partial class Utils
                 projectResponse.LatestStatus.Should().BeNull();
             else
                 AssertProjectStatusResponse(projectResponse.LatestStatus!, GetLatestStatus(project));
+            projectResponse.CreatedDateTime.Should().Be(project.CreatedDateTime);
         }
 
         private static void AssertUserResponse(

@@ -16,14 +16,14 @@ public class GetCollectionProjectQueryValidatorTest
     public async Task ValidateGetCollectionProjectQuery_WhenValid_ShouldReturnTrue(GetCollectionProjectQuery query)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAsync(query);
 
         // Assert
         outcome.IsValid.Should().BeTrue();
     }
-    
+
     [Theory]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidPageSizeAndCurrentPageQueries))]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidPageSizeQueries))]
@@ -31,12 +31,12 @@ public class GetCollectionProjectQueryValidatorTest
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidOrderByQueries))]
     [ClassData(typeof(GetCollectionProjectQueryValidatorData.GetInvalidSearchQueries))]
     public async Task ValidateGetCollectionProjectQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
-        GetCollectionProjectQuery query, 
+        GetCollectionProjectQuery query,
         string property,
         short expectedErrors)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAsync(query);
 

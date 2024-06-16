@@ -98,6 +98,7 @@ internal static partial class Utils
         {
             project.Id.Value.Should().Be(command.Id);
             project.Name.Value.Should().Be(command.Name);
+            project.Lifecycle.ToString().ToLower().Should().Be(command.Lifecycle.ToLower());
             project.IsFavorite(currentUser).Should().Be(command.IsFavorite);
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 

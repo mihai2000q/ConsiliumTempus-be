@@ -27,9 +27,11 @@ public class UpdateProjectCommandValidatorTest
     [Theory]
     [ClassData(typeof(UpdateProjectCommandValidatorData.GetInvalidIdCommands))]
     [ClassData(typeof(UpdateProjectCommandValidatorData.GetInvalidNameCommands))]
+    [ClassData(typeof(UpdateProjectCommandValidatorData.GetInvalidLifecycleCommands))]
     public async Task ValidateUpdateProjectCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         UpdateProjectCommand command,
-        string property)
+        string property,
+        short expectedErrors)
     {
         // Arrange - parameterized
 
@@ -38,7 +40,7 @@ public class UpdateProjectCommandValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(1);
+        outcome.Errors.Should().HaveCount(expectedErrors);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }
