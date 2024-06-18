@@ -87,7 +87,8 @@ test.describe('should allow operations on the project sprint entity', () => {
           startDate: projectSprint.startDate,
           endDate: projectSprint.endDate,
         }
-      ]
+      ],
+      totalCount: 2
     })
   })
 

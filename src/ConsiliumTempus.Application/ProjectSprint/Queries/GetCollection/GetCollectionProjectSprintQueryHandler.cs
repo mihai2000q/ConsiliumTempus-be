@@ -12,10 +12,14 @@ public sealed class GetCollectionProjectSprintQueryHandler(IProjectSprintReposit
         GetCollectionProjectSprintQuery query,
         CancellationToken cancellationToken)
     {
+        var projectId = ProjectId.Create(query.ProjectId);
         var sprints = await projectSprintRepository.GetListByProject(
-            ProjectId.Create(query.ProjectId),
+            projectId,
+            cancellationToken);
+        var totalCount = await projectSprintRepository.GetListByProjectCount(
+            projectId,
             cancellationToken);
 
-        return new GetCollectionProjectSprintResult(sprints);
+        return new GetCollectionProjectSprintResult(sprints, totalCount);
     }
 }

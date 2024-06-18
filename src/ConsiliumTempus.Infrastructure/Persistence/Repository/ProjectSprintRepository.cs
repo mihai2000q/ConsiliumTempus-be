@@ -49,6 +49,15 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
             .ThenByDescending(s => s.Audit.CreatedDateTime)
             .ToListAsync(cancellationToken);
     }
+    
+    public Task<int> GetListByProjectCount(
+        ProjectId projectId, 
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.ProjectSprints
+            .Where(ps => ps.Project.Id == projectId)
+            .CountAsync(cancellationToken);
+    }
 
     public async Task Add(ProjectSprintAggregate sprint, CancellationToken cancellationToken = default)
     {

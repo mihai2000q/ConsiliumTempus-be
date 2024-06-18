@@ -102,7 +102,8 @@ Returns the project sprints.
       "startDate": null,
       "endDate": null
     }
-  ]
+  ],
+  "totalCount": 2
 }
 ```
 

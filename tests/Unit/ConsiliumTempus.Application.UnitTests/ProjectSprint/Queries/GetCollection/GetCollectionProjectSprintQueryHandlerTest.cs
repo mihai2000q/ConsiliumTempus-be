@@ -17,7 +17,7 @@ public class GetCollectionProjectSprintQueryHandlerTest
         _projectSprintRepository = Substitute.For<IProjectSprintRepository>();
         _uut = new GetCollectionProjectSprintQueryHandler(_projectSprintRepository);
     }
-    
+
     #endregion
 
     [Fact]
@@ -30,7 +30,12 @@ public class GetCollectionProjectSprintQueryHandlerTest
         _projectSprintRepository
             .GetListByProject(Arg.Any<ProjectId>())
             .Returns(sprints);
-        
+
+        const int totalCount = 25;
+        _projectSprintRepository
+            .GetListByProjectCount(Arg.Any<ProjectId>())
+            .Returns(totalCount);
+
         // Act
         var outcome = await _uut.Handle(query, default);
 
@@ -38,8 +43,12 @@ public class GetCollectionProjectSprintQueryHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetListByProject(Arg.Is<ProjectId>(pId => pId.Value == query.ProjectId));
+        await _projectSprintRepository
+            .Received(1)
+            .GetListByProjectCount(Arg.Is<ProjectId>(pId => pId.Value == query.ProjectId));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Sprints.Should().BeEquivalentTo(sprints);
+        outcome.Value.TotalCount.Should().Be(totalCount);
     }
 }

@@ -29,7 +29,8 @@ public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectSprintResponse>();
         Utils.ProjectSprint.AssertGetCollectionResponse(
             response!,
-            project.Sprints);
+            project.Sprints,
+            project.Sprints.Count);
     }
 
     [Fact]

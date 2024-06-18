@@ -31,7 +31,8 @@ internal static partial class Utils
 
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectSprintResponse response,
-            IReadOnlyList<ProjectSprintAggregate> sprints)
+            IReadOnlyList<ProjectSprintAggregate> sprints,
+            int totalCount)
         {
             response.Sprints.Should().HaveCount(sprints.Count);
             response.Sprints
@@ -40,6 +41,7 @@ internal static partial class Utils
                     .ThenByDescending(s => s.Name.Value)
                     .ThenByDescending(s => s.Audit.CreatedDateTime))
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
+            response.TotalCount.Should().Be(totalCount);
         }
 
         internal static void AssertCreation(

@@ -13,6 +13,8 @@ public interface IProjectSprintRepository
     Task<ProjectSprintAggregate?> GetWithSprintsAndWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default);
 
     Task<List<ProjectSprintAggregate>> GetListByProject(ProjectId projectId, CancellationToken cancellationToken = default);
+    
+    Task<int> GetListByProjectCount(ProjectId projectId, CancellationToken cancellationToken = default);
 
     Task Add(ProjectSprintAggregate sprint, CancellationToken cancellationToken = default);
 

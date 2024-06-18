@@ -12,10 +12,12 @@ namespace ConsiliumTempus.Common.UnitTests.ProjectSprint;
 public static class ProjectSprintResultFactory
 {
     public static GetCollectionProjectSprintResult CreateGetCollectionProjectSprintResult(
-        List<ProjectSprintAggregate>? sprints = null)
+        List<ProjectSprintAggregate>? sprints = null,
+        int totalCount = 25)
     {
         return new GetCollectionProjectSprintResult(
-            sprints ?? ProjectSprintFactory.CreateList());
+            sprints ?? ProjectSprintFactory.CreateList(),
+            totalCount);
     }
     
     public static CreateProjectSprintResult CreateCreateProjectSprintResult()
