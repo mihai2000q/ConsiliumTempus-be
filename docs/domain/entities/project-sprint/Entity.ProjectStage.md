@@ -12,6 +12,7 @@ class ProjectStage
     void UpdateWithoutAudit()
     void AddTask()
     void RemoveTask()
+    ProjectStage CopyToSprint()
 }
 ```
 

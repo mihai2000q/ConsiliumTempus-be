@@ -13,9 +13,9 @@ public sealed class Audit : Entity<Guid>
 
     private Audit(
         Guid id, 
-        UserAggregate createdBy,
+        UserAggregate? createdBy,
         DateTime createdDateTime,
-        UserAggregate updatedBy,
+        UserAggregate? updatedBy,
         DateTime updatedDateTime) : base(id)
     {
         CreatedBy = createdBy;
@@ -29,7 +29,7 @@ public sealed class Audit : Entity<Guid>
     public UserAggregate? UpdatedBy { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
 
-    public static Audit Create(UserAggregate createdBy)
+    public static Audit Create(UserAggregate? createdBy)
     {
         return new Audit(
             Guid.NewGuid(),

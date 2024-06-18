@@ -88,4 +88,14 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             _tasks[i].UpdateCustomOrderPosition(_tasks[i].CustomOrderPosition - CustomOrderPosition.Create(1));
         }
     }
+    
+    public ProjectStage CopyToSprint(ProjectSprintAggregate sprint, UserAggregate copiedBy)
+    {
+        return new ProjectStage(
+            ProjectStageId.CreateUnique(),
+            Name.Create(Name.Value),
+            CustomOrderPosition.Create(CustomOrderPosition.Value), 
+            sprint,
+            Audit.Create(copiedBy));
+    }
 }

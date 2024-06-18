@@ -9,6 +9,7 @@ class ProjectSprint
 {
     ProjectSprint Create()
     void Update()
+    void UpdateEndDate()
     void AddStage()
     void AddStages()
     void RemoveStage()

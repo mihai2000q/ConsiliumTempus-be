@@ -60,7 +60,20 @@ internal static partial class Utils
             if (command.KeepPreviousStages)
             {
                 if (project.Sprints.Count != 0)
-                    projectSprint.Stages.Should().BeEquivalentTo(project.Sprints[0].Stages);
+                {
+                    projectSprint.Stages.Should().HaveSameCount(project.Sprints[0].Stages);
+                    projectSprint.Stages
+                        .OrderBy(s => s.CustomOrderPosition.Value)
+                        .Zip(project.Sprints[0].Stages.OrderBy(s => s.CustomOrderPosition.Value))
+                        .Should().AllSatisfy((x) =>
+                        {
+                            var (newStage, stage) = x;
+                            newStage.Name.Should().Be(stage.Name);
+                            newStage.CustomOrderPosition.Should().Be(stage.CustomOrderPosition);
+                            newStage.Sprint.Should().Be(projectSprint);
+                            newStage.Audit.ShouldBeCreated(createdBy);
+                        });
+                }
                 else
                     projectSprint.Stages.Should().BeEmpty();
             }
