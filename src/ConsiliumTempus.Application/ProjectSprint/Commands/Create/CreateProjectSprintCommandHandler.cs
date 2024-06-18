@@ -41,17 +41,16 @@ public sealed class CreateProjectSprintCommandHandler(
         {
             var previousSprint = sprints[0];
             if (previousSprint.EndDate is null)
-                previousSprint.Update(
-                    previousSprint.Name,
-                    previousSprint.StartDate,
-                    DateOnly.FromDateTime(DateTime.UtcNow),
-                    user);
+                previousSprint.UpdateEndDate(DateOnly.FromDateTime(DateTime.UtcNow), user);
         });
 
         if (command.KeepPreviousStages)
         {
             project.Sprints.IfNotEmpty(sprints =>
-                    projectSprint.AddStages(sprints[0].Stages));
+                projectSprint.AddStages(sprints[0].Stages
+                    .Select(s => s.CopyToSprint(projectSprint, user))
+                    .ToList())
+            );
         }
         else
         {
@@ -67,9 +66,9 @@ public sealed class CreateProjectSprintCommandHandler(
         if (command.ProjectStatus is not null)
         {
             project.AddStatus(ProjectStatus.Create(
-                Title.Create(command.ProjectStatus.Title), 
+                Title.Create(command.ProjectStatus.Title),
                 Enum.Parse<ProjectStatusType>(command.ProjectStatus.Status),
-                Description.Create(command.ProjectStatus.Description), 
+                Description.Create(command.ProjectStatus.Description),
                 project,
                 user));
         }

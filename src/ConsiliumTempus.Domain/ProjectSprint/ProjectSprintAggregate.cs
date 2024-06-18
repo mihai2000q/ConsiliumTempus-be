@@ -67,6 +67,12 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>
         EndDate = endDate;
         Audit.Update(updatedBy);
     }
+    
+    public void UpdateEndDate(DateOnly? endDate, UserAggregate updatedBy)
+    {
+        EndDate = endDate;
+        Audit.Update(updatedBy);
+    }
 
     public void AddStage(ProjectStage stage, bool onTop = false)
     {
@@ -82,7 +88,7 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>
         }
     }
 
-    public void AddStages(IReadOnlyList<ProjectStage> stages)
+    public void AddStages(IEnumerable<ProjectStage> stages)
     {
         _stages.AddRange(stages);
     }

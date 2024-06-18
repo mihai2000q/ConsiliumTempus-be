@@ -175,7 +175,7 @@ internal class ProjectSprintData : ITestData
             ProjectSprints[2],
             AuditFactory.Create(Users[1], Users[1]),
             "In Progress",
-            2),
+            1),
         ProjectStageFactory.Create(
             ProjectSprints[2],
             AuditFactory.Create(Users[1], Users[1]),
