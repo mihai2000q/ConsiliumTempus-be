@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
+using ConsiliumTempus.Domain.Project.Enums;
 
 namespace ConsiliumTempus.Common.UnitTests.ProjectSprint;
 
@@ -34,14 +35,27 @@ public static class ProjectSprintRequestFactory
         string name = Constants.ProjectSprint.Name,
         DateOnly? startDate = null,
         DateOnly? endDate = null,
-        bool keepPreviousStages = false)
+        bool keepPreviousStages = false,
+        CreateProjectSprintRequest.CreateProjectStatus? projectStatus = null)
     {
         return new CreateProjectSprintRequest(
             projectId ?? Guid.NewGuid(),
             name,
             startDate,
             endDate,
-            keepPreviousStages);
+            keepPreviousStages,
+            projectStatus);
+    }
+
+    public static CreateProjectSprintRequest.CreateProjectStatus CreateCreateProjectStatus(
+        string title = Constants.ProjectStatus.Title,
+        string? status = null,
+        string description = Constants.ProjectStatus.Description)
+    {
+        return new CreateProjectSprintRequest.CreateProjectStatus(
+            title,
+            status ?? ProjectStatusType.AtRisk.ToString(),
+            description);
     }
 
     public static AddStageToProjectSprintRequest CreateAddStageToProjectSprintRequest(

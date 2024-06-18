@@ -50,9 +50,14 @@ internal static partial class Utils
             DateOnly? previousSprintEndDate)
         {
             sprint.Name.Value.Should().Be(request.Name);
-            sprint.StartDate.Should().Be(request.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow));
+            sprint.StartDate.Should().Be(request.StartDate);
             sprint.EndDate.Should().Be(request.EndDate);
             sprint.Project.Id.Value.Should().Be(request.ProjectId);
+            sprint.Audit.ShouldBeCreated(createdBy);
+
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            
             if (request.KeepPreviousStages)
             {
                 if (project.Sprints.Count != 0)
@@ -67,17 +72,26 @@ internal static partial class Utils
             }
 
             if (project.Sprints.Count != 0)
+            {
                 if (previousSprintEndDate is null)
-                    sprint.Project.Sprints.OrderByDescending(s => s.StartDate).ToList()[1].EndDate
+                    sprint.Project.Sprints
+                        .OrderByDescending(s => s.Audit.CreatedDateTime).ToList()[1]
+                        .EndDate
                         .Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
                 else
-                    sprint.Project.Sprints.OrderByDescending(s => s.StartDate).ToList()[1].EndDate
+                    sprint.Project.Sprints
+                        .OrderByDescending(s => s.Audit.CreatedDateTime).ToList()[1]
+                        .EndDate
                         .Should().Be(previousSprintEndDate);
+            }
 
-            sprint.Audit.ShouldBeCreated(createdBy);
-
-            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            if (request.ProjectStatus is not null)
+            {
+                sprint.Project.LatestStatus.Should().NotBeNull();
+                sprint.Project.LatestStatus!.Title.Value.Should().Be(request.ProjectStatus.Title);
+                sprint.Project.LatestStatus.Status.ToString().ToLower().Should().Be(request.ProjectStatus.Status.ToLower());
+                sprint.Project.LatestStatus.Description.Value.Should().Be(request.ProjectStatus.Description);
+            }
         }
 
         internal static void AssertAddedStage(

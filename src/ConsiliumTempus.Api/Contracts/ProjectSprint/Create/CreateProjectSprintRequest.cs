@@ -5,4 +5,11 @@ public sealed record CreateProjectSprintRequest(
     string Name,
     DateOnly? StartDate,
     DateOnly? EndDate,
-    bool KeepPreviousStages);
+    bool KeepPreviousStages,
+    CreateProjectSprintRequest.CreateProjectStatus? ProjectStatus)
+{
+    public sealed record CreateProjectStatus(
+        string Title,
+        string Status,
+        string Description);
+}

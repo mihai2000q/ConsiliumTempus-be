@@ -28,9 +28,13 @@ public class CreateProjectSprintCommandValidatorTest
     [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidProjectIdCommands))]
     [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidNameCommands))]
     [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidStartEndDateCommands))]
+    [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidProjectStatusTitleCommands))]
+    [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidProjectStatusStatusCommands))]
+    [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidProjectStatusDescriptionCommands))]
     public async Task ValidateCreateProjectSprintCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         CreateProjectSprintCommand command,
-        string property)
+        string property,
+        short expectedErrors)
     {
         // Arrange - parameterized
 
@@ -39,7 +43,7 @@ public class CreateProjectSprintCommandValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(1);
+        outcome.Errors.Should().HaveCount(expectedErrors);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

@@ -33,6 +33,10 @@ internal static class CreateProjectSprintCommandHandlerData
                 startDate: new DateOnly(2024, 10, 12));
             project = ProjectFactory.CreateWithSprints(sprintEndDate: new DateOnly(2024, 10, 13));
             Add(command, project);
+            
+            command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
+                projectStatus: ProjectSprintCommandFactory.CreateCreateProjectStatus());
+            Add(command, project);
         }
     }
 }

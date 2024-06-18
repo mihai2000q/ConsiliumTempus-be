@@ -51,8 +51,12 @@ internal static partial class Utils
         {
             projectSprint.Id.Value.Should().NotBeEmpty();
             projectSprint.Name.Value.Should().Be(command.Name);
-            projectSprint.StartDate.Should().Be(command.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow));
+            projectSprint.StartDate.Should().Be(command.StartDate);
             projectSprint.EndDate.Should().Be(command.EndDate);
+            projectSprint.Audit.ShouldBeCreated(createdBy);
+            projectSprint.DomainEvents.Should().BeEmpty();
+            projectSprint.Project.Should().Be(project);
+
             if (command.KeepPreviousStages)
             {
                 if (project.Sprints.Count != 0)
@@ -70,23 +74,28 @@ internal static partial class Utils
                 projectSprint.Stages[0].Tasks.Should().BeEmpty();
             }
 
-            projectSprint.Audit.ShouldBeCreated(createdBy);
+            if (project.Sprints.Count != 0)
+            {
+                if (previousSprintEndDate is null)
+                    project.Sprints[0].EndDate.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
+                else
+                    project.Sprints[0].EndDate.Should().Be(previousSprintEndDate);
+            }
 
-            projectSprint.DomainEvents.Should().BeEmpty();
+            if (command.ProjectStatus is not null)
+            {
+                project.LatestStatus.Should().NotBeNull();
+                project.LatestStatus!.Title.Value.Should().Be(command.ProjectStatus.Title);
+                project.LatestStatus!.Status.ToString().ToLower().Should().Be(command.ProjectStatus.Status.ToLower());
+                project.LatestStatus!.Description.Value.Should().Be(command.ProjectStatus.Description);
+            }
 
-            projectSprint.Project.Should().Be(project);
             projectSprint.Project.LastActivity
                 .Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             projectSprint.Project.Workspace.LastActivity
                 .Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            
-            if (project.Sprints.Count != 0)
-                if (previousSprintEndDate is null) 
-                    project.Sprints[0].EndDate.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
-                else 
-                    project.Sprints[0].EndDate.Should().Be(previousSprintEndDate);
-            
+
             return true;
         }
 
@@ -112,7 +121,7 @@ internal static partial class Utils
 
             sprint.Stages.Should().NotContain(stage);
             var customOrderPosition = 0;
-            sprint.Stages.Should().AllSatisfy(s => 
+            sprint.Stages.Should().AllSatisfy(s =>
                 s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -128,7 +137,7 @@ internal static partial class Utils
             sprint.Name.Value.Should().Be(command.Name);
             sprint.StartDate.Should().Be(command.StartDate);
             sprint.EndDate.Should().Be(command.EndDate);
-            
+
             sprint.Audit.ShouldBeUpdated(updatedBy);
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

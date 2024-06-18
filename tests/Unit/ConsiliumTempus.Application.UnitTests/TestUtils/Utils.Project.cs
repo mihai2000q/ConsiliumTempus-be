@@ -27,8 +27,9 @@ internal static partial class Utils
             project.Id.Value.Should().Be(command.Id);
             
             project.Statuses.Should().HaveCount(1);
-            var status = project.Statuses[0];
-            status.Id.Value.Should().NotBeEmpty();
+            var status = project.LatestStatus;
+            status.Should().NotBeNull();
+            status!.Id.Value.Should().NotBeEmpty();
             status.Title.Value.Should().Be(command.Title);
             status.Status.ToString().ToLower().Should().Be(command.Status.ToLower());
             status.Description.Value.Should().Be(command.Description);

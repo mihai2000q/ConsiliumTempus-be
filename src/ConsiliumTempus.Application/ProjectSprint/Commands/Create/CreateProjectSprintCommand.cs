@@ -8,5 +8,12 @@ public sealed record CreateProjectSprintCommand(
     string Name,
     DateOnly? StartDate,
     DateOnly? EndDate,
-    bool KeepPreviousStages)
-    : IRequest<ErrorOr<CreateProjectSprintResult>>;
+    bool KeepPreviousStages, 
+    CreateProjectSprintCommand.CreateProjectStatus? ProjectStatus)
+    : IRequest<ErrorOr<CreateProjectSprintResult>>
+{
+    public sealed record CreateProjectStatus(
+        string Title,
+        string Status,
+        string Description);
+}

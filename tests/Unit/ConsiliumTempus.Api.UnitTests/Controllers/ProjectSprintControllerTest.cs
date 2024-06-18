@@ -8,6 +8,7 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
 using ConsiliumTempus.Api.Controllers;
+using ConsiliumTempus.Api.UnitTests.TestData;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
@@ -133,12 +134,11 @@ public class ProjectSprintControllerTest
         outcome.ValidateError(error);
     }
 
-    [Fact]
-    public async Task Create_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(ProjectSprintControllerData.GetCreateProjectSprintRequests))]
+    public async Task Create_WhenIsSuccessful_ShouldReturnResponse(CreateProjectSprintRequest request)
     {
-        // Arrange
-        var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest();
-
+        // Arrange - parameterized
         var result = ProjectSprintResultFactory.CreateCreateProjectSprintResult();
         _mediator
             .Send(Arg.Any<CreateProjectSprintCommand>())

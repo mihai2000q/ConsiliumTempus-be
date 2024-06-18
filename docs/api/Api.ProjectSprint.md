@@ -119,6 +119,7 @@ POST {{host}}/api/projects/sprints
 
 Sends body data that the new project sprint needs to be created.
 It can also specify if the stages of the previous sprint (if any) can be kept/copied.
+Additionally, a new status can be created too.
 
 ```json
 {
@@ -126,7 +127,12 @@ It can also specify if the stages of the previous sprint (if any) can be kept/co
   "name": "Project Sprint Name",
   "startDate": "2024-01-01",
   "endDate": "2024-01-14",
-  "keepPreviousStages": true
+  "keepPreviousStages": true,
+  "projectStatus": {
+    "title": "Latest Release",
+    "status": "OnTrack",
+    "description": "The project has officially come back on track with the latest Release"
+  }
 }
 ```
 
