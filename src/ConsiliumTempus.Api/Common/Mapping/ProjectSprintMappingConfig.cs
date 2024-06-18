@@ -17,6 +17,7 @@ using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.User;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
@@ -41,10 +42,19 @@ public sealed class ProjectSprintMappingConfig : IRegister
         config.NewConfig<GetProjectSprintRequest, GetProjectSprintQuery>();
 
         config.NewConfig<ProjectSprintAggregate, GetProjectSprintResponse>()
-            .Map(dest => dest.Name, src => src.Name.Value);
+            .IgnoreNullValues(true)
+            .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.CreatedBy, src => src.Audit.CreatedBy)
+            .Map(dest => dest.CreatedDateTime, src => src.Audit.CreatedDateTime)
+            .Map(dest => dest.UpdatedBy, src => src.Audit.UpdatedBy)
+            .Map(dest => dest.UpdatedDateTime, src => src.Audit.UpdatedDateTime);
         config.NewConfig<ProjectStage, GetProjectSprintResponse.ProjectStageResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value);
+        config.NewConfig<UserAggregate, GetProjectSprintResponse.UserResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 
     private static void GetCollectionMappings(TypeAdapterConfig config)
@@ -55,7 +65,8 @@ public sealed class ProjectSprintMappingConfig : IRegister
         config.NewConfig<ProjectSprintAggregate, GetCollectionProjectSprintResponse.ProjectSprintResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.Name.Value);
+            .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.CreatedDateTime, src => src.Audit.CreatedDateTime);
     }
 
     private static void CreateMappings(TypeAdapterConfig config)

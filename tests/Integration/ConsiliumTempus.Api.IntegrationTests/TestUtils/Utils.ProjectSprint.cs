@@ -27,6 +27,10 @@ internal static partial class Utils
             response.Stages
                 .Zip(sprint.Stages)
                 .Should().AllSatisfy(x => AssertProjectStageResponse(x.First, x.Second));
+            AssertUserResponse(response.CreatedBy, sprint.Audit.CreatedBy);
+            response.CreatedDateTime.Should().Be(sprint.Audit.CreatedDateTime);
+            AssertUserResponse(response.UpdatedBy, sprint.Audit.UpdatedBy);
+            response.UpdatedDateTime.Should().Be(sprint.Audit.UpdatedDateTime);
         }
 
         internal static void AssertGetCollectionResponse(
@@ -197,6 +201,21 @@ internal static partial class Utils
         {
             response.Id.Should().Be(projectStage.Id.Value);
             response.Name.Should().Be(projectStage.Name.Value);
+        }
+        
+        private static void AssertUserResponse(
+            GetProjectSprintResponse.UserResponse? response,
+            UserAggregate? user)
+        {
+            if (user is null)
+            {
+                response.Should().BeNull();
+                return;
+            }
+            
+            response!.Id.Should().Be(user.Id.Value);
+            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
         }
     }
 }

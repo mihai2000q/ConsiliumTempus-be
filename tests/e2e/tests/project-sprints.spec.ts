@@ -55,7 +55,11 @@ test.describe('should allow operations on the project sprint entity', () => {
           id: expect.any(String),
           name: ProjectStageName1
         }
-      ]
+      ],
+      createdBy: expect.any(Object),
+      createdDateTime: expect.any(String),
+      updatedBy: expect.any(Object),
+      updatedDateTime: expect.any(String),
     })
   })
 
