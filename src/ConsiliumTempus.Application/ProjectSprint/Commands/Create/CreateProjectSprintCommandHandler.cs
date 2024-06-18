@@ -4,6 +4,8 @@ using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.Project.Entities;
+using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
@@ -32,7 +34,7 @@ public sealed class CreateProjectSprintCommandHandler(
             Name.Create(command.Name),
             project,
             user,
-            command.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow),
+            command.StartDate,
             command.EndDate);
 
         project.Sprints.IfNotEmpty(sprints =>
@@ -48,8 +50,7 @@ public sealed class CreateProjectSprintCommandHandler(
 
         if (command.KeepPreviousStages)
         {
-            project.Sprints
-                .IfNotEmpty(sprints =>
+            project.Sprints.IfNotEmpty(sprints =>
                     projectSprint.AddStages(sprints[0].Stages));
         }
         else
@@ -62,6 +63,16 @@ public sealed class CreateProjectSprintCommandHandler(
         }
 
         await projectSprintRepository.Add(projectSprint, cancellationToken);
+
+        if (command.ProjectStatus is not null)
+        {
+            project.AddStatus(ProjectStatus.Create(
+                Title.Create(command.ProjectStatus.Title), 
+                Enum.Parse<ProjectStatusType>(command.ProjectStatus.Status),
+                Description.Create(command.ProjectStatus.Description), 
+                project,
+                user));
+        }
 
         project.RefreshActivity();
 

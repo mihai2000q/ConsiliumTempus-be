@@ -3,7 +3,7 @@ import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
 import { deleteUser, registerUser } from "../utils/users.utils";
 import { getPersonalWorkspace } from "../utils/workspaces.utils";
-import { createProject } from "../utils/projects.utils";
+import { createProject, getProjectStatuses } from "../utils/projects.utils";
 import {
   addStageToProjectSprint,
   createProjectSprint,
@@ -181,6 +181,59 @@ test.describe('should allow operations on the project sprint entity', () => {
           name: ProjectStageName3
         },
       ])
+    })
+
+    test('should create project sprint with status', async ({ request }) => {
+      const body: CreateProjectSprintRequest = {
+        projectId: PROJECT_ID,
+        name: "Sprint 2",
+        startDate: "2024-01-12",
+        endDate: "2024-01-26",
+        projectStatus: {
+          title: "Status Update",
+          status: 'OnTrack',
+          description: "This is a new status"
+        }
+      }
+      const response = await request.post('/api/projects/sprints', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const sprints = await getProjectSprints(request, PROJECT_ID)
+      expect(sprints).toHaveLength(2)
+      expect(sprints).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: ProjectSprintName,
+          startDate: expect.any(String),
+          endDate: new Date().toISOString().slice(0, 10),
+        },
+        {
+          id: expect.any(String),
+          name: body.name,
+          startDate: body.startDate,
+          endDate: body.endDate
+        }
+      ])
+
+      const statuses = await getProjectStatuses(request, PROJECT_ID)
+      expect(statuses).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            title: body.projectStatus?.title,
+            status: body.projectStatus?.status,
+            description: body.projectStatus?.description
+          })
+        ])
+      )
     })
   })
 

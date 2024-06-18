@@ -7,6 +7,8 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Create;
@@ -23,32 +25,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         var project = ProjectSprintData.Projects.First();
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(project.Id.Value);
 
-        var previousSprintEndDate = project.Sprints
-            .IfNotEmpty(sprints => sprints[0].EndDate);
-        
-        // Act
-        Client.UseCustomToken(user);
-        var outcome = await Client.Post("api/projects/sprints", request);
-
-        // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectSprintResponse>();
-        response!.Message.Should().Be("Project Sprint has been created successfully!");
-
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
-        var createdSprint = await dbContext.ProjectSprints
-            .Include(ps => ps.Project.Workspace)
-            .Include(ps => ps.Project.Sprints)
-            .Include(ps => ps.Stages)
-            .SingleAsync(ps => ps.Name.Value == request.Name);
-        Utils.ProjectSprint.AssertCreation(
-            createdSprint,
-            request,
-            project,
-            user,
-            previousSprintEndDate);
+        await ActAndAssertSuccess(user, project, request);
     }
 
     [Fact]
@@ -61,32 +38,7 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
             project.Id.Value,
             keepPreviousStages: true);
 
-        var previousSprintEndDate = project.Sprints
-            .IfNotEmpty(sprints => sprints[0].EndDate);
-        
-        // Act
-        Client.UseCustomToken(user);
-        var outcome = await Client.Post("api/projects/sprints", request);
-
-        // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectSprintResponse>();
-        response!.Message.Should().Be("Project Sprint has been created successfully!");
-
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
-        var createdSprint = await dbContext.ProjectSprints
-            .Include(ps => ps.Project.Workspace)
-            .Include(ps => ps.Project.Sprints)
-            .Include(ps => ps.Stages)
-            .SingleAsync(ps => ps.Name.Value == request.Name);
-        Utils.ProjectSprint.AssertCreation(
-            createdSprint,
-            request,
-            project,
-            user,
-            previousSprintEndDate);
+        await ActAndAssertSuccess(user, project, request);
     }
 
     [Fact]
@@ -99,33 +51,21 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
             project.Id.Value,
             keepPreviousStages: true);
 
-        var previousSprintEndDate = project.Sprints
-            .IfNotEmpty(sprints => sprints[0].EndDate);
-        
-        // Act
-        Client.UseCustomToken(user);
-        var outcome = await Client.Post("api/projects/sprints", request);
-
-        // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectSprintResponse>();
-        response!.Message.Should().Be("Project Sprint has been created successfully!");
-
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
-        var createdSprint = await dbContext.ProjectSprints
-            .Include(ps => ps.Project.Workspace)
-            .Include(ps => ps.Project.Sprints)
-            .Include(ps => ps.Stages)
-            .SingleAsync(ps => ps.Name.Value == request.Name);
+        await ActAndAssertSuccess(user, project, request);
         project.Sprints.Should().BeEmpty();
-        Utils.ProjectSprint.AssertCreation(
-            createdSprint,
-            request,
-            project,
-            user,
-            previousSprintEndDate);
+    }
+
+    [Fact]
+    public async Task CreateProjectSprint_WhenRequestHasProjectStatus_ShouldCreateAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = ProjectSprintData.Users.First();
+        var project = ProjectSprintData.Projects.First();
+        var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
+            project.Id.Value,
+            projectStatus: ProjectSprintRequestFactory.CreateCreateProjectStatus());
+
+        await ActAndAssertSuccess(user, project, request);
     }
 
     [Fact]
@@ -144,5 +84,40 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length);
         dbContext.ProjectSprints.SingleOrDefault(p => p.Name.Value == request.Name)
             .Should().BeNull();
+    }
+
+    private async Task ActAndAssertSuccess(
+        UserAggregate user,
+        ProjectAggregate project,
+        CreateProjectSprintRequest request)
+    {
+        var previousSprintEndDate = project.Sprints
+            .IfNotEmpty(sprints => sprints[0].EndDate);
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Post("api/projects/sprints", request);
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var response = await outcome.Content.ReadFromJsonAsync<CreateProjectSprintResponse>();
+        response!.Message.Should().Be("Project Sprint has been created successfully!");
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
+        var createdSprint = await dbContext.ProjectSprints
+            .Include(ps => ps.Audit)
+            .Include(ps => ps.Project.Workspace)
+            .Include(ps => ps.Project.Sprints)
+            .Include(ps => ps.Project.Statuses)
+            .Include(ps => ps.Stages)
+            .SingleAsync(ps => ps.Name.Value == request.Name);
+        Utils.ProjectSprint.AssertCreation(
+            createdSprint,
+            request,
+            project,
+            user,
+            previousSprintEndDate);
     }
 }

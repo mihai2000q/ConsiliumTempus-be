@@ -119,7 +119,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
 
     public void AddStatus(ProjectStatus status)
     {
-        _statuses.Add(status);
+        _statuses.Insert(0, status);
     }
 
     public void RemoveStatus(ProjectStatus status)

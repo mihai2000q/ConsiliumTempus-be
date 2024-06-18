@@ -51,6 +51,17 @@ internal static partial class Utils
             command.EndDate.Should().Be(request.EndDate);
             command.KeepPreviousStages.Should().Be(request.KeepPreviousStages);
 
+            if (request.ProjectStatus is null)
+            {
+                command.ProjectStatus.Should().BeNull();
+            }
+            else
+            {
+                command.ProjectStatus!.Title.Should().Be(request.ProjectStatus.Title);
+                command.ProjectStatus.Status.Should().Be(request.ProjectStatus.Status);
+                command.ProjectStatus.Description.Should().Be(request.ProjectStatus.Description);
+            }
+
             return true;
         }
 

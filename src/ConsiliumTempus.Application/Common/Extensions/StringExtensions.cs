@@ -9,6 +9,8 @@ public static class StringExtensions
 
     public static string And(this string str, string str2) => str + "&" + str2;
 
+    public static string Dot(this string str, string str2) => str + "." + str2;
+
     public static string ToBackingField(this string propertyName) =>
         propertyName.Length switch
         {

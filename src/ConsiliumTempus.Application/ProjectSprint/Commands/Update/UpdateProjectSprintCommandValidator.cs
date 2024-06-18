@@ -16,8 +16,9 @@ public sealed class UpdateProjectSprintCommandValidator : AbstractValidator<Upda
             .MaximumLength(PropertiesValidation.ProjectSprint.NameMaximumLength);
 
         RuleFor(c => c)
-            .Must(c => c.StartDate is null || c.EndDate is null || c.StartDate < c.EndDate)
+            .Must(c => c.StartDate < c.EndDate)
             .WithMessage("The 'EndDate' must be bigger than the 'StartDate'")
-            .WithName(nameof(UpdateProjectSprintCommand.StartDate).And(nameof(UpdateProjectSprintCommand.EndDate)));
+            .WithName(nameof(UpdateProjectSprintCommand.StartDate).And(nameof(UpdateProjectSprintCommand.EndDate)))
+            .When(c => c.StartDate is not null && c.EndDate is not null);
     }
 }
