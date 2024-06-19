@@ -121,26 +121,39 @@ internal class ProjectSprintData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
-            "Do Something with your life?")
+            "Do Something with your life?"),
+        ProjectFactory.Create(
+            Workspaces[0],
+            Users[0],
+            "Buy a house!")
     ];
 
     public static ProjectSprintAggregate[] ProjectSprints { get; } =
     [
         ProjectSprintFactory.Create(
             Projects[0],
-            AuditFactory.Create(Users[0], Users[0], new DateTime(DateTime.UtcNow.Year, 1, 16)),
+            AuditFactory.Create(
+                Users[0], 
+                Users[0], 
+                new DateTime(DateTime.UtcNow.Year, 1, 16, 0, 0, 0, DateTimeKind.Utc)),
             "Sprint 2 - Qualify on Semi Finals",
             new DateOnly(DateTime.UtcNow.Year, 01, 16),
             new DateOnly(DateTime.UtcNow.Year, 01, 30)),
         ProjectSprintFactory.Create(
             Projects[0],
-            AuditFactory.Create(Users[0], Users[0], new DateTime(DateTime.UtcNow.Year, 1, 1)),
+            AuditFactory.Create(
+                Users[0], 
+                Users[0], 
+                new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc)),
             "Sprint 1 - Qualify on Quarters",
             new DateOnly(DateTime.UtcNow.Year, 01, 1),
             new DateOnly(DateTime.UtcNow.Year, 01, 15)),
         ProjectSprintFactory.Create(
             Projects[0],
-            AuditFactory.Create(Users[0], Users[0], new DateTime(DateTime.UtcNow.Year - 1, 11, 20)),
+            AuditFactory.Create(
+                Users[0], 
+                Users[0],
+                new DateTime(DateTime.UtcNow.Year- 1, 11, 2, 0, 0, 0, DateTimeKind.Utc)),
             "Sprint 0 - Training",
             new DateOnly(DateTime.UtcNow.Year - 1, 11, 22)),
         ProjectSprintFactory.Create(
@@ -149,7 +162,7 @@ internal class ProjectSprintData : ITestData
             "Get the champs lig finals",
             new DateOnly(DateTime.UtcNow.Year, 01, 16)),
         ProjectSprintFactory.Create(
-            Projects[2],
+            Projects[3],
             AuditFactory.Create(Users[0], Users[0]),
             "Sprint From Last Year",
             new DateOnly(DateTime.UtcNow.Year - 1, 11, 22)),

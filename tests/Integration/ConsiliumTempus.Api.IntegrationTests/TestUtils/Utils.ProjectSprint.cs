@@ -193,6 +193,7 @@ internal static partial class Utils
             response.Name.Should().Be(projectSprint.Name.Value);
             response.StartDate.Should().Be(projectSprint.StartDate);
             response.EndDate.Should().Be(projectSprint.EndDate);
+            response.CreatedDateTime.Should().Be(projectSprint.Audit.CreatedDateTime);
         }
 
         private static void AssertProjectStageResponse(

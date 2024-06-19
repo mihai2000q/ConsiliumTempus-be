@@ -11,5 +11,6 @@ public sealed record GetCollectionProjectSprintResponse(
         Guid Id,
         string Name,
         DateOnly? StartDate,
-        DateOnly? EndDate);
+        DateOnly? EndDate,
+        DateTime CreatedDateTime);
 }

@@ -108,13 +108,15 @@ Returns the project sprints.
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Sprint 1",
       "startDate": "2022-10-10",
-      "endDate": "2022-10-24"
+      "endDate": "2022-10-24",
+      "createdDateTime": "2020-01-01T00:00:00.0000000Z"
     },
     {
       "id": "20000000-0000-0000-0000-000000000000",
       "name": "Sprint 2",
       "startDate": null,
-      "endDate": null
+      "endDate": null,
+      "createdDateTime": "2020-01-01T00:00:00.0000000Z"
     }
   ],
   "totalCount": 2

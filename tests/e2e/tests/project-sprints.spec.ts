@@ -85,12 +85,14 @@ test.describe('should allow operations on the project sprint entity', () => {
             name: ProjectSprintName,
             startDate: expect.any(String),
             endDate: new Date().toISOString().slice(0, 10),
+            createdDateTime: expect.any(String)
           },
           {
             id: expect.any(String),
             name: projectSprint.name,
             startDate: projectSprint.startDate,
             endDate: projectSprint.endDate,
+            createdDateTime: expect.any(String)
           }
         ],
         totalCount: 2
@@ -118,12 +120,14 @@ test.describe('should allow operations on the project sprint entity', () => {
             name: ProjectSprintName,
             startDate: expect.any(String),
             endDate: new Date().toISOString().slice(0, 10),
+            createdDateTime: expect.any(String)
           },
           {
             id: expect.any(String),
             name: projectSprint.name,
             startDate: projectSprint.startDate,
             endDate: projectSprint.endDate,
+            createdDateTime: expect.any(String)
           }
         ],
         totalCount: 2
@@ -151,6 +155,7 @@ test.describe('should allow operations on the project sprint entity', () => {
             name: projectSprint.name,
             startDate: projectSprint.startDate,
             endDate: projectSprint.endDate,
+            createdDateTime: expect.any(String)
           }
         ],
         totalCount: 1
@@ -185,12 +190,14 @@ test.describe('should allow operations on the project sprint entity', () => {
           name: ProjectSprintName,
           startDate: expect.any(String),
           endDate: new Date().toISOString().slice(0, 10),
+          createdDateTime: expect.any(String)
         },
         {
           id: expect.any(String),
           name: body.name,
           startDate: body.startDate,
-          endDate: body.endDate
+          endDate: body.endDate,
+          createdDateTime: expect.any(String)
         }
       ])
     })
@@ -222,12 +229,14 @@ test.describe('should allow operations on the project sprint entity', () => {
           name: ProjectSprintName,
           startDate: expect.any(String),
           endDate: new Date().toISOString().slice(0, 10),
+          createdDateTime: expect.any(String)
         },
         {
           id: expect.any(String),
           name: body.name,
           startDate: body.startDate,
-          endDate: body.endDate
+          endDate: body.endDate,
+          createdDateTime: expect.any(String)
         }
       ])
       const createdSprint = sprints.filter((s: { name: string; }) => s.name == body.name)[0]
@@ -281,12 +290,14 @@ test.describe('should allow operations on the project sprint entity', () => {
           name: ProjectSprintName,
           startDate: expect.any(String),
           endDate: new Date().toISOString().slice(0, 10),
+          createdDateTime: expect.any(String)
         },
         {
           id: expect.any(String),
           name: body.name,
           startDate: body.startDate,
-          endDate: body.endDate
+          endDate: body.endDate,
+          createdDateTime: expect.any(String)
         }
       ])
 
@@ -414,12 +425,14 @@ test.describe('should allow operations on the project sprint entity', () => {
         name: ProjectSprintName,
         startDate: expect.any(String),
         endDate: new Date().toISOString().slice(0, 10),
+        createdDateTime: expect.any(String)
       },
       {
         id: body.id,
         name: body.name,
         startDate: body.startDate,
-        endDate: body.endDate
+        endDate: body.endDate,
+        createdDateTime: expect.any(String)
       }
     ])
   })
@@ -494,7 +507,8 @@ test.describe('should allow operations on the project sprint entity', () => {
         id: expect.any(String),
         name: projectSprint.name,
         startDate: projectSprint.startDate,
-        endDate: projectSprint.endDate
+        endDate: projectSprint.endDate,
+        createdDateTime: expect.any(String)
       }
     ]))
     expect(sprints).toStrictEqual([
@@ -503,6 +517,7 @@ test.describe('should allow operations on the project sprint entity', () => {
         name: ProjectSprintName,
         startDate: expect.any(String),
         endDate: new Date().toISOString().slice(0, 10),
+        createdDateTime: expect.any(String)
       }
     ])
   })

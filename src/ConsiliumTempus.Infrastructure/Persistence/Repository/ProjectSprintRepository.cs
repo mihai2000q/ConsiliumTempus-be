@@ -60,7 +60,7 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
         bool fromThisYear,
         CancellationToken cancellationToken = default)
     {
-        var date = new DateTime(DateTime.UtcNow.Year, 1, 1);
+        var date = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         return dbContext.ProjectSprints
             .Where(ps => ps.Project.Id == projectId)
@@ -82,7 +82,7 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
         bool fromThisYear,
         CancellationToken cancellationToken = default)
     {
-        var date = new DateTime(DateTime.UtcNow.Year, 1, 1);
+        var date = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         return dbContext.ProjectSprints
             .Where(ps => ps.Project.Id == projectId)
