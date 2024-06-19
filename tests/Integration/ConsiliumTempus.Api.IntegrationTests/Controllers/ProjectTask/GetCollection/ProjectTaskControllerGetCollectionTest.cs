@@ -35,7 +35,60 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
     }
     
     [Fact]
-    public async Task GetCollectionProjectTask_WhenRequestHasNameContains_ShouldReturnTasks()
+    public async Task GetCollectionProjectTask_WhenRequestDoesNotHaveOrderCustomOrderIsInPlace_ShouldReturnTasks()
+    {
+        // Arrange
+        var stage = ProjectTaskData.ProjectStages.First();
+        var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest(
+            stage.Id.Value);
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Get($"api/projects/tasks" +
+                                       $"?projectStageId={request.ProjectStageId}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>();
+        Utils.ProjectTask.AssertGetCollectionResponse(
+            response!,
+            stage.Tasks,
+            stage.Tasks.Count);
+
+        var count = 0;
+        stage.Tasks.Should().AllSatisfy(t => t.CustomOrderPosition.Value.Should().Be(count++));
+    }
+    
+    [Fact]
+    public async Task GetCollectionProjectTask_WhenRequestHasNameAscendingOrder_ShouldReturnOrderedTasks()
+    {
+        // Arrange
+        var stage = ProjectTaskData.ProjectStages.First();
+        var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest(
+            stage.Id.Value,
+            orderBy: ["name.asc"]);
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Get($"api/projects/tasks" +
+                                       $"?projectStageId={request.ProjectStageId}" +
+                                       $"&{request.OrderBy?.ToOrderByQueryParam()}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>();
+
+        var expectedTasks = stage.Tasks
+            .OrderBy(t => t.Name.Value)
+            .ToList();
+        
+        Utils.ProjectTask.AssertGetCollectionResponse(
+            response!,
+            expectedTasks,
+            expectedTasks.Count);
+    }
+
+    [Fact] public async Task GetCollectionProjectTask_WhenRequestHasNameContainsFilter_ShouldReturnFilteredTasks()
     {
         // Arrange
         var stage = ProjectTaskData.ProjectStages.First();
@@ -64,7 +117,7 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
     }
     
     [Fact]
-    public async Task GetCollectionProjectTask_WhenRequestHasIsCompletedEqual_ShouldReturnTasks()
+    public async Task GetCollectionProjectTask_WhenRequestHasIsCompletedEqualFilter_ShouldReturnFilteredTasks()
     {
         // Arrange
         var stage = ProjectTaskData.ProjectStages.First();

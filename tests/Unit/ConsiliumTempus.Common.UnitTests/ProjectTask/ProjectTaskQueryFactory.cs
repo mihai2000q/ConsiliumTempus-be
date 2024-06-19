@@ -12,10 +12,12 @@ public static class ProjectTaskQueryFactory
     
     public static GetCollectionProjectTaskQuery CreateGetCollectionProjectTaskQuery(
         Guid? projectStageId = null,
-        string[]? search = null)
+        string[]? search = null,
+        string[]? orderBy = null)
     {
         return new GetCollectionProjectTaskQuery(
             projectStageId ?? Guid.NewGuid(),
-            search);
+            search,
+            orderBy);
     }
 }

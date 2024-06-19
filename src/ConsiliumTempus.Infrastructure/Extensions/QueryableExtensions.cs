@@ -47,6 +47,14 @@ public static class QueryableExtensions
     {
         return condition ? queryable.Where(predicate) : queryable;
     }
+    
+    public static IQueryable<TSource> OrderByIf<TSource, TKey>(
+        this IQueryable<TSource> queryable,
+        bool condition,
+        Expression<Func<TSource, TKey>> keySelector)
+    {
+        return condition ? queryable.OrderBy(keySelector) : queryable;
+    }
 
     private static IOrderedQueryable<TSource> ApplyOrder<TSource>(
         this IQueryable<TSource> queryable,

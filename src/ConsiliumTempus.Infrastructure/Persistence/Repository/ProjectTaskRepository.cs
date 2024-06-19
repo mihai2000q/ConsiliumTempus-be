@@ -43,12 +43,14 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
     public Task<List<ProjectTaskAggregate>> GetListByStage(
         ProjectStageId stageId,
         IReadOnlyList<IFilter<ProjectTaskAggregate>> filters,
+        IReadOnlyList<IOrder<ProjectTaskAggregate>> orders,
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectTasks
             .Where(t => t.Stage.Id == stageId)
             .ApplyFilters(filters)
-            .OrderBy(t => t.CustomOrderPosition.Value)
+            .ApplyOrders(orders)
+            .OrderByIf(orders.Count == 0, t => t.CustomOrderPosition.Value)
             .ToListAsync(cancellationToken);
     }
 

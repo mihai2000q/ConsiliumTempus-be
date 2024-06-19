@@ -30,7 +30,8 @@ internal static partial class Utils
         {
             response.TotalCount.Should().Be(totalCount);
             response.Tasks.Should().HaveCount(tasks.Count);
-            response.Tasks.Zip(tasks)
+            response.Tasks
+                .Zip(tasks)
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
         }
         
