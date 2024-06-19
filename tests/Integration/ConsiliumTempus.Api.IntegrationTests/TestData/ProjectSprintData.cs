@@ -128,21 +128,31 @@ internal class ProjectSprintData : ITestData
     [
         ProjectSprintFactory.Create(
             Projects[0],
-            AuditFactory.Create(Users[0], Users[0], new DateTime(2024, 1, 16)),
+            AuditFactory.Create(Users[0], Users[0], new DateTime(DateTime.UtcNow.Year, 1, 16)),
             "Sprint 2 - Qualify on Semi Finals",
-            new DateOnly(2024, 01, 16),
-            new DateOnly(2024, 01, 30)),
+            new DateOnly(DateTime.UtcNow.Year, 01, 16),
+            new DateOnly(DateTime.UtcNow.Year, 01, 30)),
         ProjectSprintFactory.Create(
             Projects[0],
-            AuditFactory.Create(Users[0], Users[0], new DateTime(2024, 1, 1)),
+            AuditFactory.Create(Users[0], Users[0], new DateTime(DateTime.UtcNow.Year, 1, 1)),
             "Sprint 1 - Qualify on Quarters",
-            new DateOnly(2024, 01, 1),
-            new DateOnly(2024, 01, 15)),
+            new DateOnly(DateTime.UtcNow.Year, 01, 1),
+            new DateOnly(DateTime.UtcNow.Year, 01, 15)),
+        ProjectSprintFactory.Create(
+            Projects[0],
+            AuditFactory.Create(Users[0], Users[0], new DateTime(DateTime.UtcNow.Year - 1, 11, 20)),
+            "Sprint 0 - Training",
+            new DateOnly(DateTime.UtcNow.Year - 1, 11, 22)),
         ProjectSprintFactory.Create(
             Projects[1],
             AuditFactory.Create(Users[1], Users[1]),
             "Get the champs lig finals",
-            new DateOnly(2024, 01, 16))
+            new DateOnly(DateTime.UtcNow.Year, 01, 16)),
+        ProjectSprintFactory.Create(
+            Projects[2],
+            AuditFactory.Create(Users[0], Users[0]),
+            "Sprint From Last Year",
+            new DateOnly(DateTime.UtcNow.Year - 1, 11, 22)),
     ];
 
     public static ProjectStage[] ProjectStages { get; } =

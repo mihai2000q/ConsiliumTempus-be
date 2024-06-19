@@ -65,8 +65,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
         config.NewConfig<ProjectSprintAggregate, GetCollectionProjectSprintResponse.ProjectSprintResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.CreatedDateTime, src => src.Audit.CreatedDateTime);
+            .Map(dest => dest.Name, src => src.Name.Value);
     }
 
     private static void CreateMappings(TypeAdapterConfig config)

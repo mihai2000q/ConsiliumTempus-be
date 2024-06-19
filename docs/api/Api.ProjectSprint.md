@@ -86,7 +86,7 @@ Anyone that is part of a workspace can access the project sprints
 ([Get Collection Project Sprint Permission](../Security.md/#permissions)).
 
 ```js
-GET {{host}}/api/projects/sprints?projectId=10000000-0000-0000-0000-000000000000
+GET {{host}}/api/projects/sprints?projectId=10000000-0000-0000-0000-000000000000&search=name ct something&fromThisYear=false
 ```
 
 #### Get Collection Project Sprint Request
@@ -94,6 +94,8 @@ GET {{host}}/api/projects/sprints?projectId=10000000-0000-0000-0000-000000000000
 Sends the project id as a query parameter.
 
 - **projectId** is used to specify the project that the sprint is part of
+- **search** is used to filter the sprints dynamically by their properties
+- **fromThisYear** to get sprints only from this year (or if there are none, get one from last year)
 
 #### Get Collection Project Sprint Response
 
