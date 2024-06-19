@@ -44,7 +44,7 @@ For database design, check out the [User Diagram](../../database-diagrams/aggreg
 
 - The **First Name** cannot be longer than 100 characters
 - The **Last Name** cannot be longer than 100 characters
-- The **Email** cannot be longer than 100 characters
+- The **Email** cannot be longer than 256 characters
 - The plain **Password** cannot be longer than 100 characters
 - The **Role** cannot be longer than 50 characters
 

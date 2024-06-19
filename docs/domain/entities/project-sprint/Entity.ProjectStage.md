@@ -31,7 +31,7 @@ For database design checkout the [Project Sprint Diagram](../../../database-diag
 
 ### Properties Validation
 
-- The **Name** cannot be longer than 100 characters
+- The **Name** cannot be longer than 50 characters
 
 ### Domain Errors
 

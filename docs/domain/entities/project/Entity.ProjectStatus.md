@@ -27,7 +27,7 @@ For database design checkout the [Project Diagram](../../../database-diagrams/ag
 
 ### Properties Validation
 
-- The **Title** cannot be longer than 100 characters
+- The **Title** cannot be longer than 50 characters
 
 ### Domain Errors
 

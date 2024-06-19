@@ -42,7 +42,7 @@ For database design checkout the [Project Task Diagram](../../database-diagrams/
 
 ### Properties Validation
 
-- The **Name** cannot be longer than 100 characters
+- The **Name** cannot be longer than 256 characters
 
 ### Domain Errors
 
