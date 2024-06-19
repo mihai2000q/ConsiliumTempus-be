@@ -76,6 +76,46 @@ test.describe('should allow operations on the project task entity', () => {
       })
     })
 
+    test('should get collection of project tasks ordered by name ascending', async ({ request }) => {
+      const projectTask2 = await createProjectTask(request, {
+        projectStageId: STAGE_ID,
+        name: "task Name 2",
+        onTop: false
+      })
+      const projectTask1 = await createProjectTask(request, {
+        projectStageId: STAGE_ID,
+        name: "task Name 1",
+        onTop: false
+      })
+
+      const response = await request.get(
+        `/api/projects/tasks?projectStageId=${STAGE_ID}&orderBy=name.asc`,
+        useToken()
+      )
+
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json.tasks).toHaveLength(2);
+      expect(json).toStrictEqual({
+        tasks: [
+          {
+            id: expect.any(String),
+            name: projectTask1.name,
+            isCompleted: false,
+            assignee: null
+          },
+          {
+            id: expect.any(String),
+            name: projectTask2.name,
+            isCompleted: false,
+            assignee: null
+          }
+        ],
+        totalCount: 2
+      })
+    })
+
     test('should get collection of project tasks filtered by name', async ({ request }) => {
       const projectTask = await createProjectTask(request, {
         projectStageId: STAGE_ID,

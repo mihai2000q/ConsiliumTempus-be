@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Orders;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 
@@ -34,7 +35,8 @@ public class GetCollectionProjectTaskQueryHandlerTest
         _projectTaskRepository
             .GetListByStage(
                 Arg.Any<ProjectStageId>(),
-                Arg.Any<IReadOnlyList<IFilter<ProjectTaskAggregate>>>())
+                Arg.Any<IReadOnlyList<IFilter<ProjectTaskAggregate>>>(),
+                Arg.Any<IReadOnlyList<IOrder<ProjectTaskAggregate>>>())
             .Returns(tasks);
 
         const int projectTasksCount = 25;
@@ -53,7 +55,9 @@ public class GetCollectionProjectTaskQueryHandlerTest
             .GetListByStage(
                 Arg.Is<ProjectStageId>(sId => sId.Value == query.ProjectStageId),
                 Arg.Is<IReadOnlyList<IFilter<ProjectTaskAggregate>>>(filters =>
-                    filters.AssertFilters(query.Search, ProjectTaskFilter.FilterProperties)));
+                    filters.AssertFilters(query.Search, ProjectTaskFilter.FilterProperties)),
+                Arg.Is<IReadOnlyList<IOrder<ProjectTaskAggregate>>>(orders =>
+                    orders.AssertOrders(query.OrderBy, ProjectTaskOrder.OrderProperties)));
 
         await _projectTaskRepository
             .GetListByStageCount(

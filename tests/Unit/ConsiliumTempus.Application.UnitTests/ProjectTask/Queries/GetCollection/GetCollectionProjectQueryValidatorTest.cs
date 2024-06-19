@@ -26,6 +26,8 @@ public class GetCollectionProjectTaskQueryValidatorTest
     
     [Theory]
     [ClassData(typeof(GetCollectionProjectTaskQueryValidatorData.GetInvalidProjectStageIdQueries))]
+    [ClassData(typeof(GetCollectionProjectTaskQueryValidatorData.GetInvalidSearchQueries))]
+    [ClassData(typeof(GetCollectionProjectTaskQueryValidatorData.GetInvalidOrderByQueries))]
     public async Task ValidateGetCollectionProjectQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionProjectTaskQuery query, 
         string property,

@@ -56,3 +56,10 @@ For database design checkout the [Project Task Diagram](../../database-diagrams/
 
 - **Name** to filter by name
 - **IsCompleted** to filter by completed tasks
+
+### Orders
+
+- **Name** to order alphabetically
+- **IsCompleted** to order by completed tasks
+- **UpdatedDateTime** to order by last modified date
+- **CreatedDateTime** to order by creation time

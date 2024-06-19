@@ -21,12 +21,14 @@ public static class ProjectTaskRequestFactory
 
     public static GetCollectionProjectTaskRequest CreateGetCollectionProjectTaskRequest(
         Guid? projectStageId = null,
-        string[]? search = null)
+        string[]? search = null,
+        string[]? orderBy = null)
     {
         return new GetCollectionProjectTaskRequest
         {
             ProjectStageId = projectStageId ?? Guid.NewGuid(),
-            Search = search
+            Search = search,
+            OrderBy = orderBy
         };
     }
 

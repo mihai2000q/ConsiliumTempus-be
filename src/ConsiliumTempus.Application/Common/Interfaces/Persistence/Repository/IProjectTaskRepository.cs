@@ -17,6 +17,7 @@ public interface IProjectTaskRepository
     Task<List<ProjectTaskAggregate>> GetListByStage(
         ProjectStageId stageId,
         IReadOnlyList<IFilter<ProjectTaskAggregate>> filters,
+        IReadOnlyList<IOrder<ProjectTaskAggregate>> orders,
         CancellationToken cancellationToken = default);
 
     Task<int> GetListByStageCount(
