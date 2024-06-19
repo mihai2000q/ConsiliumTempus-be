@@ -11,9 +11,13 @@ public static class ProjectSprintQueryFactory
     }
     
     public static GetCollectionProjectSprintQuery CreateGetCollectionProjectSprintQuery(
-        Guid? projectId = null)
+        Guid? projectId = null,
+        string[]? search = null,
+        bool fromThisYear = false)
     {
         return new GetCollectionProjectSprintQuery(
-            projectId ?? Guid.NewGuid());
+            projectId ?? Guid.NewGuid(),
+            search,
+            fromThisYear);
     }
 }

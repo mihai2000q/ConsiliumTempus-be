@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ErrorOr;
 using MediatR;
@@ -13,12 +14,23 @@ public sealed class GetCollectionProjectSprintQueryHandler(IProjectSprintReposit
         CancellationToken cancellationToken)
     {
         var projectId = ProjectId.Create(query.ProjectId);
+        var filters = ProjectSprintFilter.Parse(query.Search);
+
         var sprints = await projectSprintRepository.GetListByProject(
             projectId,
+            filters,
+            query.FromThisYear,
             cancellationToken);
         var totalCount = await projectSprintRepository.GetListByProjectCount(
             projectId,
+            filters,
+            query.FromThisYear,
             cancellationToken);
+
+        if (sprints.Count == 0 && filters.Count == 0 && query.FromThisYear)
+        {
+            sprints = [await projectSprintRepository.GetFirstByProject(projectId, filters, cancellationToken)];
+        }
 
         return new GetCollectionProjectSprintResult(sprints, totalCount);
     }

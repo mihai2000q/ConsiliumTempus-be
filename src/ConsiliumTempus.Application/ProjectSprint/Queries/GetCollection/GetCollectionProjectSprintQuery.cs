@@ -4,5 +4,7 @@ using MediatR;
 namespace ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 
 public sealed record GetCollectionProjectSprintQuery(
-    Guid ProjectId)
+    Guid ProjectId,
+    string[]? Search,
+    bool FromThisYear)
     : IRequest<ErrorOr<GetCollectionProjectSprintResult>>;

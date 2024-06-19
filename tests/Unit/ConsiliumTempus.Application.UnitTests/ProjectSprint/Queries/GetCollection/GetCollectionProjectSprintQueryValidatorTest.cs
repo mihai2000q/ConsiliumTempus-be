@@ -26,9 +26,11 @@ public class GetCollectionProjectSprintQueryValidatorTest
     
     [Theory]
     [ClassData(typeof(GetCollectionProjectSprintQueryValidatorData.GetInvalidProjectIdQueries))]
+    [ClassData(typeof(GetCollectionProjectSprintQueryValidatorData.GetInvalidSearchQueries))]
     public async Task WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollectionProjectSprintQuery query, 
-        string property)
+        string property,
+        short expectedErrors)
     {
         // Arrange - parameterized
         
@@ -37,7 +39,7 @@ public class GetCollectionProjectSprintQueryValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(1);
+        outcome.Errors.Should().HaveCount(expectedErrors);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }
