@@ -27,11 +27,16 @@ internal static partial class Utils
             response.Stages
                 .Zip(sprint.Stages)
                 .Should().AllSatisfy(x => AssertProjectStageResponse(x.First, x.Second));
+            AssertUserResponse(response.CreatedBy, sprint.Audit.CreatedBy);
+            response.CreatedDateTime.Should().Be(sprint.Audit.CreatedDateTime);
+            AssertUserResponse(response.UpdatedBy, sprint.Audit.UpdatedBy);
+            response.UpdatedDateTime.Should().Be(sprint.Audit.UpdatedDateTime);
         }
 
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectSprintResponse response,
-            IReadOnlyList<ProjectSprintAggregate> sprints)
+            IReadOnlyList<ProjectSprintAggregate> sprints,
+            int totalCount)
         {
             response.Sprints.Should().HaveCount(sprints.Count);
             response.Sprints
@@ -40,6 +45,7 @@ internal static partial class Utils
                     .ThenByDescending(s => s.Name.Value)
                     .ThenByDescending(s => s.Audit.CreatedDateTime))
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
+            response.TotalCount.Should().Be(totalCount);
         }
 
         internal static void AssertCreation(
@@ -187,6 +193,7 @@ internal static partial class Utils
             response.Name.Should().Be(projectSprint.Name.Value);
             response.StartDate.Should().Be(projectSprint.StartDate);
             response.EndDate.Should().Be(projectSprint.EndDate);
+            response.CreatedDateTime.Should().Be(projectSprint.Audit.CreatedDateTime);
         }
 
         private static void AssertProjectStageResponse(
@@ -195,6 +202,21 @@ internal static partial class Utils
         {
             response.Id.Should().Be(projectStage.Id.Value);
             response.Name.Should().Be(projectStage.Name.Value);
+        }
+        
+        private static void AssertUserResponse(
+            GetProjectSprintResponse.UserResponse? response,
+            UserAggregate? user)
+        {
+            if (user is null)
+            {
+                response.Should().BeNull();
+                return;
+            }
+            
+            response!.Id.Should().Be(user.Id.Value);
+            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
         }
     }
 }

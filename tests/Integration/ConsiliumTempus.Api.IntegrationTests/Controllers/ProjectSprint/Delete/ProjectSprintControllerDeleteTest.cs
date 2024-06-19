@@ -46,7 +46,7 @@ public class ProjectSprintControllerDeleteTest(WebAppFactory factory)
     public async Task DeleteProjectSprint_WhenTheProjectHasOnlyOneSprint_ShouldReturnOnlyOneSprintError()
     {
         // Arrange
-        var sprint = ProjectSprintData.ProjectSprints[2];
+        var sprint = ProjectSprintData.ProjectSprints[3];
         var request = ProjectSprintRequestFactory.CreateDeleteProjectSprintRequest(id: sprint.Id.Value);
 
         // Act

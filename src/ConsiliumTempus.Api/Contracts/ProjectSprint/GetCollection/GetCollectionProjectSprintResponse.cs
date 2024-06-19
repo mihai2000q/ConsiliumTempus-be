@@ -4,11 +4,13 @@ namespace ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed record GetCollectionProjectSprintResponse(
-    List<GetCollectionProjectSprintResponse.ProjectSprintResponse> Sprints)
+    List<GetCollectionProjectSprintResponse.ProjectSprintResponse> Sprints,
+    int TotalCount)
 {
     public sealed record ProjectSprintResponse(
         Guid Id,
         string Name,
         DateOnly? StartDate,
-        DateOnly? EndDate);
+        DateOnly? EndDate,
+        DateTime CreatedDateTime);
 }

@@ -64,7 +64,19 @@ Returns the project sprint.
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Done"
     }
-  ]
+  ],
+  "createdBy": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Michael Jordan",
+    "email": "michael@jordan.com"
+  },
+  "createdDateTime": "2020-01-01T00:00:00.0000000Z",
+  "updatedBy": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Michael Jordan",
+    "email": "michael@jordan.com"
+  },
+  "updatedDateTime": "2020-01-01T00:00:00.0000000Z"
 }
 ```
 
@@ -74,7 +86,7 @@ Anyone that is part of a workspace can access the project sprints
 ([Get Collection Project Sprint Permission](../Security.md/#permissions)).
 
 ```js
-GET {{host}}/api/projects/sprints?projectId=10000000-0000-0000-0000-000000000000
+GET {{host}}/api/projects/sprints?projectId=10000000-0000-0000-0000-000000000000&search=name ct something&fromThisYear=false
 ```
 
 #### Get Collection Project Sprint Request
@@ -82,6 +94,8 @@ GET {{host}}/api/projects/sprints?projectId=10000000-0000-0000-0000-000000000000
 Sends the project id as a query parameter.
 
 - **projectId** is used to specify the project that the sprint is part of
+- **search** is used to filter the sprints dynamically by their properties
+- **fromThisYear** to get sprints only from this year (or if there are none, get one from last year)
 
 #### Get Collection Project Sprint Response
 
@@ -94,15 +108,18 @@ Returns the project sprints.
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Sprint 1",
       "startDate": "2022-10-10",
-      "endDate": "2022-10-24"
+      "endDate": "2022-10-24",
+      "createdDateTime": "2020-01-01T00:00:00.0000000Z"
     },
     {
       "id": "20000000-0000-0000-0000-000000000000",
       "name": "Sprint 2",
       "startDate": null,
-      "endDate": null
+      "endDate": null,
+      "createdDateTime": "2020-01-01T00:00:00.0000000Z"
     }
-  ]
+  ],
+  "totalCount": 2
 }
 ```
 

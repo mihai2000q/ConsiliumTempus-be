@@ -42,3 +42,7 @@ For database design checkout the [Project Sprint Diagram](../../database-diagram
 
 - **Not Found** when the project sprint cannot be found
 - **Only One Sprint** when the project does not have more than one sprint
+
+### Filters
+
+- **Name** to filter by name

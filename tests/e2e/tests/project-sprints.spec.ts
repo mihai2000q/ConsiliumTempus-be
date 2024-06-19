@@ -55,39 +55,111 @@ test.describe('should allow operations on the project sprint entity', () => {
           id: expect.any(String),
           name: ProjectStageName1
         }
-      ]
+      ],
+      createdBy: expect.any(Object),
+      createdDateTime: expect.any(String),
+      updatedBy: expect.any(Object),
+      updatedDateTime: expect.any(String),
     })
   })
 
-  test('should get collection of project sprints', async ({ request }) => {
-    const projectSprint = await createProjectSprint(request, {
-      projectId: PROJECT_ID,
-      name: "Sprint Name",
-      startDate: "2024-01-12",
-      endDate: "2024-01-26"
+  test.describe('should allow to get collection of project sprints', () => {
+    test('should get collection of project sprints', async ({ request }) => {
+      const projectSprint = await createProjectSprint(request, {
+        projectId: PROJECT_ID,
+        name: "Sprint Name",
+        startDate: "2024-01-12",
+        endDate: "2024-01-26"
+      })
+
+      const response = await request.get(`/api/projects/sprints?projectId=${PROJECT_ID}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json.sprints).toHaveLength(2);
+      expect(json).toStrictEqual({
+        sprints: [
+          {
+            id: expect.any(String),
+            name: ProjectSprintName,
+            startDate: expect.any(String),
+            endDate: new Date().toISOString().slice(0, 10),
+            createdDateTime: expect.any(String)
+          },
+          {
+            id: expect.any(String),
+            name: projectSprint.name,
+            startDate: projectSprint.startDate,
+            endDate: projectSprint.endDate,
+            createdDateTime: expect.any(String)
+          }
+        ],
+        totalCount: 2
+      })
     })
 
-    const response = await request.get(`/api/projects/sprints?projectId=${PROJECT_ID}`, useToken())
+    test('should get collection of project sprints from this year', async ({ request }) => {
+      const projectSprint = await createProjectSprint(request, {
+        projectId: PROJECT_ID,
+        name: "Sprint Name",
+        startDate: "2024-01-12",
+        endDate: "2024-01-26"
+      })
 
-    expect(response.ok()).toBeTruthy()
+      const response = await request.get(`/api/projects/sprints?projectId=${PROJECT_ID}&fromThisYear=true`, useToken())
 
-    const json = await response.json()
-    expect(json.sprints).toHaveLength(2);
-    expect(json).toStrictEqual({
-      sprints: [
-        {
-          id: expect.any(String),
-          name: ProjectSprintName,
-          startDate: expect.any(String),
-          endDate: new Date().toISOString().slice(0, 10),
-        },
-        {
-          id: expect.any(String),
-          name: projectSprint.name,
-          startDate: projectSprint.startDate,
-          endDate: projectSprint.endDate,
-        }
-      ]
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json.sprints).toHaveLength(2);
+      expect(json).toStrictEqual({
+        sprints: [
+          {
+            id: expect.any(String),
+            name: ProjectSprintName,
+            startDate: expect.any(String),
+            endDate: new Date().toISOString().slice(0, 10),
+            createdDateTime: expect.any(String)
+          },
+          {
+            id: expect.any(String),
+            name: projectSprint.name,
+            startDate: projectSprint.startDate,
+            endDate: projectSprint.endDate,
+            createdDateTime: expect.any(String)
+          }
+        ],
+        totalCount: 2
+      })
+    })
+
+    test('should get collection of project sprints filtered by name', async ({ request }) => {
+      const projectSprint = await createProjectSprint(request, {
+        projectId: PROJECT_ID,
+        name: "Sprint Name",
+        startDate: "2024-01-12",
+        endDate: "2024-01-26"
+      })
+
+      const response = await request.get(`/api/projects/sprints?projectId=${PROJECT_ID}&search=name ct name`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json.sprints).toHaveLength(1);
+      expect(json).toStrictEqual({
+        sprints: [
+          {
+            id: expect.any(String),
+            name: projectSprint.name,
+            startDate: projectSprint.startDate,
+            endDate: projectSprint.endDate,
+            createdDateTime: expect.any(String)
+          }
+        ],
+        totalCount: 1
+      })
     })
   })
 
@@ -118,12 +190,14 @@ test.describe('should allow operations on the project sprint entity', () => {
           name: ProjectSprintName,
           startDate: expect.any(String),
           endDate: new Date().toISOString().slice(0, 10),
+          createdDateTime: expect.any(String)
         },
         {
           id: expect.any(String),
           name: body.name,
           startDate: body.startDate,
-          endDate: body.endDate
+          endDate: body.endDate,
+          createdDateTime: expect.any(String)
         }
       ])
     })
@@ -155,12 +229,14 @@ test.describe('should allow operations on the project sprint entity', () => {
           name: ProjectSprintName,
           startDate: expect.any(String),
           endDate: new Date().toISOString().slice(0, 10),
+          createdDateTime: expect.any(String)
         },
         {
           id: expect.any(String),
           name: body.name,
           startDate: body.startDate,
-          endDate: body.endDate
+          endDate: body.endDate,
+          createdDateTime: expect.any(String)
         }
       ])
       const createdSprint = sprints.filter((s: { name: string; }) => s.name == body.name)[0]
@@ -214,12 +290,14 @@ test.describe('should allow operations on the project sprint entity', () => {
           name: ProjectSprintName,
           startDate: expect.any(String),
           endDate: new Date().toISOString().slice(0, 10),
+          createdDateTime: expect.any(String)
         },
         {
           id: expect.any(String),
           name: body.name,
           startDate: body.startDate,
-          endDate: body.endDate
+          endDate: body.endDate,
+          createdDateTime: expect.any(String)
         }
       ])
 
@@ -347,12 +425,14 @@ test.describe('should allow operations on the project sprint entity', () => {
         name: ProjectSprintName,
         startDate: expect.any(String),
         endDate: new Date().toISOString().slice(0, 10),
+        createdDateTime: expect.any(String)
       },
       {
         id: body.id,
         name: body.name,
         startDate: body.startDate,
-        endDate: body.endDate
+        endDate: body.endDate,
+        createdDateTime: expect.any(String)
       }
     ])
   })
@@ -427,7 +507,8 @@ test.describe('should allow operations on the project sprint entity', () => {
         id: expect.any(String),
         name: projectSprint.name,
         startDate: projectSprint.startDate,
-        endDate: projectSprint.endDate
+        endDate: projectSprint.endDate,
+        createdDateTime: expect.any(String)
       }
     ]))
     expect(sprints).toStrictEqual([
@@ -436,6 +517,7 @@ test.describe('should allow operations on the project sprint entity', () => {
         name: ProjectSprintName,
         startDate: expect.any(String),
         endDate: new Date().toISOString().slice(0, 10),
+        createdDateTime: expect.any(String)
       }
     ])
   })
