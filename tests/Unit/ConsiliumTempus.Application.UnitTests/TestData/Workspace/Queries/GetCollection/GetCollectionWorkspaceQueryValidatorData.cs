@@ -175,10 +175,6 @@ internal static class GetCollectionWorkspaceQueryValidatorData
             Add(query, nameof(query.Search), 1);
 
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
-                search: ["name eq     "]);
-            Add(query, nameof(query.Search), 1);
-
-            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
                 search: [correct, "name eq     "]);
             Add(query, nameof(query.Search), 1);
 

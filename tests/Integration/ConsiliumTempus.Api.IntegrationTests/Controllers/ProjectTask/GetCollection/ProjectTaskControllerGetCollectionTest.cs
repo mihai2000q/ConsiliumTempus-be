@@ -33,6 +33,64 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
             stage.Tasks,
             stage.Tasks.Count);
     }
+    
+    [Fact]
+    public async Task GetCollectionProjectTask_WhenRequestHasNameContains_ShouldReturnTasks()
+    {
+        // Arrange
+        var stage = ProjectTaskData.ProjectStages.First();
+        var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest(
+            stage.Id.Value,
+            search: ["name ct should"]);
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Get($"api/projects/tasks" +
+                                       $"?projectStageId={request.ProjectStageId}" +
+                                       $"&{request.Search?.ToSearchQueryParam()}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>();
+
+        var expectedTasks = stage.Tasks
+            .Where(t => t.Name.Value.ToLower().Contains("should"))
+            .ToList();
+        
+        Utils.ProjectTask.AssertGetCollectionResponse(
+            response!,
+            expectedTasks,
+            expectedTasks.Count);
+    }
+    
+    [Fact]
+    public async Task GetCollectionProjectTask_WhenRequestHasIsCompletedEqual_ShouldReturnTasks()
+    {
+        // Arrange
+        var stage = ProjectTaskData.ProjectStages.First();
+        var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest(
+            stage.Id.Value,
+            search: ["is_completed eq true"]);
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Get($"api/projects/tasks" +
+                                       $"?projectStageId={request.ProjectStageId}" +
+                                       $"&{request.Search?.ToSearchQueryParam()}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>();
+
+        var expectedTasks = stage.Tasks
+            .Where(t => t.IsCompleted.Value)
+            .ToList();
+        
+        Utils.ProjectTask.AssertGetCollectionResponse(
+            response!,
+            expectedTasks,
+            expectedTasks.Count);
+    }
 
     [Fact]
     public async Task GetCollectionProjectTask_WhenStageIsNotFound_ShouldReturnEmptyTasks()

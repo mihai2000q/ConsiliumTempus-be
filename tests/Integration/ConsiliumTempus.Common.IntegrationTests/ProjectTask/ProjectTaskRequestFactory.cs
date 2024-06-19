@@ -8,7 +8,7 @@ using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
 namespace ConsiliumTempus.Common.IntegrationTests.ProjectTask;
 
-public class ProjectTaskRequestFactory
+public static class ProjectTaskRequestFactory
 {
     public static GetProjectTaskRequest CreateGetProjectTaskRequest(
         Guid? id = null)
@@ -20,11 +20,13 @@ public class ProjectTaskRequestFactory
     }
 
     public static GetCollectionProjectTaskRequest CreateGetCollectionProjectTaskRequest(
-        Guid? projectStageId = null)
+        Guid? projectStageId = null,
+        string[]? search = null)
     {
         return new GetCollectionProjectTaskRequest
         {
-            ProjectStageId = projectStageId ?? Guid.NewGuid()
+            ProjectStageId = projectStageId ?? Guid.NewGuid(),
+            Search = search
         };
     }
 

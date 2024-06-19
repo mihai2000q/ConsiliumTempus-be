@@ -9,5 +9,12 @@ public sealed record GetCollectionProjectTaskResponse(
 {
     public sealed record ProjectTaskResponse(
         Guid Id,
-        string Name);
+        string Name,
+        bool IsCompleted,
+        UserResponse? Assignee);
+
+    public sealed record UserResponse(
+        Guid Id,
+        string Name,
+        string Email);
 }

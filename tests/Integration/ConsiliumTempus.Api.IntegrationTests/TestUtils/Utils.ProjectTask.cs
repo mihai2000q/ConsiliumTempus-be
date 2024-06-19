@@ -115,6 +115,23 @@ internal static partial class Utils
         {
             response.Id.Should().Be(projectTask.Id.Value);
             response.Name.Should().Be(projectTask.Name.Value);
+            response.IsCompleted.Should().Be(projectTask.IsCompleted.Value);
+            AssertUserResponse(response.Assignee, projectTask.Assignee);
+        }
+        
+        private static void AssertUserResponse(
+            GetCollectionProjectTaskResponse.UserResponse? response,
+            UserAggregate? user)
+        {
+            if (user is null)
+            {
+                response.Should().BeNull();
+                return;
+            }
+            
+            response!.Id.Should().Be(user.Id.Value);
+            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
         }
     }
 }

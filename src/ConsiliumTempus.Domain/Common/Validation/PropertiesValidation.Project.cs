@@ -9,6 +9,6 @@ public static partial class PropertiesValidation
     
     public static class ProjectStatus
     {
-        public const short TitleMaximumLength = 100;
+        public const short TitleMaximumLength = 50;
     }
 }

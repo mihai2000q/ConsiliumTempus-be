@@ -156,13 +156,16 @@ internal class ProjectTaskData : ITestData
             Users[0],
             ProjectStages[0],
             "Should do add more stepping to my shots",
-            customOrderPosition: 1),
+            customOrderPosition: 1,
+            assignee: Users[1],
+            isCompleted: true),
         ProjectTaskFactory.Create(
             Users[3],
             ProjectStages[0],
             "Should tell Michael to PASS MOORE!!",
             assignee: Users[0],
             customOrderPosition: 2),
+        
         ProjectTaskFactory.Create(
             Users[0],
             ProjectStages[1],

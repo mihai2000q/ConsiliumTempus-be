@@ -1,6 +1,8 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
+using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
+using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -50,12 +52,14 @@ public class GetCollectionProjectTaskQueryHandlerTest
             .Received(1)
             .GetListByStage(
                 Arg.Is<ProjectStageId>(sId => sId.Value == query.ProjectStageId),
-                Arg.Any<IReadOnlyList<IFilter<ProjectTaskAggregate>>>());
+                Arg.Is<IReadOnlyList<IFilter<ProjectTaskAggregate>>>(filters =>
+                    filters.AssertFilters(query.Search, ProjectTaskFilter.FilterProperties)));
 
         await _projectTaskRepository
             .GetListByStageCount(
                 Arg.Is<ProjectStageId>(sId => sId.Value == query.ProjectStageId),
-                Arg.Any<IReadOnlyList<IFilter<ProjectTaskAggregate>>>());
+                Arg.Is<IReadOnlyList<IFilter<ProjectTaskAggregate>>>(filters =>
+                    filters.AssertFilters(query.Search, ProjectTaskFilter.FilterProperties)));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Tasks.Should().BeEquivalentTo(tasks);
