@@ -58,12 +58,15 @@ Anyone that is part of the workspace can read the projects
 in case the workspace Id is mentioned, otherwise any logged-in user will get their projects.
 
 ```js
-GET {{host}}/api/projects/tasks?projectStageId=10000000-0000-0000-0000-000000000000
+GET {{host}}/api/projects/tasks?projectStageId=10000000-0000-0000-0000-000000000000&search=name ct task
 ```
 
 #### Get Collection Request
 
-it sends the id of the project stage.
+Sends the following as query parameters:
+
+- **projectStageId** is used to specify the project stage that the tasks are part of
+- **search** is used to filter the tasks dynamically by their properties
 
 #### Get Collection Response
 

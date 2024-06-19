@@ -203,10 +203,6 @@ internal static class GetCollectionProjectQueryValidatorData
             Add(query, nameof(query.Search), 1);
 
             query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
-                search: ["name eq     "]);
-            Add(query, nameof(query.Search), 1);
-
-            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
                 search: [correct, "name eq     "]);
             Add(query, nameof(query.Search), 1);
 

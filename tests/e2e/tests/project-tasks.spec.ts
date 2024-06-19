@@ -49,29 +49,60 @@ test.describe('should allow operations on the project task entity', () => {
     })
   })
 
-  test('should get collection of project tasks', async ({ request }) => {
-    const projectTask = await createProjectTask(request, {
-      projectStageId: STAGE_ID,
-      name: "task Name",
-      onTop: false
+  test.describe('should allow to get collection of project tasks', () => {
+    test('should get collection of project tasks', async ({ request }) => {
+      const projectTask = await createProjectTask(request, {
+        projectStageId: STAGE_ID,
+        name: "task Name",
+        onTop: false
+      })
+
+      const response = await request.get(`/api/projects/tasks?projectStageId=${STAGE_ID}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json.tasks).toHaveLength(1);
+      expect(json).toStrictEqual({
+        tasks: [
+          {
+            id: expect.any(String),
+            name: projectTask.name,
+            isCompleted: false,
+            assignee: null
+          }
+        ],
+        totalCount: 1
+      })
     })
 
-    const response = await request.get(`/api/projects/tasks?projectStageId=${STAGE_ID}`, useToken())
+    test('should get collection of project tasks filtered by name', async ({ request }) => {
+      const projectTask = await createProjectTask(request, {
+        projectStageId: STAGE_ID,
+        name: "task Name",
+        onTop: false
+      })
 
-    expect(response.ok()).toBeTruthy()
+      const response = await request.get(
+        `/api/projects/tasks?projectStageId=${STAGE_ID}&search=name ct task`,
+        useToken()
+      )
 
-    const json = await response.json()
-    expect(json.tasks).toHaveLength(1);
-    expect(json).toStrictEqual({
-      tasks: [
-        {
-          id: expect.any(String),
-          name: projectTask.name,
-          isCompleted: false,
-          assignee: null
-        }
-      ],
-      totalCount: 1
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json.tasks).toHaveLength(1);
+      expect(json).toStrictEqual({
+        tasks: [
+          {
+            id: expect.any(String),
+            name: projectTask.name,
+            isCompleted: false,
+            assignee: null
+          }
+        ],
+        totalCount: 1
+      })
     })
   })
 

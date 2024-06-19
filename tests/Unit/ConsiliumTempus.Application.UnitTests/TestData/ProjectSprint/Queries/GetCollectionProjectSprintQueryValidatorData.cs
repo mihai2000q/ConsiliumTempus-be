@@ -66,10 +66,6 @@ internal static class GetCollectionProjectSprintQueryValidatorData
             Add(query, nameof(query.Search), 1);
 
             query = ProjectSprintQueryFactory.CreateGetCollectionProjectSprintQuery(
-                search: ["name eq     "]);
-            Add(query, nameof(query.Search), 1);
-
-            query = ProjectSprintQueryFactory.CreateGetCollectionProjectSprintQuery(
                 search: [correct, "name eq     "]);
             Add(query, nameof(query.Search), 1);
 

@@ -51,3 +51,8 @@ For database design checkout the [Project Task Diagram](../../database-diagrams/
 ### Value Objects
 
 - **IsCompleted**, which encapsulates a boolean *Value*
+
+### Filters
+
+- **Name** to filter by name
+- **IsCompleted** to filter by completed tasks

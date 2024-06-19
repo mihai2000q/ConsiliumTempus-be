@@ -33,6 +33,7 @@ internal static partial class Utils
             GetCollectionProjectTaskRequest request)
         {
             query.ProjectStageId.Should().Be(request.ProjectStageId);
+            query.Search.Should().BeEquivalentTo(request.Search);
 
             return true;
         }

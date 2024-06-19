@@ -91,9 +91,9 @@ GET {{host}}/api/projects/sprints?projectId=10000000-0000-0000-0000-000000000000
 
 #### Get Collection Project Sprint Request
 
-Sends the project id as a query parameter.
+Sends the following as query parameters:
 
-- **projectId** is used to specify the project that the sprint is part of
+- **projectId** is used to specify the project that the sprints are part of
 - **search** is used to filter the sprints dynamically by their properties
 - **fromThisYear** to get sprints only from this year (or if there are none, get one from last year)
 
