@@ -271,7 +271,8 @@ test.describe('should allow operations on the project task entity', () => {
     const body: UpdateOverviewProjectTaskRequest = {
       id: task.id,
       name: "task 2 - Updated",
-      description: "THis is a new description"
+      description: "THis is a new description",
+      isCompleted: true
     }
     const response = await request.put('/api/projects/tasks/overview', {
       ...useToken(),
@@ -288,7 +289,7 @@ test.describe('should allow operations on the project task entity', () => {
     expect(newTask).toStrictEqual({
       name: body.name,
       description: body.description,
-      isCompleted: false
+      isCompleted: body.isCompleted
     })
   })
 

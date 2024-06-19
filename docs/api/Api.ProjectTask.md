@@ -79,12 +79,18 @@ Returns the project tasks and their total count.
     {
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Project Task Name 1",
-      "isCompleted": true
+      "isCompleted": true,
+      "assignee": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Michael Jordan",
+        "email": "michael@jordan.com"
+      }
     },
     {
       "id": "20000000-0000-0000-0000-000000000000",
       "name": "Project Task Name 2",
-      "isCompleted": false
+      "isCompleted": false,
+      "assignee": null
     }
   ],
   "totalCount": 2
@@ -160,6 +166,7 @@ Sends body data that the project overview needs to be updated.
   "id": "10000000-0000-0000-0000-000000000000",
   "name": "New Project Task Name",
   "description": "This is the new description of the project task that I can't wait to work on",
+  "isCompleted": true,
   "assigneeId": "10000000-0000-0000-0000-000000000000"
 }
 ```

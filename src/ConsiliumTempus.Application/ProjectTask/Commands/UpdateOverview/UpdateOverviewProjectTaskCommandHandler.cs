@@ -28,6 +28,7 @@ public sealed class UpdateOverviewProjectTaskCommandHandler(
         task.UpdateOverview(
             Name.Create(command.Name),
             Description.Create(command.Description),
+            IsCompleted.Create(command.IsCompleted),
             assignee);
         task.Stage.Sprint.Project.RefreshActivity();
 

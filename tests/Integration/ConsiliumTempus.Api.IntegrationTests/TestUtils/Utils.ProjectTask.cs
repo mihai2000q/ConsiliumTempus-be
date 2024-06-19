@@ -103,7 +103,11 @@ internal static partial class Utils
             // changed
             newTask.Name.Value.Should().Be(request.Name);
             newTask.Description.Value.Should().Be(request.Description);
-            newTask.Assignee?.Id.Value.Should().Be(request.AssigneeId!.Value);
+            newTask.IsCompleted.Value.Should().Be(request.IsCompleted);
+            if (request.AssigneeId is null)
+                newTask.Assignee.Should().BeNull();
+            else
+                newTask.Assignee!.Id.Value.Should().Be(request.AssigneeId.Value);
             newTask.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             newTask.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
