@@ -74,11 +74,13 @@ Returns the project tasks and their total count.
   "tasks": [
     {
       "id": "10000000-0000-0000-0000-000000000000",
-      "name": "Project Task Name 1"
+      "name": "Project Task Name 1",
+      "isCompleted": true
     },
     {
       "id": "20000000-0000-0000-0000-000000000000",
-      "name": "Project Task Name 2"
+      "name": "Project Task Name 2",
+      "isCompleted": false
     }
   ],
   "totalCount": 2

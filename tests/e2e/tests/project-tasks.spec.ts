@@ -66,7 +66,9 @@ test.describe('should allow operations on the project task entity', () => {
       tasks: [
         {
           id: expect.any(String),
-          name: projectTask.name
+          name: projectTask.name,
+          isCompleted: false,
+          assignee: null
         }
       ],
       totalCount: 1
@@ -97,6 +99,8 @@ test.describe('should allow operations on the project task entity', () => {
         {
           id: expect.any(String),
           name: body.name,
+          isCompleted: false,
+          assignee: null
         }
       ])
     })
@@ -136,14 +140,20 @@ test.describe('should allow operations on the project task entity', () => {
         {
           id: expect.any(String),
           name: body.name,
+          isCompleted: false,
+          assignee: null
         },
         {
           id: expect.any(String),
           name: createProjectTaskRequest1.name,
+          isCompleted: false,
+          assignee: null
         },
         {
           id: expect.any(String),
           name: createProjectTaskRequest2.name,
+          isCompleted: false,
+          assignee: null
         },
       ])
     })

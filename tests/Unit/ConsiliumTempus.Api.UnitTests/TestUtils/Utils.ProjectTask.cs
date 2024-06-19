@@ -11,6 +11,7 @@ using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
 using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -37,7 +38,7 @@ internal static partial class Utils
         }
 
         internal static bool AssertCreateCommand(
-            CreateProjectTaskCommand command, 
+            CreateProjectTaskCommand command,
             CreateProjectTaskRequest request)
         {
             command.ProjectStageId.Should().Be(request.ProjectStageId);
@@ -46,7 +47,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static bool AssertUpdateCommand(
             UpdateProjectTaskCommand command,
             UpdateProjectTaskRequest request)
@@ -58,7 +59,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static bool AssertUpdateOverviewCommand(
             UpdateOverviewProjectTaskCommand command,
             UpdateOverviewProjectTaskRequest request)
@@ -104,6 +105,23 @@ internal static partial class Utils
         {
             taskResponse.Id.Should().Be(task.Id.Value);
             taskResponse.Name.Should().Be(task.Name.Value);
+            taskResponse.IsCompleted.Should().Be(task.IsCompleted.Value);
+            AssertUserResponse(taskResponse.Assignee, task.Assignee);
+        }
+
+        private static void AssertUserResponse(
+            GetCollectionProjectTaskResponse.UserResponse? response,
+            UserAggregate? user)
+        {
+            if (user is null)
+            {
+                response.Should().BeNull();
+                return;
+            }
+
+            response!.Id.Should().Be(user.Id.Value);
+            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
         }
     }
 }

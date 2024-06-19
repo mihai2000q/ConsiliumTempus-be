@@ -12,6 +12,7 @@ using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
 using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.User;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
@@ -46,7 +47,12 @@ public sealed class ProjectTaskMappingConfig : IRegister
         config.NewConfig<GetCollectionProjectTaskResult, GetCollectionProjectTaskResponse>();
         config.NewConfig<ProjectTaskAggregate, GetCollectionProjectTaskResponse.ProjectTaskResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.Name.Value);
+            .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.IsCompleted, src => src.IsCompleted.Value);
+        config.NewConfig<UserAggregate, GetCollectionProjectTaskResponse.UserResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 
     private static void CreateMappings(TypeAdapterConfig config)
