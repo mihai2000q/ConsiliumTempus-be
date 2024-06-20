@@ -47,7 +47,42 @@ Returns a project.
 {
   "name": "Project Task Name 1",
   "description": "This task is gonna be awesome and I can't wait to work on it.",
-  "isCompleted": true
+  "isCompleted": true,
+  "assignee": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Michael Jordan",
+    "email": "michael@jordan.com"
+  },
+  "stage": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "In Progress"
+  },
+  "sprint": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Sprint 1",
+    "stages": [
+      {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "To do"
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "In Progress"
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Completed"
+      }
+    ]
+  },
+  "project": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Some Project"
+  },
+  "workspace": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Some Workspace"
+  }
 }
 ```
 

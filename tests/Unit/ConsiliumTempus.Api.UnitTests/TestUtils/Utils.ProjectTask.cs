@@ -10,8 +10,12 @@ using ConsiliumTempus.Application.ProjectTask.Commands.Update;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
+using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -91,6 +95,11 @@ internal static partial class Utils
             response.Name.Should().Be(task.Name.Value);
             response.Description.Should().Be(task.Description.Value);
             response.IsCompleted.Should().Be(task.IsCompleted.Value);
+            AssertUserResponse(response.Assignee, task.Assignee);
+            AssertProjectStageResponse(response.Stage, task.Stage);
+            AssertProjectSprintResponse(response.Sprint, task.Stage.Sprint);
+            AssertProjectResponse(response.Project, task.Stage.Sprint.Project);
+            AssertWorkspaceResponse(response.Workspace, task.Stage.Sprint.Project.Workspace);
         }
 
         internal static void AssertGetCollectionResponse(
@@ -100,6 +109,55 @@ internal static partial class Utils
             response.Tasks.Zip(result.Tasks)
                 .Should().AllSatisfy(p => AssertProjectTaskResponse(p.First, p.Second));
             response.TotalCount.Should().Be(result.TotalCount);
+        }
+        
+        private static void AssertUserResponse(
+            GetProjectTaskResponse.UserResponse? response,
+            UserAggregate? user)
+        {
+            if (user is null)
+            {
+                response.Should().BeNull();
+                return;
+            }
+
+            response!.Id.Should().Be(user.Id.Value);
+            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
+        }
+
+        private static void AssertProjectStageResponse(
+            GetProjectTaskResponse.ProjectStageResponse response,
+            ProjectStage stage)
+        {
+            response.Id.Should().Be(stage.Id.Value);
+            response.Name.Should().Be(stage.Name.Value);
+        }
+
+        private static void AssertProjectSprintResponse(
+            GetProjectTaskResponse.ProjectSprintResponse response,
+            ProjectSprintAggregate sprint)
+        {
+            response.Id.Should().Be(sprint.Id.Value);
+            response.Name.Should().Be(sprint.Name.Value);
+            response.Stages.Zip(sprint.Stages)
+                .Should().AllSatisfy(x => AssertProjectStageResponse(x.First, x.Second));
+        }
+
+        private static void AssertProjectResponse(
+            GetProjectTaskResponse.ProjectResponse response,
+            ProjectAggregate project)
+        {
+            response.Id.Should().Be(project.Id.Value);
+            response.Name.Should().Be(project.Name.Value);
+        }
+
+        private static void AssertWorkspaceResponse(
+            GetProjectTaskResponse.WorkspaceResponse response,
+            WorkspaceAggregate workspace)
+        {
+            response.Id.Should().Be(workspace.Id.Value);
+            response.Name.Should().Be(workspace.Name.Value);
         }
 
         private static void AssertProjectTaskResponse(

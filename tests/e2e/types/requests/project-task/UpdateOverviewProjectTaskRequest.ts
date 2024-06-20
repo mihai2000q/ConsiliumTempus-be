@@ -3,5 +3,5 @@ export default interface UpdateOverviewProjectTaskRequest {
   name: string,
   description: string,
   isCompleted: boolean,
-  assigneeId?: string | null
+  assigneeId: string | null
 }

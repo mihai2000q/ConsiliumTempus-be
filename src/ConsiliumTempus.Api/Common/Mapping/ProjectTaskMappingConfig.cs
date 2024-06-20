@@ -11,8 +11,12 @@ using ConsiliumTempus.Application.ProjectTask.Commands.Update;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
+using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.Workspace;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
@@ -37,7 +41,27 @@ public sealed class ProjectTaskMappingConfig : IRegister
         config.NewConfig<ProjectTaskAggregate, GetProjectTaskResponse>()
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.IsCompleted, src => src.IsCompleted.Value);
+            .Map(dest => dest.IsCompleted, src => src.IsCompleted.Value)
+            .Map(dest => dest.Stage, src => src.Stage)
+            .Map(dest => dest.Sprint, src => src.Stage.Sprint)
+            .Map(dest => dest.Project, src => src.Stage.Sprint.Project)
+            .Map(dest => dest.Workspace, src => src.Stage.Sprint.Project.Workspace);
+        config.NewConfig<UserAggregate, GetProjectTaskResponse.UserResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Email, src => src.Credentials.Email);
+        config.NewConfig<ProjectStage, GetProjectTaskResponse.ProjectStageResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.Name.Value);
+        config.NewConfig<ProjectSprintAggregate, GetProjectTaskResponse.ProjectSprintResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.Name.Value);
+        config.NewConfig<ProjectAggregate, GetProjectTaskResponse.ProjectResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.Name.Value);
+        config.NewConfig<WorkspaceAggregate, GetProjectTaskResponse.WorkspaceResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.Name.Value);
     }
 
     private static void GetCollectionMappings(TypeAdapterConfig config)
