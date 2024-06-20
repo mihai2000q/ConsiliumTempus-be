@@ -41,12 +41,14 @@ public static class ProjectTaskCommandFactory
         Guid? id = null,
         string name = Constants.ProjectTask.Name,
         string description = Constants.ProjectTask.Description,
+        bool isCompleted = false,
         Guid? assigneeId = null)
     {
         return new UpdateOverviewProjectTaskCommand(
             id ?? Guid.NewGuid(),
             name,
             description,
+            isCompleted,
             assigneeId);
     }
 }

@@ -45,7 +45,12 @@ test.describe('should allow operations on the project task entity', () => {
     expect(await response.json()).toStrictEqual({
       name: createProjectTaskRequest.name,
       description: "",
-      isCompleted: false
+      isCompleted: false,
+      assignee: null,
+      stage: expect.any(Object),
+      sprint: expect.any(Object),
+      project: expect.any(Object),
+      workspace: expect.any(Object)
     })
   })
 
@@ -257,7 +262,12 @@ test.describe('should allow operations on the project task entity', () => {
     expect(newTask).toStrictEqual({
       name: body.name,
       description: "",
-      isCompleted: body.isCompleted
+      isCompleted: body.isCompleted,
+      assignee: body.assigneeId ? expect.objectContaining({ id: body.assigneeId }) : null,
+      stage: expect.any(Object),
+      sprint: expect.any(Object),
+      project: expect.any(Object),
+      workspace: expect.any(Object)
     })
   })
 
@@ -271,7 +281,9 @@ test.describe('should allow operations on the project task entity', () => {
     const body: UpdateOverviewProjectTaskRequest = {
       id: task.id,
       name: "task 2 - Updated",
-      description: "THis is a new description"
+      description: "THis is a new description",
+      isCompleted: true,
+      assigneeId: null
     }
     const response = await request.put('/api/projects/tasks/overview', {
       ...useToken(),
@@ -288,7 +300,12 @@ test.describe('should allow operations on the project task entity', () => {
     expect(newTask).toStrictEqual({
       name: body.name,
       description: body.description,
-      isCompleted: false
+      isCompleted: body.isCompleted,
+      assignee: body.assigneeId ? expect.objectContaining({ id: body.assigneeId }) : null,
+      stage: expect.any(Object),
+      sprint: expect.any(Object),
+      project: expect.any(Object),
+      workspace: expect.any(Object)
     })
   })
 

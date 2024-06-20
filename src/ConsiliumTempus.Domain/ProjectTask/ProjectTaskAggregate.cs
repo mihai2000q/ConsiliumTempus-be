@@ -88,10 +88,12 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public void UpdateOverview(
         Name name, 
         Description description,
+        IsCompleted isCompleted,
         UserAggregate? assignee)
     {
         Name = name;
         Description = description;
+        IsCompleted = isCompleted;
         Assignee = assignee;
         UpdatedDateTime = DateTime.UtcNow;
     }

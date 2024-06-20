@@ -47,7 +47,42 @@ Returns a project.
 {
   "name": "Project Task Name 1",
   "description": "This task is gonna be awesome and I can't wait to work on it.",
-  "isCompleted": true
+  "isCompleted": true,
+  "assignee": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Michael Jordan",
+    "email": "michael@jordan.com"
+  },
+  "stage": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "In Progress"
+  },
+  "sprint": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Sprint 1",
+    "stages": [
+      {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "To do"
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "In Progress"
+      },
+      {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Completed"
+      }
+    ]
+  },
+  "project": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Some Project"
+  },
+  "workspace": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Some Workspace"
+  }
 }
 ```
 
@@ -79,12 +114,18 @@ Returns the project tasks and their total count.
     {
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Project Task Name 1",
-      "isCompleted": true
+      "isCompleted": true,
+      "assignee": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Michael Jordan",
+        "email": "michael@jordan.com"
+      }
     },
     {
       "id": "20000000-0000-0000-0000-000000000000",
       "name": "Project Task Name 2",
-      "isCompleted": false
+      "isCompleted": false,
+      "assignee": null
     }
   ],
   "totalCount": 2
@@ -160,6 +201,7 @@ Sends body data that the project overview needs to be updated.
   "id": "10000000-0000-0000-0000-000000000000",
   "name": "New Project Task Name",
   "description": "This is the new description of the project task that I can't wait to work on",
+  "isCompleted": true,
   "assigneeId": "10000000-0000-0000-0000-000000000000"
 }
 ```
