@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectTask;
 
 namespace ConsiliumTempus.Domain.Common.Orders.Properties;

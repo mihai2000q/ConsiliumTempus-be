@@ -24,6 +24,22 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
     }
 
+    public async Task<WorkspaceAggregate?> GetWithMemberships(
+        WorkspaceId id,
+        string searchValue,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Workspaces
+            .Include(w => w.Memberships)
+            .ThenInclude(m => m.User)
+            .WhereIf(!string.IsNullOrWhiteSpace(searchValue), 
+                w => w.Memberships.Any(m => 
+                    m.User.Credentials.Email.Contains(searchValue) ||
+                    m.User.FirstName.Value.Contains(searchValue) ||
+                    m.User.LastName.Value.Contains(searchValue)))
+            .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
+    }
+
     public async Task<WorkspaceAggregate?> GetByProject(ProjectId id, CancellationToken cancellationToken = default)
     {
         var project = await dbContext.Projects

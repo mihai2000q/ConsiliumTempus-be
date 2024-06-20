@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectTask;
 
 namespace ConsiliumTempus.Domain.Common.Filters.Properties;
