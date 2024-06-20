@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Controllers;
@@ -10,6 +11,7 @@ using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -76,6 +78,53 @@ public class WorkspaceControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<GetWorkspaceQuery>(query => Utils.Workspace.AssertGetQuery(query, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task GetCollaborators_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateGetCollaboratorsFromWorkspaceRequest();
+
+        var result = WorkspaceResultFactory.CreateGetCollaboratorsFromWorkspaceResult();
+        _mediator
+            .Send(Arg.Any<GetCollaboratorsFromWorkspaceQuery>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.GetCollaborators(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCollaboratorsFromWorkspaceQuery>(query => 
+                Utils.Workspace.AssertGetCollaboratorsQuery(query, request)));
+
+        var response = outcome.ToResponse<GetCollaboratorsFromWorkspaceResponse>();
+        Utils.Workspace.AssertGetCollaboratorsResponse(response, result);
+    }
+
+    [Fact]
+    public async Task GetCollaborators_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateGetCollaboratorsFromWorkspaceRequest();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator
+            .Send(Arg.Any<GetCollaboratorsFromWorkspaceQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetCollaborators(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCollaboratorsFromWorkspaceQuery>(query => 
+                Utils.Workspace.AssertGetCollaboratorsQuery(query, request)));
 
         outcome.ValidateError(error);
     }

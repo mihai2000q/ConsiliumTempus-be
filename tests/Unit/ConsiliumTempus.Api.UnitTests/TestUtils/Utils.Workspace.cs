@@ -1,12 +1,14 @@
 ﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
@@ -22,6 +24,16 @@ internal static partial class Utils
             GetWorkspaceRequest request)
         {
             query.Id.Should().Be(request.Id);
+
+            return true;
+        }
+
+        internal static bool AssertGetCollaboratorsQuery(
+            GetCollaboratorsFromWorkspaceQuery query,
+            GetCollaboratorsFromWorkspaceRequest request)
+        {
+            query.Id.Should().Be(request.Id);
+            query.SearchValue.Should().Be(request.SearchValue);
 
             return true;
         }
@@ -75,6 +87,14 @@ internal static partial class Utils
             response.IsPersonal.Should().Be(result.Workspace.IsPersonal.Value);
             response.Description.Should().Be(result.Workspace.Description.Value);
         }
+        
+        internal static void AssertGetCollaboratorsResponse(
+            GetCollaboratorsFromWorkspaceResponse response,
+            GetCollaboratorsFromWorkspaceResult result)
+        {
+            response.Collaborators.Zip(result.Collaborators)
+                .Should().AllSatisfy(p => AssertUserResponse(p.First, p.Second));
+        }
 
         internal static void AssertGetCollectionResponse(
             GetCollectionWorkspaceResponse response,
@@ -83,6 +103,15 @@ internal static partial class Utils
             response.Workspaces.Zip(result.Workspaces)
                 .Should().AllSatisfy(p => AssertWorkspaceResponse(p.First, p.Second, result.CurrentUser));
             response.TotalCount.Should().Be(result.TotalCount);
+        }
+        
+        private static void AssertUserResponse(
+            GetCollaboratorsFromWorkspaceResponse.UserResponse response,
+            UserAggregate user)
+        {
+            response.Id.Should().Be(user.Id.Value);
+            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
         }
 
         private static void AssertWorkspaceResponse(

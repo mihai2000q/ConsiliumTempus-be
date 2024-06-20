@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.User;
@@ -18,6 +19,13 @@ public static class WorkspaceResultFactory
         return new GetWorkspaceResult(
             workspace ?? WorkspaceFactory.Create(),
             user ?? UserFactory.Create());
+    }
+    
+    public static GetCollaboratorsFromWorkspaceResult CreateGetCollaboratorsFromWorkspaceResult(
+        List<UserAggregate>? collaborators = null)
+    {
+        return new GetCollaboratorsFromWorkspaceResult(
+            collaborators ?? UserFactory.CreateList());
     }
     
     public static GetCollectionWorkspaceResult CreateGetCollectionWorkspaceResult(

@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
@@ -17,7 +18,18 @@ public static class WorkspaceRequestFactory
             Id = id ?? Guid.NewGuid()
         };
     }
-    
+
+    public static GetCollaboratorsFromWorkspaceRequest CreateGetCollaboratorsFromWorkspaceRequest(
+        Guid? id = null,
+        string searchValue = "")
+    {
+        return new GetCollaboratorsFromWorkspaceRequest
+        {
+            Id = id ?? Guid.NewGuid(),
+            SearchValue = searchValue
+        };
+    }
+
     public static GetCollectionWorkspaceRequest CreateGetCollectionWorkspaceRequest(
         bool isPersonalWorkspaceFirst = false,
         int? pageSize = null,
@@ -52,7 +64,7 @@ public static class WorkspaceRequestFactory
             name,
             description);
     }
-    
+
     public static DeleteWorkspaceRequest CreateDeleteWorkspaceRequest(Guid? id = null)
     {
         return new DeleteWorkspaceRequest

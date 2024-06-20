@@ -49,6 +49,11 @@ internal class WorkspaceData : ITestData
             "pass",
             "Lebron",
             "James"),
+        UserFactory.Create(
+            "johansenm@gmail.com",
+            "pass",
+            "Johansen",
+            "Michael")
     ];
 
     public static WorkspaceAggregate[] Workspaces { get; } =
@@ -105,6 +110,10 @@ internal class WorkspaceData : ITestData
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[4],
+            Workspaces[0],
+            WorkspaceRole.View),
+        MembershipFactory.Create(
+            Users[5],
             Workspaces[0],
             WorkspaceRole.View),
         MembershipFactory.Create(

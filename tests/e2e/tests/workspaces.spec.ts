@@ -8,9 +8,10 @@ import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceR
 import UpdateWorkspaceRequest from "../types/requests/workspace/UpdateWorkspaceRequest";
 
 test.describe('should allow operations on the workspace entity', () => {
+  const EMAIL = "michaelj@gmail.com"
 
   test.beforeEach('should register and create token', async ({ request }) => {
-    process.env.API_TOKEN = (await registerUser(request)).token
+    process.env.API_TOKEN = (await registerUser(request, EMAIL)).token
   })
 
   test.afterEach('should delete user', async ({ request }) => {
@@ -30,6 +31,22 @@ test.describe('should allow operations on the workspace entity', () => {
       isPersonal: true,
       isFavorite: false
     })
+  })
+
+  test('should get collaborators', async ({ request }) => {
+    const workspace = await getPersonalWorkspace(request);
+
+    const response = await request.get(`/api/workspaces/${workspace.id}/collaborators`, useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    const json = await response.json()
+    expect(json.collaborators).toHaveLength(1)
+    expect(json.collaborators).toStrictEqual([{
+      id: expect.any(String),
+      name: expect.any(String),
+      email: EMAIL,
+    }])
   })
 
   test.describe('should allow to get collection of workspaces', async () => {
