@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project.ValueObjects;
@@ -24,20 +25,22 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
     }
 
-    public async Task<WorkspaceAggregate?> GetWithMemberships(
+    public async Task<List<UserAggregate>> GetCollaborators(
         WorkspaceId id,
         string searchValue,
         CancellationToken cancellationToken = default)
     {
-        return await dbContext.Workspaces
-            .Include(w => w.Memberships)
-            .ThenInclude(m => m.User)
-            .WhereIf(!string.IsNullOrWhiteSpace(searchValue), 
-                w => w.Memberships.Any(m => 
-                    m.User.Credentials.Email.Contains(searchValue) ||
-                    m.User.FirstName.Value.Contains(searchValue) ||
-                    m.User.LastName.Value.Contains(searchValue)))
-            .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
+        return await dbContext.Set<Membership>()
+            .Include(m => m.User)
+            .Where(m => m.Workspace.Id == id)
+            .Select(m => m.User)
+            .WhereIf(!string.IsNullOrWhiteSpace(searchValue),
+                u =>
+                    u.Credentials.Email.Contains(searchValue) ||
+                    u.FirstName.Value.Contains(searchValue) ||
+                    u.LastName.Value.Contains(searchValue))
+            .OrderBy(u => u.FirstName.Value)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<WorkspaceAggregate?> GetByProject(ProjectId id, CancellationToken cancellationToken = default)

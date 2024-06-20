@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ErrorOr;
 using MediatR;
@@ -12,17 +11,11 @@ public sealed class GetCollaboratorsFromWorkspaceQueryHandler(IWorkspaceReposito
     public async Task<ErrorOr<GetCollaboratorsFromWorkspaceResult>> Handle(GetCollaboratorsFromWorkspaceQuery query,
         CancellationToken cancellationToken)
     {
-        var workspace = await workspaceRepository.GetWithMemberships(
+        var collaborators = await workspaceRepository.GetCollaborators(
             WorkspaceId.Create(query.Id),
             query.SearchValue,
             cancellationToken);
 
-        var collaborators = workspace?.Memberships
-            .Select(m => m.User)
-            .ToList();
-
-        return collaborators is not null
-            ? new GetCollaboratorsFromWorkspaceResult(collaborators)
-            : Errors.Workspace.NotFound;
+        return new GetCollaboratorsFromWorkspaceResult(collaborators);
     }
 }

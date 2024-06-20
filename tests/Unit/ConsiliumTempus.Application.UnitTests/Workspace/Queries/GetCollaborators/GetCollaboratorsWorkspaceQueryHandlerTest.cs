@@ -1,10 +1,8 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
-using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
-using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Queries.GetCollaborators;
 
@@ -29,10 +27,10 @@ public class GetCollaboratorsFromWorkspaceQueryHandlerTest
         // Arrange
         var query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery();
 
-        var workspace = WorkspaceFactory.Create();
+        var collaborators = UserFactory.CreateList();
         _workspaceRepository
-            .GetWithMemberships(Arg.Any<WorkspaceId>(), Arg.Any<string>())
-            .Returns(workspace);
+            .GetCollaborators(Arg.Any<WorkspaceId>(), Arg.Any<string>())
+            .Returns(collaborators);
 
         // Act
         var outcome = await _uut.Handle(query, default);
@@ -40,34 +38,11 @@ public class GetCollaboratorsFromWorkspaceQueryHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMemberships(
+            .GetCollaborators(
                 Arg.Is<WorkspaceId>(id => query.Id == id.Value),
                 Arg.Is<string>(s => s == query.SearchValue));
 
         outcome.IsError.Should().BeFalse();
-        outcome.Value.Collaborators.Should().BeEquivalentTo(workspace.Memberships.Select(m => m.User));
-    }
-
-    [Fact]
-    public async Task HandleGetCollaboratorsFromWorkspaceQuery_WhenIsNotFound_ShouldReturnNotFoundError()
-    {
-        // Arrange
-        var query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery();
-
-        _workspaceRepository
-            .GetWithMemberships(Arg.Any<WorkspaceId>(), Arg.Any<string>())
-            .ReturnsNull();
-
-        // Act
-        var outcome = await _uut.Handle(query, default);
-
-        // Assert
-        await _workspaceRepository
-            .Received(1)
-            .GetWithMemberships(
-                Arg.Is<WorkspaceId>(id => query.Id == id.Value),
-                Arg.Is<string>(s => s == query.SearchValue));
-
-        outcome.ValidateError(Errors.Workspace.NotFound);
+        outcome.Value.Collaborators.Should().BeEquivalentTo(collaborators);
     }
 }
