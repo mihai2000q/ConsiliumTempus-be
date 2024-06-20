@@ -41,7 +41,7 @@ Sends the id of the project task inside the route of the request.
 
 #### Get Response
 
-Returns a project.
+Returns a project task.
 
 ```json
 {

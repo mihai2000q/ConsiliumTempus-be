@@ -24,8 +24,11 @@ public static class UserFactory
         return user;
     }
 
-    public static UserId CreateId(Guid? id = null)
+    public static List<UserAggregate> CreateList(int count = 5)
     {
-        return UserId.Create(id ?? Guid.NewGuid());
+        return Enumerable
+            .Repeat(0, count)
+            .Select(_ => Create())
+            .ToList();
     }
 }

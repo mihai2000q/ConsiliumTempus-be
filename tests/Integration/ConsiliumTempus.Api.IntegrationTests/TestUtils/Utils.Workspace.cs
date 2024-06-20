@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Domain.Common.Entities;
@@ -21,6 +22,15 @@ internal static partial class Utils
             response.IsFavorite.Should().Be(workspace.IsFavorite(currentUser));
             response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
             response.Description.Should().Be(workspace.Description.Value);
+        }
+
+        internal static void AssertGetCollaboratorsResponse(
+            GetCollaboratorsFromWorkspaceResponse response,
+            IEnumerable<UserAggregate> collaborators)
+        {
+            response.Collaborators
+                .Zip(collaborators.OrderBy(c => c.FirstName.Value))
+                .Should().AllSatisfy(x => AssertUserResponse(x.First, x.Second));
         }
 
         internal static void AssertGetCollectionResponse(
@@ -82,6 +92,15 @@ internal static partial class Utils
             newWorkspace.Description.Value.Should().Be(request.Description);
             newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        private static void AssertUserResponse(
+            GetCollaboratorsFromWorkspaceResponse.UserResponse response,
+            UserAggregate user)
+        {
+            response.Id.Should().Be(user.Id.Value);
+            response.Name.Should().Be(user.FirstName + " " + user.LastName);
+            response.Email.Should().Be(user.Credentials.Email);
         }
 
         private static void AssertWorkspaceResponse(

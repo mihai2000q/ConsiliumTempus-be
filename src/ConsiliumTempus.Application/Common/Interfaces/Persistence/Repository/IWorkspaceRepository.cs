@@ -10,6 +10,11 @@ public interface IWorkspaceRepository
 {
     Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default);
 
+    Task<List<UserAggregate>> GetCollaborators(
+        WorkspaceId id, 
+        string searchValue,
+        CancellationToken cancellationToken = default);
+
     Task<List<WorkspaceAggregate>> GetListByUser(
         UserAggregate user, 
         PaginationInfo? paginationInfo,

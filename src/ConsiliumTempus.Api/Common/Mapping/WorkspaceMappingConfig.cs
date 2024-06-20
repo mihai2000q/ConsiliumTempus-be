@@ -2,12 +2,14 @@
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
+using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
+using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
@@ -23,6 +25,7 @@ public sealed class WorkspaceMappingConfig : IRegister
     public void Register(TypeAdapterConfig config)
     {
         GetMappings(config);
+        GetCollaboratorsMappings(config);
         GetCollectionMappings(config);
         CreateMappings(config);
         UpdateMappings(config);
@@ -39,6 +42,17 @@ public sealed class WorkspaceMappingConfig : IRegister
                 src => src.Workspace.IsFavorite((UserAggregate)MapContext.Current!.Parameters[CurrentUser]))
             .Map(dest => dest.IsPersonal, src => src.Workspace.IsPersonal.Value)
             .Map(dest => dest.Description, src => src.Workspace.Description.Value);
+    }
+    
+    private static void GetCollaboratorsMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<GetCollaboratorsFromWorkspaceRequest, GetCollaboratorsFromWorkspaceQuery>();
+
+        config.NewConfig<GetCollaboratorsFromWorkspaceResult, GetCollaboratorsFromWorkspaceResponse>();
+        config.NewConfig<UserAggregate, GetCollaboratorsFromWorkspaceResponse.UserResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 
     private static void GetCollectionMappings(TypeAdapterConfig config)

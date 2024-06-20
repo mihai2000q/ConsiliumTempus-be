@@ -3,7 +3,6 @@ using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security.Authentication;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Authentication;
-using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Domain.Authentication;
 using ConsiliumTempus.Domain.Authentication.ValueObjects;
 using ConsiliumTempus.Domain.Common.Errors;

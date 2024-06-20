@@ -4,6 +4,9 @@
   * [Get](#get)
     * [Get Workspace Request](#get-workspace-request)
     * [Get Workspace Response](#get-workspace-response)
+  * [Get Collaborators](#get-collaborators)
+    * [Get Collaborators From Workspace Request](#get-collaborators-from-workspace-request)
+    * [Get Collaborators From Workspace Response](#get-collaborators-from-workspace-response)
   * [Get Collection](#get-collection)
     * [Get Collection Workspace Request](#get-collection-workspace-request)
     * [Get Collection Workspace Response](#get-collection-workspace-response)
@@ -45,6 +48,43 @@ Returns the workspace data.
   "description": "This is the description of the workspace",
   "isFavorite": true,
   "isPersonal": false
+}
+```
+
+### Get Collaborators
+
+Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
+
+```js
+GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle
+```
+
+- **id** is a 36 characters strings
+
+#### Get Collaborators From Workspace Request
+
+Sends the id of the workspace inside the route request and the following query parameters:
+
+- **searchValue** to search through the collaborators by email, name, or other identifier
+
+#### Get Collaborators From Workspace Response
+
+Returns the collaborators.
+
+```json
+{
+  "collaborators": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "name": "Michael Jordan",
+      "email": "michaelj@gmail.com"
+    },
+    {
+      "id": "20000000-0000-0000-0000-000000000000",
+      "name": "Stephen Curry",
+      "email": "stephenc@gmail.com"
+    }
+  ]
 }
 ```
 
