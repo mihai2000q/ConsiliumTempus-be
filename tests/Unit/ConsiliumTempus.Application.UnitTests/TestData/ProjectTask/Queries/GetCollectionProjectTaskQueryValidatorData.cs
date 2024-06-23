@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Queries;
@@ -39,7 +40,9 @@ internal static class GetCollectionProjectTaskQueryValidatorData
             query = new GetCollectionProjectTaskQuery(
                 Guid.NewGuid(),
                 ["name ct Screen"],
-                ["name.asc"]);
+                ["name.asc"],
+                1,
+                20);
             Add(query);
         }
     }
@@ -50,6 +53,52 @@ internal static class GetCollectionProjectTaskQueryValidatorData
         {
             var query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery(Guid.Empty);
             Add(query, nameof(query.ProjectStageId), 1);
+        }
+    }
+    
+    internal class GetInvalidPageSizeAndCurrentPageQueries : TheoryData<GetCollectionProjectTaskQuery, string, short>
+    {
+        public GetInvalidPageSizeAndCurrentPageQueries()
+        {
+            var query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery(
+                pageSize: 1);
+            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)), 1);
+
+            query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery(
+                currentPage: 1);
+            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)), 1);
+        }
+    }
+
+    internal class GetInvalidPageSizeQueries : TheoryData<GetCollectionProjectTaskQuery, string, short>
+    {
+        public GetInvalidPageSizeQueries()
+        {
+            var query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery(
+                currentPage: 1,
+                pageSize: -1);
+            Add(query, nameof(query.PageSize), 1);
+
+            query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery(
+                currentPage: 1,
+                pageSize: 0);
+            Add(query, nameof(query.PageSize), 1);
+        }
+    }
+
+    internal class GetInvalidCurrentPageQueries : TheoryData<GetCollectionProjectTaskQuery, string, short>
+    {
+        public GetInvalidCurrentPageQueries()
+        {
+            var query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery(
+                pageSize: 20,
+                currentPage: -1);
+            Add(query, nameof(query.CurrentPage), 1);
+
+            query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery(
+                pageSize: 20,
+                currentPage: 0);
+            Add(query, nameof(query.CurrentPage), 1);
         }
     }
 

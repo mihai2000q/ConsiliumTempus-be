@@ -149,6 +149,51 @@ test.describe('should allow operations on the project task entity', () => {
         totalCount: 1
       })
     })
+
+    test('should get collection of project tasks paginated', async ({ request }) => {
+      const projectTask1 = await createProjectTask(request, {
+        projectStageId: STAGE_ID,
+        name: "task Name1",
+        onTop: false
+      })
+      const projectTask2 = await createProjectTask(request, {
+        projectStageId: STAGE_ID,
+        name: "task Name2",
+        onTop: false
+      })
+      await createProjectTask(request, {
+        projectStageId: STAGE_ID,
+        name: "task Name3",
+        onTop: false
+      })
+
+      const response = await request.get(
+        `/api/projects/tasks?projectStageId=${STAGE_ID}&currentPage=1&pageSize=2`,
+        useToken()
+      )
+
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json.tasks).toHaveLength(2);
+      expect(json).toStrictEqual({
+        tasks: [
+          {
+            id: expect.any(String),
+            name: projectTask1.name,
+            isCompleted: false,
+            assignee: null
+          },
+          {
+            id: expect.any(String),
+            name: projectTask2.name,
+            isCompleted: false,
+            assignee: null
+          }
+        ],
+        totalCount: 3
+      })
+    })
   })
 
   test.describe(`should allow creation of project task`, () => {

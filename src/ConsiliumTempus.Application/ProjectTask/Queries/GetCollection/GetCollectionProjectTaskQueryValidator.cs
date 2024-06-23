@@ -17,5 +17,16 @@ public class GetCollectionProjectTaskQueryValidator : AbstractValidator<GetColle
 
         RuleFor(q => q.OrderBy)
             .HasOrderByFormat(ProjectTaskOrder.OrderProperties);
+        
+        RuleFor(q => q)
+            .Must(q => q.PageSize is not null ? q.CurrentPage is not null : q.CurrentPage is null)
+            .WithMessage("Both the 'Page Size' and the 'Current Page' have to either be set or unset.")
+            .WithName(nameof(GetCollectionProjectTaskQuery.PageSize).And(nameof(GetCollectionProjectTaskQuery.CurrentPage)));
+
+        RuleFor(q => q.PageSize)
+            .GreaterThan(0);
+
+        RuleFor(q => q.CurrentPage)
+            .GreaterThan(0);
     }
 }

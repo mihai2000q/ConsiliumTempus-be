@@ -27,7 +27,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
 
     public async Task<List<UserAggregate>> GetCollaborators(
         WorkspaceId id,
-        string searchValue,
+        string? searchValue,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Set<Membership>()
@@ -36,10 +36,11 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .Select(m => m.User)
             .WhereIf(!string.IsNullOrWhiteSpace(searchValue),
                 u =>
-                    u.Credentials.Email.Contains(searchValue) ||
-                    u.FirstName.Value.Contains(searchValue) ||
-                    u.LastName.Value.Contains(searchValue))
+                    u.Credentials.Email.Contains(searchValue!) ||
+                    (u.FirstName.Value + " " + u.LastName.Value).Contains(searchValue!))
             .OrderBy(u => u.FirstName.Value)
+            .ThenBy(u => u.LastName.Value)
+            .ThenBy(u => u.Credentials.Email)
             .ToListAsync(cancellationToken);
     }
 

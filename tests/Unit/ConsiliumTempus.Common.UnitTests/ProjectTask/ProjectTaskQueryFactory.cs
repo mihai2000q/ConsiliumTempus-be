@@ -13,11 +13,15 @@ public static class ProjectTaskQueryFactory
     public static GetCollectionProjectTaskQuery CreateGetCollectionProjectTaskQuery(
         Guid? projectStageId = null,
         string[]? search = null,
-        string[]? orderBy = null)
+        string[]? orderBy = null,
+        int? currentPage = null,
+        int? pageSize = null)
     {
         return new GetCollectionProjectTaskQuery(
             projectStageId ?? Guid.NewGuid(),
             search,
-            orderBy);
+            orderBy,
+            currentPage,
+            pageSize);
     }
 }

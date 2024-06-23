@@ -6,5 +6,7 @@ namespace ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
 public sealed record GetCollectionProjectTaskQuery(
     Guid ProjectStageId,
     string[]? Search,
-    string[]? OrderBy)
+    string[]? OrderBy,
+    int? CurrentPage,
+    int? PageSize)
     : IRequest<ErrorOr<GetCollectionProjectTaskResult>>;

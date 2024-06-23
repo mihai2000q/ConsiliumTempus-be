@@ -56,8 +56,8 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
         var expectedCollaborators = workspace.Memberships
             .Select(m => m.User)
             .Where(u =>
-                u.FirstName.Value.Contains(request.SearchValue) || 
-                u.LastName.Value.Contains(request.SearchValue));
+                u.FirstName.Value.Contains(request.SearchValue!) || 
+                u.LastName.Value.Contains(request.SearchValue!));
         
         Utils.Workspace.AssertGetCollaboratorsResponse(
             response!,

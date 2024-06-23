@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -18,6 +19,7 @@ public interface IProjectTaskRepository
         ProjectStageId stageId,
         IReadOnlyList<IFilter<ProjectTaskAggregate>> filters,
         IReadOnlyList<IOrder<ProjectTaskAggregate>> orders,
+        PaginationInfo? paginationInfo,
         CancellationToken cancellationToken = default);
 
     Task<int> GetListByStageCount(
