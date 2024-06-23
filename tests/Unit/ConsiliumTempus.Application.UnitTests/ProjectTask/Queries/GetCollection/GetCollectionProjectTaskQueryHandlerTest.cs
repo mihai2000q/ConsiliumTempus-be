@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.Orders;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -36,7 +37,8 @@ public class GetCollectionProjectTaskQueryHandlerTest
             .GetListByStage(
                 Arg.Any<ProjectStageId>(),
                 Arg.Any<IReadOnlyList<IFilter<ProjectTaskAggregate>>>(),
-                Arg.Any<IReadOnlyList<IOrder<ProjectTaskAggregate>>>())
+                Arg.Any<IReadOnlyList<IOrder<ProjectTaskAggregate>>>(),
+                Arg.Any<PaginationInfo?>())
             .Returns(tasks);
 
         const int projectTasksCount = 25;
@@ -57,7 +59,9 @@ public class GetCollectionProjectTaskQueryHandlerTest
                 Arg.Is<IReadOnlyList<IFilter<ProjectTaskAggregate>>>(filters =>
                     filters.AssertFilters(query.Search, ProjectTaskFilter.FilterProperties)),
                 Arg.Is<IReadOnlyList<IOrder<ProjectTaskAggregate>>>(orders =>
-                    orders.AssertOrders(query.OrderBy, ProjectTaskOrder.OrderProperties)));
+                    orders.AssertOrders(query.OrderBy, ProjectTaskOrder.OrderProperties)),
+                Arg.Is<PaginationInfo?>(p =>
+                    p.AssertPagination(query.PageSize, query.CurrentPage)));
 
         await _projectTaskRepository
             .GetListByStageCount(

@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Filters;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.Orders;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ErrorOr;
@@ -14,6 +15,7 @@ public sealed class GetCollectionProjectTaskQueryHandler(IProjectTaskRepository 
         CancellationToken cancellationToken)
     {
         var stageId = ProjectStageId.Create(query.ProjectStageId);
+        var paginationInfo = PaginationInfo.Create(query.PageSize, query.CurrentPage);
         var filters = ProjectTaskFilter.Parse(query.Search);
         var orders = ProjectTaskOrder.Parse(query.OrderBy);
 
@@ -21,6 +23,7 @@ public sealed class GetCollectionProjectTaskQueryHandler(IProjectTaskRepository 
             stageId,
             filters,
             orders,
+            paginationInfo,
             cancellationToken);
         var totalCount = await projectTaskRepository.GetListByStageCount(
             stageId,

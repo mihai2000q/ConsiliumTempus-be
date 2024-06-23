@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Interfaces;
+using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -47,6 +48,7 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         ProjectStageId stageId,
         IReadOnlyList<IFilter<ProjectTaskAggregate>> filters,
         IReadOnlyList<IOrder<ProjectTaskAggregate>> orders,
+        PaginationInfo? paginationInfo,
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectTasks
@@ -54,6 +56,7 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .ApplyFilters(filters)
             .ApplyOrders(orders)
             .OrderByIf(orders.Count == 0, t => t.CustomOrderPosition.Value)
+            .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);
     }
 
