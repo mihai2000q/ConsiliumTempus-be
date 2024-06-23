@@ -33,7 +33,7 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
             stage.Tasks,
             stage.Tasks.Count);
     }
-    
+
     [Fact]
     public async Task GetCollectionProjectTask_WhenRequestDoesNotHaveOrderCustomOrderIsInPlace_ShouldReturnTasks()
     {
@@ -58,7 +58,7 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
         var count = 0;
         stage.Tasks.Should().AllSatisfy(t => t.CustomOrderPosition.Value.Should().Be(count++));
     }
-    
+
     [Fact]
     public async Task GetCollectionProjectTask_WhenRequestHasNameAscendingOrder_ShouldReturnOrderedTasks()
     {
@@ -81,14 +81,15 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
         var expectedTasks = stage.Tasks
             .OrderBy(t => t.Name.Value)
             .ToList();
-        
+
         Utils.ProjectTask.AssertGetCollectionResponse(
             response!,
             expectedTasks,
             expectedTasks.Count);
     }
 
-    [Fact] public async Task GetCollectionProjectTask_WhenRequestHasNameContainsFilter_ShouldReturnFilteredTasks()
+    [Fact]
+    public async Task GetCollectionProjectTask_WhenRequestHasNameContainsFilter_ShouldReturnFilteredTasks()
     {
         // Arrange
         var stage = ProjectTaskData.ProjectStages.First();
@@ -109,13 +110,13 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
         var expectedTasks = stage.Tasks
             .Where(t => t.Name.Value.ToLower().Contains("should"))
             .ToList();
-        
+
         Utils.ProjectTask.AssertGetCollectionResponse(
             response!,
             expectedTasks,
             expectedTasks.Count);
     }
-    
+
     [Fact]
     public async Task GetCollectionProjectTask_WhenRequestHasIsCompletedEqualFilter_ShouldReturnFilteredTasks()
     {
@@ -138,11 +139,43 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
         var expectedTasks = stage.Tasks
             .Where(t => t.IsCompleted.Value)
             .ToList();
-        
+
         Utils.ProjectTask.AssertGetCollectionResponse(
             response!,
             expectedTasks,
             expectedTasks.Count);
+    }
+
+    [Fact]
+    public async Task GetCollectionProjectTask_WhenRequestHasPaginationInfo_ShouldReturnPaginatedTasks()
+    {
+        // Arrange
+        var stage = ProjectTaskData.ProjectStages.First();
+        var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest(
+            stage.Id.Value,
+            currentPage: 1,
+            pageSize: 2);
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Get($"api/projects/tasks" +
+                                       $"?projectStageId={request.ProjectStageId}" +
+                                       $"&currentPage={request.CurrentPage}" +
+                                       $"&pageSize={request.PageSize}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>();
+
+        var expectedTasks = stage.Tasks
+            .Skip(request.PageSize!.Value * (request.CurrentPage!.Value - 1))
+            .Take(request.PageSize.Value)
+            .ToList();
+
+        Utils.ProjectTask.AssertGetCollectionResponse(
+            response!,
+            expectedTasks,
+            stage.Tasks.Count);
     }
 
     [Fact]

@@ -39,6 +39,8 @@ internal static partial class Utils
             query.ProjectStageId.Should().Be(request.ProjectStageId);
             query.Search.Should().BeEquivalentTo(request.Search);
             query.OrderBy.Should().BeEquivalentTo(request.OrderBy);
+            query.CurrentPage.Should().Be(request.CurrentPage);
+            query.PageSize.Should().Be(request.PageSize);
 
             return true;
         }

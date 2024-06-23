@@ -93,7 +93,7 @@ Anyone that is part of the workspace can read the projects
 in case the workspace Id is mentioned, otherwise any logged-in user will get their projects.
 
 ```js
-GET {{host}}/api/projects/tasks?projectStageId=10000000-0000-0000-0000-000000000000&search=name ct task&orderBy=name.asc
+GET {{host}}/api/projects/tasks?projectStageId=10000000-0000-0000-0000-000000000000&search=name ct task&orderBy=name.asc&currentPage=1&pageSize=20
 ```
 
 #### Get Collection Request
@@ -103,6 +103,8 @@ Sends the following as query parameters:
 - **projectStageId** is used to specify the project stage that the tasks are part of
 - **search** is used to filter the tasks dynamically by their properties
 - **orderBy** is used to order the tasks dynamically by their properties
+- **currentPage** is used to specify the current page when paginating
+- **pageSize** is used to specify the size of the page when paginating
 
 #### Get Collection Response
 
