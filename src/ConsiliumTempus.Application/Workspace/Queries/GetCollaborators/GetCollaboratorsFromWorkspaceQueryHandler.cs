@@ -13,7 +13,7 @@ public sealed class GetCollaboratorsFromWorkspaceQueryHandler(IWorkspaceReposito
     {
         var collaborators = await workspaceRepository.GetCollaborators(
             WorkspaceId.Create(query.Id),
-            query.SearchValue,
+            query.SearchValue?.Trim(),
             cancellationToken);
 
         return new GetCollaboratorsFromWorkspaceResult(collaborators);

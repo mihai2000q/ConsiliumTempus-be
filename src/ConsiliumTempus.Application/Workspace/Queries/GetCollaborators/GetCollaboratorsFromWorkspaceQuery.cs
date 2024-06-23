@@ -5,5 +5,5 @@ namespace ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 
 public sealed record GetCollaboratorsFromWorkspaceQuery(
     Guid Id,
-    string SearchValue)
+    string? SearchValue)
     : IRequest<ErrorOr<GetCollaboratorsFromWorkspaceResult>>;

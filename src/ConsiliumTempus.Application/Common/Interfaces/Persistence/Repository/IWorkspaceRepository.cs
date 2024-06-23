@@ -12,7 +12,7 @@ public interface IWorkspaceRepository
 
     Task<List<UserAggregate>> GetCollaborators(
         WorkspaceId id, 
-        string searchValue,
+        string? searchValue,
         CancellationToken cancellationToken = default);
 
     Task<List<WorkspaceAggregate>> GetListByUser(
