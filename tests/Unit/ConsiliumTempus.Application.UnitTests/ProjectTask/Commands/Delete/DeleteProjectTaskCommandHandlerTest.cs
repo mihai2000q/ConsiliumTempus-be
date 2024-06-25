@@ -29,7 +29,7 @@ public class DeleteProjectTaskCommandHandlerTest
         // Arrange
         var task = ProjectTaskFactory.CreateWithTasks();
         _projectTaskRepository
-            .GetWithStageAndWorkspace(Arg.Any<ProjectTaskId>())
+            .Get(Arg.Any<ProjectTaskId>())
             .Returns(task);
         
         var command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand(task.Id.Value);
@@ -40,7 +40,7 @@ public class DeleteProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithStageAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .Get(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectTaskResult());
@@ -55,7 +55,7 @@ public class DeleteProjectTaskCommandHandlerTest
         var command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand();
 
         _projectTaskRepository
-            .GetWithStageAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
+            .Get(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
             .ReturnsNull();
 
         // Act
@@ -64,7 +64,7 @@ public class DeleteProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithStageAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .Get(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);
     }

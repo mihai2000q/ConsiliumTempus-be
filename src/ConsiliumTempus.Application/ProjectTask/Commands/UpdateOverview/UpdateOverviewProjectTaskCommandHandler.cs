@@ -16,7 +16,7 @@ public sealed class UpdateOverviewProjectTaskCommandHandler(
     public async Task<ErrorOr<UpdateOverviewProjectTaskResult>> Handle(UpdateOverviewProjectTaskCommand command,
         CancellationToken cancellationToken)
     {
-        var task = await projectTaskRepository.GetWithStageAndWorkspace(
+        var task = await projectTaskRepository.Get(
             ProjectTaskId.Create(command.Id),
             cancellationToken);
         if (task is null) return Errors.ProjectTask.NotFound;
