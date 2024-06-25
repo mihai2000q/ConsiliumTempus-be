@@ -2,12 +2,11 @@
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
-using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
+namespace ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 
-public sealed class PermissionRepository(ConsiliumTempusDbContext dbContext) : IPermissionProvider
+public sealed class PermissionProvider(ConsiliumTempusDbContext dbContext) : IPermissionProvider
 {
     public async Task<HashSet<string>> GetPermissions(UserId userId, WorkspaceId workspaceId)
     {
