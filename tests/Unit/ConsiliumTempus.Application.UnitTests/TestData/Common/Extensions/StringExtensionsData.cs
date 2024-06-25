@@ -11,14 +11,6 @@ internal static class StringExtensionsData
             Add("BigRole", "BigRoleId");
         }
     }
-    
-    internal class GetValidAnd : TheoryData<string, string, string>
-    {
-        public GetValidAnd()
-        {
-            Add("first", "second", "first&second");
-        }
-    }
 
     internal class GetValidToBackingField : TheoryData<string, string>
     {

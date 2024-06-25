@@ -12,7 +12,7 @@ public sealed class DeleteProjectTaskCommandHandler(IProjectTaskRepository proje
     public async Task<ErrorOr<DeleteProjectTaskResult>> Handle(DeleteProjectTaskCommand command, 
         CancellationToken cancellationToken)
     {
-        var task = await projectTaskRepository.GetWithStageAndWorkspace(
+        var task = await projectTaskRepository.GetWithTasks(
             ProjectTaskId.Create(command.Id),
             cancellationToken);
         if (task is null) return Errors.ProjectTask.NotFound;

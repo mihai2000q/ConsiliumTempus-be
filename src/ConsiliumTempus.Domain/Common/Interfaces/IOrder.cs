@@ -5,6 +5,6 @@ namespace ConsiliumTempus.Domain.Common.Interfaces;
 
 public interface IOrder<TEntity>
 {
-    public Expression<Func<TEntity, object?>> PropertySelector { get; }
-    public OrderType Type { get; }
+    Expression<Func<TEntity, object?>> PropertySelector { get; }
+    OrderType Type { get; }
 }

@@ -71,7 +71,7 @@ public static class DependencyInjection
         services.AddAuthorization();
 
         services.AddScoped<IWorkspaceProvider, WorkspaceRepository>();
-        services.AddScoped<IPermissionProvider, PermissionRepository>();
+        services.AddScoped<IPermissionProvider, PermissionProvider>();
         services.AddScoped<IUserProvider, UserRepository>();
         services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
         services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();

@@ -19,13 +19,26 @@ public class StringExtensionsTest
     }
     
     [Theory]
-    [ClassData(typeof(StringExtensionsData.GetValidAnd))]
+    [InlineData("first", "second", "first&second")]
     public void And_WhenValid_ShouldConcat2StringsWithAndSymbol(string input1, string input2, string expected)
     {
         // Arrange - parameterized
 
         // Act
         var outcome = input1.And(input2);
+
+        // Assert
+        outcome.Should().Be(expected);
+    }
+    
+    [Theory]
+    [InlineData("first", "second", "first.second")]
+    public void Dot_WhenValid_ShouldConcat2StringsWithAndSymbol(string input1, string input2, string expected)
+    {
+        // Arrange - parameterized
+
+        // Act
+        var outcome = input1.Dot(input2);
 
         // Assert
         outcome.Should().Be(expected);
