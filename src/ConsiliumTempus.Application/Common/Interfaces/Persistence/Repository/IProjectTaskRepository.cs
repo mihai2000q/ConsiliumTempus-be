@@ -9,7 +9,13 @@ namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 
 public interface IProjectTaskRepository
 {
-    Task<ProjectTaskAggregate?> Get(ProjectTaskId id, CancellationToken cancellationToken = default);
+    Task<ProjectTaskAggregate?> GetWithWorkspace(ProjectTaskId id, CancellationToken cancellationToken = default);
+
+    Task<ProjectTaskAggregate?> GetWithStagesAndWorkspace(
+        ProjectTaskId id,
+        CancellationToken cancellationToken = default);
+
+    Task<ProjectTaskAggregate?> GetWithTasks(ProjectTaskId id, CancellationToken cancellationToken = default);
 
     Task<ProjectStage?> GetStageWithTasksAndWorkspace(ProjectStageId id, CancellationToken cancellationToken = default);
 

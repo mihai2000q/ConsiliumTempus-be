@@ -13,13 +13,32 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
 public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : IProjectTaskRepository
 {
-    public Task<ProjectTaskAggregate?> Get(ProjectTaskId id, CancellationToken cancellationToken = default)
+    public async Task<ProjectTaskAggregate?> GetWithWorkspace(ProjectTaskId id, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.ProjectTasks
+            .Include(t => t.Stage.Sprint.Project.Workspace)
+            .Where(t => t.Id == id)
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<ProjectTaskAggregate?> GetWithStagesAndWorkspace(ProjectTaskId id, CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectTasks
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .Include(t => t.Stage.Sprint.Stages.OrderBy(s => s.CustomOrderPosition.Value))
             .Where(t => t.Id == id)
             .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<ProjectTaskAggregate?> GetWithTasks(
+        ProjectTaskId id,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.ProjectTasks
+            .Include(t => t.Stage)
+            .ThenInclude(s => s.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
+            .Include(t => t.Stage.Sprint.Project.Workspace)
+            .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
     // TODO: Potentially remove method by adding the project sprint Id too, so that it can be queried from DB instead

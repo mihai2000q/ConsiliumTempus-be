@@ -36,7 +36,7 @@ public class UpdateProjectTaskCommandHandlerTest
         // Arrange
         var task = ProjectTaskFactory.Create();
         _projectTaskRepository
-            .Get(Arg.Any<ProjectTaskId>())
+            .GetWithTasks(Arg.Any<ProjectTaskId>())
             .Returns(task);
 
         var assignee = UserFactory.Create();
@@ -50,7 +50,7 @@ public class UpdateProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .Get(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .GetWithTasks(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
         if (command.AssigneeId is not null)
         {
             await _userRepository
@@ -71,7 +71,7 @@ public class UpdateProjectTaskCommandHandlerTest
         var command = ProjectTaskCommandFactory.CreateUpdateProjectTaskCommand();
 
         _projectTaskRepository
-            .Get(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
+            .GetWithTasks(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
             .ReturnsNull();
 
         // Act
@@ -80,7 +80,7 @@ public class UpdateProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .Get(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .GetWithTasks(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
         _userRepository.DidNotReceive();
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);
