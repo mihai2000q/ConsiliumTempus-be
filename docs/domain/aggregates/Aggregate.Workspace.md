@@ -54,6 +54,9 @@ otherwise they can be part of other people's personal workspaces, but they can't
 
 - **Name** to filter by name
 - **IsPersonal** to filter by the *IsPersonal* Property
+- **LastActivity** to filter by activity
+- **CreatedDateTime** to filter by last modified date
+- **UpdatedDateTime** to filter by creation time
 
 ### Orders
 
