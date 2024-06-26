@@ -59,6 +59,7 @@ For database design checkout the [Project Diagram](../../database-diagrams/aggre
 - **IsPrivate** to filter by accessibility
 - **Lifecycle** to filter by lifecycle
 - **LatestStatus** to filter by the latest status
+- **LastActivity** to filter by activity
 - **CreatedDateTime** to filter by created date time
 - **UpdatedDateTime** to filter by updated date time
 
