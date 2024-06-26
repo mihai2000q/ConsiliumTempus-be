@@ -29,8 +29,31 @@ internal static class GetCollectionWorkspaceQueryValidatorData
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
                 search:
                 [
+                    // Name
                     "name ct something", "name sw something", "name eq something", "name neq something",
+                    // Is Personal
                     "is_personal eq false", "is_personal neq true",
+                    // Last Activity
+                    "last_activity eq 2024-07-23 17:00:48.2688790",
+                    "last_activity neq 2024-06-11 17:00:48.2688790",
+                    "last_activity lte 2023-06-11",
+                    "last_activity gte 2024-06-11 11:54:48.2688790",
+                    "last_activity gt 2025-06-11 17:00:48.2688790",
+                    "last_activity lt 2021-06-11 23:59:48",
+                    // Created Date Time
+                    "created_date_time eq 2024-06-11 17:00:48.2688790",
+                    "created_date_time neq 2024-06-11 17:00:48.2688790",
+                    "created_date_time lte 2023-06-11",
+                    "created_date_time gte 2024-06-11 11:54:48.2688790",
+                    "created_date_time gt 2025-06-11 17:00:48.2688790",
+                    "created_date_time lt 2021-06-11 23:59:48",
+                    // Updated Date Time
+                    "updated_date_time eq 2024-06-11 17:00:48.2688790",
+                    "updated_date_time neq 2024-06-11 17:00:48.2688790",
+                    "updated_date_time lte 2023-02-27",
+                    "updated_date_time gte 2024-06-11 11:54:48.2688790",
+                    "updated_date_time gt 2025-06-11 17:00:48.2688790",
+                    "updated_date_time lt 2021-06-11 23:59:48",
                 ]);
             Add(query);
 
@@ -225,6 +248,10 @@ internal static class GetCollectionWorkspaceQueryValidatorData
             // Parse Validation
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
                 search: ["is_personal eq something"]);
+            Add(query, nameof(query.Search), 1);
+            
+            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                search: ["created_date_time eq something_else_but_not_a_date"]);
             Add(query, nameof(query.Search), 1);
             
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
