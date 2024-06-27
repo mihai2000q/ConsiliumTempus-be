@@ -6,9 +6,11 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
@@ -32,6 +34,7 @@ public sealed class WorkspaceMappingConfig : IRegister
         GetCollectionMappings(config);
         CreateMappings(config);
         UpdateMappings(config);
+        UpdateOverviewMappings(config);
         DeleteMappings(config);
     }
 
@@ -94,6 +97,13 @@ public sealed class WorkspaceMappingConfig : IRegister
         config.NewConfig<UpdateWorkspaceRequest, UpdateWorkspaceCommand>();
 
         config.NewConfig<UpdateWorkspaceResult, UpdateWorkspaceResponse>();
+    }
+    
+    private static void UpdateOverviewMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateOverviewWorkspaceRequest, UpdateOverviewWorkspaceCommand>();
+
+        config.NewConfig<UpdateOverviewWorkspaceResult, UpdateOverviewWorkspaceResponse>();
     }
 
     private static void DeleteMappings(TypeAdapterConfig config)

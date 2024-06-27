@@ -4,32 +4,32 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Update;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.UpdateOverview;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerUpdateAuthorizationTest(WebAppFactory factory)
+public class WorkspaceControllerUpdateOverviewAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task Update_WhenWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task UpdateOverview_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(WorkspaceData.Users[0]);
     }
 
     [Fact]
-    public async Task Update_WhenWithMemberRole_ShouldReturnSuccessResponse()
+    public async Task UpdateOverview_WhenWithMemberRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(WorkspaceData.Users[3]);
     }
 
     [Fact]
-    public async Task Update_WhenWithViewRole_ShouldReturnForbiddenResponse()
+    public async Task UpdateOverview_WhenWithViewRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(WorkspaceData.Users[4]);
     }
 
     [Fact]
-    public async Task Update_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task UpdateOverview_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(WorkspaceData.Users[1]);
     }
@@ -54,10 +54,10 @@ public class WorkspaceControllerUpdateAuthorizationTest(WebAppFactory factory)
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
-        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: workspace.Id.Value);
+        var request = WorkspaceRequestFactory.CreateUpdateOverviewWorkspaceRequest(id: workspace.Id.Value);
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Put("api/workspaces", request);
+        return await Client.Put("api/workspaces/overview", request);
     }
 }

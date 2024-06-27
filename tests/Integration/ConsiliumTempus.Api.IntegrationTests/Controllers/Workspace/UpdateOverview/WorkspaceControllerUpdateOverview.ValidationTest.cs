@@ -4,38 +4,37 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Update;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.UpdateOverview;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerUpdateValidationTest(WebAppFactory factory)
+public class WorkspaceControllerUpdateOverviewValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task Update_WhenRequestIsValid_ShouldReturnSuccessResponse()
+    public async Task UpdateOverview_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
-        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: workspace.Id.Value);
+        var request = WorkspaceRequestFactory.CreateUpdateOverviewWorkspaceRequest(id: workspace.Id.Value);
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
-        var outcome = await Client.Put("api/workspaces", request);
+        var outcome = await Client.Put("api/workspaces/overview", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]
-    public async Task Update_WhenRequestIsInvalid_ShouldReturnValidationErrors()
+    public async Task UpdateOverview_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
-        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(
-            id: Guid.Empty, 
-            name: string.Empty);
+        var request = WorkspaceRequestFactory.CreateUpdateOverviewWorkspaceRequest(
+            id: Guid.Empty);
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
-        var outcome = await Client.Put("api/workspaces", request);
+        var outcome = await Client.Put("api/workspaces/overview", request);
 
         // Assert
         await outcome.ValidateValidationErrors();

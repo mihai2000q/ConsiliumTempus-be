@@ -10,6 +10,18 @@ export async function getPersonalWorkspace(request: APIRequestContext) {
   return json.workspaces[0]
 }
 
+export async function getWorkspace(request: APIRequestContext, workspaceId: string) {
+  const response = await request.get(`/api/workspaces/${workspaceId}`, useToken())
+  expect(response.ok()).toBeTruthy()
+  return await response.json()
+}
+
+export async function getWorkspaceOverview(request: APIRequestContext, workspaceId: string) {
+  const response = await request.get(`/api/workspaces/overview/${workspaceId}`, useToken())
+  expect(response.ok()).toBeTruthy()
+  return await response.json()
+}
+
 export async function getWorkspaces(request: APIRequestContext) {
   const response = await request.get('/api/workspaces', useToken())
   expect(response.ok()).toBeTruthy()

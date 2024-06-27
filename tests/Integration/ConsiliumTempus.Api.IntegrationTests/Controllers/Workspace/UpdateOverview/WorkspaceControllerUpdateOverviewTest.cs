@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
@@ -10,41 +10,40 @@ using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Update;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.UpdateOverview;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerUpdateTest(WebAppFactory factory)
+public class WorkspaceControllerUpdateOverviewOverviewTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task Update_WhenItSucceeds_ShouldUpdateAndReturnSuccessResponse()
+    public async Task UpdateOverview_WhenItSucceeds_ShouldUpdateOverviewAndReturnSuccessResponse()
     {
         // Arrange
-        var user = WorkspaceData.Users.First();
         var workspace = WorkspaceData.Workspaces.First();
-        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: workspace.Id.Value);
+        var request = WorkspaceRequestFactory.CreateUpdateOverviewWorkspaceRequest(id: workspace.Id.Value);
 
         // Act
-        Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/workspaces", request);
+        Client.UseCustomToken(WorkspaceData.Users.First());
+        var outcome = await Client.Put("api/workspaces/overview", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<UpdateWorkspaceResponse>();
-        response!.Message.Should().Be("Workspace has been updated successfully!");
+        var response = await outcome.Content.ReadFromJsonAsync<UpdateOverviewWorkspaceResponse>();
+        response!.Message.Should().Be("Workspace Overview has been updated successfully!");
 
         var updatedWorkspace = await GetWorkspaceById(request.Id);
-        Utils.Workspace.AssertUpdated(workspace, updatedWorkspace!, request, user);
+        Utils.Workspace.AssertUpdatedOverview(workspace, updatedWorkspace!, request);
     }
 
     [Fact]
-    public async Task Update_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task UpdateOverview_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: Guid.NewGuid());
+        var request = WorkspaceRequestFactory.CreateUpdateOverviewWorkspaceRequest(id: Guid.NewGuid());
 
         // Act
-        var outcome = await Client.Put("api/workspaces", request);
+        var outcome = await Client.Put("api/workspaces/overview", request);
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);

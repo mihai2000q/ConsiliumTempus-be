@@ -5,9 +5,11 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
@@ -29,7 +31,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static bool AssertGetOverviewQuery(
             GetOverviewWorkspaceQuery query,
             GetOverviewWorkspaceRequest request)
@@ -80,6 +82,16 @@ internal static partial class Utils
             return true;
         }
 
+        internal static bool AssertUpdateOverviewCommand(
+            UpdateOverviewWorkspaceCommand command,
+            UpdateOverviewWorkspaceRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.Description.Should().Be(request.Description);
+
+            return true;
+        }
+
         internal static bool AssertDeleteCommand(
             DeleteWorkspaceCommand command,
             DeleteWorkspaceRequest request)
@@ -97,14 +109,14 @@ internal static partial class Utils
             response.IsFavorite.Should().Be(result.Workspace.IsFavorite(result.CurrentUser));
             response.IsPersonal.Should().Be(result.Workspace.IsPersonal.Value);
         }
-        
+
         internal static void AssertGetOverviewResponse(
             GetOverviewWorkspaceResponse response,
             WorkspaceAggregate workspace)
         {
             response.Description.Should().Be(workspace.Description.Value);
         }
-        
+
         internal static void AssertGetCollaboratorsResponse(
             GetCollaboratorsFromWorkspaceResponse response,
             GetCollaboratorsFromWorkspaceResult result)
@@ -121,7 +133,7 @@ internal static partial class Utils
                 .Should().AllSatisfy(p => AssertWorkspaceResponse(p.First, p.Second, result.CurrentUser));
             response.TotalCount.Should().Be(result.TotalCount);
         }
-        
+
         private static void AssertUserResponse(
             GetCollaboratorsFromWorkspaceResponse.UserResponse response,
             UserAggregate user)

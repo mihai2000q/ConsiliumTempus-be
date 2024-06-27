@@ -19,6 +19,9 @@
   * [Update](#update)
     * [Update Workspace Request](#update-workspace-request)
     * [Update Workspace Response](#update-workspace-response)
+  * [Update Overview](#update-overview)
+    * [Update Overview Workspace Request](#update-overview-workspace-request)
+    * [Update Overview Workspace Response](#update-overview-workspace-response)
   * [Delete](#delete)
     * [Delete Workspace Request](#delete-workspace-request)
     * [Delete Workspace Response](#delete-workspace-response)
@@ -212,6 +215,30 @@ Sends body data that the new workspace needs to be updated.
 #### Update Workspace Response
 
 Returns a confirmation message that the workspace has been updated successfully.
+
+### Update Overview
+
+Only member or admin users that are part of the workspace can update it
+([Update Workspace Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/workspaces/overview
+```
+
+#### Update Overview Workspace Request
+
+Sends body data that the workspace overview needs to be updated.
+
+```json
+{
+  "id": "88882448-bd63-4731-8a05-f6333b6d22e2",
+  "description": "This is the new description of the workspace overview"
+}
+```
+
+#### Update Overview Workspace Response
+
+Returns a confirmation message that the workspace overview has been updated successfully.
 
 ### Delete
 
