@@ -66,12 +66,12 @@ public static class WorkspaceRequestFactory
     public static UpdateWorkspaceRequest CreateUpdateWorkspaceRequest(
         Guid? id = null,
         string name = Constants.Workspace.Name,
-        string description = Constants.Workspace.Description)
+        bool isFavorite = false)
     {
         return new UpdateWorkspaceRequest(
             id ?? Guid.NewGuid(),
             name,
-            description);
+            isFavorite);
     }
 
     public static DeleteWorkspaceRequest CreateDeleteWorkspaceRequest(Guid? id = null)

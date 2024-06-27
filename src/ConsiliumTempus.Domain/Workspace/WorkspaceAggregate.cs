@@ -52,13 +52,14 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
 
     public static WorkspaceAggregate Create(
         Name name,
+        Description description,
         UserAggregate owner,
         IsPersonal isPersonal)
     {
         var workspace = new WorkspaceAggregate(
             WorkspaceId.CreateUnique(),
             name,
-            Description.Create(string.Empty), 
+            description, 
             owner,
             isPersonal,
             DateTime.UtcNow,
@@ -73,9 +74,19 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
         return _favorites.SingleOrDefault(u => u == user) is not null;
     }
 
-    public void Update(Name name, Description description)
+    public void Update(Name name, bool isFavorite, UserAggregate user)
     {
         Name = name;
+        if (isFavorite)
+            _favorites.Add(user);
+        else
+            _favorites.Remove(user);
+        UpdatedDateTime = DateTime.UtcNow;
+        RefreshActivity();
+    }
+    
+    public void UpdateOverview(Description description)
+    {
         Description = description;
         UpdatedDateTime = DateTime.UtcNow;
         RefreshActivity();

@@ -20,11 +20,12 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
     public async Task UpdateWorkspace_WhenItSucceeds_ShouldUpdateAndReturnSuccessResponse()
     {
         // Arrange
+        var user = WorkspaceData.Users.First();
         var workspace = WorkspaceData.Workspaces.First();
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: workspace.Id.Value);
 
         // Act
-        Client.UseCustomToken(WorkspaceData.Users.First());
+        Client.UseCustomToken();
         var outcome = await Client.Put("api/workspaces", request);
 
         // Assert
@@ -33,7 +34,7 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
         response!.Message.Should().Be("Workspace has been updated successfully!");
 
         var updatedWorkspace = await GetWorkspaceById(request.Id);
-        Utils.Workspace.AssertUpdated(workspace, updatedWorkspace!, request);
+        Utils.Workspace.AssertUpdated(workspace, updatedWorkspace!, request, user);
     }
 
     [Fact]

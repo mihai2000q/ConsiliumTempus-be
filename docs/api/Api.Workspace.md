@@ -200,13 +200,12 @@ PUT {{host}}/api/workspaces
 #### Update Workspace Request
 
 Sends body data that the new workspace needs to be updated.
-<br>
 
 ```json
 {
   "id": "88882448-bd63-4731-8a05-f6333b6d22e2",
   "name": "Workspace Name",
-  "description": "This is the new description of the workspace"
+  "isFavorite": true
 }
 ```
 

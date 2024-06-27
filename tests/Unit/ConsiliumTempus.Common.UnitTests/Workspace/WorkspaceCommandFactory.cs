@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.Workspace;
@@ -17,11 +18,20 @@ public static class WorkspaceCommandFactory
     public static UpdateWorkspaceCommand CreateUpdateWorkspaceCommand(
         Guid? id = null,
         string name = Constants.Workspace.Name,
-        string description = Constants.Workspace.Description)
+        bool isFavorite = false)
     {
         return new UpdateWorkspaceCommand(
             id ?? Guid.NewGuid(),
             name,
+            isFavorite);
+    }
+    
+    public static UpdateOverviewWorkspaceCommand CreateUpdateOverviewWorkspaceCommand(
+        Guid? id = null,
+        string description = Constants.Workspace.Description)
+    {
+        return new UpdateOverviewWorkspaceCommand(
+            id ?? Guid.NewGuid(),
             description);
     }
     
