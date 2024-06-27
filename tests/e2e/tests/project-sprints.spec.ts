@@ -50,12 +50,6 @@ test.describe('should allow operations on the project sprint entity', () => {
       name: createProjectSprintRequest.name,
       startDate: createProjectSprintRequest.startDate,
       endDate: createProjectSprintRequest.endDate,
-      stages: [
-        {
-          id: expect.any(String),
-          name: ProjectStageName1
-        }
-      ],
       createdBy: expect.any(Object),
       createdDateTime: expect.any(String),
       updatedBy: expect.any(Object),
@@ -161,6 +155,38 @@ test.describe('should allow operations on the project sprint entity', () => {
         totalCount: 1
       })
     })
+  })
+
+  test('should get stages from project sprint', async ({ request }) => {
+    const createProjectSprintRequest: CreateProjectSprintRequest = {
+      projectId: PROJECT_ID,
+      name: "Sprint Name"
+    }
+    const sprint = await createProjectSprint(request, createProjectSprintRequest)
+
+    const addStageToProjectSprintRequest: AddStageToProjectSprintRequest = {
+      id: sprint.id,
+      name: "In Transit",
+      onTop: true
+    }
+    const stage = await addStageToProjectSprint(request, addStageToProjectSprintRequest)
+
+    const response = await request.get(`/api/projects/sprints/${sprint.id}/stages`, useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    const json = await response.json()
+    expect(json.stages).toHaveLength(2)
+    expect(json.stages).toStrictEqual([
+      {
+        id: stage.id,
+        name: stage.name
+      },
+      {
+        id: expect.any(String),
+        name: ProjectStageName1,
+      }
+    ])
   })
 
   test.describe(`should allow creation of project sprint`, () => {

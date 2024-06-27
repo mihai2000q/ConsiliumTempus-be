@@ -23,7 +23,7 @@ export async function createProjectSprint(
 }
 
 export async function getProjectStages(request: APIRequestContext, projectSprintId: string) {
-  const response = await request.get(`/api/projects/sprints/${projectSprintId}`, useToken())
+  const response = await request.get(`/api/projects/sprints/${projectSprintId}/stages`, useToken())
   expect(response.ok()).toBeTruthy()
   return (await response.json()).stages
 }

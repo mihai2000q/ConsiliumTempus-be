@@ -97,6 +97,7 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
     {
         return dbContext.Set<ProjectStage>()
             .Where(ps => ps.Sprint.Id == id)
+            .OrderBy(ps => ps.CustomOrderPosition.Value)
             .ToListAsync(cancellationToken);
     }
 

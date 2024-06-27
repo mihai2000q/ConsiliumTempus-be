@@ -5,7 +5,10 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
+using ConsiliumTempus.Application.ProjectSprint.Queries.GetStages;
+using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 
 namespace ConsiliumTempus.Common.UnitTests.ProjectSprint;
 
@@ -18,6 +21,13 @@ public static class ProjectSprintResultFactory
         return new GetCollectionProjectSprintResult(
             sprints ?? ProjectSprintFactory.CreateList(),
             totalCount);
+    }
+    
+    public static GetStagesFromProjectSprintResult CreateGetStagesFromProjectSprintResult(
+        List<ProjectStage>? stages = null)
+    {
+        return new GetStagesFromProjectSprintResult(
+            stages ?? ProjectStageFactory.CreateList());
     }
     
     public static CreateProjectSprintResult CreateCreateProjectSprintResult()

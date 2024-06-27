@@ -7,6 +7,9 @@
   * [Get Collection](#get-collection)
     * [Get Collection Project Sprint Request](#get-collection-project-sprint-request)
     * [Get Collection Project Sprint Response](#get-collection-project-sprint-response)
+  * [Get Stages](#get-stages)
+    * [Get Stages From Project Sprint Request](#get-stages-from-project-sprint-request)
+    * [Get Stages From Project Sprint Response](#get-stages-from-project-sprint-response)
   * [Create](#create)
     * [Create Project Sprint Request](#create-project-sprint-request)
     * [Create Project Sprint Response](#create-project-sprint-response)
@@ -110,6 +113,44 @@ Returns the project sprints.
     }
   ],
   "totalCount": 2
+}
+```
+
+### Get Stages
+
+Anyone that is part of a workspace can access the project stages
+([Get Project Sprint Permission](../Security.md/#permissions)).
+
+```js
+GET {{host}}/api/projects/{id}/sprints
+```
+
+- **id** is a 36-character strings
+
+#### Get Stages From Project Sprint Request
+
+Sends the id of the sprint to get the stages.
+
+#### Get Stages From Project Sprint Response
+
+Returns the project stages.
+
+```json
+{
+  "stages": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "name": "To Do"
+    },
+    {
+      "id": "20000000-0000-0000-0000-000000000000",
+      "name": "In Progress"
+    },
+    {
+      "id": "30000000-0000-0000-0000-000000000000",
+      "name": "Done"
+    }
+  ]
 }
 ```
 

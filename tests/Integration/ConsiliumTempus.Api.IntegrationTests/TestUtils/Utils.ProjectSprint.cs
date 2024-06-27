@@ -2,12 +2,14 @@
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.GetStages;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -42,6 +44,16 @@ internal static partial class Utils
                     .ThenByDescending(s => s.Audit.CreatedDateTime))
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
             response.TotalCount.Should().Be(totalCount);
+        }
+        
+        internal static void AssertGetStagesResponse(
+            GetStagesFromProjectSprintResponse response,
+            IReadOnlyList<ProjectStage> stages)
+        {
+            response.Stages.Should().HaveCount(stages.Count);
+            response.Stages
+                .Zip(stages)
+                .Should().AllSatisfy(p => AssertStageResponse(p.First, p.Second));
         }
 
         internal static void AssertCreation(
@@ -190,6 +202,14 @@ internal static partial class Utils
             response.StartDate.Should().Be(projectSprint.StartDate);
             response.EndDate.Should().Be(projectSprint.EndDate);
             response.CreatedDateTime.Should().Be(projectSprint.Audit.CreatedDateTime);
+        }
+        
+        private static void AssertStageResponse(
+            GetStagesFromProjectSprintResponse.ProjectStageResponse response,
+            ProjectStage projectStage)
+        {
+            response.Id.Should().Be(projectStage.Id.Value);
+            response.Name.Should().Be(projectStage.Name.Value);
         }
         
         private static void AssertUserResponse(

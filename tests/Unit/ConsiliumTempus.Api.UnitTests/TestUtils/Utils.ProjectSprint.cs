@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.GetStages;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
@@ -14,7 +15,9 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
+using ConsiliumTempus.Application.ProjectSprint.Queries.GetStages;
 using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
@@ -37,6 +40,15 @@ internal static partial class Utils
             GetCollectionProjectSprintRequest request)
         {
             query.ProjectId.Should().Be(request.ProjectId);
+
+            return true;
+        }
+        
+        internal static bool AssertGetStagesQuery(
+            GetStagesFromProjectSprintQuery query,
+            GetStagesFromProjectSprintRequest request)
+        {
+            query.Id.Should().Be(request.Id);
 
             return true;
         }
@@ -138,16 +150,13 @@ internal static partial class Utils
             response.Sprints.Zip(result.Sprints)
                 .Should().AllSatisfy(p => AssertProjectSprintResponse(p.First, p.Second));
         }
-
-        private static void AssertProjectSprintResponse(
-            GetCollectionProjectSprintResponse.ProjectSprintResponse response,
-            ProjectSprintAggregate projectSprint)
+        
+        internal static void AssertGetStagesResponse(
+            GetStagesFromProjectSprintResponse response,
+            GetStagesFromProjectSprintResult result)
         {
-            response.Id.Should().Be(projectSprint.Id.Value);
-            response.Name.Should().Be(projectSprint.Name.Value);
-            response.StartDate.Should().Be(projectSprint.StartDate);
-            response.EndDate.Should().Be(projectSprint.EndDate);
-            response.CreatedDateTime.Should().Be(projectSprint.Audit.CreatedDateTime);
+            response.Stages.Zip(result.Stages)
+                .Should().AllSatisfy(p => AssertProjectStageResponse(p.First, p.Second));
         }
         
         private static void AssertUserResponse(
@@ -163,6 +172,25 @@ internal static partial class Utils
             response!.Id.Should().Be(user.Id.Value);
             response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
             response.Email.Should().Be(user.Credentials.Email);
+        }
+
+        private static void AssertProjectSprintResponse(
+            GetCollectionProjectSprintResponse.ProjectSprintResponse response,
+            ProjectSprintAggregate projectSprint)
+        {
+            response.Id.Should().Be(projectSprint.Id.Value);
+            response.Name.Should().Be(projectSprint.Name.Value);
+            response.StartDate.Should().Be(projectSprint.StartDate);
+            response.EndDate.Should().Be(projectSprint.EndDate);
+            response.CreatedDateTime.Should().Be(projectSprint.Audit.CreatedDateTime);
+        }
+        
+        private static void AssertProjectStageResponse(
+            GetStagesFromProjectSprintResponse.ProjectStageResponse response,
+            ProjectStage projectStage)
+        {
+            response.Id.Should().Be(projectStage.Id.Value);
+            response.Name.Should().Be(projectStage.Name.Value);
         }
     }
 }

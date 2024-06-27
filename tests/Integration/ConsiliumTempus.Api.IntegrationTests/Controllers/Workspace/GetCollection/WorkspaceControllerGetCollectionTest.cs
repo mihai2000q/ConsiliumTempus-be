@@ -14,7 +14,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task GetCollection_WhenUserIsNotFound_ShouldReturnUserNotFoundError()
+    public async Task GetCollectionWorkspace_WhenUserIsNotFound_ShouldReturnUserNotFoundError()
     {
         // Arrange
 
@@ -27,7 +27,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollection_WhenIsSuccessful_ShouldReturnWorkspaces()
+    public async Task GetCollectionWorkspace_WhenIsSuccessful_ShouldReturnWorkspaces()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
@@ -48,7 +48,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollection_WhenRequestHasIsPersonalWorkspaceFirst_ShouldReturnWorkspacesWithPersonalWorkspaceFirst()
+    public async Task GetCollectionWorkspace_WhenRequestHasIsPersonalWorkspaceFirst_ShouldReturnWorkspacesWithPersonalWorkspaceFirst()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
@@ -79,7 +79,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollection_WhenRequestHasSearchNameContains_ShouldReturnWorkspacesFilteredByName()
+    public async Task GetCollectionWorkspace_WhenRequestHasSearchNameContains_ShouldReturnWorkspacesFilteredByName()
     {
         // Arrange
         const string searchName = "sOme";
@@ -105,7 +105,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollection_WhenRequestHasOrderNameAsc_ShouldReturnWorkspacesOrderedByNameAscending()
+    public async Task GetCollectionWorkspace_WhenRequestHasOrderNameAsc_ShouldReturnWorkspacesOrderedByNameAscending()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
@@ -131,7 +131,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollection_WhenRequestHasNameAscAndLastActivityAscOrder_ShouldReturnWorkspacesOrderedByNameAscending()
+    public async Task GetCollectionWorkspace_WhenRequestHasNameAscAndLastActivityAscOrder_ShouldReturnWorkspacesOrderedByNameAscending()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
@@ -158,7 +158,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollection_WhenRequestHasPaginationAndOrder_ShouldReturnWorkspacesPaginatedAndOrdered()
+    public async Task GetCollectionWorkspace_WhenRequestHasPaginationAndOrder_ShouldReturnWorkspacesPaginatedAndOrdered()
     {
         // Arrange
         var user = WorkspaceData.Users.First();

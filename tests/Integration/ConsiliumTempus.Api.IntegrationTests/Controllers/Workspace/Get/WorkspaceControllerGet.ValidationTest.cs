@@ -11,7 +11,7 @@ public class WorkspaceControllerGetValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task Get_WhenRequestIsValid_ShouldReturnSuccessResponse()
+    public async Task GetWorkspace_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
@@ -26,7 +26,7 @@ public class WorkspaceControllerGetValidationTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task Get_WhenRequestIsInvalid_ShouldReturnValidationErrors()
+    public async Task GetWorkspace_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetWorkspaceRequest(

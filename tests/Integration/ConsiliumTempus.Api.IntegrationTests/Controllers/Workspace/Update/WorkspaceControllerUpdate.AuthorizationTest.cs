@@ -11,25 +11,25 @@ public class WorkspaceControllerUpdateAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task Update_WhenWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task UpdateWorkspace_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(WorkspaceData.Users[0]);
     }
 
     [Fact]
-    public async Task Update_WhenWithMemberRole_ShouldReturnSuccessResponse()
+    public async Task UpdateWorkspace_WhenWithMemberRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(WorkspaceData.Users[3]);
     }
 
     [Fact]
-    public async Task Update_WhenWithViewRole_ShouldReturnForbiddenResponse()
+    public async Task UpdateWorkspace_WhenWithViewRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(WorkspaceData.Users[4]);
     }
 
     [Fact]
-    public async Task Update_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task UpdateWorkspace_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(WorkspaceData.Users[1]);
     }
