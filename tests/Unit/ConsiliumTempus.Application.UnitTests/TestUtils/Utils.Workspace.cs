@@ -68,6 +68,21 @@ internal static partial class Utils
 
             outcome.CurrentUser.Should().Be(user);
         }
+        
+        internal static void AssertWorkspace(
+            WorkspaceAggregate outcome, 
+            WorkspaceAggregate expected)
+        {
+            outcome.Id.Should().Be(expected.Id);
+            outcome.Name.Should().Be(expected.Name);
+            outcome.Description.Should().Be(expected.Description);
+            outcome.LastActivity.Should().Be(expected.LastActivity);
+            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
+            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Memberships.Should().BeEquivalentTo(expected.Memberships);
+            outcome.Projects.Should().BeEquivalentTo(expected.Projects);
+            outcome.Favorites.Should().BeEquivalentTo(expected.Favorites);
+        }
 
         internal static void AssertGetCollectionResult(
             GetCollectionWorkspaceResult result,
