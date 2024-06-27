@@ -27,7 +27,7 @@ public class GetProjectQueryValidatorTest
 
     [Theory]
     [ClassData(typeof(GetProjectQueryValidatorData.GetInvalidIdQueries))]
-    public async Task ValidateGetProjectQuery_WhenIdIsInvalid_ShouldReturnFalse(
+    public async Task ValidateGetProjectQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetProjectQuery query,
         string property)
     {

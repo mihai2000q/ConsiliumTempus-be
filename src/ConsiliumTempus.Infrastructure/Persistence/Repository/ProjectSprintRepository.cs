@@ -3,6 +3,7 @@ using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
@@ -90,6 +91,13 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
                 ps.Audit.CreatedDateTime >= date)
             .ApplyFilters(filters)
             .CountAsync(cancellationToken);
+    }
+
+    public Task<List<ProjectStage>> GetStages(ProjectSprintId id, CancellationToken cancellationToken = default)
+    {
+        return dbContext.Set<ProjectStage>()
+            .Where(ps => ps.Sprint.Id == id)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task Add(ProjectSprintAggregate sprint, CancellationToken cancellationToken = default)

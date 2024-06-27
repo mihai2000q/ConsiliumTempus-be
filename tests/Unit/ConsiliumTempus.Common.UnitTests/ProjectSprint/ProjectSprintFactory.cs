@@ -30,15 +30,9 @@ public static class ProjectSprintFactory
             endDate);
 
         project.AddSprint(sprint);
-
-        Enumerable
-            .Range(0, stagesCount)
-            .ToList()
-            .ForEach(i => sprint.AddStage(ProjectStageFactory.Create(
-                sprint,
-                Constants.ProjectStage.Name + i,
-                i,
-                createdBy)));
+        
+        ProjectStageFactory.CreateList(sprint, createdBy, stagesCount)
+            .ForEach(stage => sprint.AddStage(stage));
 
         return sprint;
     }

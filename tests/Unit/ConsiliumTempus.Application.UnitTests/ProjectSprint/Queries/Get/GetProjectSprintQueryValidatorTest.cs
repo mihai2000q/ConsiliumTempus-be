@@ -1,5 +1,5 @@
 ﻿using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
-using ConsiliumTempus.Common.UnitTests.ProjectSprint;
+using ConsiliumTempus.Application.UnitTests.TestData.ProjectSprint.Queries.Get;
 
 namespace ConsiliumTempus.Application.UnitTests.ProjectSprint.Queries.Get;
 
@@ -11,12 +11,11 @@ public class GetProjectSprintQueryValidatorTest
 
     #endregion
     
-    [Fact]
-    public async Task WhenQueryIsValid_ShouldReturnTrue()
+    [Theory]
+    [ClassData(typeof(GetProjectSprintQueryValidatorData.GetValidQueries))]
+    public async Task ValidateGetProjectSprintQuery_WhenQueryIsValid_ShouldReturnTrue(GetProjectSprintQuery query)
     {
-        // Arrange
-        var query = ProjectSprintQueryFactory.CreateGetProjectSprintQuery();
-
+        // Arrange - parameterized
         // Act
         var outcome = await _uut.ValidateAsync(query);
 
@@ -25,18 +24,19 @@ public class GetProjectSprintQueryValidatorTest
         outcome.Errors.Should().BeEmpty();
     }
     
-    [Fact]
-    public async Task WhenIdIsInvalid_ShouldReturnFalse()
+    [Theory]
+    [ClassData(typeof(GetProjectSprintQueryValidatorData.GetInvalidIdQueries))]
+    public async Task ValidateGetProjectSprintQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse( 
+        GetProjectSprintQuery query,
+        string property)
     {
-        // Arrange
-        var query = ProjectSprintQueryFactory.CreateGetProjectSprintQuery(Guid.Empty);
-
+        // Arrange - parameterized
         // Act
         var outcome = await _uut.ValidateAsync(query);
 
         // Assert
         outcome.IsValid.Should().BeFalse();
         outcome.Errors.Should().HaveCount(1);
-        outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(nameof(query.Id)));
+        outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

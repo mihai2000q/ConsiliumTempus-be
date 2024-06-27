@@ -38,4 +38,19 @@ public static class ProjectStageFactory
 
         return stage;
     }
+
+    public static List<ProjectStage> CreateList(
+        ProjectSprintAggregate? sprint = null,
+        UserAggregate? createdBy = null,
+        int stagesCount = 5)
+    {
+        return Enumerable
+            .Range(0, stagesCount)
+            .Select(i => Create(
+                sprint, 
+                Constants.ProjectStage.Name + i,
+                i,
+                createdBy))
+            .ToList();
+    }
 }

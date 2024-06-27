@@ -33,6 +33,7 @@ public class GetProjectSprintQueryHandlerTest
         _projectSprintRepository
             .Get(Arg.Any<ProjectSprintId>())
             .Returns(projectSprint);
+
         // Act
         var outcome = await _uut.Handle(query, default);
 
