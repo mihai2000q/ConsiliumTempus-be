@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
@@ -21,6 +22,12 @@ internal static partial class Utils
             response.Name.Should().Be(workspace.Name.Value);
             response.IsFavorite.Should().Be(workspace.IsFavorite(currentUser));
             response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
+        }
+        
+        internal static void AssertGetOverviewResponse(
+            GetOverviewWorkspaceResponse response,
+            WorkspaceAggregate workspace)
+        {
             response.Description.Should().Be(workspace.Description.Value);
         }
 

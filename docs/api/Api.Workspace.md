@@ -4,6 +4,9 @@
   * [Get](#get)
     * [Get Workspace Request](#get-workspace-request)
     * [Get Workspace Response](#get-workspace-response)
+  * [Get Overview](#get-overview)
+    * [Get Overview Workspace Request](#get-overview-workspace-request)
+    * [Get Overview Workspace Response](#get-overview-workspace-response)
   * [Get Collaborators](#get-collaborators)
     * [Get Collaborators From Workspace Request](#get-collaborators-from-workspace-request)
     * [Get Collaborators From Workspace Response](#get-collaborators-from-workspace-response)
@@ -40,14 +43,37 @@ Sends the id of the workspace inside the route request.
 
 #### Get Workspace Response
 
-Returns the workspace data.
+Returns the workspace.
 
 ```json
 {
   "name": "Workspace Name",
-  "description": "This is the description of the workspace",
   "isFavorite": true,
   "isPersonal": false
+}
+```
+
+### Get Overview
+
+Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
+
+```js
+GET {{host}}/api/workspaces/overview/{id}
+```
+
+- **id** is a 36 characters strings
+
+#### Get Overview Workspace Request
+
+Sends the id of the workspace inside the route request.
+
+#### Get Overview Workspace Response
+
+Returns the workspace overview.
+
+```json
+{
+  "description": "This is the description of the workspace"
 }
 ```
 

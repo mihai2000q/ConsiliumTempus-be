@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
@@ -10,14 +11,22 @@ namespace ConsiliumTempus.Common.IntegrationTests.Workspace;
 
 public static class WorkspaceRequestFactory
 {
-    public static GetWorkspaceRequest CreateGetWorkspaceRequest(
-        Guid? id = null)
+    public static GetWorkspaceRequest CreateGetWorkspaceRequest(Guid? id = null)
     {
         return new GetWorkspaceRequest
         {
             Id = id ?? Guid.NewGuid()
         };
     }
+    
+    public static GetOverviewWorkspaceRequest CreateGetOverviewWorkspaceRequest(Guid? id = null)
+    {
+        return new GetOverviewWorkspaceRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
+    }
+
 
     public static GetCollaboratorsFromWorkspaceRequest CreateGetCollaboratorsFromWorkspaceRequest(
         Guid? id = null,

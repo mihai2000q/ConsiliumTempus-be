@@ -27,9 +27,20 @@ test.describe('should allow operations on the workspace entity', () => {
 
     expect(await response.json()).toStrictEqual({
       name: workspace.name,
-      description: workspace.description,
       isPersonal: true,
       isFavorite: false
+    })
+  })
+
+  test('should get workspace overview', async ({ request }) => {
+    const workspace = await getPersonalWorkspace(request);
+
+    const response = await request.get(`/api/workspaces/overview/${workspace.id}`, useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      description: workspace.description,
     })
   })
 

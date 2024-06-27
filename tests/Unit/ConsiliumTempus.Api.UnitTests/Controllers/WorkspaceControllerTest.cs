@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
@@ -13,6 +14,7 @@ using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Application.Workspace.Queries.GetOverview;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 
@@ -78,6 +80,53 @@ public class WorkspaceControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<GetWorkspaceQuery>(query => Utils.Workspace.AssertGetQuery(query, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task GetOverview_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateGetOverviewWorkspaceRequest();
+
+        var workspace = WorkspaceFactory.Create();
+        _mediator
+            .Send(Arg.Any<GetOverviewWorkspaceQuery>())
+            .Returns(workspace);
+
+        // Act
+        var outcome = await _uut.GetOverview(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetOverviewWorkspaceQuery>(query => 
+                Utils.Workspace.AssertGetOverviewQuery(query, request)));
+
+        var response = outcome.ToResponse<GetOverviewWorkspaceResponse>();
+        Utils.Workspace.AssertGetOverviewResponse(response, workspace);
+    }
+
+    [Fact]
+    public async Task GetOverview_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateGetOverviewWorkspaceRequest();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator
+            .Send(Arg.Any<GetOverviewWorkspaceQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetOverview(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetOverviewWorkspaceQuery>(query => 
+                Utils.Workspace.AssertGetOverviewQuery(query, request)));
 
         outcome.ValidateError(error);
     }

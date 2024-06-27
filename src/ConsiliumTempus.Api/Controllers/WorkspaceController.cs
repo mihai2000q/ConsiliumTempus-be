@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
@@ -12,6 +13,7 @@ using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Application.Workspace.Queries.GetOverview;
 using ConsiliumTempus.Domain.Common.Enums;
 using MapsterMapper;
 using MediatR;
@@ -32,6 +34,19 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
             getResult => Ok(Mapper.From(getResult)
                 .AddParameters(WorkspaceMappingConfig.CurrentUser, getResult.CurrentUser)
                 .AdaptToType<GetWorkspaceResponse>()),
+            Problem
+        );
+    }
+    
+    [HasPermission(Permissions.ReadWorkspace)]
+    [HttpGet("Overview/{id:guid}")]
+    public async Task<IActionResult> GetOverview(GetOverviewWorkspaceRequest request, CancellationToken cancellationToken)
+    {
+        var query = Mapper.Map<GetOverviewWorkspaceQuery>(request);
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return result.Match(
+            getOverviewResult => Ok(Mapper.Map<GetOverviewWorkspaceResponse>(getOverviewResult)),
             Problem
         );
     }

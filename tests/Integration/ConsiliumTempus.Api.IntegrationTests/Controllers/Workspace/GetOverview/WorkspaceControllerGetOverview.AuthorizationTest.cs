@@ -3,32 +3,32 @@ using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Get;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.GetOverview;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerGetAuthorizationTest(WebAppFactory factory)
+public class WorkspaceControllerGetOverviewAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task Get_WhenWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task GetOverviewWorkspace_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(WorkspaceData.Users[0]);
     }
 
     [Fact]
-    public async Task Get_WhenWithMemberRole_ShouldReturnSuccessResponse()
+    public async Task GetOverviewWorkspace_WhenWithMemberRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(WorkspaceData.Users[3]);
     }
 
     [Fact]
-    public async Task Get_WhenWithViewRole_ShouldReturnSuccessResponse()
+    public async Task GetOverviewWorkspace_WhenWithViewRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(WorkspaceData.Users[4]);
     }
 
     [Fact]
-    public async Task Get_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task GetOverviewWorkspace_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(WorkspaceData.Users[1]);
     }
@@ -56,6 +56,6 @@ public class WorkspaceControllerGetAuthorizationTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Get($"api/workspaces/{workspace.Id}");
+        return await Client.Get($"api/workspaces/overview/{workspace.Id}");
     }
 }
