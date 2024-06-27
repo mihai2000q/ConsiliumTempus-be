@@ -48,9 +48,6 @@ public sealed class ProjectSprintMappingConfig : IRegister
             .Map(dest => dest.CreatedDateTime, src => src.Audit.CreatedDateTime)
             .Map(dest => dest.UpdatedBy, src => src.Audit.UpdatedBy)
             .Map(dest => dest.UpdatedDateTime, src => src.Audit.UpdatedDateTime);
-        config.NewConfig<ProjectStage, GetProjectSprintResponse.ProjectStageResponse>()
-            .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.Name.Value);
         config.NewConfig<UserAggregate, GetProjectSprintResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)

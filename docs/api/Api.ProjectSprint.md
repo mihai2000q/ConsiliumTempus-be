@@ -55,16 +55,6 @@ Returns the project sprint.
   "name": "Sprint 1",
   "startDate": "2022-10-10",
   "endDate": "2022-10-24",
-  "stages": [
-    {
-      "id": "10000000-0000-0000-0000-000000000000",
-      "name": "To Do"
-    },
-    {
-      "id": "10000000-0000-0000-0000-000000000000",
-      "name": "Done"
-    }
-  ],
   "createdBy": {
     "id": "10000000-0000-0000-0000-000000000000",
     "name": "Michael Jordan",

@@ -14,13 +14,11 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
 {
     public async Task<ProjectSprintAggregate?> Get(ProjectSprintId id, CancellationToken cancellationToken = default)
     {
-        return await dbContext.ProjectSprints
-            .Include(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
-            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
+        return await dbContext.ProjectSprints.FindAsync([id], cancellationToken);
     }
 
     public Task<ProjectSprintAggregate?> GetWithWorkspace(
-        ProjectSprintId id, 
+        ProjectSprintId id,
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectSprints
@@ -30,7 +28,7 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
     }
 
     public Task<ProjectSprintAggregate?> GetWithSprintsAndWorkspace(
-        ProjectSprintId id, 
+        ProjectSprintId id,
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectSprints
