@@ -23,6 +23,7 @@ internal static partial class Utils
             response.Name.Should().Be(workspace.Name.Value);
             response.IsFavorite.Should().Be(workspace.IsFavorite(currentUser));
             response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
+            AssertUserResponse(response.Owner, workspace.Owner);
         }
         
         internal static void AssertGetOverviewResponse(
@@ -119,6 +120,15 @@ internal static partial class Utils
         }
         
         private static void AssertUserResponse(
+            GetWorkspaceResponse.UserResponse response,
+            UserAggregate user)
+        {
+            response.Id.Should().Be(user.Id.Value);
+            response.Name.Should().Be(user.FirstName + " " + user.LastName);
+            response.Email.Should().Be(user.Credentials.Email);
+        }
+        
+        private static void AssertUserResponse(
             GetCollaboratorsFromWorkspaceResponse.UserResponse response,
             UserAggregate user)
         {
@@ -141,6 +151,7 @@ internal static partial class Utils
             var owner = workspace.Owner;
             response.Owner.Id.Should().Be(owner.Id.Value);
             response.Owner.Name.Should().Be(owner.FirstName + " " + owner.LastName);
+            response.Owner.Email.Should().Be(owner.Credentials.Email);
         }
     }
 }

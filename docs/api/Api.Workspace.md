@@ -52,7 +52,12 @@ Returns the workspace.
 {
   "name": "Workspace Name",
   "isFavorite": true,
-  "isPersonal": false
+  "isPersonal": false,
+  "owner": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Michael Jordan",
+    "email": "michael@jordan.com"
+  }
 }
 ```
 
@@ -150,7 +155,8 @@ Returns the workspaces and their total count.
       "isFavorite": true,
       "owner": {
         "id": "10000000-0000-0000-0000-000000000000",
-        "name": "Michael Jordan"
+        "name": "Michael Jordan",
+        "email": "michaelj@gmail.com"
       }
     },
     {
@@ -160,8 +166,9 @@ Returns the workspaces and their total count.
       "isPersonal": false,
       "isFavorite": true,
       "owner": {
-        "id": "10000000-0000-0000-0000-000000000000",
-        "name": "Andreas Donner"
+        "id": "20000000-0000-0000-0000-000000000000",
+        "name": "Andreas Donner",
+        "email": "andreasd@gmail.com"
       }
     }
   ],

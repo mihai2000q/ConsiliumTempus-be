@@ -13,9 +13,10 @@ public sealed record GetCollectionWorkspaceResponse(
         string Description,
         bool IsFavorite,
         bool IsPersonal,
-        Owner Owner);
+        UserResponse Owner);
 
-    public sealed record Owner(
+    public sealed record UserResponse(
         Guid Id,
-        string Name);
+        string Name,
+        string Email);
 }

@@ -6,4 +6,11 @@ namespace ConsiliumTempus.Api.Contracts.Workspace.Get;
 public sealed record GetWorkspaceResponse(
     string Name,
     bool IsFavorite,
-    bool IsPersonal);
+    bool IsPersonal,
+    GetWorkspaceResponse.UserResponse Owner)
+{
+    public sealed record UserResponse(
+        Guid Id,
+        string Name,
+        string Email);
+}

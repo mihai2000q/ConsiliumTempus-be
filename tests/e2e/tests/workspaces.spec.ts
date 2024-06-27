@@ -35,7 +35,12 @@ test.describe('should allow operations on the workspace entity', () => {
     expect(await response.json()).toStrictEqual({
       name: workspace.name,
       isPersonal: true,
-      isFavorite: false
+      isFavorite: false,
+      owner: {
+        id: expect.any(String),
+        name: expect.any(String),
+        email: EMAIL
+      }
     })
   })
 
@@ -300,7 +305,8 @@ test.describe('should allow operations on the workspace entity', () => {
     expect(newWorkspace).toStrictEqual({
       name: body.name,
       isFavorite: body.isFavorite,
-      isPersonal: false
+      isPersonal: false,
+      owner: expect.any(Object)
     })
   })
 

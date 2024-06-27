@@ -46,7 +46,12 @@ public sealed class WorkspaceMappingConfig : IRegister
             .Map(dest => dest.Name, src => src.Workspace.Name.Value)
             .Map(dest => dest.IsFavorite,
                 src => src.Workspace.IsFavorite((UserAggregate)MapContext.Current!.Parameters[CurrentUser]))
-            .Map(dest => dest.IsPersonal, src => src.Workspace.IsPersonal.Value);
+            .Map(dest => dest.IsPersonal, src => src.Workspace.IsPersonal.Value)
+            .Map(dest => dest.Owner, src => src.Workspace.Owner);
+        config.NewConfig<UserAggregate, GetWorkspaceResponse.UserResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Email, src => src.Credentials.Email);
     }
     
     private static void GetOverviewMappings(TypeAdapterConfig config)
@@ -80,9 +85,10 @@ public sealed class WorkspaceMappingConfig : IRegister
             .Map(dest => dest.IsFavorite,
                 src => src.IsFavorite((UserAggregate)MapContext.Current!.Parameters[CurrentUser]))
             .Map(dest => dest.IsPersonal, src => src.IsPersonal.Value);
-        config.NewConfig<UserAggregate, GetCollectionWorkspaceResponse.Owner>()
+        config.NewConfig<UserAggregate, GetCollectionWorkspaceResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value);
+            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 
     private static void CreateMappings(TypeAdapterConfig config)
