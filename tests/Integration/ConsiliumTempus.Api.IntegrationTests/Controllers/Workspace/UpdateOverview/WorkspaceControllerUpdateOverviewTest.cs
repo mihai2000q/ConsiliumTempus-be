@@ -17,7 +17,7 @@ public class WorkspaceControllerUpdateOverviewOverviewTest(WebAppFactory factory
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task UpdateOverview_WhenItSucceeds_ShouldUpdateOverviewAndReturnSuccessResponse()
+    public async Task UpdateOverviewWorkspace_WhenItSucceeds_ShouldUpdateOverviewAndReturnSuccessResponse()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
@@ -37,7 +37,7 @@ public class WorkspaceControllerUpdateOverviewOverviewTest(WebAppFactory factory
     }
 
     [Fact]
-    public async Task UpdateOverview_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task UpdateOverviewWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateOverviewWorkspaceRequest(id: Guid.NewGuid());

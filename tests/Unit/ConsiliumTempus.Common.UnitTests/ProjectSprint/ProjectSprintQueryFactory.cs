@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
+using ConsiliumTempus.Application.ProjectSprint.Queries.GetStages;
 
 namespace ConsiliumTempus.Common.UnitTests.ProjectSprint;
 
@@ -9,7 +10,7 @@ public static class ProjectSprintQueryFactory
     {
         return new GetProjectSprintQuery(id ?? Guid.NewGuid());
     }
-    
+
     public static GetCollectionProjectSprintQuery CreateGetCollectionProjectSprintQuery(
         Guid? projectId = null,
         string[]? search = null,
@@ -19,5 +20,10 @@ public static class ProjectSprintQueryFactory
             projectId ?? Guid.NewGuid(),
             search,
             fromThisYear);
+    }
+
+    public static GetStagesFromProjectSprintQuery CreateGetStagesFromProjectSprintQuery(Guid? id = null)
+    {
+        return new GetStagesFromProjectSprintQuery(id ?? Guid.NewGuid());
     }
 }

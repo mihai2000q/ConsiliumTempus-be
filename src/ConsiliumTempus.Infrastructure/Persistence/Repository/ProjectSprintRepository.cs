@@ -3,6 +3,7 @@ using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
@@ -14,13 +15,11 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
 {
     public async Task<ProjectSprintAggregate?> Get(ProjectSprintId id, CancellationToken cancellationToken = default)
     {
-        return await dbContext.ProjectSprints
-            .Include(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
-            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
+        return await dbContext.ProjectSprints.FindAsync([id], cancellationToken);
     }
 
     public Task<ProjectSprintAggregate?> GetWithWorkspace(
-        ProjectSprintId id, 
+        ProjectSprintId id,
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectSprints
@@ -30,7 +29,7 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
     }
 
     public Task<ProjectSprintAggregate?> GetWithSprintsAndWorkspace(
-        ProjectSprintId id, 
+        ProjectSprintId id,
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectSprints
@@ -92,6 +91,14 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
                 ps.Audit.CreatedDateTime >= date)
             .ApplyFilters(filters)
             .CountAsync(cancellationToken);
+    }
+
+    public Task<List<ProjectStage>> GetStages(ProjectSprintId id, CancellationToken cancellationToken = default)
+    {
+        return dbContext.Set<ProjectStage>()
+            .Where(ps => ps.Sprint.Id == id)
+            .OrderBy(ps => ps.CustomOrderPosition.Value)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task Add(ProjectSprintAggregate sprint, CancellationToken cancellationToken = default)

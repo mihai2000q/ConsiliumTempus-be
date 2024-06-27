@@ -14,7 +14,7 @@ public class WorkspaceControllerGetTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task Get_WhenItSucceeds_ShouldReturnWorkspace()
+    public async Task GetWorkspace_WhenItSucceeds_ShouldReturnWorkspace()
     {
         // Arrange
         var user = WorkspaceData.Users[0];
@@ -32,7 +32,7 @@ public class WorkspaceControllerGetTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task Get_WhenItFails_ShouldReturnNotFoundError()
+    public async Task GetWorkspace_WhenItFails_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = WorkspaceRequestFactory.CreateGetWorkspaceRequest();

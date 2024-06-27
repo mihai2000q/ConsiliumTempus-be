@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.GetStages;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
@@ -15,6 +16,7 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
+using ConsiliumTempus.Application.ProjectSprint.Queries.GetStages;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.User;
@@ -29,6 +31,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
     {
         Get(config);
         GetCollectionMappings(config);
+        GetStagesMappings(config);
         CreateMappings(config);
         AddStageMappings(config);
         UpdateMappings(config);
@@ -48,9 +51,6 @@ public sealed class ProjectSprintMappingConfig : IRegister
             .Map(dest => dest.CreatedDateTime, src => src.Audit.CreatedDateTime)
             .Map(dest => dest.UpdatedBy, src => src.Audit.UpdatedBy)
             .Map(dest => dest.UpdatedDateTime, src => src.Audit.UpdatedDateTime);
-        config.NewConfig<ProjectStage, GetProjectSprintResponse.ProjectStageResponse>()
-            .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.Name.Value);
         config.NewConfig<UserAggregate, GetProjectSprintResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
@@ -67,6 +67,16 @@ public sealed class ProjectSprintMappingConfig : IRegister
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.CreatedDateTime, src => src.Audit.CreatedDateTime);
+    }
+    
+    private static void GetStagesMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<GetStagesFromProjectSprintRequest, GetStagesFromProjectSprintQuery>();
+
+        config.NewConfig<GetStagesFromProjectSprintResult, GetStagesFromProjectSprintResponse>();
+        config.NewConfig<ProjectStage, GetStagesFromProjectSprintResponse.ProjectStageResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.Name.Value);
     }
 
     private static void CreateMappings(TypeAdapterConfig config)

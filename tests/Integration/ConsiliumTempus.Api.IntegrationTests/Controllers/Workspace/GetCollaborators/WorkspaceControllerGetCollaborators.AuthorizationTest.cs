@@ -10,25 +10,25 @@ public class WorkspaceControllerGetCollaboratorsAuthorizationTest(WebAppFactory 
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task GetCollaborators_WhenWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task GetCollaboratorsFromWorkspace_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(WorkspaceData.Users[0]);
     }
 
     [Fact]
-    public async Task GetCollaborators_WhenWithMemberRole_ShouldReturnSuccessResponse()
+    public async Task GetCollaboratorsFromWorkspace_WhenWithMemberRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(WorkspaceData.Users[3]);
     }
 
     [Fact]
-    public async Task GetCollaborators_WhenWithViewRole_ShouldReturnSuccessResponse()
+    public async Task GetCollaboratorsFromWorkspace_WhenWithViewRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(WorkspaceData.Users[4]);
     }
 
     [Fact]
-    public async Task GetCollaborators_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task GetCollaboratorsFromWorkspace_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(WorkspaceData.Users[1]);
     }

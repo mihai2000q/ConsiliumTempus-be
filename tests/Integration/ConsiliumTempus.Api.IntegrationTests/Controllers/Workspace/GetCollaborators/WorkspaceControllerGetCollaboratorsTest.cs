@@ -13,7 +13,7 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task GetCollaborators_WhenIsSuccessful_ShouldReturnCollaborators()
+    public async Task GetCollaboratorsFromWorkspace_WhenIsSuccessful_ShouldReturnCollaborators()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
@@ -36,7 +36,7 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
     }
     
     [Fact]
-    public async Task GetCollaborators_WhenRequestHasSearchValue_ShouldReturnFilteredCollaborators()
+    public async Task GetCollaboratorsFromWorkspace_WhenRequestHasSearchValue_ShouldReturnFilteredCollaborators()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
@@ -65,7 +65,7 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollaborators_WhenWorkspaceIsNotFound_ShouldReturnEmpty()
+    public async Task GetCollaboratorsFromWorkspace_WhenWorkspaceIsNotFound_ShouldReturnEmpty()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollaboratorsFromWorkspaceRequest(

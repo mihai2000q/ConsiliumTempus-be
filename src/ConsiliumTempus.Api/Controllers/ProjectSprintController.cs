@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.GetStages;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
@@ -15,6 +16,7 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
+using ConsiliumTempus.Application.ProjectSprint.Queries.GetStages;
 using ConsiliumTempus.Domain.Common.Enums;
 using MapsterMapper;
 using MediatR;
@@ -52,6 +54,20 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
         );
     }
 
+    [HasPermission(Permissions.ReadProjectSprint)]
+    [HttpGet("{id:guid}/stages")]
+    public async Task<IActionResult> GetStages(GetStagesFromProjectSprintRequest request,
+        CancellationToken cancellationToken)
+    {
+        var query = Mapper.Map<GetStagesFromProjectSprintQuery>(request);
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return result.Match(
+            getStagesResult => Ok(Mapper.Map<GetStagesFromProjectSprintResponse>(getStagesResult)),
+            Problem
+        );
+    }
+
     [HasPermission(Permissions.CreateProjectSprint)]
     [HttpPost]
     public async Task<IActionResult> Create(CreateProjectSprintRequest request, CancellationToken cancellationToken)
@@ -67,7 +83,8 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
 
     [HasPermission(Permissions.AddStageToProjectSprint)]
     [HttpPost("Add-Stage")]
-    public async Task<IActionResult> AddStage(AddStageToProjectSprintRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddStage(AddStageToProjectSprintRequest request,
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<AddStageToProjectSprintCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
@@ -120,7 +137,8 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
 
     [HasPermission(Permissions.RemoveStageFromProjectSprint)]
     [HttpDelete("{id:guid}/Remove-Stage/{stageId:guid}")]
-    public async Task<IActionResult> RemoveStage(RemoveStageFromProjectSprintRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> RemoveStage(RemoveStageFromProjectSprintRequest request,
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<RemoveStageFromProjectSprintCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);

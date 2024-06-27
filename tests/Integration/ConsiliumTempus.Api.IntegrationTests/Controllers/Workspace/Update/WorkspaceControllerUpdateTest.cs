@@ -17,7 +17,7 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task Update_WhenItSucceeds_ShouldUpdateAndReturnSuccessResponse()
+    public async Task UpdateWorkspace_WhenItSucceeds_ShouldUpdateAndReturnSuccessResponse()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
@@ -38,7 +38,7 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task Update_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task UpdateWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest(id: Guid.NewGuid());

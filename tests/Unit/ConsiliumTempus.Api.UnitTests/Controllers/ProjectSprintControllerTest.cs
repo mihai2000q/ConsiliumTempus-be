@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.GetStages;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
@@ -18,6 +19,7 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 using ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
+using ConsiliumTempus.Application.ProjectSprint.Queries.GetStages;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
 
@@ -134,6 +136,53 @@ public class ProjectSprintControllerTest
         outcome.ValidateError(error);
     }
 
+    [Fact]
+    public async Task GetStages_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectSprintRequestFactory.CreateGetStagesFromProjectSprintRequest();
+
+        var result = ProjectSprintResultFactory.CreateGetStagesFromProjectSprintResult();
+        _mediator
+            .Send(Arg.Any<GetStagesFromProjectSprintQuery>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.GetStages(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetStagesFromProjectSprintQuery>(
+                query => Utils.ProjectSprint.AssertGetStagesQuery(query, request)));
+
+        var response = outcome.ToResponse<GetStagesFromProjectSprintResponse>();
+        Utils.ProjectSprint.AssertGetStagesResponse(response, result);
+    }
+
+    [Fact]
+    public async Task GetStages_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectSprintRequestFactory.CreateGetStagesFromProjectSprintRequest();
+
+        var error = Errors.Project.NotFound;
+        _mediator
+            .Send(Arg.Any<GetStagesFromProjectSprintQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetStages(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetStagesFromProjectSprintQuery>(
+                query => Utils.ProjectSprint.AssertGetStagesQuery(query, request)));
+
+        outcome.ValidateError(error);
+    }
+
     [Theory]
     [ClassData(typeof(ProjectSprintControllerData.GetCreateProjectSprintRequests))]
     public async Task Create_WhenIsSuccessful_ShouldReturnResponse(CreateProjectSprintRequest request)
@@ -179,7 +228,7 @@ public class ProjectSprintControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task AddStage_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -273,7 +322,7 @@ public class ProjectSprintControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task UpdateStage_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -367,7 +416,7 @@ public class ProjectSprintControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task RemoveStage_WhenIsSuccessful_ShouldReturnSuccess()
     {

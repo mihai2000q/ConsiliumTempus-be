@@ -11,7 +11,7 @@ public class WorkspaceControllerGetCollaboratorsValidationTest(WebAppFactory fac
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task GetCollaborators_WhenRequestIsValid_ShouldReturnSuccessResponse()
+    public async Task GetCollaboratorsFromWorkspace_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
@@ -26,7 +26,7 @@ public class WorkspaceControllerGetCollaboratorsValidationTest(WebAppFactory fac
     }
 
     [Fact]
-    public async Task GetCollaborators_WhenRequestIsInvalid_ShouldReturnValidationErrors()
+    public async Task GetCollaboratorsFromWorkspace_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollaboratorsFromWorkspaceRequest(

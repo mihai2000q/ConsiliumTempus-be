@@ -11,7 +11,7 @@ public class WorkspaceControllerGetCollectionValidationTest(WebAppFactory factor
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task GetCollection_WhenRequestIsValid_ShouldReturnSuccessResponse()
+    public async Task GetCollectionWorkspace_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(orderBy: ["name.asc"]);
@@ -25,7 +25,7 @@ public class WorkspaceControllerGetCollectionValidationTest(WebAppFactory factor
     }
 
     [Fact]
-    public async Task GetCollection_WhenRequestIsInvalid_ShouldReturnValidationErrors()
+    public async Task GetCollectionWorkspace_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
