@@ -3,17 +3,26 @@ using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.Workspace;
 
 public static class WorkspaceRequestFactory
 {
-    public static GetWorkspaceRequest CreateGetWorkspaceRequest(
-        Guid? id = null)
+    public static GetWorkspaceRequest CreateGetWorkspaceRequest(Guid? id = null)
     {
         return new GetWorkspaceRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
+    }
+    
+    public static GetOverviewWorkspaceRequest CreateGetOverviewWorkspaceRequest(Guid? id = null)
+    {
+        return new GetOverviewWorkspaceRequest
         {
             Id = id ?? Guid.NewGuid()
         };
@@ -57,11 +66,20 @@ public static class WorkspaceRequestFactory
     public static UpdateWorkspaceRequest CreateUpdateWorkspaceRequest(
         Guid? id = null,
         string name = Constants.Workspace.Name,
-        string description = Constants.Workspace.Description)
+        bool isFavorite = false)
     {
         return new UpdateWorkspaceRequest(
             id ?? Guid.NewGuid(),
             name,
+            isFavorite);
+    }
+    
+    public static UpdateOverviewWorkspaceRequest CreateUpdateOverviewWorkspaceRequest(
+        Guid? id = null,
+        string description = Constants.Workspace.Description)
+    {
+        return new UpdateOverviewWorkspaceRequest(
+            id ?? Guid.NewGuid(),
             description);
     }
     

@@ -6,6 +6,7 @@ using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Queries.Get;
 
@@ -41,7 +42,7 @@ public class GetWorkspaceQueryHandlerTest
         _currentUserProvider
             .GetCurrentUserAfterPermissionCheck()
             .Returns(user);
-        
+
         // Act
         var outcome = await _uut.Handle(query, default);
 
@@ -59,6 +60,10 @@ public class GetWorkspaceQueryHandlerTest
     {
         // Arrange
         var query = WorkspaceQueryFactory.CreateGetWorkspaceQuery();
+
+        _workspaceRepository
+            .Get(Arg.Any<WorkspaceId>())
+            .ReturnsNull();
 
         // Act
         var outcome = await _uut.Handle(query, default);

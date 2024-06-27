@@ -4,6 +4,9 @@
   * [Get](#get)
     * [Get Workspace Request](#get-workspace-request)
     * [Get Workspace Response](#get-workspace-response)
+  * [Get Overview](#get-overview)
+    * [Get Overview Workspace Request](#get-overview-workspace-request)
+    * [Get Overview Workspace Response](#get-overview-workspace-response)
   * [Get Collaborators](#get-collaborators)
     * [Get Collaborators From Workspace Request](#get-collaborators-from-workspace-request)
     * [Get Collaborators From Workspace Response](#get-collaborators-from-workspace-response)
@@ -16,6 +19,9 @@
   * [Update](#update)
     * [Update Workspace Request](#update-workspace-request)
     * [Update Workspace Response](#update-workspace-response)
+  * [Update Overview](#update-overview)
+    * [Update Overview Workspace Request](#update-overview-workspace-request)
+    * [Update Overview Workspace Response](#update-overview-workspace-response)
   * [Delete](#delete)
     * [Delete Workspace Request](#delete-workspace-request)
     * [Delete Workspace Response](#delete-workspace-response)
@@ -40,14 +46,42 @@ Sends the id of the workspace inside the route request.
 
 #### Get Workspace Response
 
-Returns the workspace data.
+Returns the workspace.
 
 ```json
 {
   "name": "Workspace Name",
-  "description": "This is the description of the workspace",
   "isFavorite": true,
-  "isPersonal": false
+  "isPersonal": false,
+  "owner": {
+    "id": "10000000-0000-0000-0000-000000000000",
+    "name": "Michael Jordan",
+    "email": "michael@jordan.com"
+  }
+}
+```
+
+### Get Overview
+
+Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
+
+```js
+GET {{host}}/api/workspaces/overview/{id}
+```
+
+- **id** is a 36 characters strings
+
+#### Get Overview Workspace Request
+
+Sends the id of the workspace inside the route request.
+
+#### Get Overview Workspace Response
+
+Returns the workspace overview.
+
+```json
+{
+  "description": "This is the description of the workspace"
 }
 ```
 
@@ -121,7 +155,8 @@ Returns the workspaces and their total count.
       "isFavorite": true,
       "owner": {
         "id": "10000000-0000-0000-0000-000000000000",
-        "name": "Michael Jordan"
+        "name": "Michael Jordan",
+        "email": "michaelj@gmail.com"
       }
     },
     {
@@ -131,8 +166,9 @@ Returns the workspaces and their total count.
       "isPersonal": false,
       "isFavorite": true,
       "owner": {
-        "id": "10000000-0000-0000-0000-000000000000",
-        "name": "Andreas Donner"
+        "id": "20000000-0000-0000-0000-000000000000",
+        "name": "Andreas Donner",
+        "email": "andreasd@gmail.com"
       }
     }
   ],
@@ -174,19 +210,42 @@ PUT {{host}}/api/workspaces
 #### Update Workspace Request
 
 Sends body data that the new workspace needs to be updated.
-<br>
 
 ```json
 {
   "id": "88882448-bd63-4731-8a05-f6333b6d22e2",
   "name": "Workspace Name",
-  "description": "This is the new description of the workspace"
+  "isFavorite": true
 }
 ```
 
 #### Update Workspace Response
 
 Returns a confirmation message that the workspace has been updated successfully.
+
+### Update Overview
+
+Only member or admin users that are part of the workspace can update it
+([Update Workspace Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/workspaces/overview
+```
+
+#### Update Overview Workspace Request
+
+Sends body data that the workspace overview needs to be updated.
+
+```json
+{
+  "id": "88882448-bd63-4731-8a05-f6333b6d22e2",
+  "description": "This is the new description of the workspace overview"
+}
+```
+
+#### Update Overview Workspace Response
+
+Returns a confirmation message that the workspace overview has been updated successfully.
 
 ### Delete
 

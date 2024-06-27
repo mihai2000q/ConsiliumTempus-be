@@ -2,7 +2,9 @@
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
@@ -21,6 +23,13 @@ internal static partial class Utils
             response.Name.Should().Be(workspace.Name.Value);
             response.IsFavorite.Should().Be(workspace.IsFavorite(currentUser));
             response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
+            AssertUserResponse(response.Owner, workspace.Owner);
+        }
+        
+        internal static void AssertGetOverviewResponse(
+            GetOverviewWorkspaceResponse response,
+            WorkspaceAggregate workspace)
+        {
             response.Description.Should().Be(workspace.Description.Value);
         }
 
@@ -81,7 +90,8 @@ internal static partial class Utils
         internal static void AssertUpdated(
             WorkspaceAggregate workspace,
             WorkspaceAggregate newWorkspace,
-            UpdateWorkspaceRequest request)
+            UpdateWorkspaceRequest request,
+            UserAggregate currentUser)
         {
             // unchanged
             newWorkspace.Id.Value.Should().Be(request.Id);
@@ -89,9 +99,33 @@ internal static partial class Utils
 
             // changed
             newWorkspace.Name.Value.Should().Be(request.Name);
+            newWorkspace.IsFavorite(currentUser).Should().Be(request.IsFavorite);
+            newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static void AssertUpdatedOverview(
+            WorkspaceAggregate workspace,
+            WorkspaceAggregate newWorkspace,
+            UpdateOverviewWorkspaceRequest request)
+        {
+            // unchanged
+            newWorkspace.Id.Value.Should().Be(request.Id);
+            newWorkspace.CreatedDateTime.Should().Be(workspace.CreatedDateTime);
+
+            // changed
             newWorkspace.Description.Value.Should().Be(request.Description);
             newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        private static void AssertUserResponse(
+            GetWorkspaceResponse.UserResponse response,
+            UserAggregate user)
+        {
+            response.Id.Should().Be(user.Id.Value);
+            response.Name.Should().Be(user.FirstName + " " + user.LastName);
+            response.Email.Should().Be(user.Credentials.Email);
         }
         
         private static void AssertUserResponse(
@@ -117,6 +151,7 @@ internal static partial class Utils
             var owner = workspace.Owner;
             response.Owner.Id.Should().Be(owner.Id.Value);
             response.Owner.Name.Should().Be(owner.FirstName + " " + owner.LastName);
+            response.Owner.Email.Should().Be(owner.Credentials.Email);
         }
     }
 }

@@ -103,6 +103,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     public void UpdateOverview(Description description)
     {
         Description = description;
+        UpdatedDateTime = DateTime.UtcNow;
         RefreshActivity();
     }
 

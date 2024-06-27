@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Application.Workspace.Queries.GetOverview;
 
 namespace ConsiliumTempus.Common.UnitTests.Workspace;
 
@@ -9,6 +10,11 @@ public static class WorkspaceQueryFactory
     public static GetWorkspaceQuery CreateGetWorkspaceQuery(Guid? id = null)
     {
         return new GetWorkspaceQuery(id ?? Guid.NewGuid());
+    }
+    
+    public static GetOverviewWorkspaceQuery CreateGetOverviewWorkspaceQuery(Guid? id = null)
+    {
+        return new GetOverviewWorkspaceQuery(id ?? Guid.NewGuid());
     }
     
     public static GetCollaboratorsFromWorkspaceQuery CreateGetCollaboratorsFromWorkspaceQuery(

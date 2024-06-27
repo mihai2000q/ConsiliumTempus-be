@@ -9,6 +9,7 @@ class Workspace
 {
     Workspace Create()
     void Update()
+    void UpdateOverview()
     void AddUserMembership()
     void RefreshActivity()
     void TransferOwnership()

@@ -1,5 +1,5 @@
 export default interface UpdateWorkspaceRequest {
   id: string,
   name: string,
-  description: string
+  isFavorite: boolean
 }

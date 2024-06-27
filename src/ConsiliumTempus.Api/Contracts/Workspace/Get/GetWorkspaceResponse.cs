@@ -7,4 +7,10 @@ public sealed record GetWorkspaceResponse(
     string Name,
     bool IsFavorite,
     bool IsPersonal,
-    string Description);
+    GetWorkspaceResponse.UserResponse Owner)
+{
+    public sealed record UserResponse(
+        Guid Id,
+        string Name,
+        string Email);
+}

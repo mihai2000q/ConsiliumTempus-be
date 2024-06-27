@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Entities;
@@ -42,12 +43,24 @@ internal static partial class Utils
 
         internal static void AssertFromUpdateCommand(
             WorkspaceAggregate workspace,
-            UpdateWorkspaceCommand command)
+            UpdateWorkspaceCommand command,
+            UserAggregate currentUser)
         {
             workspace.Id.Value.Should().Be(command.Id);
             workspace.Name.Value.Should().Be(command.Name);
+            workspace.IsFavorite(currentUser).Should().Be(command.IsFavorite);
+            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertFromUpdateOverviewCommand(
+            WorkspaceAggregate workspace,
+            UpdateOverviewWorkspaceCommand command)
+        {
+            workspace.Id.Value.Should().Be(command.Id);
             workspace.Description.Value.Should().Be(command.Description);
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertWorkspace(
@@ -67,6 +80,21 @@ internal static partial class Utils
             outcome.Workspace.Favorites.Should().BeEquivalentTo(expected.Favorites);
 
             outcome.CurrentUser.Should().Be(user);
+        }
+        
+        internal static void AssertWorkspace(
+            WorkspaceAggregate outcome, 
+            WorkspaceAggregate expected)
+        {
+            outcome.Id.Should().Be(expected.Id);
+            outcome.Name.Should().Be(expected.Name);
+            outcome.Description.Should().Be(expected.Description);
+            outcome.LastActivity.Should().Be(expected.LastActivity);
+            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
+            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Memberships.Should().BeEquivalentTo(expected.Memberships);
+            outcome.Projects.Should().BeEquivalentTo(expected.Projects);
+            outcome.Favorites.Should().BeEquivalentTo(expected.Favorites);
         }
 
         internal static void AssertGetCollectionResult(

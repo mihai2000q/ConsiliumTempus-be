@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
@@ -47,6 +48,11 @@ public static class WorkspaceResultFactory
     public static UpdateWorkspaceResult CreateUpdateWorkspaceResult()
     {
         return new UpdateWorkspaceResult();
+    }
+    
+    public static UpdateOverviewWorkspaceResult CreateUpdateOverviewWorkspaceResult()
+    {
+        return new UpdateOverviewWorkspaceResult();
     }
     
     public static DeleteWorkspaceResult CreateDeleteWorkspaceResult()
