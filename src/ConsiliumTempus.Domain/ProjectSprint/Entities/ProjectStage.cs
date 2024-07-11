@@ -50,19 +50,14 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             Audit.Create(createdBy));
     }
 
-    public void Update(
-        Name name, 
-        CustomOrderPosition customOrderPosition,
-        UserAggregate updatedBy)
+    public void Update(Name name, UserAggregate updatedBy)
     {
         Name = name;
-        CustomOrderPosition = customOrderPosition;
         Audit.Update(updatedBy);
     }
-    
-    public void UpdateWithoutAudit(Name name, CustomOrderPosition customOrderPosition)
+
+    public void UpdateCustomOrderPosition(CustomOrderPosition customOrderPosition)
     {
-        Name = name;
         CustomOrderPosition = customOrderPosition;
     }
 
@@ -70,7 +65,7 @@ public sealed class ProjectStage : Entity<ProjectStageId>
     {
         if (onTop)
         {
-            _tasks.ForEach(t => 
+            _tasks.ForEach(t =>
                 t.UpdateCustomOrderPosition(t.CustomOrderPosition + CustomOrderPosition.Create(1)));
             _tasks.Insert(0, task);
         }
@@ -88,13 +83,13 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             _tasks[i].UpdateCustomOrderPosition(_tasks[i].CustomOrderPosition - CustomOrderPosition.Create(1));
         }
     }
-    
+
     public ProjectStage CopyToSprint(ProjectSprintAggregate sprint, UserAggregate copiedBy)
     {
         return new ProjectStage(
             ProjectStageId.CreateUnique(),
             Name.Create(Name.Value),
-            CustomOrderPosition.Create(CustomOrderPosition.Value), 
+            CustomOrderPosition.Create(CustomOrderPosition.Value),
             sprint,
             Audit.Create(copiedBy));
     }

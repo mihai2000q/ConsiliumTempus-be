@@ -25,8 +25,8 @@ public class UpdateStageFromProjectSprintCommandValidatorTest
     }
 
     [Theory]
-    [ClassData(typeof(UpdateStageFromProjectSprintCommandValidatorData.GetInvalidProjectSprintIdCommands))]
-    [ClassData(typeof(UpdateStageFromProjectSprintCommandValidatorData.GetInvalidProjectSprintIdCommands))]
+    [ClassData(typeof(UpdateStageFromProjectSprintCommandValidatorData.GetInvalidIdCommands))]
+    [ClassData(typeof(UpdateStageFromProjectSprintCommandValidatorData.GetInvalidStageIdCommands))]
     [ClassData(typeof(UpdateStageFromProjectSprintCommandValidatorData.GetInvalidNameCommands))]
     public async Task ValidateUpdateStageFromProjectSprintCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         UpdateStageFromProjectSprintCommand command,

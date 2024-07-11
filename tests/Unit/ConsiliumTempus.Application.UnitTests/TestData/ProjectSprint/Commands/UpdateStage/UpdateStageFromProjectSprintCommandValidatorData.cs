@@ -21,9 +21,9 @@ internal static class UpdateStageFromProjectSprintCommandValidatorData
         }
     }
 
-    internal class GetInvalidProjectSprintIdCommands : TheoryData<UpdateStageFromProjectSprintCommand, string>
+    internal class GetInvalidIdCommands : TheoryData<UpdateStageFromProjectSprintCommand, string>
     {
-        public GetInvalidProjectSprintIdCommands()
+        public GetInvalidIdCommands()
         {
             var command = ProjectSprintCommandFactory.CreateUpdateStageFromProjectSprintCommand(projectSprintId: Guid.Empty);
             Add(command, nameof(command.Id));

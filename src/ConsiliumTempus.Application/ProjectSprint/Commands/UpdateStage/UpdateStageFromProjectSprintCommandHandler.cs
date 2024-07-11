@@ -26,11 +26,7 @@ public sealed class UpdateStageFromProjectSprintCommandHandler(
 
         var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
 
-        stage.Update(
-            Name.Create(command.Name),
-            stage.CustomOrderPosition,
-            user);
-
+        stage.Update(Name.Create(command.Name), user);
         sprint.Project.RefreshActivity();
 
         return new UpdateStageFromProjectSprintResult();
