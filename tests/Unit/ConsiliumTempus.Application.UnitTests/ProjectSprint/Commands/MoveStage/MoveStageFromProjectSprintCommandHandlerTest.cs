@@ -120,12 +120,13 @@ public class MoveStageFromProjectSprintCommandHandlerTest
     public async Task HandleMoveStageFromProjectSprintCommand_WhenOverStageIsNotFound_ShouldReturnStageNotFoundError()
     {
         // Arrange
-        var command = ProjectSprintCommandFactory.CreateMoveStageFromProjectSprintCommand();
-
         var sprint = ProjectSprintFactory.Create();
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);
+        
+        var command = ProjectSprintCommandFactory.CreateMoveStageFromProjectSprintCommand(
+            stageId: sprint.Stages[0].Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
