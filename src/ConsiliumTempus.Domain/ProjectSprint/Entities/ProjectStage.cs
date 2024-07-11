@@ -93,4 +93,32 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             sprint,
             Audit.Create(copiedBy));
     }
+
+    public void Move(ProjectStageId overId, UserAggregate updatedBy)
+    {
+        var overStage = Sprint.Stages.SingleOrDefault(s => s.Id == overId);
+        if (overStage is null) return;
+        
+        var newCustomOrderPosition = CustomOrderPosition.Create(overStage.CustomOrderPosition.Value);
+
+        if (CustomOrderPosition.Value < overStage.CustomOrderPosition.Value)
+        {
+            // stage is placed on upper position
+            for (var i = CustomOrderPosition.Value + 1; i <= overStage.CustomOrderPosition.Value; i++)
+            {
+                Sprint.Stages[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
+            }
+        }
+        else
+        {
+            // stage is placed on lower position
+            for (var i = overStage.CustomOrderPosition.Value; i < CustomOrderPosition.Value; i++)
+            {
+                Sprint.Stages[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
+            }
+        }
+
+        CustomOrderPosition = newCustomOrderPosition;
+        Audit.Update(updatedBy);
+    }
 }
