@@ -15,6 +15,7 @@ import UpdateProjectSprintRequest from "../types/requests/project-sprint/UpdateP
 import { ProjectSprintName, ProjectStageName1, ProjectStageName2, ProjectStageName3 } from "../utils/constants";
 import AddStageToProjectSprintRequest from "../types/requests/project-sprint/AddStageToProjectSprintRequest";
 import UpdateStageFromProjectSprintRequest from "../types/requests/project-sprint/UpdateStageFromProjectSprintRequest";
+import MoveStageFromProjectSprintRequest from "../types/requests/project-sprint/MoveStageFromProjectSprintRequest";
 
 test.describe('should allow operations on the project sprint entity', () => {
   let PROJECT_ID: string
@@ -507,6 +508,74 @@ test.describe('should allow operations on the project sprint entity', () => {
         id: stage.id,
         name: body.name,
       }
+    ]))
+  })
+
+  test('should move stage from project sprint', async ({ request }) => {
+    const createProjectSprintRequest: CreateProjectSprintRequest = {
+      projectId: PROJECT_ID,
+      name: "Sprint 2",
+      startDate: "2024-01-12",
+      endDate: "2024-01-26"
+    }
+    const sprint = await createProjectSprint(request, createProjectSprintRequest)
+
+    const addStageToProjectSprintRequest1: AddStageToProjectSprintRequest = {
+      id: sprint.id,
+      name: "In Delivery",
+      onTop: true
+    }
+    const stage1 = await addStageToProjectSprint(request, addStageToProjectSprintRequest1)
+
+    const addStageToProjectSprintRequest2: AddStageToProjectSprintRequest = {
+      id: sprint.id,
+      name: "In Transit",
+      onTop: true
+    }
+    const stage2 = await addStageToProjectSprint(request, addStageToProjectSprintRequest2)
+
+    const addStageToProjectSprintRequest3: AddStageToProjectSprintRequest = {
+      id: sprint.id,
+      name: "Delivered",
+      onTop: false
+    }
+    const stage3 = await addStageToProjectSprint(request, addStageToProjectSprintRequest3)
+
+    const body: MoveStageFromProjectSprintRequest = {
+      id: sprint.id,
+      stageId: stage1.id,
+      overStageId: stage3.id,
+    }
+    const response = await request.put('/api/projects/sprints/move-stage', {
+      ...useToken(),
+      data: body
+    });
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const stages = await getProjectStages(request, body.id)
+    expect(stages).toStrictEqual(expect.arrayContaining([
+      {
+        id: stage2.id,
+        name: stage2.name,
+      },
+
+      {
+        id: expect.any(String),
+        name: ProjectStageName1,
+      },
+      {
+        id: stage3.id,
+        name: stage3.name,
+      },
+      {
+        id: stage1.id,
+        name: stage1.name,
+      },
     ]))
   })
 

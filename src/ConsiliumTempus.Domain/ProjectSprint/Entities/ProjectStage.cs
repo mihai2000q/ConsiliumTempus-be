@@ -50,19 +50,14 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             Audit.Create(createdBy));
     }
 
-    public void Update(
-        Name name, 
-        CustomOrderPosition customOrderPosition,
-        UserAggregate updatedBy)
+    public void Update(Name name, UserAggregate updatedBy)
     {
         Name = name;
-        CustomOrderPosition = customOrderPosition;
         Audit.Update(updatedBy);
     }
-    
-    public void UpdateWithoutAudit(Name name, CustomOrderPosition customOrderPosition)
+
+    public void UpdateCustomOrderPosition(CustomOrderPosition customOrderPosition)
     {
-        Name = name;
         CustomOrderPosition = customOrderPosition;
     }
 
@@ -70,8 +65,7 @@ public sealed class ProjectStage : Entity<ProjectStageId>
     {
         if (onTop)
         {
-            _tasks.ForEach(t => 
-                t.UpdateCustomOrderPosition(t.CustomOrderPosition + 1));
+            _tasks.ForEach(t => t.UpdateCustomOrderPosition(t.CustomOrderPosition + 1));
             _tasks.Insert(0, task);
         }
         else
@@ -88,14 +82,39 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             _tasks[i].UpdateCustomOrderPosition(_tasks[i].CustomOrderPosition - 1);
         }
     }
-    
+
     public ProjectStage CopyToSprint(ProjectSprintAggregate sprint, UserAggregate copiedBy)
     {
         return new ProjectStage(
             ProjectStageId.CreateUnique(),
             Name.Create(Name.Value),
-            CustomOrderPosition.Create(CustomOrderPosition.Value), 
+            CustomOrderPosition.Create(CustomOrderPosition.Value),
             sprint,
             Audit.Create(copiedBy));
+    }
+
+    public void Move(ProjectStage overStage, UserAggregate updatedBy)
+    {
+        var newCustomOrderPosition = CustomOrderPosition.Create(overStage.CustomOrderPosition.Value);
+
+        if (CustomOrderPosition.Value < overStage.CustomOrderPosition.Value)
+        {
+            // stage is placed on upper position
+            for (var i = CustomOrderPosition.Value + 1; i <= overStage.CustomOrderPosition.Value; i++)
+            {
+                Sprint.Stages[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
+            }
+        }
+        else
+        {
+            // stage is placed on lower position
+            for (var i = overStage.CustomOrderPosition.Value; i < CustomOrderPosition.Value; i++)
+            {
+                Sprint.Stages[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
+            }
+        }
+
+        CustomOrderPosition = newCustomOrderPosition;
+        Audit.Update(updatedBy);
     }
 }

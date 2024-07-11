@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
+using ConsiliumTempus.Application.ProjectSprint.Commands.MoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
@@ -122,6 +123,28 @@ internal static partial class Utils
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             return true;
+        }
+        
+        internal static void AssertFromMoveStageCommand(
+            Domain.ProjectSprint.Entities.ProjectStage stage,
+            MoveStageFromProjectSprintCommand command,
+            UserAggregate updatedBy,
+            int newCustomOrderPosition)
+        {
+            stage.Id.Value.Should().Be(command.StageId);
+            stage.CustomOrderPosition.Value.Should().Be(newCustomOrderPosition);
+            stage.Audit.ShouldBeUpdated(updatedBy);
+
+            var sprint = stage.Sprint;
+
+            var customOrderPosition = 0;
+            sprint.Stages
+                .OrderBy(s => s.CustomOrderPosition.Value)
+                .Should().AllSatisfy(s =>
+                s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+            
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertFromRemoveStageCommand(
