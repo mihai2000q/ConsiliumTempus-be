@@ -105,4 +105,88 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     {
         _comments.Add(comment);
     }
+
+    public void Move(Guid overId, List<ProjectStage> stages)
+    {
+        var overStage = stages.SingleOrDefault(s => s.Id.Value == overId);
+
+        if (overStage is not null)
+        {
+            CustomOrderPosition = CustomOrderPosition.Create(0);
+            Stage = overStage;
+            overStage.AddTask(this);
+        }
+        else
+        {
+            overStage = stages
+                .SelectMany(s => s.Tasks)
+                .SingleOrDefault(t => t.Id.Value == overId)
+                ?.Stage;
+
+            if (overStage == Stage)
+            {
+                MoveWithinStage(ProjectTaskId.Create(overId));
+            }
+            else if (overStage is not null)
+            {
+                MoveInAnotherStage(ProjectTaskId.Create(overId), overStage);
+            }
+        }
+
+        UpdatedDateTime = DateTime.UtcNow;
+    }
+
+    private void MoveWithinStage(ProjectTaskId overProjectTaskId)
+    {
+        var overTask = Stage.Tasks.Single(t => t.Id == overProjectTaskId);
+
+        var newCustomOrderPosition = CustomOrderPosition.Create(overTask.CustomOrderPosition.Value);
+
+        if (CustomOrderPosition.Value < overTask.CustomOrderPosition.Value)
+        {
+            // task is placed on upper position
+            for (var i = CustomOrderPosition.Value + 1; i <= overTask.CustomOrderPosition.Value; i++)
+            {
+                Stage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
+            }
+        }
+        else
+        {
+            // task is placed on lower position
+            for (var i = overTask.CustomOrderPosition.Value + 1; i <= CustomOrderPosition.Value; i++)
+            {
+                Stage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
+            }
+        }
+
+        CustomOrderPosition = newCustomOrderPosition;
+    }
+
+    private void MoveInAnotherStage(ProjectTaskId overProjectTaskId, ProjectStage overStage)
+    {
+        var overTask = overStage.Tasks.Single(t => t.Id == overProjectTaskId);
+
+        var newCustomOrderPosition = CustomOrderPosition.Create(overTask.CustomOrderPosition.Value + 1);
+
+        Parallel.Invoke(
+            () =>
+            {
+                // reorder new stage
+                for (var i = overTask.CustomOrderPosition.Value + 1; i < overStage.Tasks.Count; i++)
+                {
+                    overStage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
+                }
+            },
+            () =>
+            {
+                // reorder old stage
+                for (var i = CustomOrderPosition.Value + 1; i < Stage.Tasks.Count; i++)
+                {
+                    Stage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
+                }
+            });
+
+        Stage = overStage;
+        CustomOrderPosition = newCustomOrderPosition;
+    }
 }

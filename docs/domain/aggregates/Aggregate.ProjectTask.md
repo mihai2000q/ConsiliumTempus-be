@@ -12,6 +12,7 @@ class ProjectTask
     void UpdateOverview()
     void UpdatetCustomOrderPosition()
     void AddComment()
+    void Move()
 }
 ```
 
