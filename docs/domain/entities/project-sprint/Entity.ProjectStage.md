@@ -9,7 +9,7 @@ class ProjectStage
 {
     ProjectStage Create()
     void Update()
-    void UpdateWithoutAudit()
+    void UpdateCustomOrderPosition()
     void AddTask()
     void RemoveTask()
     ProjectStage CopyToSprint()

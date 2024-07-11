@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
+using ConsiliumTempus.Application.ProjectSprint.Commands.MoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
@@ -53,6 +54,17 @@ public static class ProjectSprintCommandFactory
     public static DeleteProjectSprintCommand CreateDeleteProjectSprintCommand(Guid? id = null)
     {
         return new DeleteProjectSprintCommand(id ?? Guid.NewGuid());
+    }
+    
+    public static MoveStageFromProjectSprintCommand CreateMoveStageFromProjectSprintCommand(
+        Guid? projectSprintId = null,
+        Guid? stageId = null,
+        Guid? overStageId = null)
+    {
+        return new MoveStageFromProjectSprintCommand(
+            projectSprintId ?? Guid.NewGuid(),
+            stageId ?? Guid.NewGuid(),
+            overStageId ?? Guid.NewGuid());
     }
     
     public static RemoveStageFromProjectSprintCommand CreateRemoveStageFromProjectSprintCommand(

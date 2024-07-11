@@ -40,7 +40,7 @@ public class ProjectSprintControllerRemoveStageTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Set<ProjectStage>().Should().HaveCount(ProjectSprintData.ProjectStages.Length - 1);
         var newSprint = await dbContext.ProjectSprints
-            .Include(ps => ps.Stages)
+            .Include(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
             .Include(ps => ps.Project.Workspace)
             .SingleAsync(ps => ps.Id == sprint.Id);
         Utils.ProjectSprint.AssertRemovedStage(newSprint, request);
