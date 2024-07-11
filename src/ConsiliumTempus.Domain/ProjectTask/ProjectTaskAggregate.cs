@@ -73,20 +73,18 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     }
 
     public void Update(
-        Name name, 
-        CustomOrderPosition customOrderPosition,
+        Name name,
         IsCompleted isCompleted,
         UserAggregate? assignee)
     {
         Name = name;
-        CustomOrderPosition = customOrderPosition;
         IsCompleted = isCompleted;
         Assignee = assignee;
         UpdatedDateTime = DateTime.UtcNow;
     }
-    
+
     public void UpdateOverview(
-        Name name, 
+        Name name,
         Description description,
         IsCompleted isCompleted,
         UserAggregate? assignee)
@@ -97,7 +95,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         Assignee = assignee;
         UpdatedDateTime = DateTime.UtcNow;
     }
-    
+
     public void UpdateCustomOrderPosition(CustomOrderPosition customOrderPosition)
     {
         CustomOrderPosition = customOrderPosition;

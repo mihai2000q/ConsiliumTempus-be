@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
 
@@ -13,7 +14,7 @@ internal static partial class Utils
     {
         internal static void AssertFromCreateCommand(
             CreateProjectTaskCommand command,
-            Domain.ProjectSprint.Entities.ProjectStage stage,
+            ProjectStage stage,
             UserAggregate user)
         {
             var task = command.OnTop ? stage.Tasks[0] : stage.Tasks[^1];

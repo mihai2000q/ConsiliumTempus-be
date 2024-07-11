@@ -13,7 +13,7 @@ public static class ProjectTaskFactory
     public static ProjectTaskAggregate Create(
         string name = Constants.ProjectTask.Name,
         string description = Constants.ProjectTask.Description,
-        int customOrderPosition = 1,
+        int customOrderPosition = 0,
         ProjectStage? stage = null,
         UserAggregate? user = null)
     {
