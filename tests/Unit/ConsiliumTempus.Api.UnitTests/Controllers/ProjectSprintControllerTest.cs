@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetStages;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.MoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
@@ -14,6 +15,7 @@ using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
+using ConsiliumTempus.Application.ProjectSprint.Commands.MoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
@@ -327,7 +329,7 @@ public class ProjectSprintControllerTest
     public async Task UpdateStage_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
-        var request = ProjectSprintRequestFactory.CreateUpdateStageToProjectSprintRequest();
+        var request = ProjectSprintRequestFactory.CreateUpdateStageFromProjectSprintRequest();
 
         var result = ProjectSprintResultFactory.CreateUpdateStageFromProjectSprintResult();
         _mediator
@@ -351,7 +353,7 @@ public class ProjectSprintControllerTest
     public async Task UpdateStage_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
-        var request = ProjectSprintRequestFactory.CreateUpdateStageToProjectSprintRequest();
+        var request = ProjectSprintRequestFactory.CreateUpdateStageFromProjectSprintRequest();
 
         var error = Errors.ProjectSprint.NotFound;
         _mediator
@@ -366,6 +368,53 @@ public class ProjectSprintControllerTest
             .Received(1)
             .Send(Arg.Is<UpdateStageFromProjectSprintCommand>(
                 command => Utils.ProjectSprint.AssertUpdateStageCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task MoveStage_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectSprintRequestFactory.CreateMoveStageFromProjectSprintRequest();
+
+        var result = ProjectSprintResultFactory.CreateMoveStageFromProjectSprintResult();
+        _mediator
+            .Send(Arg.Any<MoveStageFromProjectSprintCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.MoveStage(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<MoveStageFromProjectSprintCommand>(
+                command => Utils.ProjectSprint.AssertMoveStageCommand(command, request)));
+
+        var response = outcome.ToResponse<MoveStageFromProjectSprintResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task MoveStage_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectSprintRequestFactory.CreateMoveStageFromProjectSprintRequest();
+
+        var error = Errors.ProjectSprint.NotFound;
+        _mediator
+            .Send(Arg.Any<MoveStageFromProjectSprintCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.MoveStage(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<MoveStageFromProjectSprintCommand>(
+                command => Utils.ProjectSprint.AssertMoveStageCommand(command, request)));
 
         outcome.ValidateError(error);
     }

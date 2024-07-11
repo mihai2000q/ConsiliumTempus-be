@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
+using ErrorOr;
 
 namespace ConsiliumTempus.Domain.Common.Errors;
 
@@ -17,6 +18,10 @@ public static partial class Errors
 
     public static class ProjectStage
     {
+        public static Func<ProjectStageId, Error> NotFoundWithId => id => Error.NotFound(
+            "ProjectStage.NotFound",
+            $"Project Stage, {id}, could not be found");
+
         public static Error NotFound => Error.NotFound(
             "ProjectStage.NotFound",
             "Project Stage could not be found");

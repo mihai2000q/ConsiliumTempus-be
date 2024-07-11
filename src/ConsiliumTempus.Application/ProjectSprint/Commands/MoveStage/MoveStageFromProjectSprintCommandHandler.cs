@@ -20,12 +20,17 @@ public sealed class MoveStageFromProjectSprintCommandHandler(
             cancellationToken);
         if (sprint is null) return Errors.ProjectSprint.NotFound;
 
-        var stage = sprint.Stages.SingleOrDefault(s => s.Id.Value == command.StageId);
-        if (stage is null) return Errors.ProjectStage.NotFound;
+        var stageId = ProjectStageId.Create(command.StageId);
+        var stage = sprint.Stages.SingleOrDefault(s => s.Id == stageId);
+        if (stage is null) return Errors.ProjectStage.NotFoundWithId(stageId);
+
+        var overStageId = ProjectStageId.Create(command.OverStageId);
+        var overStage = sprint.Stages.SingleOrDefault(s => s.Id == overStageId);
+        if (overStage is null) return Errors.ProjectStage.NotFoundWithId(overStageId);
 
         var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
 
-        stage.Move(ProjectStageId.Create(command.OverStageId), user);
+        stage.Move(overStage, user);
         sprint.Project.RefreshActivity();
 
         return new MoveStageFromProjectSprintResult();

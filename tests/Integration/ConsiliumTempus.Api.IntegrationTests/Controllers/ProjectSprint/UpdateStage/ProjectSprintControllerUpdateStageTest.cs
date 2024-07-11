@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.ProjectSprint.AddStage;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
@@ -34,7 +34,7 @@ public class ProjectSprintControllerUpdateStageTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var response = await outcome.Content.ReadFromJsonAsync<AddStageToProjectSprintResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<UpdateStageFromProjectSprintResponse>();
         response!.Message.Should().Be("Stage has been successfully updated from Project Sprint!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();

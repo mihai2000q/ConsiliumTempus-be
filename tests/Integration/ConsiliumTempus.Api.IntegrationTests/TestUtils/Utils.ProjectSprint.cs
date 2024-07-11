@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetStages;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.MoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
@@ -176,6 +177,27 @@ internal static partial class Utils
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
+        
+        internal static void AssertMovedStage(
+            ProjectSprintAggregate sprint,
+            MoveStageFromProjectSprintRequest request,
+            UserAggregate updatedBy,
+            int newCustomOrderPosition)
+        {
+            sprint.Id.Value.Should().Be(request.Id);
+            var stage = sprint.Stages.Single(s => s.Id.Value == request.StageId);
+
+            stage.Id.Value.Should().Be(request.StageId);
+            stage.CustomOrderPosition.Value.Should().Be(newCustomOrderPosition);
+            stage.Audit.ShouldBeUpdated(updatedBy);
+            
+            var customOrderPosition = 0;
+            sprint.Stages
+                .Should().AllSatisfy(s => s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+
+            sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
 
         internal static void AssertRemovedStage(
             ProjectSprintAggregate sprint,
@@ -186,7 +208,6 @@ internal static partial class Utils
 
             var customOrderPosition = 0;
             sprint.Stages
-                .OrderBy(s => s.CustomOrderPosition.Value)
                 .Should().AllSatisfy(s => s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

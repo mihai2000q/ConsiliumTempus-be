@@ -113,6 +113,29 @@ public class MoveStageFromProjectSprintCommandHandlerTest
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
         _currentUserProvider.DidNotReceive();
 
-        outcome.ValidateError(Errors.ProjectStage.NotFound);
+        outcome.ValidateError(Errors.ProjectStage.NotFoundWithId(ProjectStageId.Create(command.StageId)));
+    }
+
+    [Fact]
+    public async Task HandleMoveStageFromProjectSprintCommand_WhenOverStageIsNotFound_ShouldReturnStageNotFoundError()
+    {
+        // Arrange
+        var command = ProjectSprintCommandFactory.CreateMoveStageFromProjectSprintCommand();
+
+        var sprint = ProjectSprintFactory.Create();
+        _projectSprintRepository
+            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
+            .Returns(sprint);
+
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Assert
+        await _projectSprintRepository
+            .Received(1)
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+        _currentUserProvider.DidNotReceive();
+
+        outcome.ValidateError(Errors.ProjectStage.NotFoundWithId(ProjectStageId.Create(command.OverStageId)));
     }
 }

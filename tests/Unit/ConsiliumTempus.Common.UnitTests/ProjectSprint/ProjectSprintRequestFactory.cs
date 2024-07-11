@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetStages;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.MoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
@@ -91,7 +92,7 @@ public static class ProjectSprintRequestFactory
             endDate);
     }
 
-    public static UpdateStageFromProjectSprintRequest CreateUpdateStageToProjectSprintRequest(
+    public static UpdateStageFromProjectSprintRequest CreateUpdateStageFromProjectSprintRequest(
         Guid? id = null,
         Guid? stageId = null,
         string name = Constants.ProjectStage.Name)
@@ -100,6 +101,17 @@ public static class ProjectSprintRequestFactory
             id ?? Guid.NewGuid(),
             stageId ?? Guid.NewGuid(),
             name);
+    }
+    
+    public static MoveStageFromProjectSprintRequest CreateMoveStageFromProjectSprintRequest(
+        Guid? id = null,
+        Guid? stageId = null,
+        Guid? overStageId = null)
+    {
+        return new MoveStageFromProjectSprintRequest(
+            id ?? Guid.NewGuid(),
+            stageId ?? Guid.NewGuid(),
+            overStageId ?? Guid.NewGuid());
     }
 
     public static DeleteProjectSprintRequest CreateDeleteProjectSprintRequest(Guid? id = null)

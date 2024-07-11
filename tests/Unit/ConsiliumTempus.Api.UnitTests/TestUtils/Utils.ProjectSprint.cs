@@ -4,12 +4,14 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetStages;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.MoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
+using ConsiliumTempus.Application.ProjectSprint.Commands.MoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
@@ -107,6 +109,17 @@ internal static partial class Utils
             command.Id.Should().Be(request.Id);
             command.StageId.Should().Be(request.StageId);
             command.Name.Should().Be(request.Name);
+
+            return true;
+        }
+        
+        internal static bool AssertMoveStageCommand(
+            MoveStageFromProjectSprintCommand command,
+            MoveStageFromProjectSprintRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.StageId.Should().Be(request.StageId);
+            command.OverStageId.Should().Be(request.OverStageId);
 
             return true;
         }

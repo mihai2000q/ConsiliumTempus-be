@@ -94,11 +94,8 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             Audit.Create(copiedBy));
     }
 
-    public void Move(ProjectStageId overId, UserAggregate updatedBy)
+    public void Move(ProjectStage overStage, UserAggregate updatedBy)
     {
-        var overStage = Sprint.Stages.SingleOrDefault(s => s.Id == overId);
-        if (overStage is null) return;
-        
         var newCustomOrderPosition = CustomOrderPosition.Create(overStage.CustomOrderPosition.Value);
 
         if (CustomOrderPosition.Value < overStage.CustomOrderPosition.Value)

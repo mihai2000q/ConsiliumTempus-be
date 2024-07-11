@@ -5,12 +5,14 @@ using ConsiliumTempus.Api.Contracts.ProjectSprint.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Get;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetStages;
+using ConsiliumTempus.Api.Contracts.ProjectSprint.MoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.RemoveStage;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Update;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.UpdateStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
+using ConsiliumTempus.Application.ProjectSprint.Commands.MoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
@@ -118,6 +120,20 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
 
         return result.Match(
             updateStageResult => Ok(Mapper.Map<UpdateStageFromProjectSprintResponse>(updateStageResult)),
+            Problem
+        );
+    }
+    
+    [HasPermission(Permissions.UpdateStageFromProjectSprint)]
+    [HttpPut("Move-Stage")]
+    public async Task<IActionResult> MoveStage(MoveStageFromProjectSprintRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<MoveStageFromProjectSprintCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateStageResult => Ok(Mapper.Map<MoveStageFromProjectSprintResponse>(updateStageResult)),
             Problem
         );
     }
