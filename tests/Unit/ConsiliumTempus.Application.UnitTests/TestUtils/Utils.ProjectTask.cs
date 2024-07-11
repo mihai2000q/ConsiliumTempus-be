@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
+using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
@@ -67,6 +68,17 @@ internal static partial class Utils
             task.Name.Value.Should().Be(command.Name);
             task.IsCompleted.Value.Should().Be(command.IsCompleted);
             task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static void AssertFromMoveCommand(
+            ProjectTaskAggregate task,
+            MoveProjectTaskCommand command,
+            List<ProjectStage> stages)
+        {
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
