@@ -129,7 +129,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             }
             else if (overStage is not null)
             {
-                MoveInAnotherStage(ProjectTaskId.Create(overId), overStage);
+                MoveToAnotherStage(ProjectTaskId.Create(overId), overStage);
             }
             else
             {
@@ -159,7 +159,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         else
         {
             // task is placed on lower position
-            for (var i = overTask.CustomOrderPosition.Value + 1; i < CustomOrderPosition.Value; i++)
+            for (var i = overTask.CustomOrderPosition.Value; i < CustomOrderPosition.Value; i++)
             {
                 Stage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
             }
@@ -168,17 +168,17 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         CustomOrderPosition = newCustomOrderPosition;
     }
 
-    private void MoveInAnotherStage(ProjectTaskId overProjectTaskId, ProjectStage overStage)
+    private void MoveToAnotherStage(ProjectTaskId overProjectTaskId, ProjectStage overStage)
     {
         var overTask = overStage.Tasks.Single(t => t.Id == overProjectTaskId);
 
-        var newCustomOrderPosition = CustomOrderPosition.Create(overTask.CustomOrderPosition.Value + 1);
+        var newCustomOrderPosition = CustomOrderPosition.Create(overTask.CustomOrderPosition.Value);
 
         Parallel.Invoke(
             () =>
             {
                 // reorder new stage
-                for (var i = overTask.CustomOrderPosition.Value + 1; i < overStage.Tasks.Count; i++)
+                for (var i = overTask.CustomOrderPosition.Value; i < overStage.Tasks.Count; i++)
                 {
                     overStage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
                 }

@@ -56,20 +56,31 @@ internal static class MoveProjectTaskCommandHandlerData
     {
         public GetMovingWithinStageCommands()
         {
+            // upper position
             var task = ProjectTaskFactory.CreateWithTasks(tasksCount: 6);
             var overTask = task.Stage.Tasks[5];
             var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
                 id: task.Id.Value,
                 overId: overTask.Id.Value);
             Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
+            
+            // lower position
+            task = ProjectTaskFactory.CreateWithTasks(tasksCount: 10);
+            task = task.Stage.Tasks[7];
+            overTask = task.Stage.Tasks[1];
+            command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
+                id: task.Id.Value,
+                overId: overTask.Id.Value);
+            Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
         }
     }
 
-    internal class GetMovingOverTaskInAnotherStageCommands
+    internal class GetMovingOverTaskToAnotherStageCommands
         : TheoryData<MoveProjectTaskCommand, ProjectTaskAggregate, List<ProjectStage>, int>
     {
-        public GetMovingOverTaskInAnotherStageCommands()
+        public GetMovingOverTaskToAnotherStageCommands()
         {
+            // upper position
             var stages = ProjectStageFactory.CreateListWithTasks(
                 sprint: ProjectSprintFactory.Create(),
                 stagesCount: 4, 
@@ -83,7 +94,23 @@ internal static class MoveProjectTaskCommandHandlerData
             var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
                 id: task.Id.Value,
                 overId: overTask.Id.Value);
-            Add(command, task, stages, overTask.CustomOrderPosition.Value + 1);
+            Add(command, task, stages, overTask.CustomOrderPosition.Value);
+            
+            // lower position
+            stages = ProjectStageFactory.CreateListWithTasks(
+                sprint: ProjectSprintFactory.Create(),
+                stagesCount: 4, 
+                tasksCount: 10);
+
+            currentStage = stages[0];
+            task = currentStage.Tasks[8];
+            overStage = stages[1];
+            overTask = overStage.Tasks[2];
+
+            command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
+                id: task.Id.Value,
+                overId: overTask.Id.Value);
+            Add(command, task, stages, overTask.CustomOrderPosition.Value);
         }
     }
 }

@@ -98,8 +98,8 @@ public class MoveProjectTaskCommandHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(MoveProjectTaskCommandHandlerData.GetMovingOverTaskInAnotherStageCommands))]
-    public async Task HandleMoveProjectTaskCommand_WhenMovingOverTaskInAnotherStage_ShouldMoveProjectTask(
+    [ClassData(typeof(MoveProjectTaskCommandHandlerData.GetMovingOverTaskToAnotherStageCommands))]
+    public async Task HandleMoveProjectTaskCommand_WhenMovingOverTaskToAnotherStage_ShouldMoveProjectTask(
         MoveProjectTaskCommand command,
         ProjectTaskAggregate task,
         List<ProjectStage> stages,
@@ -128,7 +128,7 @@ public class MoveProjectTaskCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new MoveProjectTaskResult());
 
-        Utils.ProjectTask.AssertFromMoveCommandOverTaskInAnotherStage(
+        Utils.ProjectTask.AssertFromMoveCommandOverTaskToAnotherStage(
             task,
             command,
             stages,

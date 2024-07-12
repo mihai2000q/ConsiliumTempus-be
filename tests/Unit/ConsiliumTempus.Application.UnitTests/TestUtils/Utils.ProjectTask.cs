@@ -106,7 +106,7 @@ internal static partial class Utils
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
-        internal static void AssertFromMoveCommandOverTaskInAnotherStage(
+        internal static void AssertFromMoveCommandOverTaskToAnotherStage(
             ProjectTaskAggregate task,
             MoveProjectTaskCommand command,
             List<ProjectStage> stages,
