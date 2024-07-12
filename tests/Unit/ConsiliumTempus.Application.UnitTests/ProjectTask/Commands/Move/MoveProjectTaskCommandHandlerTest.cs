@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
+using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
@@ -30,8 +31,8 @@ public class MoveProjectTaskCommandHandlerTest
     #endregion
 
     [Theory]
-    [ClassData(typeof(MoveProjectTaskCommandHandlerData.GetCommands))]
-    public async Task HandleMoveProjectTaskCommand_WhenIsSuccessful_ShouldMoveProjectTask(
+    [ClassData(typeof(MoveProjectTaskCommandHandlerData.GetMovingToAnotherStageCommands))]
+    public async Task HandleMoveProjectTaskCommand_WhenMovingToAnotherStage_ShouldMoveProjectTask(
         MoveProjectTaskCommand command,
         ProjectTaskAggregate task,
         List<ProjectStage> stages)
@@ -44,8 +45,7 @@ public class MoveProjectTaskCommandHandlerTest
         _projectSprintRepository
             .GetStagesWithTasks(Arg.Any<ProjectSprintId>())
             .Returns(stages);
-            .Returns(stages);
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
@@ -60,7 +60,81 @@ public class MoveProjectTaskCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new MoveProjectTaskResult());
 
-        Utils.ProjectTask.AssertFromMoveCommand(task, command, stages);
+        Utils.ProjectTask.AssertFromMoveCommandToAnotherStage(task, command, stages);
+    }
+
+    [Theory]
+    [ClassData(typeof(MoveProjectTaskCommandHandlerData.GetMovingWithinStageCommands))]
+    public async Task HandleMoveProjectTaskCommand_WhenMovingWithinStage_ShouldMoveProjectTask(
+        MoveProjectTaskCommand command,
+        ProjectTaskAggregate task,
+        List<ProjectStage> stages,
+        int expectedCustomOrderPosition)
+    {
+        // Arrange
+        _projectTaskRepository
+            .GetWithWorkspace(Arg.Any<ProjectTaskId>())
+            .Returns(task);
+
+        _projectSprintRepository
+            .GetStagesWithTasks(Arg.Any<ProjectSprintId>())
+            .Returns(stages);
+
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Arrange
+        await _projectTaskRepository
+            .Received(1)
+            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+        await _projectSprintRepository
+            .Received(1)
+            .GetStagesWithTasks(Arg.Is(task.Stage.Sprint.Id));
+
+        outcome.IsError.Should().BeFalse();
+        outcome.Value.Should().Be(new MoveProjectTaskResult());
+
+        Utils.ProjectTask.AssertFromMoveCommandWithinStage(task, command, expectedCustomOrderPosition);
+    }
+
+    [Theory]
+    [ClassData(typeof(MoveProjectTaskCommandHandlerData.GetMovingOverTaskInAnotherStageCommands))]
+    public async Task HandleMoveProjectTaskCommand_WhenMovingOverTaskInAnotherStage_ShouldMoveProjectTask(
+        MoveProjectTaskCommand command,
+        ProjectTaskAggregate task,
+        List<ProjectStage> stages,
+        int expectedCustomOrderPosition)
+    {
+        // Arrange
+        _projectTaskRepository
+            .GetWithWorkspace(Arg.Any<ProjectTaskId>())
+            .Returns(task);
+
+        _projectSprintRepository
+            .GetStagesWithTasks(Arg.Any<ProjectSprintId>())
+            .Returns(stages);
+
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Arrange
+        await _projectTaskRepository
+            .Received(1)
+            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+        await _projectSprintRepository
+            .Received(1)
+            .GetStagesWithTasks(Arg.Is(task.Stage.Sprint.Id));
+
+        outcome.IsError.Should().BeFalse();
+        outcome.Value.Should().Be(new MoveProjectTaskResult());
+
+        Utils.ProjectTask.AssertFromMoveCommandOverTaskInAnotherStage(
+            task,
+            command,
+            stages,
+            expectedCustomOrderPosition);
+    }
+
     [Fact]
     public async Task HandleMoveProjectTaskCommand_WhenOverIsNull_ShouldReturnOverNotFoundError()
     {

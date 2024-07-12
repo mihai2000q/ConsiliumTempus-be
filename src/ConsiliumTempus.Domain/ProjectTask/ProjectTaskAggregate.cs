@@ -114,7 +114,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         {
             CustomOrderPosition = CustomOrderPosition.Create(0);
             Stage = overStage;
-            overStage.AddTask(this);
+            overStage.AddTask(this, true);
         }
         else
         {
@@ -159,7 +159,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         else
         {
             // task is placed on lower position
-            for (var i = overTask.CustomOrderPosition.Value + 1; i <= CustomOrderPosition.Value; i++)
+            for (var i = overTask.CustomOrderPosition.Value + 1; i < CustomOrderPosition.Value; i++)
             {
                 Stage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
             }
@@ -185,13 +185,10 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             },
             () =>
             {
-                // reorder old stage
-                for (var i = CustomOrderPosition.Value + 1; i < Stage.Tasks.Count; i++)
-                {
-                    Stage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
-                }
+                Stage.RemoveTask(this);
             });
 
+        overStage.AddTask(this);
         Stage = overStage;
         CustomOrderPosition = newCustomOrderPosition;
     }
