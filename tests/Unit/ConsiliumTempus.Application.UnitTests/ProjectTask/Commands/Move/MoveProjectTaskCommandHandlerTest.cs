@@ -38,7 +38,7 @@ public class MoveProjectTaskCommandHandlerTest
     {
         // Arrange
         _projectTaskRepository
-            .GetWithTasks(Arg.Any<ProjectTaskId>())
+            .GetWithWorkspace(Arg.Any<ProjectTaskId>())
             .Returns(task);
 
         _projectSprintRepository
@@ -98,7 +98,7 @@ public class MoveProjectTaskCommandHandlerTest
         var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand();
 
         _projectTaskRepository
-            .GetWithTasks(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
+            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
             .ReturnsNull();
 
         // Act
@@ -107,7 +107,7 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithTasks(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
         _projectSprintRepository.DidNotReceive();
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);

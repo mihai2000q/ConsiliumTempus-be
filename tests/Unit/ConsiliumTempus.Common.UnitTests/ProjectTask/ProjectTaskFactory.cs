@@ -15,13 +15,13 @@ public static class ProjectTaskFactory
         string description = Constants.ProjectTask.Description,
         int customOrderPosition = 0,
         ProjectStage? stage = null,
-        UserAggregate? user = null)
+        UserAggregate? createdBy = null)
     {
         return ProjectTaskAggregate.Create(
             Name.Create(name), 
             Description.Create(description), 
             CustomOrderPosition.Create(customOrderPosition), 
-            user ?? UserFactory.Create(),
+            createdBy ?? UserFactory.Create(),
             stage ?? ProjectStageFactory.Create());
     }
 

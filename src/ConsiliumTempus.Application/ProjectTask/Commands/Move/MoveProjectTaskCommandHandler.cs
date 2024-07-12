@@ -14,7 +14,7 @@ public sealed class MoveProjectTaskCommandHandler(
     public async Task<ErrorOr<MoveProjectTaskResult>> Handle(MoveProjectTaskCommand command,
         CancellationToken cancellationToken)
     {
-        var task = await projectTaskRepository.GetWithTasks(
+        var task = await projectTaskRepository.GetWithWorkspace(
             ProjectTaskId.Create(command.Id),
             cancellationToken);
         if (task is null) return Errors.ProjectTask.NotFound;
