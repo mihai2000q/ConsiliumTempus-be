@@ -78,8 +78,7 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>
     {
         if (onTop)
         {
-            _stages.ForEach(s => s
-                .UpdateCustomOrderPosition(s.CustomOrderPosition + CustomOrderPosition.Create(1)));
+            _stages.ForEach(s => s.UpdateCustomOrderPosition(s.CustomOrderPosition + 1));
             _stages.Insert(0, stage);
         }
         else
@@ -99,7 +98,7 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>
         for (var i = stage.CustomOrderPosition.Value; i < _stages.Count; i++)
         {
             var s = _stages[i];
-            s.UpdateCustomOrderPosition(s.CustomOrderPosition - CustomOrderPosition.Create(1));
+            s.UpdateCustomOrderPosition(s.CustomOrderPosition - 1);
         }
     }
 }

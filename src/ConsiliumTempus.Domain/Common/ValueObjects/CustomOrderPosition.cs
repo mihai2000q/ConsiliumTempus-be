@@ -27,13 +27,13 @@ public sealed class CustomOrderPosition : ValueObject
         yield return Value;
     }
 
-    public static CustomOrderPosition operator +(CustomOrderPosition a, CustomOrderPosition b)
+    public static CustomOrderPosition operator +(CustomOrderPosition a, int b)
     {
-        return Create(a.Value + b.Value);
+        return Create(a.Value + b);
     }
-    
-    public static CustomOrderPosition operator -(CustomOrderPosition a, CustomOrderPosition b)
+
+    public static CustomOrderPosition operator -(CustomOrderPosition a, int b)
     {
-        return Create(a.Value - b.Value);
+        return Create(a.Value - b);
     }
 }

@@ -24,9 +24,17 @@ public static class ProjectStageFactory
     }
     
     public static ProjectStage CreateWithTasks(
+        ProjectSprintAggregate? sprint = null,
+        UserAggregate? createdBy = null,
+        string name = Constants.ProjectStage.Name,
+        int customOrderPosition = 0,
         int tasksCount = 5)
     {
-        var stage = Create();
+        var stage = Create(
+            sprint: sprint,
+            name: name,
+            createdBy: createdBy,
+            customOrderPosition: customOrderPosition);
 
         Enumerable
             .Range(0, tasksCount)
@@ -34,7 +42,8 @@ public static class ProjectStageFactory
             .ForEach(i => stage.AddTask(ProjectTaskFactory.Create(
                 name: Constants.ProjectTask.Name + i,
                 customOrderPosition: i, 
-                stage: stage)));
+                stage: stage,
+                createdBy: createdBy)));
 
         return stage;
     }
@@ -51,6 +60,23 @@ public static class ProjectStageFactory
                 Constants.ProjectStage.Name + i,
                 i,
                 createdBy))
+            .ToList();
+    }
+    
+    public static List<ProjectStage> CreateListWithTasks(
+        ProjectSprintAggregate? sprint = null,
+        UserAggregate? createdBy = null,
+        int stagesCount = 5,
+        int tasksCount = 5)
+    {
+        return Enumerable
+            .Range(0, stagesCount)
+            .Select(i => CreateWithTasks(
+                sprint: sprint,
+                name: Constants.ProjectStage.Name + i,
+                customOrderPosition: i,
+                createdBy: createdBy, 
+                tasksCount: tasksCount))
             .ToList();
     }
 }

@@ -38,6 +38,7 @@ public class ProjectTaskControllerDeleteTest(WebAppFactory factory)
             .Should().BeNull();
         var stage = await dbContext.Set<ProjectStage>()
             .Include(s => s.Sprint.Project.Workspace)
+            .Include(s => s.Tasks)
             .SingleAsync(s => s.Id == task.Stage.Id);
         Utils.ProjectTask.AssertDelete(stage, request);
     }

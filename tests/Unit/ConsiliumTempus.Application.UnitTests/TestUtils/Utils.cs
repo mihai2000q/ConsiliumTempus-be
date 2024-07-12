@@ -2,6 +2,8 @@
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
 using FluentAssertions.Extensions;
 
@@ -16,6 +18,21 @@ internal static partial class Utils
         error.IsError.Should().BeTrue();
         error.Errors.Should().HaveCount(1);
         error.FirstError.Should().Be(expectedError);
+    }
+
+    internal static void ShouldBeOrdered(this IReadOnlyList<ProjectTaskAggregate> tasks)
+    {
+        var customOrderPosition = 0;
+        tasks.OrderBy(t => t.CustomOrderPosition.Value)
+            .Should().AllSatisfy(t => 
+                t.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+    }
+    
+    internal static void ShouldBeOrdered(this IReadOnlyList<ProjectStage> stages)
+    {
+        var customOrderPosition = 0;
+        stages.OrderBy(s => s.CustomOrderPosition.Value)
+            .Should().AllSatisfy(s => s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
 
     internal static void ShouldBeCreated(this Audit audit, UserAggregate createdBy)
@@ -50,7 +67,18 @@ internal static partial class Utils
             .Zip(orderBy)
             .All(x => x.First.AssertOrder(x.Second, orderProperties));
     }
-
+    
+    internal static bool AssertFilters<TEntity>(
+        this IReadOnlyList<IFilter<TEntity>> filters,
+        string[]? search,
+        IEnumerable<FilterProperty<TEntity>> filterProperties)
+    {
+        if (search is null) return filters.Count == 0;
+        return filters
+            .Zip(search)
+            .All(x => x.First.AssertFilter(x.Second, filterProperties));
+    }
+    
     private static bool AssertOrder<TEntity>(
         this IOrder<TEntity> order,
         string stringOrder,
@@ -65,17 +93,6 @@ internal static partial class Utils
         return orderProperties
             .Single(op => op.Identifier == split[0])
             .PropertySelector == order.PropertySelector;
-    }
-    
-    internal static bool AssertFilters<TEntity>(
-        this IReadOnlyList<IFilter<TEntity>> filters,
-        string[]? search,
-        IEnumerable<FilterProperty<TEntity>> filterProperties)
-    {
-        if (search is null) return filters.Count == 0;
-        return filters
-            .Zip(search)
-            .All(x => x.First.AssertFilter(x.Second, filterProperties));
     }
 
     private static bool AssertFilter<TEntity>(

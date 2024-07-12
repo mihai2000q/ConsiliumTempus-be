@@ -1,6 +1,8 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
 using ErrorOr;
 using FluentAssertions.Extensions;
@@ -49,6 +51,21 @@ internal static partial class Utils
         error?.Status.Should().Be(StatusCodes.Status400BadRequest);
         var errorCodes = error?.Extensions["errors"] as JsonElement?;
         errorCodes?.ValueKind.Should().Be(JsonValueKind.Object);
+    }
+    
+    internal static void ShouldBeOrdered(this IReadOnlyList<ProjectTaskAggregate> tasks)
+    {
+        var customOrderPosition = 0;
+        tasks.OrderBy(t => t.CustomOrderPosition.Value)
+            .Should().AllSatisfy(t => 
+                t.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+    }
+    
+    internal static void ShouldBeOrdered(this IReadOnlyList<ProjectStage> stages)
+    {
+        var customOrderPosition = 0;
+        stages.OrderBy(s => s.CustomOrderPosition.Value)
+            .Should().AllSatisfy(s => s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
 
     internal static void ShouldBeCreated(this Audit audit, UserAggregate createdBy)

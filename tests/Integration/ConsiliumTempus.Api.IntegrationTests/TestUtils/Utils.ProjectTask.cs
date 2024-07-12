@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.Contracts.ProjectTask.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Domain.Project;
@@ -53,11 +54,7 @@ internal static partial class Utils
             task.CreatedBy.Should().Be(user);
             task.Assignee.Should().BeNull();
             task.Stage.Id.Value.Should().Be(request.ProjectStageId);
-
-            var customOrderPosition = 0;
-            task.Stage.Tasks
-                .OrderBy(ta => ta.CustomOrderPosition.Value)
-                .Should().AllSatisfy(t => t.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+            task.Stage.Tasks.ShouldBeOrdered();
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -68,11 +65,7 @@ internal static partial class Utils
             DeleteProjectTaskRequest request)
         {
             stage.Tasks.Should().NotContain(s => s.Id.Value == request.Id);
-
-            var customOrderPosition = 0;
-            stage.Tasks
-                .OrderBy(s => s.CustomOrderPosition.Value)
-                .Should().AllSatisfy(s => s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+            stage.Tasks.ShouldBeOrdered();
 
             stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -120,6 +113,56 @@ internal static partial class Utils
 
             newTask.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newTask.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertMoveWithinStage(
+            MoveProjectTaskRequest request,
+            ProjectTaskAggregate task,
+            int expectedCustomOrderPosition)
+        {
+            task.Id.Value.Should().Be(request.Id);
+            task.CustomOrderPosition.Value.Should().Be(expectedCustomOrderPosition);
+            task.Stage.Tasks.ShouldBeOrdered();
+            task.Stage.Tasks.Should().ContainSingle(t => t.Id.Value == request.OverId);
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static void AssertMoveToAnotherStage(
+            MoveProjectTaskRequest request,
+            ProjectTaskAggregate task,
+            ProjectStage overStage)
+        {
+            task.Id.Value.Should().Be(request.Id);
+            task.CustomOrderPosition.Value.Should().Be(0);
+            task.Stage.Should().Be(overStage);
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            overStage.Tasks.Should().Contain(task);
+            overStage.Tasks[0].Should().Be(task);
+            overStage.Tasks.ShouldBeOrdered();
+
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static void AssertMoveOverTaskToAnotherStage(
+            MoveProjectTaskRequest request,
+            ProjectTaskAggregate task,
+            ProjectStage overStage,
+            int expectedCustomOrderPosition)
+        {
+            overStage.Tasks.Should().ContainSingle(t => t.Id.Value == request.OverId);
+            task.Id.Value.Should().Be(request.Id);
+            task.CustomOrderPosition.Value.Should().Be(expectedCustomOrderPosition);
+            task.Stage.Should().Be(overStage);
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            task.Stage.Sprint.Stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
+
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         private static void AssertUserResponse(

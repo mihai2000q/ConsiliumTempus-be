@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
+using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
@@ -31,6 +32,11 @@ public static class ProjectTaskResultFactory
     public static UpdateOverviewProjectTaskResult CreateUpdateOverviewProjectTaskResult()
     {
         return new UpdateOverviewProjectTaskResult();
+    }
+    
+    public static MoveProjectTaskResult CreateMoveProjectTaskResult()
+    {
+        return new MoveProjectTaskResult();
     }
 
     public static DeleteProjectTaskResult CreateDeleteProjectTaskResult()

@@ -133,7 +133,7 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            updateStageResult => Ok(Mapper.Map<MoveStageFromProjectSprintResponse>(updateStageResult)),
+            moveStageResult => Ok(Mapper.Map<MoveStageFromProjectSprintResponse>(moveStageResult)),
             Problem
         );
     }
