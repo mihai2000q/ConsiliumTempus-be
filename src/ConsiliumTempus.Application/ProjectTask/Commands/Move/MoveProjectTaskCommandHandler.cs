@@ -21,7 +21,9 @@ public sealed class MoveProjectTaskCommandHandler(
 
         var stages = await projectSprintRepository.GetStages(task.Stage.Sprint.Id, cancellationToken);
 
-        task.Move(command.OverId, stages);
+        var result = task.Move(command.OverId, stages);
+        if (!result) return Errors.ProjectTask.OverNotFound;
+
         task.Stage.Sprint.Project.RefreshActivity();
 
         return new MoveProjectTaskResult();

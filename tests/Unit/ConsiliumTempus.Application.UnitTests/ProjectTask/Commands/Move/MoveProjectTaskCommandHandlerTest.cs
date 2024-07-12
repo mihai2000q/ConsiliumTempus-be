@@ -60,6 +60,35 @@ public class MoveProjectTaskCommandHandlerTest
         outcome.Value.Should().Be(new MoveProjectTaskResult());
 
         Utils.ProjectTask.AssertFromMoveCommand(task, command, stages);
+    [Fact]
+    public async Task HandleMoveProjectTaskCommand_WhenOverIsNull_ShouldReturnOverNotFoundError()
+    {
+        // Arrange
+        var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand();
+
+        var task = ProjectTaskFactory.Create();
+        _projectTaskRepository
+            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
+            .Returns(task);
+
+        // these stages do not have the overId and neither do the tasks
+        var stages = ProjectStageFactory.CreateList();
+        _projectSprintRepository
+            .GetStagesWithTasks(Arg.Any<ProjectSprintId>())
+            .Returns(stages);
+
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Arrange
+        await _projectTaskRepository
+            .Received(1)
+            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+        await _projectSprintRepository
+            .Received(1)
+            .GetStagesWithTasks(Arg.Is(task.Stage.Sprint.Id));
+
+        outcome.ValidateError(Errors.ProjectTask.OverNotFound);
     }
 
     [Fact]

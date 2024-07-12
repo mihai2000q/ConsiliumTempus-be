@@ -106,7 +106,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         _comments.Add(comment);
     }
 
-    public void Move(Guid overId, List<ProjectStage> stages)
+    public bool Move(Guid overId, List<ProjectStage> stages)
     {
         var overStage = stages.SingleOrDefault(s => s.Id.Value == overId);
 
@@ -131,9 +131,15 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             {
                 MoveInAnotherStage(ProjectTaskId.Create(overId), overStage);
             }
+            else
+            {
+                return false;
+            }
         }
 
         UpdatedDateTime = DateTime.UtcNow;
+
+        return true;
     }
 
     private void MoveWithinStage(ProjectTaskId overProjectTaskId)
