@@ -155,7 +155,7 @@ internal class ProjectTaskData : ITestData
         ProjectTaskFactory.Create(
             Users[0],
             ProjectStages[0],
-            "Should do add more stepping to my shots",
+            "Should add more stepping to my shots",
             customOrderPosition: 1,
             assignee: Users[1],
             isCompleted: true),
@@ -165,10 +165,26 @@ internal class ProjectTaskData : ITestData
             "Should tell Michael to PASS MOORE!!",
             assignee: Users[0],
             customOrderPosition: 2),
+        ProjectTaskFactory.Create(
+            Users[3],
+            ProjectStages[0],
+            "Tell Michael to DRIBBLE LESS!!",
+            assignee: Users[0],
+            customOrderPosition: 3),
         
         ProjectTaskFactory.Create(
             Users[0],
             ProjectStages[1],
-            "We want to win the cup")
+            "We want to win the cup"),
+        ProjectTaskFactory.Create(
+            Users[0],
+            ProjectStages[1],
+            "We want to win them all",
+            customOrderPosition: 1),
+        ProjectTaskFactory.Create(
+            Users[0],
+            ProjectStages[1],
+            "We want to go to coffee after",
+            customOrderPosition: 2)
     ];
 }

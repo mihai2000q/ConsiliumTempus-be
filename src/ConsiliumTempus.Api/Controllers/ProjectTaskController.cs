@@ -3,10 +3,12 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Create;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
+using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
@@ -83,6 +85,19 @@ public sealed class ProjectTaskController(IMapper mapper, ISender mediator) : Ap
 
         return result.Match(
             updateOverviewResult => Ok(Mapper.Map<UpdateOverviewProjectTaskResponse>(updateOverviewResult)),
+            Problem
+        );
+    }
+    
+    [HasPermission(Permissions.UpdateProjectTask)]
+    [HttpPut("Move")]
+    public async Task<IActionResult> Move(MoveProjectTaskRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<MoveProjectTaskCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            moveResult => Ok(Mapper.Map<MoveProjectTaskResponse>(moveResult)),
             Problem
         );
     }

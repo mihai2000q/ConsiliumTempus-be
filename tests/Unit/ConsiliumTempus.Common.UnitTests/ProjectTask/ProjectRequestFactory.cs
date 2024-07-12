@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.Contracts.ProjectTask.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
@@ -73,6 +74,15 @@ public static class ProjectTaskRequestFactory
             description,
             isCompleted,
             assigneeId);
+    }
+    
+    public static MoveProjectTaskRequest CreateMoveProjectTaskRequest(
+        Guid? id = null,
+        Guid? overId = null)
+    {
+        return new MoveProjectTaskRequest(
+            id ?? Guid.NewGuid(),
+            overId ?? Guid.NewGuid());
     }
 
     public static DeleteProjectTaskRequest CreateDeleteProjectTaskRequest(Guid? id = null)

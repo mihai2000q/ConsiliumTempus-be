@@ -2,10 +2,12 @@
 using ConsiliumTempus.Api.Contracts.ProjectTask.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
+using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
+using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
@@ -77,6 +79,16 @@ internal static partial class Utils
             command.Description.Should().Be(request.Description);
             command.IsCompleted.Should().Be(request.IsCompleted);
             command.AssigneeId.Should().Be(request.AssigneeId);
+
+            return true;
+        }
+        
+        internal static bool AssertMoveCommand(
+            MoveProjectTaskCommand command,
+            MoveProjectTaskRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.OverId.Should().Be(request.OverId);
 
             return true;
         }

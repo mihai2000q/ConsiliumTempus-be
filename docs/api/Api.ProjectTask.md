@@ -13,6 +13,9 @@
   * [Update](#update)
     * [Update Project Task Request](#update-project-task-request)
     * [Update Project Task Response](#update-project-task-response)
+  * [Move](#move)
+    * [Move Project Task Request](#move-project-task-request)
+    * [Move Project Task Response](#move-project-task-response)
   * [Update Overview](#update-overview)
     * [Update Overview Project Task Request](#update-overview-project-task-request)
     * [Update Overview Project Task Response](#update-overview-project-task-response)
@@ -161,7 +164,7 @@ Returns a confirmation message that the project task has been created successful
 
 ### Update
 
-All members that are part of the workspace can update a project
+All members that are part of the workspace can update a project task
 ([Update Project Task Permission](../Security.md/#permissions)).
 
 ```js
@@ -187,7 +190,7 @@ Returns a confirmation message that the project task has been updated successful
 
 ### Update Overview
 
-All members that are part of the workspace can update a project overview
+All members that are part of the workspace can update a project task overview
 ([Update Project Task Permission](../Security.md/#permissions)).
 
 ```js
@@ -211,6 +214,30 @@ Sends body data that the project overview needs to be updated.
 #### Update Overview Project Task Response
 
 Returns a confirmation message that the project task overview has been updated successfully.
+
+### Move
+
+All members that are part of the workspace can move a project task
+([Update Project Task Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/projects/tasks/move
+```
+
+#### Move Project Task Request
+
+Sends body data that the project task needs to be moved.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "overId": "20000000-0000-0000-0000-000000000000"
+}
+```
+
+#### Move Project Task Response
+
+Returns a confirmation message that the project task has been moved successfully.
 
 ### Delete
 

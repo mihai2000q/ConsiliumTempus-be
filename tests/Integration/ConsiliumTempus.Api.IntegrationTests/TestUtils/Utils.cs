@@ -2,6 +2,7 @@
 using System.Text.Json;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
 using ErrorOr;
 using FluentAssertions.Extensions;
@@ -51,6 +52,15 @@ internal static partial class Utils
         var errorCodes = error?.Extensions["errors"] as JsonElement?;
         errorCodes?.ValueKind.Should().Be(JsonValueKind.Object);
     }
+    
+    internal static void ShouldBeOrdered(this IReadOnlyList<ProjectTaskAggregate> tasks)
+    {
+        var customOrderPosition = 0;
+        tasks.OrderBy(t => t.CustomOrderPosition.Value)
+            .Should().AllSatisfy(t => 
+                t.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+    }
+    
     internal static void ShouldBeOrdered(this IReadOnlyList<ProjectStage> stages)
     {
         var customOrderPosition = 0;

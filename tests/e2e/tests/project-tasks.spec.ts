@@ -9,6 +9,7 @@ import CreateProjectTaskRequest from "../types/requests/project-task/CreateProje
 import { createProjectTask, getProjectTask, getProjectTasks } from "../utils/project-task.utils";
 import UpdateProjectTaskRequest from "../types/requests/project-task/UpdateProjectTaskRequest";
 import UpdateOverviewProjectTaskRequest from "../types/requests/project-task/UpdateOverviewProjectTaskRequest";
+import MoveProjectTaskRequest from "../types/requests/project-task/MoveProjectTaskRequest";
 
 test.describe('should allow operations on the project task entity', () => {
   let STAGE_ID: string
@@ -352,6 +353,64 @@ test.describe('should allow operations on the project task entity', () => {
       project: expect.any(Object),
       workspace: expect.any(Object)
     })
+  })
+
+  test('should move project task', async ({ request }) => {
+    const createProjectTaskRequest1: CreateProjectTaskRequest = {
+      projectStageId: STAGE_ID,
+      name: "task 1"
+    }
+    const task1 = await createProjectTask(request, createProjectTaskRequest1)
+
+    const createProjectTaskRequest2: CreateProjectTaskRequest = {
+      projectStageId: STAGE_ID,
+      name: "task 2"
+    }
+    const task2 = await createProjectTask(request, createProjectTaskRequest2)
+
+    const createProjectTaskRequest3: CreateProjectTaskRequest = {
+      projectStageId: STAGE_ID,
+      name: "task 3"
+    }
+    const task3 = await createProjectTask(request, createProjectTaskRequest3)
+
+    const body: MoveProjectTaskRequest = {
+      id: task2.id,
+      overId: task3.id
+    }
+    const response = await request.put('/api/projects/tasks/move', {
+      ...useToken(),
+      data: body
+    });
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const tasks = await getProjectTasks(request, STAGE_ID)
+    expect(tasks).toHaveLength(3)
+    expect(tasks).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: task1.name,
+        isCompleted: false,
+        assignee: null
+      },
+      {
+        id: expect.any(String),
+        name: task3.name,
+        isCompleted: false,
+        assignee: null
+      },
+      {
+        id: expect.any(String),
+        name: task2.name,
+        isCompleted: false,
+        assignee: null
+      }
+    ])
   })
 
   test('should delete project task', async ({ request }) => {
