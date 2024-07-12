@@ -35,10 +35,9 @@ internal static partial class Utils
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            var count = 0;
+            sprint.Stages.ShouldBeOrdered();
             sprint.Stages.Should().AllSatisfy(stage =>
             {
-                stage.CustomOrderPosition.Value.Should().Be(count++);
                 stage.Audit.UpdatedBy.Should().Be(stage == projectStage ? createdBy : sprintCreatedBy);
             });
         }
@@ -104,11 +103,8 @@ internal static partial class Utils
                 project.LatestStatus!.Description.Value.Should().Be(command.ProjectStatus.Description);
             }
 
-            projectSprint.Project.LastActivity
-                .Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-
-            projectSprint.Project.Workspace.LastActivity
-                .Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            projectSprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            projectSprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             return true;
         }
@@ -137,11 +133,7 @@ internal static partial class Utils
 
             var sprint = stage.Sprint;
 
-            var customOrderPosition = 0;
-            sprint.Stages
-                .OrderBy(s => s.CustomOrderPosition.Value)
-                .Should().AllSatisfy(s =>
-                s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+            sprint.Stages.ShouldBeOrdered();
             
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -156,9 +148,7 @@ internal static partial class Utils
             var sprint = stage.Sprint;
 
             sprint.Stages.Should().NotContain(stage);
-            var customOrderPosition = 0;
-            sprint.Stages.Should().AllSatisfy(s =>
-                s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+            sprint.Stages.ShouldBeOrdered();
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
