@@ -42,7 +42,8 @@ public class MoveProjectTaskCommandHandlerTest
             .Returns(task);
 
         _projectSprintRepository
-            .GetStages(Arg.Any<ProjectSprintId>())
+            .GetStagesWithTasks(Arg.Any<ProjectSprintId>())
+            .Returns(stages);
             .Returns(stages);
         
         // Act
@@ -51,10 +52,10 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithTasks(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
         await _projectSprintRepository
             .Received(1)
-            .GetStages(Arg.Is<ProjectSprintId>(id => id == task.Stage.Sprint.Id));
+            .GetStagesWithTasks(Arg.Is(task.Stage.Sprint.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new MoveProjectTaskResult());

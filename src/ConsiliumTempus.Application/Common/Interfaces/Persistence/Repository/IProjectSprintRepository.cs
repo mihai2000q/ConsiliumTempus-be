@@ -34,6 +34,8 @@ public interface IProjectSprintRepository
 
     Task<List<ProjectStage>> GetStages(ProjectSprintId id, CancellationToken cancellationToken = default);
 
+    Task<List<ProjectStage>> GetStagesWithTasks(ProjectSprintId id, CancellationToken cancellationToken = default);
+
     Task Add(ProjectSprintAggregate sprint, CancellationToken cancellationToken = default);
 
     void Remove(ProjectSprintAggregate sprint);
