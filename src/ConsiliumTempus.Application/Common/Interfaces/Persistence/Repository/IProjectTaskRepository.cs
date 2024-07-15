@@ -11,6 +11,11 @@ public interface IProjectTaskRepository
 {
     Task<ProjectTaskAggregate?> GetWithWorkspace(ProjectTaskId id, CancellationToken cancellationToken = default);
 
+    Task<ProjectTaskAggregate?> GetWithSprint(
+        ProjectTaskId id,
+        bool isTracking = true,
+        CancellationToken cancellationToken = default);
+
     Task<ProjectTaskAggregate?> GetWithStagesAndWorkspace(
         ProjectTaskId id,
         CancellationToken cancellationToken = default);
