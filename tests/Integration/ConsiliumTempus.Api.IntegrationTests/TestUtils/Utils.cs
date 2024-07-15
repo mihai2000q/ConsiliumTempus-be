@@ -52,20 +52,19 @@ internal static partial class Utils
         var errorCodes = error?.Extensions["errors"] as JsonElement?;
         errorCodes?.ValueKind.Should().Be(JsonValueKind.Object);
     }
-    
+
     internal static void ShouldBeOrdered(this IReadOnlyList<ProjectTaskAggregate> tasks)
     {
         var customOrderPosition = 0;
-        tasks.OrderBy(t => t.CustomOrderPosition.Value)
-            .Should().AllSatisfy(t => 
-                t.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+        tasks.Should().AllSatisfy(t =>
+            t.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
-    
+
     internal static void ShouldBeOrdered(this IReadOnlyList<ProjectStage> stages)
     {
         var customOrderPosition = 0;
-        stages.OrderBy(s => s.CustomOrderPosition.Value)
-            .Should().AllSatisfy(s => s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+        stages.Should().AllSatisfy(s =>
+            s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
 
     internal static void ShouldBeCreated(this Audit audit, UserAggregate createdBy)
