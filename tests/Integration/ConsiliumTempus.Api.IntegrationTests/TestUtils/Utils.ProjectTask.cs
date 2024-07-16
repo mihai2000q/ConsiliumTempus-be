@@ -133,8 +133,10 @@ internal static partial class Utils
         internal static void AssertMoveToAnotherStage(
             MoveProjectTaskRequest request,
             ProjectTaskAggregate task,
-            ProjectStage overStage)
+            List<ProjectStage> stages)
         {
+            var overStage = stages.Single(s => s.Id.Value == request.OverId);
+
             task.Id.Value.Should().Be(request.Id);
             task.CustomOrderPosition.Value.Should().Be(0);
             task.Stage.Should().Be(overStage);
@@ -142,6 +144,8 @@ internal static partial class Utils
             overStage.Tasks.Should().Contain(task);
             overStage.Tasks[0].Should().Be(task);
             overStage.Tasks.ShouldBeOrdered();
+
+            stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -151,6 +155,7 @@ internal static partial class Utils
             MoveProjectTaskRequest request,
             ProjectTaskAggregate task,
             ProjectStage overStage,
+            List<ProjectStage> stages,
             int expectedCustomOrderPosition)
         {
             overStage.Tasks.Should().ContainSingle(t => t.Id.Value == request.OverId);
@@ -159,7 +164,8 @@ internal static partial class Utils
             task.Stage.Should().Be(overStage);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            task.Stage.Sprint.Stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
+            stages.Should().ContainSingle(s => s.Id == overStage.Id);
+            stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

@@ -43,7 +43,8 @@ public class ProjectSprintControllerMoveStageTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var newSprint = await dbContext.ProjectSprints
-            .Include(ps => ps.Stages)
+            .AsNoTracking()
+            .Include(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
             .Include(ps => ps.Project.Workspace)
             .SingleAsync(ps => ps.Id == sprint.Id);
         Utils.ProjectSprint.AssertMovedStage(newSprint, request, user, expectedCustomOrderPosition);
