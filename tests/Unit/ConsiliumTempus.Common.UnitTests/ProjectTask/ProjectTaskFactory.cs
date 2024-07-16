@@ -2,6 +2,7 @@
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
@@ -26,9 +27,11 @@ public static class ProjectTaskFactory
     }
 
     public static ProjectTaskAggregate CreateWithTasks(
+        ProjectSprintAggregate? sprint = null,
         int tasksCount = 5)
     {
-        var stage = ProjectStageFactory.Create();
+        var stage = ProjectStageFactory.Create(
+            sprint: sprint);
 
         Enumerable
             .Range(0, tasksCount)
