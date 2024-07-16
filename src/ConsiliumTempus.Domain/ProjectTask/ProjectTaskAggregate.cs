@@ -106,12 +106,13 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         _comments.Add(comment);
     }
 
-    public bool Move(Guid overId, List<ProjectStage> stages)
+    public bool Move(Guid overId, IReadOnlyList<ProjectStage> stages)
     {
         var overStage = stages.SingleOrDefault(s => s.Id.Value == overId);
 
         if (overStage is not null)
         {
+            Stage.RemoveTask(this);
             CustomOrderPosition = CustomOrderPosition.Create(0);
             Stage = overStage;
             overStage.AddTask(this, true);
@@ -142,9 +143,9 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         return true;
     }
 
-    private void MoveWithinStage(ProjectTaskId overProjectTaskId)
+    private void MoveWithinStage(ProjectTaskId overTaskId)
     {
-        var overTask = Stage.Tasks.Single(t => t.Id == overProjectTaskId);
+        var overTask = Stage.Tasks.Single(t => t.Id == overTaskId);
 
         var newCustomOrderPosition = CustomOrderPosition.Create(overTask.CustomOrderPosition.Value);
 
@@ -168,9 +169,9 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         CustomOrderPosition = newCustomOrderPosition;
     }
 
-    private void MoveToAnotherStage(ProjectTaskId overProjectTaskId, ProjectStage overStage)
+    private void MoveToAnotherStage(ProjectTaskId overTaskId, ProjectStage overStage)
     {
-        var overTask = overStage.Tasks.Single(t => t.Id == overProjectTaskId);
+        var overTask = overStage.Tasks.Single(t => t.Id == overTaskId);
 
         var newCustomOrderPosition = CustomOrderPosition.Create(overTask.CustomOrderPosition.Value);
 
@@ -182,13 +183,13 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
                 {
                     overStage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
                 }
+                overStage.AddTask(this);
             },
             () =>
             {
                 Stage.RemoveTask(this);
             });
 
-        overStage.AddTask(this);
         Stage = overStage;
         CustomOrderPosition = newCustomOrderPosition;
     }

@@ -77,12 +77,11 @@ public sealed class ProjectStage : Entity<ProjectStageId>
 
     public void RemoveTask(ProjectTaskAggregate task)
     {
-        _tasks.Remove(task);
-        // reorder
-        for (var i = task.CustomOrderPosition.Value; i < _tasks.Count; i++)
+        for (var i = task.CustomOrderPosition.Value + 1; i < _tasks.Count; i++)
         {
-            _tasks[i].UpdateCustomOrderPosition(_tasks[i].CustomOrderPosition - 1);
+            _tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
         }
+        _tasks.Remove(task);
     }
 
     public ProjectStage CopyToSprint(ProjectSprintAggregate sprint, UserAggregate copiedBy)

@@ -94,11 +94,10 @@ public sealed class ProjectSprintAggregate : Entity<ProjectSprintId>
 
     public void RemoveStage(ProjectStage stage)
     {
-        _stages.Remove(stage);
-        for (var i = stage.CustomOrderPosition.Value; i < _stages.Count; i++)
+        for (var i = stage.CustomOrderPosition.Value + 1; i < _stages.Count; i++)
         {
-            var s = _stages[i];
-            s.UpdateCustomOrderPosition(s.CustomOrderPosition - 1);
+            _stages[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
         }
+        _stages.Remove(stage);
     }
 }
