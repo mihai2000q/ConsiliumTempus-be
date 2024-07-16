@@ -64,10 +64,42 @@ internal static class MoveProjectTaskCommandHandlerData
                 overId: overTask.Id.Value);
             Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
             
+            task = ProjectTaskFactory.CreateWithTasks(tasksCount: 3);
+            task = task.Stage.Tasks[0];
+            overTask = task.Stage.Tasks[2];
+            command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
+                id: task.Id.Value,
+                overId: overTask.Id.Value);
+            Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
+            
+            task = ProjectTaskFactory.CreateWithTasks(tasksCount: 2);
+            task = task.Stage.Tasks[0];
+            overTask = task.Stage.Tasks[1];
+            command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
+                id: task.Id.Value,
+                overId: overTask.Id.Value);
+            Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
+            
             // lower position
             task = ProjectTaskFactory.CreateWithTasks(tasksCount: 10);
             task = task.Stage.Tasks[7];
             overTask = task.Stage.Tasks[1];
+            command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
+                id: task.Id.Value,
+                overId: overTask.Id.Value);
+            Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
+            
+            task = ProjectTaskFactory.CreateWithTasks(tasksCount: 3);
+            task = task.Stage.Tasks[2];
+            overTask = task.Stage.Tasks[0];
+            command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
+                id: task.Id.Value,
+                overId: overTask.Id.Value);
+            Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
+            
+            task = ProjectTaskFactory.CreateWithTasks(tasksCount: 2);
+            task = task.Stage.Tasks[1];
+            overTask = task.Stage.Tasks[0];
             command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
                 id: task.Id.Value,
                 overId: overTask.Id.Value);

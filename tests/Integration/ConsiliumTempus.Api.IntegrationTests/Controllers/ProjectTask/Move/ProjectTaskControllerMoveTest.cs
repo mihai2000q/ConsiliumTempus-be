@@ -41,10 +41,14 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
         response!.Message.Should().Be("Project Task has been moved successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        var movedTask = await dbContext.ProjectTasks
-            .Include(t => t.Stage.Tasks)
-            .Include(t => t.Stage.Sprint.Project.Workspace)
-            .SingleAsync(t => t.Id == task.Id);
+        var movedTask = dbContext.Set<ProjectStage>()
+            .AsNoTracking()
+            .Include(s => s.Tasks.OrderBy(tt => tt.CustomOrderPosition.Value))
+            .Include(s => s.Sprint.Project.Workspace)
+            .Where(s => s.Sprint.Id == task.Stage.Sprint.Id)
+            .ToList()
+            .SelectMany(s => s.Tasks)
+            .Single(t => t.Id == task.Id);
 
         Utils.ProjectTask.AssertMoveWithinStage(request, movedTask, expectedCustomOrderPosition);
     }
@@ -72,15 +76,14 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var movedTask = await dbContext.ProjectTasks
-            .Include(t => t.Stage.Tasks)
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .SingleAsync(t => t.Id == task.Id);
 
-        var modifiedOverStage = await dbContext.Set<ProjectStage>()
-            .Include(s => s.Tasks)
+        var updatedOverStage = await dbContext.Set<ProjectStage>()
+            .Include(s => s.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
             .SingleAsync(s => s.Id == overStage.Id);
 
-        Utils.ProjectTask.AssertMoveToAnotherStage(request, movedTask, modifiedOverStage);
+        Utils.ProjectTask.AssertMoveToAnotherStage(request, movedTask, updatedOverStage);
     }
 
     [Fact]
@@ -108,15 +111,20 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var movedTask = await dbContext.ProjectTasks
-            .Include(t => t.Stage.Tasks)
+            .AsNoTracking()
             .Include(t => t.Stage.Sprint.Project.Workspace)
-            .Include(t => t.Stage.Sprint.Stages)
             .SingleAsync(t => t.Id == task.Id);
+
+        var stages = await dbContext.Set<ProjectStage>()
+            .Include(s => s.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
+            .Where(s => s.Sprint.Id == movedTask.Stage.Sprint.Id)
+            .ToListAsync();
 
         Utils.ProjectTask.AssertMoveOverTaskToAnotherStage(
             request, 
             movedTask, 
             overTask.Stage, 
+            stages,
             expectedCustomOrderPosition);
     }
 

@@ -104,6 +104,7 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
     public Task<List<ProjectStage>> GetStagesWithTasks(ProjectSprintId id, CancellationToken cancellationToken = default)
     {
         return dbContext.Set<ProjectStage>()
+            .Include(s => s.Sprint.Project.Workspace)
             .Include(ps => ps.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
             .Where(ps => ps.Sprint.Id == id)
             .ToListAsync(cancellationToken);

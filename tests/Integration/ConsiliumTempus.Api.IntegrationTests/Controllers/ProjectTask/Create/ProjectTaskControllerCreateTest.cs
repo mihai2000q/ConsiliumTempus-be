@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.User;
 using Microsoft.EntityFrameworkCore;
 
@@ -81,11 +82,14 @@ public class ProjectTaskControllerCreateTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectTasks.Should().HaveCount(ProjectTaskData.ProjectTasks.Length + 1);
-        var createdTask = await dbContext.ProjectTasks
-            .Include(t => t.Stage.Sprint.Project.Workspace)
-            .Include(t => t.Stage.Tasks)
-            .Include(t => t.CreatedBy)
-            .SingleAsync(t => t.Name.Value == request.Name);
+        var createdTask = dbContext.Set<ProjectStage>()
+            .AsNoTracking()
+            .Include(s => s.Sprint.Project.Workspace)
+            .Include(s => s.Tasks.OrderBy(tt => tt.CustomOrderPosition.Value))
+            .ThenInclude(t => t.CreatedBy)
+            .Single(s => s.Tasks.Any(t => t.Name.Value == request.Name))
+            .Tasks
+            .Single(t => t.Name.Value == request.Name);
         Utils.ProjectTask.AssertCreation(createdTask, request, user);
     }
 }

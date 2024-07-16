@@ -14,17 +14,23 @@ public sealed class MoveProjectTaskCommandHandler(
     public async Task<ErrorOr<MoveProjectTaskResult>> Handle(MoveProjectTaskCommand command,
         CancellationToken cancellationToken)
     {
-        var task = await projectTaskRepository.GetWithWorkspace(
+        var task = await projectTaskRepository.GetWithSprint(
             ProjectTaskId.Create(command.Id),
-            cancellationToken);
+            false,
+            cancellationToken: cancellationToken);
         if (task is null) return Errors.ProjectTask.NotFound;
 
         var stages = await projectSprintRepository.GetStagesWithTasks(
             task.Stage.Sprint.Id,
             cancellationToken);
+        // replace with tracking entity
+        task = stages
+            .Single(s => s == task.Stage)
+            .Tasks
+            .Single(t => t.Id == task.Id);
 
-        var result = task.Move(command.OverId, stages);
-        if (!result) return Errors.ProjectTask.OverNotFound;
+        if (!task.Move(command.OverId, stages)) 
+            return Errors.ProjectTask.OverNotFound;
 
         task.Stage.Sprint.Project.RefreshActivity();
 

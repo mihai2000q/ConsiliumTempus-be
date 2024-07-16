@@ -151,6 +151,7 @@ internal static partial class Utils
             MoveProjectTaskRequest request,
             ProjectTaskAggregate task,
             ProjectStage overStage,
+            List<ProjectStage> stages,
             int expectedCustomOrderPosition)
         {
             overStage.Tasks.Should().ContainSingle(t => t.Id.Value == request.OverId);
@@ -159,7 +160,8 @@ internal static partial class Utils
             task.Stage.Should().Be(overStage);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            task.Stage.Sprint.Stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
+            stages.Should().ContainSingle(s => s.Id == overStage.Id);
+            stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

@@ -39,7 +39,7 @@ public class MoveProjectTaskCommandHandlerTest
     {
         // Arrange
         _projectTaskRepository
-            .GetWithWorkspace(Arg.Any<ProjectTaskId>())
+            .GetWithSprint(Arg.Any<ProjectTaskId>(), Arg.Any<bool>())
             .Returns(task);
 
         _projectSprintRepository
@@ -52,7 +52,7 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .GetWithSprint(Arg.Is<ProjectTaskId>(id => id.Value == command.Id), Arg.Is(false));
         await _projectSprintRepository
             .Received(1)
             .GetStagesWithTasks(Arg.Is(task.Stage.Sprint.Id));
@@ -73,7 +73,7 @@ public class MoveProjectTaskCommandHandlerTest
     {
         // Arrange
         _projectTaskRepository
-            .GetWithWorkspace(Arg.Any<ProjectTaskId>())
+            .GetWithSprint(Arg.Any<ProjectTaskId>(), Arg.Any<bool>())
             .Returns(task);
 
         _projectSprintRepository
@@ -86,7 +86,7 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .GetWithSprint(Arg.Is<ProjectTaskId>(id => id.Value == command.Id), Arg.Is(false));
         await _projectSprintRepository
             .Received(1)
             .GetStagesWithTasks(Arg.Is(task.Stage.Sprint.Id));
@@ -107,7 +107,7 @@ public class MoveProjectTaskCommandHandlerTest
     {
         // Arrange
         _projectTaskRepository
-            .GetWithWorkspace(Arg.Any<ProjectTaskId>())
+            .GetWithSprint(Arg.Any<ProjectTaskId>(), Arg.Any<bool>())
             .Returns(task);
 
         _projectSprintRepository
@@ -120,7 +120,7 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .GetWithSprint(Arg.Is<ProjectTaskId>(id => id.Value == command.Id), Arg.Is(false));
         await _projectSprintRepository
             .Received(1)
             .GetStagesWithTasks(Arg.Is(task.Stage.Sprint.Id));
@@ -141,13 +141,14 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand();
 
-        var task = ProjectTaskFactory.Create();
+        var stages = ProjectStageFactory.CreateListWithTasks();
+        var task = stages[0].Tasks[0];
+
         _projectTaskRepository
-            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
+            .GetWithSprint(Arg.Any<ProjectTaskId>(), Arg.Any<bool>())
             .Returns(task);
 
         // these stages do not have the overId and neither do the tasks
-        var stages = ProjectStageFactory.CreateList();
         _projectSprintRepository
             .GetStagesWithTasks(Arg.Any<ProjectSprintId>())
             .Returns(stages);
@@ -158,7 +159,7 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .GetWithSprint(Arg.Is<ProjectTaskId>(id => id.Value == command.Id), Arg.Is(false));
         await _projectSprintRepository
             .Received(1)
             .GetStagesWithTasks(Arg.Is(task.Stage.Sprint.Id));
@@ -173,7 +174,7 @@ public class MoveProjectTaskCommandHandlerTest
         var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand();
 
         _projectTaskRepository
-            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
+            .GetWithSprint(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
             .ReturnsNull();
 
         // Act
@@ -182,7 +183,7 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .GetWithSprint(Arg.Is<ProjectTaskId>(id => id.Value == command.Id), Arg.Is(false));
         _projectSprintRepository.DidNotReceive();
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);

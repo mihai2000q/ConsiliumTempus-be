@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Extensions;
 
@@ -47,13 +48,21 @@ public static class QueryableExtensions
     {
         return condition ? queryable.Where(predicate) : queryable;
     }
-    
+
     public static IQueryable<TSource> OrderByIf<TSource, TKey>(
         this IQueryable<TSource> queryable,
         bool condition,
         Expression<Func<TSource, TKey>> keySelector)
     {
         return condition ? queryable.OrderBy(keySelector) : queryable;
+    }
+    
+    public static IQueryable<TSource> AsTrackingOrNot<TSource>(
+        this IQueryable<TSource> queryable,
+        bool condition)
+        where TSource : class
+    {
+        return condition ? queryable.AsTracking() : queryable.AsNoTracking();
     }
 
     private static IOrderedQueryable<TSource> ApplyOrder<TSource>(
