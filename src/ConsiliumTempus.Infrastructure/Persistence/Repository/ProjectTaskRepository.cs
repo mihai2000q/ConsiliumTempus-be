@@ -13,7 +13,9 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
 public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : IProjectTaskRepository
 {
-    public async Task<ProjectTaskAggregate?> GetWithWorkspace(ProjectTaskId id, CancellationToken cancellationToken = default)
+    public async Task<ProjectTaskAggregate?> GetWithWorkspace(
+        ProjectTaskId id,
+        CancellationToken cancellationToken = default)
     {
         return await dbContext.ProjectTasks
             .Include(t => t.Stage.Sprint.Project.Workspace)
@@ -21,11 +23,26 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .SingleOrDefaultAsync(cancellationToken);
     }
 
-    public Task<ProjectTaskAggregate?> GetWithStagesAndWorkspace(ProjectTaskId id, CancellationToken cancellationToken = default)
+    public Task<ProjectTaskAggregate?> GetWithStagesAndWorkspace(
+        ProjectTaskId id,
+        CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectTasks
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .Include(t => t.Stage.Sprint.Stages.OrderBy(s => s.CustomOrderPosition.Value))
+            .Where(t => t.Id == id)
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<ProjectTaskAggregate?> GetWithTasksStagesAndWorkspace(
+        ProjectTaskId id, 
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.ProjectTasks
+            .Include(t => t.Stage.Sprint.Project.Workspace)
+            .Include(t => t.Stage.Tasks.OrderBy(tt => tt.CustomOrderPosition.Value))
+            .Include(t => t.Stage.Sprint.Stages)
+            .ThenInclude(s => s.Tasks.OrderBy(tt => tt.CustomOrderPosition.Value))
             .Where(t => t.Id == id)
             .SingleOrDefaultAsync(cancellationToken);
     }
