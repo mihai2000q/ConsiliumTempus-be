@@ -1,7 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
@@ -30,17 +29,6 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .Include(t => t.Stage.Sprint.Stages.OrderBy(s => s.CustomOrderPosition.Value))
             .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
-    }
-
-    // TODO: Potentially remove method by adding the project sprint Id too, so that it can be queried from DB instead
-    public Task<ProjectStage?> GetStageWithTasksAndWorkspace(
-        ProjectStageId id,
-        CancellationToken cancellationToken = default)
-    {
-        return dbContext.Set<ProjectStage>()
-            .Include(s => s.Sprint.Project.Workspace)
-            .Include(s => s.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
-            .SingleOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
 
     public Task<List<ProjectTaskAggregate>> GetListByStage(

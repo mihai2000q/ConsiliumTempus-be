@@ -11,13 +11,13 @@ namespace ConsiliumTempus.Application.ProjectTask.Commands.Create;
 
 public sealed class CreateProjectTaskCommandHandler(
     ICurrentUserProvider currentUserProvider,
-    IProjectTaskRepository projectTaskRepository)
+    IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<CreateProjectTaskCommand, ErrorOr<CreateProjectTaskResult>>
 {
     public async Task<ErrorOr<CreateProjectTaskResult>> Handle(CreateProjectTaskCommand command, 
         CancellationToken cancellationToken)
     {
-        var stage = await projectTaskRepository.GetStageWithTasksAndWorkspace(
+        var stage = await projectSprintRepository.GetStageWithTasksAndWorkspace(
             ProjectStageId.Create(command.ProjectStageId),
             cancellationToken);
         if (stage is null) return Errors.ProjectStage.NotFound;
