@@ -32,16 +32,6 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
-    public Task<ProjectTaskAggregate?> GetWithTasksAndWorkspace(
-        ProjectTaskId id,
-        CancellationToken cancellationToken = default)
-    {
-        return dbContext.ProjectTasks
-            .Include(t => t.Stage.Sprint.Project.Workspace)
-            .Include(t => t.Stage.Tasks.OrderBy(tt => tt.CustomOrderPosition.Value))
-            .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
-    }
-
     // TODO: Potentially remove method by adding the project sprint Id too, so that it can be queried from DB instead
     public Task<ProjectStage?> GetStageWithTasksAndWorkspace(
         ProjectStageId id,
