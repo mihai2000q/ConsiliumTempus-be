@@ -79,10 +79,12 @@ internal static class MoveProjectTaskCommandHandlerData
             int overTaskIndex)
         {
             var sprint = ProjectSprintFactory.Create(stagesCount: 0);
-            var task = ProjectTaskFactory.CreateWithTasks(sprint: sprint, tasksCount: tasksCount);
-            sprint.AddStage(task.Stage);
-            task = task.Stage.Tasks[taskIndex];
+            var stage = ProjectStageFactory.CreateWithTasks(sprint: sprint, tasksCount: tasksCount);
+            sprint.AddStage(stage);
+
+            var task = stage.Tasks[taskIndex];
             var overTask = task.Stage.Tasks[overTaskIndex];
+
             var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
                 sprintId: sprint.Id.Value,
                 id: task.Id.Value,

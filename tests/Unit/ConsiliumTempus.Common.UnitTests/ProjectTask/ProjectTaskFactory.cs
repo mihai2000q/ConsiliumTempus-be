@@ -2,7 +2,6 @@
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
@@ -24,24 +23,6 @@ public static class ProjectTaskFactory
             CustomOrderPosition.Create(customOrderPosition), 
             createdBy ?? UserFactory.Create(),
             stage ?? ProjectStageFactory.Create());
-    }
-
-    public static ProjectTaskAggregate CreateWithTasks(
-        ProjectSprintAggregate? sprint = null,
-        int tasksCount = 5)
-    {
-        var stage = ProjectStageFactory.Create(
-            sprint: sprint);
-
-        Enumerable
-            .Range(0, tasksCount)
-            .ToList()
-            .ForEach(i => stage.AddTask(Create(
-                Constants.ProjectTask.Name + i,
-                customOrderPosition: i,
-                stage: stage)));
-        
-        return stage.Tasks[0];
     }
     
     public static List<ProjectTaskAggregate> CreateList(int count = 5)
