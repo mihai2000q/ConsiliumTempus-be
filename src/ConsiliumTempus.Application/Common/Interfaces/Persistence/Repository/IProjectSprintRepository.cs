@@ -12,7 +12,12 @@ public interface IProjectSprintRepository
 
     Task<ProjectSprintAggregate?> GetWithWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default);
 
-    Task<ProjectSprintAggregate?> GetWithSprintsAndWorkspace(ProjectSprintId id,
+    Task<ProjectSprintAggregate?> GetWithSprintsAndWorkspace(
+        ProjectSprintId id,
+        CancellationToken cancellationToken = default);
+
+    Task<ProjectSprintAggregate?> GetWithTasksAndWorkspace(
+        ProjectSprintId id,
         CancellationToken cancellationToken = default);
 
     Task<ProjectSprintAggregate> GetFirstByProject(

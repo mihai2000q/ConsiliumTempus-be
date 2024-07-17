@@ -19,8 +19,7 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
     {
         return await dbContext.ProjectTasks
             .Include(t => t.Stage.Sprint.Project.Workspace)
-            .Where(t => t.Id == id)
-            .SingleOrDefaultAsync(cancellationToken);
+            .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
     public Task<ProjectTaskAggregate?> GetWithStagesAndWorkspace(
@@ -30,31 +29,16 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         return dbContext.ProjectTasks
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .Include(t => t.Stage.Sprint.Stages.OrderBy(s => s.CustomOrderPosition.Value))
-            .Where(t => t.Id == id)
-            .SingleOrDefaultAsync(cancellationToken);
+            .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
-    public async Task<ProjectTaskAggregate?> GetWithTasksStagesAndWorkspace(
-        ProjectTaskId id, 
-        CancellationToken cancellationToken = default)
-    {
-        return await dbContext.ProjectTasks
-            .Include(t => t.Stage.Sprint.Project.Workspace)
-            .Include(t => t.Stage.Tasks.OrderBy(tt => tt.CustomOrderPosition.Value))
-            .Include(t => t.Stage.Sprint.Stages)
-            .ThenInclude(s => s.Tasks.OrderBy(tt => tt.CustomOrderPosition.Value))
-            .Where(t => t.Id == id)
-            .SingleOrDefaultAsync(cancellationToken);
-    }
-
-    public Task<ProjectTaskAggregate?> GetWithTasks(
+    public Task<ProjectTaskAggregate?> GetWithTasksAndWorkspace(
         ProjectTaskId id,
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectTasks
-            .Include(t => t.Stage)
-            .ThenInclude(s => s.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
             .Include(t => t.Stage.Sprint.Project.Workspace)
+            .Include(t => t.Stage.Tasks.OrderBy(tt => tt.CustomOrderPosition.Value))
             .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 

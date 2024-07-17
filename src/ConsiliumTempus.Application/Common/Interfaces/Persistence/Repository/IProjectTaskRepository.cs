@@ -17,11 +17,7 @@ public interface IProjectTaskRepository
         ProjectTaskId id,
         CancellationToken cancellationToken = default);
 
-    Task<ProjectTaskAggregate?> GetWithTasksStagesAndWorkspace(
-        ProjectTaskId id,
-        CancellationToken cancellationToken = default);
-
-    Task<ProjectTaskAggregate?> GetWithTasks(ProjectTaskId id, CancellationToken cancellationToken = default);
+    Task<ProjectTaskAggregate?> GetWithTasksAndWorkspace(ProjectTaskId id, CancellationToken cancellationToken = default);
 
     Task<ProjectStage?> GetStageWithTasksAndWorkspace(ProjectStageId id, CancellationToken cancellationToken = default);
 
