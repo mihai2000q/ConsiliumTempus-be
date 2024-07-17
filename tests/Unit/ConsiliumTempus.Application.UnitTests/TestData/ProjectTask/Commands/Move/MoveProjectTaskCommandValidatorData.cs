@@ -14,8 +14,18 @@ internal static class MoveProjectTaskCommandValidatorData
 
             command = new MoveProjectTaskCommand(
                 Guid.NewGuid(),
+                Guid.NewGuid(),
                 Guid.NewGuid());
             Add(command);
+        }
+    }
+
+    internal class GetInvalidSprintIdCommands : TheoryData<MoveProjectTaskCommand, string>
+    {
+        public GetInvalidSprintIdCommands()
+        {
+            var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(sprintId: Guid.Empty);
+            Add(command, nameof(command.SprintId));
         }
     }
 

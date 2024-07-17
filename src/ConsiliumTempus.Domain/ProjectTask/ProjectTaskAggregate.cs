@@ -134,13 +134,13 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             }
             else
             {
-                return false;
+                return true;
             }
         }
 
         UpdatedDateTime = DateTime.UtcNow;
 
-        return true;
+        return false;
     }
 
     private void MoveWithinStage(ProjectTaskId overTaskId)
