@@ -230,6 +230,7 @@ Sends body data that the project task needs to be moved.
 
 ```json
 {
+  "sprintId": "10000000-0000-0000-0000-000000000000",
   "id": "10000000-0000-0000-0000-000000000000",
   "overId": "20000000-0000-0000-0000-000000000000"
 }

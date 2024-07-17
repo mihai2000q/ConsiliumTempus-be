@@ -12,6 +12,7 @@ import UpdateOverviewProjectTaskRequest from "../types/requests/project-task/Upd
 import MoveProjectTaskRequest from "../types/requests/project-task/MoveProjectTaskRequest";
 
 test.describe('should allow operations on the project task entity', () => {
+  let SPRINT_ID: string
   let STAGE_ID: string
 
   test.beforeEach('should register user and get project id', async ({ request }) => {
@@ -23,6 +24,7 @@ test.describe('should allow operations on the project task entity', () => {
       isPrivate: true
     })
     const sprints = await getProjectSprints(request, project.id)
+    SPRINT_ID = sprints[0].id
     const stages = await getProjectStages(request, sprints[0].id)
     STAGE_ID = stages[1].id
   })
@@ -375,6 +377,7 @@ test.describe('should allow operations on the project task entity', () => {
     const task3 = await createProjectTask(request, createProjectTaskRequest3)
 
     const body: MoveProjectTaskRequest = {
+      sprintId: SPRINT_ID,
       id: task2.id,
       overId: task3.id
     }

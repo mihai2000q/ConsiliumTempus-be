@@ -146,6 +146,8 @@ internal static partial class Utils
             overStage.Tasks.ShouldBeOrdered();
 
             stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
+            stages.SelectMany(s => s.Tasks)
+                .Should().ContainSingle(t => t == task);
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -164,8 +166,10 @@ internal static partial class Utils
             task.Stage.Should().Be(overStage);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            stages.Should().ContainSingle(s => s.Id == overStage.Id);
+            stages.Should().ContainSingle(s => s == overStage);
             stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
+            stages.SelectMany(s => s.Tasks)
+                .Should().ContainSingle(t => t == task);
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

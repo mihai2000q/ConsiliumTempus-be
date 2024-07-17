@@ -77,10 +77,12 @@ public static class ProjectTaskRequestFactory
     }
     
     public static MoveProjectTaskRequest CreateMoveProjectTaskRequest(
+        Guid? sprintId = null,
         Guid? id = null,
         Guid? overId = null)
     {
         return new MoveProjectTaskRequest(
+            sprintId ?? Guid.NewGuid(),
             id ?? Guid.NewGuid(),
             overId ?? Guid.NewGuid());
     }
