@@ -103,7 +103,7 @@ public sealed class ProjectTaskController(IMapper mapper, ISender mediator) : Ap
     }
 
     [HasPermission(Permissions.DeleteProjectTask)]
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("{id:guid}/from/{stageId:guid}")]
     public async Task<IActionResult> Delete(DeleteProjectTaskRequest request, CancellationToken cancellationToken)
     {
         var command = Mapper.Map<DeleteProjectTaskCommand>(request);

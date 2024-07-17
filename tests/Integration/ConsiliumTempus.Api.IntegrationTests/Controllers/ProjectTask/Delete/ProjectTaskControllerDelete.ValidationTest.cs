@@ -14,12 +14,16 @@ public class ProjectTaskControllerDeleteValidationTest(WebAppFactory factory)
     public async Task DeleteProjectTask_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var task = ProjectTaskData.ProjectTasks.First();
-        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(task.Id.Value);
+        var stage = ProjectTaskData.ProjectStages.First();
+        var task = stage.Tasks[0];
+        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(
+            task.Id.Value,
+            stage.Id.Value);
 
         // Act
         Client.UseCustomToken(ProjectTaskData.Users.First());
-        var outcome = await Client.Delete($"api/projects/tasks/{request.Id}");
+        var outcome = await Client.Delete($"api/projects/tasks/" +
+                                          $"{request.Id}/from/{request.StageId}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -29,11 +33,11 @@ public class ProjectTaskControllerDeleteValidationTest(WebAppFactory factory)
     public async Task DeleteProjectTask_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
-        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(
-            id: Guid.Empty);  
+        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(id: Guid.Empty);
 
         // Act
-        var outcome = await Client.Delete($"api/projects/tasks/{request.Id}");
+        var outcome = await Client.Delete($"api/projects/tasks/" +
+                                          $"{request.Id}/from/{request.StageId}");
 
         // Assert
         await outcome.ValidateValidationErrors();

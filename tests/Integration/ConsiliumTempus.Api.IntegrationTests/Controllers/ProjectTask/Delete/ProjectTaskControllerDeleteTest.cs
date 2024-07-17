@@ -20,12 +20,15 @@ public class ProjectTaskControllerDeleteTest(WebAppFactory factory)
     public async Task DeleteProjectTask_WhenSucceeds_ShouldDeleteAndReturnSuccessResponse()
     {
         // Arrange
-        var task = ProjectTaskData.ProjectTasks.First();
-        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(task.Id.Value);
+        var task = ProjectTaskData.ProjectTasks[2];
+        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(
+            task.Id.Value,
+            task.Stage.Id.Value);
 
         // Act
         Client.UseCustomToken(ProjectTaskData.Users.First());
-        var outcome = await Client.Delete($"api/projects/tasks/{request.Id}");
+        var outcome = await Client.Delete($"api/projects/tasks/" +
+                                          $"{request.Id}/from/{request.StageId}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -49,13 +52,36 @@ public class ProjectTaskControllerDeleteTest(WebAppFactory factory)
     public async Task DeleteProjectTask_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest();
+        var stage = ProjectTaskData.ProjectStages.First();
+        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(
+            stageId: stage.Id.Value);
 
         // Act
-        var outcome = await Client.Delete($"api/projects/tasks/{request.Id}");
+        var outcome = await Client.Delete($"api/projects/tasks/" +
+                                          $"{request.Id}/from/{request.StageId}");
 
         // Assert
         await outcome.ValidateError(Errors.ProjectTask.NotFound);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.ProjectTasks.Should().HaveCount(ProjectTaskData.ProjectTasks.Length);
+        dbContext.ProjectTasks
+            .SingleOrDefault(p => p.Id == ProjectTaskId.Create(request.Id))
+            .Should().BeNull();
+    }
+
+    [Fact]
+    public async Task DeleteProjectTask_WhenStageIsNotFound_ShouldReturnStageNotFoundError()
+    {
+        // Arrange
+        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest();
+
+        // Act
+        var outcome = await Client.Delete($"api/projects/tasks/" +
+                                          $"{request.Id}/from/{request.StageId}");
+
+        // Assert
+        await outcome.ValidateError(Errors.ProjectStage.NotFound);
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectTasks.Should().HaveCount(ProjectTaskData.ProjectTasks.Length);

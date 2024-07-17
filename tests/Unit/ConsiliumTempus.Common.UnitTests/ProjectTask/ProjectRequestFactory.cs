@@ -87,11 +87,14 @@ public static class ProjectTaskRequestFactory
             overId ?? Guid.NewGuid());
     }
 
-    public static DeleteProjectTaskRequest CreateDeleteProjectTaskRequest(Guid? id = null)
+    public static DeleteProjectTaskRequest CreateDeleteProjectTaskRequest(
+        Guid? id = null,
+        Guid? stageId = null)
     {
         return new DeleteProjectTaskRequest
         {
-            Id = id ?? Guid.NewGuid()
+            Id = id ?? Guid.NewGuid(),
+            StageId = stageId ?? Guid.NewGuid()
         };
     }
 }
