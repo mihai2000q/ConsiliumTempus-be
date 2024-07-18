@@ -12,6 +12,7 @@
 - [Api](#api)
 - [Domain Models](#domain-models)
 - [Database](#database)
+- [Feature Development Workflow](#feature-development-workflow)
 - [License](#license)
 
 ## Abstract
@@ -214,6 +215,11 @@ More about the domain models can be found at [Domain Models](docs/Domain.md).
 The database chosen for this application infrastructure is a Microsoft SQL Server. 
 <br>
 For more information about the database, please check out the [documentation](docs/Database.md). 
+
+## Feature Development Workflow
+
+For a summary on best practices and how to start implementing new features, 
+check out the [guidelines](docs/Feature-Development-Workflow.md).
 
 ## License
 
