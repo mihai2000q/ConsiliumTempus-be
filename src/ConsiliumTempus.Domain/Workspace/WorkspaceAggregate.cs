@@ -80,14 +80,15 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
         UpdatedDateTime = DateTime.UtcNow;
         RefreshActivity();
     }
+
+    public void UpdateFavorites(bool isFavorite, UserAggregate user)
+    {
         if (isFavorite)
             _favorites.Add(user);
         else
             _favorites.Remove(user);
-        UpdatedDateTime = DateTime.UtcNow;
-        RefreshActivity();
     }
-    
+
     public void UpdateOverview(Description description)
     {
         Description = description;
