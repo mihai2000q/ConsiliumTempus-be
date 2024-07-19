@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Constants;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.ProjectSprint;
@@ -19,26 +20,23 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
             DateOnly.FromDateTime(DateTime.UtcNow));
         notification.Project.AddSprint(sprint);
 
-        var count = 0;
         Constants.ProjectStage.Names
-            .Select(name => ProjectStage.Create(
+            .Select((name, index) => ProjectStage.Create(
                 Name.Create(name),
-                CustomOrderPosition.Create(count++), 
+                CustomOrderPosition.Create(index), 
                 sprint,
                 notification.Project.Owner))
-            .ToList()
             .ForEach(stage => sprint.AddStage(stage));
 
-        count = 0;
         var stage = sprint.Stages[0];
         Constants.ProjectTask.Names
-            .ToList()
-            .ForEach(name => stage.AddTask(ProjectTaskAggregate.Create(
+            .Select((name, index) => ProjectTaskAggregate.Create(
                 Name.Create(name),
                 Description.Create(string.Empty),
-                CustomOrderPosition.Create(count++),
+                CustomOrderPosition.Create(index),
                 notification.Project.Owner,
-                stage)));
+                stage))
+            .ForEach(task => stage.AddTask(task));
 
         return Task.CompletedTask;
     }

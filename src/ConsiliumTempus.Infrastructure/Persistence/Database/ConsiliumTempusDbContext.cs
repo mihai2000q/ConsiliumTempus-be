@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Interfaces;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -31,7 +32,6 @@ public sealed class ConsiliumTempusDbContext(
         modelBuilder.Model.GetEntityTypes()
             .SelectMany(e => e.GetProperties())
             .Where(p => p.IsPrimaryKey())
-            .ToList()
             .ForEach(p => p.ValueGenerated = ValueGenerated.Never);
 
         base.OnModelCreating(modelBuilder);
