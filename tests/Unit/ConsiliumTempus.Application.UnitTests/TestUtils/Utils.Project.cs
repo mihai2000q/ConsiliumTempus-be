@@ -3,6 +3,7 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
@@ -103,6 +104,14 @@ internal static partial class Utils
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertFromUpdateFavoritesCommand(
+            ProjectAggregate project,
+            UpdateFavoritesProjectCommand command,
+            UserAggregate currentUser)
+        {
+            project.IsFavorite(currentUser).Should().Be(command.IsFavorite);
         }
         
         internal static void AssertFromUpdateOverviewCommand(
