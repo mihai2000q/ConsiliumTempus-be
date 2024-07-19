@@ -25,7 +25,6 @@ public class MoveProjectTaskCommandValidatorTest
     }
 
     [Theory]
-    [ClassData(typeof(MoveProjectTaskCommandValidatorData.GetInvalidSprintIdCommands))]
     [ClassData(typeof(MoveProjectTaskCommandValidatorData.GetInvalidIdCommands))]
     [ClassData(typeof(MoveProjectTaskCommandValidatorData.GetInvalidOverIdCommands))]
     public async Task ValidateMoveProjectTaskCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(

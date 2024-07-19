@@ -21,12 +21,10 @@ public static class ProjectTaskCommandFactory
     }
     
     public static MoveProjectTaskCommand CreateMoveProjectTaskCommand(
-        Guid? sprintId = null,
         Guid? id = null,
         Guid? overId = null)
     {
         return new MoveProjectTaskCommand(
-            sprintId ?? Guid.NewGuid(),
             id ?? Guid.NewGuid(),
             overId ?? Guid.NewGuid());
     }

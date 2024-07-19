@@ -1,28 +1,23 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ErrorOr;
 using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.Move;
 
-public sealed class MoveProjectTaskCommandHandler(IProjectSprintRepository projectSprintRepository)
+public sealed class MoveProjectTaskCommandHandler(IProjectTaskRepository projectTaskRepository)
     : IRequestHandler<MoveProjectTaskCommand, ErrorOr<MoveProjectTaskResult>>
 {
     public async Task<ErrorOr<MoveProjectTaskResult>> Handle(MoveProjectTaskCommand command,
         CancellationToken cancellationToken)
     {
-        var sprint = await projectSprintRepository.GetWithTasksAndWorkspace(
-            ProjectSprintId.Create(command.SprintId), 
+        var task = await projectTaskRepository.GetWithTasksAndWorkspace(
+            ProjectTaskId.Create(command.Id), 
             cancellationToken);
-        if (sprint is null) return Errors.ProjectSprint.NotFound;
-
-        var task = sprint.Stages
-            .SelectMany(s => s.Tasks)
-            .SingleOrDefault(t => t.Id.Value == command.Id);
         if (task is null) return Errors.ProjectTask.NotFound;
 
-        var isError = task.Move(command.OverId, task.Stage.Sprint.Stages);
+        var isError = task.Move(command.OverId);
         if (isError) return Errors.ProjectTask.OverNotFound;
 
         task.Stage.Sprint.Project.RefreshActivity();

@@ -6,9 +6,6 @@ public sealed class MoveProjectTaskCommandValidator : AbstractValidator<MoveProj
 {
     public MoveProjectTaskCommandValidator()
     {
-        RuleFor(c => c.SprintId)
-            .NotEmpty(); 
-
         RuleFor(c => c.Id)
             .NotEmpty();
 
