@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Domain.Common.Constants;
@@ -128,8 +129,7 @@ internal static partial class Utils
         internal static void AssertUpdate(
             ProjectAggregate project,
             ProjectAggregate newProject,
-            UpdateProjectRequest request,
-            UserAggregate user)
+            UpdateProjectRequest request)
         {
             // unchanged
             newProject.Id.Value.Should().Be(request.Id);
@@ -138,21 +138,30 @@ internal static partial class Utils
             // changed
             newProject.Name.Value.Should().Be(request.Name);
             newProject.Lifecycle.ToString().ToLower().Should().Be(request.Lifecycle.ToLower());
-            newProject.IsFavorite(user).Should().Be(request.IsFavorite);
             newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
+        internal static void AssertUpdateFavorites(
+            ProjectAggregate newProject,
+            UpdateFavoritesProjectRequest request,
+            UserAggregate user)
+        {
+            // unchanged
+            newProject.Id.Value.Should().Be(request.Id);
+
+            // changed
+            newProject.IsFavorite(user).Should().Be(request.IsFavorite);
+        }
+
         internal static void AssertUpdateOverview(
-            ProjectAggregate project,
             ProjectAggregate newProject,
             UpdateOverviewProjectRequest request)
         {
             // unchanged
             newProject.Id.Value.Should().Be(request.Id);
-            newProject.CreatedDateTime.Should().Be(project.CreatedDateTime);
 
             // changed
             newProject.Description.Value.Should().Be(request.Description);

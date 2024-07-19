@@ -9,6 +9,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
@@ -16,6 +17,7 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
@@ -126,6 +128,20 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
         return result.Match(
             updateResult => Ok(Mapper.Map<UpdateProjectResponse>(updateResult)),
+            Problem
+        );
+    }
+
+    [HasPermission(Permissions.UpdateProject)]
+    [HttpPut("Favorites")]
+    public async Task<IActionResult> UpdateFavorites(UpdateFavoritesProjectRequest request, 
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateFavoritesProjectCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateFavoritesResult => Ok(Mapper.Map<UpdateFavoritesProjectResponse>(updateFavoritesResult)),
             Problem
         );
     }

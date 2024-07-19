@@ -3,5 +3,4 @@
 public sealed record UpdateProjectRequest(
     Guid Id,
     string Name,
-    string Lifecycle,
-    bool IsFavorite);
+    string Lifecycle);

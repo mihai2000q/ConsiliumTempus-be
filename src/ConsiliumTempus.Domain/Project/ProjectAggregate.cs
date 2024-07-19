@@ -88,16 +88,20 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         return _favorites.SingleOrDefault(u => u == user) is not null;
     }
 
-    public void Update(Name name, ProjectLifecycle lifecycle, bool isFavorite, UserAggregate user)
+    public void Update(Name name, ProjectLifecycle lifecycle)
     {
         Name = name;
         Lifecycle = lifecycle;
+        UpdatedDateTime = DateTime.UtcNow;
+        RefreshActivity();
+    }
+    
+    public void UpdateFavorites(bool isFavorite, UserAggregate user)
+    {
         if (isFavorite)
             _favorites.Add(user);
         else
             _favorites.Remove(user);
-        UpdatedDateTime = DateTime.UtcNow;
-        RefreshActivity();
     }
 
     public void UpdateOverview(Description description)

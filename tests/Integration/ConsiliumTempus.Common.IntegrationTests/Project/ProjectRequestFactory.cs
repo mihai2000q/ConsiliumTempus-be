@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
@@ -84,13 +85,20 @@ public static class ProjectRequestFactory
     public static UpdateProjectRequest CreateUpdateProjectRequest(
         Guid? id = null,
         string name = Constants.Project.Name,
-        ProjectLifecycle lifecycle = ProjectLifecycle.Active,
-        bool isFavorite = false)
+        ProjectLifecycle lifecycle = ProjectLifecycle.Active)
     {
         return new UpdateProjectRequest(
             id ?? Guid.NewGuid(),
             name,
-            lifecycle.ToString(),
+            lifecycle.ToString());
+    }
+
+    public static UpdateFavoritesProjectRequest CreateUpdateFavoritesProjectRequest(
+        Guid? id = null,
+        bool isFavorite = false)
+    {
+        return new UpdateFavoritesProjectRequest(
+            id ?? Guid.NewGuid(),
             isFavorite);
     }
 

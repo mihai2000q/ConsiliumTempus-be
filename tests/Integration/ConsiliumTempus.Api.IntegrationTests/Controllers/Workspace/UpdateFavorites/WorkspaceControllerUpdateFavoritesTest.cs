@@ -7,7 +7,6 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
-using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.UpdateFavorites;
 
@@ -34,8 +33,8 @@ public class WorkspaceControllerUpdateFavoritesTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedWorkspace = dbContext.Workspaces
-            .SingleOrDefault(u => u.Id == WorkspaceId.Create(request.Id));
-        Utils.Workspace.AssertUpdatedFavorites(updatedWorkspace!, request, user);
+            .Single(u => u.Id == WorkspaceId.Create(request.Id));
+        Utils.Workspace.AssertUpdatedFavorites(updatedWorkspace, request, user);
     }
 
     [Fact]
