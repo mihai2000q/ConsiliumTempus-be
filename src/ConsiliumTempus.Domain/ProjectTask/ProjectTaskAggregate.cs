@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
@@ -106,71 +107,64 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         _comments.Add(comment);
     }
 
-    public bool Move(Guid overId, List<ProjectStage> stages)
+    public bool Move(Guid overId)
     {
-        var overStage = stages.SingleOrDefault(s => s.Id.Value == overId);
+        var overStage = Stage.Sprint.Stages.SingleOrDefault(s => s.Id.Value == overId);
 
         if (overStage is not null)
         {
+            Parallel.Invoke(
+                () =>
+                {
+                    ReorderStage();
+                    Stage.RemoveTask(this, false);
+                },
+                () => overStage.AddTask(this, true));
+
             CustomOrderPosition = CustomOrderPosition.Create(0);
             Stage = overStage;
-            overStage.AddTask(this, true);
         }
         else
         {
-            overStage = stages
+            overStage = Stage.Sprint.Stages
                 .SelectMany(s => s.Tasks)
                 .SingleOrDefault(t => t.Id.Value == overId)
                 ?.Stage;
 
-            if (overStage == Stage)
-            {
-                MoveWithinStage(ProjectTaskId.Create(overId));
-            }
-            else if (overStage is not null)
-            {
-                MoveToAnotherStage(ProjectTaskId.Create(overId), overStage);
-            }
-            else
-            {
-                return false;
-            }
+            var overTaskId = ProjectTaskId.Create(overId);
+
+            if (overStage == Stage) MoveWithinStage(overTaskId);
+            else if (overStage is not null) MoveToAnotherStage(overTaskId, overStage);
+            else return true;
         }
 
         UpdatedDateTime = DateTime.UtcNow;
 
-        return true;
+        return false;
     }
 
-    private void MoveWithinStage(ProjectTaskId overProjectTaskId)
+    private void MoveWithinStage(ProjectTaskId overTaskId)
     {
-        var overTask = Stage.Tasks.Single(t => t.Id == overProjectTaskId);
+        var overTask = Stage.Tasks.Single(t => t.Id == overTaskId);
 
         var newCustomOrderPosition = CustomOrderPosition.Create(overTask.CustomOrderPosition.Value);
 
-        if (CustomOrderPosition.Value < overTask.CustomOrderPosition.Value)
-        {
-            // task is placed on upper position
-            for (var i = CustomOrderPosition.Value + 1; i <= overTask.CustomOrderPosition.Value; i++)
-            {
-                Stage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
-            }
-        }
-        else
-        {
-            // task is placed on lower position
-            for (var i = overTask.CustomOrderPosition.Value; i < CustomOrderPosition.Value; i++)
-            {
-                Stage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
-            }
-        }
+        var (start, end, sign) = CustomOrderPosition.Value < overTask.CustomOrderPosition.Value
+            ? (CustomOrderPosition.Value + 1, overTask.CustomOrderPosition.Value + 1, -1)
+            : (overTask.CustomOrderPosition.Value, CustomOrderPosition.Value, 1);
+
+        Stage.Tasks
+            .OrderBy(t => t.CustomOrderPosition.Value)
+            .Skip(start)
+            .Take(end - start)
+            .ForEach(t => t.UpdateCustomOrderPosition(t.CustomOrderPosition + sign));
 
         CustomOrderPosition = newCustomOrderPosition;
     }
 
-    private void MoveToAnotherStage(ProjectTaskId overProjectTaskId, ProjectStage overStage)
+    private void MoveToAnotherStage(ProjectTaskId overTaskId, ProjectStage overStage)
     {
-        var overTask = overStage.Tasks.Single(t => t.Id == overProjectTaskId);
+        var overTask = overStage.Tasks.Single(t => t.Id == overTaskId);
 
         var newCustomOrderPosition = CustomOrderPosition.Create(overTask.CustomOrderPosition.Value);
 
@@ -182,14 +176,30 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
                 {
                     overStage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
                 }
+                overStage.AddTask(this);
             },
             () =>
             {
-                Stage.RemoveTask(this);
+                ReorderStage();
+                Stage.RemoveTask(this, false);
             });
 
-        overStage.AddTask(this);
         Stage = overStage;
         CustomOrderPosition = newCustomOrderPosition;
+    }
+
+    /// <summary>
+    /// Orders the tasks inside the stage by Custom Order Position and then updates all the tasks' position.
+    /// </summary>
+    /// <remarks>
+    /// Current Stage is not ordered even before deletion, therefore we order it manually by Custom Order Position,
+    /// and then we can update the position for all tasks
+    /// </remarks>
+    private void ReorderStage()
+    {
+        Stage.Tasks
+            .OrderBy(t => t.CustomOrderPosition.Value)
+            .Skip(CustomOrderPosition.Value + 1)
+            .ForEach(t => t.UpdateCustomOrderPosition(t.CustomOrderPosition - 1));
     }
 }

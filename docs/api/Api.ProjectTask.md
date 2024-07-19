@@ -245,14 +245,15 @@ Only admin users that are part of the workspace can delete a project
 ([Delete Project Task Permission](../Security.md/#permissions)).
 
 ```js
-DELETE {{host}}/api/projects/tasks/{id}
+DELETE {{host}}/api/projects/tasks/{id}/from/{stageId}
 ```
 
 - **id** is a 36 characters strings
+- **stageId** is a 36 characters strings
 
 #### Delete Project Task Request
 
-Sends the id of the sprint inside the route request.
+Sends the id of the task and the stage inside the route request.
 
 #### Delete Project Task Response
 

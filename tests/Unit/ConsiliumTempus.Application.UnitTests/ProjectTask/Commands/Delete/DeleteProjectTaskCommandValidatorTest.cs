@@ -25,6 +25,7 @@ public class DeleteProjectTaskCommandValidatorTest
     }
 
     [Theory]
+    [ClassData(typeof(DeleteProjectTaskCommandValidatorData.GetInvalidStageIdCommands))]
     [ClassData(typeof(DeleteProjectTaskCommandValidatorData.GetInvalidIdCommands))]
     public async Task ValidateDeleteProjectTaskCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         DeleteProjectTaskCommand command,

@@ -101,13 +101,12 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
             .ToListAsync(cancellationToken);
     }
 
-    public Task<List<ProjectStage>> GetStagesWithTasks(ProjectSprintId id, CancellationToken cancellationToken = default)
+    public Task<ProjectStage?> GetStageWithTasksAndWorkspace(ProjectStageId id, CancellationToken cancellationToken = default)
     {
         return dbContext.Set<ProjectStage>()
-            .Include(s => s.Sprint.Project.Workspace)
+            .Include(ps => ps.Sprint.Project.Workspace)
             .Include(ps => ps.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
-            .Where(ps => ps.Sprint.Id == id)
-            .ToListAsync(cancellationToken);
+            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 
     public async Task Add(ProjectSprintAggregate sprint, CancellationToken cancellationToken = default)

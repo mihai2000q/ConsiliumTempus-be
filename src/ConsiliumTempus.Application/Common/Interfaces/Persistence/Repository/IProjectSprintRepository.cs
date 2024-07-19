@@ -12,7 +12,8 @@ public interface IProjectSprintRepository
 
     Task<ProjectSprintAggregate?> GetWithWorkspace(ProjectSprintId id, CancellationToken cancellationToken = default);
 
-    Task<ProjectSprintAggregate?> GetWithSprintsAndWorkspace(ProjectSprintId id,
+    Task<ProjectSprintAggregate?> GetWithSprintsAndWorkspace(
+        ProjectSprintId id,
         CancellationToken cancellationToken = default);
 
     Task<ProjectSprintAggregate> GetFirstByProject(
@@ -34,7 +35,7 @@ public interface IProjectSprintRepository
 
     Task<List<ProjectStage>> GetStages(ProjectSprintId id, CancellationToken cancellationToken = default);
 
-    Task<List<ProjectStage>> GetStagesWithTasks(ProjectSprintId id, CancellationToken cancellationToken = default);
+    Task<ProjectStage?> GetStageWithTasksAndWorkspace(ProjectStageId id, CancellationToken cancellationToken = default);
 
     Task Add(ProjectSprintAggregate sprint, CancellationToken cancellationToken = default);
 

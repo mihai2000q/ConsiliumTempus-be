@@ -8,5 +8,8 @@ public sealed class DeleteProjectTaskCommandValidator : AbstractValidator<Delete
     {
         RuleFor(c => c.Id)
             .NotEmpty();
+
+        RuleFor(c => c.StageId)
+            .NotEmpty();
     }
 }

@@ -419,7 +419,10 @@ test.describe('should allow operations on the project task entity', () => {
       name: "Project task Name"
     })
 
-    const response = await request.delete(`/api/projects/tasks/${projectTask.id}`, useToken());
+    const response = await request.delete(
+      `/api/projects/tasks/${projectTask.id}/from/${STAGE_ID}`,
+      useToken()
+    );
 
     expect(response.ok()).toBeTruthy()
 

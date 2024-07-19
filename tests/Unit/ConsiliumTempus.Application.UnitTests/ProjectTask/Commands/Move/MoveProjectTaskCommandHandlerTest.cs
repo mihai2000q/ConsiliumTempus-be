@@ -2,10 +2,11 @@
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
+using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
@@ -17,15 +18,13 @@ public class MoveProjectTaskCommandHandlerTest
 {
     #region Setup
 
-    private readonly IProjectSprintRepository _projectSprintRepository;
     private readonly IProjectTaskRepository _projectTaskRepository;
     private readonly MoveProjectTaskCommandHandler _uut;
 
     public MoveProjectTaskCommandHandlerTest()
     {
-        _projectSprintRepository = Substitute.For<IProjectSprintRepository>();
         _projectTaskRepository = Substitute.For<IProjectTaskRepository>();
-        _uut = new MoveProjectTaskCommandHandler(_projectSprintRepository, _projectTaskRepository);
+        _uut = new MoveProjectTaskCommandHandler(_projectTaskRepository);
     }
 
     #endregion
@@ -34,17 +33,12 @@ public class MoveProjectTaskCommandHandlerTest
     [ClassData(typeof(MoveProjectTaskCommandHandlerData.GetMovingToAnotherStageCommands))]
     public async Task HandleMoveProjectTaskCommand_WhenMovingToAnotherStage_ShouldMoveProjectTask(
         MoveProjectTaskCommand command,
-        ProjectTaskAggregate task,
-        List<ProjectStage> stages)
+        ProjectTaskAggregate task)
     {
         // Arrange
         _projectTaskRepository
-            .GetWithSprint(Arg.Any<ProjectTaskId>(), Arg.Any<bool>())
+            .GetWithTasksAndWorkspace(Arg.Any<ProjectTaskId>())
             .Returns(task);
-
-        _projectSprintRepository
-            .GetStagesWithTasks(Arg.Any<ProjectSprintId>())
-            .Returns(stages);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -52,15 +46,12 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithSprint(Arg.Is<ProjectTaskId>(id => id.Value == command.Id), Arg.Is(false));
-        await _projectSprintRepository
-            .Received(1)
-            .GetStagesWithTasks(Arg.Is(task.Stage.Sprint.Id));
+            .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new MoveProjectTaskResult());
 
-        Utils.ProjectTask.AssertFromMoveCommandToAnotherStage(task, command, stages);
+        Utils.ProjectTask.AssertFromMoveCommandToAnotherStage(task, command);
     }
 
     [Theory]
@@ -68,17 +59,12 @@ public class MoveProjectTaskCommandHandlerTest
     public async Task HandleMoveProjectTaskCommand_WhenMovingWithinStage_ShouldMoveProjectTask(
         MoveProjectTaskCommand command,
         ProjectTaskAggregate task,
-        List<ProjectStage> stages,
         int expectedCustomOrderPosition)
     {
         // Arrange
         _projectTaskRepository
-            .GetWithSprint(Arg.Any<ProjectTaskId>(), Arg.Any<bool>())
+            .GetWithTasksAndWorkspace(Arg.Any<ProjectTaskId>())
             .Returns(task);
-
-        _projectSprintRepository
-            .GetStagesWithTasks(Arg.Any<ProjectSprintId>())
-            .Returns(stages);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -86,10 +72,7 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithSprint(Arg.Is<ProjectTaskId>(id => id.Value == command.Id), Arg.Is(false));
-        await _projectSprintRepository
-            .Received(1)
-            .GetStagesWithTasks(Arg.Is(task.Stage.Sprint.Id));
+            .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new MoveProjectTaskResult());
@@ -102,17 +85,12 @@ public class MoveProjectTaskCommandHandlerTest
     public async Task HandleMoveProjectTaskCommand_WhenMovingOverTaskToAnotherStage_ShouldMoveProjectTask(
         MoveProjectTaskCommand command,
         ProjectTaskAggregate task,
-        List<ProjectStage> stages,
         int expectedCustomOrderPosition)
     {
         // Arrange
         _projectTaskRepository
-            .GetWithSprint(Arg.Any<ProjectTaskId>(), Arg.Any<bool>())
+            .GetWithTasksAndWorkspace(Arg.Any<ProjectTaskId>())
             .Returns(task);
-
-        _projectSprintRepository
-            .GetStagesWithTasks(Arg.Any<ProjectSprintId>())
-            .Returns(stages);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -120,10 +98,7 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithSprint(Arg.Is<ProjectTaskId>(id => id.Value == command.Id), Arg.Is(false));
-        await _projectSprintRepository
-            .Received(1)
-            .GetStagesWithTasks(Arg.Is(task.Stage.Sprint.Id));
+            .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new MoveProjectTaskResult());
@@ -131,7 +106,6 @@ public class MoveProjectTaskCommandHandlerTest
         Utils.ProjectTask.AssertFromMoveCommandOverTaskToAnotherStage(
             task,
             command,
-            stages,
             expectedCustomOrderPosition);
     }
 
@@ -139,19 +113,15 @@ public class MoveProjectTaskCommandHandlerTest
     public async Task HandleMoveProjectTaskCommand_WhenOverIsNull_ShouldReturnOverNotFoundError()
     {
         // Arrange
-        var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand();
-
+        var sprint = ProjectSprintFactory.Create(stagesCount: 0);
         var stages = ProjectStageFactory.CreateListWithTasks();
+        sprint.AddStages(stages);
         var task = stages[0].Tasks[0];
-
         _projectTaskRepository
-            .GetWithSprint(Arg.Any<ProjectTaskId>(), Arg.Any<bool>())
+            .GetWithTasksAndWorkspace(Arg.Any<ProjectTaskId>())
             .Returns(task);
 
-        // these stages do not have the overId and neither do the tasks
-        _projectSprintRepository
-            .GetStagesWithTasks(Arg.Any<ProjectSprintId>())
-            .Returns(stages);
+        var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(task.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -159,22 +129,19 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithSprint(Arg.Is<ProjectTaskId>(id => id.Value == command.Id), Arg.Is(false));
-        await _projectSprintRepository
-            .Received(1)
-            .GetStagesWithTasks(Arg.Is(task.Stage.Sprint.Id));
+            .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.ProjectTask.OverNotFound);
     }
 
     [Fact]
-    public async Task HandleMoveProjectTaskCommand_WhenProjectStageIsNull_ShouldReturnProjectStageNotFoundError()
+    public async Task HandleMoveProjectTaskCommand_WhenProjectTaskIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand();
 
         _projectTaskRepository
-            .GetWithSprint(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
+            .GetWithTasksAndWorkspace(Arg.Any<ProjectTaskId>())
             .ReturnsNull();
 
         // Act
@@ -183,8 +150,7 @@ public class MoveProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithSprint(Arg.Is<ProjectTaskId>(id => id.Value == command.Id), Arg.Is(false));
-        _projectSprintRepository.DidNotReceive();
+            .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);
     }

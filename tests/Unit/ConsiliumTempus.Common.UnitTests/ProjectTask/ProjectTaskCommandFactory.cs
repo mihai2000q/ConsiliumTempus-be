@@ -29,9 +29,13 @@ public static class ProjectTaskCommandFactory
             overId ?? Guid.NewGuid());
     }
     
-    public static DeleteProjectTaskCommand CreateDeleteProjectTaskCommand(Guid? id = null)
+    public static DeleteProjectTaskCommand CreateDeleteProjectTaskCommand(
+        Guid? id = null,
+        Guid? stageId = null)
     {
-        return new DeleteProjectTaskCommand(id ?? Guid.NewGuid());
+        return new DeleteProjectTaskCommand(
+            id ?? Guid.NewGuid(),
+            stageId ?? Guid.NewGuid());
     }
     
     public static UpdateProjectTaskCommand CreateUpdateProjectTaskCommand(

@@ -2,7 +2,6 @@
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
-using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.Move;
@@ -10,7 +9,7 @@ namespace ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.Mo
 internal static class MoveProjectTaskCommandHandlerData
 {
     internal class GetMovingToAnotherStageCommands 
-        : TheoryData<MoveProjectTaskCommand, ProjectTaskAggregate, List<ProjectStage>>
+        : TheoryData<MoveProjectTaskCommand, ProjectTaskAggregate>
     {
         public GetMovingToAnotherStageCommands()
         {
@@ -21,6 +20,7 @@ internal static class MoveProjectTaskCommandHandlerData
                 sprint: sprint,
                 stagesCount: 4,
                 tasksCount: 10);
+            sprint.AddStages(stages);
 
             var currentStage = stages[0];
             var task = currentStage.Tasks[4];
@@ -29,7 +29,7 @@ internal static class MoveProjectTaskCommandHandlerData
             var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
                 id: task.Id.Value,
                 overId: overStage.Id.Value);
-            Add(command, task, stages);
+            Add(command, task);
             
             // Use Case 2: (more likely to happen)
             sprint = ProjectSprintFactory.Create(stagesCount: 0);
@@ -47,76 +47,60 @@ internal static class MoveProjectTaskCommandHandlerData
             command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
                 id: task.Id.Value,
                 overId: overStage.Id.Value);
-            Add(command, task, sprint.Stages.ToList());
+            Add(command, task);
         }
     }
 
     internal class GetMovingWithinStageCommands 
-        : TheoryData<MoveProjectTaskCommand, ProjectTaskAggregate, List<ProjectStage>, int>
+        : TheoryData<MoveProjectTaskCommand, ProjectTaskAggregate, int>
     {
         public GetMovingWithinStageCommands()
         {
-            // upper position
-            var task = ProjectTaskFactory.CreateWithTasks(tasksCount: 6);
-            var overTask = task.Stage.Tasks[5];
+            // Use Case 1: Upper position
+            AddUseCase(10, 5, 7);
+            AddUseCase(10, 0, 5);
+            AddUseCase(3, 0, 1);
+            AddUseCase(3, 0, 1);
+            AddUseCase(2, 0, 1);
+
+            // Lower position
+            AddUseCase(10, 5, 1);
+            AddUseCase(3, 2, 0);
+            AddUseCase(3, 1, 0);
+            AddUseCase(2, 1, 0);
+        }
+
+        private void AddUseCase(
+            int tasksCount,
+            int taskIndex,
+            int overTaskIndex)
+        {
+            var sprint = ProjectSprintFactory.Create(stagesCount: 0);
+            var stage = ProjectStageFactory.CreateWithTasks(sprint: sprint, tasksCount: tasksCount);
+            sprint.AddStage(stage);
+
+            var task = stage.Tasks[taskIndex];
+            var overTask = task.Stage.Tasks[overTaskIndex];
+
             var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
                 id: task.Id.Value,
                 overId: overTask.Id.Value);
-            Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
-            
-            task = ProjectTaskFactory.CreateWithTasks(tasksCount: 3);
-            task = task.Stage.Tasks[0];
-            overTask = task.Stage.Tasks[2];
-            command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
-                id: task.Id.Value,
-                overId: overTask.Id.Value);
-            Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
-            
-            task = ProjectTaskFactory.CreateWithTasks(tasksCount: 2);
-            task = task.Stage.Tasks[0];
-            overTask = task.Stage.Tasks[1];
-            command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
-                id: task.Id.Value,
-                overId: overTask.Id.Value);
-            Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
-            
-            // lower position
-            task = ProjectTaskFactory.CreateWithTasks(tasksCount: 10);
-            task = task.Stage.Tasks[7];
-            overTask = task.Stage.Tasks[1];
-            command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
-                id: task.Id.Value,
-                overId: overTask.Id.Value);
-            Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
-            
-            task = ProjectTaskFactory.CreateWithTasks(tasksCount: 3);
-            task = task.Stage.Tasks[2];
-            overTask = task.Stage.Tasks[0];
-            command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
-                id: task.Id.Value,
-                overId: overTask.Id.Value);
-            Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
-            
-            task = ProjectTaskFactory.CreateWithTasks(tasksCount: 2);
-            task = task.Stage.Tasks[1];
-            overTask = task.Stage.Tasks[0];
-            command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
-                id: task.Id.Value,
-                overId: overTask.Id.Value);
-            Add(command, task, [task.Stage], overTask.CustomOrderPosition.Value);
+            Add(command, task, overTask.CustomOrderPosition.Value);
         }
     }
 
     internal class GetMovingOverTaskToAnotherStageCommands
-        : TheoryData<MoveProjectTaskCommand, ProjectTaskAggregate, List<ProjectStage>, int>
+        : TheoryData<MoveProjectTaskCommand, ProjectTaskAggregate, int>
     {
         public GetMovingOverTaskToAnotherStageCommands()
         {
             // upper position
+            var sprint = ProjectSprintFactory.Create(stagesCount: 0);
             var stages = ProjectStageFactory.CreateListWithTasks(
-                sprint: ProjectSprintFactory.Create(),
+                sprint: sprint,
                 stagesCount: 4, 
                 tasksCount: 10);
+            sprint.AddStages(stages);
 
             var currentStage = stages[0];
             var task = currentStage.Tasks[1];
@@ -126,13 +110,15 @@ internal static class MoveProjectTaskCommandHandlerData
             var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
                 id: task.Id.Value,
                 overId: overTask.Id.Value);
-            Add(command, task, stages, overTask.CustomOrderPosition.Value);
+            Add(command, task, overTask.CustomOrderPosition.Value);
             
             // lower position
+            sprint = ProjectSprintFactory.Create(stagesCount: 0);
             stages = ProjectStageFactory.CreateListWithTasks(
-                sprint: ProjectSprintFactory.Create(),
+                sprint: sprint,
                 stagesCount: 4, 
                 tasksCount: 10);
+            sprint.AddStages(stages);
 
             currentStage = stages[0];
             task = currentStage.Tasks[8];
@@ -142,7 +128,7 @@ internal static class MoveProjectTaskCommandHandlerData
             command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
                 id: task.Id.Value,
                 overId: overTask.Id.Value);
-            Add(command, task, stages, overTask.CustomOrderPosition.Value);
+            Add(command, task, overTask.CustomOrderPosition.Value);
         }
     }
 }
