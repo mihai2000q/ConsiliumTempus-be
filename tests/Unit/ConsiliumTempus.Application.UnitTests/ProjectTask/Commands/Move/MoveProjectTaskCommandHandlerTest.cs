@@ -6,8 +6,6 @@ using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.ProjectSprint;
-using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using NSubstitute.ReturnsExtensions;

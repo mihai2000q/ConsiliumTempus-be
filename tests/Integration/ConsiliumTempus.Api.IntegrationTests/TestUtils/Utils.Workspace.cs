@@ -90,8 +90,7 @@ internal static partial class Utils
         internal static void AssertUpdated(
             WorkspaceAggregate workspace,
             WorkspaceAggregate newWorkspace,
-            UpdateWorkspaceRequest request,
-            UserAggregate currentUser)
+            UpdateWorkspaceRequest request)
         {
             // unchanged
             newWorkspace.Id.Value.Should().Be(request.Id);
@@ -99,7 +98,6 @@ internal static partial class Utils
 
             // changed
             newWorkspace.Name.Value.Should().Be(request.Name);
-            newWorkspace.IsFavorite(currentUser).Should().Be(request.IsFavorite);
             newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }

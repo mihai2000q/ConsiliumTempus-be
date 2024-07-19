@@ -287,8 +287,7 @@ test.describe('should allow operations on the workspace entity', () => {
 
     const body: UpdateWorkspaceRequest = {
       id: workspace.id,
-      name: "New Workspace Name",
-      isFavorite: true
+      name: "New Workspace Name"
     }
     const response = await request.put('/api/workspaces', {
       ...useToken(),
@@ -304,7 +303,7 @@ test.describe('should allow operations on the workspace entity', () => {
     const newWorkspace = await getWorkspace(request, body.id)
     expect(newWorkspace).toStrictEqual({
       name: body.name,
-      isFavorite: body.isFavorite,
+      isFavorite: false,
       isPersonal: false,
       owner: expect.any(Object)
     })

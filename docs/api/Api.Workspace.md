@@ -214,8 +214,7 @@ Sends body data that the new workspace needs to be updated.
 ```json
 {
   "id": "88882448-bd63-4731-8a05-f6333b6d22e2",
-  "name": "Workspace Name",
-  "isFavorite": true
+  "name": "Workspace Name"
 }
 ```
 

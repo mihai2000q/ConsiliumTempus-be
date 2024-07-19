@@ -34,7 +34,7 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
         response!.Message.Should().Be("Workspace has been updated successfully!");
 
         var updatedWorkspace = await GetWorkspaceById(request.Id);
-        Utils.Workspace.AssertUpdated(workspace, updatedWorkspace!, request, user);
+        Utils.Workspace.AssertUpdated(workspace, updatedWorkspace!, request);
     }
 
     [Fact]

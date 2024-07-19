@@ -77,7 +77,6 @@ internal static partial class Utils
         {
             command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
-            command.IsFavorite.Should().Be(request.IsFavorite);
 
             return true;
         }

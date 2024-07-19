@@ -5,6 +5,5 @@ namespace ConsiliumTempus.Application.Workspace.Commands.Update;
 
 public sealed record UpdateWorkspaceCommand(
     Guid Id,
-    string Name,
-    bool IsFavorite)
+    string Name)
     : IRequest<ErrorOr<UpdateWorkspaceResult>>;

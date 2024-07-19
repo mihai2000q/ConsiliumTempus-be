@@ -74,9 +74,12 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
         return _favorites.SingleOrDefault(u => u == user) is not null;
     }
 
-    public void Update(Name name, bool isFavorite, UserAggregate user)
+    public void Update(Name name)
     {
         Name = name;
+        UpdatedDateTime = DateTime.UtcNow;
+        RefreshActivity();
+    }
         if (isFavorite)
             _favorites.Add(user);
         else

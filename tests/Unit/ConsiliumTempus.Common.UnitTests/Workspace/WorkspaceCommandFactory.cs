@@ -17,12 +17,12 @@ public static class WorkspaceCommandFactory
 
     public static UpdateWorkspaceCommand CreateUpdateWorkspaceCommand(
         Guid? id = null,
-        string name = Constants.Workspace.Name,
-        bool isFavorite = false)
+        string name = Constants.Workspace.Name)
     {
         return new UpdateWorkspaceCommand(
             id ?? Guid.NewGuid(),
-            name,
+            name);
+    }
             isFavorite);
     }
     

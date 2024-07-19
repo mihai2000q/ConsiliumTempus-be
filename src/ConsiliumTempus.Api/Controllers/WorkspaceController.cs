@@ -96,8 +96,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
     [HasPermission(Permissions.UpdateWorkspace)]
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] UpdateWorkspaceRequest request,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(UpdateWorkspaceRequest request, CancellationToken cancellationToken)
     {
         var command = Mapper.Map<UpdateWorkspaceCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
@@ -110,7 +109,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
     
     [HasPermission(Permissions.UpdateWorkspace)]
     [HttpPut("Overview")]
-    public async Task<IActionResult> UpdateOverview([FromBody] UpdateOverviewWorkspaceRequest request,
+    public async Task<IActionResult> UpdateOverview(UpdateOverviewWorkspaceRequest request, 
         CancellationToken cancellationToken)
     {
         var command = Mapper.Map<UpdateOverviewWorkspaceCommand>(request);
