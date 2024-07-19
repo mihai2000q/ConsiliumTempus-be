@@ -2,5 +2,4 @@
 
 public sealed record UpdateWorkspaceRequest(
     Guid Id,
-    string Name,
-    bool IsFavorite);
+    string Name);

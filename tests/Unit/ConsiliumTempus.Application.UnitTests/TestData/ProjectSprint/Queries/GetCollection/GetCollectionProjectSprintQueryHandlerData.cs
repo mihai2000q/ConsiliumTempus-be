@@ -2,7 +2,7 @@
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint;
 
-namespace ConsiliumTempus.Application.UnitTests.TestData.ProjectSprint.Queries;
+namespace ConsiliumTempus.Application.UnitTests.TestData.ProjectSprint.Queries.GetCollection;
 
 internal static class GetCollectionProjectSprintQueryHandlerData
 {

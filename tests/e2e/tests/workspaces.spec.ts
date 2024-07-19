@@ -13,6 +13,7 @@ import { deleteUser, registerUser } from "../utils/users.utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
 import UpdateWorkspaceRequest from "../types/requests/workspace/UpdateWorkspaceRequest";
 import UpdateOverviewWorkspaceRequest from "../types/requests/workspace/UpdateOverviewWorkspaceRequest";
+import UpdateFavoritesWorkspaceRequest from "../types/requests/workspace/UpdateFavoritesWorkspaceRequest";
 
 test.describe('should allow operations on the workspace entity', () => {
   const EMAIL = "michaelj@gmail.com"
@@ -280,15 +281,14 @@ test.describe('should allow operations on the workspace entity', () => {
   })
 
   test('should update workspace', async ({ request }) => {
-    const oldBody: CreateWorkspaceRequest = {
+    const createWorkspaceRequest: CreateWorkspaceRequest = {
       name: "Some workspace",
     }
-    const workspace = await createWorkspace(request, oldBody)
+    const workspace = await createWorkspace(request, createWorkspaceRequest)
 
     const body: UpdateWorkspaceRequest = {
       id: workspace.id,
-      name: "New Workspace Name",
-      isFavorite: true
+      name: "New Workspace Name"
     }
     const response = await request.put('/api/workspaces', {
       ...useToken(),
@@ -304,6 +304,36 @@ test.describe('should allow operations on the workspace entity', () => {
     const newWorkspace = await getWorkspace(request, body.id)
     expect(newWorkspace).toStrictEqual({
       name: body.name,
+      isFavorite: false,
+      isPersonal: false,
+      owner: expect.any(Object)
+    })
+  })
+
+  test('should update workspace favorites', async ({ request }) => {
+    const createWorkspaceRequest: CreateWorkspaceRequest = {
+      name: "Some workspace",
+    }
+    const workspace = await createWorkspace(request, createWorkspaceRequest)
+
+    const body: UpdateFavoritesWorkspaceRequest = {
+      id: workspace.id,
+      isFavorite: true
+    }
+    const response = await request.put('/api/workspaces/favorites', {
+      ...useToken(),
+      data: body
+    })
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const newWorkspace = await getWorkspace(request, body.id)
+    expect(newWorkspace).toStrictEqual({
+      name: createWorkspaceRequest.name,
       isFavorite: body.isFavorite,
       isPersonal: false,
       owner: expect.any(Object)
@@ -311,10 +341,10 @@ test.describe('should allow operations on the workspace entity', () => {
   })
 
   test('should update workspace overview', async ({ request }) => {
-    const oldBody: CreateWorkspaceRequest = {
+    const createWorkspaceRequest: CreateWorkspaceRequest = {
       name: "Some workspace",
     }
-    const workspace = await createWorkspace(request, oldBody)
+    const workspace = await createWorkspace(request, createWorkspaceRequest)
 
     const body: UpdateOverviewWorkspaceRequest = {
       id: workspace.id,
@@ -338,10 +368,10 @@ test.describe('should allow operations on the workspace entity', () => {
   })
 
   test('should delete workspace', async ({ request }) => {
-    const body: CreateWorkspaceRequest = {
+    const createWorkspaceRequest: CreateWorkspaceRequest = {
       name: "New Team",
     }
-    const workspace = await createWorkspace(request, body)
+    const workspace = await createWorkspace(request, createWorkspaceRequest)
 
     const response = await request.delete(`/api/workspaces/${workspace.id}`, useToken())
 

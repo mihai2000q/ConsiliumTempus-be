@@ -1,8 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
-using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -14,15 +12,13 @@ public class UpdateWorkspaceCommandHandlerTest
 {
     #region Setup
 
-    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IWorkspaceRepository _workspaceRepository;
     private readonly UpdateWorkspaceCommandHandler _uut;
 
     public UpdateWorkspaceCommandHandlerTest()
     {
-        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
-        _uut = new UpdateWorkspaceCommandHandler(_currentUserProvider, _workspaceRepository);
+        _uut = new UpdateWorkspaceCommandHandler(_workspaceRepository);
     }
 
     #endregion
@@ -35,13 +31,8 @@ public class UpdateWorkspaceCommandHandlerTest
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);
-        
-        var currentUser = UserFactory.Create();
-        _currentUserProvider
-            .GetCurrentUserAfterPermissionCheck()
-            .Returns(currentUser);
 
-        var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand(id: workspace.Id.Value);
+        var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand(workspace.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -50,14 +41,11 @@ public class UpdateWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        await _currentUserProvider
-            .Received(1)
-            .GetCurrentUserAfterPermissionCheck();
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateWorkspaceResult());
 
-        Utils.Workspace.AssertFromUpdateCommand(workspace, command, currentUser);
+        Utils.Workspace.AssertFromUpdateCommand(workspace, command);
     }
 
     [Fact]
@@ -77,7 +65,6 @@ public class UpdateWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

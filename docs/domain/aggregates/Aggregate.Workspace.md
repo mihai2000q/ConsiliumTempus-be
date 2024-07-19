@@ -9,6 +9,7 @@ class Workspace
 {
     Workspace Create()
     void Update()
+    void UpdateFavorites()
     void UpdateOverview()
     void AddUserMembership()
     void RefreshActivity()

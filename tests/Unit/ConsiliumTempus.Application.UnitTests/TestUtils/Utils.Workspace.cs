@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
@@ -43,14 +44,21 @@ internal static partial class Utils
 
         internal static void AssertFromUpdateCommand(
             WorkspaceAggregate workspace,
-            UpdateWorkspaceCommand command,
-            UserAggregate currentUser)
+            UpdateWorkspaceCommand command)
         {
             workspace.Id.Value.Should().Be(command.Id);
             workspace.Name.Value.Should().Be(command.Name);
-            workspace.IsFavorite(currentUser).Should().Be(command.IsFavorite);
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertFromUpdateFavoritesCommand(
+            WorkspaceAggregate workspace,
+            UpdateFavoritesWorkspaceCommand command,
+            UserAggregate currentUser)
+        {
+            workspace.Id.Value.Should().Be(command.Id);
+            workspace.IsFavorite(currentUser).Should().Be(command.IsFavorite);
         }
 
         internal static void AssertFromUpdateOverviewCommand(
