@@ -87,7 +87,6 @@ internal static partial class Utils
             MoveProjectTaskCommand command,
             MoveProjectTaskRequest request)
         {
-            command.SprintId.Should().Be(request.SprintId);
             command.Id.Should().Be(request.Id);
             command.OverId.Should().Be(request.OverId);
 

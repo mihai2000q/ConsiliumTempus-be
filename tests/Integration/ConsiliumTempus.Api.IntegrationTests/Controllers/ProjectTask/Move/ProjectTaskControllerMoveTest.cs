@@ -25,7 +25,6 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
         var task = ProjectTaskData.ProjectTasks[1];
         var overTask = ProjectTaskData.ProjectTasks[3];
         var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(
-            task.Stage.Sprint.Id.Value,
             task.Id.Value,
             overTask.Id.Value);
 
@@ -62,7 +61,6 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
         var task = ProjectTaskData.ProjectTasks[3];
         var overTask = ProjectTaskData.ProjectTasks[1];
         var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(
-            task.Stage.Sprint.Id.Value,
             task.Id.Value,
             overTask.Id.Value);
 
@@ -99,7 +97,6 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
         var task = ProjectTaskData.ProjectTasks[1];
         var overStage = ProjectTaskData.ProjectStages[2];
         var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(
-            task.Stage.Sprint.Id.Value,
             task.Id.Value,
             overStage.Id.Value);
 
@@ -136,7 +133,6 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
         var task = ProjectTaskData.ProjectTasks[0];
         var overTask = ProjectTaskData.ProjectTasks[5];
         var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(
-            task.Stage.Sprint.Id.Value,
             task.Id.Value,
             overTask.Id.Value);
 
@@ -178,9 +174,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
         // Arrange
         var user = ProjectTaskData.Users.First();
         var task = ProjectTaskData.ProjectTasks.First();
-        var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(
-            task.Stage.Sprint.Id.Value,
-            task.Id.Value);
+        var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(task.Id.Value);
 
         // Act
         Client.UseCustomToken(user);
@@ -190,8 +184,6 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
         await outcome.ValidateError(Errors.ProjectTask.OverNotFound);
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.ProjectSprints.SingleOrDefault(t => t.Id == ProjectSprintId.Create(request.SprintId))
-            .Should().NotBeNull();
         dbContext.ProjectTasks.SingleOrDefault(t => t.Id == ProjectTaskId.Create(request.Id))
             .Should().NotBeNull();
         dbContext.ProjectTasks.SingleOrDefault(t => t.Id == ProjectTaskId.Create(request.OverId))
@@ -204,8 +196,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
     public async Task MoveProjectTask_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var sprint = ProjectTaskData.ProjectSprints.First();
-        var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(sprint.Id.Value);
+        var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest();
 
         // Act
         var outcome = await Client.Put("api/projects/tasks/Move", request);
@@ -214,26 +205,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
         await outcome.ValidateError(Errors.ProjectTask.NotFound);
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.ProjectSprints.SingleOrDefault(t => t.Id == ProjectSprintId.Create(request.SprintId))
-            .Should().NotBeNull();
         dbContext.ProjectTasks.SingleOrDefault(t => t.Id == ProjectTaskId.Create(request.Id))
-            .Should().BeNull();
-    }
-
-    [Fact]
-    public async Task MoveProjectTask_WhenSprintIsNotFound_ShouldReturnSprintNotFoundError()
-    {
-        // Arrange
-        var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(Guid.NewGuid());
-
-        // Act
-        var outcome = await Client.Put("api/projects/tasks/Move", request);
-
-        // Assert
-        await outcome.ValidateError(Errors.ProjectSprint.NotFound);
-
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.ProjectSprints.SingleOrDefault(t => t.Id == ProjectSprintId.Create(request.SprintId))
             .Should().BeNull();
     }
 }

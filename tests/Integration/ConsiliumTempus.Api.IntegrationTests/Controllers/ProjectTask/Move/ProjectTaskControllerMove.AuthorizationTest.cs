@@ -56,7 +56,6 @@ public class ProjectTaskControllerMoveAuthorizationTest(WebAppFactory factory)
         var task = ProjectTaskData.ProjectTasks.First();
         var overStage = ProjectTaskData.ProjectStages[2];
         var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(
-            sprintId: task.Stage.Sprint.Id.Value,
             id: task.Id.Value,
             overId: overStage.Id.Value);
 

@@ -17,7 +17,6 @@ public class ProjectTaskControllerMoveValidationTest(WebAppFactory factory)
         var task = ProjectTaskData.ProjectTasks.First();
         var overStage = ProjectTaskData.ProjectStages[2];
         var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(
-            sprintId: task.Stage.Sprint.Id.Value,
             id: task.Id.Value,
             overId: overStage.Id.Value);
 
@@ -34,7 +33,6 @@ public class ProjectTaskControllerMoveValidationTest(WebAppFactory factory)
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(
-            sprintId: Guid.Empty,
             id: Guid.Empty, 
             overId: Guid.Empty);  
 
