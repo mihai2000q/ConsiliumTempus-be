@@ -17,8 +17,7 @@ internal static class UpdateProjectCommandValidatorData
             command = new UpdateProjectCommand(
                 Guid.NewGuid(),
                 "New Name",
-                ProjectLifecycle.Archived.ToString().ToLower(),
-                true);
+                ProjectLifecycle.Archived.ToString().ToLower());
             Add(command);
         }
     }

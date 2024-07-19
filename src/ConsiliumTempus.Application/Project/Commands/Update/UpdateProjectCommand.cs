@@ -6,6 +6,5 @@ namespace ConsiliumTempus.Application.Project.Commands.Update;
 public sealed record UpdateProjectCommand(
     Guid Id,
     string Name,
-    string Lifecycle,
-    bool IsFavorite)
+    string Lifecycle)
     : IRequest<ErrorOr<UpdateProjectResult>>;

@@ -94,13 +94,11 @@ internal static partial class Utils
 
         internal static void AssertFromUpdateCommand(
             ProjectAggregate project,
-            UpdateProjectCommand command,
-            UserAggregate currentUser)
+            UpdateProjectCommand command)
         {
             project.Id.Value.Should().Be(command.Id);
             project.Name.Value.Should().Be(command.Name);
             project.Lifecycle.ToString().ToLower().Should().Be(command.Lifecycle.ToLower());
-            project.IsFavorite(currentUser).Should().Be(command.IsFavorite);
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

@@ -319,8 +319,7 @@ Sends body data that the project needs to be updated.
 {
   "id": "10000000-0000-0000-0000-000000000000",
   "name": "New Project Name",
-  "lifecycle": "Active",
-  "isFavorite": false
+  "lifecycle": "Active"
 }
 ```
 

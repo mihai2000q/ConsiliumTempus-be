@@ -396,15 +396,14 @@ test.describe('should allow operations on the project entity', () => {
     }
     const project = await createProject(request, createProjectRequest)
 
-    const updateProjectRequest: UpdateProjectRequest = {
+    const body: UpdateProjectRequest = {
       id: project.id,
       name: "This is my project now",
-      lifecycle: 'Archived',
-      isFavorite: true
+      lifecycle: 'Archived'
     }
     const response = await request.put('/api/projects', {
       ...useToken(),
-      data: updateProjectRequest
+      data: body
     })
 
     expect(response.ok()).toBeTruthy()
@@ -415,9 +414,9 @@ test.describe('should allow operations on the project entity', () => {
 
     const projects = await getProject(request, project.id)
     expect(projects).toStrictEqual({
-      name: updateProjectRequest.name,
-      isFavorite: updateProjectRequest.isFavorite,
-      lifecycle: updateProjectRequest.lifecycle,
+      name: body.name,
+      isFavorite: false,
+      lifecycle: body.lifecycle,
       owner: expect.any(Object),
       isPrivate: createProjectRequest.isPrivate,
       latestStatus: null,

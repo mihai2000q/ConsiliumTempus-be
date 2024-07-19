@@ -85,14 +85,12 @@ public static class ProjectRequestFactory
     public static UpdateProjectRequest CreateUpdateProjectRequest(
         Guid? id = null,
         string name = Constants.Project.Name,
-        ProjectLifecycle lifecycle = ProjectLifecycle.Active,
-        bool isFavorite = false)
+        ProjectLifecycle lifecycle = ProjectLifecycle.Active)
     {
         return new UpdateProjectRequest(
             id ?? Guid.NewGuid(),
             name,
-            lifecycle.ToString(),
-            isFavorite);
+            lifecycle.ToString());
     }
 
     public static UpdateOverviewProjectRequest CreateUpdateOverviewProjectRequest(

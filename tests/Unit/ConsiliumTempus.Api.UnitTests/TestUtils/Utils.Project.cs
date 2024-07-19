@@ -101,7 +101,6 @@ internal static partial class Utils
             command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
             command.Lifecycle.Should().Be(request.Lifecycle);
-            command.IsFavorite.Should().Be(request.IsFavorite);
 
             return true;
         }

@@ -36,7 +36,7 @@ public class ProjectControllerUpdateOverviewTest(WebAppFactory factory)
         var updatedProject = await dbContext.Projects
             .Include(p => p.Workspace)
             .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
-        Utils.Project.AssertUpdateOverview(project, updatedProject, request);
+        Utils.Project.AssertUpdateOverview(updatedProject, request);
     }
 
     [Fact]

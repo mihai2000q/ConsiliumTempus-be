@@ -7,7 +7,6 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
-using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.UpdateFavorites;
 

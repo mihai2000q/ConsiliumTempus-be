@@ -62,14 +62,12 @@ public static class ProjectCommandFactory
     public static UpdateProjectCommand CreateUpdateProjectCommand(
         Guid? id = null,
         string name = Constants.Project.Name,
-        ProjectLifecycle lifecycle = ProjectLifecycle.Active,
-        bool isFavorite = false)
+        ProjectLifecycle lifecycle = ProjectLifecycle.Active)
     {
         return new UpdateProjectCommand(
             id ?? Guid.NewGuid(),
             name,
-            lifecycle.ToString(),
-            isFavorite);
+            lifecycle.ToString());
     }
     
     public static UpdateProjectCommand CreateUpdateProjectCommandWithLifecycle(string lifecycle)
@@ -77,8 +75,7 @@ public static class ProjectCommandFactory
         return new UpdateProjectCommand(
             Guid.NewGuid(),
             Constants.Project.Name,
-            lifecycle,
-            false);
+            lifecycle);
     }
     
     public static UpdateOverviewProjectCommand CreateUpdateOverviewProjectCommand(
