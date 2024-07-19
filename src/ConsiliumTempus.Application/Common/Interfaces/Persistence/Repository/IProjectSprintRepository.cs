@@ -16,10 +16,6 @@ public interface IProjectSprintRepository
         ProjectSprintId id,
         CancellationToken cancellationToken = default);
 
-    Task<ProjectSprintAggregate?> GetWithTasksAndWorkspace(
-        ProjectSprintId id,
-        CancellationToken cancellationToken = default);
-
     Task<ProjectSprintAggregate> GetFirstByProject(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,

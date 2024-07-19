@@ -17,6 +17,10 @@ public interface IProjectTaskRepository
         ProjectTaskId id,
         CancellationToken cancellationToken = default);
 
+    Task<ProjectTaskAggregate?> GetWithTasksAndWorkspace(
+        ProjectTaskId id,
+        CancellationToken cancellationToken = default);
+
     Task<List<ProjectTaskAggregate>> GetListByStage(
         ProjectStageId stageId,
         IReadOnlyList<IFilter<ProjectTaskAggregate>> filters,
