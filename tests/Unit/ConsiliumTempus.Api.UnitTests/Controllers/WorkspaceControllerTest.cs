@@ -6,12 +6,14 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
@@ -317,6 +319,53 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<UpdateWorkspaceCommand>(
                 command => Utils.Workspace.AssertUpdateCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task UpdateFavorites_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateUpdateFavoritesWorkspaceRequest();
+
+        var result = WorkspaceResultFactory.CreateUpdateFavoritesWorkspaceResult();
+        _mediator
+            .Send(Arg.Any<UpdateFavoritesWorkspaceCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.UpdateFavorites(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateFavoritesWorkspaceCommand>(
+                command => Utils.Workspace.AssertUpdateFavoritesCommand(command, request)));
+
+        var response = outcome.ToResponse<UpdateFavoritesWorkspaceResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task UpdateFavorites_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateUpdateFavoritesWorkspaceRequest();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdateFavoritesWorkspaceCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.UpdateFavorites(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateFavoritesWorkspaceCommand>(
+                command => Utils.Workspace.AssertUpdateFavoritesCommand(command, request)));
 
         outcome.ValidateError(error);
     }

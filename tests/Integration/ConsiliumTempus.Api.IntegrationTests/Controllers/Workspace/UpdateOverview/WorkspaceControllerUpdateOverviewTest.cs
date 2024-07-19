@@ -33,7 +33,7 @@ public class WorkspaceControllerUpdateOverviewOverviewTest(WebAppFactory factory
         response!.Message.Should().Be("Workspace Overview has been updated successfully!");
 
         var updatedWorkspace = await GetWorkspaceById(request.Id);
-        Utils.Workspace.AssertUpdatedOverview(workspace, updatedWorkspace!, request);
+        Utils.Workspace.AssertUpdatedOverview(updatedWorkspace!, request);
     }
 
     [Fact]

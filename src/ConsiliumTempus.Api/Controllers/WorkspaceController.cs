@@ -7,10 +7,12 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
@@ -106,7 +108,21 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
             Problem
         );
     }
-    
+
+    [HasPermission(Permissions.UpdateWorkspace)]
+    [HttpPut("Favorites")]
+    public async Task<IActionResult> UpdateFavorites(UpdateFavoritesWorkspaceRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateFavoritesWorkspaceCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateFavoritesResult => Ok(Mapper.Map<UpdateFavoritesWorkspaceResponse>(updateFavoritesResult)),
+            Problem
+        );
+    }
+
     [HasPermission(Permissions.UpdateWorkspace)]
     [HttpPut("Overview")]
     public async Task<IActionResult> UpdateOverview(UpdateOverviewWorkspaceRequest request, 

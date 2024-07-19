@@ -5,10 +5,12 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
@@ -77,6 +79,16 @@ internal static partial class Utils
         {
             command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
+
+            return true;
+        }
+
+        internal static bool AssertUpdateFavoritesCommand(
+            UpdateFavoritesWorkspaceCommand command,
+            UpdateFavoritesWorkspaceRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.IsFavorite.Should().Be(request.IsFavorite);
 
             return true;
         }

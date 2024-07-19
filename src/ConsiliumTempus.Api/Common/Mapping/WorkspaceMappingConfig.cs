@@ -6,10 +6,12 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
@@ -34,6 +36,7 @@ public sealed class WorkspaceMappingConfig : IRegister
         GetCollectionMappings(config);
         CreateMappings(config);
         UpdateMappings(config);
+        UpdateFavoritesMappings(config);
         UpdateOverviewMappings(config);
         DeleteMappings(config);
     }
@@ -103,6 +106,13 @@ public sealed class WorkspaceMappingConfig : IRegister
         config.NewConfig<UpdateWorkspaceRequest, UpdateWorkspaceCommand>();
 
         config.NewConfig<UpdateWorkspaceResult, UpdateWorkspaceResponse>();
+    }
+
+    private static void UpdateFavoritesMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateFavoritesWorkspaceRequest, UpdateFavoritesWorkspaceCommand>();
+
+        config.NewConfig<UpdateFavoritesWorkspaceResult, UpdateFavoritesWorkspaceResponse>();
     }
     
     private static void UpdateOverviewMappings(TypeAdapterConfig config)

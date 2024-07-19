@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
@@ -101,15 +102,25 @@ internal static partial class Utils
             newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
+
+        internal static void AssertUpdatedFavorites(
+            WorkspaceAggregate newWorkspace,
+            UpdateFavoritesWorkspaceRequest request,
+            UserAggregate user)
+        {
+            // unchanged
+            newWorkspace.Id.Value.Should().Be(request.Id);
+
+            // changed
+            newWorkspace.IsFavorite(user).Should().Be(request.IsFavorite);
+        }
         
         internal static void AssertUpdatedOverview(
-            WorkspaceAggregate workspace,
             WorkspaceAggregate newWorkspace,
             UpdateOverviewWorkspaceRequest request)
         {
             // unchanged
             newWorkspace.Id.Value.Should().Be(request.Id);
-            newWorkspace.CreatedDateTime.Should().Be(workspace.CreatedDateTime);
 
             // changed
             newWorkspace.Description.Value.Should().Be(request.Description);

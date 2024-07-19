@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
@@ -73,6 +74,15 @@ public static class WorkspaceRequestFactory
             name);
     }
     
+    public static UpdateFavoritesWorkspaceRequest CreateUpdateFavoritesWorkspaceRequest(
+        Guid? id = null,
+        bool isFavorite = false)
+    {
+        return new UpdateFavoritesWorkspaceRequest(
+            id ?? Guid.NewGuid(),
+            isFavorite);
+    }
+
     public static UpdateOverviewWorkspaceRequest CreateUpdateOverviewWorkspaceRequest(
         Guid? id = null,
         string description = Constants.Workspace.Description)

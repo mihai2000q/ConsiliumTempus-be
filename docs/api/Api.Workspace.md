@@ -19,6 +19,9 @@
   * [Update](#update)
     * [Update Workspace Request](#update-workspace-request)
     * [Update Workspace Response](#update-workspace-response)
+  * [Update Favorites](#update-favorites)
+    * [Update Favorites Workspace Request](#update-favorites-workspace-request)
+    * [Update Favorites Workspace Response](#update-favorites-workspace-response)
   * [Update Overview](#update-overview)
     * [Update Overview Workspace Request](#update-overview-workspace-request)
     * [Update Overview Workspace Response](#update-overview-workspace-response)
@@ -221,6 +224,30 @@ Sends body data that the new workspace needs to be updated.
 #### Update Workspace Response
 
 Returns a confirmation message that the workspace has been updated successfully.
+
+### Update Favorites
+
+Only member or admin users that are part of the workspace can update it
+([Update Workspace Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/workspaces/favorites
+```
+
+#### Update Favorites Workspace Request
+
+Sends body data that the workspace needs to update favorites.
+
+```json
+{
+  "id": "88882448-bd63-4731-8a05-f6333b6d22e2",
+  "isFavorite": false
+}
+```
+
+#### Update Favorites Workspace Response
+
+Returns a confirmation message that the workspace favorites have been updated successfully.
 
 ### Update Overview
 
