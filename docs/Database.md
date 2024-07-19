@@ -14,8 +14,17 @@ such as aestheticism, order or simplicity, plus **Pascal Case** as it is a C# ba
 
 ## Migrations
 
+Before anything, migrations refer to the process of modifying a database schema in a controlled and organized way. 
+This typically involves creating, updating, 
+or deleting tables, columns, or other database structures to reflect changes in the application's data model.
+Migrations ensure that changes to the database schema are versioned, 
+and can be applied consistently across different environments (development, testing, production).
+Also, they can be rolled back at any time.
+
 As the infrastructure layer relies on the **Entity Framework Core**, to release,
 update or create any kind of migration, we will use the EF CLI provided by the dotnet tools.
+
+### Dotnet tools
 
 To install the dotnet **EF Core CLI**, please type the following in the terminal:
 
@@ -31,6 +40,8 @@ To make sure that it has been installed, you can type the following:
 dotnet tool list --global
 ```
 
+### Create Migration
+
 To create a migration, you can use the following command:
 
 ```sh
@@ -39,15 +50,23 @@ dotnet ef migrations add Update -p ./src/ConsiliumTempus.Infrastructure -s ./src
 
 That will create a migration named with a timestamp followed by the suffix *Update*.
 
+### Migration Naming Convention
+
 The **Naming Convention** is *VERB\_TABLE\_COLUMN*, for example,
 if the user table has been modified by the _Email_ Column, the name would be `Update_Users_Email`,
 otherwise, if the table has been thoroughly modified `Update_Users` suffices.
+
+### Apply Migration
 
 To apply the migration, you can type the following command:
 
 ```sh
 dotnet ef database update -p ./src/ConsiliumTempus.Infrastructure -s ./src/ConsiliumTempus.Api/
 ```
+
+Alternatively, the shell script `apply-migration-to-database.sh` can be used, as you did when you got setup.
+
+### Apply Migration—with the connection flag
 
 In case, the database target is not the one that the application already uses;
 the _connection_ flag can be mentioned:
