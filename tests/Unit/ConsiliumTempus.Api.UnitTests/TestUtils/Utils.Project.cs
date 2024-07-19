@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
@@ -14,6 +15,7 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
@@ -101,6 +103,16 @@ internal static partial class Utils
             command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
             command.Lifecycle.Should().Be(request.Lifecycle);
+
+            return true;
+        }
+
+        internal static bool AssertUpdateFavoritesCommand(
+            UpdateFavoritesProjectCommand command,
+            UpdateFavoritesProjectRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.IsFavorite.Should().Be(request.IsFavorite);
 
             return true;
         }

@@ -19,6 +19,7 @@ import UpdateProjectRequest from "../types/requests/project/UpdateProjectRequest
 import UpdateOverviewProjectRequest from "../types/requests/project/UpdateOverviewProjectRequest";
 import AddStatusToProjectRequest from "../types/requests/project/AddStatusToProjectRequest";
 import UpdateStatusFromProjectRequest from "../types/requests/project/UpdateStatusFromProjectRequest";
+import UpdateFavoritesProjectRequest from "../types/requests/project/UpdateFavoritesProjectRequest";
 
 test.describe('should allow operations on the project entity', () => {
   let WORKSPACE_ID: string
@@ -417,6 +418,41 @@ test.describe('should allow operations on the project entity', () => {
       name: body.name,
       isFavorite: false,
       lifecycle: body.lifecycle,
+      owner: expect.any(Object),
+      isPrivate: createProjectRequest.isPrivate,
+      latestStatus: null,
+      workspace: expect.any(Object)
+    })
+  })
+
+  test('should update project favorites', async ({ request }) => {
+    const createProjectRequest: CreateProjectRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "New Project",
+      isPrivate: false
+    }
+    const project = await createProject(request, createProjectRequest)
+
+    const body: UpdateFavoritesProjectRequest = {
+      id: project.id,
+      isFavorite: true
+    }
+    const response = await request.put('/api/projects/favorites', {
+      ...useToken(),
+      data: body
+    })
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const projects = await getProject(request, project.id)
+    expect(projects).toStrictEqual({
+      name: createProjectRequest.name,
+      isFavorite: body.isFavorite,
+      lifecycle: 'Active',
       owner: expect.any(Object),
       isPrivate: createProjectRequest.isPrivate,
       latestStatus: null,

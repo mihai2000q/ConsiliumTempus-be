@@ -8,6 +8,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Api.Controllers;
@@ -17,6 +18,7 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
@@ -369,6 +371,53 @@ public class ProjectControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<UpdateProjectCommand>(command => Utils.Project.AssertUpdateCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task UpdateFavorites_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdateFavoritesProjectRequest();
+
+        var result = ProjectResultFactory.CreateUpdateFavoritesProjectResult();
+        _mediator
+            .Send(Arg.Any<UpdateFavoritesProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.UpdateFavorites(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateFavoritesProjectCommand>(command => 
+                Utils.Project.AssertUpdateFavoritesCommand(command, request)));
+
+        var response = outcome.ToResponse<UpdateFavoritesProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task UpdateFavorites_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdateFavoritesProjectRequest();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdateFavoritesProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.UpdateFavorites(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateFavoritesProjectCommand>(command =>
+                Utils.Project.AssertUpdateFavoritesCommand(command, request)));
 
         outcome.ValidateError(error);
     }

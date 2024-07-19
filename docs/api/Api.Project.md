@@ -22,6 +22,9 @@
   * [Update](#update)
     * [Update Project Request](#update-project-request)
     * [Update Project Response](#update-project-response)
+  * [Update Favorites](#update-favorites)
+    * [Update Favorites Project Request](#update-favorites-project-request)
+    * [Update Favorites Project Response](#update-favorites-project-response)
   * [Update Overview](#update-overview)
     * [Update Overview Project Request](#update-overview-project-request)
     * [Update Overview Project Response](#update-overview-project-response)
@@ -326,6 +329,30 @@ Sends body data that the project needs to be updated.
 #### Update Project Response
 
 Returns a confirmation message that the project has been updated successfully.
+
+### Update Favorites
+
+All members that are part of the workspace can update a project
+([Update Project Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/projects/favorites
+```
+
+#### Update Favorites Project Request
+
+Sends body data that the project favorites need to be updated.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "isFavorite": true
+}
+```
+
+#### Update Favorites Project Response
+
+Returns a confirmation message that the project favorites have been updated successfully.
 
 ### Update Overview
 

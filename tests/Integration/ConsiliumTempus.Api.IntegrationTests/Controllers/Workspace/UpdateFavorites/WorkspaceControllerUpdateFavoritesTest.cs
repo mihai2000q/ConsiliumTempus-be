@@ -33,8 +33,8 @@ public class WorkspaceControllerUpdateFavoritesTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedWorkspace = dbContext.Workspaces
-            .SingleOrDefault(u => u.Id == WorkspaceId.Create(request.Id));
-        Utils.Workspace.AssertUpdatedFavorites(updatedWorkspace!, request, user);
+            .Single(u => u.Id == WorkspaceId.Create(request.Id));
+        Utils.Workspace.AssertUpdatedFavorites(updatedWorkspace, request, user);
     }
 
     [Fact]

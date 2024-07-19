@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
@@ -91,6 +92,15 @@ public static class ProjectRequestFactory
             id ?? Guid.NewGuid(),
             name,
             lifecycle.ToString());
+    }
+
+    public static UpdateFavoritesProjectRequest CreateUpdateFavoritesProjectRequest(
+        Guid? id = null,
+        bool isFavorite = false)
+    {
+        return new UpdateFavoritesProjectRequest(
+            id ?? Guid.NewGuid(),
+            isFavorite);
     }
 
     public static UpdateOverviewProjectRequest CreateUpdateOverviewProjectRequest(

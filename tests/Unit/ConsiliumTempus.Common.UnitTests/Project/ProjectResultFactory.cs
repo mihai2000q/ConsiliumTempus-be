@@ -3,6 +3,7 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
@@ -60,6 +61,11 @@ public static class ProjectResultFactory
     public static UpdateProjectResult CreateUpdateProjectResult()
     {
         return new UpdateProjectResult();
+    }
+
+    public static UpdateFavoritesProjectResult CreateUpdateFavoritesProjectResult()
+    {
+        return new UpdateFavoritesProjectResult();
     }
 
     public static UpdateOverviewProjectResult CreateUpdateOverviewProjectResult()

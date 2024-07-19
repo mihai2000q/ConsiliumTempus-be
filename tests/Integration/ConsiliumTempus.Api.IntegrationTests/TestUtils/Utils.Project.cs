@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Domain.Common.Constants;
@@ -141,6 +142,18 @@ internal static partial class Utils
             newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertUpdateFavorites(
+            ProjectAggregate newProject,
+            UpdateFavoritesProjectRequest request,
+            UserAggregate user)
+        {
+            // unchanged
+            newProject.Id.Value.Should().Be(request.Id);
+
+            // changed
+            newProject.IsFavorite(user).Should().Be(request.IsFavorite);
         }
 
         internal static void AssertUpdateOverview(
