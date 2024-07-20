@@ -25,6 +25,17 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
     }
 
+    public async Task<WorkspaceAggregate?> GetWithMembershipsAndInvitations(
+        WorkspaceId id,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Workspaces
+            .Include(w => w.Invitations)
+            .Include(w => w.Memberships)
+            .ThenInclude(m => m.User)
+            .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
+    }
+
     public async Task<List<UserAggregate>> GetCollaborators(
         WorkspaceId id,
         string? searchValue,
@@ -53,7 +64,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         return project?.Workspace;
     }
 
-    public async Task<WorkspaceAggregate?> GetByProjectSprint(ProjectSprintId id, 
+    public async Task<WorkspaceAggregate?> GetByProjectSprint(ProjectSprintId id,
         CancellationToken cancellationToken = default)
     {
         var projectSprint = await dbContext.ProjectSprints
@@ -63,7 +74,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         return projectSprint?.Project.Workspace;
     }
 
-    public async Task<WorkspaceAggregate?> GetByProjectStage(ProjectStageId id, 
+    public async Task<WorkspaceAggregate?> GetByProjectStage(ProjectStageId id,
         CancellationToken cancellationToken = default)
     {
         var projectStage = await dbContext.Set<ProjectStage>()
