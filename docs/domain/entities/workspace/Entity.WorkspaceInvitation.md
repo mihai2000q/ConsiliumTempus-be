@@ -26,3 +26,5 @@ For database design checkout the [Workspace Diagram](../../../database-diagrams/
 ### Domain Errors
 
 - **Not Found** when the workspace invitation cannot be found
+- **Already Invited** when the workspace invitation cannot be sent because the user has already been invited
+- **Already Collaborator** when the workspace invitation cannot be sent because the user is already a collaborator
