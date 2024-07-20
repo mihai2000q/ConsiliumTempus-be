@@ -14,7 +14,6 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
         builder.ToTable(nameof(UserAggregate).TruncateAggregate());
 
         builder.HasKey(u => u.Id);
-        builder.HasIndex(u => u.Id);
         builder.Property(u => u.Id)
             .HasConversion(
                 id => id.Value,

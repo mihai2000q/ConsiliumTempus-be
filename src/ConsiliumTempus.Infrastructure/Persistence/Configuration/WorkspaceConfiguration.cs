@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,9 +15,8 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
     {
         builder.ToTable(nameof(WorkspaceAggregate).TruncateAggregate());
 
-        builder.HasIndex(w => w.Id);
         builder.HasKey(w => w.Id);
-        builder.Property(u => u.Id)
+        builder.Property(w => w.Id)
             .HasConversion(
                 id => id.Value,
                 value => WorkspaceId.Create(value));
@@ -48,5 +48,33 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
                 b.Property(nameof(WorkspaceAggregate).ToId())
                     .HasColumnName(nameof(WorkspaceId));
             });
+
+        builder.HasMany(w => w.Invitations)
+            .WithOne(i => i.Workspace);
+    }
+}
+
+public sealed class WorkspaceInvitationConfiguration : IEntityTypeConfiguration<WorkspaceInvitation>
+{
+    public void Configure(EntityTypeBuilder<WorkspaceInvitation> builder)
+    {
+        builder.ToTable(nameof(WorkspaceInvitation));
+
+        builder.HasKey(i => i.Id);
+        builder.Property(i => i.Id)
+            .HasConversion(
+                id => id.Value,
+                value => WorkspaceInvitationId.Create(value));
+
+        builder.HasOne(i => i.Sender)
+            .WithMany();
+        builder.Navigation(i => i.Sender).AutoInclude();
+
+        builder.HasOne(i => i.Collaborator)
+            .WithMany();
+        builder.Navigation(i => i.Collaborator).AutoInclude();
+
+        builder.HasOne(i => i.Workspace)
+            .WithMany(w => w.Invitations);
     }
 }
