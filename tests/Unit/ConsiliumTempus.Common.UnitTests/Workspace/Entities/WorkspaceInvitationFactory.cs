@@ -17,4 +17,13 @@ public static class WorkspaceInvitationFactory
             collaborator ?? UserFactory.Create(),
             workspace ?? WorkspaceFactory.Create());
     }
+
+    public static List<WorkspaceInvitation> CreateList(
+        int stagesCount = 5)
+    {
+        return Enumerable
+            .Range(0, stagesCount)
+            .Select(_ => Create())
+            .ToList();
+    }
 }
