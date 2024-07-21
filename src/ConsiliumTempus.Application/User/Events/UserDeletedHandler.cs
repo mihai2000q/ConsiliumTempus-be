@@ -37,5 +37,6 @@ public sealed class UserDeletedHandler(
 
         await userRepository.NullifyAuditsByUser(notification.User, cancellationToken);
         await userRepository.RemoveProjectsByOwner(notification.User, cancellationToken);
+        await userRepository.RemoveWorkspaceInvitationsByUser(notification.User, cancellationToken);
     }
 }
