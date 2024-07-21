@@ -275,14 +275,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_WorkspaceInvitation_User_CollaboratorId",
                         column: x => x.CollaboratorId,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_WorkspaceInvitation_User_SenderId",
                         column: x => x.SenderId,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_WorkspaceInvitation_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,

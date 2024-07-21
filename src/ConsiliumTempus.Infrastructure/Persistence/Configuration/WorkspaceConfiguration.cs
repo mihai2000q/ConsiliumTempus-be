@@ -67,11 +67,13 @@ public sealed class WorkspaceInvitationConfiguration : IEntityTypeConfiguration<
                 value => WorkspaceInvitationId.Create(value));
 
         builder.HasOne(i => i.Sender)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
         builder.Navigation(i => i.Sender).AutoInclude();
 
         builder.HasOne(i => i.Collaborator)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
         builder.Navigation(i => i.Collaborator).AutoInclude();
 
         builder.HasOne(i => i.Workspace)
