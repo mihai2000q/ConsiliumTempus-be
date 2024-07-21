@@ -2,9 +2,11 @@
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
 using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
+using ConsiliumTempus.Common.IntegrationTests.Workspace.Entities;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Entities;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestData;
 
@@ -16,7 +18,8 @@ internal class WorkspaceData : ITestData
         [
             Users,
             Workspaces,
-            Memberships
+            Memberships,
+            WorkspaceInvitations
         ];
     }
 
@@ -53,7 +56,17 @@ internal class WorkspaceData : ITestData
             "johansenm@gmail.com",
             "pass",
             "Johansen",
-            "Michael")
+            "Michael"),
+        UserFactory.Create(
+            "bsmith@gmail.com",
+            "pass",
+            "Benjamin",
+            "Smith"),
+        UserFactory.Create(
+            "sfranklin@gmail.com",
+            "pass",
+            "Samuel",
+            "Franklin")
     ];
 
     public static WorkspaceAggregate[] Workspaces { get; } =
@@ -132,5 +145,13 @@ internal class WorkspaceData : ITestData
             Users[0],
             Workspaces[6],
             WorkspaceRole.Admin),
+    ];
+
+    public static WorkspaceInvitation[] WorkspaceInvitations =
+    [
+        WorkspaceInvitationFactory.Create(
+            Users[0],
+            Users[7],
+            Workspaces[0]), 
     ];
 }

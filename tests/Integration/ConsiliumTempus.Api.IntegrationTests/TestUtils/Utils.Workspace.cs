@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
@@ -34,15 +35,6 @@ internal static partial class Utils
             response.Description.Should().Be(workspace.Description.Value);
         }
 
-        internal static void AssertGetCollaboratorsResponse(
-            GetCollaboratorsFromWorkspaceResponse response,
-            IEnumerable<UserAggregate> collaborators)
-        {
-            response.Collaborators
-                .Zip(collaborators.OrderBy(c => c.FirstName.Value))
-                .Should().AllSatisfy(x => AssertUserResponse(x.First, x.Second));
-        }
-
         internal static void AssertGetCollectionResponse(
             GetCollectionWorkspaceResponse response,
             List<WorkspaceAggregate> workspaces,
@@ -67,6 +59,15 @@ internal static partial class Utils
             response.TotalCount.Should().Be(totalCount);
         }
 
+        internal static void AssertGetCollaboratorsResponse(
+            GetCollaboratorsFromWorkspaceResponse response,
+            IEnumerable<UserAggregate> collaborators)
+        {
+            response.Collaborators
+                .Zip(collaborators.OrderBy(c => c.FirstName.Value))
+                .Should().AllSatisfy(x => AssertUserResponse(x.First, x.Second));
+        }
+
         internal static void AssertCreation(
             WorkspaceAggregate workspace,
             CreateWorkspaceRequest request,
@@ -86,6 +87,23 @@ internal static partial class Utils
             workspace.Memberships[0].WorkspaceRole.Should().Be(WorkspaceRole.Admin);
             workspace.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertInviteCollaborator(
+            InviteCollaboratorToWorkspaceRequest request,
+            WorkspaceAggregate workspace,
+            UserAggregate sender,
+            UserAggregate collaborator)
+        {
+            workspace.Id.Value.Should().Be(request.Id);
+            workspace.Invitations.Should().ContainSingle(i => i.Collaborator == collaborator);
+
+            var invitation = workspace.Invitations.Single(i => i.Collaborator == collaborator);
+            invitation.Id.Value.Should().NotBeEmpty();
+            invitation.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            invitation.Sender.Should().Be(sender);
+            invitation.Collaborator.Should().Be(collaborator);
+            invitation.Workspace.Should().Be(workspace);
         }
 
         internal static void AssertUpdated(

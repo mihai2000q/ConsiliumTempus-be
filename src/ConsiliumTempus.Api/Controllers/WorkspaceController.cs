@@ -6,11 +6,13 @@ using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
+using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
@@ -41,30 +43,17 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
             Problem
         );
     }
-    
+
     [HasPermission(Permissions.ReadWorkspace)]
     [HttpGet("Overview/{id:guid}")]
-    public async Task<IActionResult> GetOverview(GetOverviewWorkspaceRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetOverview(GetOverviewWorkspaceRequest request,
+        CancellationToken cancellationToken)
     {
         var query = Mapper.Map<GetOverviewWorkspaceQuery>(request);
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
             getOverviewResult => Ok(Mapper.Map<GetOverviewWorkspaceResponse>(getOverviewResult)),
-            Problem
-        );
-    }
-    
-    [HasPermission(Permissions.ReadWorkspace)]
-    [HttpGet("{id:guid}/Collaborators")]
-    public async Task<IActionResult> GetCollaborators(GetCollaboratorsFromWorkspaceRequest request,
-        CancellationToken cancellationToken)
-    {
-        var query = Mapper.Map<GetCollaboratorsFromWorkspaceQuery>(request);
-        var result = await Mediator.Send(query, cancellationToken);
-
-        return result.Match(
-            getCollaborators => Ok(Mapper.Map<GetCollaboratorsFromWorkspaceResponse>(getCollaborators)),
             Problem
         );
     }
@@ -84,6 +73,20 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         );
     }
 
+    [HasPermission(Permissions.ReadWorkspace)]
+    [HttpGet("{id:guid}/Collaborators")]
+    public async Task<IActionResult> GetCollaborators(GetCollaboratorsFromWorkspaceRequest request,
+        CancellationToken cancellationToken)
+    {
+        var query = Mapper.Map<GetCollaboratorsFromWorkspaceQuery>(request);
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return result.Match(
+            getCollaborators => Ok(Mapper.Map<GetCollaboratorsFromWorkspaceResponse>(getCollaborators)),
+            Problem
+        );
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(CreateWorkspaceRequest request, CancellationToken cancellationToken)
     {
@@ -92,6 +95,19 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
         return result.Match(
             createResult => Ok(Mapper.Map<CreateWorkspaceResponse>(createResult)),
+            Problem
+        );
+    }
+
+    [HttpPost("Invite-Collaborator")]
+    public async Task<IActionResult> InviteCollaborator(InviteCollaboratorToWorkspaceRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<InviteCollaboratorToWorkspaceCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            inviteCollaboratorResult => Ok(Mapper.Map<InviteCollaboratorToWorkspaceResponse>(inviteCollaboratorResult)),
             Problem
         );
     }
@@ -125,7 +141,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
     [HasPermission(Permissions.UpdateWorkspace)]
     [HttpPut("Overview")]
-    public async Task<IActionResult> UpdateOverview(UpdateOverviewWorkspaceRequest request, 
+    public async Task<IActionResult> UpdateOverview(UpdateOverviewWorkspaceRequest request,
         CancellationToken cancellationToken)
     {
         var command = Mapper.Map<UpdateOverviewWorkspaceCommand>(request);

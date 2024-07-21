@@ -4,11 +4,13 @@ using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
+using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
@@ -43,16 +45,6 @@ internal static partial class Utils
             return true;
         }
 
-        internal static bool AssertGetCollaboratorsQuery(
-            GetCollaboratorsFromWorkspaceQuery query,
-            GetCollaboratorsFromWorkspaceRequest request)
-        {
-            query.Id.Should().Be(request.Id);
-            query.SearchValue.Should().Be(request.SearchValue);
-
-            return true;
-        }
-
         internal static bool AssertGetCollectionQuery(
             GetCollectionWorkspaceQuery query,
             GetCollectionWorkspaceRequest request)
@@ -66,9 +58,31 @@ internal static partial class Utils
             return true;
         }
 
-        internal static bool AssertCreateCommand(CreateWorkspaceCommand command, CreateWorkspaceRequest request)
+        internal static bool AssertGetCollaboratorsQuery(
+            GetCollaboratorsFromWorkspaceQuery query,
+            GetCollaboratorsFromWorkspaceRequest request)
+        {
+            query.Id.Should().Be(request.Id);
+            query.SearchValue.Should().Be(request.SearchValue);
+
+            return true;
+        }
+
+        internal static bool AssertCreateCommand(
+            CreateWorkspaceCommand command, 
+            CreateWorkspaceRequest request)
         {
             command.Name.Should().Be(request.Name);
+
+            return true;
+        }
+
+        internal static bool AssertInviteCollaboratorCommand(
+            InviteCollaboratorToWorkspaceCommand command,
+            InviteCollaboratorToWorkspaceRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.Email.Should().Be(request.Email);
 
             return true;
         }

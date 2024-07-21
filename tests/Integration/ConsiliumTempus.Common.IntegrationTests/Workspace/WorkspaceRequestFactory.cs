@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
@@ -29,18 +30,6 @@ public static class WorkspaceRequestFactory
         };
     }
 
-
-    public static GetCollaboratorsFromWorkspaceRequest CreateGetCollaboratorsFromWorkspaceRequest(
-        Guid? id = null,
-        string searchValue = "")
-    {
-        return new GetCollaboratorsFromWorkspaceRequest
-        {
-            Id = id ?? Guid.NewGuid(),
-            SearchValue = searchValue
-        };
-    }
-
     public static GetCollectionWorkspaceRequest CreateGetCollectionWorkspaceRequest(
         bool isPersonalWorkspaceFirst = false,
         int? pageSize = null,
@@ -58,11 +47,31 @@ public static class WorkspaceRequestFactory
         };
     }
 
+    public static GetCollaboratorsFromWorkspaceRequest CreateGetCollaboratorsFromWorkspaceRequest(
+        Guid? id = null,
+        string searchValue = "")
+    {
+        return new GetCollaboratorsFromWorkspaceRequest
+        {
+            Id = id ?? Guid.NewGuid(),
+            SearchValue = searchValue
+        };
+    }
+
     public static CreateWorkspaceRequest CreateCreateWorkspaceRequest(
         string name = Constants.Workspace.Name)
     {
         return new CreateWorkspaceRequest(
             name);
+    }
+
+    public static InviteCollaboratorToWorkspaceRequest CreateInviteCollaboratorToWorkspaceRequest(
+        Guid? id = null,
+        string email = Constants.WorkspaceInvitation.Email)
+    {
+        return new InviteCollaboratorToWorkspaceRequest(
+            id ?? Guid.NewGuid(),
+            email);
     }
 
     public static UpdateWorkspaceRequest CreateUpdateWorkspaceRequest(

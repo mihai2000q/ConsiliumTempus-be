@@ -7,15 +7,18 @@
   * [Get Overview](#get-overview)
     * [Get Overview Workspace Request](#get-overview-workspace-request)
     * [Get Overview Workspace Response](#get-overview-workspace-response)
-  * [Get Collaborators](#get-collaborators)
-    * [Get Collaborators From Workspace Request](#get-collaborators-from-workspace-request)
-    * [Get Collaborators From Workspace Response](#get-collaborators-from-workspace-response)
   * [Get Collection](#get-collection)
     * [Get Collection Workspace Request](#get-collection-workspace-request)
     * [Get Collection Workspace Response](#get-collection-workspace-response)
+  * [Get Collaborators](#get-collaborators)
+    * [Get Collaborators From Workspace Request](#get-collaborators-from-workspace-request)
+    * [Get Collaborators From Workspace Response](#get-collaborators-from-workspace-response)
   * [Create](#create)
     * [Create Workspace Request](#create-workspace-request)
     * [Create Workspace Response](#create-workspace-response)
+  * [Invite Collaborator](#invite-collaborator)
+    * [Invite Collaborator To Workspace Request](#invite-collaborator-workspace-request)
+    * [Invite Collaborator To Workspace Response](#invite-collaborator-workspace-response)
   * [Update](#update)
     * [Update Workspace Request](#update-workspace-request)
     * [Update Workspace Response](#update-workspace-response)
@@ -88,43 +91,6 @@ Returns the workspace overview.
 }
 ```
 
-### Get Collaborators
-
-Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
-
-```js
-GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle
-```
-
-- **id** is a 36 characters strings
-
-#### Get Collaborators From Workspace Request
-
-Sends the id of the workspace inside the route request and the following query parameters:
-
-- **searchValue** to search through the collaborators by email, name, or other identifier
-
-#### Get Collaborators From Workspace Response
-
-Returns the collaborators.
-
-```json
-{
-  "collaborators": [
-    {
-      "id": "10000000-0000-0000-0000-000000000000",
-      "name": "Michael Jordan",
-      "email": "michaelj@gmail.com"
-    },
-    {
-      "id": "20000000-0000-0000-0000-000000000000",
-      "name": "Stephen Curry",
-      "email": "stephenc@gmail.com"
-    }
-  ]
-}
-```
-
 ### Get Collection
 
 Anyone logged in can request this data, but it will return only the workspaces that are linked to this user.
@@ -179,6 +145,43 @@ Returns the workspaces and their total count.
 }
 ```
 
+### Get Collaborators
+
+Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
+
+```js
+GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle
+```
+
+- **id** is a 36 characters strings
+
+#### Get Collaborators From Workspace Request
+
+Sends the id of the workspace inside the route request and the following query parameters:
+
+- **searchValue** to search through the collaborators by email, name, or other identifier
+
+#### Get Collaborators From Workspace Response
+
+Returns the collaborators.
+
+```json
+{
+  "collaborators": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "name": "Michael Jordan",
+      "email": "michaelj@gmail.com"
+    },
+    {
+      "id": "20000000-0000-0000-0000-000000000000",
+      "name": "Stephen Curry",
+      "email": "stephenc@gmail.com"
+    }
+  ]
+}
+```
+
 ### Create
 
 Anyone logged in can create a workspace.
@@ -200,6 +203,30 @@ Sends body data that the new workspace needs to be created.
 #### Create Workspace Response
 
 Returns a confirmation message that the workspace has been created successfully.
+
+### Invite Collaborator
+
+Only admins of the workspace can invite new collaborators
+([Invite Collaborator To Workspace Permission](../Security.md/#permissions)).
+
+```js
+POST {{host}}/api/workspaces
+```
+
+#### Invite Collaborator To Workspace Request
+
+Sends body data needed to invite a new collaborator to the workspace.
+
+```json
+{
+  "id": "88882448-bd63-4731-8a05-f6333b6d22e2",
+  "email": "benjamin_smith@gmail.com"
+}
+```
+
+#### Invite Collaborator To Workspace Response
+
+Returns a confirmation message that the invitation has been sent successfully.
 
 ### Update
 

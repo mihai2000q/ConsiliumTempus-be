@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
@@ -12,6 +13,7 @@ using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
+using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
@@ -134,6 +136,53 @@ public class WorkspaceControllerTest
 
         outcome.ValidateError(error);
     }
+
+    [Fact]
+    public async Task GetCollection_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
+
+        var result = WorkspaceResultFactory.CreateGetCollectionWorkspaceResult();
+        _mediator
+            .Send(Arg.Any<GetCollectionWorkspaceQuery>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.GetCollection(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCollectionWorkspaceQuery>(query =>
+                Utils.Workspace.AssertGetCollectionQuery(query, request)));
+
+        var response = outcome.ToResponse<GetCollectionWorkspaceResponse>();
+        Utils.Workspace.AssertGetCollectionResponse(response, result);
+    }
+
+    [Fact]
+    public async Task GetCollection_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
+
+        var error = Errors.User.NotFound;
+        _mediator
+            .Send(Arg.Any<GetCollectionWorkspaceQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetCollection(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCollectionWorkspaceQuery>(query =>
+                Utils.Workspace.AssertGetCollectionQuery(query, request)));
+
+        outcome.ValidateError(error);
+    }
     
     [Fact]
     public async Task GetCollaborators_WhenIsSuccessful_ShouldReturnResponse()
@@ -183,53 +232,6 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task GetCollection_WhenIsSuccessful_ShouldReturnResponse()
-    {
-        // Arrange
-        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
-
-        var result = WorkspaceResultFactory.CreateGetCollectionWorkspaceResult();
-        _mediator
-            .Send(Arg.Any<GetCollectionWorkspaceQuery>())
-            .Returns(result);
-
-        // Act
-        var outcome = await _uut.GetCollection(request, default);
-
-        // Assert
-        await _mediator
-            .Received(1)
-            .Send(Arg.Is<GetCollectionWorkspaceQuery>(query =>
-                Utils.Workspace.AssertGetCollectionQuery(query, request)));
-
-        var response = outcome.ToResponse<GetCollectionWorkspaceResponse>();
-        Utils.Workspace.AssertGetCollectionResponse(response, result);
-    }
-
-    [Fact]
-    public async Task GetCollection_WhenItFails_ShouldReturnProblem()
-    {
-        // Arrange
-        var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
-
-        var error = Errors.User.NotFound;
-        _mediator
-            .Send(Arg.Any<GetCollectionWorkspaceQuery>())
-            .Returns(error);
-
-        // Act
-        var outcome = await _uut.GetCollection(request, default);
-
-        // Assert
-        await _mediator
-            .Received(1)
-            .Send(Arg.Is<GetCollectionWorkspaceQuery>(query =>
-                Utils.Workspace.AssertGetCollectionQuery(query, request)));
-
-        outcome.ValidateError(error);
-    }
-
-    [Fact]
     public async Task Create_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
@@ -272,6 +274,53 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<CreateWorkspaceCommand>(
                 command => Utils.Workspace.AssertCreateCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task InviteCollaborator_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateInviteCollaboratorToWorkspaceRequest();
+
+        var result = WorkspaceResultFactory.CreateInviteCollaboratorToWorkspaceResult();
+        _mediator
+            .Send(Arg.Any<InviteCollaboratorToWorkspaceCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.InviteCollaborator(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<InviteCollaboratorToWorkspaceCommand>(
+                command => Utils.Workspace.AssertInviteCollaboratorCommand(command, request)));
+
+        var response = outcome.ToResponse<InviteCollaboratorToWorkspaceResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task InviteCollaborator_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateInviteCollaboratorToWorkspaceRequest();
+
+        var error = Errors.User.NotFound;
+        _mediator
+            .Send(Arg.Any<InviteCollaboratorToWorkspaceCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.InviteCollaborator(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<InviteCollaboratorToWorkspaceCommand>(
+                command => Utils.Workspace.AssertInviteCollaboratorCommand(command, request)));
 
         outcome.ValidateError(error);
     }

@@ -5,7 +5,8 @@ import {
   createWorkspace,
   createWorkspaces,
   getPersonalWorkspace,
-  getWorkspace, getWorkspaceOverview,
+  getWorkspace,
+  getWorkspaceOverview,
   getWorkspaces
 } from "../utils/workspaces.utils";
 import { PersonalWorkspaceName } from "../utils/constants";
@@ -55,22 +56,6 @@ test.describe('should allow operations on the workspace entity', () => {
     expect(await response.json()).toStrictEqual({
       description: workspace.description,
     })
-  })
-
-  test('should get collaborators', async ({ request }) => {
-    const workspace = await getPersonalWorkspace(request);
-
-    const response = await request.get(`/api/workspaces/${workspace.id}/collaborators`, useToken())
-
-    expect(response.ok()).toBeTruthy()
-
-    const json = await response.json()
-    expect(json.collaborators).toHaveLength(1)
-    expect(json.collaborators).toStrictEqual([{
-      id: expect.any(String),
-      name: expect.any(String),
-      email: EMAIL,
-    }])
   })
 
   test.describe('should allow to get collection of workspaces', async () => {
@@ -250,6 +235,40 @@ test.describe('should allow operations on the workspace entity', () => {
       })
       expect(json.workspaces).toHaveLength(totalCount < pageSize ? totalCount : pageSize)
     })
+  })
+
+
+  test('should get collaborators', async ({ request }) => {
+    const collaboratorEmail = "someone@gmail.com"
+    const collaboratorName = "Michelle Obama"
+    await registerUser(
+      request,
+      collaboratorEmail,
+      "Some Password 123",
+      collaboratorName.split(" ")[0],
+      collaboratorName.split(" ")[1],
+    )
+
+    const workspace = await getPersonalWorkspace(request);
+
+    const response = await request.get(`/api/workspaces/${workspace.id}/collaborators`, useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    const json = await response.json()
+    expect(json.collaborators).toHaveLength(1)
+    expect(json.collaborators).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: expect.any(String),
+        email: EMAIL,
+      },
+      {
+        id: expect.any(String),
+        name: collaboratorName,
+        email: collaboratorEmail,
+      }
+    ])
   })
 
   test('should create workspace', async ({ request }) => {

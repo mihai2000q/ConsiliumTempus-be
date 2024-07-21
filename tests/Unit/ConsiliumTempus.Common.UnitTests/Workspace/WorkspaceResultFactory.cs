@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
+using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
@@ -22,14 +23,7 @@ public static class WorkspaceResultFactory
             workspace ?? WorkspaceFactory.Create(),
             user ?? UserFactory.Create());
     }
-    
-    public static GetCollaboratorsFromWorkspaceResult CreateGetCollaboratorsFromWorkspaceResult(
-        List<UserAggregate>? collaborators = null)
-    {
-        return new GetCollaboratorsFromWorkspaceResult(
-            collaborators ?? UserFactory.CreateList());
-    }
-    
+
     public static GetCollectionWorkspaceResult CreateGetCollectionWorkspaceResult(
         List<WorkspaceAggregate>? workspaces = null,
         int totalCount = 25,
@@ -41,9 +35,21 @@ public static class WorkspaceResultFactory
             currentUser ?? UserFactory.Create());
     }
     
+    public static GetCollaboratorsFromWorkspaceResult CreateGetCollaboratorsFromWorkspaceResult(
+        List<UserAggregate>? collaborators = null)
+    {
+        return new GetCollaboratorsFromWorkspaceResult(
+            collaborators ?? UserFactory.CreateList());
+    }
+    
     public static CreateWorkspaceResult CreateCreateWorkspaceResult()
     {
         return new CreateWorkspaceResult();
+    }
+
+    public static InviteCollaboratorToWorkspaceResult CreateInviteCollaboratorToWorkspaceResult()
+    {
+        return new InviteCollaboratorToWorkspaceResult();
     }
     
     public static UpdateWorkspaceResult CreateUpdateWorkspaceResult()
