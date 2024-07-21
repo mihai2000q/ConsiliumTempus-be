@@ -58,7 +58,7 @@ public class CreateWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleCreateWorkspaceCommand_WhenItFails_ShouldReturnUserNotFoundError()
+    public async Task HandleCreateWorkspaceCommand_WhenUserIsNull_ShouldReturnUserNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand();

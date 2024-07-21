@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
+using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
@@ -40,6 +41,21 @@ internal static partial class Utils
             workspace.Favorites.Should().BeEmpty();
 
             return true;
+        }
+
+        internal static void AssertFromInviteCollaboratorCommand(
+            InviteCollaboratorToWorkspaceCommand command,
+            WorkspaceAggregate workspace,
+            UserAggregate sender,
+            UserAggregate collaborator)
+        {
+            workspace.Id.Value.Should().Be(command.Id);
+            workspace.Invitations.Should().HaveCount(1);
+
+            workspace.Invitations[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.Invitations[0].Sender.Should().Be(sender);
+            workspace.Invitations[0].Collaborator.Should().Be(collaborator);
+            workspace.Invitations[0].Workspace.Should().Be(workspace);
         }
 
         internal static void AssertFromUpdateCommand(

@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
+using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
@@ -14,6 +15,20 @@ public static class WorkspaceCommandFactory
     {
         return new CreateWorkspaceCommand(
             name);
+    }
+
+    public static DeleteWorkspaceCommand CreateDeleteWorkspaceCommand(Guid? id = null)
+    {
+        return new DeleteWorkspaceCommand(id ?? Guid.NewGuid());
+    }
+
+    public static InviteCollaboratorToWorkspaceCommand CreateInviteCollaboratorToWorkspaceCommand(
+        Guid? id = null,
+        string email = Constants.User.Email)
+    {
+        return new InviteCollaboratorToWorkspaceCommand(
+            id ?? Guid.NewGuid(),
+            email);
     }
 
     public static UpdateWorkspaceCommand CreateUpdateWorkspaceCommand(
@@ -41,10 +56,5 @@ public static class WorkspaceCommandFactory
         return new UpdateOverviewWorkspaceCommand(
             id ?? Guid.NewGuid(),
             description);
-    }
-    
-    public static DeleteWorkspaceCommand CreateDeleteWorkspaceCommand(Guid? id = null)
-    {
-        return new DeleteWorkspaceCommand(id ?? Guid.NewGuid());
     }
 }

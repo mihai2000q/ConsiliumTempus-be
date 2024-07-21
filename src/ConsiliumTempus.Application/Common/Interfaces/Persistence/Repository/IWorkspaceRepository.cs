@@ -10,20 +10,24 @@ public interface IWorkspaceRepository
 {
     Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default);
 
+    Task<WorkspaceAggregate?> GetWithMembershipsAndInvitations(
+        WorkspaceId id,
+        CancellationToken cancellationToken = default);
+
     Task<List<UserAggregate>> GetCollaborators(
-        WorkspaceId id, 
+        WorkspaceId id,
         string? searchValue,
         CancellationToken cancellationToken = default);
 
     Task<List<WorkspaceAggregate>> GetListByUser(
-        UserAggregate user, 
+        UserAggregate user,
         PaginationInfo? paginationInfo,
         IReadOnlyList<IOrder<WorkspaceAggregate>> orders,
         IEnumerable<IFilter<WorkspaceAggregate>> filters,
         CancellationToken cancellationToken = default);
-    
+
     Task<int> GetListByUserCount(
-        UserAggregate user, 
+        UserAggregate user,
         IEnumerable<IFilter<WorkspaceAggregate>> filters,
         CancellationToken cancellationToken = default);
 
