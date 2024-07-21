@@ -8,6 +8,7 @@ using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
@@ -34,25 +35,6 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .Include(w => w.Memberships)
             .ThenInclude(m => m.User)
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
-    }
-
-    public async Task<List<UserAggregate>> GetCollaborators(
-        WorkspaceId id,
-        string? searchValue,
-        CancellationToken cancellationToken = default)
-    {
-        return await dbContext.Set<Membership>()
-            .Include(m => m.User)
-            .Where(m => m.Workspace.Id == id)
-            .Select(m => m.User)
-            .WhereIf(!string.IsNullOrWhiteSpace(searchValue),
-                u =>
-                    u.Credentials.Email.Contains(searchValue!) ||
-                    (u.FirstName.Value + " " + u.LastName.Value).Contains(searchValue!))
-            .OrderBy(u => u.FirstName.Value)
-            .ThenBy(u => u.LastName.Value)
-            .ThenBy(u => u.Credentials.Email)
-            .ToListAsync(cancellationToken);
     }
 
     public async Task<WorkspaceAggregate?> GetByProject(ProjectId id, CancellationToken cancellationToken = default)
@@ -129,6 +111,54 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .ThenInclude(m => m.User)
             .Where(w => w.Memberships.Any(m => m.User == user))
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<UserAggregate>> GetCollaborators(
+        WorkspaceId id,
+        string? searchValue,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Set<Membership>()
+            .Include(m => m.User)
+            .Where(m => m.Workspace.Id == id)
+            .Select(m => m.User)
+            .WhereIf(!string.IsNullOrWhiteSpace(searchValue),
+                u =>
+                    u.Credentials.Email.Contains(searchValue!) ||
+                    (u.FirstName.Value + " " + u.LastName.Value).Contains(searchValue!))
+            .OrderBy(u => u.FirstName.Value)
+            .ThenBy(u => u.LastName.Value)
+            .ThenBy(u => u.Credentials.Email)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<WorkspaceInvitation>> GetInvitations(
+        UserAggregate? user,
+        bool? isSender,
+        WorkspaceId? workspaceId,
+        PaginationInfo? paginationInfo,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Set<WorkspaceInvitation>()
+            .WhereIf(isSender is not null && isSender.Value, i => i.Sender == user)
+            .WhereIf(isSender is not null && !isSender.Value, i => i.Collaborator == user)
+            .WhereIf(workspaceId is not null, i => i.Workspace.Id == workspaceId)
+            .OrderByDescending(i => i.CreatedDateTime)
+            .Paginate(paginationInfo)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<int> GetInvitationsCount(
+        UserAggregate? user,
+        bool? isSender,
+        WorkspaceId? workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Set<WorkspaceInvitation>()
+            .WhereIf(isSender is not null && isSender.Value, i => i.Sender == user)
+            .WhereIf(isSender is not null && !isSender.Value, i => i.Collaborator == user)
+            .WhereIf(workspaceId is not null, i => i.Workspace.Id == workspaceId)
+            .CountAsync(cancellationToken);
     }
 
     public async Task Add(WorkspaceAggregate workspaceAggregate, CancellationToken cancellationToken = default)
