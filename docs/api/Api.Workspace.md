@@ -103,11 +103,11 @@ GET {{host}}/api/workspaces?pageSize=2&currentPage=1orderBy=name.asc&orderBy=upd
 
 Sends optional query parameters for ordering, filtering, and page-based pagination.
 
-- _**pageSize**_ is used to specify the size of the page
-- _**currentPage**_ is used to specify the current page
-- _**orderBy**_ is used to order the collection
-- _**search**_ is used to filter the collection
-- _**isPersonalWorkspaceFirst**_ is used to place the personal workspace of the user on top of the others
+- **pageSize** is used to specify the size of the page
+- **currentPage** is used to specify the current page
+- **orderBy** is used to order the collection
+- **search** is used to filter the collection
+- **isPersonalWorkspaceFirst** is used to place the personal workspace of the user on top of the others
 
 #### Get Collection Workspace Response
 
@@ -210,7 +210,7 @@ Only admins of the workspace can invite new collaborators
 ([Invite Collaborator To Workspace Permission](../Security.md/#permissions)).
 
 ```js
-POST {{host}}/api/workspaces
+POST {{host}}/api/workspaces/invite-collaborator
 ```
 
 #### Invite Collaborator To Workspace Request

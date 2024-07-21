@@ -32,9 +32,10 @@ public sealed class WorkspaceMappingConfig : IRegister
     {
         GetMappings(config);
         GetOverviewMappings(config);
-        GetCollaboratorsMappings(config);
         GetCollectionMappings(config);
+        GetCollaboratorsMappings(config);
         CreateMappings(config);
+        InviteCollaboratorMappings(config);
         UpdateMappings(config);
         UpdateFavoritesMappings(config);
         UpdateOverviewMappings(config);
@@ -65,17 +66,6 @@ public sealed class WorkspaceMappingConfig : IRegister
             .Map(dest => dest.Description, src => src.Description.Value);
     }
 
-    private static void GetCollaboratorsMappings(TypeAdapterConfig config)
-    {
-        config.NewConfig<GetCollaboratorsFromWorkspaceRequest, GetCollaboratorsFromWorkspaceQuery>();
-
-        config.NewConfig<GetCollaboratorsFromWorkspaceResult, GetCollaboratorsFromWorkspaceResponse>();
-        config.NewConfig<UserAggregate, GetCollaboratorsFromWorkspaceResponse.UserResponse>()
-            .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
-            .Map(dest => dest.Email, src => src.Credentials.Email);
-    }
-
     private static void GetCollectionMappings(TypeAdapterConfig config)
     {
         config.NewConfig<GetCollectionWorkspaceRequest, GetCollectionWorkspaceQuery>();
@@ -94,11 +84,28 @@ public sealed class WorkspaceMappingConfig : IRegister
             .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 
+    private static void GetCollaboratorsMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<GetCollaboratorsFromWorkspaceRequest, GetCollaboratorsFromWorkspaceQuery>();
+
+        config.NewConfig<GetCollaboratorsFromWorkspaceResult, GetCollaboratorsFromWorkspaceResponse>();
+        config.NewConfig<UserAggregate, GetCollaboratorsFromWorkspaceResponse.UserResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Email, src => src.Credentials.Email);
+    }
     private static void CreateMappings(TypeAdapterConfig config)
     {
         config.NewConfig<CreateWorkspaceRequest, CreateWorkspaceCommand>();
 
         config.NewConfig<CreateWorkspaceResult, CreateWorkspaceResponse>();
+    }
+
+    private static void InviteCollaboratorMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<InviteCollaboratorToWorkspaceRequest, InviteCollaboratorToWorkspaceCommand>();
+
+        config.NewConfig<InviteCollaboratorToWorkspaceResult, InviteCollaboratorToWorkspaceResponse>();
     }
 
     private static void UpdateMappings(TypeAdapterConfig config)
