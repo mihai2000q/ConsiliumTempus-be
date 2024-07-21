@@ -9,8 +9,7 @@ public static class QueryableExtensions
 {
     public static IQueryable<TSource> ApplyFilters<TSource>(
         this IQueryable<TSource> queryable,
-        IEnumerable<IFilter<TSource>> filters
-    ) where TSource : notnull
+        IEnumerable<IFilter<TSource>> filters) 
     {
         return filters.Aggregate(queryable, (query, filter) => query.Where(filter.Predicate));
     }

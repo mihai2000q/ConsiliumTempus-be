@@ -140,6 +140,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Set<WorkspaceInvitation>()
+            .Include(i => i.Workspace)
             .WhereIf(isSender is not null && isSender.Value, i => i.Sender == user)
             .WhereIf(isSender is not null && !isSender.Value, i => i.Collaborator == user)
             .WhereIf(workspaceId is not null, i => i.Workspace.Id == workspaceId)
