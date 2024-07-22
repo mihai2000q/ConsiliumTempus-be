@@ -14,4 +14,19 @@ public static partial class Errors
             "Workspace.PersonalWorkspace",
             "Personal Workspaces cannot be deleted, not even by their owners");
     }
+
+    public static class WorkspaceInvitation
+    {
+        public static Error NotFound => Error.NotFound(
+            "WorkspaceInvitation.NotFound",
+            "Workspace Invitation could not be found");
+
+        public static Error AlreadyInvited => Error.NotFound(
+            "WorkspaceInvitation.AlreadyInvited",
+            "This user has already been invited");
+
+        public static Error AlreadyCollaborator => Error.NotFound(
+            "WorkspaceInvitation.AlreadyCollaborator",
+            "This user is already a collaborator");
+    }
 }

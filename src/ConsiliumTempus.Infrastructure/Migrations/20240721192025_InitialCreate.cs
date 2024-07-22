@@ -30,7 +30,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -89,8 +89,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ExpiryDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsInvalidated = table.Column<bool>(type: "bit", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -259,11 +259,42 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WorkspaceInvitation",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CollaboratorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkspaceInvitation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkspaceInvitation_User_CollaboratorId",
+                        column: x => x.CollaboratorId,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_WorkspaceInvitation_User_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_WorkspaceInvitation_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectSprint",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     StartDate = table.Column<DateOnly>(type: "date", nullable: true),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: true),
                     ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -290,7 +321,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -342,7 +373,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CustomOrderPosition = table.Column<int>(type: "int", nullable: false),
                     SprintId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -369,7 +400,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CustomOrderPosition = table.Column<int>(type: "int", nullable: false),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false),
@@ -642,11 +673,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_Id",
-                table: "User",
-                column: "Id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserHasFavoriteProject_ProjectId",
                 table: "UserHasFavoriteProject",
                 column: "ProjectId");
@@ -657,14 +683,24 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "WorkspaceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Workspace_Id",
-                table: "Workspace",
-                column: "Id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Workspace_OwnerId",
                 table: "Workspace",
                 column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkspaceInvitation_CollaboratorId",
+                table: "WorkspaceInvitation",
+                column: "CollaboratorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkspaceInvitation_SenderId",
+                table: "WorkspaceInvitation",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkspaceInvitation_WorkspaceId",
+                table: "WorkspaceInvitation",
+                column: "WorkspaceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkspaceRoleHasPermission_PermissionId",
@@ -692,6 +728,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserHasFavoriteWorkspace");
+
+            migrationBuilder.DropTable(
+                name: "WorkspaceInvitation");
 
             migrationBuilder.DropTable(
                 name: "WorkspaceRoleHasPermission");

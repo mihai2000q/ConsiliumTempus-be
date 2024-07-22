@@ -56,6 +56,9 @@ public class UserDeletedHandlerTest
         await _userRepository
             .Received(1)
             .RemoveProjectsByOwner(user);
+        await _userRepository
+            .Received(1)
+            .RemoveWorkspaceInvitationsByUser(user);
         
         await _workspaceRepository
             .Received(1)

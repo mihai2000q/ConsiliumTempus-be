@@ -15,6 +15,8 @@ class Workspace
     void RefreshActivity()
     void TransferOwnership()
     void UpdateIsPersonal()
+    void AddInvitation()
+    void RemoveInvitation()
 }
 ```
 
@@ -29,7 +31,8 @@ class Workspace
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
   "memberships": [{}],
-  "favorites": [{}]
+  "favorites": [{}],
+  "invitations": [{}]
 }
 ```
 

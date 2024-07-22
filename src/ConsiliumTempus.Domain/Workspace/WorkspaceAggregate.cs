@@ -5,6 +5,7 @@ using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Workspace;
@@ -38,6 +39,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     private readonly List<Membership> _memberships = [];
     private readonly List<ProjectAggregate> _projects = [];
     private readonly List<UserAggregate> _favorites = [];
+    private readonly List<WorkspaceInvitation> _invitations = [];
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
@@ -49,6 +51,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
     public IReadOnlyList<ProjectAggregate> Projects => _projects.AsReadOnly();
     public IReadOnlyList<UserAggregate> Favorites => _favorites.AsReadOnly();
+    public IReadOnlyList<WorkspaceInvitation> Invitations => _invitations.AsReadOnly();
 
     public static WorkspaceAggregate Create(
         Name name,
@@ -114,5 +117,15 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     public void UpdateIsPersonal(IsPersonal isPersonal)
     {
         IsPersonal = isPersonal;
+    }
+
+    public void AddInvitation(WorkspaceInvitation invitation)
+    {
+        _invitations.Add(invitation);
+    }
+
+    public void RemoveInvitation(WorkspaceInvitation invitation)
+    {
+        _invitations.Remove(invitation);
     }
 }

@@ -1,9 +1,13 @@
-﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
+﻿using ConsiliumTempus.Api.Contracts.Workspace.AcceptInvitation;
+using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
+using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
@@ -20,23 +24,12 @@ public static class WorkspaceRequestFactory
             Id = id ?? Guid.NewGuid()
         };
     }
-    
+
     public static GetOverviewWorkspaceRequest CreateGetOverviewWorkspaceRequest(Guid? id = null)
     {
         return new GetOverviewWorkspaceRequest
         {
             Id = id ?? Guid.NewGuid()
-        };
-    }
-    
-    public static GetCollaboratorsFromWorkspaceRequest CreateGetCollaboratorsFromWorkspaceRequest(
-        Guid? id = null,
-        string searchValue = "")
-    {
-        return new GetCollaboratorsFromWorkspaceRequest
-        {
-            Id = id ?? Guid.NewGuid(),
-            SearchValue = searchValue
         };
     }
 
@@ -57,11 +50,64 @@ public static class WorkspaceRequestFactory
         };
     }
 
+    public static GetCollaboratorsFromWorkspaceRequest CreateGetCollaboratorsFromWorkspaceRequest(
+        Guid? id = null,
+        string searchValue = "")
+    {
+        return new GetCollaboratorsFromWorkspaceRequest
+        {
+            Id = id ?? Guid.NewGuid(),
+            SearchValue = searchValue
+        };
+    }
+
+    public static GetInvitationsWorkspaceRequest CreateGetInvitationsWorkspaceRequest(
+        bool? isSender = null,
+        Guid? workspaceId = null,
+        int? pageSize = null,
+        int? currentPage = null)
+    {
+        return new GetInvitationsWorkspaceRequest
+        {
+            IsSender = isSender,
+            WorkspaceId = workspaceId,
+            PageSize = pageSize,
+            CurrentPage = currentPage
+        };
+    }
+
     public static CreateWorkspaceRequest CreateCreateWorkspaceRequest(
         string name = Constants.Workspace.Name)
     {
         return new CreateWorkspaceRequest(
             name);
+    }
+
+    public static InviteCollaboratorToWorkspaceRequest CreateInviteCollaboratorToWorkspaceRequest(
+        Guid? id = null,
+        string email = Constants.User.Email)
+    {
+        return new InviteCollaboratorToWorkspaceRequest(
+            id ?? Guid.NewGuid(),
+            email);
+    }
+
+    public static AcceptInvitationToWorkspaceRequest CreateAcceptInvitationToWorkspaceRequest(
+        Guid? id = null,
+        Guid? invitationId = null)
+    {
+        return new AcceptInvitationToWorkspaceRequest(
+            id ?? Guid.NewGuid(),
+            invitationId ?? Guid.NewGuid());
+    }
+
+    public static RejectInvitationToWorkspaceRequest CreateRejectInvitationToWorkspaceRequest(
+        Guid? id = null,
+        Guid? invitationId = null)
+    {
+        return new RejectInvitationToWorkspaceRequest(
+            id ?? Guid.NewGuid(),
+            invitationId ?? Guid.NewGuid());
     }
 
     public static UpdateWorkspaceRequest CreateUpdateWorkspaceRequest(
@@ -81,7 +127,7 @@ public static class WorkspaceRequestFactory
             id ?? Guid.NewGuid(),
             isFavorite);
     }
-    
+
     public static UpdateOverviewWorkspaceRequest CreateUpdateOverviewWorkspaceRequest(
         Guid? id = null,
         string description = Constants.Workspace.Description)
@@ -90,7 +136,7 @@ public static class WorkspaceRequestFactory
             id ?? Guid.NewGuid(),
             description);
     }
-    
+
     public static DeleteWorkspaceRequest CreateDeleteWorkspaceRequest(Guid? id = null)
     {
         return new DeleteWorkspaceRequest

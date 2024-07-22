@@ -1,5 +1,8 @@
-﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
+﻿using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
+using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
+using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
@@ -14,6 +17,38 @@ public static class WorkspaceCommandFactory
     {
         return new CreateWorkspaceCommand(
             name);
+    }
+
+    public static DeleteWorkspaceCommand CreateDeleteWorkspaceCommand(Guid? id = null)
+    {
+        return new DeleteWorkspaceCommand(id ?? Guid.NewGuid());
+    }
+
+    public static InviteCollaboratorToWorkspaceCommand CreateInviteCollaboratorToWorkspaceCommand(
+        Guid? id = null,
+        string email = Constants.User.Email)
+    {
+        return new InviteCollaboratorToWorkspaceCommand(
+            id ?? Guid.NewGuid(),
+            email);
+    }
+
+    public static AcceptInvitationToWorkspaceCommand CreateAcceptInvitationToWorkspaceCommand(
+        Guid? id = null,
+        Guid? invitationId = null)
+    {
+        return new AcceptInvitationToWorkspaceCommand(
+            id ?? Guid.NewGuid(),
+            invitationId ?? Guid.NewGuid());
+    }
+
+    public static RejectInvitationToWorkspaceCommand CreateRejectInvitationToWorkspaceCommand(
+        Guid? id = null,
+        Guid? invitationId = null)
+    {
+        return new RejectInvitationToWorkspaceCommand(
+            id ?? Guid.NewGuid(),
+            invitationId ?? Guid.NewGuid());
     }
 
     public static UpdateWorkspaceCommand CreateUpdateWorkspaceCommand(
@@ -41,10 +76,5 @@ public static class WorkspaceCommandFactory
         return new UpdateOverviewWorkspaceCommand(
             id ?? Guid.NewGuid(),
             description);
-    }
-    
-    public static DeleteWorkspaceCommand CreateDeleteWorkspaceCommand(Guid? id = null)
-    {
-        return new DeleteWorkspaceCommand(id ?? Guid.NewGuid());
     }
 }

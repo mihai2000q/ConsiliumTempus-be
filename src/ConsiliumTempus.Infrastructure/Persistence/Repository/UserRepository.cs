@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,13 @@ public sealed class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRe
     {
         await dbContext.Projects
             .Where(p => p.Owner == owner)
+            .ExecuteDeleteAsync(cancellationToken);
+    }
+
+    public async Task RemoveWorkspaceInvitationsByUser(UserAggregate user, CancellationToken cancellationToken = default)
+    {
+        await dbContext.Set<WorkspaceInvitation>()
+            .Where(wi => wi.Sender == user || wi.Collaborator == user)
             .ExecuteDeleteAsync(cancellationToken);
     }
 }

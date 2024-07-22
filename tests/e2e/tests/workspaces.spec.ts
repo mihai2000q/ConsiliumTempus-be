@@ -3,10 +3,14 @@ import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
 import {
   createWorkspace,
-  createWorkspaces,
+  createWorkspaces, getCollaborators,
+  getInvitations,
   getPersonalWorkspace,
-  getWorkspace, getWorkspaceOverview,
-  getWorkspaces
+  getWorkspace,
+  getWorkspaceOverview,
+  getWorkspaces,
+  inviteCollaborator,
+  inviteCollaboratorWithRegister
 } from "../utils/workspaces.utils";
 import { PersonalWorkspaceName } from "../utils/constants";
 import { deleteUser, registerUser } from "../utils/users.utils";
@@ -14,6 +18,8 @@ import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceR
 import UpdateWorkspaceRequest from "../types/requests/workspace/UpdateWorkspaceRequest";
 import UpdateOverviewWorkspaceRequest from "../types/requests/workspace/UpdateOverviewWorkspaceRequest";
 import UpdateFavoritesWorkspaceRequest from "../types/requests/workspace/UpdateFavoritesWorkspaceRequest";
+import InviteCollaboratorToWorkspaceRequest from "../types/requests/workspace/InviteCollaboratorToWorkspaceRequest";
+import AcceptInvitationToWorkspaceRequest from "../types/requests/workspace/AcceptInvitationToWorkspaceRequest";
 
 test.describe('should allow operations on the workspace entity', () => {
   const EMAIL = "michaelj@gmail.com"
@@ -55,22 +61,6 @@ test.describe('should allow operations on the workspace entity', () => {
     expect(await response.json()).toStrictEqual({
       description: workspace.description,
     })
-  })
-
-  test('should get collaborators', async ({ request }) => {
-    const workspace = await getPersonalWorkspace(request);
-
-    const response = await request.get(`/api/workspaces/${workspace.id}/collaborators`, useToken())
-
-    expect(response.ok()).toBeTruthy()
-
-    const json = await response.json()
-    expect(json.collaborators).toHaveLength(1)
-    expect(json.collaborators).toStrictEqual([{
-      id: expect.any(String),
-      name: expect.any(String),
-      email: EMAIL,
-    }])
   })
 
   test.describe('should allow to get collection of workspaces', async () => {
@@ -252,6 +242,302 @@ test.describe('should allow operations on the workspace entity', () => {
     })
   })
 
+  test('should get collaborators', async ({ request }) => {
+    const workspace = await createWorkspace(request, {
+      name: "Some Random Workspace"
+    });
+
+    const response = await request.get(`/api/workspaces/${workspace.id}/collaborators`, useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    const json = await response.json()
+    expect(json.collaborators).toHaveLength(1)
+    expect(json.collaborators).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: expect.any(String),
+        email: EMAIL,
+      }
+    ])
+  })
+
+  test.describe('should allow to get invitations', async () => {
+    test('should get invitations for sender', async ({ request }) => {
+      const workspace = await createWorkspace(request)
+
+      const collaboratorEmail1 = "hector_lector@gmail.com"
+      const collaboratorName1 = "Hector Lector"
+      await inviteCollaboratorWithRegister(
+        request,
+        collaboratorEmail1,
+        collaboratorName1.split(" ")[0],
+        collaboratorName1.split(" ")[1],
+        workspace.id
+      )
+
+      const collaboratorEmail2 = "michelle_obama_official_account@gmail.com"
+      const collaboratorName2 = "Michelle Obama"
+      await inviteCollaboratorWithRegister(
+        request,
+        collaboratorEmail2,
+        collaboratorName2.split(" ")[0],
+        collaboratorName2.split(" ")[1],
+        workspace.id
+      )
+
+      const response = await request.get(`/api/workspaces/invitations?isSender=true`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const expectedWorkspace = {
+        id: workspace.id,
+        name: workspace.name,
+        isPersonal: workspace.isPersonal,
+      }
+
+      const json = await response.json()
+      expect(json.invitations).toHaveLength(2)
+      expect(json).toStrictEqual(
+        {
+          invitations: [
+            {
+              id: expect.any(String),
+              sender: {
+                id: expect.any(String),
+                email: EMAIL,
+                name: expect.any(String)
+              },
+              workspace: expectedWorkspace,
+              collaborator: {
+                id: expect.any(String),
+                email: collaboratorEmail2,
+                name: collaboratorName2
+              }
+            },
+            {
+              id: expect.any(String),
+              sender: {
+                id: expect.any(String),
+                email: EMAIL,
+                name: expect.any(String)
+              },
+              workspace: expectedWorkspace,
+              collaborator: {
+                id: expect.any(String),
+                email: collaboratorEmail1,
+                name: collaboratorName1
+              }
+            },
+          ],
+          totalCount: 2
+        }
+      )
+    })
+
+    test('should get invitations for collaborator', async ({ request }) => {
+      const senderEmail1 = "schecter_guitar@gmail.com"
+      const token1 = (await registerUser(request, senderEmail1)).token
+      const workspace1 = (await getPersonalWorkspace(request, token1))
+      await inviteCollaborator(
+        request,
+        {
+          id: workspace1.id,
+          email: EMAIL
+        },
+        token1
+      )
+
+      const senderEmail2 = "ibanez_guitar@gmail.com"
+      const token2 = (await registerUser(request, senderEmail2)).token
+      const workspace2 = (await getPersonalWorkspace(request, token2))
+      await inviteCollaborator(
+        request,
+        {
+          id: workspace2.id,
+          email: EMAIL
+        },
+        token2
+      )
+
+      const response = await request.get(`/api/workspaces/invitations?isSender=false`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const expectedCollaborator = {
+        id: expect.any(String),
+        email: EMAIL,
+        name: expect.any(String)
+      }
+
+      const json = await response.json()
+      expect(json.invitations).toHaveLength(2)
+      expect(json).toStrictEqual(
+        {
+          invitations: [
+            {
+              id: expect.any(String),
+              collaborator: expectedCollaborator,
+              sender: {
+                id: expect.any(String),
+                email: senderEmail2,
+                name: expect.any(String)
+              },
+              workspace: {
+                id: workspace2.id,
+                name: workspace2.name,
+                isPersonal: workspace2.isPersonal,
+              },
+            },
+            {
+              id: expect.any(String),
+              collaborator: expectedCollaborator,
+              sender: {
+                id: expect.any(String),
+                email: senderEmail1,
+                name: expect.any(String)
+              },
+              workspace: {
+                id: workspace1.id,
+                name: workspace1.name,
+                isPersonal: workspace1.isPersonal,
+              },
+            }
+          ],
+          totalCount: 2
+        }
+      )
+    })
+
+    test('should get invitations for workspace', async ({ request }) => {
+      const workspace1 = await createWorkspace(request, {
+        name: "Another Random Workspace"
+      })
+      const workspace2 = await createWorkspace(request, {
+        name: "Let's see, is this another workspace?"
+      })
+
+      const collaboratorEmail1 = "someone@gmail.com"
+      const collaboratorName1 = "Someone Else"
+      await inviteCollaboratorWithRegister(
+        request,
+        collaboratorEmail1,
+        collaboratorName1.split(" ")[0],
+        collaboratorName1.split(" ")[1],
+        workspace1.id
+      )
+
+      const collaboratorEmail2 = "michelle_obama@gmail.com"
+      const collaboratorName2 = "Michelle Obama"
+      await inviteCollaboratorWithRegister(
+        request,
+        collaboratorEmail2,
+        collaboratorName2.split(" ")[0],
+        collaboratorName2.split(" ")[1],
+        workspace2.id
+      )
+
+      const expectedSender = {
+        id: expect.any(String),
+        email: EMAIL,
+        name: expect.any(String)
+      }
+      const expectedWorkspace = {
+        id: workspace2.id,
+        name: workspace2.name,
+        isPersonal: workspace2.isPersonal,
+      }
+
+      const response = await request.get(`/api/workspaces/invitations?workspaceId=${workspace2.id}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      const json = await response.json()
+      expect(json.invitations).toHaveLength(1)
+      expect(json).toStrictEqual(
+        {
+          invitations: [
+            {
+              id: expect.any(String),
+              sender: expectedSender,
+              workspace: expectedWorkspace,
+              collaborator: {
+                id: expect.any(String),
+                email: collaboratorEmail2,
+                name: collaboratorName2
+              }
+            }
+          ],
+          totalCount: 1
+        }
+      )
+    })
+
+    test('should get invitations for workspace with pagination', async ({ request }) => {
+      const workspace = await createWorkspace(request, {
+        name: "perhaps, another workspace?"
+      })
+
+      const collaboratorEmail1 = "howard_impact@gmail.com"
+      const collaboratorName1 = "Howard Impact"
+      await inviteCollaboratorWithRegister(
+        request,
+        collaboratorEmail1,
+        collaboratorName1.split(" ")[0],
+        collaboratorName1.split(" ")[1],
+        workspace.id
+      )
+
+      const collaboratorEmail2 = "tremolo_base@gmail.com"
+      const collaboratorName2 = "Tremolo Base"
+      await inviteCollaboratorWithRegister(
+        request,
+        collaboratorEmail2,
+        collaboratorName2.split(" ")[0],
+        collaboratorName2.split(" ")[1],
+        workspace.id
+      )
+
+      const response = await request.get(
+        `/api/workspaces/invitations?workspaceId=${workspace.id}&pageSize=1&currentPage=2`,
+        useToken()
+      )
+
+      expect(response.ok()).toBeTruthy()
+
+      const expectedSender = {
+        id: expect.any(String),
+        email: EMAIL,
+        name: expect.any(String)
+      }
+      const expectedWorkspace = {
+        id: workspace.id,
+        name: workspace.name,
+        isPersonal: workspace.isPersonal,
+      }
+
+      const json = await response.json()
+      expect(json.invitations).toHaveLength(1)
+      expect(json).toStrictEqual(
+        {
+          invitations: [
+            {
+              id: expect.any(String),
+              sender: expectedSender,
+              workspace: expectedWorkspace,
+              collaborator: {
+                id: expect.any(String),
+                email: collaboratorEmail1,
+                name: collaboratorName1
+              }
+            },
+          ],
+          totalCount: 2
+        }
+      )
+    })
+  })
+
   test('should create workspace', async ({ request }) => {
     const createWorkspaceRequest: CreateWorkspaceRequest = {
       name: "New Workspace"
@@ -278,6 +564,145 @@ test.describe('should allow operations on the workspace entity', () => {
         owner: expect.any(Object)
       }
     ]))
+  })
+
+  test('should invite collaborator to workspace', async ({ request }) => {
+    const collaboratorEmail = "julian_goth@gmail.com"
+    const collaboratorName = "Julian Goth"
+    await registerUser(
+      request,
+      collaboratorEmail,
+      "Some Password 123",
+      collaboratorName.split(" ")[0],
+      collaboratorName.split(" ")[1]
+    )
+
+    const workspace = await createWorkspace(request, {
+      name: "Some other workspace"
+    });
+
+    const body: InviteCollaboratorToWorkspaceRequest = {
+      id: workspace.id,
+      email: collaboratorEmail,
+    }
+    const response = await request.post(`/api/workspaces/invite-collaborator`, {
+      ...useToken(),
+      data: body
+    })
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const invitations = await getInvitations(request, workspace.id)
+    expect(invitations).toHaveLength(1)
+    expect(invitations).toStrictEqual([
+      {
+        id: expect.any(String),
+        sender: {
+          id: expect.any(String),
+          email: EMAIL,
+          name: expect.any(String)
+        },
+        workspace: {
+          id: workspace.id,
+          name: workspace.name,
+          isPersonal: workspace.isPersonal
+        },
+        collaborator: {
+          id: expect.any(String),
+          email: collaboratorEmail,
+          name: collaboratorName
+        }
+      }
+    ])
+  })
+
+  test('should accept invitation to workspace', async ({ request }) => {
+    const senderEmail = "sender_email@gmail.com"
+    const token = (await registerUser(request, senderEmail)).token
+    const workspace = await createWorkspace(request, { name: "yet another workspace" }, token)
+    await inviteCollaborator(
+      request,
+      {
+        id: workspace.id,
+        email: EMAIL
+      },
+      token
+    )
+    const invitation = (await getInvitations(request, workspace.id))
+      .filter((i: { collaborator: { email: string } }) => i.collaborator.email === EMAIL)[0]
+
+    const body: AcceptInvitationToWorkspaceRequest = {
+      id: workspace.id,
+      invitationId: invitation.id,
+    }
+    const response = await request.post(`/api/workspaces/accept-invitation`, {
+        ...useToken(),
+        data: body
+      }
+    )
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const invitations = await getInvitations(request, workspace.id)
+    expect(invitations).toHaveLength(0)
+
+    const collaborators = await getCollaborators(request, workspace.id)
+    expect(collaborators).toHaveLength(2)
+    expect(collaborators).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: expect.any(String),
+        email: EMAIL,
+      },
+      {
+        id: expect.any(String),
+        name: expect.any(String),
+        email: senderEmail,
+      }
+    ])
+  })
+
+  test('should reject invitation to workspace', async ({ request }) => {
+    const senderEmail = "sender_email2@gmail.com"
+    const token = (await registerUser(request, senderEmail)).token
+    const workspace = await createWorkspace(request, { name: "yet another workspace to reject" }, token)
+    await inviteCollaborator(
+      request,
+      {
+        id: workspace.id,
+        email: EMAIL
+      },
+      token
+    )
+    const invitation = (await getInvitations(request, workspace.id))
+      .filter((i: { collaborator: { email: string } }) => i.collaborator.email === EMAIL)[0]
+
+    const body: AcceptInvitationToWorkspaceRequest = {
+      id: workspace.id,
+      invitationId: invitation.id,
+    }
+    const response = await request.post(`/api/workspaces/reject-invitation`, {
+        ...useToken(),
+        data: body
+      }
+    )
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+    
+    const invitations = await getInvitations(request, workspace.id)
+    expect(invitations).toHaveLength(0)
   })
 
   test('should update workspace', async ({ request }) => {
