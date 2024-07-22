@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
+﻿using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
+using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
@@ -29,6 +30,15 @@ public static class WorkspaceCommandFactory
         return new InviteCollaboratorToWorkspaceCommand(
             id ?? Guid.NewGuid(),
             email);
+    }
+
+    public static AcceptInvitationToWorkspaceCommand CreateAcceptInvitationToWorkspaceCommand(
+        Guid? id = null,
+        Guid? invitationId = null)
+    {
+        return new AcceptInvitationToWorkspaceCommand(
+            id ?? Guid.NewGuid(),
+            invitationId ?? Guid.NewGuid());
     }
 
     public static UpdateWorkspaceCommand CreateUpdateWorkspaceCommand(

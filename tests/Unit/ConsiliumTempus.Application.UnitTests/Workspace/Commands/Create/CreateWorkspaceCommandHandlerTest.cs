@@ -30,7 +30,7 @@ public class CreateWorkspaceCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleCreateWorkspaceCommand_WhenIsSuccessful_ShouldAddWorkspaceAndReturnResponse()
+    public async Task HandleCreateWorkspaceCommand_WhenIsSuccessful_ShouldAddWorkspaceAndReturnSuccessResponse()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateCreateWorkspaceCommand();

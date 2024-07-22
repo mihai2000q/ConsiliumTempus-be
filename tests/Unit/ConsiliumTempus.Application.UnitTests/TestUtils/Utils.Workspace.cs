@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
+﻿using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
+using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
@@ -52,10 +53,30 @@ internal static partial class Utils
             workspace.Id.Value.Should().Be(command.Id);
             workspace.Invitations.Should().HaveCount(1);
 
-            workspace.Invitations[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            workspace.Invitations[0].Sender.Should().Be(sender);
-            workspace.Invitations[0].Collaborator.Should().Be(collaborator);
-            workspace.Invitations[0].Workspace.Should().Be(workspace);
+            var invitation = workspace.Invitations[0];
+            invitation.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            invitation.Sender.Should().Be(sender);
+            invitation.Collaborator.Should().Be(collaborator);
+            invitation.Workspace.Should().Be(workspace);
+        }
+
+        internal static void AssertFromAcceptInvitationCommand(
+            AcceptInvitationToWorkspaceCommand command,
+            WorkspaceAggregate workspace,
+            UserAggregate user)
+        {
+            workspace.Id.Value.Should().Be(command.Id);
+            workspace.Invitations.Should().HaveCount(0);
+            workspace.Memberships.Should().ContainSingle(m => m.User == user);
+
+            var membership = workspace.Memberships.Single(m => m.User == user);
+            membership.Id.UserId.Should().Be(user.Id);
+            membership.Id.WorkspaceId.Should().Be(workspace.Id);
+            membership.User.Should().Be(user);
+            membership.Workspace.Should().Be(workspace);
+            membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+            membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertFromUpdateCommand(
