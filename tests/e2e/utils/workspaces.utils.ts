@@ -92,3 +92,12 @@ export async function inviteCollaborator(
   )
   expect(inviteResponse.ok()).toBeTruthy()
 }
+
+export async function getInvitations(request: APIRequestContext, workspaceId: string) {
+  const response = await request.get(
+    `/api/workspaces/invitations?workspaceId=${workspaceId}`,
+    useToken()
+  )
+
+  return (await response.json()).invitations
+}
