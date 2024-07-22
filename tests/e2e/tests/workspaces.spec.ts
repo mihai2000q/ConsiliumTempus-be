@@ -651,6 +651,9 @@ test.describe('should allow operations on the workspace entity', () => {
       message: expect.any(String)
     })
 
+    const invitations = await getInvitations(request, workspace.id)
+    expect(invitations).toHaveLength(0)
+
     const collaborators = await getCollaborators(request, workspace.id)
     expect(collaborators).toHaveLength(2)
     expect(collaborators).toStrictEqual([
@@ -665,6 +668,41 @@ test.describe('should allow operations on the workspace entity', () => {
         email: senderEmail,
       }
     ])
+  })
+
+  test('should reject invitation to workspace', async ({ request }) => {
+    const senderEmail = "sender_email2@gmail.com"
+    const token = (await registerUser(request, senderEmail)).token
+    const workspace = await createWorkspace(request, { name: "yet another workspace to reject" }, token)
+    await inviteCollaborator(
+      request,
+      {
+        id: workspace.id,
+        email: EMAIL
+      },
+      token
+    )
+    const invitation = (await getInvitations(request, workspace.id))
+      .filter((i: { collaborator: { email: string } }) => i.collaborator.email === EMAIL)[0]
+
+    const body: AcceptInvitationToWorkspaceRequest = {
+      id: workspace.id,
+      invitationId: invitation.id,
+    }
+    const response = await request.post(`/api/workspaces/reject-invitation`, {
+        ...useToken(),
+        data: body
+      }
+    )
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+    
+    const invitations = await getInvitations(request, workspace.id)
+    expect(invitations).toHaveLength(0)
   })
 
   test('should update workspace', async ({ request }) => {

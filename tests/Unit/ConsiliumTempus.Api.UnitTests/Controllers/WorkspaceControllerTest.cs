@@ -8,6 +8,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
+using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
@@ -17,6 +18,7 @@ using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
@@ -419,6 +421,53 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<AcceptInvitationToWorkspaceCommand>(
                 command => Utils.Workspace.AssertAcceptInvitationCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task RejectInvitation_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateRejectInvitationToWorkspaceRequest();
+
+        var result = WorkspaceResultFactory.CreateRejectInvitationToWorkspaceResult();
+        _mediator
+            .Send(Arg.Any<RejectInvitationToWorkspaceCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.RejectInvitation(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<RejectInvitationToWorkspaceCommand>(
+                command => Utils.Workspace.AssertRejectInvitationCommand(command, request)));
+
+        var response = outcome.ToResponse<RejectInvitationToWorkspaceResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task RejectInvitation_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateRejectInvitationToWorkspaceRequest();
+
+        var error = Errors.User.NotFound;
+        _mediator
+            .Send(Arg.Any<RejectInvitationToWorkspaceCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.RejectInvitation(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<RejectInvitationToWorkspaceCommand>(
+                command => Utils.Workspace.AssertRejectInvitationCommand(command, request)));
 
         outcome.ValidateError(error);
     }

@@ -25,6 +25,9 @@
   * [Accept Invitation](#accept-invitation)
     * [Accept Invitation To Workspace Request](#accept-invitation-to-workspace-request)
     * [Accept Invitation To Workspace Response](#accept-invitation-to-workspace-response)
+  * [Reject Invitation](#reject-invitation)
+    * [Reject Invitation To Workspace Request](#reject-invitation-to-workspace-request)
+    * [Reject Invitation To Workspace Response](#reject-invitation-to-workspace-response)
   * [Update](#update)
     * [Update Workspace Request](#update-workspace-request)
     * [Update Workspace Response](#update-workspace-response)
@@ -321,6 +324,29 @@ Sends body data needed to accept the invitation to the workspace.
 #### Accept Invitation To Workspace Response
 
 Returns a confirmation message that the invitation has been accepted successfully.
+
+### Reject Invitation
+
+Anyone can reject an invitation to a workspace.
+
+```js
+POST {{host}}/api/workspaces/reject-invitation
+```
+
+#### Reject Invitation To Workspace Request
+
+Sends body data needed to reject the invitation to the workspace.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "invitationId": "20000000-0000-0000-0000-000000000000"
+}
+```
+
+#### Reject Invitation To Workspace Response
+
+Returns a confirmation message that the invitation has been rejected successfully.
 
 ### Update
 

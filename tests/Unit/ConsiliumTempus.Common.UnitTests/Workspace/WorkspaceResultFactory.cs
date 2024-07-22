@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
@@ -68,6 +69,11 @@ public static class WorkspaceResultFactory
     public static AcceptInvitationToWorkspaceResult CreateAcceptInvitationToWorkspaceResult()
     {
         return new AcceptInvitationToWorkspaceResult();
+    }
+
+    public static RejectInvitationToWorkspaceResult CreateRejectInvitationToWorkspaceResult()
+    {
+        return new RejectInvitationToWorkspaceResult();
     }
     
     public static UpdateWorkspaceResult CreateUpdateWorkspaceResult()

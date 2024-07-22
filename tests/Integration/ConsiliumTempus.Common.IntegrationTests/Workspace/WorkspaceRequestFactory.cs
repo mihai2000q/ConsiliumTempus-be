@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
+using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
@@ -96,6 +97,15 @@ public static class WorkspaceRequestFactory
         Guid? invitationId = null)
     {
         return new AcceptInvitationToWorkspaceRequest(
+            id ?? Guid.NewGuid(),
+            invitationId ?? Guid.NewGuid());
+    }
+
+    public static RejectInvitationToWorkspaceRequest CreateRejectInvitationToWorkspaceRequest(
+        Guid? id = null,
+        Guid? invitationId = null)
+    {
+        return new RejectInvitationToWorkspaceRequest(
             id ?? Guid.NewGuid(),
             invitationId ?? Guid.NewGuid());
     }

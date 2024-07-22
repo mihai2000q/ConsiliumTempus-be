@@ -8,6 +8,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
+using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
@@ -15,6 +16,7 @@ using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
@@ -45,6 +47,7 @@ public sealed class WorkspaceMappingConfig : IRegister
         CreateMappings(config);
         InviteCollaboratorMappings(config);
         AcceptInvitationMappings(config);
+        RejectInvitationMappings(config);
         UpdateMappings(config);
         UpdateFavoritesMappings(config);
         UpdateOverviewMappings(config);
@@ -140,6 +143,13 @@ public sealed class WorkspaceMappingConfig : IRegister
         config.NewConfig<AcceptInvitationToWorkspaceRequest, AcceptInvitationToWorkspaceCommand>();
 
         config.NewConfig<AcceptInvitationToWorkspaceResult, AcceptInvitationToWorkspaceResponse>();
+    }
+
+    private static void RejectInvitationMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<RejectInvitationToWorkspaceRequest, RejectInvitationToWorkspaceCommand>();
+
+        config.NewConfig<RejectInvitationToWorkspaceResult, RejectInvitationToWorkspaceResponse>();
     }
 
     private static void UpdateMappings(TypeAdapterConfig config)

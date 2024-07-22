@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
+using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
@@ -136,6 +137,16 @@ internal static partial class Utils
             membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
             membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertRejectInvitation(
+            RejectInvitationToWorkspaceRequest request,
+            WorkspaceAggregate workspace,
+            UserAggregate collaborator)
+        {
+            workspace.Id.Value.Should().Be(request.Id);
+            workspace.Invitations.Should().NotContain(i => i.Collaborator == collaborator);
+            workspace.Memberships.Should().NotContain(i => i.User == collaborator);
         }
 
         internal static void AssertUpdated(
