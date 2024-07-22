@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
+﻿using ConsiliumTempus.Api.Contracts.Workspace.AcceptInvitation;
+using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
@@ -9,6 +10,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
+using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
@@ -98,6 +100,16 @@ internal static partial class Utils
         {
             command.Id.Should().Be(request.Id);
             command.Email.Should().Be(request.Email);
+
+            return true;
+        }
+
+        internal static bool AssertAcceptInvitationCommand(
+            AcceptInvitationToWorkspaceCommand command,
+            AcceptInvitationToWorkspaceRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.InvitationId.Should().Be(request.InvitationId);
 
             return true;
         }

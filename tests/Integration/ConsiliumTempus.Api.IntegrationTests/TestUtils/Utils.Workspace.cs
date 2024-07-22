@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
+﻿using ConsiliumTempus.Api.Contracts.Workspace.AcceptInvitation;
+using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
@@ -117,6 +118,24 @@ internal static partial class Utils
             invitation.Sender.Should().Be(sender);
             invitation.Collaborator.Should().Be(collaborator);
             invitation.Workspace.Should().Be(workspace);
+        }
+
+        internal static void AssertAcceptInvitation(
+            AcceptInvitationToWorkspaceRequest request,
+            WorkspaceAggregate workspace,
+            UserAggregate collaborator)
+        {
+            workspace.Id.Value.Should().Be(request.Id);
+            workspace.Invitations.Should().NotContain(i => i.Collaborator == collaborator);
+            workspace.Memberships.Should().ContainSingle(i => i.User == collaborator);
+
+            var membership = workspace.Memberships.Single(i => i.User == collaborator);
+            membership.Id.UserId.Should().Be(collaborator.Id);
+            membership.User.Should().Be(collaborator);
+            membership.Workspace.Should().Be(workspace);
+            membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+            membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdated(

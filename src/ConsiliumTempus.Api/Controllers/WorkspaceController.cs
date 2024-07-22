@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Api.Common.Attributes;
 using ConsiliumTempus.Api.Common.Mapping;
+using ConsiliumTempus.Api.Contracts.Workspace.AcceptInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
@@ -11,6 +12,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
+using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
@@ -123,6 +125,19 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
         return result.Match(
             inviteCollaboratorResult => Ok(Mapper.Map<InviteCollaboratorToWorkspaceResponse>(inviteCollaboratorResult)),
+            Problem
+        );
+    }
+
+    [HttpPost("Accept-Invitation")]
+    public async Task<IActionResult> AcceptInvitation(AcceptInvitationToWorkspaceRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<AcceptInvitationToWorkspaceCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            acceptInvitationResult => Ok(Mapper.Map<AcceptInvitationToWorkspaceResponse>(acceptInvitationResult)),
             Problem
         );
     }

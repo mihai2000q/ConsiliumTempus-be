@@ -20,8 +20,11 @@
     * [Create Workspace Request](#create-workspace-request)
     * [Create Workspace Response](#create-workspace-response)
   * [Invite Collaborator](#invite-collaborator)
-    * [Invite Collaborator To Workspace Request](#invite-collaborator-workspace-request)
-    * [Invite Collaborator To Workspace Response](#invite-collaborator-workspace-response)
+    * [Invite Collaborator To Workspace Request](#invite-collaborator-to-workspace-request)
+    * [Invite Collaborator To Workspace Response](#invite-collaborator-to-workspace-response)
+  * [Accept Invitation](#accept-invitation)
+    * [Accept Invitation To Workspace Request](#accept-invitation-to-workspace-request)
+    * [Accept Invitation To Workspace Response](#accept-invitation-to-workspace-response)
   * [Update](#update)
     * [Update Workspace Request](#update-workspace-request)
     * [Update Workspace Response](#update-workspace-response)
@@ -287,7 +290,7 @@ Sends body data needed to invite a new collaborator to the workspace.
 
 ```json
 {
-  "id": "88882448-bd63-4731-8a05-f6333b6d22e2",
+  "id": "10000000-0000-0000-0000-000000000000",
   "email": "benjamin_smith@gmail.com"
 }
 ```
@@ -295,6 +298,29 @@ Sends body data needed to invite a new collaborator to the workspace.
 #### Invite Collaborator To Workspace Response
 
 Returns a confirmation message that the invitation has been sent successfully.
+
+### Accept Invitation
+
+Anyone can accept an invitation to a workspace.
+
+```js
+POST {{host}}/api/workspaces/accept-invitation
+```
+
+#### Accept Invitation To Workspace Request
+
+Sends body data needed to accept the invitation to the workspace.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "invitationId": "20000000-0000-0000-0000-000000000000"
+}
+```
+
+#### Accept Invitation To Workspace Response
+
+Returns a confirmation message that the invitation has been accepted successfully.
 
 ### Update
 
@@ -311,7 +337,7 @@ Sends body data that the new workspace needs to be updated.
 
 ```json
 {
-  "id": "88882448-bd63-4731-8a05-f6333b6d22e2",
+  "id": "10000000-0000-0000-0000-000000000000",
   "name": "Workspace Name"
 }
 ```
@@ -335,7 +361,7 @@ Sends body data that the workspace needs to update favorites.
 
 ```json
 {
-  "id": "88882448-bd63-4731-8a05-f6333b6d22e2",
+  "id": "10000000-0000-0000-0000-000000000000",
   "isFavorite": false
 }
 ```
@@ -359,7 +385,7 @@ Sends body data that the workspace overview needs to be updated.
 
 ```json
 {
-  "id": "88882448-bd63-4731-8a05-f6333b6d22e2",
+  "id": "10000000-0000-0000-0000-000000000000",
   "description": "This is the new description of the workspace overview"
 }
 ```

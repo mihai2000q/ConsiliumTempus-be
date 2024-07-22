@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Api.Contracts.Workspace.AcceptInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
@@ -10,6 +11,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
+using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
@@ -42,6 +44,7 @@ public sealed class WorkspaceMappingConfig : IRegister
         GetInvitationsMappings(config);
         CreateMappings(config);
         InviteCollaboratorMappings(config);
+        AcceptInvitationMappings(config);
         UpdateMappings(config);
         UpdateFavoritesMappings(config);
         UpdateOverviewMappings(config);
@@ -130,6 +133,13 @@ public sealed class WorkspaceMappingConfig : IRegister
         config.NewConfig<InviteCollaboratorToWorkspaceRequest, InviteCollaboratorToWorkspaceCommand>();
 
         config.NewConfig<InviteCollaboratorToWorkspaceResult, InviteCollaboratorToWorkspaceResponse>();
+    }
+
+    private static void AcceptInvitationMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<AcceptInvitationToWorkspaceRequest, AcceptInvitationToWorkspaceCommand>();
+
+        config.NewConfig<AcceptInvitationToWorkspaceResult, AcceptInvitationToWorkspaceResponse>();
     }
 
     private static void UpdateMappings(TypeAdapterConfig config)

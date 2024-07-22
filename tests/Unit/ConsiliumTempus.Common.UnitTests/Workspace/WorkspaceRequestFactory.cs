@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Api.Contracts.Workspace.Create;
+﻿using ConsiliumTempus.Api.Contracts.Workspace.AcceptInvitation;
+using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
@@ -88,6 +89,15 @@ public static class WorkspaceRequestFactory
         return new InviteCollaboratorToWorkspaceRequest(
             id ?? Guid.NewGuid(),
             email);
+    }
+
+    public static AcceptInvitationToWorkspaceRequest CreateAcceptInvitationToWorkspaceRequest(
+        Guid? id = null,
+        Guid? invitationId = null)
+    {
+        return new AcceptInvitationToWorkspaceRequest(
+            id ?? Guid.NewGuid(),
+            invitationId ?? Guid.NewGuid());
     }
 
     public static UpdateWorkspaceRequest CreateUpdateWorkspaceRequest(

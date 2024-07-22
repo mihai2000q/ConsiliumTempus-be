@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
+using ConsiliumTempus.Api.Contracts.Workspace.AcceptInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Create;
 using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
@@ -12,6 +13,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
+using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
@@ -370,6 +372,53 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<InviteCollaboratorToWorkspaceCommand>(
                 command => Utils.Workspace.AssertInviteCollaboratorCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task AcceptInvitation_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateAcceptInvitationToWorkspaceRequest();
+
+        var result = WorkspaceResultFactory.CreateAcceptInvitationToWorkspaceResult();
+        _mediator
+            .Send(Arg.Any<AcceptInvitationToWorkspaceCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.AcceptInvitation(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<AcceptInvitationToWorkspaceCommand>(
+                command => Utils.Workspace.AssertAcceptInvitationCommand(command, request)));
+
+        var response = outcome.ToResponse<AcceptInvitationToWorkspaceResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task AcceptInvitation_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateAcceptInvitationToWorkspaceRequest();
+
+        var error = Errors.User.NotFound;
+        _mediator
+            .Send(Arg.Any<AcceptInvitationToWorkspaceCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.AcceptInvitation(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<AcceptInvitationToWorkspaceCommand>(
+                command => Utils.Workspace.AssertAcceptInvitationCommand(command, request)));
 
         outcome.ValidateError(error);
     }
