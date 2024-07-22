@@ -13,6 +13,9 @@
   * [Get Collaborators](#get-collaborators)
     * [Get Collaborators From Workspace Request](#get-collaborators-from-workspace-request)
     * [Get Collaborators From Workspace Response](#get-collaborators-from-workspace-response)
+  * [Get Invitations](#get-invitations)
+    * [Get Invitations Workspace Request](#get-invitations-workspace-request)
+    * [Get Invitations Workspace Response](#get-invitations-workspace-response)
   * [Create](#create)
     * [Create Workspace Request](#create-workspace-request)
     * [Create Workspace Response](#create-workspace-response)
@@ -179,6 +182,71 @@ Returns the collaborators.
       "email": "stephenc@gmail.com"
     }
   ]
+}
+```
+
+### Get Invitations
+
+Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
+
+```js
+GET {{host}}/api/workspaces/invitations?isSender=false&pageSize=2&currentPage=1
+```
+
+#### Get Invitations Workspace Request
+
+Sends the following query parameters:
+
+- **isSender** to get invitations where the current user is the sender, otherwise where the user is the invitee
+- **workspaceId** to get invitations from a workspace
+- **pageSize** to specify the size of the invitations returned
+- **currentPage** to specify the current page 
+
+#### Get Invitations Workspace Response
+
+Returns the invitations and total count.
+
+```json
+{
+  "invitations": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "sender": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Michael Jordan",
+        "email": "michaelj@gmail.com"
+      },
+      "collaborator": {
+        "id": "20000000-0000-0000-0000-000000000000",
+        "name": "Benjamin Smith",
+        "email": "bsmith@gmail.com"
+      },
+      "workspace": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Michael's Workspace",
+        "isPersonal": true
+      }
+    },
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "sender": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Thomson Mike",
+        "email": "thomson_mike@gmail.com"
+      },
+      "collaborator": {
+        "id": "20000000-0000-0000-0000-000000000000",
+        "name": "Benjamin Smith",
+        "email": "bsmith@gmail.com"
+      },
+      "workspace": {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "name": "Thomson's Workspace",
+        "isPersonal": false
+      }
+    }
+  ],
+  "totalCount": 2
 }
 ```
 

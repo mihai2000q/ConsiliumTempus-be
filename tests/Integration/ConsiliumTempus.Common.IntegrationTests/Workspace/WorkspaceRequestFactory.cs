@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
@@ -55,6 +56,21 @@ public static class WorkspaceRequestFactory
         {
             Id = id ?? Guid.NewGuid(),
             SearchValue = searchValue
+        };
+    }
+
+    public static GetInvitationsWorkspaceRequest CreateGetInvitationsWorkspaceRequest(
+        bool? isSender = null,
+        Guid? workspaceId = null,
+        int? pageSize = null,
+        int? currentPage = null)
+    {
+        return new GetInvitationsWorkspaceRequest
+        {
+            IsSender = isSender,
+            WorkspaceId = workspaceId,
+            PageSize = pageSize,
+            CurrentPage = currentPage
         };
     }
 

@@ -7,9 +7,12 @@ using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Application.Workspace.Queries.GetInvitations;
 using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Common.UnitTests.Workspace.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Entities;
 
 namespace ConsiliumTempus.Common.UnitTests.Workspace;
 
@@ -40,6 +43,15 @@ public static class WorkspaceResultFactory
     {
         return new GetCollaboratorsFromWorkspaceResult(
             collaborators ?? UserFactory.CreateList());
+    }
+
+    public static GetInvitationsWorkspaceResult CreateGetInvitationsWorkspaceResult(
+        List<WorkspaceInvitation>? invitations = null,
+        int totalCount = 25)
+    {
+        return new GetInvitationsWorkspaceResult(
+            invitations ?? WorkspaceInvitationFactory.CreateList(),
+            TotalCount: totalCount);
     }
     
     public static CreateWorkspaceResult CreateCreateWorkspaceResult()

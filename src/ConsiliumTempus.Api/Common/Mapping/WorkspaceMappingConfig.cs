@@ -4,21 +4,26 @@ using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
+using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Application.Workspace.Queries.GetInvitations;
 using ConsiliumTempus.Application.Workspace.Queries.GetOverview;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Entities;
 using Mapster;
 
 namespace ConsiliumTempus.Api.Common.Mapping;
@@ -34,6 +39,7 @@ public sealed class WorkspaceMappingConfig : IRegister
         GetOverviewMappings(config);
         GetCollectionMappings(config);
         GetCollaboratorsMappings(config);
+        GetInvitationsMappings(config);
         CreateMappings(config);
         InviteCollaboratorMappings(config);
         UpdateMappings(config);
@@ -94,6 +100,24 @@ public sealed class WorkspaceMappingConfig : IRegister
             .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
     }
+
+    private static void GetInvitationsMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<GetInvitationsWorkspaceRequest, GetInvitationsWorkspaceQuery>();
+
+        config.NewConfig<GetInvitationsWorkspaceResult, GetInvitationsWorkspaceResponse>();
+        config.NewConfig<WorkspaceInvitation, GetInvitationsWorkspaceResponse.WorkspaceInvitationResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value);
+        config.NewConfig<UserAggregate, GetInvitationsWorkspaceResponse.UserResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Email, src => src.Credentials.Email);
+        config.NewConfig<WorkspaceAggregate, GetInvitationsWorkspaceResponse.WorkspaceResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.IsPersonal, src => src.IsPersonal.Value);
+    }
+
     private static void CreateMappings(TypeAdapterConfig config)
     {
         config.NewConfig<CreateWorkspaceRequest, CreateWorkspaceCommand>();

@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
@@ -19,6 +20,7 @@ using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Application.Workspace.Queries.GetInvitations;
 using ConsiliumTempus.Application.Workspace.Queries.GetOverview;
 using ConsiliumTempus.Domain.Common.Enums;
 using MapsterMapper;
@@ -83,6 +85,19 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
         return result.Match(
             getCollaborators => Ok(Mapper.Map<GetCollaboratorsFromWorkspaceResponse>(getCollaborators)),
+            Problem
+        );
+    }
+
+    [HttpGet("Invitations")]
+    public async Task<IActionResult> GetInvitations(GetInvitationsWorkspaceRequest request, 
+        CancellationToken cancellationToken)
+    {
+        var query = Mapper.Map<GetInvitationsWorkspaceQuery>(request);
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return result.Match(
+            getInvitationsResult => Ok(Mapper.Map<GetInvitationsWorkspaceResponse>(getInvitationsResult)),
             Problem
         );
     }

@@ -1,6 +1,8 @@
 import { APIRequestContext, expect } from "@playwright/test";
 import { useToken } from "./utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
+import { registerUser } from "./users.utils";
+import InviteCollaboratorToWorkspaceRequest from "../types/requests/workspace/InviteCollaboratorToWorkspaceRequest";
 
 export async function getPersonalWorkspace(request: APIRequestContext) {
   const response = await request.get('/api/workspaces?isPersonalWorkspaceFirst=true', useToken())
@@ -60,4 +62,33 @@ export async function createWorkspaces(request: APIRequestContext, count: number
   }
 
   return requests
+}
+
+export async function inviteCollaborator(
+  request: APIRequestContext,
+  email: string,
+  firstName: string,
+  lastName: string,
+  workspaceId: string
+) {
+  const registerResponse = await registerUser(
+    request,
+    email,
+    "Some Password 123",
+    firstName,
+    lastName,
+  )
+  expect(registerResponse.ok()).toBeTruthy()
+
+  const inviteCollaboratorToWorkspaceRequest: InviteCollaboratorToWorkspaceRequest = {
+    id: workspaceId,
+    email: email,
+  }
+  const inviteResponse = await request.post(
+    `/api/workspaces/invite-collaborator`, {
+      ...useToken(),
+      data: inviteCollaboratorToWorkspaceRequest
+    }
+  )
+  expect(inviteResponse.ok()).toBeTruthy()
 }

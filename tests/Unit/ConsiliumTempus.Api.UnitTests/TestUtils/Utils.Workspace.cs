@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
@@ -17,9 +18,11 @@ using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Application.Workspace.Queries.GetInvitations;
 using ConsiliumTempus.Application.Workspace.Queries.GetOverview;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Entities;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
 
@@ -68,8 +71,20 @@ internal static partial class Utils
             return true;
         }
 
+        internal static bool AssertGetInvitationsQuery(
+            GetInvitationsWorkspaceQuery query,
+            GetInvitationsWorkspaceRequest request)
+        {
+            query.IsSender.Should().Be(request.IsSender);
+            query.WorkspaceId.Should().Be(request.WorkspaceId);
+            query.PageSize.Should().Be(request.PageSize);
+            query.CurrentPage.Should().Be(request.CurrentPage);
+
+            return true;
+        }
+
         internal static bool AssertCreateCommand(
-            CreateWorkspaceCommand command, 
+            CreateWorkspaceCommand command,
             CreateWorkspaceRequest request)
         {
             command.Name.Should().Be(request.Name);
@@ -143,14 +158,6 @@ internal static partial class Utils
             response.Description.Should().Be(workspace.Description.Value);
         }
 
-        internal static void AssertGetCollaboratorsResponse(
-            GetCollaboratorsFromWorkspaceResponse response,
-            GetCollaboratorsFromWorkspaceResult result)
-        {
-            response.Collaborators.Zip(result.Collaborators)
-                .Should().AllSatisfy(p => AssertUserResponse(p.First, p.Second));
-        }
-
         internal static void AssertGetCollectionResponse(
             GetCollectionWorkspaceResponse response,
             GetCollectionWorkspaceResult result)
@@ -160,8 +167,47 @@ internal static partial class Utils
             response.TotalCount.Should().Be(result.TotalCount);
         }
 
+        internal static void AssertGetCollaboratorsResponse(
+            GetCollaboratorsFromWorkspaceResponse response,
+            GetCollaboratorsFromWorkspaceResult result)
+        {
+            response.Collaborators.Zip(result.Collaborators)
+                .Should().AllSatisfy(p => AssertUserResponse(p.First, p.Second));
+        }
+
+        internal static void AssertGetInvitationsResponse(
+            GetInvitationsWorkspaceResponse response,
+            GetInvitationsWorkspaceResult result)
+        {
+            response.Invitations.Zip(result.Invitations)
+                .Should().AllSatisfy(p => AssertWorkspaceInvitationResponse(p.First, p.Second));
+            response.TotalCount.Should().Be(result.TotalCount);
+        }
+
         private static void AssertUserResponse(
             GetWorkspaceResponse.UserResponse response,
+            UserAggregate user)
+        {
+            response.Id.Should().Be(user.Id.Value);
+            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
+        }
+
+        private static void AssertWorkspaceResponse(
+            GetCollectionWorkspaceResponse.WorkspaceResponse response,
+            WorkspaceAggregate workspace,
+            UserAggregate currentUser)
+        {
+            response.Id.Should().Be(workspace.Id.Value);
+            response.Name.Should().Be(workspace.Name.Value);
+            response.Description.Should().Be(workspace.Description.Value);
+            response.IsFavorite.Should().Be(workspace.IsFavorite(currentUser));
+            response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
+            AssertUserResponse(response.Owner, workspace.Owner);
+        }
+
+        private static void AssertUserResponse(
+            GetCollectionWorkspaceResponse.UserResponse response,
             UserAggregate user)
         {
             response.Id.Should().Be(user.Id.Value);
@@ -178,21 +224,32 @@ internal static partial class Utils
             response.Email.Should().Be(user.Credentials.Email);
         }
 
-        private static void AssertWorkspaceResponse(
-            GetCollectionWorkspaceResponse.WorkspaceResponse response,
-            WorkspaceAggregate workspace,
-            UserAggregate currentUser)
+        private static void AssertWorkspaceInvitationResponse(
+            GetInvitationsWorkspaceResponse.WorkspaceInvitationResponse response,
+            WorkspaceInvitation invitation)
         {
-            response.Id.Should().Be(workspace.Id.Value.ToString());
-            response.Name.Should().Be(workspace.Name.Value);
-            response.Description.Should().Be(workspace.Description.Value);
-            response.IsFavorite.Should().Be(workspace.IsFavorite(currentUser));
-            response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
+            response.Id.Should().Be(invitation.Id.Value);
+            AssertUserResponse(response.Sender, invitation.Sender);
+            AssertUserResponse(response.Collaborator, invitation.Collaborator);
+            AssertWorkspaceResponse(response.Workspace, invitation.Workspace);
+        }
 
-            var owner = workspace.Owner;
-            response.Owner.Id.Should().Be(owner.Id.Value);
-            response.Owner.Name.Should().Be(owner.FirstName.Value + " " + owner.LastName.Value);
-            response.Owner.Email.Should().Be(owner.Credentials.Email);
+        private static void AssertUserResponse(
+            GetInvitationsWorkspaceResponse.UserResponse response,
+            UserAggregate user)
+        {
+            response.Id.Should().Be(user.Id.Value);
+            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Email.Should().Be(user.Credentials.Email);
+        }
+
+        private static void AssertWorkspaceResponse(
+            GetInvitationsWorkspaceResponse.WorkspaceResponse response,
+            WorkspaceAggregate workspace)
+        {
+            response.Id.Should().Be(workspace.Id.Value);
+            response.Name.Should().Be(workspace.Name.Value);
+            response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
         }
     }
 }

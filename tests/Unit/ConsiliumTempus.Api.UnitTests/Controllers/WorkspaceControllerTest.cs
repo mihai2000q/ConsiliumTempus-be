@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.Delete;
 using ConsiliumTempus.Api.Contracts.Workspace.Get;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
+using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
@@ -20,6 +21,7 @@ using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
+using ConsiliumTempus.Application.Workspace.Queries.GetInvitations;
 using ConsiliumTempus.Application.Workspace.Queries.GetOverview;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -227,6 +229,53 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<GetCollaboratorsFromWorkspaceQuery>(query => 
                 Utils.Workspace.AssertGetCollaboratorsQuery(query, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task GetInvitations_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateGetInvitationsWorkspaceRequest();
+
+        var result = WorkspaceResultFactory.CreateGetInvitationsWorkspaceResult();
+        _mediator
+            .Send(Arg.Any<GetInvitationsWorkspaceQuery>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.GetInvitations(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetInvitationsWorkspaceQuery>(query => 
+                Utils.Workspace.AssertGetInvitationsQuery(query, request)));
+
+        var response = outcome.ToResponse<GetInvitationsWorkspaceResponse>();
+        Utils.Workspace.AssertGetInvitationsResponse(response, result);
+    }
+
+    [Fact]
+    public async Task GetInvitations_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateGetInvitationsWorkspaceRequest();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator
+            .Send(Arg.Any<GetInvitationsWorkspaceQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetInvitations(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetInvitationsWorkspaceQuery>(query => 
+                Utils.Workspace.AssertGetInvitationsQuery(query, request)));
 
         outcome.ValidateError(error);
     }

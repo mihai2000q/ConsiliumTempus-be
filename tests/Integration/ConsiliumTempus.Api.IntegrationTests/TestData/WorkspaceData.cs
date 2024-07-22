@@ -147,11 +147,27 @@ internal class WorkspaceData : ITestData
             WorkspaceRole.Admin),
     ];
 
-    public static WorkspaceInvitation[] WorkspaceInvitations =
+    public static WorkspaceInvitation[] WorkspaceInvitations { get; } =
     [
         WorkspaceInvitationFactory.Create(
             Users[0],
             Users[7],
-            Workspaces[0]), 
+            Workspaces[0]),
+        WorkspaceInvitationFactory.Create(
+            Users[0],
+            Users[1],
+            Workspaces[0]),
+        WorkspaceInvitationFactory.Create(
+            Users[0],
+            Users[2],
+            Workspaces[0]),
+        WorkspaceInvitationFactory.Create(
+            Users[1],
+            Users[7],
+            Workspaces[1]),
+        WorkspaceInvitationFactory.Create(
+            Users[0],
+            Users[7],
+            Workspaces[2]),
     ];
 }
