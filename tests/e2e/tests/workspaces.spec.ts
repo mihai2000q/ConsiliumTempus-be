@@ -3,7 +3,7 @@ import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
 import {
   createWorkspace,
-  createWorkspaces, getCollaborators,
+  createWorkspaces, getCollaborators, getInvitation,
   getInvitations,
   getPersonalWorkspace,
   getWorkspace,
@@ -632,8 +632,7 @@ test.describe('should allow operations on the workspace entity', () => {
       },
       token
     )
-    const invitation = (await getInvitations(request, workspace.id))
-      .filter((i: { collaborator: { email: string } }) => i.collaborator.email === EMAIL)[0]
+    const invitation = await getInvitation(request, senderEmail)
 
     const body: AcceptInvitationToWorkspaceRequest = {
       id: workspace.id,
@@ -682,8 +681,7 @@ test.describe('should allow operations on the workspace entity', () => {
       },
       token
     )
-    const invitation = (await getInvitations(request, workspace.id))
-      .filter((i: { collaborator: { email: string } }) => i.collaborator.email === EMAIL)[0]
+    const invitation = await getInvitation(request, senderEmail)
 
     const body: AcceptInvitationToWorkspaceRequest = {
       id: workspace.id,

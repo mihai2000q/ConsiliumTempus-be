@@ -121,3 +121,14 @@ export async function getInvitations(request: APIRequestContext, workspaceId: st
 
   return (await response.json()).invitations
 }
+
+export async function getInvitation(request: APIRequestContext, senderEmail: string) {
+  const response = await request.get(
+    `/api/workspaces/invitations?isSender=false`,
+    useToken()
+  )
+
+  return (await response.json())
+    .invitations
+    .filter((i: { sender: { email: string } }) => i.sender.email === senderEmail)[0]
+}
