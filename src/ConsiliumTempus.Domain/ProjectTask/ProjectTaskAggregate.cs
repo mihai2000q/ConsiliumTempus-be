@@ -93,6 +93,12 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         UpdatedDateTime = DateTime.UtcNow;
     }
 
+    public void UpdateIsCompleted(IsCompleted isCompleted)
+    {
+        IsCompleted = isCompleted;
+        UpdatedDateTime = DateTime.UtcNow;
+    }
+
     public void UpdateCustomOrderPosition(CustomOrderPosition customOrderPosition)
     {
         CustomOrderPosition = customOrderPosition;
