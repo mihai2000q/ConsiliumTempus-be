@@ -111,7 +111,7 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
     }
 
     [HasPermission(Permissions.MoveStageFromProjectSprint)]
-    [HttpPut("Move-Stage")]
+    [HttpPost("Move-Stage")]
     public async Task<IActionResult> MoveStage(MoveStageFromProjectSprintRequest request,
         CancellationToken cancellationToken)
     {

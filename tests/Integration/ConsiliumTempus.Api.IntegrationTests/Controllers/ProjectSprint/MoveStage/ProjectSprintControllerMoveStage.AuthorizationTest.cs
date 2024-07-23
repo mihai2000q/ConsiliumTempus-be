@@ -63,6 +63,6 @@ public class ProjectSprintControllerMoveStageAuthorizationTest(WebAppFactory fac
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Put("api/projects/sprints/Move-Stage/", request);
+        return await Client.Post("api/projects/sprints/Move-Stage/", request);
     }
 }

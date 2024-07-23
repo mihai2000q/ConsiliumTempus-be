@@ -248,7 +248,7 @@ Only admin and member users that are part of the workspace can move a project st
 ([Move Stage From Project Sprint Permission](../Security.md/#permissions)).
 
 ```js
-PUT {{host}}/api/projects/sprints/move-stage
+POST {{host}}/api/projects/sprints/move-stage
 ```
 
 #### Move Stage From Project Sprint Request
@@ -259,7 +259,7 @@ Sends body data that the project stage needs to be updated.
 {
   "id": "10000000-0000-0000-0000-000000000000",
   "stageId": "10000000-0000-0000-0000-000000000000",
-  "overId": "20000000-0000-0000-0000-000000000000"
+  "overStageId": "20000000-0000-0000-0000-000000000000"
 }
 ```
 

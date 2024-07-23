@@ -171,7 +171,7 @@ All members that are part of the workspace can move a project task
 ([Move Project Task Permission](../Security.md/#permissions)).
 
 ```js
-PUT {{host}}/api/projects/tasks/move
+POST {{host}}/api/projects/tasks/move
 ```
 
 #### Move Project Task Request

@@ -66,7 +66,7 @@ public sealed class ProjectTaskController(IMapper mapper, ISender mediator) : Ap
     }
 
     [HasPermission(Permissions.MoveProjectTask)]
-    [HttpPut("Move")]
+    [HttpPost("Move")]
     public async Task<IActionResult> Move(MoveProjectTaskRequest request, CancellationToken cancellationToken)
     {
         var command = Mapper.Map<MoveProjectTaskCommand>(request);

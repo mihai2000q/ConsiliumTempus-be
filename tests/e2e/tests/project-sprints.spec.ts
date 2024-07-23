@@ -546,7 +546,7 @@ test.describe('should allow operations on the project sprint entity', () => {
       stageId: stage1.id,
       overStageId: stage3.id,
     }
-    const response = await request.put('/api/projects/sprints/move-stage', {
+    const response = await request.post('/api/projects/sprints/move-stage', {
       ...useToken(),
       data: body
     });
