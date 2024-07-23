@@ -215,7 +215,7 @@ internal static partial class Utils
             AssertUserResponse(response.UpdatedBy, projectStatus.Audit.UpdatedBy);
             response.UpdatedDateTime.Should().Be(projectStatus.Audit.UpdatedDateTime);
         }
-        
+
         private static void AssertWorkspaceResponse(
             GetProjectResponse.WorkspaceResponse workspaceResponse,
             WorkspaceAggregate workspace)

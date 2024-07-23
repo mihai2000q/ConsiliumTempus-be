@@ -371,7 +371,7 @@ public class ProjectSprintControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task MoveStage_WhenIsSuccessful_ShouldReturnResponse()
     {

@@ -95,7 +95,7 @@ public class WorkspaceControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task GetOverview_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -113,7 +113,7 @@ public class WorkspaceControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetOverviewWorkspaceQuery>(query => 
+            .Send(Arg.Is<GetOverviewWorkspaceQuery>(query =>
                 Utils.Workspace.AssertGetOverviewQuery(query, request)));
 
         var response = outcome.ToResponse<GetOverviewWorkspaceResponse>();
@@ -137,7 +137,7 @@ public class WorkspaceControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetOverviewWorkspaceQuery>(query => 
+            .Send(Arg.Is<GetOverviewWorkspaceQuery>(query =>
                 Utils.Workspace.AssertGetOverviewQuery(query, request)));
 
         outcome.ValidateError(error);
@@ -189,7 +189,7 @@ public class WorkspaceControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task GetCollaborators_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -207,7 +207,7 @@ public class WorkspaceControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetCollaboratorsFromWorkspaceQuery>(query => 
+            .Send(Arg.Is<GetCollaboratorsFromWorkspaceQuery>(query =>
                 Utils.Workspace.AssertGetCollaboratorsQuery(query, request)));
 
         var response = outcome.ToResponse<GetCollaboratorsFromWorkspaceResponse>();
@@ -231,7 +231,7 @@ public class WorkspaceControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetCollaboratorsFromWorkspaceQuery>(query => 
+            .Send(Arg.Is<GetCollaboratorsFromWorkspaceQuery>(query =>
                 Utils.Workspace.AssertGetCollaboratorsQuery(query, request)));
 
         outcome.ValidateError(error);
@@ -254,7 +254,7 @@ public class WorkspaceControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetInvitationsWorkspaceQuery>(query => 
+            .Send(Arg.Is<GetInvitationsWorkspaceQuery>(query =>
                 Utils.Workspace.AssertGetInvitationsQuery(query, request)));
 
         var response = outcome.ToResponse<GetInvitationsWorkspaceResponse>();
@@ -278,7 +278,7 @@ public class WorkspaceControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<GetInvitationsWorkspaceQuery>(query => 
+            .Send(Arg.Is<GetInvitationsWorkspaceQuery>(query =>
                 Utils.Workspace.AssertGetInvitationsQuery(query, request)));
 
         outcome.ValidateError(error);
@@ -565,7 +565,7 @@ public class WorkspaceControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task UpdateOverview_WhenIsSuccessful_ShouldReturnResponse()
     {

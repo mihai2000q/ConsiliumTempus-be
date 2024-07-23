@@ -11,7 +11,7 @@ internal static class ProjectSprintControllerData
         {
             var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest();
             Add(request);
-            
+
             request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest(
                 projectStatus: ProjectSprintRequestFactory.CreateCreateProjectStatus());
             Add(request);

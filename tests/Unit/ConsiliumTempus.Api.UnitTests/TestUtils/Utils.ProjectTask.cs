@@ -135,7 +135,7 @@ internal static partial class Utils
                 .Should().AllSatisfy(p => AssertProjectTaskResponse(p.First, p.Second));
             response.TotalCount.Should().Be(result.TotalCount);
         }
-        
+
         private static void AssertUserResponse(
             GetProjectTaskResponse.UserResponse? response,
             UserAggregate? user)

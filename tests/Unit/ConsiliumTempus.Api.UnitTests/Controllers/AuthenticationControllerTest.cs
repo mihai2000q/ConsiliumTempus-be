@@ -30,7 +30,7 @@ public class AuthenticationControllerTest
     }
 
     #endregion
-    
+
     [Fact]
     public async Task Register_WhenIsSuccessful_ShouldReturnResponse()
     {
