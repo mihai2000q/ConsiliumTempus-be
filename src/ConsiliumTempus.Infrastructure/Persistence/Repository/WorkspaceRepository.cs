@@ -125,7 +125,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .WhereIf(!string.IsNullOrWhiteSpace(searchValue),
                 u =>
                     u.Credentials.Email.Contains(searchValue!) ||
-                    u.Name.Value.Contains(searchValue!))
+                    (u.FirstName.Value + " " + u.LastName.Value).Contains(searchValue!))
             .OrderBy(u => u.FirstName.Value)
             .ThenBy(u => u.LastName.Value)
             .ThenBy(u => u.Credentials.Email)
