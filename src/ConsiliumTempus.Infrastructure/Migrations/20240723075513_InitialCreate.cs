@@ -404,6 +404,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CustomOrderPosition = table.Column<int>(type: "int", nullable: false),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    CompletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AssigneeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ReviewerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),

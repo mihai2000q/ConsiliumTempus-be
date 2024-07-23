@@ -27,7 +27,6 @@ public sealed class UpdateProjectTaskCommandHandler(
 
         task.Update(
             Name.Create(command.Name),
-            IsCompleted.Create(command.IsCompleted),
             assignee);
         task.Stage.Sprint.Project.RefreshActivity();
 

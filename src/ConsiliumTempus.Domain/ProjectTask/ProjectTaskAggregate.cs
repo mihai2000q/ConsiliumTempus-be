@@ -75,11 +75,9 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
 
     public void Update(
         Name name,
-        IsCompleted isCompleted,
         UserAggregate? assignee)
     {
         Name = name;
-        IsCompleted = isCompleted;
         Assignee = assignee;
         UpdatedDateTime = DateTime.UtcNow;
     }
@@ -87,13 +85,17 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public void UpdateOverview(
         Name name,
         Description description,
-        IsCompleted isCompleted,
         UserAggregate? assignee)
     {
         Name = name;
         Description = description;
-        IsCompleted = isCompleted;
         Assignee = assignee;
+        UpdatedDateTime = DateTime.UtcNow;
+    }
+
+    public void UpdateIsCompleted(IsCompleted isCompleted)
+    {
+        IsCompleted = isCompleted;
         UpdatedDateTime = DateTime.UtcNow;
     }
 

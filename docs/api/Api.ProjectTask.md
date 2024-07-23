@@ -10,12 +10,12 @@
   * [Create](#create)
     * [Create Project Task Request](#create-project-task-request)
     * [Create Project Task Response](#create-project-task-response)
-  * [Update](#update)
-    * [Update Project Task Request](#update-project-task-request)
-    * [Update Project Task Response](#update-project-task-response)
   * [Move](#move)
     * [Move Project Task Request](#move-project-task-request)
     * [Move Project Task Response](#move-project-task-response)
+  * [Update](#update)
+    * [Update Project Task Request](#update-project-task-request)
+    * [Update Project Task Response](#update-project-task-response)
   * [Update Overview](#update-overview)
     * [Update Overview Project Task Request](#update-overview-project-task-request)
     * [Update Overview Project Task Response](#update-overview-project-task-response)
@@ -162,59 +162,6 @@ Sends body data that the new project task needs to be created.
 
 Returns a confirmation message that the project task has been created successfully.
 
-### Update
-
-All members that are part of the workspace can update a project task
-([Update Project Task Permission](../Security.md/#permissions)).
-
-```js
-PUT {{host}}/api/projects/tasks
-```
-
-#### Update Project Task Request
-
-Sends body data that the project task needs to be updated.
-
-```json
-{
-  "id": "10000000-0000-0000-0000-000000000000",
-  "name": "New Project Task Name",
-  "isCompleted": false,
-  "assigneeId": "10000000-0000-0000-0000-000000000000"
-}
-```
-
-#### Update Project Task Response
-
-Returns a confirmation message that the project task has been updated successfully.
-
-### Update Overview
-
-All members that are part of the workspace can update a project task overview
-([Update Project Task Permission](../Security.md/#permissions)).
-
-```js
-PUT {{host}}/api/projects/tasks/overview
-```
-
-#### Update Overview Project Task Request
-
-Sends body data that the project overview needs to be updated.
-
-```json
-{
-  "id": "10000000-0000-0000-0000-000000000000",
-  "name": "New Project Task Name",
-  "description": "This is the new description of the project task that I can't wait to work on",
-  "isCompleted": true,
-  "assigneeId": "10000000-0000-0000-0000-000000000000"
-}
-```
-
-#### Update Overview Project Task Response
-
-Returns a confirmation message that the project task overview has been updated successfully.
-
 ### Move
 
 All members that are part of the workspace can move a project task
@@ -238,6 +185,81 @@ Sends body data that the project task needs to be moved.
 #### Move Project Task Response
 
 Returns a confirmation message that the project task has been moved successfully.
+
+### Update
+
+All members that are part of the workspace can update a project task
+([Update Project Task Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/projects/tasks
+```
+
+#### Update Project Task Request
+
+Sends body data that the project task needs to be updated.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "name": "New Project Task Name",
+  "assigneeId": "10000000-0000-0000-0000-000000000000"
+}
+```
+
+#### Update Project Task Response
+
+Returns a confirmation message that the project task has been updated successfully.
+
+### Update
+
+All members that are part of the workspace can update a project task
+([Update Project Task Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/projects/tasks/is-completed
+```
+
+#### Update Project Task Request
+
+Sends body data that the project task needs to update the completion status.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "isCompleted": false
+}
+```
+
+#### Update Is Completed Project Task Response
+
+Returns a confirmation message that the project task's completion status has been updated successfully.
+
+### Update Overview
+
+All members that are part of the workspace can update a project task overview
+([Update Project Task Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/projects/tasks/overview
+```
+
+#### Update Overview Project Task Request
+
+Sends body data that the project overview needs to be updated.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "name": "New Project Task Name",
+  "description": "This is the new description of the project task that I can't wait to work on",
+  "assigneeId": "10000000-0000-0000-0000-000000000000"
+}
+```
+
+#### Update Overview Project Task Response
+
+Returns a confirmation message that the project task overview has been updated successfully.
 
 ### Delete
 

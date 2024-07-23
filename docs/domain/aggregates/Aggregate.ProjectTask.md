@@ -10,6 +10,7 @@ class ProjectTask
     ProjectTask Create()
     void Update()
     void UpdateOverview()
+    void UpdateIsCompleted()
     void UpdatetCustomOrderPosition()
     void AddComment()
     void Move()
@@ -20,9 +21,12 @@ class ProjectTask
 {
   "id": { "value": "00000000-0000-0000-0000-000000000000" },
   "name": { "value": "Task 1" },
-  "description": { "value": "This is the description of the task" } ,
+  "description": { "value": "This is the description of the task" },
   "customOrderPosition": { "value": 1 },
-  "isCompleted": { "value": false },
+  "isCompleted": {
+    "value": true,
+    "completedOn": "2020-01-01T00:00:00.0000000Z"
+  },
   "createdBy": {},
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",

@@ -16,7 +16,6 @@ internal static class UpdateProjectTaskCommandValidatorData
             command = new UpdateProjectTaskCommand(
                 Guid.NewGuid(),
                 "New Project Task Name",
-                true,
                 Guid.NewGuid());
             Add(command);
         }

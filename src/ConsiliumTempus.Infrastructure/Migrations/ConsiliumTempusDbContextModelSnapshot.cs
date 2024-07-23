@@ -1240,6 +1240,10 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.Property<Guid>("ProjectTaskAggregateId")
                                 .HasColumnType("uniqueidentifier");
 
+                            b1.Property<DateTime?>("CompletedOn")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("CompletedOn");
+
                             b1.Property<bool>("Value")
                                 .HasColumnType("bit")
                                 .HasColumnName("IsCompleted");

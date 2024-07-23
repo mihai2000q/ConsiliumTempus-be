@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
@@ -71,50 +72,6 @@ internal static partial class Utils
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
-        internal static void AssertUpdated(
-            ProjectTaskAggregate newTask,
-            ProjectTaskAggregate task,
-            UpdateProjectTaskRequest request)
-        {
-            // unchanged
-            newTask.Id.Value.Should().Be(request.Id);
-            newTask.CreatedDateTime.Should().Be(task.CreatedDateTime);
-            newTask.Stage.Should().Be(task.Stage);
-
-            // changed
-            newTask.Name.Value.Should().Be(request.Name);
-            newTask.IsCompleted.Value.Should().Be(request.IsCompleted);
-            newTask.Assignee?.Id.Value.Should().Be(request.AssigneeId!.Value);
-            newTask.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-
-            newTask.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            newTask.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-        }
-
-        internal static void AssertUpdatedOverview(
-            ProjectTaskAggregate newTask,
-            ProjectTaskAggregate task,
-            UpdateOverviewProjectTaskRequest request)
-        {
-            // unchanged
-            newTask.Id.Value.Should().Be(request.Id);
-            newTask.CreatedDateTime.Should().Be(task.CreatedDateTime);
-            newTask.Stage.Should().Be(task.Stage);
-
-            // changed
-            newTask.Name.Value.Should().Be(request.Name);
-            newTask.Description.Value.Should().Be(request.Description);
-            newTask.IsCompleted.Value.Should().Be(request.IsCompleted);
-            if (request.AssigneeId is null)
-                newTask.Assignee.Should().BeNull();
-            else
-                newTask.Assignee!.Id.Value.Should().Be(request.AssigneeId.Value);
-            newTask.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-
-            newTask.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            newTask.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-        }
-
         internal static void AssertMoveWithinStage(
             MoveProjectTaskRequest request,
             ProjectTaskAggregate task,
@@ -173,6 +130,67 @@ internal static partial class Utils
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertUpdated(
+            ProjectTaskAggregate newTask,
+            ProjectTaskAggregate task,
+            UpdateProjectTaskRequest request)
+        {
+            // unchanged
+            newTask.Id.Value.Should().Be(request.Id);
+            newTask.CreatedDateTime.Should().Be(task.CreatedDateTime);
+            newTask.Stage.Should().Be(task.Stage);
+
+            // changed
+            newTask.Name.Value.Should().Be(request.Name);
+            newTask.Assignee?.Id.Value.Should().Be(request.AssigneeId!.Value);
+            newTask.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            newTask.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newTask.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertUpdatedIsCompleted(
+            ProjectTaskAggregate newTask,
+            UpdateIsCompletedProjectTaskRequest request)
+        {
+            // unchanged
+            newTask.Id.Value.Should().Be(request.Id);
+
+            // changed
+            newTask.IsCompleted.Value.Should().Be(request.IsCompleted);
+            if (request.IsCompleted)
+                newTask.IsCompleted.CompletedOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            else
+                newTask.IsCompleted.CompletedOn.Should().BeNull();
+            newTask.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            newTask.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newTask.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertUpdatedOverview(
+            ProjectTaskAggregate newTask,
+            ProjectTaskAggregate task,
+            UpdateOverviewProjectTaskRequest request)
+        {
+            // unchanged
+            newTask.Id.Value.Should().Be(request.Id);
+            newTask.CreatedDateTime.Should().Be(task.CreatedDateTime);
+            newTask.Stage.Should().Be(task.Stage);
+
+            // changed
+            newTask.Name.Value.Should().Be(request.Name);
+            newTask.Description.Value.Should().Be(request.Description);
+            if (request.AssigneeId is null)
+                newTask.Assignee.Should().BeNull();
+            else
+                newTask.Assignee!.Id.Value.Should().Be(request.AssigneeId.Value);
+            newTask.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            newTask.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newTask.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         private static void AssertUserResponse(
