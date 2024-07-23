@@ -64,7 +64,6 @@ internal static partial class Utils
             UserAggregate assignee)
         {
             task.Name.Value.Should().Be(command.Name);
-            task.IsCompleted.Value.Should().Be(command.IsCompleted);
             task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
@@ -139,7 +138,6 @@ internal static partial class Utils
         {
             task.Name.Value.Should().Be(command.Name);
             task.Description.Value.Should().Be(command.Description);
-            task.IsCompleted.Value.Should().Be(command.IsCompleted);
             task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 

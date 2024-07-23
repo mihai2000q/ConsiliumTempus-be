@@ -83,7 +83,6 @@ internal static partial class Utils
 
             // changed
             newTask.Name.Value.Should().Be(request.Name);
-            newTask.IsCompleted.Value.Should().Be(request.IsCompleted);
             newTask.Assignee?.Id.Value.Should().Be(request.AssigneeId!.Value);
             newTask.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
@@ -104,7 +103,6 @@ internal static partial class Utils
             // changed
             newTask.Name.Value.Should().Be(request.Name);
             newTask.Description.Value.Should().Be(request.Description);
-            newTask.IsCompleted.Value.Should().Be(request.IsCompleted);
             if (request.AssigneeId is null)
                 newTask.Assignee.Should().BeNull();
             else

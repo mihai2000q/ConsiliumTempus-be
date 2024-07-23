@@ -64,7 +64,6 @@ internal static partial class Utils
         {
             command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
-            command.IsCompleted.Should().Be(request.IsCompleted);
             command.AssigneeId.Should().Be(request.AssigneeId);
 
             return true;
@@ -77,7 +76,6 @@ internal static partial class Utils
             command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
             command.Description.Should().Be(request.Description);
-            command.IsCompleted.Should().Be(request.IsCompleted);
             command.AssigneeId.Should().Be(request.AssigneeId);
 
             return true;

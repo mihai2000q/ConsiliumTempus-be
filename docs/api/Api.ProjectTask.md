@@ -179,7 +179,6 @@ Sends body data that the project task needs to be updated.
 {
   "id": "10000000-0000-0000-0000-000000000000",
   "name": "New Project Task Name",
-  "isCompleted": false,
   "assigneeId": "10000000-0000-0000-0000-000000000000"
 }
 ```
@@ -206,7 +205,6 @@ Sends body data that the project overview needs to be updated.
   "id": "10000000-0000-0000-0000-000000000000",
   "name": "New Project Task Name",
   "description": "This is the new description of the project task that I can't wait to work on",
-  "isCompleted": true,
   "assigneeId": "10000000-0000-0000-0000-000000000000"
 }
 ```
