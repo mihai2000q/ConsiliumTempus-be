@@ -19,12 +19,12 @@
   * [Update](#update)
     * [Update Project Sprint Request](#update-project-sprint-request)
     * [Update Project Sprint Response](#update-project-sprint-response)
-  * [Update Stage](#update-stage)
-    * [Update Stage From Project Sprint Request](#update-stage-from-project-sprint-request)
-    * [Update Stage From Project Sprint Response](#update-stage-from-project-sprint-response)
   * [Move Stage](#move-stage)
     * [Move Stage From Project Sprint Request](#move-stage-from-project-sprint-request)
     * [Move Stage From Project Sprint Response](#move-stage-from-project-sprint-response)
+  * [Update Stage](#update-stage)
+    * [Update Stage From Project Sprint Request](#update-stage-from-project-sprint-request)
+    * [Update Stage From Project Sprint Response](#update-stage-from-project-sprint-response)
   * [Delete](#delete)
     * [Delete Project Sprint Request](#delete-project-sprint-request)
     * [Delete Project Sprint Response](#delete-project-sprint-response)
@@ -122,10 +122,10 @@ Returns the project sprints.
 ### Get Stages
 
 Anyone that is part of a workspace can access the project stages
-([Get Project Sprint Permission](../Security.md/#permissions)).
+([Read Stages From Project Sprint Permission](../Security.md/#permissions)).
 
 ```js
-GET {{host}}/api/projects/{id}/sprints
+GET {{host}}/api/projects/sprints/{id}/stages
 ```
 
 - **id** is a 36-character strings
@@ -242,6 +242,31 @@ Sends body data that the project sprint needs to be updated.
 
 Returns a confirmation message that the sprint has been updated successfully.
 
+### Move Stage
+
+Only admin and member users that are part of the workspace can move a project stage
+([Move Stage From Project Sprint Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/projects/sprints/move-stage
+```
+
+#### Move Stage From Project Sprint Request
+
+Sends body data that the project stage needs to be updated.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "stageId": "10000000-0000-0000-0000-000000000000",
+  "overId": "20000000-0000-0000-0000-000000000000"
+}
+```
+
+#### Move Stage From Project Sprint Response
+
+Returns a confirmation message that the stage has been moved successfully.
+
 ### Update Stage
 
 Only admin and member users that are part of the workspace can update a project stage
@@ -266,31 +291,6 @@ Sends body data that the project stage needs to be updated.
 #### Update Stage From Project Sprint Response
 
 Returns a confirmation message that the stage has been updated successfully.
-
-### Move Stage
-
-Only admin and member users that are part of the workspace can move a project stage
-([Update Stage From Project Sprint Permission](../Security.md/#permissions)).
-
-```js
-PUT {{host}}/api/projects/sprints/move-stage
-```
-
-#### Move Stage From Project Sprint Request
-
-Sends body data that the project stage needs to be updated.
-
-```json
-{
-  "id": "10000000-0000-0000-0000-000000000000",
-  "stageId": "10000000-0000-0000-0000-000000000000",
-  "overId": "20000000-0000-0000-0000-000000000000"
-}
-```
-
-#### Move Stage From Project Sprint Response
-
-Returns a confirmation message that the stage has been moved successfully.
 
 ### Delete
 

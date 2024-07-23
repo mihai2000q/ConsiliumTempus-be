@@ -17,9 +17,9 @@ public class ProjectSprintControllerMoveStageAuthorizationTest(WebAppFactory fac
     }
 
     [Fact]
-    public async Task MoveStageFromProjectSprint_WhenWithMemberRole_ShouldReturnSuccessResponse()
+    public async Task MoveStageFromProjectSprint_WhenWithMemberRole_ShouldReturnForbiddenResponse()
     {
-        await AssertSuccessfulResponse(ProjectSprintData.Users[3]);
+        await AssertForbiddenResponse(ProjectSprintData.Users[3]);
     }
 
     [Fact]

@@ -33,8 +33,12 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
         // Project
         Permissions.ReadProject, Permissions.ReadOverviewProject, Permissions.ReadCollectionProject,
         Permissions.UpdateFavoritesProject,
+        // Project - Project Status
+        Permissions.ReadStatusesFromProject,
         // Project Sprint
         Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint,
+        // Project Sprint - Project Stage
+        Permissions.ReadStagesFromProjectSprint,
         // Project Task
         Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask
     ];
@@ -51,7 +55,7 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
         // Project Sprint
         Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint,
         // Project Sprint - Project Stage
-        Permissions.UpdateStageFromProjectSprint,
+        Permissions.ReadStagesFromProjectSprint, Permissions.UpdateStageFromProjectSprint,
         // Project Task
         Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask,
         Permissions.UpdateProjectTask, Permissions.UpdateIsCompletedProjectTask, Permissions.UpdateOverviewProjectTask,
@@ -72,7 +76,8 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
         Permissions.CreateProjectSprint, Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint,
         Permissions.UpdateProjectSprint, Permissions.DeleteProjectSprint,
         // Project Sprint - Project Stage
-        Permissions.AddStageToProjectSprint, Permissions.UpdateStageFromProjectSprint,
+        Permissions.AddStageToProjectSprint, Permissions.ReadStagesFromProjectSprint, 
+        Permissions.MoveStageFromProjectSprint, Permissions.UpdateStageFromProjectSprint,
         Permissions.RemoveStageFromProjectSprint,
         // Project Task
         Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask,

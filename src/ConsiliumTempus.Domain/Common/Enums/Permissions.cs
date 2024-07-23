@@ -27,7 +27,9 @@ public enum Permissions
     UpdateProjectSprint,
     DeleteProjectSprint,
     // Project Sprint - Project Stage
+    ReadStagesFromProjectSprint,
     AddStageToProjectSprint,
+    MoveStageFromProjectSprint,
     UpdateStageFromProjectSprint,
     RemoveStageFromProjectSprint,
     // Project Task
