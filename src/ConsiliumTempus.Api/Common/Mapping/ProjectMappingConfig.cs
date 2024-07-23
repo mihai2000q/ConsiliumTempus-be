@@ -76,7 +76,7 @@ public sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.UpdatedDateTime, src => src.Audit.UpdatedDateTime);
         config.NewConfig<UserAggregate, GetProjectResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
         config.NewConfig<WorkspaceAggregate, GetProjectResponse.WorkspaceResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
@@ -106,7 +106,7 @@ public sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.IsPrivate, src => src.IsPrivate.Value);
         config.NewConfig<UserAggregate, GetCollectionProjectResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
         config.NewConfig<ProjectStatus, GetCollectionProjectResponse.ProjectStatusResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
@@ -130,7 +130,7 @@ public sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.UpdatedDateTime, src => src.Audit.UpdatedDateTime);
         config.NewConfig<UserAggregate, GetStatusesFromProjectResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 

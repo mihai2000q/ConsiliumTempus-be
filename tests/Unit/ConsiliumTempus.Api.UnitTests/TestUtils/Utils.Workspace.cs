@@ -213,7 +213,7 @@ internal static partial class Utils
             UserAggregate user)
         {
             response.Id.Should().Be(user.Id.Value);
-            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Name.Should().Be(user.Name.Value);
             response.Email.Should().Be(user.Credentials.Email);
         }
 
@@ -235,7 +235,7 @@ internal static partial class Utils
             UserAggregate user)
         {
             response.Id.Should().Be(user.Id.Value);
-            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Name.Should().Be(user.Name.Value);
             response.Email.Should().Be(user.Credentials.Email);
         }
 
@@ -244,7 +244,7 @@ internal static partial class Utils
             UserAggregate user)
         {
             response.Id.Should().Be(user.Id.Value);
-            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Name.Should().Be(user.Name.Value);
             response.Email.Should().Be(user.Credentials.Email);
         }
 
@@ -263,7 +263,7 @@ internal static partial class Utils
             UserAggregate user)
         {
             response.Id.Should().Be(user.Id.Value);
-            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Name.Should().Be(user.Name.Value);
             response.Email.Should().Be(user.Credentials.Email);
         }
 
