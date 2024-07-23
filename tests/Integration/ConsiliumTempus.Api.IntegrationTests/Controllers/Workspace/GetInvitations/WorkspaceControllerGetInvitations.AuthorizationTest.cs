@@ -17,7 +17,7 @@ public class WorkspaceControllerGetInvitationsAuthorizationTest(WebAppFactory fa
         var request = WorkspaceRequestFactory.CreateGetInvitationsWorkspaceRequest(isSender: false);
 
         // Act
-        Client.UseCustomToken(ProjectData.Users[0]);
+        Client.UseCustomToken(WorkspaceData.Users[0]);
         var outcome = await Client.Get($"api/workspaces/invitations?isSender={request.IsSender}");
 
         // Assert

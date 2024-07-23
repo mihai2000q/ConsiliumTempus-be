@@ -31,7 +31,7 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.ReadWorkspace, RequestLocation.Route);
             Add(Permissions.ReadOverviewWorkspace, RequestLocation.Route);
             Add(Permissions.ReadCollaboratorsFromWorkspace, RequestLocation.Route);
-            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Route);
+            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Query);
             Add(Permissions.InviteCollaboratorToWorkspace, RequestLocation.Body);
             Add(Permissions.UpdateWorkspace, RequestLocation.Body);
             Add(Permissions.UpdateFavoritesWorkspace, RequestLocation.Body);
@@ -88,7 +88,7 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.ReadWorkspace, RequestLocation.Route, null);
             Add(Permissions.ReadOverviewWorkspace, RequestLocation.Route, null);
             Add(Permissions.ReadCollaboratorsFromWorkspace, RequestLocation.Route, null);
-            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Route, ToIdProperty<WorkspaceAggregate>());
+            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Query, ToIdProperty<WorkspaceAggregate>());
             Add(Permissions.InviteCollaboratorToWorkspace, RequestLocation.Body, null);
             Add(Permissions.UpdateWorkspace, RequestLocation.Body, null);
             Add(Permissions.UpdateFavoritesWorkspace, RequestLocation.Body, null);
@@ -145,7 +145,7 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.ReadWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
             Add(Permissions.ReadOverviewWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
             Add(Permissions.ReadCollaboratorsFromWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
-            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Route, ToIdProperty<WorkspaceAggregate>(), StringIdType.Workspace);
+            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Query, ToIdProperty<WorkspaceAggregate>(), StringIdType.Workspace);
             Add(Permissions.InviteCollaboratorToWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
             Add(Permissions.UpdateWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
             Add(Permissions.UpdateFavoritesWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
@@ -193,7 +193,7 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.DeleteProjectTask, RequestLocation.Route, null, StringIdType.ProjectTask);
         }
     }
-    
+
     private static string ToIdProperty<T>()
     {
         var property = typeof(T).Name.Replace("Aggregate", "");

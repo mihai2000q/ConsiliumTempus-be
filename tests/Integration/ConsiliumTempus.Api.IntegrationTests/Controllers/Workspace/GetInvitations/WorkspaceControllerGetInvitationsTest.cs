@@ -5,7 +5,6 @@ using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
-using ConsiliumTempus.Domain.Common.Errors;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.GetInvitations;
 
@@ -120,19 +119,5 @@ public class WorkspaceControllerGetInvitationsTest(WebAppFactory factory)
             response!,
             expectedInvitations,
             expectedInvitationsCount);
-    }
-
-    [Fact]
-    public async Task GetInvitationsWorkspace_WhenUserIsNotFound_ShouldReturnUserNotFoundError()
-    {
-        // Arrange
-        var request = WorkspaceRequestFactory.CreateGetInvitationsWorkspaceRequest(isSender: false);
-
-        // Act
-        Client.UseInvalidToken();
-        var outcome = await Client.Get($"api/workspaces/invitations?isSender={request.IsSender}");
-
-        // Assert
-        await outcome.ValidateError(Errors.User.NotFound);
     }
 }

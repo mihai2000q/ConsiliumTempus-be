@@ -84,6 +84,8 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.UpdateProjectSprint or
             Permissions.DeleteProjectSprint or
             Permissions.AddStageToProjectSprint or
+            Permissions.ReadStagesFromProjectSprint or
+            Permissions.MoveStageFromProjectSprint or
             Permissions.UpdateStageFromProjectSprint or
             Permissions.RemoveStageFromProjectSprint => await workspaceProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
 
@@ -111,8 +113,8 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.ReadWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.ReadOverviewWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.ReadCollaboratorsFromWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
-            Permissions.ReadInvitationsFromWorkspace => HttpRequestReader.GetStringIdFromRoute(request, ToIdProperty<WorkspaceAggregate>()),
-            Permissions.InviteCollaboratorToWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
+            Permissions.ReadInvitationsFromWorkspace => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<WorkspaceAggregate>()),
+            Permissions.InviteCollaboratorToWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateFavoritesWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateOverviewWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
@@ -143,7 +145,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
 
             // Project Sprint - Project Stage
             Permissions.AddStageToProjectSprint => await HttpRequestReader.GetStringIdFromBody(request),
-            Permissions.ReadStagesFromProjectSprint => await HttpRequestReader.GetStringIdFromBody(request),
+            Permissions.ReadStagesFromProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.MoveStageFromProjectSprint => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateStageFromProjectSprint => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.RemoveStageFromProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),

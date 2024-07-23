@@ -58,6 +58,6 @@ public class WorkspaceControllerInviteCollaboratorAuthorizationTest(WebAppFactor
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Get($"api/workspaces/{request.Id}/invite-collaborator");
+        return await Client.Post("api/workspaces/invite-collaborator", request);
     }
 }
