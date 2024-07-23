@@ -4,11 +4,13 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
@@ -58,6 +60,16 @@ internal static partial class Utils
             return true;
         }
 
+        internal static bool AssertMoveCommand(
+            MoveProjectTaskCommand command,
+            MoveProjectTaskRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.OverId.Should().Be(request.OverId);
+
+            return true;
+        }
+
         internal static bool AssertUpdateCommand(
             UpdateProjectTaskCommand command,
             UpdateProjectTaskRequest request)
@@ -65,6 +77,16 @@ internal static partial class Utils
             command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
             command.AssigneeId.Should().Be(request.AssigneeId);
+
+            return true;
+        }
+
+        internal static bool AssertUpdateIsCompletedCommand(
+            UpdateIsCompletedProjectTaskCommand command,
+            UpdateIsCompletedProjectTaskRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.IsCompleted.Should().Be(request.IsCompleted);
 
             return true;
         }
@@ -77,16 +99,6 @@ internal static partial class Utils
             command.Name.Should().Be(request.Name);
             command.Description.Should().Be(request.Description);
             command.AssigneeId.Should().Be(request.AssigneeId);
-
-            return true;
-        }
-        
-        internal static bool AssertMoveCommand(
-            MoveProjectTaskCommand command,
-            MoveProjectTaskRequest request)
-        {
-            command.Id.Should().Be(request.Id);
-            command.OverId.Should().Be(request.OverId);
 
             return true;
         }

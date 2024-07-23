@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 
@@ -48,6 +49,15 @@ public static class ProjectTaskRequestFactory
             onTop);
     }
 
+    public static MoveProjectTaskRequest CreateMoveProjectTaskRequest(
+        Guid? id = null,
+        Guid? overId = null)
+    {
+        return new MoveProjectTaskRequest(
+            id ?? Guid.NewGuid(),
+            overId ?? Guid.NewGuid());
+    }
+
     public static UpdateProjectTaskRequest CreateUpdateProjectTaskRequest(
         Guid? id = null,
         string name = Constants.ProjectTask.Name,
@@ -59,11 +69,19 @@ public static class ProjectTaskRequestFactory
             assigneeId);
     }
 
+    public static UpdateIsCompletedProjectTaskRequest CreateUpdateIsCompletedProjectTaskRequest(
+        Guid? id = null,
+        bool isCompleted = false)
+    {
+        return new UpdateIsCompletedProjectTaskRequest(
+            id ?? Guid.NewGuid(),
+            isCompleted);
+    }
+
     public static UpdateOverviewProjectTaskRequest CreateUpdateOverviewProjectTaskRequest(
         Guid? id = null,
         string name = Constants.ProjectTask.Name,
         string description = Constants.ProjectTask.Description,
-        bool isCompleted = false,
         Guid? assigneeId = null)
     {
         return new UpdateOverviewProjectTaskRequest(
@@ -71,15 +89,6 @@ public static class ProjectTaskRequestFactory
             name,
             description,
             assigneeId);
-    }
-    
-    public static MoveProjectTaskRequest CreateMoveProjectTaskRequest(
-        Guid? id = null,
-        Guid? overId = null)
-    {
-        return new MoveProjectTaskRequest(
-            id ?? Guid.NewGuid(),
-            overId ?? Guid.NewGuid());
     }
 
     public static DeleteProjectTaskRequest CreateDeleteProjectTaskRequest(

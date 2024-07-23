@@ -83,8 +83,7 @@ public class ProjectTaskControllerUpdateTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedTask = await dbContext.ProjectTasks
             .Include(t => t.Stage.Sprint.Project.Workspace)
-            .Include(t => t.Stage.Tasks)
-            .SingleAsync(t => t.Name.Value == request.Name);
+            .SingleAsync(t => t.Id == ProjectTaskId.Create(request.Id));
         Utils.ProjectTask.AssertUpdated(updatedTask, task, request);
     }
 }
