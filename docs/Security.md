@@ -58,8 +58,11 @@ The permissions will be classified on their respective component:
 - Project
   - Create
   - Read
+  - Read Overview
   - Read Collection
   - Update
+  - Update Favorites
+  - Update Overview
   - Delete
   - Add Status
   - Read Statuses
@@ -95,8 +98,11 @@ The Access Control List of the system is the following:
 | Delete Workspace                 |      |        | X     |
 | Create Project                   |      |        | X     |
 | Read Project                     | X    | X      | X     |
+| Read Overview Project            | X    | X      | X     |
 | Read Collection Project          | X    | X      | X     |
 | Update Project                   |      | X      | X     |
+| Update Favorites Project         | X    | X      | X     |
+| Update Overview Project          |      | X      | X     |
 | Delete Project                   |      |        | X     |
 | Add Status To Project            |      |        | X     |
 | Read Statuses From Project       |      | X      | X     |

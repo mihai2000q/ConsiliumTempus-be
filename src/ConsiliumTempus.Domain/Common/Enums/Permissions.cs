@@ -9,8 +9,11 @@ public enum Permissions
     // Project
     CreateProject,
     ReadProject,
+    ReadOverviewProject,
     ReadCollectionProject,
     UpdateProject,
+    UpdateFavoritesProject,
+    UpdateOverviewProject,
     DeleteProject,
     // Project - Project Status
     AddStatusToProject,

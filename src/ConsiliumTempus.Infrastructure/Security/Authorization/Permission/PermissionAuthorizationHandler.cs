@@ -68,7 +68,10 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         var workspace = permission switch
         {
             Permissions.ReadProject or
+            Permissions.ReadOverviewProject or
             Permissions.UpdateProject or
+            Permissions.UpdateFavoritesProject or
+            Permissions.UpdateOverviewProject or
             Permissions.DeleteProject or
             Permissions.CreateProjectSprint or
             Permissions.ReadCollectionProjectSprint or
@@ -110,8 +113,11 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
 
             Permissions.CreateProject => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<WorkspaceAggregate>()),
             Permissions.ReadProject => HttpRequestReader.GetStringIdFromRoute(request),
+            Permissions.ReadOverviewProject => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.ReadCollectionProject => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<WorkspaceAggregate>()),
             Permissions.UpdateProject => await HttpRequestReader.GetStringIdFromBody(request),
+            Permissions.UpdateFavoritesProject => await HttpRequestReader.GetStringIdFromBody(request),
+            Permissions.UpdateOverviewProject => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProject => HttpRequestReader.GetStringIdFromRoute(request),
             
             Permissions.AddStatusToProject => await HttpRequestReader.GetStringIdFromBody(request),

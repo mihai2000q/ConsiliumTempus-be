@@ -23,9 +23,9 @@ public class ProjectControllerUpdateFavoritesAuthorizationTest(WebAppFactory fac
     }
 
     [Fact]
-    public async Task UpdateFavoritesProject_WhenWithViewRole_ShouldReturnForbiddenResponse()
+    public async Task UpdateFavoritesProject_WhenWithViewRole_ShouldReturnSuccessResponse()
     {
-        await AssertForbiddenResponse(ProjectData.Users[4]);
+        await AssertSuccessfulResponse(ProjectData.Users[4]);
     }
 
     [Fact]
