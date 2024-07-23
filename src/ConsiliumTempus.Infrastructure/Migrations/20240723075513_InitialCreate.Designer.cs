@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240721192025_InitialCreate")]
+    [Migration("20240723075513_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -1242,6 +1242,10 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             b1.Property<Guid>("ProjectTaskAggregateId")
                                 .HasColumnType("uniqueidentifier");
+
+                            b1.Property<DateTime?>("CompletedOn")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("CompletedOn");
 
                             b1.Property<bool>("Value")
                                 .HasColumnType("bit")

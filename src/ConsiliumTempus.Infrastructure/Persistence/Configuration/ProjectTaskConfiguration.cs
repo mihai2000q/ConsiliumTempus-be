@@ -30,9 +30,15 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
             .Property(d => d.Value)
             .HasColumnName(nameof(Description));
 
-        builder.OwnsOne(t => t.IsCompleted)
-            .Property(c => c.Value)
-            .HasColumnName(nameof(IsCompleted));
+        builder.OwnsOne(t => t.IsCompleted, b =>
+        {
+            b.Property(c => c.Value)
+                .HasColumnName(nameof(IsCompleted));
+
+            b.Property(c => c.CompletedOn)
+                .HasColumnName(nameof(IsCompleted.CompletedOn));
+        });
+            
 
         builder.OwnsOne(t => t.CustomOrderPosition)
             .Property(o => o.Value)
