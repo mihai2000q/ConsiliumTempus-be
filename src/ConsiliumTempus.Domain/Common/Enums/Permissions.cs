@@ -31,6 +31,9 @@ public enum Permissions
     CreateProjectTask,
     ReadProjectTask,
     ReadCollectionProjectTask,
+    MoveProjectTask,
     UpdateProjectTask,
+    UpdateIsCompletedProjectTask,
+    UpdateOverviewProjectTask,
     DeleteProjectTask
 }

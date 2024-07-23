@@ -88,7 +88,10 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.ReadCollectionProjectTask => await workspaceProvider.GetByProjectStage(ProjectStageId.Create(guidId)),
 
             Permissions.ReadProjectTask or
+            Permissions.MoveProjectTask or
             Permissions.UpdateProjectTask or
+            Permissions.UpdateIsCompletedProjectTask or
+            Permissions.UpdateOverviewProjectTask or
             Permissions.DeleteProjectTask => await workspaceProvider.GetByProjectTask(ProjectTaskId.Create(guidId)),
 
             _ => await workspaceProvider.Get(WorkspaceId.Create(guidId)),
@@ -129,7 +132,10 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.CreateProjectTask => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<ProjectStage>()),
             Permissions.ReadProjectTask => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.ReadCollectionProjectTask => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<ProjectStage>()),
+            Permissions.MoveProjectTask => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateProjectTask => await HttpRequestReader.GetStringIdFromBody(request),
+            Permissions.UpdateIsCompletedProjectTask => await HttpRequestReader.GetStringIdFromBody(request),
+            Permissions.UpdateOverviewProjectTask => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProjectTask => HttpRequestReader.GetStringIdFromRoute(request),
 
             _ => throw new ArgumentOutOfRangeException(nameof(permission))

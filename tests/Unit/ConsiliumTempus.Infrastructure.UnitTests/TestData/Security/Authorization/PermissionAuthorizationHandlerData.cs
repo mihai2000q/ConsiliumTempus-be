@@ -52,7 +52,10 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.CreateProjectTask, RequestLocation.Body);
             Add(Permissions.ReadProjectTask, RequestLocation.Route);
             Add(Permissions.ReadCollectionProjectTask, RequestLocation.Query);
+            Add(Permissions.MoveProjectTask, RequestLocation.Body);
             Add(Permissions.UpdateProjectTask, RequestLocation.Body);
+            Add(Permissions.UpdateIsCompletedProjectTask, RequestLocation.Body);
+            Add(Permissions.UpdateOverviewProjectTask, RequestLocation.Body);
             Add(Permissions.DeleteProjectTask, RequestLocation.Route);
         }
     }
@@ -89,7 +92,10 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.CreateProjectTask, RequestLocation.Body, "projectStageId");
             Add(Permissions.ReadProjectTask, RequestLocation.Route, null);
             Add(Permissions.ReadCollectionProjectTask, RequestLocation.Query, "projectStageId");
+            Add(Permissions.MoveProjectTask, RequestLocation.Body, null);
             Add(Permissions.UpdateProjectTask, RequestLocation.Body, null);
+            Add(Permissions.UpdateIsCompletedProjectTask, RequestLocation.Body, null);
+            Add(Permissions.UpdateOverviewProjectTask, RequestLocation.Body, null);
             Add(Permissions.DeleteProjectTask, RequestLocation.Route, null);
         }
     }
@@ -126,7 +132,10 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.CreateProjectTask, RequestLocation.Body, "projectStageId", StringIdType.ProjectStage);
             Add(Permissions.ReadProjectTask, RequestLocation.Route, null, StringIdType.ProjectTask);
             Add(Permissions.ReadCollectionProjectTask, RequestLocation.Query, "projectStageId", StringIdType.ProjectStage);
+            Add(Permissions.MoveProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
             Add(Permissions.UpdateProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
+            Add(Permissions.UpdateIsCompletedProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
+            Add(Permissions.UpdateOverviewProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
             Add(Permissions.DeleteProjectTask, RequestLocation.Route, null, StringIdType.ProjectTask);
         }
     }

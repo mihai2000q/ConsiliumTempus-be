@@ -78,7 +78,10 @@ The permissions will be classified on their respective component:
   - Create
   - Read
   - Read Collection
+  - Move
   - Update
+  - Update Is Completed
+  - Update Overview
   - Delete
 
 ## Workspace Roles to Permissions
@@ -110,5 +113,8 @@ The Access Control List of the system is the following:
 | Create Project Task              |      | X      | X     |
 | Read Project Task                | X    | X      | X     |
 | Read Collection Project Task     | X    | X      | X     |
+| Move Project Task                |      | X      | X     |
 | Update Project Task              |      | X      | X     |
+| Update Is Completed Project Task |      | X      | X     |
+| Update Overview Project Task     |      | X      | X     |
 | Delete Project Task              |      | X      | X     |
