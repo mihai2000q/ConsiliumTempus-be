@@ -65,7 +65,7 @@ public class UpdateProjectTaskCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateProjectTaskCommand_WhenProjectStageIsNull_ShouldReturnProjectStageNotFoundError()
+    public async Task HandleUpdateProjectTaskCommand_WhenProjectTaskIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectTaskCommandFactory.CreateUpdateProjectTaskCommand();
