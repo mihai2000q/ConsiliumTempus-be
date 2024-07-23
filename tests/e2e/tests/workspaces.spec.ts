@@ -3,8 +3,8 @@ import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
 import {
   createWorkspace,
-  createWorkspaces, getCollaborators, getInvitation,
-  getInvitations,
+  createWorkspaces, getCollaborators, getInvitation, getInvitations,
+  getInvitationsByWorkspace,
   getPersonalWorkspace,
   getWorkspace,
   getWorkspaceOverview,
@@ -596,7 +596,7 @@ test.describe('should allow operations on the workspace entity', () => {
       message: expect.any(String)
     })
 
-    const invitations = await getInvitations(request, workspace.id)
+    const invitations = await getInvitationsByWorkspace(request, workspace.id)
     expect(invitations).toHaveLength(1)
     expect(invitations).toStrictEqual([
       {
@@ -632,7 +632,7 @@ test.describe('should allow operations on the workspace entity', () => {
       },
       token
     )
-    const invitation = await getInvitation(request, senderEmail)
+    const invitation = await getInvitation(request, workspace.id)
 
     const body: AcceptInvitationToWorkspaceRequest = {
       id: workspace.id,
@@ -650,7 +650,7 @@ test.describe('should allow operations on the workspace entity', () => {
       message: expect.any(String)
     })
 
-    const invitations = await getInvitations(request, workspace.id)
+    const invitations = await getInvitations(request)
     expect(invitations).toHaveLength(0)
 
     const collaborators = await getCollaborators(request, workspace.id)
@@ -681,7 +681,7 @@ test.describe('should allow operations on the workspace entity', () => {
       },
       token
     )
-    const invitation = await getInvitation(request, senderEmail)
+    const invitation = await getInvitation(request, workspace.id)
 
     const body: AcceptInvitationToWorkspaceRequest = {
       id: workspace.id,
@@ -699,7 +699,7 @@ test.describe('should allow operations on the workspace entity', () => {
       message: expect.any(String)
     })
     
-    const invitations = await getInvitations(request, workspace.id)
+    const invitations = await getInvitations(request)
     expect(invitations).toHaveLength(0)
   })
 

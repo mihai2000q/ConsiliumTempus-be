@@ -85,7 +85,7 @@ export async function inviteCollaboratorWithRegister(
     email: email,
   })
 
-  return (await getInvitations(request, workspaceId))
+  return (await getInvitationsByWorkspace(request, workspaceId))
     .filter((i: { collaborator: { email: string } }) => i.collaborator.email === email)[0]
 }
 
@@ -109,26 +109,39 @@ export async function getCollaborators(request: APIRequestContext, workspaceId: 
     `/api/workspaces/${workspaceId}/collaborators`,
     useToken()
   )
+  expect(response.ok()).toBeTruthy()
 
   return (await response.json()).collaborators
 }
 
-export async function getInvitations(request: APIRequestContext, workspaceId: string) {
+export async function getInvitationsByWorkspace(request: APIRequestContext, workspaceId: string) {
   const response = await request.get(
     `/api/workspaces/invitations?workspaceId=${workspaceId}`,
     useToken()
   )
+  expect(response.ok()).toBeTruthy()
 
   return (await response.json()).invitations
 }
 
-export async function getInvitation(request: APIRequestContext, senderEmail: string) {
+export async function getInvitations(request: APIRequestContext) {
   const response = await request.get(
     `/api/workspaces/invitations?isSender=false`,
     useToken()
   )
+  expect(response.ok()).toBeTruthy()
+
+  return (await response.json()).invitations
+}
+
+export async function getInvitation(request: APIRequestContext, workspaceId: string) {
+  const response = await request.get(
+    `/api/workspaces/invitations?isSender=false`,
+    useToken()
+  )
+  expect(response.ok()).toBeTruthy()
 
   return (await response.json())
     .invitations
-    .filter((i: { sender: { email: string } }) => i.sender.email === senderEmail)[0]
+    .filter((i: { workspace: { id: string } }) => i.workspace.id === workspaceId)[0]
 }
