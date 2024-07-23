@@ -4,7 +4,13 @@ public enum Permissions
 {
     // Workspace
     ReadWorkspace,
+    ReadOverviewWorkspace,
+    ReadCollaboratorsFromWorkspace,
+    ReadInvitationsFromWorkspace,
+    InviteCollaboratorToWorkspace,
     UpdateWorkspace,
+    UpdateFavoritesWorkspace,
+    UpdateOverviewWorkspace,
     DeleteWorkspace,
     // Project
     CreateProject,

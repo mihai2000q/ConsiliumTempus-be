@@ -78,7 +78,8 @@ Returns the workspace.
 
 ### Get Overview
 
-Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
+Only users that are part of the workspace can retrieve it 
+([Read Overview Workspace Permission](../Security.md/#permissions)).
 
 ```js
 GET {{host}}/api/workspaces/overview/{id}
@@ -156,7 +157,8 @@ Returns the workspaces and their total count.
 
 ### Get Collaborators
 
-Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
+Only users that are part of the workspace can retrieve it 
+([Read Collaborators From Workspace Permission](../Security.md/#permissions)).
 
 ```js
 GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle
@@ -193,7 +195,8 @@ Returns the collaborators.
 
 ### Get Invitations
 
-Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
+All users can see their invitations (sent or received), but only admins can see those from a workspace
+([Read Invitations From Workspace Permission](../Security.md/#permissions)).
 
 ```js
 GET {{host}}/api/workspaces/invitations?isSender=false&pageSize=2&currentPage=1
@@ -374,8 +377,8 @@ Returns a confirmation message that the workspace has been updated successfully.
 
 ### Update Favorites
 
-Only member or admin users that are part of the workspace can update it
-([Update Workspace Permission](../Security.md/#permissions)).
+Anyone that is part of the workspace can add it to their favorites
+([Update Favorites Workspace Permission](../Security.md/#permissions)).
 
 ```js
 PUT {{host}}/api/workspaces/favorites
@@ -399,7 +402,7 @@ Returns a confirmation message that the workspace favorites have been updated su
 ### Update Overview
 
 Only member or admin users that are part of the workspace can update it
-([Update Workspace Permission](../Security.md/#permissions)).
+([Update Overview Workspace Permission](../Security.md/#permissions)).
 
 ```js
 PUT {{host}}/api/workspaces/overview

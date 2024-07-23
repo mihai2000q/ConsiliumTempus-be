@@ -53,7 +53,13 @@ The permissions will be classified on their respective component:
 
 - Workspace
   - Read
+  - Read Overview
+  - Read Collaborators
+  - Read Invitations
+  - Invite Collaborator
   - Update
+  - Update Favorites
+  - Update Overview
   - Delete
 - Project
   - Create
@@ -93,38 +99,44 @@ The permissions will be classified on their respective component:
 
 The Access Control List of the system is the following:
 
-|                                  | View | Member | Admin |
-|----------------------------------|:----:|:------:|:-----:|
-| Read Workspace                   |  X   |   X    |   X   |
-| Update Workspace                 |      |   X    |   X   |
-| Delete Workspace                 |      |        |   X   |
-| Create Project                   |      |        |   X   |
-| Read Project                     |  X   |   X    |   X   |
-| Read Overview Project            |  X   |   X    |   X   |
-| Read Collection Project          |  X   |   X    |   X   |
-| Update Project                   |      |   X    |   X   |
-| Update Favorites Project         |  X   |   X    |   X   |
-| Update Overview Project          |      |   X    |   X   |
-| Delete Project                   |      |        |   X   |
-| Add Status To Project            |      |        |   X   |
-| Read Statuses From Project       |      |   X    |   X   |
-| Update Status From Project       |      |   X    |   X   |
-| Remove Status From Project       |      |        |   X   |
-| Create Project Sprint            |      |        |   X   |
-| Read Project Sprint              |  X   |   X    |   X   |
-| Read Collection Project Sprint   |  X   |   X    |   X   |
-| Update Project Sprint            |      |   X    |   X   |
-| Delete Project Sprint            |      |        |   X   |
-| Add Stage To Project Sprint      |      |        |   X   |
-| Read Stages From Project Sprint  |  X   |   X    |   X   |
-| Move Stage From Project Sprint   |      |        |   X   |
-| Update Stage From Project Sprint |      |   X    |   X   |
-| Remove Stage From Project Sprint |      |        |   X   |
-| Create Project Task              |      |   X    |   X   |
-| Read Project Task                |  X   |   X    |   X   |
-| Read Collection Project Task     |  X   |   X    |   X   |
-| Move Project Task                |      |   X    |   X   |
-| Update Project Task              |      |   X    |   X   |
-| Update Is Completed Project Task |      |   X    |   X   |
-| Update Overview Project Task     |      |   X    |   X   |
-| Delete Project Task              |      |   X    |   X   |
+|                                   | View | Member | Admin |
+|-----------------------------------|:----:|:------:|:-----:|
+| Read Workspace                    |  X   |   X    |   X   |
+| Read Overview Workspace           |  X   |   X    |   X   |
+| Read Collaborators From Workspace |  X   |   X    |   X   |
+| Read Invitations From Workspace   |      |        |   X   |
+| Invite Collaborator To Workspace  |      |        |   X   |
+| Update Workspace                  |      |   X    |   X   |
+| Update Favorites Workspace        |  X   |   X    |   X   |
+| Update Overview Workspace         |      |   X    |   X   |
+| Delete Workspace                  |      |        |   X   |
+| Create Project                    |      |        |   X   |
+| Read Project                      |  X   |   X    |   X   |
+| Read Overview Project             |  X   |   X    |   X   |
+| Read Collection Project           |  X   |   X    |   X   |
+| Update Project                    |      |   X    |   X   |
+| Update Favorites Project          |  X   |   X    |   X   |
+| Update Overview Project           |      |   X    |   X   |
+| Delete Project                    |      |        |   X   |
+| Add Status To Project             |      |        |   X   |
+| Read Statuses From Project        |      |   X    |   X   |
+| Update Status From Project        |      |   X    |   X   |
+| Remove Status From Project        |      |        |   X   |
+| Create Project Sprint             |      |        |   X   |
+| Read Project Sprint               |  X   |   X    |   X   |
+| Read Collection Project Sprint    |  X   |   X    |   X   |
+| Update Project Sprint             |      |   X    |   X   |
+| Delete Project Sprint             |      |        |   X   |
+| Add Stage To Project Sprint       |      |        |   X   |
+| Read Stages From Project Sprint   |  X   |   X    |   X   |
+| Move Stage From Project Sprint    |      |        |   X   |
+| Update Stage From Project Sprint  |      |   X    |   X   |
+| Remove Stage From Project Sprint  |      |        |   X   |
+| Create Project Task               |      |   X    |   X   |
+| Read Project Task                 |  X   |   X    |   X   |
+| Read Collection Project Task      |  X   |   X    |   X   |
+| Move Project Task                 |      |   X    |   X   |
+| Update Project Task               |      |   X    |   X   |
+| Update Is Completed Project Task  |      |   X    |   X   |
+| Update Overview Project Task      |      |   X    |   X   |
+| Delete Project Task               |      |   X    |   X   |

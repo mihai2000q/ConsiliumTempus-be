@@ -29,7 +29,13 @@ public static class PermissionAuthorizationHandlerData
         {
             // Workspace
             Add(Permissions.ReadWorkspace, RequestLocation.Route);
+            Add(Permissions.ReadOverviewWorkspace, RequestLocation.Route);
+            Add(Permissions.ReadCollaboratorsFromWorkspace, RequestLocation.Route);
+            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Route);
+            Add(Permissions.InviteCollaboratorToWorkspace, RequestLocation.Body);
             Add(Permissions.UpdateWorkspace, RequestLocation.Body);
+            Add(Permissions.UpdateFavoritesWorkspace, RequestLocation.Body);
+            Add(Permissions.UpdateOverviewWorkspace, RequestLocation.Body);
             Add(Permissions.DeleteWorkspace, RequestLocation.Route);
 
             // Project
@@ -80,7 +86,13 @@ public static class PermissionAuthorizationHandlerData
         {
             // Workspace
             Add(Permissions.ReadWorkspace, RequestLocation.Route, null);
+            Add(Permissions.ReadOverviewWorkspace, RequestLocation.Route, null);
+            Add(Permissions.ReadCollaboratorsFromWorkspace, RequestLocation.Route, null);
+            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Route, ToIdProperty<WorkspaceAggregate>());
+            Add(Permissions.InviteCollaboratorToWorkspace, RequestLocation.Body, null);
             Add(Permissions.UpdateWorkspace, RequestLocation.Body, null);
+            Add(Permissions.UpdateFavoritesWorkspace, RequestLocation.Body, null);
+            Add(Permissions.UpdateOverviewWorkspace, RequestLocation.Body, null);
             Add(Permissions.DeleteWorkspace, RequestLocation.Route, null);
 
             // Project
@@ -131,7 +143,13 @@ public static class PermissionAuthorizationHandlerData
         {
             // Workspace
             Add(Permissions.ReadWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
+            Add(Permissions.ReadOverviewWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
+            Add(Permissions.ReadCollaboratorsFromWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
+            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Route, ToIdProperty<WorkspaceAggregate>(), StringIdType.Workspace);
+            Add(Permissions.InviteCollaboratorToWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
             Add(Permissions.UpdateWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
+            Add(Permissions.UpdateFavoritesWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
+            Add(Permissions.UpdateOverviewWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
             Add(Permissions.DeleteWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
 
             // Project
