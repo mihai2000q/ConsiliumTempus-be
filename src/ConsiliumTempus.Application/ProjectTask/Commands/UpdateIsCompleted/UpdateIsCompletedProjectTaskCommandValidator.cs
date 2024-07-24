@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Domain.Common.Validation;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 

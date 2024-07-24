@@ -11,6 +11,10 @@ public interface IWorkspaceRepository
 {
     Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default);
 
+    Task<WorkspaceAggregate?> GetWithMemberships(
+        WorkspaceId id,
+        CancellationToken cancellationToken = default);
+
     Task<WorkspaceAggregate?> GetWithInvitations(
         WorkspaceId id,
         CancellationToken cancellationToken = default);

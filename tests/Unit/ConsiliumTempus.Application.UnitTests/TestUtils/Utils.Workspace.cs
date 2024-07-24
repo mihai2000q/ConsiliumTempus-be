@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
@@ -87,6 +88,16 @@ internal static partial class Utils
         {
             workspace.Id.Value.Should().Be(command.Id);
             workspace.Invitations.Should().HaveCount(0);
+        }
+
+        internal static void AssertFromLeaveCommand(
+            LeaveWorkspaceCommand command,
+            WorkspaceAggregate workspace,
+            UserAggregate user)
+        {
+            workspace.Id.Value.Should().Be(command.Id);
+            workspace.Memberships.Should().NotContain(m => m.User == user);
+            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertFromUpdateCommand(
