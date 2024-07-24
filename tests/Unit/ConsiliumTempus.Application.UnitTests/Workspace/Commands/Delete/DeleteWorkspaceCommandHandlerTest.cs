@@ -72,7 +72,7 @@ public class DeleteWorkspaceCommandHandlerTest
             .DidNotReceive()
             .Remove(Arg.Any<WorkspaceAggregate>());
 
-        outcome.ValidateError(Errors.Workspace.PersonalWorkspace);
+        outcome.ValidateError(Errors.Workspace.DeletePersonalWorkspace);
     }
 
     [Fact]
