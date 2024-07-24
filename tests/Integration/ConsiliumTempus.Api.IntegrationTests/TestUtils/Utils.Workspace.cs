@@ -127,6 +127,7 @@ internal static partial class Utils
             UserAggregate collaborator)
         {
             workspace.Id.Value.Should().Be(request.Id);
+            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.Invitations.Should().NotContain(i => i.Collaborator == collaborator);
             workspace.Memberships.Should().ContainSingle(i => i.User == collaborator);
 

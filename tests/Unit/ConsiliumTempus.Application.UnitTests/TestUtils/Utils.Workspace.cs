@@ -67,6 +67,7 @@ internal static partial class Utils
             UserAggregate user)
         {
             workspace.Id.Value.Should().Be(command.Id);
+            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.Invitations.Should().HaveCount(0);
             workspace.Memberships.Should().ContainSingle(m => m.User == user);
 
