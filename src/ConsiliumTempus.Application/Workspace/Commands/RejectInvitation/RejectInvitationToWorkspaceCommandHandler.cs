@@ -12,7 +12,7 @@ public sealed class RejectInvitationToWorkspaceCommandHandler(IWorkspaceReposito
     public async Task<ErrorOr<RejectInvitationToWorkspaceResult>> Handle(RejectInvitationToWorkspaceCommand command,
         CancellationToken cancellationToken)
     {
-        var workspace = await workspaceRepository.GetWithMembershipsAndInvitations(
+        var workspace = await workspaceRepository.GetWithInvitations(
             WorkspaceId.Create(command.Id),
             cancellationToken);
         if (workspace is null) return Errors.Workspace.NotFound;
