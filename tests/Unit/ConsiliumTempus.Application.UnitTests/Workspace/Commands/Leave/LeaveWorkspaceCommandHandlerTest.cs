@@ -31,7 +31,7 @@ public class LeaveWorkspaceCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleLeaveWorkspaceCommand_WhenIsSuccessful_ShouldSendInvitationAndReturnResponse()
+    public async Task HandleLeaveWorkspaceCommand_WhenIsSuccessful_ShouldRemoveMembershipAndReturnResponse()
     {
         // Arrange
         var user = UserFactory.Create();
@@ -63,6 +63,36 @@ public class LeaveWorkspaceCommandHandlerTest
         outcome.Value.Should().Be(new LeaveWorkspaceResult());
 
         Utils.Workspace.AssertFromLeaveCommand(command, workspace, user);
+    }
+
+    [Fact]
+    public async Task HandleLeaveWorkspaceCommand_WhenIsOwnerOfWorkspace_ShouldReturnLeaveOwnedWorkspaceError()
+    {
+        // Arrange
+        var command = WorkspaceCommandFactory.CreateLeaveWorkspaceCommand();
+
+        var user = UserFactory.Create();
+        _currentUserProvider
+            .GetCurrentUserAfterPermissionCheck()
+            .Returns(user);
+
+        var workspace = WorkspaceFactory.Create(owner: user);
+        _workspaceRepository
+            .GetWithMemberships(Arg.Any<WorkspaceId>())
+            .Returns(workspace);
+
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Assert
+        await _workspaceRepository
+            .Received(1)
+            .GetWithMemberships(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+        await _currentUserProvider
+            .Received(1)
+            .GetCurrentUserAfterPermissionCheck();
+
+        outcome.ValidateError(Errors.Workspace.LeaveOwnedWorkspace);
     }
 
     [Fact]

@@ -22,6 +22,8 @@ public sealed class LeaveWorkspaceCommandHandler(
 
         var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
 
+        if (workspace.Owner == user) return Errors.Workspace.LeaveOwnedWorkspace;
+
         var membership = workspace.Memberships.Single(m => m.User == user);
         workspace.RemoveUserMembership(membership);
         workspace.RefreshActivity();
