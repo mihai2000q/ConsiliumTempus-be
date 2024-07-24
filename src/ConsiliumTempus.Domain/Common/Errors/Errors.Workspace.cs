@@ -13,6 +13,10 @@ public static partial class Errors
         public static Error PersonalWorkspace => Error.Conflict(
             "Workspace.PersonalWorkspace",
             "Personal Workspaces cannot be deleted, not even by their owners");
+
+        public static Error CollaboratorNotFound => Error.NotFound(
+            "Workspace.CollaboratorNotFound",
+            "Collaborator could not be found inside workspace");
     }
 
     public static class WorkspaceInvitation

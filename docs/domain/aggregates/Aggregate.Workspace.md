@@ -12,6 +12,7 @@ class Workspace
     void UpdateFavorites()
     void UpdateOverview()
     void AddUserMembership()
+    void RemoveUserMembership()
     void RefreshActivity()
     void TransferOwnership()
     void UpdateIsPersonal()
@@ -47,6 +48,7 @@ For database design checkout the [Workspace Diagram](../../database-diagrams/agg
 
 - **Not Found** when the workspace cannot be found
 - **Personal Workspace** when the workspace is personal (used to restrict deletion)
+- **Collaborator Not Found** when the collaborator cannot be found within the workspace
 
 ### Value Objects
 
