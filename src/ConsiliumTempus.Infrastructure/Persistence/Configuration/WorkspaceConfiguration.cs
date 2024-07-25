@@ -1,9 +1,9 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Domain.Common.Validation;
+﻿using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

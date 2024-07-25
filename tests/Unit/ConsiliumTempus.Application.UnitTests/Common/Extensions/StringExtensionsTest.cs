@@ -1,26 +1,12 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Application.UnitTests.TestData.Common.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Common.Extensions;
 
 public class StringExtensionsTest
 {
     [Theory]
-    [ClassData(typeof(StringExtensionsData.GetValidToId))]
-    public void ToId_WhenValid_ShouldReturnStringWithIdNotation(string input, string expected)
-    {
-        // Arrange - parameterized
-
-        // Act
-        var outcome = input.ToId();
-
-        // Assert
-        outcome.Should().Be(expected);
-    }
-    
-    [Theory]
     [InlineData("first", "second", "first&second")]
-    public void And_WhenValid_ShouldConcat2StringsWithAndSymbol(string input1, string input2, string expected)
+    public void And_ShouldConcatenate2StringsWithAndSymbol(string input1, string input2, string expected)
     {
         // Arrange - parameterized
 
@@ -30,54 +16,15 @@ public class StringExtensionsTest
         // Assert
         outcome.Should().Be(expected);
     }
-    
+
     [Theory]
     [InlineData("first", "second", "first.second")]
-    public void Dot_WhenValid_ShouldConcat2StringsWithAndSymbol(string input1, string input2, string expected)
+    public void Dot_ShouldConcatenate2StringsWithDotSymbol(string input1, string input2, string expected)
     {
         // Arrange - parameterized
 
         // Act
         var outcome = input1.Dot(input2);
-
-        // Assert
-        outcome.Should().Be(expected);
-    }
-
-    [Theory]
-    [ClassData(typeof(StringExtensionsData.GetValidToBackingField))]
-    public void ToBackingField_WhenValid_ShouldReturnStringWithBackingFieldNotation(string input, string expected)
-    {
-        // Arrange - parameterized
-
-        // Act
-        var outcome = input.ToBackingField();
-
-        // Assert
-        outcome.Should().Be(expected);
-    }
-
-    [Theory]
-    [ClassData(typeof(StringExtensionsData.GetValidToIdBackingField))]
-    public void ToIdBackingField_WhenValid_ShouldReturnStringWithIdBackingFieldNotation(string input, string expected)
-    {
-        // Arrange - parameterized
-
-        // Act
-        var outcome = input.ToIdBackingField();
-
-        // Assert
-        outcome.Should().Be(expected);
-    }
-
-    [Theory]
-    [ClassData(typeof(StringExtensionsData.GetValidTruncateAggregate))]
-    public void TruncateAggregate_WhenValid_ShouldReturnStringWithoutAggregate(string input, string expected)
-    {
-        // Arrange - parameterized
-
-        // Act
-        var outcome = input.TruncateAggregate();
 
         // Assert
         outcome.Should().Be(expected);
@@ -161,35 +108,13 @@ public class StringExtensionsTest
         outcome.Should().BeFalse();
     }
 
-    [Fact]
-    public void Capitalize_WhenLengthIs0_ShouldReturnEmpty()
-    {
-        // Arrange
-        const string input = "";
-
-        // Act
-        var outcome = input.Capitalize();
-
-        // Assert
-        outcome.Should().BeEmpty();
-    }
-
-    [Fact]
-    public void Capitalize_WhenLengthIs1_ShouldReturnUpper()
-    {
-        // Arrange
-        const string input = "l";
-
-        // Act
-        var outcome = input.Capitalize();
-
-        // Assert
-        outcome.Should().Be("L");
-    }
-
     [Theory]
-    [ClassData(typeof(StringExtensionsData.GetCapitalizeStrings))]
-    public void Capitalize_WhenLengthIsOver1_ShouldReturnCapitalizedWords(string input, string expected)
+    [InlineData("", "")]
+    [InlineData("l", "L")]
+    [InlineData("aNdReI", "Andrei")]
+    [InlineData("mIchAel JaMES", "Michael James")]
+    [InlineData("CHRISTIAN-MICHAEL", "Christian-Michael")]
+    public void Capitalize_ShouldReturnCapitalizedWords(string input, string expected)
     {
         // Arrange - parameterized
 

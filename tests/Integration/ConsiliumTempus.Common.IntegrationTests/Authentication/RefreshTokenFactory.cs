@@ -1,7 +1,7 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Domain.Authentication;
+﻿using ConsiliumTempus.Domain.Authentication;
 using ConsiliumTempus.Domain.Authentication.ValueObjects;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Infrastructure.Extensions;
 
 namespace ConsiliumTempus.Common.IntegrationTests.Authentication;
 
