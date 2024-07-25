@@ -3,7 +3,7 @@ using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 
-public sealed class ProjectSprintId : ValueObject
+public sealed class ProjectSprintId : AggregateRootId<Guid>
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectSprintId()
@@ -15,7 +15,7 @@ public sealed class ProjectSprintId : ValueObject
         Value = value;
     }
 
-    public Guid Value { get; init; }
+    public override Guid Value { get; protected set; }
 
     public static ProjectSprintId CreateUnique()
     {

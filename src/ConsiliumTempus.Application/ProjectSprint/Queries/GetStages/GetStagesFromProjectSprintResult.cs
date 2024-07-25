@@ -2,4 +2,4 @@
 
 namespace ConsiliumTempus.Application.ProjectSprint.Queries.GetStages;
 
-public record GetStagesFromProjectSprintResult(List<ProjectStage> Stages);
+public sealed record GetStagesFromProjectSprintResult(List<ProjectStage> Stages);
