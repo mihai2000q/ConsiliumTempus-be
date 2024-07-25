@@ -6,6 +6,7 @@ using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Entities;
@@ -125,6 +126,16 @@ internal static partial class Utils
         {
             workspace.Id.Value.Should().Be(command.Id);
             workspace.Description.Value.Should().Be(command.Description);
+            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertFromUpdateOwnerCommand(
+            WorkspaceAggregate workspace,
+            UpdateOwnerWorkspaceCommand command,
+            UserAggregate owner)
+        {
+            workspace.Id.Value.Should().Be(command.Id);
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
