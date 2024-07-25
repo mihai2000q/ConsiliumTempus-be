@@ -7,6 +7,7 @@ using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.Workspace;
@@ -84,5 +85,14 @@ public static class WorkspaceCommandFactory
         return new UpdateOverviewWorkspaceCommand(
             id ?? Guid.NewGuid(),
             description);
+    }
+
+    public static UpdateOwnerWorkspaceCommand CreateUpdateOwnerWorkspaceCommand(
+        Guid? id = null,
+        Guid? ownerId = null)
+    {
+        return new UpdateOwnerWorkspaceCommand(
+            id ?? Guid.NewGuid(),
+            ownerId ?? Guid.NewGuid());
     }
 }

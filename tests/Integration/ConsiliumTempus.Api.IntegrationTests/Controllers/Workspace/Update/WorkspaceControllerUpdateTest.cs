@@ -33,7 +33,9 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<UpdateWorkspaceResponse>();
         response!.Message.Should().Be("Workspace has been updated successfully!");
 
-        var updatedWorkspace = await GetWorkspaceById(request.Id);
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        var updatedWorkspace = dbContext.Workspaces
+            .Single(u => u.Id == WorkspaceId.Create(request.Id));
         Utils.Workspace.AssertUpdated(workspace, updatedWorkspace!, request);
     }
 
@@ -49,12 +51,8 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);
 
-        (await GetWorkspaceById(request.Id)).Should().BeNull();
-    }
-
-    private async Task<WorkspaceAggregate?> GetWorkspaceById(Guid id)
-    {
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        return await dbContext.Workspaces.SingleOrDefaultAsync(u => u.Id == WorkspaceId.Create(id));
+        dbContext.Workspaces.SingleOrDefault(u => u.Id == WorkspaceId.Create(request.Id))
+            .Should().BeNull();
     }
 }

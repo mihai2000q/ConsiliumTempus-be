@@ -14,7 +14,7 @@ import {
   getWorkspaces,
   inviteCollaborator,
   inviteCollaboratorWithRegister,
-  inviteToWorkspace
+  inviteMeToWorkspace, inviteThemToWorkspace
 } from "../utils/workspaces.utils";
 import { PersonalWorkspaceName } from "../utils/constants";
 import { deleteUser, registerUser } from "../utils/users.utils";
@@ -25,6 +25,7 @@ import UpdateFavoritesWorkspaceRequest from "../types/requests/workspace/UpdateF
 import InviteCollaboratorToWorkspaceRequest from "../types/requests/workspace/InviteCollaboratorToWorkspaceRequest";
 import AcceptInvitationToWorkspaceRequest from "../types/requests/workspace/AcceptInvitationToWorkspaceRequest";
 import LeaveWorkspaceRequest from "../types/requests/workspace/LeaveWorkspaceRequest";
+import UpdateOwnerWorkspaceRequest from "../types/requests/workspace/UpdateOwnerWorkspaceRequest";
 
 test.describe('should allow operations on the workspace entity', () => {
   const EMAIL = "michaelj@gmail.com"
@@ -709,7 +710,7 @@ test.describe('should allow operations on the workspace entity', () => {
   })
 
   test('should leave workspace', async ({ request }) => {
-    const workspace = await inviteToWorkspace(request, "somebody_else@yahoo.com", EMAIL)
+    const workspace = await inviteMeToWorkspace(request, "somebody_else@yahoo.com", EMAIL)
 
     const body: LeaveWorkspaceRequest = {
       id: workspace.id,
@@ -817,6 +818,35 @@ test.describe('should allow operations on the workspace entity', () => {
     const newWorkspace = await getWorkspaceOverview(request, body.id)
     expect(newWorkspace).toStrictEqual({
       description: body.description,
+    })
+  })
+
+  test('should update workspace owner', async ({ request }) => {
+    const [workspace, owner] = await inviteThemToWorkspace(request, "guapo@email.com")
+
+    const body: UpdateOwnerWorkspaceRequest = {
+      id: workspace.id,
+      ownerId: owner.id
+    }
+    const response = await request.put('/api/workspaces/owner', {
+      ...useToken(),
+      data: body
+    })
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const newWorkspace = await getWorkspace(request, body.id)
+    expect(newWorkspace).toStrictEqual({
+      name: workspace.name,
+      isFavorite: workspace.isFavorite,
+      isPersonal: workspace.isPersonal,
+      owner: expect.objectContaining({
+        id: body.ownerId
+      })
     })
   })
 

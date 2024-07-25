@@ -37,6 +37,9 @@
   * [Update Overview](#update-overview)
     * [Update Overview Workspace Request](#update-overview-workspace-request)
     * [Update Overview Workspace Response](#update-overview-workspace-response)
+  * [Update Owner](#update-owner)
+    * [Update Owner Workspace Request](#update-owner-workspace-request)
+    * [Update Owner Workspace Response](#update-owner-workspace-response)
   * [Delete](#delete)
     * [Delete Workspace Request](#delete-workspace-request)
     * [Delete Workspace Response](#delete-workspace-response)
@@ -422,6 +425,29 @@ Sends body data that the workspace overview needs to be updated.
 #### Update Overview Workspace Response
 
 Returns a confirmation message that the workspace overview has been updated successfully.
+
+### Update Owner
+
+Only owners of the workspace can update the owner.
+
+```js
+PUT {{host}}/api/workspaces/owner
+```
+
+#### Update Owner Workspace Request
+
+Sends body data that the workspace needs to update the owner.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "ownerId": "10000000-0000-0000-0000-000000000000"
+}
+```
+
+#### Update Owner Workspace Response
+
+Returns a confirmation message that the workspace owner has been updated successfully.
 
 ### Delete
 

@@ -13,6 +13,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateOwner;
 using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
@@ -22,6 +23,7 @@ using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
@@ -54,6 +56,7 @@ public sealed class WorkspaceMappingConfig : IRegister
         UpdateMappings(config);
         UpdateFavoritesMappings(config);
         UpdateOverviewMappings(config);
+        UpdateOwnerMappings(config);
         DeleteMappings(config);
     }
 
@@ -181,6 +184,13 @@ public sealed class WorkspaceMappingConfig : IRegister
         config.NewConfig<UpdateOverviewWorkspaceRequest, UpdateOverviewWorkspaceCommand>();
 
         config.NewConfig<UpdateOverviewWorkspaceResult, UpdateOverviewWorkspaceResponse>();
+    }
+
+    private static void UpdateOwnerMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateOwnerWorkspaceRequest, UpdateOwnerWorkspaceCommand>();
+
+        config.NewConfig<UpdateOwnerWorkspaceResult, UpdateOwnerWorkspaceResponse>();
     }
 
     private static void DeleteMappings(TypeAdapterConfig config)

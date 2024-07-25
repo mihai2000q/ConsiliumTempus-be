@@ -1,7 +1,7 @@
 import { APIRequestContext, expect } from "@playwright/test";
 import { useToken } from "./utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
-import { registerUser } from "./users.utils";
+import { getCurrentUser, registerUser } from "./users.utils";
 import InviteCollaboratorToWorkspaceRequest from "../types/requests/workspace/InviteCollaboratorToWorkspaceRequest";
 import AcceptInvitationToWorkspaceRequest from "../types/requests/workspace/AcceptInvitationToWorkspaceRequest";
 
@@ -125,10 +125,10 @@ export async function getInvitationsByWorkspace(request: APIRequestContext, work
   return (await response.json()).invitations
 }
 
-export async function getInvitations(request: APIRequestContext) {
+export async function getInvitations(request: APIRequestContext, token?: string | undefined) {
   const response = await request.get(
     `/api/workspaces/invitations?isSender=false`,
-    useToken()
+    useToken(token)
   )
   expect(response.ok()).toBeTruthy()
 
@@ -147,10 +147,32 @@ export async function getInvitation(request: APIRequestContext, workspaceId: str
     .filter((i: { workspace: { id: string } }) => i.workspace.id === workspaceId)[0]
 }
 
-export async function inviteToWorkspace(
+export async function acceptInvitation(
+  request: APIRequestContext,
+  collaboratorEmail: string,
+  workspaceId: string,
+  token?: string | undefined
+) {
+  const invitation = (await getInvitations(request, token))
+    .filter((i: { collaborator: { email: string } }) => i.collaborator.email === collaboratorEmail)[0]
+
+  const acceptInvitationToWorkspaceRequest: AcceptInvitationToWorkspaceRequest = {
+    id: workspaceId,
+    invitationId: invitation.id,
+  }
+  const response = await request.post(`/api/workspaces/accept-invitation`, {
+      ...useToken(token),
+      data: acceptInvitationToWorkspaceRequest
+    }
+  )
+
+  expect(response.ok()).toBeTruthy()
+}
+
+export async function inviteMeToWorkspace(
   request: APIRequestContext,
   senderEmail: string,
-  collaboratorEmail: string
+  myEmail: string
 ) {
   const token = (await registerUser(request, senderEmail)).token
   const workspace = await createWorkspace(request, { name: "yet another workspace" }, token)
@@ -158,24 +180,31 @@ export async function inviteToWorkspace(
     request,
     {
       id: workspace.id,
-      email: collaboratorEmail
+      email: myEmail
     },
     token
   )
-  const invitation = (await getInvitations(request))
-    .filter((i: { collaborator: { email: string } }) => i.collaborator.email === collaboratorEmail)[0]
+  await acceptInvitation(request, myEmail, workspace.id)
 
-  const acceptInvitationToWorkspaceRequest: AcceptInvitationToWorkspaceRequest = {
-    id: workspace.id,
-    invitationId: invitation.id,
-  }
-  const response = await request.post(`/api/workspaces/accept-invitation`, {
-      ...useToken(),
-      data: acceptInvitationToWorkspaceRequest
+  return workspace
+}
+
+export async function inviteThemToWorkspace(
+  request: APIRequestContext,
+  collaboratorEmail: string
+) {
+  const token = (await registerUser(request, collaboratorEmail)).token
+  const workspace = await createWorkspace(request, { name: "yet another workspace" })
+  await inviteCollaborator(
+    request,
+    {
+      id: workspace.id,
+      email: collaboratorEmail
     }
   )
 
-  expect(response.ok()).toBeTruthy()
+  await acceptInvitation(request, collaboratorEmail, workspace.id, token)
 
-  return workspace
+  const user = await getCurrentUser(request, token)
+  return [workspace, user]
 }

@@ -10,12 +10,8 @@ const LASTNAME = "Jordan"
 const ROLE = "Pro Basketball Player"
 const DATE_OF_BIRTH = "2000-12-21"
 
-export async function getCurrentUser(request: APIRequestContext) {
-  const response = await request.get('api/users/current', {
-    headers: {
-      'Authorization': `Bearer ${process.env.API_TOKEN}`
-    }
-  })
+export async function getCurrentUser(request: APIRequestContext, token?: string | undefined) {
+  const response = await request.get('api/users/current', useToken(token))
 
   expect(response.ok()).toBeTruthy()
 

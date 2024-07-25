@@ -81,7 +81,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     {
         Name = name;
         UpdatedDateTime = DateTime.UtcNow;
-        RefreshActivity();
+        LastActivity = DateTime.UtcNow;
     }
 
     public void UpdateFavorites(bool isFavorite, UserAggregate user)
@@ -96,7 +96,22 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     {
         Description = description;
         UpdatedDateTime = DateTime.UtcNow;
-        RefreshActivity();
+        LastActivity = DateTime.UtcNow;
+    }
+
+    public void UpdateOwner(UserAggregate owner)
+    {
+        Owner = owner;
+    }
+
+    public void UpdateIsPersonal(IsPersonal isPersonal)
+    {
+        IsPersonal = isPersonal;
+    }
+
+    public void RefreshUpdatedDateTime()
+    {
+        UpdatedDateTime = DateTime.UtcNow;
     }
 
     public void RefreshActivity()
@@ -112,16 +127,6 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     public void RemoveUserMembership(Membership membership)
     {
         _memberships.Remove(membership);
-    }
-
-    public void TransferOwnership(UserAggregate owner)
-    {
-        Owner = owner;
-    }
-
-    public void UpdateIsPersonal(IsPersonal isPersonal)
-    {
-        IsPersonal = isPersonal;
     }
 
     public void AddInvitation(WorkspaceInvitation invitation)
