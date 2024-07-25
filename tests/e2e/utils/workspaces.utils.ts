@@ -3,6 +3,7 @@ import { useToken } from "./utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
 import { registerUser } from "./users.utils";
 import InviteCollaboratorToWorkspaceRequest from "../types/requests/workspace/InviteCollaboratorToWorkspaceRequest";
+import AcceptInvitationToWorkspaceRequest from "../types/requests/workspace/AcceptInvitationToWorkspaceRequest";
 
 export async function getPersonalWorkspace(request: APIRequestContext, token?: string | undefined) {
   const response = await request.get('/api/workspaces?isPersonalWorkspaceFirst=true', useToken(token))
@@ -120,4 +121,37 @@ export async function getInvitations(request: APIRequestContext, workspaceId: st
   )
 
   return (await response.json()).invitations
+}
+
+export async function inviteToWorkspace(
+  request: APIRequestContext,
+  senderEmail: string,
+  collaboratorEmail: string
+) {
+  const token = (await registerUser(request, senderEmail)).token
+  const workspace = await createWorkspace(request, { name: "yet another workspace" }, token)
+  await inviteCollaborator(
+    request,
+    {
+      id: workspace.id,
+      email: collaboratorEmail
+    },
+    token
+  )
+  const invitation = (await getInvitations(request, workspace.id))
+    .filter((i: { collaborator: { email: string } }) => i.collaborator.email === collaboratorEmail)[0]
+
+  const acceptInvitationToWorkspaceRequest: AcceptInvitationToWorkspaceRequest = {
+    id: workspace.id,
+    invitationId: invitation.id,
+  }
+  const response = await request.post(`/api/workspaces/accept-invitation`, {
+      ...useToken(),
+      data: acceptInvitationToWorkspaceRequest
+    }
+  )
+
+  expect(response.ok()).toBeTruthy()
+
+  return workspace
 }

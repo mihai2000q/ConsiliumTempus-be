@@ -26,6 +26,25 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
     }
 
+    public async Task<WorkspaceAggregate?> GetWithMemberships(
+        WorkspaceId id,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Workspaces
+            .Include(w => w.Memberships)
+            .ThenInclude(m => m.User)
+            .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
+    }
+
+    public async Task<WorkspaceAggregate?> GetWithInvitations(
+        WorkspaceId id,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Workspaces
+            .Include(w => w.Invitations)
+            .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
+    }
+    
     public async Task<WorkspaceAggregate?> GetWithMembershipsAndInvitations(
         WorkspaceId id,
         CancellationToken cancellationToken = default)

@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
@@ -49,6 +50,13 @@ public static class WorkspaceCommandFactory
         return new RejectInvitationToWorkspaceCommand(
             id ?? Guid.NewGuid(),
             invitationId ?? Guid.NewGuid());
+    }
+
+    public static LeaveWorkspaceCommand CreateLeaveWorkspaceCommand(
+        Guid? id = null)
+    {
+        return new LeaveWorkspaceCommand(
+            id ?? Guid.NewGuid());
     }
 
     public static UpdateWorkspaceCommand CreateUpdateWorkspaceCommand(
