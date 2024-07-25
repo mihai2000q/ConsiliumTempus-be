@@ -68,7 +68,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         response!.Workspaces.First().IsPersonal.Should().BeTrue();
 
         response.Workspaces.First().Owner.Id.Should().Be(user.Id.Value);
-        response.Workspaces.First().Owner.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+        response.Workspaces.First().Owner.Name.Should().Be(user.Name.Value);
         response.Workspaces.First().Owner.Email.Should().Be(user.Credentials.Email);
 
         Utils.Workspace.AssertGetCollectionResponse(

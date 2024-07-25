@@ -16,6 +16,9 @@
   * [Update](#update)
     * [Update Project Task Request](#update-project-task-request)
     * [Update Project Task Response](#update-project-task-response)
+  * [Update Is Completed](#update-is-completed)
+    * [Update Is Completed Project Task Request](#update-is-completed-project-task-request)
+    * [Update Is Completed Project Task Response](#update-is-completed-project-task-response)
   * [Update Overview](#update-overview)
     * [Update Overview Project Task Request](#update-overview-project-task-request)
     * [Update Overview Project Task Response](#update-overview-project-task-response)
@@ -165,10 +168,10 @@ Returns a confirmation message that the project task has been created successful
 ### Move
 
 All members that are part of the workspace can move a project task
-([Update Project Task Permission](../Security.md/#permissions)).
+([Move Project Task Permission](../Security.md/#permissions)).
 
 ```js
-PUT {{host}}/api/projects/tasks/move
+POST {{host}}/api/projects/tasks/move
 ```
 
 #### Move Project Task Request
@@ -211,16 +214,16 @@ Sends body data that the project task needs to be updated.
 
 Returns a confirmation message that the project task has been updated successfully.
 
-### Update
+### Update Is Completed
 
 All members that are part of the workspace can update a project task
-([Update Project Task Permission](../Security.md/#permissions)).
+([Update Is Completed Project Task Permission](../Security.md/#permissions)).
 
 ```js
 PUT {{host}}/api/projects/tasks/is-completed
 ```
 
-#### Update Project Task Request
+#### Update Is Completed Project Task Request
 
 Sends body data that the project task needs to update the completion status.
 
@@ -238,7 +241,7 @@ Returns a confirmation message that the project task's completion status has bee
 ### Update Overview
 
 All members that are part of the workspace can update a project task overview
-([Update Project Task Permission](../Security.md/#permissions)).
+([Update Overview Project Task Permission](../Security.md/#permissions)).
 
 ```js
 PUT {{host}}/api/projects/tasks/overview

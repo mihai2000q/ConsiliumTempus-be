@@ -28,32 +28,69 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
 
     private static readonly List<Permissions> ViewPermissions =
     [
-        Permissions.ReadWorkspace,
-        Permissions.ReadProject, Permissions.ReadCollectionProject,
+        // Workspace
+        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace, Permissions.ReadCollaboratorsFromWorkspace, 
+        Permissions.UpdateFavoritesWorkspace,
+        // Project
+        Permissions.ReadProject, Permissions.ReadOverviewProject, Permissions.ReadCollectionProject,
+        Permissions.UpdateFavoritesProject,
+        // Project - Project Status
+        Permissions.ReadStatusesFromProject,
+        // Project Sprint
         Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint,
+        // Project Sprint - Project Stage
+        Permissions.ReadStagesFromProjectSprint,
+        // Project Task
         Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask
     ];
 
     private static readonly List<Permissions> MemberPermissions =
     [
-        Permissions.ReadWorkspace, Permissions.UpdateWorkspace,
-        Permissions.ReadProject, Permissions.ReadCollectionProject, Permissions.UpdateProject,
+        // Workspace
+        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace, Permissions.ReadCollaboratorsFromWorkspace, 
+        Permissions.UpdateWorkspace, Permissions.UpdateFavoritesWorkspace, Permissions.UpdateOverviewWorkspace,
+        // Project
+        Permissions.ReadProject, Permissions.ReadOverviewProject, Permissions.ReadCollectionProject,
+        Permissions.UpdateProject, Permissions.UpdateFavoritesProject, Permissions.UpdateOverviewProject,
+        // Project - Project Status
         Permissions.ReadStatusesFromProject, Permissions.UpdateStatusFromProject,
-        Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint, Permissions.UpdateStageFromProjectSprint,
+        // Project Sprint
+        Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint,
+        // Project Sprint - Project Stage
+        Permissions.ReadStagesFromProjectSprint, Permissions.UpdateStageFromProjectSprint,
+        // Project Task
         Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask,
-        Permissions.UpdateProjectTask, Permissions.DeleteProjectTask,
+        Permissions.MoveProjectTask, 
+        Permissions.UpdateProjectTask, Permissions.UpdateIsCompletedProjectTask, Permissions.UpdateOverviewProjectTask,
+        Permissions.DeleteProjectTask,
     ];
 
     private static readonly List<Permissions> AdminPermissions =
     [
-        Permissions.ReadWorkspace, Permissions.UpdateWorkspace, Permissions.DeleteWorkspace,
-        Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadCollectionProject,
-        Permissions.UpdateProject, Permissions.DeleteProject,
-        Permissions.AddStatusToProject, Permissions.ReadStatusesFromProject, Permissions.RemoveStatusFromProject, Permissions.UpdateStatusFromProject,
-        Permissions.CreateProjectSprint, Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint, Permissions.DeleteProjectSprint,
-        Permissions.AddStageToProjectSprint, Permissions.UpdateStageFromProjectSprint, Permissions.RemoveStageFromProjectSprint,
+        // Workspace
+        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace, Permissions.ReadCollaboratorsFromWorkspace, 
+        Permissions.ReadInvitationsFromWorkspace, Permissions.InviteCollaboratorToWorkspace,
+        Permissions.UpdateWorkspace, Permissions.UpdateFavoritesWorkspace, Permissions.UpdateOverviewWorkspace,
+        Permissions.DeleteWorkspace,
+        // Project
+        Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadOverviewProject, Permissions.ReadCollectionProject,
+        Permissions.UpdateProject, Permissions.UpdateFavoritesProject, Permissions.UpdateOverviewProject, 
+        Permissions.DeleteProject,
+        // Project - Project Status
+        Permissions.AddStatusToProject, Permissions.ReadStatusesFromProject, Permissions.RemoveStatusFromProject,
+        Permissions.UpdateStatusFromProject,
+        // Project Sprint
+        Permissions.CreateProjectSprint, Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint,
+        Permissions.UpdateProjectSprint, Permissions.DeleteProjectSprint,
+        // Project Sprint - Project Stage
+        Permissions.AddStageToProjectSprint, Permissions.ReadStagesFromProjectSprint, 
+        Permissions.MoveStageFromProjectSprint, Permissions.UpdateStageFromProjectSprint,
+        Permissions.RemoveStageFromProjectSprint,
+        // Project Task
         Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask,
-        Permissions.UpdateProjectTask, Permissions.DeleteProjectTask,
+        Permissions.MoveProjectTask, 
+        Permissions.UpdateProjectTask, Permissions.UpdateIsCompletedProjectTask, Permissions.UpdateOverviewProjectTask,
+        Permissions.DeleteProjectTask,
     ];
 
     public static readonly Dictionary<WorkspaceRole, List<Permissions>> DefaultData = new()

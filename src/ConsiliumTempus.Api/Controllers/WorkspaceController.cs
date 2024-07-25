@@ -52,7 +52,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         );
     }
 
-    [HasPermission(Permissions.ReadWorkspace)]
+    [HasPermission(Permissions.ReadOverviewWorkspace)]
     [HttpGet("Overview/{id:guid}")]
     public async Task<IActionResult> GetOverview(GetOverviewWorkspaceRequest request,
         CancellationToken cancellationToken)
@@ -81,7 +81,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         );
     }
 
-    [HasPermission(Permissions.ReadWorkspace)]
+    [HasPermission(Permissions.ReadCollaboratorsFromWorkspace)]
     [HttpGet("{id:guid}/Collaborators")]
     public async Task<IActionResult> GetCollaborators(GetCollaboratorsFromWorkspaceRequest request,
         CancellationToken cancellationToken)
@@ -95,6 +95,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         );
     }
 
+    [HasPermission(Permissions.ReadInvitationsFromWorkspace)]
     [HttpGet("Invitations")]
     public async Task<IActionResult> GetInvitations(GetInvitationsWorkspaceRequest request, 
         CancellationToken cancellationToken)
@@ -120,6 +121,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         );
     }
 
+    [HasPermission(Permissions.InviteCollaboratorToWorkspace)]
     [HttpPost("Invite-Collaborator")]
     public async Task<IActionResult> InviteCollaborator(InviteCollaboratorToWorkspaceRequest request,
         CancellationToken cancellationToken)
@@ -184,7 +186,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         );
     }
 
-    [HasPermission(Permissions.UpdateWorkspace)]
+    [HasPermission(Permissions.UpdateFavoritesWorkspace)]
     [HttpPut("Favorites")]
     public async Task<IActionResult> UpdateFavorites(UpdateFavoritesWorkspaceRequest request,
         CancellationToken cancellationToken)
@@ -198,7 +200,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         );
     }
 
-    [HasPermission(Permissions.UpdateWorkspace)]
+    [HasPermission(Permissions.UpdateOverviewWorkspace)]
     [HttpPut("Overview")]
     public async Task<IActionResult> UpdateOverview(UpdateOverviewWorkspaceRequest request,
         CancellationToken cancellationToken)

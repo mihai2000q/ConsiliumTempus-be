@@ -32,7 +32,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/projects/tasks/Move", request);
+        var outcome = await Client.Post("api/projects/tasks/Move", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -68,7 +68,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/projects/tasks/Move", request);
+        var outcome = await Client.Post("api/projects/tasks/Move", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -102,7 +102,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/projects/tasks/Move", request);
+        var outcome = await Client.Post("api/projects/tasks/Move", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -140,7 +140,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/projects/tasks/Move", request);
+        var outcome = await Client.Post("api/projects/tasks/Move", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -178,7 +178,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/projects/tasks/Move", request);
+        var outcome = await Client.Post("api/projects/tasks/Move", request);
 
         // Assert
         await outcome.ValidateError(Errors.ProjectTask.OverNotFound);
@@ -199,7 +199,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
         var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest();
 
         // Act
-        var outcome = await Client.Put("api/projects/tasks/Move", request);
+        var outcome = await Client.Post("api/projects/tasks/Move", request);
 
         // Assert
         await outcome.ValidateError(Errors.ProjectTask.NotFound);

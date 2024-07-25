@@ -49,7 +49,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
-    [HasPermission(Permissions.ReadProject)]
+    [HasPermission(Permissions.ReadOverviewProject)]
     [HttpGet("Overview/{id:guid}")]
     public async Task<IActionResult> GetOverview(GetOverviewProjectRequest request, CancellationToken cancellationToken)
     {
@@ -132,7 +132,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
-    [HasPermission(Permissions.UpdateProject)]
+    [HasPermission(Permissions.UpdateFavoritesProject)]
     [HttpPut("Favorites")]
     public async Task<IActionResult> UpdateFavorites(UpdateFavoritesProjectRequest request, 
         CancellationToken cancellationToken)
@@ -146,7 +146,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
-    [HasPermission(Permissions.UpdateProject)]
+    [HasPermission(Permissions.UpdateOverviewProject)]
     [HttpPut("Overview")]
     public async Task<IActionResult> UpdateOverview(UpdateOverviewProjectRequest request,
         CancellationToken cancellationToken)

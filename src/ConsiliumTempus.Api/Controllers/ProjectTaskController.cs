@@ -65,8 +65,8 @@ public sealed class ProjectTaskController(IMapper mapper, ISender mediator) : Ap
         );
     }
 
-    [HasPermission(Permissions.UpdateProjectTask)]
-    [HttpPut("Move")]
+    [HasPermission(Permissions.MoveProjectTask)]
+    [HttpPost("Move")]
     public async Task<IActionResult> Move(MoveProjectTaskRequest request, CancellationToken cancellationToken)
     {
         var command = Mapper.Map<MoveProjectTaskCommand>(request);
@@ -91,9 +91,9 @@ public sealed class ProjectTaskController(IMapper mapper, ISender mediator) : Ap
         );
     }
 
-    [HasPermission(Permissions.UpdateProjectTask)]
+    [HasPermission(Permissions.UpdateIsCompletedProjectTask)]
     [HttpPut("Is-Completed")]
-    public async Task<IActionResult> UpdateIsCompleted(UpdateIsCompletedProjectTaskRequest request, 
+    public async Task<IActionResult> UpdateIsCompleted(UpdateIsCompletedProjectTaskRequest request,
         CancellationToken cancellationToken)
     {
         var command = Mapper.Map<UpdateIsCompletedProjectTaskCommand>(request);
@@ -105,9 +105,10 @@ public sealed class ProjectTaskController(IMapper mapper, ISender mediator) : Ap
         );
     }
 
-    [HasPermission(Permissions.UpdateProjectTask)]
+    [HasPermission(Permissions.UpdateOverviewProjectTask)]
     [HttpPut("Overview")]
-    public async Task<IActionResult> UpdateOverview(UpdateOverviewProjectTaskRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateOverview(UpdateOverviewProjectTaskRequest request,
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<UpdateOverviewProjectTaskCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);

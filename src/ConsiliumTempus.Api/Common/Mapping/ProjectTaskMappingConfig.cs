@@ -51,7 +51,7 @@ public sealed class ProjectTaskMappingConfig : IRegister
             .Map(dest => dest.Workspace, src => src.Stage.Sprint.Project.Workspace);
         config.NewConfig<UserAggregate, GetProjectTaskResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
         config.NewConfig<ProjectStage, GetProjectTaskResponse.ProjectStageResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
@@ -78,7 +78,7 @@ public sealed class ProjectTaskMappingConfig : IRegister
             .Map(dest => dest.IsCompleted, src => src.IsCompleted.Value);
         config.NewConfig<UserAggregate, GetCollectionProjectTaskResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 

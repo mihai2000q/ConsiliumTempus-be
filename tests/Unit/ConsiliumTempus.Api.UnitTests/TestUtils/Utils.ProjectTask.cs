@@ -135,7 +135,7 @@ internal static partial class Utils
                 .Should().AllSatisfy(p => AssertProjectTaskResponse(p.First, p.Second));
             response.TotalCount.Should().Be(result.TotalCount);
         }
-        
+
         private static void AssertUserResponse(
             GetProjectTaskResponse.UserResponse? response,
             UserAggregate? user)
@@ -147,7 +147,7 @@ internal static partial class Utils
             }
 
             response!.Id.Should().Be(user.Id.Value);
-            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Name.Should().Be(user.Name.Value);
             response.Email.Should().Be(user.Credentials.Email);
         }
 
@@ -206,7 +206,7 @@ internal static partial class Utils
             }
 
             response!.Id.Should().Be(user.Id.Value);
-            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Name.Should().Be(user.Name.Value);
             response.Email.Should().Be(user.Credentials.Email);
         }
     }

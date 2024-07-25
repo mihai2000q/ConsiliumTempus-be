@@ -99,7 +99,7 @@ Returns a project.
 ### Get Overview
 
 Anyone that is part of the workspace can read a project overview
-([Read Project Permission](../Security.md/#permissions)).
+([Read Overview Project Permission](../Security.md/#permissions)).
 
 ```js
 GET {{host}}/api/projects/overview/{id}
@@ -332,8 +332,8 @@ Returns a confirmation message that the project has been updated successfully.
 
 ### Update Favorites
 
-All members that are part of the workspace can update a project
-([Update Project Permission](../Security.md/#permissions)).
+Anyone that is part of the workspace can add the project to favorites
+([Update Favorites Project Permission](../Security.md/#permissions)).
 
 ```js
 PUT {{host}}/api/projects/favorites
@@ -357,7 +357,7 @@ Returns a confirmation message that the project favorites have been updated succ
 ### Update Overview
 
 All members that are part of the workspace can update a project overview
-([Update Project Permission](../Security.md/#permissions)).
+([Update Overview Project Permission](../Security.md/#permissions)).
 
 ```js
 PUT {{host}}/api/projects/overview

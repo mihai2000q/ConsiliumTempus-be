@@ -53,7 +53,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
             .Map(dest => dest.UpdatedDateTime, src => src.Audit.UpdatedDateTime);
         config.NewConfig<UserAggregate, GetProjectSprintResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 

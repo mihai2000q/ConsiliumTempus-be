@@ -1,7 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
-using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ErrorOr;
@@ -18,9 +17,8 @@ public sealed class GetInvitationsWorkspaceQueryHandler(
         CancellationToken cancellationToken)
     {
         var user = query.IsSender is not null 
-            ? await currentUserProvider.GetCurrentUser(cancellationToken)
+            ? await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken)
             : null;
-        if (query.IsSender is not null && user is null) return Errors.User.NotFound;
 
         var paginationInfo = PaginationInfo.Create(query.PageSize, query.CurrentPage);
         var workspaceId = query.WorkspaceId.IfNotNull(WorkspaceId.Create);

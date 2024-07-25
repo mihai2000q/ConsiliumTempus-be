@@ -45,7 +45,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static bool AssertGetStagesQuery(
             GetStagesFromProjectSprintQuery query,
             GetStagesFromProjectSprintRequest request)
@@ -112,7 +112,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static bool AssertMoveStageCommand(
             MoveStageFromProjectSprintCommand command,
             MoveStageFromProjectSprintRequest request)
@@ -163,7 +163,7 @@ internal static partial class Utils
             response.Sprints.Zip(result.Sprints)
                 .Should().AllSatisfy(p => AssertProjectSprintResponse(p.First, p.Second));
         }
-        
+
         internal static void AssertGetStagesResponse(
             GetStagesFromProjectSprintResponse response,
             GetStagesFromProjectSprintResult result)
@@ -171,7 +171,7 @@ internal static partial class Utils
             response.Stages.Zip(result.Stages)
                 .Should().AllSatisfy(p => AssertProjectStageResponse(p.First, p.Second));
         }
-        
+
         private static void AssertUserResponse(
             GetProjectSprintResponse.UserResponse? response,
             UserAggregate? user)
@@ -181,9 +181,9 @@ internal static partial class Utils
                 response.Should().BeNull();
                 return;
             }
-            
+
             response!.Id.Should().Be(user.Id.Value);
-            response.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            response.Name.Should().Be(user.Name.Value);
             response.Email.Should().Be(user.Credentials.Email);
         }
 
@@ -197,7 +197,7 @@ internal static partial class Utils
             response.EndDate.Should().Be(projectSprint.EndDate);
             response.CreatedDateTime.Should().Be(projectSprint.Audit.CreatedDateTime);
         }
-        
+
         private static void AssertProjectStageResponse(
             GetStagesFromProjectSprintResponse.ProjectStageResponse response,
             ProjectStage projectStage)

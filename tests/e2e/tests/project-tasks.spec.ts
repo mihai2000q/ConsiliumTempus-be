@@ -412,7 +412,7 @@ test.describe('should allow operations on the project task entity', () => {
       id: task2.id,
       overId: task3.id
     }
-    const response = await request.put('/api/projects/tasks/move', {
+    const response = await request.post('/api/projects/tasks/move', {
       ...useToken(),
       data: body
     });

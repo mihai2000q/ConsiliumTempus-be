@@ -4,13 +4,10 @@ using ConsiliumTempus.Application.UnitTests.TestData.Workspace.Queries.GetInvita
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Queries.GetInvitations;
 using ConsiliumTempus.Common.UnitTests.User;
-using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Common.UnitTests.Workspace.Entities;
-using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
-using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.Workspace.Queries.GetInvitations;
 
@@ -39,7 +36,7 @@ public class GetInvitationsWorkspaceQueryHandlerTest
         // Arrange
         var user = UserFactory.Create();
         _currentUserProvider
-            .GetCurrentUser()
+            .GetCurrentUserAfterPermissionCheck()
             .Returns(user);
 
         var invitations = WorkspaceInvitationFactory.CreateList();
@@ -66,7 +63,7 @@ public class GetInvitationsWorkspaceQueryHandlerTest
         if (query.IsSender is not null)
             await _currentUserProvider
                 .Received(1)
-                .GetCurrentUser();
+                .GetCurrentUserAfterPermissionCheck();
 
         await _workspaceRepository
             .Received(1)
@@ -87,26 +84,5 @@ public class GetInvitationsWorkspaceQueryHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Invitations.Should().BeEquivalentTo(invitations);
         outcome.Value.TotalCount.Should().Be(totalCount);
-    }
-
-    [Fact]
-    public async Task HandleGetInvitationsWorkspaceQuery_WhenUserIsNull_ShouldReturnUserNotFoundError()
-    {
-        // Arrange
-        var query = WorkspaceQueryFactory.CreateGetInvitationsWorkspaceQuery(isSender: false);
-
-        _currentUserProvider
-            .GetCurrentUser()
-            .ReturnsNull();
-
-        // Act
-        var outcome = await _uut.Handle(query, default);
-
-        // Assert
-        await _currentUserProvider
-            .Received(1)
-            .GetCurrentUser();
-
-        outcome.ValidateError(Errors.User.NotFound);
     }
 }

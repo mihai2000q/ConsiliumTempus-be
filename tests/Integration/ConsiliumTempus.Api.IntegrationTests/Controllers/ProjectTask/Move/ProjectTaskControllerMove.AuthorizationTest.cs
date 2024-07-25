@@ -61,6 +61,6 @@ public class ProjectTaskControllerMoveAuthorizationTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Put("api/projects/tasks/Move", request);
+        return await Client.Post("api/projects/tasks/Move", request);
     }
 }

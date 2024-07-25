@@ -17,9 +17,9 @@ public class ProjectSprintControllerMoveStageAuthorizationTest(WebAppFactory fac
     }
 
     [Fact]
-    public async Task MoveStageFromProjectSprint_WhenWithMemberRole_ShouldReturnSuccessResponse()
+    public async Task MoveStageFromProjectSprint_WhenWithMemberRole_ShouldReturnForbiddenResponse()
     {
-        await AssertSuccessfulResponse(ProjectSprintData.Users[3]);
+        await AssertForbiddenResponse(ProjectSprintData.Users[3]);
     }
 
     [Fact]
@@ -63,6 +63,6 @@ public class ProjectSprintControllerMoveStageAuthorizationTest(WebAppFactory fac
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Put("api/projects/sprints/Move-Stage/", request);
+        return await Client.Post("api/projects/sprints/Move-Stage/", request);
     }
 }

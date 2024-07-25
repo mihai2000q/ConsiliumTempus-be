@@ -4,32 +4,32 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.UpdateFavorites;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.InviteCollaborator;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerUpdateFavoritesAuthorizationTest(WebAppFactory factory)
+public class WorkspaceControllerInviteCollaboratorAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task UpdateFavoritesWorkspace_WhenWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task InviteCollaboratorToWorkspace_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(WorkspaceData.Users[0]);
     }
 
     [Fact]
-    public async Task UpdateFavoritesWorkspace_WhenWithMemberRole_ShouldReturnSuccessResponse()
+    public async Task InviteCollaboratorToWorkspace_WhenWithMemberRole_ShouldReturnForbiddenResponse()
     {
-        await AssertSuccessfulResponse(WorkspaceData.Users[3]);
+        await AssertForbiddenResponse(WorkspaceData.Users[3]);
     }
 
     [Fact]
-    public async Task UpdateFavoritesWorkspace_WhenWithViewRole_ShouldReturnSuccessResponse()
+    public async Task InviteCollaboratorToWorkspace_WhenWithViewRole_ShouldReturnForbiddenResponse()
     {
-        await AssertSuccessfulResponse(WorkspaceData.Users[4]);
+        await AssertForbiddenResponse(WorkspaceData.Users[4]);
     }
 
     [Fact]
-    public async Task UpdateFavoritesWorkspace_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task InviteCollaboratorToWorkspace_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(WorkspaceData.Users[1]);
     }
@@ -54,10 +54,10 @@ public class WorkspaceControllerUpdateFavoritesAuthorizationTest(WebAppFactory f
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();
-        var request = WorkspaceRequestFactory.CreateUpdateFavoritesWorkspaceRequest(id: workspace.Id.Value);
+        var request = WorkspaceRequestFactory.CreateInviteCollaboratorToWorkspaceRequest(id: workspace.Id.Value);
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Put("api/workspaces/Favorites", request);
+        return await Client.Post("api/workspaces/invite-collaborator", request);
     }
 }

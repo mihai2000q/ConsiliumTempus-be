@@ -23,9 +23,9 @@ public class ProjectControllerDeleteAuthorizationTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetStatuses_WhenWithViewRole_ShouldReturnForbiddenResponse()
+    public async Task GetStatuses_WhenWithViewRole_ShouldReturnSuccessResponse()
     {
-        await AssertForbiddenResponse(ProjectData.Users[4]);
+        await AssertSuccessfulRequest(ProjectData.Users[4]);
     }
 
     [Fact]

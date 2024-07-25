@@ -3,14 +3,18 @@ import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
 import {
   createWorkspace,
-  createWorkspaces, getCollaborators,
+  createWorkspaces,
+  getCollaborators,
+  getInvitation,
   getInvitations,
+  getInvitationsByWorkspace,
   getPersonalWorkspace,
   getWorkspace,
   getWorkspaceOverview,
   getWorkspaces,
   inviteCollaborator,
-  inviteCollaboratorWithRegister, inviteToWorkspace
+  inviteCollaboratorWithRegister,
+  inviteToWorkspace
 } from "../utils/workspaces.utils";
 import { PersonalWorkspaceName } from "../utils/constants";
 import { deleteUser, registerUser } from "../utils/users.utils";
@@ -597,7 +601,7 @@ test.describe('should allow operations on the workspace entity', () => {
       message: expect.any(String)
     })
 
-    const invitations = await getInvitations(request, workspace.id)
+    const invitations = await getInvitationsByWorkspace(request, workspace.id)
     expect(invitations).toHaveLength(1)
     expect(invitations).toStrictEqual([
       {
@@ -633,8 +637,7 @@ test.describe('should allow operations on the workspace entity', () => {
       },
       token
     )
-    const invitation = (await getInvitations(request, workspace.id))
-      .filter((i: { collaborator: { email: string } }) => i.collaborator.email === EMAIL)[0]
+    const invitation = await getInvitation(request, workspace.id)
 
     const body: AcceptInvitationToWorkspaceRequest = {
       id: workspace.id,
@@ -652,7 +655,7 @@ test.describe('should allow operations on the workspace entity', () => {
       message: expect.any(String)
     })
 
-    const invitations = await getInvitations(request, workspace.id)
+    const invitations = await getInvitations(request)
     expect(invitations).toHaveLength(0)
 
     const collaborators = await getCollaborators(request, workspace.id)
@@ -683,8 +686,7 @@ test.describe('should allow operations on the workspace entity', () => {
       },
       token
     )
-    const invitation = (await getInvitations(request, workspace.id))
-      .filter((i: { collaborator: { email: string } }) => i.collaborator.email === EMAIL)[0]
+    const invitation = await getInvitation(request, workspace.id)
 
     const body: AcceptInvitationToWorkspaceRequest = {
       id: workspace.id,
@@ -702,7 +704,7 @@ test.describe('should allow operations on the workspace entity', () => {
       message: expect.any(String)
     })
     
-    const invitations = await getInvitations(request, workspace.id)
+    const invitations = await getInvitations(request)
     expect(invitations).toHaveLength(0)
   })
 

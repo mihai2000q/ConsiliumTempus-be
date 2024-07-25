@@ -215,7 +215,7 @@ internal static partial class Utils
             AssertUserResponse(response.UpdatedBy, projectStatus.Audit.UpdatedBy);
             response.UpdatedDateTime.Should().Be(projectStatus.Audit.UpdatedDateTime);
         }
-        
+
         private static void AssertWorkspaceResponse(
             GetProjectResponse.WorkspaceResponse workspaceResponse,
             WorkspaceAggregate workspace)
@@ -235,7 +235,7 @@ internal static partial class Utils
             }
 
             userResponse!.Id.Should().Be(user.Id.Value);
-            userResponse.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            userResponse.Name.Should().Be(user.Name.Value);
             userResponse.Email.Should().Be(user.Credentials.Email);
         }
 
@@ -260,7 +260,7 @@ internal static partial class Utils
             UserAggregate user)
         {
             userResponse.Id.Should().Be(user.Id.Value);
-            userResponse.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            userResponse.Name.Should().Be(user.Name.Value);
             userResponse.Email.Should().Be(user.Credentials.Email);
         }
 
@@ -304,7 +304,7 @@ internal static partial class Utils
             }
 
             userResponse!.Id.Should().Be(user.Id.Value);
-            userResponse.Name.Should().Be(user.FirstName.Value + " " + user.LastName.Value);
+            userResponse.Name.Should().Be(user.Name.Value);
             userResponse.Email.Should().Be(user.Credentials.Email);
         }
     }

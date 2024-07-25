@@ -24,7 +24,7 @@ public class ProjectSprintControllerMoveStageValidationTest(WebAppFactory factor
 
         // Act
         Client.UseCustomToken(ProjectSprintData.Users.First());
-        var outcome = await Client.Put("api/projects/sprints/Move-Stage", request);
+        var outcome = await Client.Post("api/projects/sprints/Move-Stage", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -40,7 +40,7 @@ public class ProjectSprintControllerMoveStageValidationTest(WebAppFactory factor
             overStageId: Guid.Empty);  
 
         // Act
-        var outcome = await Client.Put("api/projects/sprints/Move-Stage", request);
+        var outcome = await Client.Post("api/projects/sprints/Move-Stage", request);
 
         // Assert
         await outcome.ValidateValidationErrors();
