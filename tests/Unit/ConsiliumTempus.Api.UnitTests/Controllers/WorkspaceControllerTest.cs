@@ -13,6 +13,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateOwner;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
@@ -24,6 +25,7 @@ using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
@@ -658,6 +660,53 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<UpdateOverviewWorkspaceCommand>(
                 command => Utils.Workspace.AssertUpdateOverviewCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task UpdateOwner_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateUpdateOwnerWorkspaceRequest();
+
+        var result = WorkspaceResultFactory.CreateUpdateOwnerWorkspaceResult();
+        _mediator
+            .Send(Arg.Any<UpdateOwnerWorkspaceCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.UpdateOwner(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateOwnerWorkspaceCommand>(
+                command => Utils.Workspace.AssertUpdateOwnerCommand(command, request)));
+
+        var response = outcome.ToResponse<UpdateOwnerWorkspaceResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task UpdateOwner_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateUpdateOwnerWorkspaceRequest();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdateOwnerWorkspaceCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.UpdateOwner(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateOwnerWorkspaceCommand>(
+                command => Utils.Workspace.AssertUpdateOwnerCommand(command, request)));
 
         outcome.ValidateError(error);
     }

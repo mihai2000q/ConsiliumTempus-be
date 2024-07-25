@@ -14,6 +14,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateOwner;
 using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
@@ -23,6 +24,7 @@ using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
@@ -210,6 +212,19 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
         return result.Match(
             updateOverviewResult => Ok(Mapper.Map<UpdateOverviewWorkspaceResponse>(updateOverviewResult)),
+            Problem
+        );
+    }
+
+    [HttpPut("Owner")]
+    public async Task<IActionResult> UpdateOwner(UpdateOwnerWorkspaceRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateOwnerWorkspaceCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateOwnerResult => Ok(Mapper.Map<UpdateOwnerWorkspaceResponse>(updateOwnerResult)),
             Problem
         );
     }

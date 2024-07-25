@@ -11,6 +11,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateOwner;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
@@ -172,8 +173,8 @@ internal static partial class Utils
 
             // changed
             newWorkspace.Name.Value.Should().Be(request.Name);
-            newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdatedFavorites(
@@ -197,8 +198,23 @@ internal static partial class Utils
 
             // changed
             newWorkspace.Description.Value.Should().Be(request.Description);
-            newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertUpdatedOwner(
+            WorkspaceAggregate newWorkspace,
+            UpdateOwnerWorkspaceRequest request,
+            UserAggregate owner)
+        {
+            // unchanged
+            newWorkspace.Id.Value.Should().Be(request.Id);
+            owner.Id.Value.Should().Be(request.OwnerId);
+
+            // changed
+            newWorkspace.Owner.Should().Be(owner);
+            newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
         
         private static void AssertUserResponse(

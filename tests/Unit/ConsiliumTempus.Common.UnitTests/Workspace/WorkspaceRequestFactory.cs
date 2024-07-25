@@ -12,6 +12,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateOwner;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.Workspace;
@@ -143,6 +144,15 @@ public static class WorkspaceRequestFactory
         return new UpdateOverviewWorkspaceRequest(
             id ?? Guid.NewGuid(),
             description);
+    }
+
+    public static UpdateOwnerWorkspaceRequest CreateUpdateOwnerWorkspaceRequest(
+        Guid? id = null,
+        Guid? ownerId = null)
+    {
+        return new UpdateOwnerWorkspaceRequest(
+            id ?? Guid.NewGuid(),
+            ownerId ?? Guid.NewGuid());
     }
 
     public static DeleteWorkspaceRequest CreateDeleteWorkspaceRequest(Guid? id = null)

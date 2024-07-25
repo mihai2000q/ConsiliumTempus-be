@@ -12,6 +12,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateOwner;
 using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
@@ -21,6 +22,7 @@ using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
@@ -163,6 +165,16 @@ internal static partial class Utils
         {
             command.Id.Should().Be(request.Id);
             command.Description.Should().Be(request.Description);
+
+            return true;
+        }
+
+        internal static bool AssertUpdateOwnerCommand(
+            UpdateOwnerWorkspaceCommand command,
+            UpdateOwnerWorkspaceRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.OwnerId.Should().Be(request.OwnerId);
 
             return true;
         }
