@@ -109,6 +109,11 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
         _memberships.Add(membership);
     }
 
+    public void RemoveUserMembership(Membership membership)
+    {
+        _memberships.Remove(membership);
+    }
+
     public void TransferOwnership(UserAggregate owner)
     {
         Owner = owner;

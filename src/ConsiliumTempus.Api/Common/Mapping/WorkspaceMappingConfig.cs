@@ -8,6 +8,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
+using ConsiliumTempus.Api.Contracts.Workspace.Leave;
 using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
@@ -16,6 +17,7 @@ using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
@@ -48,6 +50,7 @@ public sealed class WorkspaceMappingConfig : IRegister
         InviteCollaboratorMappings(config);
         AcceptInvitationMappings(config);
         RejectInvitationMappings(config);
+        LeaveMappings(config);
         UpdateMappings(config);
         UpdateFavoritesMappings(config);
         UpdateOverviewMappings(config);
@@ -150,6 +153,13 @@ public sealed class WorkspaceMappingConfig : IRegister
         config.NewConfig<RejectInvitationToWorkspaceRequest, RejectInvitationToWorkspaceCommand>();
 
         config.NewConfig<RejectInvitationToWorkspaceResult, RejectInvitationToWorkspaceResponse>();
+    }
+
+    private static void LeaveMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<LeaveWorkspaceRequest, LeaveWorkspaceCommand>();
+
+        config.NewConfig<LeaveWorkspaceResult, LeaveWorkspaceResponse>();
     }
 
     private static void UpdateMappings(TypeAdapterConfig config)

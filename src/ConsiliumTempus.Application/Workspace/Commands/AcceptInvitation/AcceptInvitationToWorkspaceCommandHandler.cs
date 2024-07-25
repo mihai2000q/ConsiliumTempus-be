@@ -33,6 +33,7 @@ public sealed class AcceptInvitationToWorkspaceCommandHandler(
             WorkspaceRole.Admin);
         workspace.AddUserMembership(membership);
         workspace.RemoveInvitation(invitation);
+        workspace.RefreshActivity();
 
         return new AcceptInvitationToWorkspaceResult();
     }

@@ -32,7 +32,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
         var invitation = WorkspaceInvitationFactory.Create();
         workspace.AddInvitation(invitation);
         _workspaceRepository
-            .GetWithMembershipsAndInvitations(Arg.Any<WorkspaceId>())
+            .GetWithInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         var command = WorkspaceCommandFactory.CreateRejectInvitationToWorkspaceCommand(
@@ -45,7 +45,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMembershipsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
+            .GetWithInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new RejectInvitationToWorkspaceResult());
@@ -61,7 +61,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
 
         var workspace = WorkspaceFactory.Create();
         _workspaceRepository
-            .GetWithMembershipsAndInvitations(Arg.Any<WorkspaceId>())
+            .GetWithInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         // Act
@@ -70,7 +70,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMembershipsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
+            .GetWithInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
 
         outcome.ValidateError(Errors.WorkspaceInvitation.NotFound);
     }
@@ -82,7 +82,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateRejectInvitationToWorkspaceCommand();
 
         _workspaceRepository
-            .GetWithMembershipsAndInvitations(Arg.Any<WorkspaceId>())
+            .GetWithInvitations(Arg.Any<WorkspaceId>())
             .ReturnsNull();
 
         // Act
@@ -91,7 +91,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMembershipsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
+            .GetWithInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }
