@@ -1,10 +1,10 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Domain.Common.Interfaces;
+﻿using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
