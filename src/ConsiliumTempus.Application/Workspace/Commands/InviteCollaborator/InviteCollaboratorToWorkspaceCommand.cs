@@ -3,7 +3,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 
-public record InviteCollaboratorToWorkspaceCommand(
+public sealed record InviteCollaboratorToWorkspaceCommand(
     Guid Id,
     string Email)
     : IRequest<ErrorOr<InviteCollaboratorToWorkspaceResult>>;

@@ -2,6 +2,6 @@
 
 namespace ConsiliumTempus.Application.Project.Queries.GetStatuses;
 
-public record GetStatusesFromProjectResult(
+public sealed record GetStatusesFromProjectResult(
     List<ProjectStatus> Statuses,
     int TotalCount);

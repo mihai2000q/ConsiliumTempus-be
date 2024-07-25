@@ -3,4 +3,4 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Queries.GetStages;
 
-public record GetStagesFromProjectSprintQuery(Guid Id) : IRequest<ErrorOr<GetStagesFromProjectSprintResult>>;
+public sealed record GetStagesFromProjectSprintQuery(Guid Id) : IRequest<ErrorOr<GetStagesFromProjectSprintResult>>;
