@@ -9,10 +9,23 @@ on:
       - develop
 
 jobs:
-  
+  architecture-testing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    name: Architecture Testing
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+
+    - name: Build
+      uses: ./.github/workflows/build-action
+
+    - name: Test
+      run: dotnet test --verbosity normal --filter "FullyQualifiedName~ArchitectureTests" --no-build
+
   unit-testing:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 7
     name: Unit Testing
     steps:
     - name: Checkout Repo
@@ -26,7 +39,7 @@ jobs:
 
   integration-testing:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     name: Integration Testing
     steps:
     - name: Checkout Repo
@@ -40,7 +53,7 @@ jobs:
     
   end-to-end-testing:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     name: End To End Testing
     steps:
     - name: Checkout Repo
