@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Domain.Common.Enums;
+﻿using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
@@ -8,6 +7,7 @@ using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Http;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using Microsoft.AspNetCore.Authorization;
@@ -113,7 +113,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.ReadWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.ReadOverviewWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.ReadCollaboratorsFromWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
-            Permissions.ReadInvitationsFromWorkspace => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<WorkspaceAggregate>()),
+            Permissions.ReadInvitationsFromWorkspace => HttpRequestReader.GetStringIdFromQuery(request, typeof(WorkspaceAggregate).ToCamelId()),
             Permissions.InviteCollaboratorToWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateFavoritesWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
@@ -121,10 +121,10 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.DeleteWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
 
             // Project
-            Permissions.CreateProject => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<WorkspaceAggregate>()),
+            Permissions.CreateProject => await HttpRequestReader.GetStringIdFromBody(request, typeof(WorkspaceAggregate).ToCamelId()),
             Permissions.ReadProject => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.ReadOverviewProject => HttpRequestReader.GetStringIdFromRoute(request),
-            Permissions.ReadCollectionProject => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<WorkspaceAggregate>()),
+            Permissions.ReadCollectionProject => HttpRequestReader.GetStringIdFromQuery(request, typeof(WorkspaceAggregate).ToCamelId()),
             Permissions.UpdateProject => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateFavoritesProject => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateOverviewProject => await HttpRequestReader.GetStringIdFromBody(request),
@@ -137,9 +137,9 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.RemoveStatusFromProject => HttpRequestReader.GetStringIdFromRoute(request),
 
             // Project Sprint
-            Permissions.CreateProjectSprint => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<ProjectAggregate>()),
+            Permissions.CreateProjectSprint => await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()),
             Permissions.ReadProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),
-            Permissions.ReadCollectionProjectSprint => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<ProjectAggregate>()),
+            Permissions.ReadCollectionProjectSprint => HttpRequestReader.GetStringIdFromQuery(request, typeof(ProjectAggregate).ToCamelId()),
             Permissions.UpdateProjectSprint => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),
 
@@ -151,9 +151,9 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.RemoveStageFromProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),
 
             // Project Task
-            Permissions.CreateProjectTask => await HttpRequestReader.GetStringIdFromBody(request, ToIdProperty<ProjectStage>()),
+            Permissions.CreateProjectTask => await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectStage).ToCamelId()),
             Permissions.ReadProjectTask => HttpRequestReader.GetStringIdFromRoute(request),
-            Permissions.ReadCollectionProjectTask => HttpRequestReader.GetStringIdFromQuery(request, ToIdProperty<ProjectStage>()),
+            Permissions.ReadCollectionProjectTask => HttpRequestReader.GetStringIdFromQuery(request, typeof(ProjectStage).ToCamelId()),
             Permissions.MoveProjectTask => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateProjectTask => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateIsCompletedProjectTask => await HttpRequestReader.GetStringIdFromBody(request),
@@ -162,12 +162,5 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
 
             _ => throw new ArgumentOutOfRangeException(nameof(permission))
         };
-    }
-
-    private static string ToIdProperty<T>()
-    {
-        var property = typeof(T).Name.TruncateAggregate();
-        property = property[0].ToString().ToLower() + property[1..];
-        return property.ToId();
     }
 }

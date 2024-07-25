@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Infrastructure.Extensions;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorization;
 
@@ -88,7 +89,7 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.ReadWorkspace, RequestLocation.Route, null);
             Add(Permissions.ReadOverviewWorkspace, RequestLocation.Route, null);
             Add(Permissions.ReadCollaboratorsFromWorkspace, RequestLocation.Route, null);
-            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Query, ToIdProperty<WorkspaceAggregate>());
+            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Query, typeof(WorkspaceAggregate).ToCamelId());
             Add(Permissions.InviteCollaboratorToWorkspace, RequestLocation.Body, null);
             Add(Permissions.UpdateWorkspace, RequestLocation.Body, null);
             Add(Permissions.UpdateFavoritesWorkspace, RequestLocation.Body, null);
@@ -96,10 +97,10 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.DeleteWorkspace, RequestLocation.Route, null);
 
             // Project
-            Add(Permissions.CreateProject, RequestLocation.Body, ToIdProperty<WorkspaceAggregate>());
+            Add(Permissions.CreateProject, RequestLocation.Body, typeof(WorkspaceAggregate).ToCamelId());
             Add(Permissions.ReadProject, RequestLocation.Route, null);
             Add(Permissions.ReadOverviewProject, RequestLocation.Route, null);
-            Add(Permissions.ReadCollectionProject, RequestLocation.Query, ToIdProperty<WorkspaceAggregate>());
+            Add(Permissions.ReadCollectionProject, RequestLocation.Query, typeof(WorkspaceAggregate).ToCamelId());
             Add(Permissions.UpdateProject, RequestLocation.Body, null);
             Add(Permissions.UpdateFavoritesProject, RequestLocation.Body, null);
             Add(Permissions.UpdateOverviewProject, RequestLocation.Body, null);
@@ -112,9 +113,9 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.RemoveStatusFromProject, RequestLocation.Route, null);
 
             // Project Sprint
-            Add(Permissions.CreateProjectSprint, RequestLocation.Body, ToIdProperty<ProjectAggregate>());
+            Add(Permissions.CreateProjectSprint, RequestLocation.Body, typeof(ProjectAggregate).ToCamelId());
             Add(Permissions.ReadProjectSprint, RequestLocation.Route, null);
-            Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Query, ToIdProperty<ProjectAggregate>());
+            Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Query, typeof(ProjectAggregate).ToCamelId());
             Add(Permissions.UpdateProjectSprint, RequestLocation.Body, null);
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route, null);
 
@@ -126,9 +127,9 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.RemoveStageFromProjectSprint, RequestLocation.Route, null);
 
             // Project Task
-            Add(Permissions.CreateProjectTask, RequestLocation.Body, ToIdProperty<ProjectStage>());
+            Add(Permissions.CreateProjectTask, RequestLocation.Body, typeof(ProjectStage).ToCamelId());
             Add(Permissions.ReadProjectTask, RequestLocation.Route, null);
-            Add(Permissions.ReadCollectionProjectTask, RequestLocation.Query, ToIdProperty<ProjectStage>());
+            Add(Permissions.ReadCollectionProjectTask, RequestLocation.Query, typeof(ProjectStage).ToCamelId());
             Add(Permissions.MoveProjectTask, RequestLocation.Body, null);
             Add(Permissions.UpdateProjectTask, RequestLocation.Body, null);
             Add(Permissions.UpdateIsCompletedProjectTask, RequestLocation.Body, null);
@@ -145,7 +146,7 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.ReadWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
             Add(Permissions.ReadOverviewWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
             Add(Permissions.ReadCollaboratorsFromWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
-            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Query, ToIdProperty<WorkspaceAggregate>(), StringIdType.Workspace);
+            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Query, typeof(WorkspaceAggregate).ToCamelId(), StringIdType.Workspace);
             Add(Permissions.InviteCollaboratorToWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
             Add(Permissions.UpdateWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
             Add(Permissions.UpdateFavoritesWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
@@ -153,10 +154,10 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.DeleteWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
 
             // Project
-            Add(Permissions.CreateProject, RequestLocation.Body, ToIdProperty<WorkspaceAggregate>(), StringIdType.Workspace);
+            Add(Permissions.CreateProject, RequestLocation.Body, typeof(WorkspaceAggregate).ToCamelId(), StringIdType.Workspace);
             Add(Permissions.ReadProject, RequestLocation.Route, null, StringIdType.Project);
             Add(Permissions.ReadOverviewProject, RequestLocation.Route, null, StringIdType.Project);
-            Add(Permissions.ReadCollectionProject, RequestLocation.Query, ToIdProperty<WorkspaceAggregate>(), StringIdType.Workspace);
+            Add(Permissions.ReadCollectionProject, RequestLocation.Query, typeof(WorkspaceAggregate).ToCamelId(), StringIdType.Workspace);
             Add(Permissions.UpdateProject, RequestLocation.Body, null, StringIdType.Project);
             Add(Permissions.UpdateFavoritesProject, RequestLocation.Body, null, StringIdType.Project);
             Add(Permissions.UpdateOverviewProject, RequestLocation.Body, null, StringIdType.Project);
@@ -169,9 +170,9 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.RemoveStatusFromProject, RequestLocation.Route, null, StringIdType.Project);
 
             // Project Sprint
-            Add(Permissions.CreateProjectSprint, RequestLocation.Body, ToIdProperty<ProjectAggregate>(), StringIdType.Project);
+            Add(Permissions.CreateProjectSprint, RequestLocation.Body, typeof(ProjectAggregate).ToCamelId(), StringIdType.Project);
             Add(Permissions.ReadProjectSprint, RequestLocation.Route, null, StringIdType.ProjectSprint);
-            Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Query, ToIdProperty<ProjectAggregate>(), StringIdType.Project);
+            Add(Permissions.ReadCollectionProjectSprint, RequestLocation.Query, typeof(ProjectAggregate).ToCamelId(), StringIdType.Project);
             Add(Permissions.UpdateProjectSprint, RequestLocation.Body, null, StringIdType.ProjectSprint);
             Add(Permissions.DeleteProjectSprint, RequestLocation.Route, null, StringIdType.ProjectSprint);
 
@@ -183,21 +184,14 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.RemoveStageFromProjectSprint, RequestLocation.Route, null, StringIdType.ProjectSprint);
 
             // Project Task
-            Add(Permissions.CreateProjectTask, RequestLocation.Body, ToIdProperty<ProjectStage>(), StringIdType.ProjectStage);
+            Add(Permissions.CreateProjectTask, RequestLocation.Body, typeof(ProjectStage).ToCamelId(), StringIdType.ProjectStage);
             Add(Permissions.ReadProjectTask, RequestLocation.Route, null, StringIdType.ProjectTask);
-            Add(Permissions.ReadCollectionProjectTask, RequestLocation.Query, ToIdProperty<ProjectStage>(), StringIdType.ProjectStage);
+            Add(Permissions.ReadCollectionProjectTask, RequestLocation.Query, typeof(ProjectStage).ToCamelId(), StringIdType.ProjectStage);
             Add(Permissions.MoveProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
             Add(Permissions.UpdateProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
             Add(Permissions.UpdateIsCompletedProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
             Add(Permissions.UpdateOverviewProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
             Add(Permissions.DeleteProjectTask, RequestLocation.Route, null, StringIdType.ProjectTask);
         }
-    }
-
-    private static string ToIdProperty<T>()
-    {
-        var property = typeof(T).Name.Replace("Aggregate", "");
-        property = property[0].ToString().ToLower() + property[1..];
-        return property + "Id";
     }
 }
