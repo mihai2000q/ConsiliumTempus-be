@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
+using ConsiliumTempus.Infrastructure.Security.Authorization.WorkspaceAuthorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
@@ -10,39 +11,38 @@ public class AuthorizationPolicyProviderTest
 {
     #region Setup
 
-    private readonly AuthorizationOptions _options;
     private readonly AuthorizationPolicyProvider _uut;
 
     public AuthorizationPolicyProviderTest()
     {
         var authOptions = Substitute.For<IOptions<AuthorizationOptions>>();
-        _options = Substitute.For<AuthorizationOptions>();
-        authOptions.Value.Returns(_options);
-        
+        var options = Substitute.For<AuthorizationOptions>();
+        authOptions.Value.Returns(options);
+
         _uut = new AuthorizationPolicyProvider(authOptions);
     }
 
     #endregion
-    [Fact(Skip = "Cannot mock the Get Policy Call as it is an internal function")]
-    public async Task WhenAuthPolicyProviderHasCachedPolicy_ShouldReturnCachedPolicy()
+
+    [Fact]
+    public async Task
+        AuthorizationPolicyProvider_WhenItIsWorkspaceAuthorizationLevel_ShouldReturnNewPolicyWithWorkspaceAuthorizationRequirement()
     {
         // Arrange
-        var policyName = Permissions.DeleteProject.ToString();
-
-        var policy = new AuthorizationPolicy([new PermissionRequirement(policyName)], []);
-        _options
-            .GetPolicy(policyName)
-            .Returns(policy);
+        var policy = WorkspaceAuthorizationLevel.IsCollaborator.ToString();
 
         // Act
-        var outcome = await _uut.GetPolicyAsync(policyName);
+        var outcome = await _uut.GetPolicyAsync(policy);
 
         // Assert
-        outcome.Should().Be(policy);
+        outcome!.Requirements.Should().HaveCount(1);
+        outcome.Requirements[0].Should().BeOfType<WorkspaceAuthorizationRequirement>();
+        ((WorkspaceAuthorizationRequirement)outcome.Requirements[0]).AuthorizationLevel.ToString().Should().Be(policy);
     }
 
     [Fact]
-    public async Task WhenAuthPolicyProviderHasNotCached_ShouldReturnNewPolicy()
+    public async Task 
+        AuthorizationPolicyProvider_WhenItIsNotWorkspaceAuthorizationLevel_ShouldReturnNewPolicyWithPermissionRequirement()
     {
         // Arrange
         var policy = Permissions.DeleteProject.ToString();

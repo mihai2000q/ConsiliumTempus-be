@@ -45,7 +45,7 @@ public class PermissionAuthorizationHandlerTest
     #endregion
     
     [Fact]
-    public async Task PermissionAuthHandler_WhenPermissionStringIsWrong_ShouldFail()
+    public async Task PermissionAuthorizationHandler_WhenPermissionStringIsWrong_ShouldFail()
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement("") };
@@ -64,7 +64,7 @@ public class PermissionAuthorizationHandlerTest
     }
 
     [Fact]
-    public async Task PermissionAuthHandler_WhenSubClaimIsNull_ShouldFail()
+    public async Task PermissionAuthorizationHandler_WhenSubClaimIsNull_ShouldFail()
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(Permissions.ReadWorkspace.ToString()) };
@@ -83,7 +83,7 @@ public class PermissionAuthorizationHandlerTest
     }
 
     [Fact]
-    public async Task PermissionAuthHandler_WhenSubClaimIsNotGuid_ShouldFail()
+    public async Task PermissionAuthorizationHandler_WhenSubClaimIsNotGuid_ShouldFail()
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(Permissions.ReadWorkspace.ToString()) };
@@ -105,7 +105,7 @@ public class PermissionAuthorizationHandlerTest
     }
 
     [Fact]
-    public async Task PermissionAuthHandler_WhenRequestIsNull_ShouldFail()
+    public async Task PermissionAuthorizationHandler_WhenRequestIsNull_ShouldFail()
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(Permissions.ReadWorkspace.ToString()) };
@@ -134,9 +134,11 @@ public class PermissionAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
-    public async Task PermissionAuthHandler_WhenRequestIsEmpty_ShouldSucceed(
+    public async Task PermissionAuthorizationHandler_WhenRequestIsEmpty_ShouldSucceed(
         Permissions permission,
-        PermissionAuthorizationHandlerData.RequestLocation requestLocation)
+        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        string? _1,
+        PermissionAuthorizationHandlerData.StringIdType _2)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission.ToString()) };
@@ -162,11 +164,12 @@ public class PermissionAuthorizationHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissionsWithId))]
-    public async Task PermissionAuthHandler_WhenRequestIdIsEmpty_ShouldSucceed(
+    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
+    public async Task PermissionAuthorizationHandler_WhenRequestIdIsEmpty_ShouldSucceed(
         Permissions permission,
         PermissionAuthorizationHandlerData.RequestLocation requestLocation,
-        string? id)
+        string? id,
+        PermissionAuthorizationHandlerData.StringIdType _1)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission.ToString()) };
@@ -193,11 +196,12 @@ public class PermissionAuthorizationHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissionsWithId))]
-    public async Task PermissionAuthHandler_WhenRequestIdIsNotGuid_ShouldSucceed(
+    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
+    public async Task PermissionAuthorizationHandler_WhenRequestIdIsNotGuid_ShouldSucceed(
         Permissions permission,
         PermissionAuthorizationHandlerData.RequestLocation requestLocation,
-        string? id)
+        string? id,
+        PermissionAuthorizationHandlerData.StringIdType _1)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission.ToString()) };
@@ -224,8 +228,8 @@ public class PermissionAuthorizationHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissionsWithIdAndType))]
-    public async Task PermissionAuthHandler_WhenWorkspaceIsNull_ShouldSucceed(
+    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
+    public async Task PermissionAuthorizationHandler_WhenWorkspaceIsNull_ShouldSucceed(
         Permissions permission,
         PermissionAuthorizationHandlerData.RequestLocation requestLocation,
         string? id,
@@ -256,8 +260,8 @@ public class PermissionAuthorizationHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissionsWithIdAndType))]
-    public async Task PermissionAuthHandler_WhenDoesNotHavePermission_ShouldFail(
+    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
+    public async Task PermissionAuthorizationHandler_WhenDoesNotHavePermission_ShouldFail(
         Permissions permission,
         PermissionAuthorizationHandlerData.RequestLocation requestLocation,
         string? id,
@@ -300,8 +304,8 @@ public class PermissionAuthorizationHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissionsWithIdAndType))]
-    public async Task PermissionAuthHandler_WhenTheyHavePermission_ShouldSucceed(
+    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
+    public async Task PermissionAuthorizationHandler_WhenTheyHavePermission_ShouldSucceed(
         Permissions permission,
         PermissionAuthorizationHandlerData.RequestLocation requestLocation,
         string? id,

@@ -2,6 +2,7 @@
 
 * [Access Control](#access-control)
 * [Role-Based Access Control (RBAC)](#role-based-access-control-rbac)
+* [Workspace Authorization levels](#workspace-authorization-levels)
 * [Workspace Roles](#workspace-roles)
 * [Permissions](#permissions)
 * [Workspace Roles to Permissions](#workspace-roles-to-permissions)
@@ -33,9 +34,23 @@ thus restricting the power held by an individual.
 This security method is used to manage conflicts of interest and fraud or tampering with the application.
 
 However, these roles are exclusive to the [Workspace](domain/aggregates/Aggregate.Workspace) component.
-If the user is not in a workspace, he cannot create any project, portfolio or add any tasks.
+For example, if the user is not in a workspace, he cannot create any project, portfolio or add any tasks.
 So he basically cannot use the application to its fullest
 (thankfully, all users must have a workspace, and one is created upon registration).
+
+Also, it should be mentioned that there are a few exceptions, such as:
+
+- a few actions can be done only by the owner of the workspace (i.e., giving up ownership to another collaborator)
+- a few actions don't require permission, they simply require that you are part of the workspace
+  (i.e., leaving a workspace, anyone can do it, but they have to be part of it first)
+  
+Those are categorized as **Workspace Authorization Levels**.
+
+## Workspace Authorization Levels
+
+There are only a few levels that differ from just having permission, and those are:
+- **Is Owner**, which requires the user that made the request to be the owner of the workspace
+- **Is Collaborator**, which requires the user that made the request to be part of the workspace (i.e., a collaborator)
 
 ## Workspace Roles
 
