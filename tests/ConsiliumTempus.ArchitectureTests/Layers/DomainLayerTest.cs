@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Domain.Common.Interfaces;
+﻿using ConsiliumTempus.ArchitectureTests.Core;
+using ConsiliumTempus.ArchitectureTests.TestUtils;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.ArchitectureTests.Layers;
