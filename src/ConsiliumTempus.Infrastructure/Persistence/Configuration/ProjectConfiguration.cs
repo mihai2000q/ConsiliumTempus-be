@@ -55,6 +55,16 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
                 b.Property(nameof(ProjectAggregate).ToId())
                     .HasColumnName(nameof(ProjectId));
             });
+        
+        builder.HasMany(p => p.AllowedMembers)
+            .WithMany()
+            .UsingEntity(b =>
+            {
+                b.ToTable("ProjectHasAllowedMember");
+
+                b.Property(nameof(ProjectAggregate)+ "1".ToId())
+                    .HasColumnName(nameof(ProjectId));
+            });
     }
 }
 

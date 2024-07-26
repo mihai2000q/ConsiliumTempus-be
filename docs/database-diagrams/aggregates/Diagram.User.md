@@ -8,8 +8,11 @@
 (through the **Many-to-one** relationship with the [Membership](../../domain/entities/Entity.Membership.md) entity).
 - **Many-to-many** relationship with the [Workspace](../../domain/aggregates/Aggregate.Workspace.md) aggregate
 (through the **UserHasFavoriteWorkspace**).
+- 2x **One-to-Many** relationship with the [Workspace Invitation](../../domain/entities/workspace/Entity.WorkspaceInvitation.md) entity.
 - **Many-to-many** relationship with the [Project](../../domain/aggregates/Aggregate.Project.md) aggregate
 (through the **UserHasFavoriteProject**).
+- **Many-to-many** relationship with the [Project](../../domain/aggregates/Aggregate.Project.md) aggregate
+  (through the **ProjectHasAllowedMember**).
 - **One-to-many** relationship with the [Refresh Token](../../domain/entities/Entity.RefreshToken.md) entity.
 - **One-to-many** relationship with the [Audit](../../domain/entities/Entity.Audit.md) entity.
 - **One-to-many** relationship with the [Workspace](../../domain/aggregates/Aggregate.Workspace.md) aggregate.
