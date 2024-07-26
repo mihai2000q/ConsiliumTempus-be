@@ -43,31 +43,12 @@ public class PermissionAuthorizationHandlerTest
     }
 
     #endregion
-    
-    [Fact]
-    public async Task PermissionAuthorizationHandler_WhenPermissionStringIsWrong_ShouldFail()
-    {
-        // Arrange
-        var requirements = new[] { new PermissionRequirement("") };
-        var user = new ClaimsPrincipal();
-        var context = new AuthorizationHandlerContext(requirements, user, null);
-
-        // Act
-        await _uut.HandleAsync(context);
-
-        // Assert
-        _ = _httpContextAccessor.DidNotReceive();
-        _workspaceProvider.DidNotReceive();
-        _permissionProvider.DidNotReceive();
-
-        context.HasSucceeded.Should().BeFalse();
-    }
 
     [Fact]
     public async Task PermissionAuthorizationHandler_WhenSubClaimIsNull_ShouldFail()
     {
         // Arrange
-        var requirements = new[] { new PermissionRequirement(Permissions.ReadWorkspace.ToString()) };
+        var requirements = new[] { new PermissionRequirement(Permissions.ReadWorkspace) };
         var user = new ClaimsPrincipal();
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
@@ -86,7 +67,7 @@ public class PermissionAuthorizationHandlerTest
     public async Task PermissionAuthorizationHandler_WhenSubClaimIsNotGuid_ShouldFail()
     {
         // Arrange
-        var requirements = new[] { new PermissionRequirement(Permissions.ReadWorkspace.ToString()) };
+        var requirements = new[] { new PermissionRequirement(Permissions.ReadWorkspace) };
         var user = new ClaimsPrincipal();
         user.AddIdentity(new ClaimsIdentity([
             new Claim(JwtRegisteredClaimNames.Sub, "")
@@ -108,7 +89,7 @@ public class PermissionAuthorizationHandlerTest
     public async Task PermissionAuthorizationHandler_WhenRequestIsNull_ShouldFail()
     {
         // Arrange
-        var requirements = new[] { new PermissionRequirement(Permissions.ReadWorkspace.ToString()) };
+        var requirements = new[] { new PermissionRequirement(Permissions.ReadWorkspace) };
         var user = new ClaimsPrincipal();
         user.AddIdentity(new ClaimsIdentity([
             new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
@@ -141,7 +122,7 @@ public class PermissionAuthorizationHandlerTest
         PermissionAuthorizationHandlerData.StringIdType _2)
     {
         // Arrange
-        var requirements = new[] { new PermissionRequirement(permission.ToString()) };
+        var requirements = new[] { new PermissionRequirement(permission) };
         var user = new ClaimsPrincipal();
         user.AddIdentity(new ClaimsIdentity([
             new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
@@ -172,7 +153,7 @@ public class PermissionAuthorizationHandlerTest
         PermissionAuthorizationHandlerData.StringIdType _1)
     {
         // Arrange
-        var requirements = new[] { new PermissionRequirement(permission.ToString()) };
+        var requirements = new[] { new PermissionRequirement(permission) };
         var user = new ClaimsPrincipal();
         user.AddIdentity(new ClaimsIdentity([
             new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
@@ -204,7 +185,7 @@ public class PermissionAuthorizationHandlerTest
         PermissionAuthorizationHandlerData.StringIdType _1)
     {
         // Arrange
-        var requirements = new[] { new PermissionRequirement(permission.ToString()) };
+        var requirements = new[] { new PermissionRequirement(permission) };
         var user = new ClaimsPrincipal();
         user.AddIdentity(new ClaimsIdentity([
             new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
@@ -236,7 +217,7 @@ public class PermissionAuthorizationHandlerTest
         PermissionAuthorizationHandlerData.StringIdType provider)
     {
         // Arrange
-        var requirements = new[] { new PermissionRequirement(permission.ToString()) };
+        var requirements = new[] { new PermissionRequirement(permission) };
         var user = new ClaimsPrincipal();
         user.AddIdentity(new ClaimsIdentity([
             new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
@@ -268,7 +249,7 @@ public class PermissionAuthorizationHandlerTest
         PermissionAuthorizationHandlerData.StringIdType provider)
     {
         // Arrange
-        var requirements = new[] { new PermissionRequirement(permission.ToString()) };
+        var requirements = new[] { new PermissionRequirement(permission) };
         var userId = Guid.NewGuid().ToString();
         var user = new ClaimsPrincipal();
         user.AddIdentity(new ClaimsIdentity([
@@ -312,7 +293,7 @@ public class PermissionAuthorizationHandlerTest
         PermissionAuthorizationHandlerData.StringIdType provider)
     {
         // Arrange
-        var requirements = new[] { new PermissionRequirement(permission.ToString()) };
+        var requirements = new[] { new PermissionRequirement(permission) };
         var userId = Guid.NewGuid().ToString();
         var user = new ClaimsPrincipal();
         user.AddIdentity(new ClaimsIdentity([

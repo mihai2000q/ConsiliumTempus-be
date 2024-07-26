@@ -26,7 +26,7 @@ public class AuthorizationPolicyProviderTest
 
     [Fact]
     public async Task
-        AuthorizationPolicyProvider_WhenItIsWorkspaceAuthorizationLevel_ShouldReturnNewPolicyWithWorkspaceAuthorizationRequirement()
+        AuthorizationPolicyProvider_WhenPolicyIsWorkspaceAuthorizationLevel_ShouldReturnNewPolicyWithWorkspaceAuthorizationRequirement()
     {
         // Arrange
         var policy = WorkspaceAuthorizationLevel.IsCollaborator.ToString();
@@ -42,7 +42,7 @@ public class AuthorizationPolicyProviderTest
 
     [Fact]
     public async Task 
-        AuthorizationPolicyProvider_WhenItIsNotWorkspaceAuthorizationLevel_ShouldReturnNewPolicyWithPermissionRequirement()
+        AuthorizationPolicyProvider_WhenPolicyIsNotWorkspaceAuthorizationLevel_ShouldReturnNewPolicyWithPermissionRequirement()
     {
         // Arrange
         var policy = Permissions.DeleteProject.ToString();
@@ -53,6 +53,6 @@ public class AuthorizationPolicyProviderTest
         // Assert
         outcome!.Requirements.Should().HaveCount(1);
         outcome.Requirements[0].Should().BeOfType<PermissionRequirement>();
-        ((PermissionRequirement)outcome.Requirements[0]).Permission.Should().Be(policy);
+        ((PermissionRequirement)outcome.Requirements[0]).Permission.ToString().Should().Be(policy);
     }
 }

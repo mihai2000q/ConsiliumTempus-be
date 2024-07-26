@@ -24,8 +24,6 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         AuthorizationHandlerContext context,
         PermissionRequirement requirement)
     {
-        if (!Enum.TryParse<Permissions>(requirement.Permission, out var permission)) return;
-
         var subUserId = context.User.Claims
             .SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
         if (subUserId is null || !Guid.TryParse(subUserId, out var guidUserId)) return;
@@ -38,7 +36,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         var request = httpContextAccessor.HttpContext?.Request;
         if (request is null) return;
 
-        var workspaceId = await GetWorkspaceId(request, workspaceProvider, permission);
+        var workspaceId = await GetWorkspaceId(request, workspaceProvider, requirement.Permission);
         if (workspaceId is null)
         {
             context.Succeed(requirement); // let the system return the not found or validation error 
@@ -47,7 +45,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         {
             var userId = UserId.Create(guidUserId);
             var permissions = await permissionProvider.GetPermissions(userId, workspaceId);
-            if (permissions.Contains(requirement.Permission)) context.Succeed(requirement);
+            if (permissions.Contains(requirement.Permission.ToString())) context.Succeed(requirement);
         }
     }
 

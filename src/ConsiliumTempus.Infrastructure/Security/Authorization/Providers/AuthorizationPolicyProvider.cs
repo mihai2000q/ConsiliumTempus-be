@@ -13,13 +13,14 @@ public sealed class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> o
     {
         await Task.CompletedTask;
 
-        if (Enum.TryParse<WorkspaceAuthorizationLevel>(policyName, out var workspaceAuthorizationLevel))
-            return new AuthorizationPolicyBuilder()
-                .AddRequirements(new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel))
-                .Build();
+        var builder = new AuthorizationPolicyBuilder();
 
-        return new AuthorizationPolicyBuilder()
-            .AddRequirements(new PermissionRequirement(policyName))
-            .Build();
+        if (Enum.TryParse<WorkspaceAuthorizationLevel>(policyName, out var workspaceAuthorizationLevel))
+            builder.AddRequirements(new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel));
+
+        else if (Enum.TryParse<Permissions>(policyName, out var permission))
+            builder.AddRequirements(new PermissionRequirement(permission));
+
+        return builder.Build();
     }
 }
