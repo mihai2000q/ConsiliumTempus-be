@@ -45,6 +45,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     private readonly List<ProjectSprintAggregate> _sprints = [];
     private readonly List<ProjectStatus> _statuses = [];
     private readonly List<UserAggregate> _favorites = [];
+    private readonly List<UserAggregate> _allowedMembers = [];
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
@@ -57,6 +58,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     public IReadOnlyList<ProjectSprintAggregate> Sprints => _sprints.AsReadOnly();
     public IReadOnlyList<ProjectStatus> Statuses => _statuses.AsReadOnly();
     public IReadOnlyList<UserAggregate> Favorites => _favorites.AsReadOnly();
+    public IReadOnlyList<UserAggregate> AllowedMembers => _allowedMembers.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
 
@@ -130,5 +132,15 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     public void RemoveStatus(ProjectStatus status)
     {
         _statuses.Remove(status);
+    }
+
+    public void AddAllowedMember(UserAggregate member)
+    {
+        _allowedMembers.Add(member);
+    }
+
+    public void RemoveAllowedMember(UserAggregate member)
+    {
+        _allowedMembers.Remove(member);
     }
 }
