@@ -2,7 +2,7 @@
 using ArchUnitNET.Domain.Extensions;
 using ArchUnitNET.Fluent.Syntax.Elements.Types;
 
-namespace ConsiliumTempus.ArchitectureTests;
+namespace ConsiliumTempus.ArchitectureTests.TestUtils;
 
 public static class Utils
 {

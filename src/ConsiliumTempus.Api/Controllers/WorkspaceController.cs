@@ -163,6 +163,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         );
     }
 
+    [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsCollaborator)]
     [HttpPost("Leave")]
     public async Task<IActionResult> Leave(LeaveWorkspaceRequest request, CancellationToken cancellationToken)
     {
@@ -216,6 +217,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         );
     }
 
+    [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsOwner)]
     [HttpPut("Owner")]
     public async Task<IActionResult> UpdateOwner(UpdateOwnerWorkspaceRequest request,
         CancellationToken cancellationToken)

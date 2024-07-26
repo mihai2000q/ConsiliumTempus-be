@@ -1,4 +1,5 @@
 using ConsiliumTempus.Api.Controllers;
+using ConsiliumTempus.ArchitectureTests.Core;
 using Mapster;
 
 namespace ConsiliumTempus.ArchitectureTests.Layers;

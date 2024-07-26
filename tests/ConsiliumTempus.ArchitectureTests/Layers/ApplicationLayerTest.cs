@@ -1,3 +1,4 @@
+using ConsiliumTempus.ArchitectureTests.Core;
 using FluentValidation;
 using MediatR;
 

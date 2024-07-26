@@ -53,6 +53,7 @@ public class WorkspaceControllerUpdateOwnerOwnerTest(WebAppFactory factory)
             ownerId: user.Id.Value);
 
         // Act
+        Client.UseCustomToken(WorkspaceData.Users.First());
         var outcome = await Client.Put("api/workspaces/Owner", request);
 
         // Assert

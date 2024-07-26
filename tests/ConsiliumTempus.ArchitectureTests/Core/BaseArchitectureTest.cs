@@ -6,7 +6,7 @@ using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Infrastructure.Persistence.Repository;
 using Assembly = System.Reflection.Assembly;
 
-namespace ConsiliumTempus.ArchitectureTests;
+namespace ConsiliumTempus.ArchitectureTests.Core;
 
 public class BaseArchitectureTest
 {

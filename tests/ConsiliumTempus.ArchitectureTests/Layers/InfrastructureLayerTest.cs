@@ -1,3 +1,6 @@
+using ConsiliumTempus.ArchitectureTests.Core;
+using ConsiliumTempus.ArchitectureTests.TestUtils;
+
 namespace ConsiliumTempus.ArchitectureTests.Layers;
 
 public class InfrastructureLayerTest : BaseArchitectureTest
