@@ -22,6 +22,52 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ConsiliumTempus.Domain.Announcement.AnnouncementAggregate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuditId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("WorkspaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuditId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("Announcement", (string)null);
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Authentication.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiryDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshToken", (string)null);
+                });
+
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Audit", b =>
                 {
                     b.Property<Guid>("Id")
@@ -214,27 +260,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             Id = 25,
                             Name = "DeleteProjectTask"
                         });
-                });
-
-            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.RefreshToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpiryDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RefreshToken", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.WorkspaceRole", b =>
@@ -756,6 +781,148 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.ToTable("UserHasFavoriteWorkspace", (string)null);
                 });
 
+            modelBuilder.Entity("ConsiliumTempus.Domain.Announcement.AnnouncementAggregate", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
+                        .WithMany()
+                        .HasForeignKey("AuditId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId");
+
+                    b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", "Workspace")
+                        .WithMany()
+                        .HasForeignKey("WorkspaceId");
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b1 =>
+                        {
+                            b1.Property<Guid>("AnnouncementAggregateId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Description");
+
+                            b1.HasKey("AnnouncementAggregateId");
+
+                            b1.ToTable("Announcement");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AnnouncementAggregateId");
+                        });
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Title", "Title", b1 =>
+                        {
+                            b1.Property<Guid>("AnnouncementAggregateId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
+                                .HasColumnName("Title");
+
+                            b1.HasKey("AnnouncementAggregateId");
+
+                            b1.ToTable("Announcement");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AnnouncementAggregateId");
+                        });
+
+                    b.Navigation("Audit");
+
+                    b.Navigation("Description")
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Title")
+                        .IsRequired();
+
+                    b.Navigation("Workspace");
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Authentication.RefreshToken", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsMany("ConsiliumTempus.Domain.Authentication.RefreshTokenHistory", "History", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<DateTime>("CreatedDateTime")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<Guid>("RefreshTokenId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("RefreshTokenId");
+
+                            b1.ToTable("RefreshTokenHistory", (string)null);
+
+                            b1.WithOwner("RefreshToken")
+                                .HasForeignKey("RefreshTokenId");
+
+                            b1.OwnsOne("ConsiliumTempus.Domain.Authentication.ValueObjects.JwtId", "JwtId", b2 =>
+                                {
+                                    b2.Property<Guid>("RefreshTokenHistoryId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<Guid>("Value")
+                                        .HasColumnType("uniqueidentifier")
+                                        .HasColumnName("JwtId");
+
+                                    b2.HasKey("RefreshTokenHistoryId");
+
+                                    b2.ToTable("RefreshTokenHistory");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("RefreshTokenHistoryId");
+                                });
+
+                            b1.Navigation("JwtId")
+                                .IsRequired();
+
+                            b1.Navigation("RefreshToken");
+                        });
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Authentication.ValueObjects.IsInvalidated", "IsInvalidated", b1 =>
+                        {
+                            b1.Property<Guid>("RefreshTokenId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<bool>("Value")
+                                .HasColumnType("bit")
+                                .HasColumnName("IsInvalidated");
+
+                            b1.HasKey("RefreshTokenId");
+
+                            b1.ToTable("RefreshToken");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RefreshTokenId");
+                        });
+
+                    b.Navigation("History");
+
+                    b.Navigation("IsInvalidated")
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Audit", b =>
                 {
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
@@ -798,82 +965,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Navigation("Workspace");
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.RefreshToken", b =>
-                {
-                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsMany("ConsiliumTempus.Domain.Common.Entities.RefreshTokenHistory", "History", b1 =>
-                        {
-                            b1.Property<Guid>("Id")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<DateTime>("CreatedDateTime")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<Guid>("RefreshTokenId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("RefreshTokenId");
-
-                            b1.ToTable("RefreshTokenHistory", (string)null);
-
-                            b1.WithOwner("RefreshToken")
-                                .HasForeignKey("RefreshTokenId");
-
-                            b1.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.JwtId", "JwtId", b2 =>
-                                {
-                                    b2.Property<Guid>("RefreshTokenHistoryId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<Guid>("Value")
-                                        .HasColumnType("uniqueidentifier")
-                                        .HasColumnName("JwtId");
-
-                                    b2.HasKey("RefreshTokenHistoryId");
-
-                                    b2.ToTable("RefreshTokenHistory");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("RefreshTokenHistoryId");
-                                });
-
-                            b1.Navigation("JwtId")
-                                .IsRequired();
-
-                            b1.Navigation("RefreshToken");
-                        });
-
-                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.IsInvalidated", "IsInvalidated", b1 =>
-                        {
-                            b1.Property<Guid>("RefreshTokenId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<bool>("Value")
-                                .HasColumnType("bit")
-                                .HasColumnName("IsInvalidated");
-
-                            b1.HasKey("RefreshTokenId");
-
-                            b1.ToTable("RefreshToken");
-
-                            b1.WithOwner()
-                                .HasForeignKey("RefreshTokenId");
-                        });
-
-                    b.Navigation("History");
-
-                    b.Navigation("IsInvalidated")
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.WorkspaceRoleHasPermission", b =>
                 {
                     b.HasOne("ConsiliumTempus.Domain.Common.Entities.Permission", null)
@@ -903,25 +994,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Title", "Title", b1 =>
-                        {
-                            b1.Property<Guid>("ProjectStatusId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Title");
-
-                            b1.HasKey("ProjectStatusId");
-
-                            b1.ToTable("ProjectStatus");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProjectStatusId");
-                        });
-
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b1 =>
                         {
                             b1.Property<Guid>("ProjectStatusId")
@@ -931,6 +1003,25 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Description");
+
+                            b1.HasKey("ProjectStatusId");
+
+                            b1.ToTable("ProjectStatus");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectStatusId");
+                        });
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Title", "Title", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectStatusId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("Title");
 
                             b1.HasKey("ProjectStatusId");
 
@@ -1071,8 +1162,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
                                 .HasColumnName("Name");
 
                             b1.HasKey("ProjectStageId");
@@ -1115,8 +1206,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
                                 .HasColumnName("Name");
 
                             b1.HasKey("ProjectSprintAggregateId");
@@ -1199,8 +1290,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
+                                .HasMaxLength(256)
+                                .HasColumnType("nvarchar(256)")
                                 .HasColumnName("Name");
 
                             b1.HasKey("ProjectTaskAggregateId");
@@ -1327,8 +1418,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.Property<string>("Email")
                                 .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
+                                .HasMaxLength(256)
+                                .HasColumnType("nvarchar(256)")
                                 .HasColumnName("Email");
 
                             b1.Property<string>("Password")
