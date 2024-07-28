@@ -25,12 +25,15 @@ public class AuthorizationPolicyProviderTest
 
     #endregion
 
-    [Fact]
+    [Theory]
+    [InlineData(WorkspaceAuthorizationLevel.IsCollaborator)]
+    [InlineData(WorkspaceAuthorizationLevel.IsWorkspaceOwner)]
     public async Task
-        AuthorizationPolicyProvider_WhenPolicyIsWorkspaceAuthorizationLevel_ShouldReturnNewPolicyWithWorkspaceAuthorizationRequirement()
+        AuthorizationPolicyProvider_WhenPolicyIsWorkspaceAuthorizationLevel_ShouldReturnNewPolicyWithWorkspaceAuthorizationRequirement(
+            WorkspaceAuthorizationLevel workspaceAuthorizationLevel)
     {
         // Arrange
-        var policy = WorkspaceAuthorizationLevel.IsCollaborator.ToString();
+        var policy = workspaceAuthorizationLevel.ToString();
 
         // Act
         var outcome = await _uut.GetPolicyAsync(policy);
@@ -41,19 +44,22 @@ public class AuthorizationPolicyProviderTest
         ((WorkspaceAuthorizationRequirement)outcome.Requirements[0]).AuthorizationLevel.ToString().Should().Be(policy);
     }
 
-    [Fact]
+    [Theory]
+    [InlineData(ProjectAuthorizationLevel.IsAllowed)]
+    [InlineData(ProjectAuthorizationLevel.IsProjectOwner)]
     public async Task 
-        AuthorizationPolicyProvider_WhenPolicyIsProjectAuthorizationLevel_ShouldReturnNewPolicyWithPermissionRequirement()
+        AuthorizationPolicyProvider_WhenPolicyIsProjectAuthorizationLevel_ShouldReturnNewPolicyWithPermissionRequirement(
+            ProjectAuthorizationLevel projectAuthorizationLevel)
     {
         // Arrange
-        var policy = ProjectAuthorizationLevel.IsOwner.ToString();
+        var policy = projectAuthorizationLevel.ToString();
 
         // Act
         var outcome = await _uut.GetPolicyAsync(policy);
 
         // Assert
         outcome!.Requirements.Should().HaveCount(1);
-        outcome.Requirements[0].Should().BeOfType<PermissionRequirement>();
+        outcome.Requirements[0].Should().BeOfType<ProjectAuthorizationRequirement>();
         ((ProjectAuthorizationRequirement)outcome.Requirements[0]).AuthorizationLevel.ToString().Should().Be(policy);
     }
 

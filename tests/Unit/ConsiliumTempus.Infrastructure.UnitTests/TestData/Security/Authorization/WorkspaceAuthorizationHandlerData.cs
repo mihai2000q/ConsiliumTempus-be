@@ -13,7 +13,7 @@ public static class WorkspaceAuthorizationHandlerData
         public GetAuthorizationLevels()
         {
             Add(WorkspaceAuthorizationLevel.IsCollaborator);
-            Add(WorkspaceAuthorizationLevel.IsOwner);
+            Add(WorkspaceAuthorizationLevel.IsWorkspaceOwner);
         }
     }
 }

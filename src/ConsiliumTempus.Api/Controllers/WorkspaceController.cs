@@ -217,7 +217,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         );
     }
 
-    [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsOwner)]
+    [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsWorkspaceOwner)]
     [HttpPut("Owner")]
     public async Task<IActionResult> UpdateOwner(UpdateOwnerWorkspaceRequest request,
         CancellationToken cancellationToken)

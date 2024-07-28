@@ -58,7 +58,7 @@ public sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory serviceSc
         return authorizationLevel switch
         {
             WorkspaceAuthorizationLevel.IsCollaborator => workspace.Memberships.Any(m => m.User.Id == userId),
-            WorkspaceAuthorizationLevel.IsOwner => workspace.Owner.Id == userId,
+            WorkspaceAuthorizationLevel.IsWorkspaceOwner => workspace.Owner.Id == userId,
             _ => throw new ArgumentOutOfRangeException(nameof(authorizationLevel))
         };
     }

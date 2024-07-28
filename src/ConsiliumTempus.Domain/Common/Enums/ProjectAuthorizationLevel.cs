@@ -3,5 +3,5 @@
 public enum ProjectAuthorizationLevel
 {
     IsAllowed,
-    IsOwner
+    IsProjectOwner
 }

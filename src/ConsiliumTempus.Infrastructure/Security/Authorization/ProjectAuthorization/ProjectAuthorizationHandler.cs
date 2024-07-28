@@ -70,7 +70,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
         {
             ProjectAuthorizationLevel.IsAllowed => !project.IsPrivate.Value ||
                                                    project.AllowedMembers.Any(u => u.Id == userId),
-            ProjectAuthorizationLevel.IsOwner => project.Owner.Id == userId,
+            ProjectAuthorizationLevel.IsProjectOwner => project.Owner.Id == userId,
             _ => throw new ArgumentOutOfRangeException(nameof(authorizationLevel))
         };
     }

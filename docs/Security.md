@@ -50,13 +50,13 @@ Those are categorized as **Workspace Authorization Levels** and **Project Author
 ## Workspace Authorization Levels
 
 There are only a few levels in the workspace that differ from just having permission, and those are:
-- **Is Owner**, which requires the user that made the request to be the owner of the workspace
+- **Is Workspace Owner**, which requires the user that made the request to be the owner of the workspace
 - **Is Collaborator**, which requires the user that made the request to be part of the workspace (i.e., a collaborator)
 
 ## Project Authorization Levels
 
 There are only a few levels in the project that differ from just having permission, and those are:
-- **Is Owner**, which requires the user that made the request to be the owner of the project
+- **Is Project Owner**, which requires the user that made the request to be the owner of the project
 - **Is Allowed**, which requires the user that made the request to be part of the allowed members of a project
 
 ## Workspace Roles
