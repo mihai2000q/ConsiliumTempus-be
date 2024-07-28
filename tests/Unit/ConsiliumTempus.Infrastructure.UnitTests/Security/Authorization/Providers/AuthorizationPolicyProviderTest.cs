@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
+using ConsiliumTempus.Infrastructure.Security.Authorization.ProjectAuthorization;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Security.Authorization.WorkspaceAuthorization;
 using Microsoft.AspNetCore.Authorization;
@@ -42,7 +43,23 @@ public class AuthorizationPolicyProviderTest
 
     [Fact]
     public async Task 
-        AuthorizationPolicyProvider_WhenPolicyIsNotWorkspaceAuthorizationLevel_ShouldReturnNewPolicyWithPermissionRequirement()
+        AuthorizationPolicyProvider_WhenPolicyIsProjectAuthorizationLevel_ShouldReturnNewPolicyWithPermissionRequirement()
+    {
+        // Arrange
+        var policy = ProjectAuthorizationLevel.IsOwner.ToString();
+
+        // Act
+        var outcome = await _uut.GetPolicyAsync(policy);
+
+        // Assert
+        outcome!.Requirements.Should().HaveCount(1);
+        outcome.Requirements[0].Should().BeOfType<PermissionRequirement>();
+        ((ProjectAuthorizationRequirement)outcome.Requirements[0]).AuthorizationLevel.ToString().Should().Be(policy);
+    }
+
+    [Fact]
+    public async Task 
+        AuthorizationPolicyProvider_WhenPolicyIsPermissions_ShouldReturnNewPolicyWithPermissionRequirement()
     {
         // Arrange
         var policy = Permissions.DeleteProject.ToString();

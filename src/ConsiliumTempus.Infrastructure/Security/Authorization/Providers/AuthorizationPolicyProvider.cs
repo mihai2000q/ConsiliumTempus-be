@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
+using ConsiliumTempus.Infrastructure.Security.Authorization.ProjectAuthorization;
 using ConsiliumTempus.Infrastructure.Security.Authorization.WorkspaceAuthorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
@@ -17,6 +18,9 @@ public sealed class AuthorizationPolicyProvider(IOptions<AuthorizationOptions> o
 
         if (Enum.TryParse<WorkspaceAuthorizationLevel>(policyName, out var workspaceAuthorizationLevel))
             builder.AddRequirements(new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel));
+
+        else if (Enum.TryParse<ProjectAuthorizationLevel>(policyName, out var projectAuthorizationLevel))
+            builder.AddRequirements(new ProjectAuthorizationRequirement(projectAuthorizationLevel));
 
         else if (Enum.TryParse<Permissions>(policyName, out var permission))
             builder.AddRequirements(new PermissionRequirement(permission));
