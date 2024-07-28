@@ -50,8 +50,10 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
     }
 
     /// <summary>
-    /// Get Workspace id from query, route or body of the request or related entity and
-    /// return it or null when the workspace was either not found, or there is a validation error
+    /// Get Workspace id from query, route or body of the request or related entity
+    /// <returns>
+    /// the workspace or null when the workspace was either not found, or there is a validation error
+    /// </returns>
     /// </summary>
     private static async Task<WorkspaceId?> GetWorkspaceId(
         HttpRequest request,
@@ -60,7 +62,6 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
     {
         var stringId = await GetStringId(request, permission);
 
-        if (string.IsNullOrWhiteSpace(stringId)) return null;
         if (!Guid.TryParse(stringId, out var guidId)) return null;
 
         var workspace = permission switch

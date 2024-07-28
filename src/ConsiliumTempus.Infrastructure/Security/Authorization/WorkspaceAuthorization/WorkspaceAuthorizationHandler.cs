@@ -46,10 +46,7 @@ public sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory serviceSc
         IWorkspaceProvider workspaceProvider)
     {
         var stringId = await HttpRequestReader.GetStringIdFromBody(request);
-        if (stringId is null) return null;
-
         if (!Guid.TryParse(stringId, out var workspaceId)) return null;
-
         return await workspaceProvider.GetWithMemberships(WorkspaceId.Create(workspaceId));
     }
 
