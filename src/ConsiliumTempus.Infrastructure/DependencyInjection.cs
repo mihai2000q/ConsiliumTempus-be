@@ -10,6 +10,7 @@ using ConsiliumTempus.Infrastructure.Persistence.Repository;
 using ConsiliumTempus.Infrastructure.Security;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
+using ConsiliumTempus.Infrastructure.Security.Authorization.ProjectAuthorization;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Security.Authorization.WorkspaceAuthorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -72,11 +73,13 @@ public static class DependencyInjection
         services.AddAuthorization();
 
         services.AddScoped<IWorkspaceProvider, WorkspaceProvider>();
+        services.AddScoped<IProjectProvider, ProjectProvider>();
         services.AddScoped<IPermissionProvider, PermissionProvider>();
         services.AddScoped<IUserProvider, UserRepository>();
         services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
         services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, WorkspaceAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, ProjectAuthorizationHandler>();
 
         return services;
     }
