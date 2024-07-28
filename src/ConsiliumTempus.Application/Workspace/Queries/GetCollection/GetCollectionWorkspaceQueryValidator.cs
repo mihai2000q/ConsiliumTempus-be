@@ -11,7 +11,7 @@ public sealed class GetCollectionWorkspaceQueryValidator : AbstractValidator<Get
     {
         RuleFor(q => q)
             .Must(q => q.PageSize is not null ? q.CurrentPage is not null : q.CurrentPage is null)
-            .WithMessage("Both the 'Page Size' and the 'Current Page' have to either be set or unset.")
+            .WithMessage("Both the 'PageSize' and the 'CurrentPage' have to either be set or unset.")
             .WithName(nameof(GetCollectionWorkspaceQuery.PageSize).And(nameof(GetCollectionWorkspaceQuery.CurrentPage)));
 
         RuleFor(q => q.PageSize)

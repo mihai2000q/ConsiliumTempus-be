@@ -17,16 +17,16 @@ public class CreateProjectTaskCommandHandlerTest
     #region Setup
 
     private readonly ICurrentUserProvider _currentUserProvider;
-    private readonly IProjectTaskRepository _projectTaskRepository;
+    private readonly IProjectSprintRepository _projectSprintRepository;
     private readonly CreateProjectTaskCommandHandler _uut;
 
     public CreateProjectTaskCommandHandlerTest()
     {
         _currentUserProvider = Substitute.For<ICurrentUserProvider>();
-        _projectTaskRepository = Substitute.For<IProjectTaskRepository>();
+        _projectSprintRepository = Substitute.For<IProjectSprintRepository>();
         _uut = new CreateProjectTaskCommandHandler(
             _currentUserProvider,
-            _projectTaskRepository);
+            _projectSprintRepository);
     }
 
     #endregion
@@ -38,7 +38,7 @@ public class CreateProjectTaskCommandHandlerTest
     {
         // Arrange
         var stage = ProjectStageFactory.CreateWithTasks();
-        _projectTaskRepository
+        _projectSprintRepository
             .GetStageWithTasksAndWorkspace(Arg.Any<ProjectStageId>())
             .Returns(stage);
 
@@ -51,7 +51,7 @@ public class CreateProjectTaskCommandHandlerTest
         var outcome = await _uut.Handle(command, default);
 
         // Arrange
-        await _projectTaskRepository
+        await _projectSprintRepository
             .Received(1)
             .GetStageWithTasksAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.ProjectStageId));
         await _currentUserProvider
@@ -70,7 +70,7 @@ public class CreateProjectTaskCommandHandlerTest
         // Arrange
         var command = ProjectTaskCommandFactory.CreateCreateProjectTaskCommand();
 
-        _projectTaskRepository
+        _projectSprintRepository
             .GetStageWithTasksAndWorkspace(Arg.Any<ProjectStageId>())
             .ReturnsNull();
 
@@ -78,7 +78,7 @@ public class CreateProjectTaskCommandHandlerTest
         var outcome = await _uut.Handle(command, default);
 
         // Arrange
-        await _projectTaskRepository
+        await _projectSprintRepository
             .Received(1)
             .GetStageWithTasksAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.ProjectStageId));
         _currentUserProvider.DidNotReceive();

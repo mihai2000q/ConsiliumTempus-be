@@ -30,12 +30,13 @@ public sealed class UserDeletedHandler(
                                          m.WorkspaceRole.Equals(WorkspaceRole.Admin));
                 var newOwner = newOwnerAdmin ?? workspace.Memberships.First(m => m.User != notification.User);
                 if (newOwnerAdmin is null) newOwner.UpdateWorkspaceRole(WorkspaceRole.Admin);
-                workspace.TransferOwnership(newOwner.User);
+                workspace.UpdateOwner(newOwner.User);
                 workspace.UpdateIsPersonal(IsPersonal.Create(false));
             }
         }
 
         await userRepository.NullifyAuditsByUser(notification.User, cancellationToken);
         await userRepository.RemoveProjectsByOwner(notification.User, cancellationToken);
+        await userRepository.RemoveWorkspaceInvitationsByUser(notification.User, cancellationToken);
     }
 }

@@ -8,6 +8,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
@@ -15,6 +16,7 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
@@ -43,6 +45,7 @@ public sealed class ProjectMappingConfig : IRegister
         CreateMappings(config);
         AddStatusMappings(config);
         UpdateMappings(config);
+        UpdateFavoritesMappings(config);
         UpdateOverviewMappings(config);
         UpdateStatusMappings(config);
         DeleteMappings(config);
@@ -73,7 +76,7 @@ public sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.UpdatedDateTime, src => src.Audit.UpdatedDateTime);
         config.NewConfig<UserAggregate, GetProjectResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
         config.NewConfig<WorkspaceAggregate, GetProjectResponse.WorkspaceResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
@@ -103,7 +106,7 @@ public sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.IsPrivate, src => src.IsPrivate.Value);
         config.NewConfig<UserAggregate, GetCollectionProjectResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
         config.NewConfig<ProjectStatus, GetCollectionProjectResponse.ProjectStatusResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
@@ -127,7 +130,7 @@ public sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.UpdatedDateTime, src => src.Audit.UpdatedDateTime);
         config.NewConfig<UserAggregate, GetStatusesFromProjectResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 
@@ -150,6 +153,13 @@ public sealed class ProjectMappingConfig : IRegister
         config.NewConfig<UpdateProjectRequest, UpdateProjectCommand>();
 
         config.NewConfig<UpdateProjectResult, UpdateProjectResponse>();
+    }
+
+    private static void UpdateFavoritesMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateFavoritesProjectRequest, UpdateFavoritesProjectCommand>();
+
+        config.NewConfig<UpdateFavoritesProjectResult, UpdateFavoritesProjectResponse>();
     }
 
     private static void UpdateOverviewMappings(TypeAdapterConfig config)

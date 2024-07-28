@@ -8,7 +8,7 @@ using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Common.Entities;
 
-public sealed class Membership : Entity<(UserId, WorkspaceId)>, ITimestamps
+public sealed class Membership : Entity<(UserId UserId, WorkspaceId WorkspaceId)>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private Membership()
@@ -31,7 +31,7 @@ public sealed class Membership : Entity<(UserId, WorkspaceId)>, ITimestamps
 
     private int _workspaceRoleId;
 
-    public override (UserId, WorkspaceId) Id => new(User.Id, Workspace.Id);
+    public override (UserId UserId, WorkspaceId WorkspaceId) Id => new(User.Id, Workspace.Id);
     public UserAggregate User { get; init; } = null!;
     public WorkspaceAggregate Workspace { get; init; } = null!;
     public WorkspaceRole WorkspaceRole => WorkspaceRole.GetValues().Single(wr => wr.Id == _workspaceRoleId);

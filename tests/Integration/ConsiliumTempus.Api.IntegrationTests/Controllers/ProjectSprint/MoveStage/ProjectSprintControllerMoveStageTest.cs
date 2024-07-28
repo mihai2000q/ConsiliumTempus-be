@@ -33,7 +33,7 @@ public class ProjectSprintControllerMoveStageTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/projects/sprints/Move-Stage", request);
+        var outcome = await Client.Post("api/projects/sprints/Move-Stage", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -62,7 +62,7 @@ public class ProjectSprintControllerMoveStageTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(ProjectSprintData.Users.First());
-        var outcome = await Client.Put("api/projects/sprints/Move-Stage", request);
+        var outcome = await Client.Post("api/projects/sprints/Move-Stage", request);
 
         // Assert
         await outcome.ValidateError(Errors.ProjectStage.NotFoundWithId(ProjectStageId.Create(request.OverStageId)));
@@ -86,7 +86,7 @@ public class ProjectSprintControllerMoveStageTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(ProjectSprintData.Users.First());
-        var outcome = await Client.Put("api/projects/sprints/Move-Stage", request);
+        var outcome = await Client.Post("api/projects/sprints/Move-Stage", request);
 
         // Assert
         await outcome.ValidateError(Errors.ProjectStage.NotFoundWithId(ProjectStageId.Create(request.StageId)));
@@ -105,7 +105,7 @@ public class ProjectSprintControllerMoveStageTest(WebAppFactory factory)
         var request = ProjectSprintRequestFactory.CreateMoveStageFromProjectSprintRequest(Guid.NewGuid());
 
         // Act
-        var outcome = await Client.Put("api/projects/sprints/Move-Stage", request);
+        var outcome = await Client.Post("api/projects/sprints/Move-Stage", request);
 
         // Assert
         await outcome.ValidateError(Errors.ProjectSprint.NotFound);

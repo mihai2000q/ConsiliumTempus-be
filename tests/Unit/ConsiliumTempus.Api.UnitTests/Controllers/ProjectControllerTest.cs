@@ -8,6 +8,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
+using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Api.Controllers;
@@ -17,6 +18,7 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
@@ -188,7 +190,7 @@ public class ProjectControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task GetStatuses_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -280,7 +282,7 @@ public class ProjectControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task AddStatus_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -298,7 +300,7 @@ public class ProjectControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<AddStatusToProjectCommand>(command => 
+            .Send(Arg.Is<AddStatusToProjectCommand>(command =>
                 Utils.Project.AssertAddStatusCommand(command, request)));
 
         var response = outcome.ToResponse<AddStatusToProjectResponse>();
@@ -372,7 +374,54 @@ public class ProjectControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
+    [Fact]
+    public async Task UpdateFavorites_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdateFavoritesProjectRequest();
+
+        var result = ProjectResultFactory.CreateUpdateFavoritesProjectResult();
+        _mediator
+            .Send(Arg.Any<UpdateFavoritesProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.UpdateFavorites(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateFavoritesProjectCommand>(command =>
+                Utils.Project.AssertUpdateFavoritesCommand(command, request)));
+
+        var response = outcome.ToResponse<UpdateFavoritesProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task UpdateFavorites_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdateFavoritesProjectRequest();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdateFavoritesProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.UpdateFavorites(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateFavoritesProjectCommand>(command =>
+                Utils.Project.AssertUpdateFavoritesCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+
     [Fact]
     public async Task UpdateOverview_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -390,7 +439,7 @@ public class ProjectControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<UpdateOverviewProjectCommand>(command => 
+            .Send(Arg.Is<UpdateOverviewProjectCommand>(command =>
                 Utils.Project.AssertUpdateOverviewCommand(command, request)));
 
         var response = outcome.ToResponse<UpdateOverviewProjectResponse>();
@@ -414,7 +463,7 @@ public class ProjectControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<UpdateOverviewProjectCommand>(command => 
+            .Send(Arg.Is<UpdateOverviewProjectCommand>(command =>
                 Utils.Project.AssertUpdateOverviewCommand(command, request)));
 
         outcome.ValidateError(error);
@@ -437,7 +486,7 @@ public class ProjectControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<UpdateStatusFromProjectCommand>(command => 
+            .Send(Arg.Is<UpdateStatusFromProjectCommand>(command =>
                 Utils.Project.AssertUpdateStatusCommand(command, request)));
 
         var response = outcome.ToResponse<UpdateStatusFromProjectResponse>();
@@ -466,7 +515,7 @@ public class ProjectControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task Delete_WhenIsSuccessful_ShouldReturnSuccess()
     {
@@ -511,7 +560,7 @@ public class ProjectControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task RemoveStatus_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -529,7 +578,7 @@ public class ProjectControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<RemoveStatusFromProjectCommand>(command => 
+            .Send(Arg.Is<RemoveStatusFromProjectCommand>(command =>
                 Utils.Project.AssertRemoveStatusCommand(command, request)));
 
         var response = outcome.ToResponse<RemoveStatusFromProjectResponse>();

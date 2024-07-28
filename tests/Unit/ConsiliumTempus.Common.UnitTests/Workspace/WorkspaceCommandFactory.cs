@@ -1,7 +1,13 @@
-﻿using ConsiliumTempus.Application.Workspace.Commands.Create;
+﻿using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
+using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
+using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.Leave;
+using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 
 namespace ConsiliumTempus.Common.UnitTests.Workspace;
@@ -15,14 +21,60 @@ public static class WorkspaceCommandFactory
             name);
     }
 
+    public static DeleteWorkspaceCommand CreateDeleteWorkspaceCommand(Guid? id = null)
+    {
+        return new DeleteWorkspaceCommand(id ?? Guid.NewGuid());
+    }
+
+    public static InviteCollaboratorToWorkspaceCommand CreateInviteCollaboratorToWorkspaceCommand(
+        Guid? id = null,
+        string email = Constants.User.Email)
+    {
+        return new InviteCollaboratorToWorkspaceCommand(
+            id ?? Guid.NewGuid(),
+            email);
+    }
+
+    public static AcceptInvitationToWorkspaceCommand CreateAcceptInvitationToWorkspaceCommand(
+        Guid? id = null,
+        Guid? invitationId = null)
+    {
+        return new AcceptInvitationToWorkspaceCommand(
+            id ?? Guid.NewGuid(),
+            invitationId ?? Guid.NewGuid());
+    }
+
+    public static RejectInvitationToWorkspaceCommand CreateRejectInvitationToWorkspaceCommand(
+        Guid? id = null,
+        Guid? invitationId = null)
+    {
+        return new RejectInvitationToWorkspaceCommand(
+            id ?? Guid.NewGuid(),
+            invitationId ?? Guid.NewGuid());
+    }
+
+    public static LeaveWorkspaceCommand CreateLeaveWorkspaceCommand(
+        Guid? id = null)
+    {
+        return new LeaveWorkspaceCommand(
+            id ?? Guid.NewGuid());
+    }
+
     public static UpdateWorkspaceCommand CreateUpdateWorkspaceCommand(
         Guid? id = null,
-        string name = Constants.Workspace.Name,
-        bool isFavorite = false)
+        string name = Constants.Workspace.Name)
     {
         return new UpdateWorkspaceCommand(
             id ?? Guid.NewGuid(),
-            name,
+            name);
+    }
+
+    public static UpdateFavoritesWorkspaceCommand CreateUpdateFavoriteWorkspaceCommand(
+        Guid? id = null,
+        bool isFavorite = false)
+    {
+        return new UpdateFavoritesWorkspaceCommand(
+            id ?? Guid.NewGuid(),
             isFavorite);
     }
     
@@ -34,9 +86,13 @@ public static class WorkspaceCommandFactory
             id ?? Guid.NewGuid(),
             description);
     }
-    
-    public static DeleteWorkspaceCommand CreateDeleteWorkspaceCommand(Guid? id = null)
+
+    public static UpdateOwnerWorkspaceCommand CreateUpdateOwnerWorkspaceCommand(
+        Guid? id = null,
+        Guid? ownerId = null)
     {
-        return new DeleteWorkspaceCommand(id ?? Guid.NewGuid());
+        return new UpdateOwnerWorkspaceCommand(
+            id ?? Guid.NewGuid(),
+            ownerId ?? Guid.NewGuid());
     }
 }

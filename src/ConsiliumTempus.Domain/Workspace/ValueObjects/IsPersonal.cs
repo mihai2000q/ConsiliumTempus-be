@@ -3,7 +3,7 @@ using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Domain.Workspace.ValueObjects;
 
-public class IsPersonal : ValueObject
+public sealed class IsPersonal : ValueObject
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private IsPersonal()

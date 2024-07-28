@@ -22,7 +22,7 @@ public class ProjectTaskControllerMoveValidationTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(ProjectTaskData.Users.First());
-        var outcome = await Client.Put("api/projects/tasks/move", request);
+        var outcome = await Client.Post("api/projects/tasks/move", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -37,7 +37,7 @@ public class ProjectTaskControllerMoveValidationTest(WebAppFactory factory)
             overId: Guid.Empty);  
 
         // Act
-        var outcome = await Client.Put("api/projects/tasks/move", request);
+        var outcome = await Client.Post("api/projects/tasks/move", request);
 
         // Assert
         await outcome.ValidateValidationErrors();

@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.User.Events;
 using ConsiliumTempus.Domain.User.ValueObjects;
 
@@ -38,6 +39,7 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
     public Credentials Credentials { get; private set; } = default!;
     public FirstName FirstName { get; private set; } = default!;
     public LastName LastName { get; private set; } = default!;
+    public Name Name => Name.Create(FirstName.Value + " " + LastName.Value);
     public Role? Role { get; private set; }
     public DateOnly? DateOfBirth { get; private set; }
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();

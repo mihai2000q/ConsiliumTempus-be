@@ -36,7 +36,7 @@ public class UpdateProjectTaskCommandHandlerTest
         // Arrange
         var task = ProjectTaskFactory.Create();
         _projectTaskRepository
-            .GetWithTasks(Arg.Any<ProjectTaskId>())
+            .GetWithWorkspace(Arg.Any<ProjectTaskId>())
             .Returns(task);
 
         var assignee = UserFactory.Create();
@@ -50,7 +50,7 @@ public class UpdateProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithTasks(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
         if (command.AssigneeId is not null)
         {
             await _userRepository
@@ -65,13 +65,13 @@ public class UpdateProjectTaskCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateProjectTaskCommand_WhenProjectStageIsNull_ShouldReturnProjectStageNotFoundError()
+    public async Task HandleUpdateProjectTaskCommand_WhenProjectTaskIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectTaskCommandFactory.CreateUpdateProjectTaskCommand();
 
         _projectTaskRepository
-            .GetWithTasks(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
+            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
             .ReturnsNull();
 
         // Act
@@ -80,7 +80,7 @@ public class UpdateProjectTaskCommandHandlerTest
         // Arrange
         await _projectTaskRepository
             .Received(1)
-            .GetWithTasks(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+            .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
         _userRepository.DidNotReceive();
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);

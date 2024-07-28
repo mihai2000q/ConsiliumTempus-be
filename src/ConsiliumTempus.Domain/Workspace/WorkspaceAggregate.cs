@@ -5,6 +5,7 @@ using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Workspace;
@@ -38,6 +39,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     private readonly List<Membership> _memberships = [];
     private readonly List<ProjectAggregate> _projects = [];
     private readonly List<UserAggregate> _favorites = [];
+    private readonly List<WorkspaceInvitation> _invitations = [];
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
@@ -49,6 +51,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
     public IReadOnlyList<ProjectAggregate> Projects => _projects.AsReadOnly();
     public IReadOnlyList<UserAggregate> Favorites => _favorites.AsReadOnly();
+    public IReadOnlyList<WorkspaceInvitation> Invitations => _invitations.AsReadOnly();
 
     public static WorkspaceAggregate Create(
         Name name,
@@ -74,22 +77,41 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
         return _favorites.SingleOrDefault(u => u == user) is not null;
     }
 
-    public void Update(Name name, bool isFavorite, UserAggregate user)
+    public void Update(Name name)
     {
         Name = name;
+        UpdatedDateTime = DateTime.UtcNow;
+        LastActivity = DateTime.UtcNow;
+    }
+
+    public void UpdateFavorites(bool isFavorite, UserAggregate user)
+    {
         if (isFavorite)
             _favorites.Add(user);
         else
             _favorites.Remove(user);
-        UpdatedDateTime = DateTime.UtcNow;
-        RefreshActivity();
     }
-    
+
     public void UpdateOverview(Description description)
     {
         Description = description;
         UpdatedDateTime = DateTime.UtcNow;
-        RefreshActivity();
+        LastActivity = DateTime.UtcNow;
+    }
+
+    public void UpdateOwner(UserAggregate owner)
+    {
+        Owner = owner;
+    }
+
+    public void UpdateIsPersonal(IsPersonal isPersonal)
+    {
+        IsPersonal = isPersonal;
+    }
+
+    public void RefreshUpdatedDateTime()
+    {
+        UpdatedDateTime = DateTime.UtcNow;
     }
 
     public void RefreshActivity()
@@ -102,13 +124,18 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
         _memberships.Add(membership);
     }
 
-    public void TransferOwnership(UserAggregate owner)
+    public void RemoveUserMembership(Membership membership)
     {
-        Owner = owner;
+        _memberships.Remove(membership);
     }
 
-    public void UpdateIsPersonal(IsPersonal isPersonal)
+    public void AddInvitation(WorkspaceInvitation invitation)
     {
-        IsPersonal = isPersonal;
+        _invitations.Add(invitation);
+    }
+
+    public void RemoveInvitation(WorkspaceInvitation invitation)
+    {
+        _invitations.Remove(invitation);
     }
 }

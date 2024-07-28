@@ -1,7 +1,7 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Domain.Common.Validation;
+﻿using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,7 +14,6 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
         builder.ToTable(nameof(UserAggregate).TruncateAggregate());
 
         builder.HasKey(u => u.Id);
-        builder.HasIndex(u => u.Id);
         builder.Property(u => u.Id)
             .HasConversion(
                 id => id.Value,

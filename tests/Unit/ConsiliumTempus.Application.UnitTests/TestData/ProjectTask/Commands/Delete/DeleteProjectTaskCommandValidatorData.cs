@@ -13,8 +13,18 @@ internal static class DeleteProjectTaskCommandValidatorData
             Add(command);
 
             command = new DeleteProjectTaskCommand(
+                Guid.NewGuid(),
                 Guid.NewGuid());
             Add(command);
+        }
+    }
+
+    internal class GetInvalidStageIdCommands : TheoryData<DeleteProjectTaskCommand, string>
+    {
+        public GetInvalidStageIdCommands()
+        {
+            var command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand(stageId: Guid.Empty);
+            Add(command, nameof(command.StageId));
         }
     }
 

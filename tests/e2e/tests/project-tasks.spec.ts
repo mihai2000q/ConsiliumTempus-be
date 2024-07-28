@@ -10,6 +10,7 @@ import { createProjectTask, getProjectTask, getProjectTasks } from "../utils/pro
 import UpdateProjectTaskRequest from "../types/requests/project-task/UpdateProjectTaskRequest";
 import UpdateOverviewProjectTaskRequest from "../types/requests/project-task/UpdateOverviewProjectTaskRequest";
 import MoveProjectTaskRequest from "../types/requests/project-task/MoveProjectTaskRequest";
+import UpdateIsCompletedProjectTaskRequest from "../types/requests/project-task/UpdateIsCompletedProjectTaskRequest";
 
 test.describe('should allow operations on the project task entity', () => {
   let STAGE_ID: string
@@ -290,8 +291,7 @@ test.describe('should allow operations on the project task entity', () => {
 
     const body: UpdateProjectTaskRequest = {
       id: task.id,
-      name: "task 2 - Updated",
-      isCompleted: true
+      name: "task 2 - Updated"
     }
     const response = await request.put('/api/projects/tasks', {
       ...useToken(),
@@ -308,8 +308,43 @@ test.describe('should allow operations on the project task entity', () => {
     expect(newTask).toStrictEqual({
       name: body.name,
       description: "",
-      isCompleted: body.isCompleted,
+      isCompleted: false,
       assignee: body.assigneeId ? expect.objectContaining({ id: body.assigneeId }) : null,
+      stage: expect.any(Object),
+      sprint: expect.any(Object),
+      project: expect.any(Object),
+      workspace: expect.any(Object)
+    })
+  })
+
+  test('should update is completed project task', async ({ request }) => {
+    const createProjectTaskRequest: CreateProjectTaskRequest = {
+      projectStageId: STAGE_ID,
+      name: "task 2"
+    }
+    const task = await createProjectTask(request, createProjectTaskRequest)
+
+    const body: UpdateIsCompletedProjectTaskRequest = {
+      id: task.id,
+      isCompleted: true
+    }
+    const response = await request.put('/api/projects/tasks/is-completed', {
+      ...useToken(),
+      data: body
+    });
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const newTask = await getProjectTask(request, task.id)
+    expect(newTask).toStrictEqual({
+      name: createProjectTaskRequest.name,
+      description: "",
+      isCompleted: body.isCompleted,
+      assignee: null,
       stage: expect.any(Object),
       sprint: expect.any(Object),
       project: expect.any(Object),
@@ -328,7 +363,6 @@ test.describe('should allow operations on the project task entity', () => {
       id: task.id,
       name: "task 2 - Updated",
       description: "THis is a new description",
-      isCompleted: true,
       assigneeId: null
     }
     const response = await request.put('/api/projects/tasks/overview', {
@@ -346,7 +380,7 @@ test.describe('should allow operations on the project task entity', () => {
     expect(newTask).toStrictEqual({
       name: body.name,
       description: body.description,
-      isCompleted: body.isCompleted,
+      isCompleted: false,
       assignee: body.assigneeId ? expect.objectContaining({ id: body.assigneeId }) : null,
       stage: expect.any(Object),
       sprint: expect.any(Object),
@@ -378,7 +412,7 @@ test.describe('should allow operations on the project task entity', () => {
       id: task2.id,
       overId: task3.id
     }
-    const response = await request.put('/api/projects/tasks/move', {
+    const response = await request.post('/api/projects/tasks/move', {
       ...useToken(),
       data: body
     });
@@ -419,7 +453,10 @@ test.describe('should allow operations on the project task entity', () => {
       name: "Project task Name"
     })
 
-    const response = await request.delete(`/api/projects/tasks/${projectTask.id}`, useToken());
+    const response = await request.delete(
+      `/api/projects/tasks/${projectTask.id}/from/${STAGE_ID}`,
+      useToken()
+    );
 
     expect(response.ok()).toBeTruthy()
 

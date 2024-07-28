@@ -7,4 +7,9 @@ internal static partial class Constants
         internal const string Name = "PBT For The Win";
         internal const string Description = "This is our team and we win";
     }
+
+    internal static class WorkspaceInvitation
+    {
+        internal const string Email = "bsmith@gmail.com";
+    }
 }

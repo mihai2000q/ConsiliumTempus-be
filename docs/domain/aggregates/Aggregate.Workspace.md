@@ -9,11 +9,16 @@ class Workspace
 {
     Workspace Create()
     void Update()
+    void UpdateFavorites()
     void UpdateOverview()
-    void AddUserMembership()
-    void RefreshActivity()
-    void TransferOwnership()
+    void UpdateOwner()
     void UpdateIsPersonal()
+    void AddUserMembership()
+    void RemoveUserMembership()
+    void RefreshUpdatedDateTime()
+    void RefreshActivity()
+    void AddInvitation()
+    void RemoveInvitation()
 }
 ```
 
@@ -28,7 +33,8 @@ class Workspace
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
   "memberships": [{}],
-  "favorites": [{}]
+  "favorites": [{}],
+  "invitations": [{}]
 }
 ```
 
@@ -42,7 +48,9 @@ For database design checkout the [Workspace Diagram](../../database-diagrams/agg
 ### Domain Errors
 
 - **Not Found** when the workspace cannot be found
-- **Personal Workspace** when the workspace is personal (used to restrict deletion)
+- **Delete Personal Workspace** when the workspace is personal, it cannot be deleted (not even by their owner)
+- **Leave Owned Workspace** when the workspace cannot be left by their owner
+- **Collaborator Not Found** when the collaborator cannot be found within the workspace
 
 ### Value Objects
 

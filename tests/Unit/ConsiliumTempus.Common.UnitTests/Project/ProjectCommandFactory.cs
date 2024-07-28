@@ -3,6 +3,7 @@ using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
+using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
@@ -62,14 +63,12 @@ public static class ProjectCommandFactory
     public static UpdateProjectCommand CreateUpdateProjectCommand(
         Guid? id = null,
         string name = Constants.Project.Name,
-        ProjectLifecycle lifecycle = ProjectLifecycle.Active,
-        bool isFavorite = false)
+        ProjectLifecycle lifecycle = ProjectLifecycle.Active)
     {
         return new UpdateProjectCommand(
             id ?? Guid.NewGuid(),
             name,
-            lifecycle.ToString(),
-            isFavorite);
+            lifecycle.ToString());
     }
     
     public static UpdateProjectCommand CreateUpdateProjectCommandWithLifecycle(string lifecycle)
@@ -77,8 +76,16 @@ public static class ProjectCommandFactory
         return new UpdateProjectCommand(
             Guid.NewGuid(),
             Constants.Project.Name,
-            lifecycle,
-            false);
+            lifecycle);
+    }
+
+    public static UpdateFavoritesProjectCommand CreateUpdateFavoritesProjectCommand(
+        Guid? id = null,
+        bool isFavorite = false)
+    {
+        return new UpdateFavoritesProjectCommand(
+            id ?? Guid.NewGuid(),
+            isFavorite);
     }
     
     public static UpdateOverviewProjectCommand CreateUpdateOverviewProjectCommand(

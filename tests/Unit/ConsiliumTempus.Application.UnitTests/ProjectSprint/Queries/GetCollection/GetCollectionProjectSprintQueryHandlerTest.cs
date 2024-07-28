@@ -1,6 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
-using ConsiliumTempus.Application.UnitTests.TestData.ProjectSprint.Queries;
+using ConsiliumTempus.Application.UnitTests.TestData.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Filters;

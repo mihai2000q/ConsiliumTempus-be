@@ -22,6 +22,9 @@
   * [Update](#update)
     * [Update Project Request](#update-project-request)
     * [Update Project Response](#update-project-response)
+  * [Update Favorites](#update-favorites)
+    * [Update Favorites Project Request](#update-favorites-project-request)
+    * [Update Favorites Project Response](#update-favorites-project-response)
   * [Update Overview](#update-overview)
     * [Update Overview Project Request](#update-overview-project-request)
     * [Update Overview Project Response](#update-overview-project-response)
@@ -96,7 +99,7 @@ Returns a project.
 ### Get Overview
 
 Anyone that is part of the workspace can read a project overview
-([Read Project Permission](../Security.md/#permissions)).
+([Read Overview Project Permission](../Security.md/#permissions)).
 
 ```js
 GET {{host}}/api/projects/overview/{id}
@@ -132,11 +135,11 @@ GET {{host}}/api/projects?pageSize=2&currentPage=1&orderBy=name.desc&orderBy=las
 
 It sends optional query parameters to paginate, order or filter the projects by workspace, name, etc.
 
-- _**pageSize**_ is used to specify the size of the page
-- _**currentPage**_ is used to specify the current page
-- _**orderBy**_ is used to order the collection
-- _**search**_ is used to filter the collection
-- _**workspaceId**_ is used to filter the projects by workspace
+- **pageSize** is used to specify the size of the page
+- **currentPage** is used to specify the current page
+- **orderBy** is used to order the collection
+- **search** is used to filter the collection
+- **workspaceId** is used to filter the projects by workspace
 
 #### Get Collection Response
 
@@ -319,8 +322,7 @@ Sends body data that the project needs to be updated.
 {
   "id": "10000000-0000-0000-0000-000000000000",
   "name": "New Project Name",
-  "lifecycle": "Active",
-  "isFavorite": false
+  "lifecycle": "Active"
 }
 ```
 
@@ -328,10 +330,34 @@ Sends body data that the project needs to be updated.
 
 Returns a confirmation message that the project has been updated successfully.
 
+### Update Favorites
+
+Anyone that is part of the workspace can add the project to favorites
+([Update Favorites Project Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/projects/favorites
+```
+
+#### Update Favorites Project Request
+
+Sends body data that the project favorites need to be updated.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "isFavorite": true
+}
+```
+
+#### Update Favorites Project Response
+
+Returns a confirmation message that the project favorites have been updated successfully.
+
 ### Update Overview
 
 All members that are part of the workspace can update a project overview
-([Update Project Permission](../Security.md/#permissions)).
+([Update Overview Project Permission](../Security.md/#permissions)).
 
 ```js
 PUT {{host}}/api/projects/overview

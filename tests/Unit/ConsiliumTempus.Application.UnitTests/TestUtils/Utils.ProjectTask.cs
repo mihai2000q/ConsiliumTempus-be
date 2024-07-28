@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -58,34 +59,23 @@ internal static partial class Utils
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
-        internal static void AssertFromUpdateCommand(
-            ProjectTaskAggregate task,
-            UpdateProjectTaskCommand command,
-            UserAggregate assignee)
-        {
-            task.Name.Value.Should().Be(command.Name);
-            task.IsCompleted.Value.Should().Be(command.IsCompleted);
-            task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-
-            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-        }
-
         internal static void AssertFromMoveCommandToAnotherStage(
             ProjectTaskAggregate task,
-            MoveProjectTaskCommand command,
-            List<ProjectStage> stages)
+            MoveProjectTaskCommand command)
         {
-            var overStage = stages.Single(s => s.Id.Value == command.OverId);
+            var overStage = task.Stage.Sprint.Stages.Single(s => s.Id.Value == command.OverId);
 
             task.Id.Value.Should().Be(command.Id);
             task.CustomOrderPosition.Value.Should().Be(0);
             task.Stage.Should().Be(overStage);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            overStage.Tasks.Should().Contain(task);
+            overStage.Tasks.Should().ContainSingle(t => t == task);
             overStage.Tasks[0].Should().Be(task);
             overStage.Tasks.ShouldBeOrdered();
+
+            task.Stage.Sprint.Stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
+            task.Stage.Sprint.Stages.SelectMany(s => s.Tasks)
+                .Should().ContainSingle(t => t == task);
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -109,10 +99,9 @@ internal static partial class Utils
         internal static void AssertFromMoveCommandOverTaskToAnotherStage(
             ProjectTaskAggregate task,
             MoveProjectTaskCommand command,
-            List<ProjectStage> stages,
             int expectedCustomOrderPosition)
         {
-            var overStage = stages
+            var overStage = task.Stage.Sprint.Stages
                 .SelectMany(s => s.Tasks)
                 .Single(s => s.Id.Value == command.OverId)
                 .Stage;
@@ -122,7 +111,37 @@ internal static partial class Utils
             task.Stage.Should().Be(overStage);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
+            task.Stage.Sprint.Stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
+            task.Stage.Sprint.Stages.SelectMany(s => s.Tasks)
+                .Should().ContainSingle(t => t == task);
+
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static void AssertFromUpdateCommand(
+            ProjectTaskAggregate task,
+            UpdateProjectTaskCommand command,
+            UserAggregate assignee)
+        {
+            task.Name.Value.Should().Be(command.Name);
+            task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static void AssertFromUpdateIsCompletedCommand(
+            ProjectTaskAggregate task,
+            UpdateIsCompletedProjectTaskCommand command)
+        {
+            task.IsCompleted.Value.Should().Be(command.IsCompleted);
+            if (command.IsCompleted)
+                task.IsCompleted.CompletedOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            else
+                task.IsCompleted.CompletedOn.Should().BeNull();
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -135,7 +154,6 @@ internal static partial class Utils
         {
             task.Name.Value.Should().Be(command.Name);
             task.Description.Value.Should().Be(command.Description);
-            task.IsCompleted.Value.Should().Be(command.IsCompleted);
             task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 

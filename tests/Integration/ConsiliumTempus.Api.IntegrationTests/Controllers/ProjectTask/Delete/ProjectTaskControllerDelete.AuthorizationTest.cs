@@ -53,11 +53,14 @@ public class ProjectTaskControllerDeleteAuthorizationTest(WebAppFactory factory)
     private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
     {
         // Arrange
-        var task = ProjectTaskData.ProjectTasks.First();
-        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(task.Id.Value);
+        var stage = ProjectTaskData.ProjectStages.First();
+        var task = stage.Tasks[0];
+        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(
+            task.Id.Value,
+            stage.Id.Value);
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Delete($"api/projects/tasks/{request.Id}");
+        return await Client.Delete($"api/projects/tasks/{request.Id}/from/{request.StageId}");
     }
 }

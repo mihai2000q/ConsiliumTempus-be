@@ -56,7 +56,7 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
         );
     }
 
-    [HasPermission(Permissions.ReadProjectSprint)]
+    [HasPermission(Permissions.ReadStagesFromProjectSprint)]
     [HttpGet("{id:guid}/stages")]
     public async Task<IActionResult> GetStages(GetStagesFromProjectSprintRequest request,
         CancellationToken cancellationToken)
@@ -110,6 +110,20 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
         );
     }
 
+    [HasPermission(Permissions.MoveStageFromProjectSprint)]
+    [HttpPost("Move-Stage")]
+    public async Task<IActionResult> MoveStage(MoveStageFromProjectSprintRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<MoveStageFromProjectSprintCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            moveStageResult => Ok(Mapper.Map<MoveStageFromProjectSprintResponse>(moveStageResult)),
+            Problem
+        );
+    }
+
     [HasPermission(Permissions.UpdateStageFromProjectSprint)]
     [HttpPut("Update-Stage")]
     public async Task<IActionResult> UpdateStage(UpdateStageFromProjectSprintRequest request,
@@ -120,20 +134,6 @@ public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : 
 
         return result.Match(
             updateStageResult => Ok(Mapper.Map<UpdateStageFromProjectSprintResponse>(updateStageResult)),
-            Problem
-        );
-    }
-    
-    [HasPermission(Permissions.UpdateStageFromProjectSprint)]
-    [HttpPut("Move-Stage")]
-    public async Task<IActionResult> MoveStage(MoveStageFromProjectSprintRequest request,
-        CancellationToken cancellationToken)
-    {
-        var command = Mapper.Map<MoveStageFromProjectSprintCommand>(request);
-        var result = await Mediator.Send(command, cancellationToken);
-
-        return result.Match(
-            moveStageResult => Ok(Mapper.Map<MoveStageFromProjectSprintResponse>(moveStageResult)),
             Problem
         );
     }

@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -24,19 +25,24 @@ public static class ProjectTaskResultFactory
         return new CreateProjectTaskResult();
     }
 
+    public static MoveProjectTaskResult CreateMoveProjectTaskResult()
+    {
+        return new MoveProjectTaskResult();
+    }
+
     public static UpdateProjectTaskResult CreateUpdateProjectTaskResult()
     {
         return new UpdateProjectTaskResult();
     }
 
+    public static UpdateIsCompletedProjectTaskResult CreateUpdateIsCompletedProjectTaskResult()
+    {
+        return new UpdateIsCompletedProjectTaskResult();
+    }
+
     public static UpdateOverviewProjectTaskResult CreateUpdateOverviewProjectTaskResult()
     {
         return new UpdateOverviewProjectTaskResult();
-    }
-    
-    public static MoveProjectTaskResult CreateMoveProjectTaskResult()
-    {
-        return new MoveProjectTaskResult();
     }
 
     public static DeleteProjectTaskResult CreateDeleteProjectTaskResult()

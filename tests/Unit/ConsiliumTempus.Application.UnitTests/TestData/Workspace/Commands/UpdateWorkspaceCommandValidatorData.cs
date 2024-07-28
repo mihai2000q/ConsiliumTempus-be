@@ -15,8 +15,7 @@ internal static class UpdateWorkspaceCommandValidatorData
 
             command = new UpdateWorkspaceCommand(
                 Guid.NewGuid(),
-                "Basketball Team",
-                false);
+                "Basketball Team");
             Add(command);
         }
     }

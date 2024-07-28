@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 
-namespace ConsiliumTempus.Application.UnitTests.TestData.ProjectSprint.Queries;
+namespace ConsiliumTempus.Application.UnitTests.TestData.ProjectSprint.Queries.GetCollection;
 
 internal static class GetCollectionProjectSprintQueryValidatorData
 {

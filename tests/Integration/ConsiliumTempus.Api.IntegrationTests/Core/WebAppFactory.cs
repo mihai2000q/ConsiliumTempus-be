@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
+using DotNet.Testcontainers.Builders;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -24,6 +25,8 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         new MsSqlBuilder()
             .WithImage(SetupConstants.MsSqlImage)
             .WithPassword(SetupConstants.DatabasePassword)
+            .WithWaitStrategy(Wait.ForUnixContainer()
+                .UntilMessageIsLogged("SQL Server is now ready for client connections."))
             .Build();
 
     private DbConnection _dbConnection = null!;

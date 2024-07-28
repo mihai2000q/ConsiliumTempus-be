@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240727171344_InitialCreate")]
+    [Migration("20240728184253_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -146,121 +146,191 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            Name = "UpdateWorkspace"
+                            Name = "ReadOverviewWorkspace"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "DeleteWorkspace"
+                            Name = "ReadCollaboratorsFromWorkspace"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "CreateProject"
+                            Name = "ReadInvitationsFromWorkspace"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "ReadProject"
+                            Name = "InviteCollaboratorToWorkspace"
                         },
                         new
                         {
                             Id = 6,
-                            Name = "ReadCollectionProject"
+                            Name = "UpdateWorkspace"
                         },
                         new
                         {
                             Id = 7,
-                            Name = "UpdateProject"
+                            Name = "UpdateFavoritesWorkspace"
                         },
                         new
                         {
                             Id = 8,
-                            Name = "DeleteProject"
+                            Name = "UpdateOverviewWorkspace"
                         },
                         new
                         {
                             Id = 9,
-                            Name = "AddStatusToProject"
+                            Name = "DeleteWorkspace"
                         },
                         new
                         {
                             Id = 10,
-                            Name = "ReadStatusesFromProject"
+                            Name = "CreateProject"
                         },
                         new
                         {
                             Id = 11,
-                            Name = "UpdateStatusFromProject"
+                            Name = "ReadProject"
                         },
                         new
                         {
                             Id = 12,
-                            Name = "RemoveStatusFromProject"
+                            Name = "ReadOverviewProject"
                         },
                         new
                         {
                             Id = 13,
-                            Name = "CreateProjectSprint"
+                            Name = "ReadCollectionProject"
                         },
                         new
                         {
                             Id = 14,
-                            Name = "ReadProjectSprint"
+                            Name = "UpdateProject"
                         },
                         new
                         {
                             Id = 15,
-                            Name = "ReadCollectionProjectSprint"
+                            Name = "UpdateFavoritesProject"
                         },
                         new
                         {
                             Id = 16,
-                            Name = "UpdateProjectSprint"
+                            Name = "UpdateOverviewProject"
                         },
                         new
                         {
                             Id = 17,
-                            Name = "DeleteProjectSprint"
+                            Name = "DeleteProject"
                         },
                         new
                         {
                             Id = 18,
-                            Name = "AddStageToProjectSprint"
+                            Name = "AddStatusToProject"
                         },
                         new
                         {
                             Id = 19,
-                            Name = "UpdateStageFromProjectSprint"
+                            Name = "ReadStatusesFromProject"
                         },
                         new
                         {
                             Id = 20,
-                            Name = "RemoveStageFromProjectSprint"
+                            Name = "UpdateStatusFromProject"
                         },
                         new
                         {
                             Id = 21,
-                            Name = "CreateProjectTask"
+                            Name = "RemoveStatusFromProject"
                         },
                         new
                         {
                             Id = 22,
-                            Name = "ReadProjectTask"
+                            Name = "CreateProjectSprint"
                         },
                         new
                         {
                             Id = 23,
-                            Name = "ReadCollectionProjectTask"
+                            Name = "ReadProjectSprint"
                         },
                         new
                         {
                             Id = 24,
-                            Name = "UpdateProjectTask"
+                            Name = "ReadCollectionProjectSprint"
                         },
                         new
                         {
                             Id = 25,
+                            Name = "UpdateProjectSprint"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Name = "DeleteProjectSprint"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Name = "ReadStagesFromProjectSprint"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Name = "AddStageToProjectSprint"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Name = "MoveStageFromProjectSprint"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Name = "UpdateStageFromProjectSprint"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Name = "RemoveStageFromProjectSprint"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Name = "CreateProjectTask"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Name = "ReadProjectTask"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Name = "ReadCollectionProjectTask"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Name = "MoveProjectTask"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Name = "UpdateProjectTask"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Name = "UpdateIsCompletedProjectTask"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Name = "UpdateOverviewProjectTask"
+                        },
+                        new
+                        {
+                            Id = 39,
                             Name = "DeleteProjectTask"
                         });
                 });
@@ -328,17 +398,32 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 1,
-                            PermissionId = 5
+                            PermissionId = 2
                         },
                         new
                         {
                             WorkspaceRoleId = 1,
-                            PermissionId = 6
+                            PermissionId = 3
                         },
                         new
                         {
                             WorkspaceRoleId = 1,
-                            PermissionId = 14
+                            PermissionId = 7
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 1,
+                            PermissionId = 11
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 1,
+                            PermissionId = 12
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 1,
+                            PermissionId = 13
                         },
                         new
                         {
@@ -348,12 +433,32 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 1,
-                            PermissionId = 22
+                            PermissionId = 19
                         },
                         new
                         {
                             WorkspaceRoleId = 1,
                             PermissionId = 23
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 1,
+                            PermissionId = 24
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 1,
+                            PermissionId = 27
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 1,
+                            PermissionId = 33
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 1,
+                            PermissionId = 34
                         },
                         new
                         {
@@ -368,7 +473,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 2,
-                            PermissionId = 5
+                            PermissionId = 3
                         },
                         new
                         {
@@ -383,12 +488,22 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 2,
-                            PermissionId = 10
+                            PermissionId = 8
                         },
                         new
                         {
                             WorkspaceRoleId = 2,
                             PermissionId = 11
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 12
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 13
                         },
                         new
                         {
@@ -413,12 +528,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 2,
-                            PermissionId = 21
-                        },
-                        new
-                        {
-                            WorkspaceRoleId = 2,
-                            PermissionId = 22
+                            PermissionId = 20
                         },
                         new
                         {
@@ -434,6 +544,56 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 2,
                             PermissionId = 25
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 27
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 30
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 32
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 33
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 34
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 35
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 36
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 37
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 38
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 2,
+                            PermissionId = 39
                         },
                         new
                         {
@@ -488,12 +648,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 3,
-                            PermissionId = 12
+                            PermissionId = 11
                         },
                         new
                         {
                             WorkspaceRoleId = 3,
-                            PermissionId = 11
+                            PermissionId = 12
                         },
                         new
                         {
@@ -533,12 +693,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             WorkspaceRoleId = 3,
-                            PermissionId = 20
+                            PermissionId = 21
                         },
                         new
                         {
                             WorkspaceRoleId = 3,
-                            PermissionId = 21
+                            PermissionId = 20
                         },
                         new
                         {
@@ -559,6 +719,76 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         {
                             WorkspaceRoleId = 3,
                             PermissionId = 25
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 26
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 28
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 27
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 29
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 30
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 31
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 32
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 33
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 34
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 35
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 36
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 37
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 38
+                        },
+                        new
+                        {
+                            WorkspaceRoleId = 3,
+                            PermissionId = 39
                         });
                 });
 
@@ -721,9 +951,35 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id");
-
                     b.ToTable("User", (string)null);
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Workspace.Entities.WorkspaceInvitation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CollaboratorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("WorkspaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CollaboratorId");
+
+                    b.HasIndex("SenderId");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("WorkspaceInvitation", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", b =>
@@ -744,8 +1000,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id");
 
                     b.HasIndex("OwnerId");
 
@@ -1310,6 +1564,10 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.Property<Guid>("ProjectTaskAggregateId")
                                 .HasColumnType("uniqueidentifier");
 
+                            b1.Property<DateTime?>("CompletedOn")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("CompletedOn");
+
                             b1.Property<bool>("Value")
                                 .HasColumnType("bit")
                                 .HasColumnName("IsCompleted");
@@ -1510,6 +1768,33 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("ConsiliumTempus.Domain.Workspace.Entities.WorkspaceInvitation", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Collaborator")
+                        .WithMany()
+                        .HasForeignKey("CollaboratorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", "Workspace")
+                        .WithMany("Invitations")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Collaborator");
+
+                    b.Navigation("Sender");
+
+                    b.Navigation("Workspace");
+                });
+
             modelBuilder.Entity("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", b =>
                 {
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Owner")
@@ -1638,6 +1923,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", b =>
                 {
+                    b.Navigation("Invitations");
+
                     b.Navigation("Memberships");
 
                     b.Navigation("Projects");

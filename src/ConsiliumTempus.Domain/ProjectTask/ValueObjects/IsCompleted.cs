@@ -10,16 +10,20 @@ public sealed class IsCompleted : ValueObject
     {
     }
 
-    private IsCompleted(bool value)
+    private IsCompleted(bool value, DateTime? completedOn)
     {
         Value = value;
+        CompletedOn = completedOn;
     }
 
     public bool Value { get; }
+    public DateTime? CompletedOn { get; }
 
-    public static IsCompleted Create(bool value)
+    public static IsCompleted Create(bool value, DateTime? completedOn = null)
     {
-        return new IsCompleted(value);
+        return new IsCompleted(
+            value, 
+            completedOn);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

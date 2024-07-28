@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
@@ -9,20 +8,17 @@ namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 
 public interface IProjectTaskRepository
 {
-    Task<ProjectTaskAggregate?> GetWithWorkspace(ProjectTaskId id, CancellationToken cancellationToken = default);
-
-    Task<ProjectTaskAggregate?> GetWithSprint(
+    Task<ProjectTaskAggregate?> GetWithWorkspace(
         ProjectTaskId id,
-        bool isTracking = true,
         CancellationToken cancellationToken = default);
 
     Task<ProjectTaskAggregate?> GetWithStagesAndWorkspace(
         ProjectTaskId id,
         CancellationToken cancellationToken = default);
 
-    Task<ProjectTaskAggregate?> GetWithTasks(ProjectTaskId id, CancellationToken cancellationToken = default);
-
-    Task<ProjectStage?> GetStageWithTasksAndWorkspace(ProjectStageId id, CancellationToken cancellationToken = default);
+    Task<ProjectTaskAggregate?> GetWithTasksAndWorkspace(
+        ProjectTaskId id,
+        CancellationToken cancellationToken = default);
 
     Task<List<ProjectTaskAggregate>> GetListByStage(
         ProjectStageId stageId,

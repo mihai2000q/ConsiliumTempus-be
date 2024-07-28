@@ -18,7 +18,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectTaskData())
 {
     [Fact]
-    public async Task MoveProjectTask_WhenMovingWithinStage_ShouldMoveAndReturnSuccessResponse()
+    public async Task MoveProjectTask_WhenMovingWithinStageOnUpperPosition_ShouldMoveAndReturnSuccessResponse()
     {
         // Arrange
         var user = ProjectTaskData.Users.First();
@@ -32,7 +32,43 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/projects/tasks/Move", request);
+        var outcome = await Client.Post("api/projects/tasks/Move", request);
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var response = await outcome.Content.ReadFromJsonAsync<MoveProjectTaskResponse>();
+        response!.Message.Should().Be("Project Task has been moved successfully!");
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        var movedTask = dbContext.Set<ProjectStage>()
+            .AsNoTracking()
+            .Include(s => s.Tasks.OrderBy(tt => tt.CustomOrderPosition.Value))
+            .Include(s => s.Sprint.Project.Workspace)
+            .Where(s => s.Sprint.Id == task.Stage.Sprint.Id)
+            .ToList()
+            .SelectMany(s => s.Tasks)
+            .Single(t => t.Id == task.Id);
+
+        Utils.ProjectTask.AssertMoveWithinStage(request, movedTask, expectedCustomOrderPosition);
+    }
+
+    [Fact]
+    public async Task MoveProjectTask_WhenMovingWithinStageOnLowerPosition_ShouldMoveAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = ProjectTaskData.Users.First();
+        var task = ProjectTaskData.ProjectTasks[3];
+        var overTask = ProjectTaskData.ProjectTasks[1];
+        var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(
+            task.Id.Value,
+            overTask.Id.Value);
+
+        var expectedCustomOrderPosition = overTask.CustomOrderPosition.Value;
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Post("api/projects/tasks/Move", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -66,7 +102,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/projects/tasks/Move", request);
+        var outcome = await Client.Post("api/projects/tasks/Move", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -76,14 +112,17 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var movedTask = await dbContext.ProjectTasks
+            .AsNoTracking()
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .SingleAsync(t => t.Id == task.Id);
 
-        var updatedOverStage = await dbContext.Set<ProjectStage>()
+        var stages = await dbContext.Set<ProjectStage>()
+            .AsNoTracking()
             .Include(s => s.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
-            .SingleAsync(s => s.Id == overStage.Id);
+            .Where(s => s.Sprint.Id == task.Stage.Sprint.Id)
+            .ToListAsync();
 
-        Utils.ProjectTask.AssertMoveToAnotherStage(request, movedTask, updatedOverStage);
+        Utils.ProjectTask.AssertMoveToAnotherStage(request, movedTask, stages);
     }
 
     [Fact]
@@ -101,7 +140,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/projects/tasks/Move", request);
+        var outcome = await Client.Post("api/projects/tasks/Move", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -116,6 +155,7 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
             .SingleAsync(t => t.Id == task.Id);
 
         var stages = await dbContext.Set<ProjectStage>()
+            .AsNoTracking()
             .Include(s => s.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
             .Where(s => s.Sprint.Id == movedTask.Stage.Sprint.Id)
             .ToListAsync();
@@ -134,12 +174,11 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
         // Arrange
         var user = ProjectTaskData.Users.First();
         var task = ProjectTaskData.ProjectTasks.First();
-        var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(
-            id: task.Id.Value);
+        var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(task.Id.Value);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/projects/tasks/Move", request);
+        var outcome = await Client.Post("api/projects/tasks/Move", request);
 
         // Assert
         await outcome.ValidateError(Errors.ProjectTask.OverNotFound);
@@ -157,10 +196,10 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
     public async Task MoveProjectTask_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest(Guid.NewGuid());
+        var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest();
 
         // Act
-        var outcome = await Client.Put("api/projects/tasks/Move", request);
+        var outcome = await Client.Post("api/projects/tasks/Move", request);
 
         // Assert
         await outcome.ValidateError(Errors.ProjectTask.NotFound);

@@ -5,6 +5,7 @@ using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -33,7 +34,6 @@ public sealed class ConsiliumTempusDbContext(
         modelBuilder.Model.GetEntityTypes()
             .SelectMany(e => e.GetProperties())
             .Where(p => p.IsPrimaryKey())
-            .ToList()
             .ForEach(p => p.ValueGenerated = ValueGenerated.Never);
 
         base.OnModelCreating(modelBuilder);

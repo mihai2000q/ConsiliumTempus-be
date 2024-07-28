@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace ConsiliumTempus.Infrastructure.Security;
 
-public class CurrentUserProvider(
+public sealed class CurrentUserProvider(
     IHttpContextAccessor httpContextAccessor,
     IUserRepository userRepository)
     : ICurrentUserProvider

@@ -1,8 +1,8 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Domain.Announcement;
+﻿using ConsiliumTempus.Domain.Announcement;
 using ConsiliumTempus.Domain.Announcement.ValueObjects;
 using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -31,6 +31,7 @@ public sealed class AnnouncementConfiguration : IEntityTypeConfiguration<Announc
 
         builder.HasOne(a => a.Audit)
             .WithMany();
+        builder.Navigation(s => s.Audit).AutoInclude();
 
         builder.HasOne(a => a.Project)
             .WithMany();

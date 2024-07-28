@@ -10,6 +10,7 @@ class Project
 {
     Project Create()
     void Update()
+    void UpdateFavorites()
     void UpdateOverview()
     void RefreshActivity()
     void AddSprint()

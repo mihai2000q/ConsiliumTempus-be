@@ -4,10 +4,12 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
@@ -30,6 +32,7 @@ public sealed class ProjectTaskMappingConfig : IRegister
         GetCollectionMappings(config);
         CreateMappings(config);
         UpdateMappings(config);
+        UpdateIsCompletedMappings(config);
         UpdateOverviewMappings(config);
         DeleteMappings(config);
     }
@@ -48,7 +51,7 @@ public sealed class ProjectTaskMappingConfig : IRegister
             .Map(dest => dest.Workspace, src => src.Stage.Sprint.Project.Workspace);
         config.NewConfig<UserAggregate, GetProjectTaskResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
         config.NewConfig<ProjectStage, GetProjectTaskResponse.ProjectStageResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
@@ -75,7 +78,7 @@ public sealed class ProjectTaskMappingConfig : IRegister
             .Map(dest => dest.IsCompleted, src => src.IsCompleted.Value);
         config.NewConfig<UserAggregate, GetCollectionProjectTaskResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.FirstName.Value + " " + src.LastName.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
     }
 
@@ -92,7 +95,14 @@ public sealed class ProjectTaskMappingConfig : IRegister
 
         config.NewConfig<UpdateProjectTaskResult, UpdateProjectTaskResponse>();
     }
-    
+
+    private static void UpdateIsCompletedMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateIsCompletedProjectTaskRequest, UpdateIsCompletedProjectTaskCommand>();
+
+        config.NewConfig<UpdateIsCompletedProjectTaskResult, UpdateIsCompletedProjectTaskResponse>();
+    }
+
     private static void UpdateOverviewMappings(TypeAdapterConfig config)
     {
         config.NewConfig<UpdateOverviewProjectTaskRequest, UpdateOverviewProjectTaskCommand>();
