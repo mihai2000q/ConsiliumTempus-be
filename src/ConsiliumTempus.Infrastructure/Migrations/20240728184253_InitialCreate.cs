@@ -290,6 +290,38 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Announcement",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Announcement", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Announcement_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Announcement_Project_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Project",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Announcement_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectSprint",
                 columns: table => new
                 {
@@ -614,6 +646,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Announcement_AuditId",
+                table: "Announcement",
+                column: "AuditId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Announcement_ProjectId",
+                table: "Announcement",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Announcement_WorkspaceId",
+                table: "Announcement",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Audit_CreatedById",
                 table: "Audit",
                 column: "CreatedById");
@@ -758,6 +805,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Announcement");
+
             migrationBuilder.DropTable(
                 name: "Membership");
 

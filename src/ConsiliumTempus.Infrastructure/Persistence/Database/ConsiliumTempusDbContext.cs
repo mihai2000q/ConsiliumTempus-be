@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Interfaces;
+﻿using ConsiliumTempus.Domain.Announcement;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -16,6 +17,7 @@ public sealed class ConsiliumTempusDbContext(
     DbContextOptions<ConsiliumTempusDbContext> options)
     : DbContext(options)
 {
+    public DbSet<AnnouncementAggregate> Announcements { get; init; } = null!;
     public DbSet<ProjectAggregate> Projects { get; init; } = null!;
     public DbSet<ProjectSprintAggregate> ProjectSprints { get; init; } = null!;
     public DbSet<ProjectTaskAggregate> ProjectTasks { get; init; } = null!;
