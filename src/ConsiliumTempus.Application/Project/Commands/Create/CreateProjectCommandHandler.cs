@@ -29,6 +29,7 @@ public sealed class CreateProjectCommandHandler(
             IsPrivate.Create(command.IsPrivate),
             workspace,
             owner);
+        project.AddAllowedMember(owner);
         await projectRepository.Add(project, cancellationToken);
 
         workspace.RefreshActivity();

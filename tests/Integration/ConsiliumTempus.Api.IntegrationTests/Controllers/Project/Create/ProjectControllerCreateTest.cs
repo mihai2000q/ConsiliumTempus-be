@@ -35,8 +35,7 @@ public class ProjectControllerCreateTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length + 1);
         var createdProject = await dbContext.Projects
-            .Include(p => p.Owner)
-            .Include(p => p.Workspace)
+            .Include(p => p.AllowedMembers)
             .Include(p => p.Sprints)
             .ThenInclude(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
             .ThenInclude(ps => ps.Tasks.OrderBy(t => t.CustomOrderPosition.Value))

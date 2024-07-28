@@ -62,6 +62,9 @@ internal static partial class Utils
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.Should().Be(workspace);
 
+            project.AllowedMembers.Should().HaveCount(1);
+            project.AllowedMembers[0].Should().Be(owner);
+
             project.DomainEvents.Should().HaveCount(1);
             project.DomainEvents[0].Should().BeOfType<ProjectCreated>();
             ((ProjectCreated)project.DomainEvents[0]).Project.Should().Be(project);
