@@ -110,13 +110,13 @@ internal class ProjectData : ITestData
             Users[0],
             "Win NBA",
             "This is an elaborate plan to win NBA",
-            true),
+            favorites: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[1],
             Users[1],
             "Win Champions League",
             "Just an idea on how to win the football league",
-            true),
+            favorites: [Users[1]]),
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
@@ -131,7 +131,7 @@ internal class ProjectData : ITestData
             Workspaces[2],
             Users[0],
             "Start a retiring investment plan",
-            "",
+            "Should do it as soon as possible",
             false,
             ProjectLifecycle.Upcoming),
         ProjectFactory.Create(
@@ -142,6 +142,18 @@ internal class ProjectData : ITestData
             false,
             ProjectLifecycle.Archived,
             favorites: [Users[0]]),
+        ProjectFactory.Create(
+            Workspaces[0],
+            Users[0],
+            "Something Private",
+            isPrivate: true,
+            allowedMembers: [Users[0], Users[3]]),
+        ProjectFactory.Create(
+            Workspaces[0],
+            Users[3],
+            "Something More Private",
+            isPrivate: true,
+            allowedMembers: [Users[3]]),
     ];
 
     public static ProjectStatus[] Statuses { get; } =

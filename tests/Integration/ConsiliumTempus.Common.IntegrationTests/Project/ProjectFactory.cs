@@ -19,7 +19,8 @@ public static class ProjectFactory
         ProjectLifecycle lifecycle = ProjectLifecycle.Active,
         DateTime? createdDateTime = null,
         DateTime? updatedDateTime = null,
-        List<UserAggregate>? favorites = null)
+        List<UserAggregate>? favorites = null,
+        List<UserAggregate>? allowedMembers = null)
     {
         return EntityBuilder<ProjectAggregate>.Empty()
             .WithProperty(nameof(ProjectAggregate.Id), ProjectId.CreateUnique())
@@ -32,6 +33,7 @@ public static class ProjectFactory
             .WithProperty(nameof(ProjectAggregate.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
             .WithProperty(nameof(ProjectAggregate.Workspace), workspace)
             .WithProperty(nameof(ProjectAggregate.Favorites), favorites ?? [])
+            .WithProperty(nameof(ProjectAggregate.AllowedMembers), allowedMembers ?? [])
             .Build();
     }
 }
