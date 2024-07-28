@@ -114,4 +114,18 @@ public class DomainLayerTest : BaseArchitectureTest
             .GetObjects(Architecture)
             .ShouldHavePrivateParameterlessConstructor();
     }
+
+    [Fact]
+    public void Aggregates_ShouldHaveSuffixAggregate()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(AggregateRoot<,>))
+            .And()
+            .AreNot(typeof(AggregateRoot<,>))
+            .Should()
+            .HaveNameEndingWith("Aggregate")
+            .Check(Architecture);
+    }
 }
