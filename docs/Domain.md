@@ -95,6 +95,7 @@ The enums defined in the Domain of the application are:
 (i.e., equal or less than)
 - **OrderType**, which is used to determine whether the order should be ascending or descending
 - **Permissions**, which are used on the Presentation Layer for Authorization
+- **Project Authorization Level**, which is used on the Presentation Layer for Project Authorization
 - **Workspace Authorization Level**, which is used on the Presentation Layer for Workspace Authorization
 
 ## Relations
