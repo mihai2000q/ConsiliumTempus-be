@@ -64,7 +64,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
     {
         return request.RouteValues["controller"] switch
         {
-            "ProjectController" => request.RouteValues["action"] switch
+            "Project" => request.RouteValues["action"] switch
             {
                 "Get" or
                 "GetOverview" or
@@ -80,7 +80,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
 
                 _ => (null, StringIdType.Empty)
             },
-            "ProjectSprintController" => request.RouteValues["action"] switch
+            "ProjectSprint" => request.RouteValues["action"] switch
             {
                 "Get" or
                 "GetStages" or
@@ -102,7 +102,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
 
                 _ => (null, StringIdType.Empty)
             },
-            "ProjectTaskController" => request.RouteValues["action"] switch
+            "ProjectTask" => request.RouteValues["action"] switch
             {
                 "Get" or
                 "Delete" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.ProjectTask),

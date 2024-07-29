@@ -5,6 +5,7 @@ using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Infrastructure.Extensions;
 
 namespace ConsiliumTempus.Common.IntegrationTests.Project;
 
@@ -32,8 +33,8 @@ public static class ProjectFactory
             .WithProperty(nameof(ProjectAggregate.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
             .WithProperty(nameof(ProjectAggregate.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
             .WithProperty(nameof(ProjectAggregate.Workspace), workspace)
-            .WithProperty(nameof(ProjectAggregate.Favorites), favorites ?? [])
-            .WithProperty(nameof(ProjectAggregate.AllowedMembers), allowedMembers ?? [])
+            .WithField(nameof(ProjectAggregate.Favorites).ToBackingField(), favorites ?? [])
+            .WithField(nameof(ProjectAggregate.AllowedMembers).ToBackingField(), allowedMembers ?? [])
             .Build();
     }
 }

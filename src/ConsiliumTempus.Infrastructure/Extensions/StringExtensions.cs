@@ -12,13 +12,7 @@ public static class StringExtensions
 
     public static string ToId(this string propertyName) => propertyName + "Id";
 
-    public static string ToBackingField(this string propertyName) =>
-        propertyName.Length switch
-        {
-            0 => "_",
-            1 => $"_{propertyName.ToLower()}",
-            _ => $"_{propertyName[0].ToString().ToLower()}{propertyName[1..]}"
-        };
+    public static string ToBackingField(this string propertyName) => "_" + propertyName.FromPascalToCamelCase();
 
     public static string ToIdBackingField(this string propertyName) => ToBackingField(propertyName).ToId();
 

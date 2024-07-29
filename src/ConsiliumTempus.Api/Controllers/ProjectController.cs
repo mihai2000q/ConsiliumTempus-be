@@ -33,6 +33,7 @@ namespace ConsiliumTempus.Api.Controllers;
 
 public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.ReadProject)]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get(GetProjectRequest request, CancellationToken cancellationToken)
@@ -49,6 +50,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.ReadOverviewProject)]
     [HttpGet("Overview/{id:guid}")]
     public async Task<IActionResult> GetOverview(GetOverviewProjectRequest request, CancellationToken cancellationToken)
@@ -79,6 +81,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.ReadStatusesFromProject)]
     [HttpGet("{id:guid}/Statuses")]
     public async Task<IActionResult> GetStatuses(GetStatusesFromProjectRequest request,
@@ -106,6 +109,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.AddStatusToProject)]
     [HttpPost("Add-Status")]
     public async Task<IActionResult> AddStatus(AddStatusToProjectRequest request, CancellationToken cancellationToken)
@@ -119,6 +123,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.UpdateProject)]
     [HttpPut]
     public async Task<IActionResult> Update(UpdateProjectRequest request, CancellationToken cancellationToken)
@@ -132,6 +137,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.UpdateFavoritesProject)]
     [HttpPut("Favorites")]
     public async Task<IActionResult> UpdateFavorites(UpdateFavoritesProjectRequest request, 
@@ -146,6 +152,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.UpdateOverviewProject)]
     [HttpPut("Overview")]
     public async Task<IActionResult> UpdateOverview(UpdateOverviewProjectRequest request,
@@ -160,6 +167,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.UpdateStatusFromProject)]
     [HttpPut("Update-Status")]
     public async Task<IActionResult> UpdateStatus(UpdateStatusFromProjectRequest request,
@@ -174,6 +182,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.DeleteProject)]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(DeleteProjectRequest request, CancellationToken cancellationToken)
@@ -187,6 +196,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.RemoveStatusFromProject)]
     [HttpDelete("{id:guid}/Remove-Status/{statusId:guid}")]
     public async Task<IActionResult> RemoveStatus(RemoveStatusFromProjectRequest request,

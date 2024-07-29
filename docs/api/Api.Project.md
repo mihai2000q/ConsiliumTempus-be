@@ -40,12 +40,15 @@
 
 ## Project
 
-This is the controller that takes care of creating, updating, deleting and querying Projects.
+This is the controller that takes care of creating, updating, deleting and querying Projects and their statuses.
 
 ### Get
 
 Anyone that is part of the workspace can read a project
 ([Read Project Permission](../Security.md/#permissions)).
+
+When the project is private, only allowed members can read it
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/projects/{id}
@@ -100,6 +103,9 @@ Returns a project.
 
 Anyone that is part of the workspace can read a project overview
 ([Read Overview Project Permission](../Security.md/#permissions)).
+
+When the project is private, only allowed members can read its overview
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/projects/overview/{id}
@@ -196,6 +202,9 @@ Returns the projects and their total count.
 Anyone that is part of the workspace can read the project statuses
 ([Read Statuses From Project Permission](../Security.md/#permissions)),
 
+When the project is private, only allowed members can read the statuses
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+
 ```js
 GET {{host}}/api/projects/{id}/statuses
 ```
@@ -284,6 +293,9 @@ Returns a confirmation message that the project has been created successfully.
 Only admin users that are part of the workspace can add a status to the project
 ([Add Status To Project Permission](../Security.md/#permissions)).
 
+When the project is private, only allowed members can add a status
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+
 ```js
 POST {{host}}/api/projects/add-status
 ```
@@ -310,6 +322,9 @@ Returns a confirmation message that the project status has been added successful
 All members that are part of the workspace can update a project
 ([Update Project Permission](../Security.md/#permissions)).
 
+When the project is private, only allowed members can update it
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+
 ```js
 PUT {{host}}/api/projects
 ```
@@ -335,6 +350,9 @@ Returns a confirmation message that the project has been updated successfully.
 Anyone that is part of the workspace can add the project to favorites
 ([Update Favorites Project Permission](../Security.md/#permissions)).
 
+When the project is private, only allowed members can add the project to favorites
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+
 ```js
 PUT {{host}}/api/projects/favorites
 ```
@@ -359,6 +377,9 @@ Returns a confirmation message that the project favorites have been updated succ
 All members that are part of the workspace can update a project overview
 ([Update Overview Project Permission](../Security.md/#permissions)).
 
+When the project is private, only allowed members can update its overview
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+
 ```js
 PUT {{host}}/api/projects/overview
 ```
@@ -382,6 +403,9 @@ Returns a confirmation message that the project overview has been updated succes
 
 Only members and admin users that are part of the workspace can update a status from the project
 ([Update Status To Project Permission](../Security.md/#permissions)).
+
+When the project is private, only allowed members can update a status
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/update-status
@@ -410,6 +434,9 @@ Returns a confirmation message that the project status has been updated successf
 Only admin users that are part of the workspace can delete a project
 ([Delete Project Permission](../Security.md/#permissions)).
 
+When the project is private, only allowed members can delete a project
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+
 ```js
 DELETE {{host}}/api/projects/{id}
 ```
@@ -428,6 +455,9 @@ Returns a confirmation message that the project has been deleted successfully.
 
 Only admin users that are part of the workspace can remove a status from the project
 ([Remove Status To Project Permission](../Security.md/#permissions)).
+
+When the project is private, only allowed members can remove a status
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
 
 ```js
 DELETE {{host}}/api/projects/{id}/remove-status/{statusId}

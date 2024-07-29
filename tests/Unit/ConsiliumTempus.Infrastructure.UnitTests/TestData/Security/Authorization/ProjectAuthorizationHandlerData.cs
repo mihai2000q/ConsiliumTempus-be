@@ -15,9 +15,9 @@ public static class ProjectAuthorizationHandlerData
     
     public enum Controller
     {
-        ProjectController,
-        ProjectSprintController,
-        ProjectTaskController
+        Project,
+        ProjectSprint,
+        ProjectTask
     }
 
     public enum StringIdType
@@ -36,7 +36,7 @@ public static class ProjectAuthorizationHandlerData
             const ProjectAuthorizationLevel level = ProjectAuthorizationLevel.IsAllowed;
 
             // Project Controller
-            var controller = Controller.ProjectController;
+            var controller = Controller.Project;
             var requestLocation = RequestLocation.Route;
             var stringIdType = StringIdType.Project;
             Add(level, requestLocation, null, controller, "Get", stringIdType);
@@ -53,7 +53,7 @@ public static class ProjectAuthorizationHandlerData
             Add(level, requestLocation, null, controller, "UpdateStatus", stringIdType);
             
             // Project Sprint Controller
-            controller = Controller.ProjectSprintController;
+            controller = Controller.ProjectSprint;
             requestLocation = RequestLocation.Route;
             stringIdType = StringIdType.ProjectSprint;
             Add(level, requestLocation, null, controller, "Get", stringIdType);
@@ -72,7 +72,7 @@ public static class ProjectAuthorizationHandlerData
             Add(level, requestLocation, null, controller, "UpdateStage", stringIdType);
             
             // Project Task Controller
-            controller = Controller.ProjectTaskController;
+            controller = Controller.ProjectTask;
             requestLocation = RequestLocation.Route;
             stringIdType = StringIdType.ProjectTask;
             Add(level, requestLocation, null, controller, "Get", stringIdType);

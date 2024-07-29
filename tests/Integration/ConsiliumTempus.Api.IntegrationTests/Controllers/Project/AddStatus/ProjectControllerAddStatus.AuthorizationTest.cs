@@ -2,58 +2,79 @@
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Common.IntegrationTests.Project;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.AddStatus;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerDeleteAuthorizationTest(WebAppFactory factory)
+public class ProjectControllerAddStatusToProjectAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
+    // Permission Authorization
     [Fact]
-    public async Task AddStatus_WhenWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task AddStatusToProject_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulRequest(ProjectData.Users[0]);
+        await AssertSuccessfulResponse(ProjectData.Users[0]);
     }
 
     [Fact]
-    public async Task AddStatus_WhenWithMemberRole_ShouldReturnForbiddenResponse()
+    public async Task AddStatusToProject_WhenWithMemberRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectData.Users[3]);
     }
 
     [Fact]
-    public async Task AddStatus_WhenWithViewRole_ShouldReturnForbiddenResponse()
+    public async Task AddStatusToProject_WhenWithViewRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectData.Users[4]);
     }
 
     [Fact]
-    public async Task AddStatus_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task AddStatusToProject_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectData.Users[1]);
     }
 
-    private async Task AssertSuccessfulRequest(UserAggregate user)
+    // Project Authorization
+    [Fact]
+    public async Task AddStatusToProject_WhenProjectIsNotPrivate_ShouldReturnSuccessResponse()
     {
-        var outcome = await ArrangeAndAct(user);
+        await AssertSuccessfulResponse(ProjectData.Users[4], ProjectData.Projects[6]);
+    }
+
+    [Fact]
+    public async Task AddStatusToProject_WhenProjectIsPrivateAndIsAllowedMember_ShouldReturnSuccessResponse()
+    {
+        await AssertSuccessfulResponse(ProjectData.Users[0], ProjectData.Projects[7]);
+    }
+
+    [Fact]
+    public async Task AddStatusToProject_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
+    {
+        await AssertForbiddenResponse(ProjectData.Users[0], ProjectData.Projects[8]);
+    }
+
+    private async Task AssertSuccessfulResponse(UserAggregate user, ProjectAggregate? project = null)
+    {
+        var outcome = await ArrangeAndAct(user, project);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-    private async Task AssertForbiddenResponse(UserAggregate user)
+    private async Task AssertForbiddenResponse(UserAggregate user, ProjectAggregate? project = null)
     {
-        var outcome = await ArrangeAndAct(user);
+        var outcome = await ArrangeAndAct(user, project);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
+    private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user, ProjectAggregate? project = null)
     {
         // Arrange
-        var project = ProjectData.Projects.First();
+        project ??= ProjectData.Projects.First();
         var request = ProjectRequestFactory.CreateAddStatusToProjectRequest(project.Id.Value);
 
         // Act
