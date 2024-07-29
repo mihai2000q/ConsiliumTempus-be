@@ -26,7 +26,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
     {
         var subUserId = context.User.Claims
             .SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
-        if (subUserId is null || !Guid.TryParse(subUserId, out var guidUserId)) return;
+        if (!Guid.TryParse(subUserId, out var guidUserId)) return;
 
         using var scope = serviceScopeFactory.CreateScope();
         var permissionProvider = scope.ServiceProvider.GetRequiredService<IPermissionProvider>();

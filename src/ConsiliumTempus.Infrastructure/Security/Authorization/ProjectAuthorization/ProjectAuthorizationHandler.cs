@@ -2,6 +2,10 @@
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
+using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Http;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +24,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
     {
         var subUserId = context.User.Claims
             .SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
-        if (subUserId is null || !Guid.TryParse(subUserId, out var guidUserId)) return;
+        if (!Guid.TryParse(subUserId, out var guidUserId)) return;
 
         using var scope = serviceScopeFactory.CreateScope();
         var httpContextAccessor = scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
@@ -43,21 +47,82 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
 
     private static async Task<ProjectAggregate?> GetProject(HttpRequest request, IProjectProvider projectProvider)
     {
-        var stringId = await GetStringId(request);
-        if (!Guid.TryParse(stringId, out var projectId)) return null;
-        return await projectProvider.Get(ProjectId.Create(projectId));
+        var (stringId, idType) = await GetStringId(request);
+        if (!Guid.TryParse(stringId, out var guidId)) return null;
+        return idType switch
+        {
+            StringIdType.Project => await projectProvider.Get(ProjectId.Create(guidId)),
+            StringIdType.ProjectSprint => await projectProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
+            StringIdType.ProjectStage => await projectProvider.GetByProjectStage(ProjectStageId.Create(guidId)),
+            StringIdType.ProjectTask => await projectProvider.GetByProjectTask(ProjectTaskId.Create(guidId)),
+            StringIdType.Empty => null,
+            _ => throw new ArgumentOutOfRangeException(nameof(request))
+        };
     }
 
-    private static async Task<string?> GetStringId(HttpRequest request)
+    private static async Task<(string?, StringIdType)> GetStringId(HttpRequest request)
     {
         return request.RouteValues["controller"] switch
         {
-            "ProjectController" => request.Method switch
+            "ProjectController" => request.RouteValues["action"] switch
             {
-               "POST" or "PUT" => await HttpRequestReader.GetStringIdFromBody(request),
-               _ => null
+                "Get" or
+                "GetOverview" or
+                "GetStatuses" or
+                "Delete" or
+                "RemoveStatus" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.Project),
+
+                "AddStatus" or
+                "Update" or
+                "UpdateFavorites" or
+                "UpdateOverview" or
+                "UpdateStatus" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.Project),
+
+                _ => (null, StringIdType.Empty)
             },
-            _ => null
+            "ProjectSprintController" => request.RouteValues["action"] switch
+            {
+                "Get" or
+                "GetStages" or
+                "Delete" or
+                "RemoveStage" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.ProjectSprint),
+
+                "GetCollection" => (
+                    HttpRequestReader.GetStringIdFromQuery(request, typeof(ProjectAggregate).ToCamelId()), 
+                    StringIdType.Project),
+
+                "Create" => (
+                    await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()), 
+                    StringIdType.Project),
+
+                "AddStage" or
+                "Update" or
+                "MoveStage" or
+                "UpdateStage" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.ProjectSprint),
+
+                _ => (null, StringIdType.Empty)
+            },
+            "ProjectTaskController" => request.RouteValues["action"] switch
+            {
+                "Get" or
+                "Delete" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.ProjectTask),
+
+                "GetCollection" => (
+                    HttpRequestReader.GetStringIdFromQuery(request, typeof(ProjectStage).ToCamelId()), 
+                    StringIdType.ProjectStage),
+
+                "Create" => (
+                    await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectStage).ToCamelId()), 
+                    StringIdType.ProjectStage),
+
+                "Move" or
+                "Update" or
+                "UpdateIsCompleted" or
+                "UpdateOverview" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.ProjectTask),
+
+                _ => (null, StringIdType.Empty)
+            },
+            _ => (null, StringIdType.Empty)
         };
     }
 
@@ -73,5 +138,14 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
             ProjectAuthorizationLevel.IsProjectOwner => project.Owner.Id == userId,
             _ => throw new ArgumentOutOfRangeException(nameof(authorizationLevel))
         };
+    }
+
+    private enum StringIdType
+    {
+        Empty,
+        Project,
+        ProjectSprint,
+        ProjectStage,
+        ProjectTask
     }
 }

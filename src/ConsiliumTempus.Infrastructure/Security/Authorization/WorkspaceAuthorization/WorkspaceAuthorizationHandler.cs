@@ -20,7 +20,7 @@ public sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory serviceSc
     {
         var subUserId = context.User.Claims
             .SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
-        if (subUserId is null || !Guid.TryParse(subUserId, out var guidUserId)) return;
+        if (!Guid.TryParse(subUserId, out var guidUserId)) return;
 
         using var scope = serviceScopeFactory.CreateScope();
         var httpContextAccessor = scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
