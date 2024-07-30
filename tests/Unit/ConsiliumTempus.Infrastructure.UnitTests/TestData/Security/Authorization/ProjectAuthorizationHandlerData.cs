@@ -12,7 +12,7 @@ public static class ProjectAuthorizationHandlerData
         Query,
         Body
     }
-    
+
     public enum Controller
     {
         Project,
@@ -28,10 +28,10 @@ public static class ProjectAuthorizationHandlerData
         ProjectTask
     }
 
-    public class GetAuthorizationLevels 
+    public class GetIsAllowed
         : TheoryData<ProjectAuthorizationLevel, RequestLocation, Type?, Controller, string, StringIdType>
     {
-        public GetAuthorizationLevels()
+        public GetIsAllowed()
         {
             const ProjectAuthorizationLevel level = ProjectAuthorizationLevel.IsAllowed;
 
@@ -51,7 +51,7 @@ public static class ProjectAuthorizationHandlerData
             Add(level, requestLocation, null, controller, "UpdateFavorites", stringIdType);
             Add(level, requestLocation, null, controller, "UpdateOverview", stringIdType);
             Add(level, requestLocation, null, controller, "UpdateStatus", stringIdType);
-            
+
             // Project Sprint Controller
             controller = Controller.ProjectSprint;
             requestLocation = RequestLocation.Route;
@@ -60,7 +60,7 @@ public static class ProjectAuthorizationHandlerData
             Add(level, requestLocation, null, controller, "GetStages", stringIdType);
             Add(level, requestLocation, null, controller, "Delete", stringIdType);
             Add(level, requestLocation, null, controller, "RemoveStage", stringIdType);
-            
+
             requestLocation = RequestLocation.Query;
             Add(level, requestLocation, typeof(ProjectAggregate), controller, "GetCollection", StringIdType.Project);
 
@@ -70,14 +70,14 @@ public static class ProjectAuthorizationHandlerData
             Add(level, requestLocation, null, controller, "Update", stringIdType);
             Add(level, requestLocation, null, controller, "MoveStage", stringIdType);
             Add(level, requestLocation, null, controller, "UpdateStage", stringIdType);
-            
+
             // Project Task Controller
             controller = Controller.ProjectTask;
             requestLocation = RequestLocation.Route;
             stringIdType = StringIdType.ProjectTask;
             Add(level, requestLocation, null, controller, "Get", stringIdType);
             Add(level, requestLocation, null, controller, "Delete", stringIdType);
-            
+
             requestLocation = RequestLocation.Query;
             Add(level, requestLocation, typeof(ProjectStage), controller, "GetCollection", StringIdType.ProjectStage);
 
@@ -87,6 +87,20 @@ public static class ProjectAuthorizationHandlerData
             Add(level, requestLocation, null, controller, "Update", stringIdType);
             Add(level, requestLocation, null, controller, "UpdateIsCompleted", stringIdType);
             Add(level, requestLocation, null, controller, "UpdateOverview", stringIdType);
+        }
+    }
+
+    public class GetIsOwner
+        : TheoryData<ProjectAuthorizationLevel, RequestLocation, Type?, Controller, string, StringIdType>
+    {
+        public GetIsOwner()
+        {
+            // Project Authorization Level: Is Project Owner
+            const ProjectAuthorizationLevel level = ProjectAuthorizationLevel.IsProjectOwner;
+            const Controller controller = Controller.Project;
+            const StringIdType stringIdType = StringIdType.Project;
+
+            Add(level, RequestLocation.Body, null, controller, "AddAllowedMember", stringIdType);
         }
     }
 }

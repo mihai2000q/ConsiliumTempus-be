@@ -108,7 +108,8 @@ public class ProjectAuthorizationHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(ProjectAuthorizationHandlerData.GetAuthorizationLevels))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
     public async Task ProjectAuthorizationHandler_WhenRequestControllerIsEmpty_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
         ProjectAuthorizationHandlerData.RequestLocation _1,
@@ -144,7 +145,8 @@ public class ProjectAuthorizationHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(ProjectAuthorizationHandlerData.GetAuthorizationLevels))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
     public async Task ProjectAuthorizationHandler_WhenRequestActionIsEmpty_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
         ProjectAuthorizationHandlerData.RequestLocation _1,
@@ -180,7 +182,8 @@ public class ProjectAuthorizationHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(ProjectAuthorizationHandlerData.GetAuthorizationLevels))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
     public async Task ProjectAuthorizationHandler_WhenRequestIsEmpty_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
         ProjectAuthorizationHandlerData.RequestLocation requestLocation,
@@ -212,7 +215,8 @@ public class ProjectAuthorizationHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(ProjectAuthorizationHandlerData.GetAuthorizationLevels))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
     public async Task ProjectAuthorizationHandler_WhenRequestIdIsEmpty_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
         ProjectAuthorizationHandlerData.RequestLocation requestLocation,
@@ -251,7 +255,8 @@ public class ProjectAuthorizationHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(ProjectAuthorizationHandlerData.GetAuthorizationLevels))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
     public async Task ProjectAuthorizationHandler_WhenRequestIdIsNotGuid_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
         ProjectAuthorizationHandlerData.RequestLocation requestLocation,
@@ -290,7 +295,8 @@ public class ProjectAuthorizationHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(ProjectAuthorizationHandlerData.GetAuthorizationLevels))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
     public async Task ProjectAuthorizationHandler_WhenProjectIsNull_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
         ProjectAuthorizationHandlerData.RequestLocation requestLocation,
@@ -330,7 +336,52 @@ public class ProjectAuthorizationHandlerTest
     }
 
     [Theory]
-    [ClassData(typeof(ProjectAuthorizationHandlerData.GetAuthorizationLevels))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
+    public async Task ProjectAuthorizationHandler_WhenLevelIsIsAllowedAndProjectIsNotPrivate_ShouldSucceed(
+        ProjectAuthorizationLevel projectAuthorizationLevel,
+        ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+        Type? idType,
+        ProjectAuthorizationHandlerData.Controller controller,
+        string requestAction,
+        ProjectAuthorizationHandlerData.StringIdType stringIdType)
+    {
+        // Arrange
+        var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
+        var user = UserFactory.Create();
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
+
+        var project = ProjectFactory.Create(isPrivate: false);
+        Utils.Authorization.MockProjectProvider(_projectProvider, project);
+
+        var stringId = Guid.NewGuid().ToString();
+        Utils.Authorization.MockHttpRequest(
+            _httpContextAccessor,
+            requestLocation,
+            idType,
+            controller,
+            requestAction,
+            stringId);
+
+        // Act
+        await _uut.HandleAsync(context);
+
+        // Assert
+        _ = _httpContextAccessor
+            .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .HttpContext;
+        await Utils.Authorization.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
+
+        projectAuthorizationLevel.Should().Be(ProjectAuthorizationLevel.IsAllowed);
+        context.HasSucceeded.Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
     public async Task ProjectAuthorizationHandler_WhenNotAuthorized_ShouldFail(
         ProjectAuthorizationLevel projectAuthorizationLevel,
         ProjectAuthorizationHandlerData.RequestLocation requestLocation,
@@ -348,7 +399,7 @@ public class ProjectAuthorizationHandlerTest
         ]));
         var context = new AuthorizationHandlerContext(requirements, userClaims, null);
 
-        var project = ProjectFactory.Create();
+        var project = ProjectFactory.Create(isPrivate: true);
         Utils.Authorization.MockProjectProvider(_projectProvider, project);
 
         var stringId = project.Id.Value.ToString();
@@ -369,11 +420,12 @@ public class ProjectAuthorizationHandlerTest
             .HttpContext;
         await Utils.Authorization.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
-        context.HasSucceeded.Should().BeTrue();
+        context.HasSucceeded.Should().BeFalse();
     }
 
     [Theory]
-    [ClassData(typeof(ProjectAuthorizationHandlerData.GetAuthorizationLevels))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
     public async Task ProjectAuthorizationHandler_WhenIsAuthorized_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
         ProjectAuthorizationHandlerData.RequestLocation requestLocation,
@@ -391,7 +443,7 @@ public class ProjectAuthorizationHandlerTest
         ]));
         var context = new AuthorizationHandlerContext(requirements, userClaims, null);
 
-        var project = ProjectFactory.Create(owner: user);
+        var project = ProjectFactory.Create(owner: user, isPrivate: true);
         project.AddAllowedMember(user);
         Utils.Authorization.MockProjectProvider(_projectProvider, project);
 
