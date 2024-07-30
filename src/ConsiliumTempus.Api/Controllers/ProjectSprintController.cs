@@ -26,6 +26,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.Controllers;
 
+[HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
 [Route("Projects/Sprints")]
 public sealed class ProjectSprintController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {

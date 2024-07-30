@@ -32,8 +32,11 @@ This is the controller that takes care of creating, updating, deleting and query
 
 ### Get
 
-Anyone that is part of the workspace can read a project
+Anyone that is part of the workspace can read a project task
 ([Read Project Task Permission](../Security.md/#permissions)).
+
+When the project is private, only allowed members can read a project task
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/projects/tasks/{id}
@@ -94,9 +97,12 @@ Returns a project task.
 
 ### Get Collection
 
-Anyone that is part of the workspace can read the projects
+Anyone that is part of the workspace can read the project tasks
 ([Read Collection Project Task Permission](../Security.md/#permissions)),
 in case the workspace Id is mentioned, otherwise any logged-in user will get their projects.
+
+When the project is private, only allowed members can read the project tasks
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/projects/tasks?projectStageId=10000000-0000-0000-0000-000000000000&search=name ct task&orderBy=name.asc&currentPage=1&pageSize=20
@@ -142,8 +148,11 @@ Returns the project tasks and their total count.
 
 ### Create
 
-All members that are part of the workspace can create a project
+All members that are part of the workspace can create a project task
 ([Create Project Task Permission](../Security.md/#permissions)).
+
+When the project is private, only allowed members can create a project task
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
 
 ```js
 POST {{host}}/api/projects/tasks
@@ -170,6 +179,9 @@ Returns a confirmation message that the project task has been created successful
 All members that are part of the workspace can move a project task
 ([Move Project Task Permission](../Security.md/#permissions)).
 
+When the project is private, only allowed members can move a project task
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+
 ```js
 POST {{host}}/api/projects/tasks/move
 ```
@@ -194,6 +206,9 @@ Returns a confirmation message that the project task has been moved successfully
 All members that are part of the workspace can update a project task
 ([Update Project Task Permission](../Security.md/#permissions)).
 
+When the project is private, only allowed members can update a task
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+
 ```js
 PUT {{host}}/api/projects/tasks
 ```
@@ -216,8 +231,11 @@ Returns a confirmation message that the project task has been updated successful
 
 ### Update Is Completed
 
-All members that are part of the workspace can update a project task
+All members that are part of the workspace can update a task's completion status
 ([Update Is Completed Project Task Permission](../Security.md/#permissions)).
+
+When the project is private, only allowed members can update a task's completion status
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/tasks/is-completed
@@ -243,6 +261,9 @@ Returns a confirmation message that the project task's completion status has bee
 All members that are part of the workspace can update a project task overview
 ([Update Overview Project Task Permission](../Security.md/#permissions)).
 
+When the project is private, only allowed members can update a task's overview
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+
 ```js
 PUT {{host}}/api/projects/tasks/overview
 ```
@@ -266,8 +287,11 @@ Returns a confirmation message that the project task overview has been updated s
 
 ### Delete
 
-Only admin users that are part of the workspace can delete a project
+Only admin users that are part of the workspace can delete a project task
 ([Delete Project Task Permission](../Security.md/#permissions)).
+
+When the project is private, only allowed members can delete a project task
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
 
 ```js
 DELETE {{host}}/api/projects/tasks/{id}/from/{stageId}

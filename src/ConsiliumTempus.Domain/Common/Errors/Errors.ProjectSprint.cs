@@ -11,7 +11,7 @@ public static partial class Errors
             "ProjectSprint.NotFound",
             "Project Sprint could not be found");
 
-        public static Error OnlyOneSprint => Error.NotFound(
+        public static Error OnlyOneSprint => Error.Conflict(
             "ProjectSprint.OnlyOneSprint",
             "Each Project should have at least one project sprint");
     }

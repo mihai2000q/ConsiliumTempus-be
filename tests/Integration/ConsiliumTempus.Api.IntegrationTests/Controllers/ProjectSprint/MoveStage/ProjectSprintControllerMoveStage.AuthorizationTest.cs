@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.MoveStage;
@@ -10,6 +11,7 @@ namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.MoveSta
 public class ProjectSprintControllerMoveStageAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectSprintData())
 {
+    // Permission Authorization
     [Fact]
     public async Task MoveStageFromProjectSprint_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
@@ -34,28 +36,47 @@ public class ProjectSprintControllerMoveStageAuthorizationTest(WebAppFactory fac
         await AssertForbiddenResponse(ProjectSprintData.Users[1]);
     }
 
-    private async Task AssertSuccessfulResponse(UserAggregate user)
+    // Project Authorization
+    [Fact]
+    public async Task MoveStageFromProjectSprint_WhenProjectIsNotPrivate_ShouldReturnSuccessResponse()
     {
-        var outcome = await ArrangeAndAct(user);
+        await AssertSuccessfulResponse(ProjectSprintData.Users[4], ProjectSprintData.ProjectSprints[5]);
+    }
+
+    [Fact]
+    public async Task MoveStageFromProjectSprint_WhenProjectIsPrivateAndIsAllowedMember_ShouldReturnSuccessResponse()
+    {
+        await AssertSuccessfulResponse(ProjectSprintData.Users[0], ProjectSprintData.ProjectSprints[6]);
+    }
+
+    [Fact]
+    public async Task MoveStageFromProjectSprint_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
+    {
+        await AssertForbiddenResponse(ProjectSprintData.Users[0], ProjectSprintData.ProjectSprints[7]);
+    }
+
+    private async Task AssertSuccessfulResponse(UserAggregate user, ProjectSprintAggregate? sprint = null)
+    {
+        var outcome = await ArrangeAndAct(user, sprint);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-    private async Task AssertForbiddenResponse(UserAggregate user)
+    private async Task AssertForbiddenResponse(UserAggregate user, ProjectSprintAggregate? sprint = null)
     {
-        var outcome = await ArrangeAndAct(user);
+        var outcome = await ArrangeAndAct(user, sprint);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
+    private Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user, ProjectSprintAggregate? sprint = null)
     {
         // Arrange
-        var sprint = ProjectSprintData.ProjectSprints.First();
-        var stage = ProjectSprintData.ProjectStages.First();
-        var overStage = ProjectSprintData.ProjectStages[1];
+        sprint ??= ProjectSprintData.ProjectSprints.First();
+        var stage = sprint.Stages[0];
+        var overStage = sprint.Stages[1];
         var request = ProjectSprintRequestFactory.CreateMoveStageFromProjectSprintRequest(
             sprint.Id.Value,
             stage.Id.Value,
@@ -63,6 +84,6 @@ public class ProjectSprintControllerMoveStageAuthorizationTest(WebAppFactory fac
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Post("api/projects/sprints/Move-Stage/", request);
+        return Client.Post("api/projects/sprints/Move-Stage/", request);
     }
 }

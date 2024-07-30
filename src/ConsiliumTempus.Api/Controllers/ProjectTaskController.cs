@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConsiliumTempus.Api.Controllers;
 
+[HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
 [Route("Projects/Tasks")]
 public sealed class ProjectTaskController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {

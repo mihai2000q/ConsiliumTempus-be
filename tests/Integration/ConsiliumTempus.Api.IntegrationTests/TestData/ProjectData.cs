@@ -151,6 +151,7 @@ internal class ProjectData : ITestData
             false,
             ProjectLifecycle.Archived,
             favorites: [Users[0]]),
+
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
