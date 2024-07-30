@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
+using ConsiliumTempus.Api.Contracts.Project.AddAllowedMember;
 using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
@@ -13,6 +14,7 @@ using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
+using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
@@ -326,6 +328,53 @@ public class ProjectControllerTest
             .Received(1)
             .Send(Arg.Is<AddStatusToProjectCommand>(command =>
                 Utils.Project.AssertAddStatusCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task AddAllowedMember_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateAddAllowedMemberToProjectRequest();
+
+        var result = ProjectResultFactory.CreateAddAllowedMemberToProjectResult();
+        _mediator
+            .Send(Arg.Any<AddAllowedMemberToProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.AddAllowedMember(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<AddAllowedMemberToProjectCommand>(command =>
+                Utils.Project.AssertAddAllowedMemberCommand(command, request)));
+
+        var response = outcome.ToResponse<AddAllowedMemberToProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task AddAllowedMember_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateAddAllowedMemberToProjectRequest();
+
+        var error = Errors.Project.NotFound;
+        _mediator
+            .Send(Arg.Any<AddAllowedMemberToProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.AddAllowedMember(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<AddAllowedMemberToProjectCommand>(command =>
+                Utils.Project.AssertAddAllowedMemberCommand(command, request)));
 
         outcome.ValidateError(error);
     }

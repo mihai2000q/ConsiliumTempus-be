@@ -27,7 +27,7 @@ internal static partial class Utils
             UserAggregate collaborator)
         {
             project.Id.Value.Should().Be(command.Id);
-            collaborator.Id.Value.Should().Be(command.AllowedMemberId);
+            collaborator.Id.Value.Should().Be(command.CollaboratorId);
 
             project.AllowedMembers.Should().HaveCount(1);
             project.AllowedMembers[0].Should().Be(collaborator);

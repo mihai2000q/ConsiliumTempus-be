@@ -5,5 +5,5 @@ namespace ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 
 public record AddAllowedMemberToProjectCommand(
     Guid Id,
-    Guid AllowedMemberId)
+    Guid CollaboratorId)
     : IRequest<ErrorOr<AddAllowedMemberToProjectResult>>;

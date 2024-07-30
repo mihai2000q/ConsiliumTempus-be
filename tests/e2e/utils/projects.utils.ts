@@ -34,6 +34,13 @@ export async function getProjectStatuses(request: APIRequestContext, projectId: 
   return (await response.json()).statuses
 }
 
+export async function getAllowedMembers(request: APIRequestContext, projectId: string) {
+  const response = await request.get(`/api/projects/${projectId}/allowed-members`, useToken())
+  expect(response.ok()).toBeTruthy()
+  return (await response.json()).allowedMembers
+}
+
+
 export async function addProjectStatus(
   request: APIRequestContext,
   body: AddStatusToProjectRequest

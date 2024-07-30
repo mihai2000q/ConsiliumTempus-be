@@ -26,7 +26,7 @@ public class AddAllowedMemberToProjectCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(AddAllowedMemberToProjectCommandValidatorData.GetInvalidIdCommands))]
-    [ClassData(typeof(AddAllowedMemberToProjectCommandValidatorData.GetInvalidAllowedMemberIdCommands))]
+    [ClassData(typeof(AddAllowedMemberToProjectCommandValidatorData.GetInvalidCollaboratorIdIdCommands))]
     public async Task ValidateAddAllowedMemberToProjectCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         AddAllowedMemberToProjectCommand command,
         string property)

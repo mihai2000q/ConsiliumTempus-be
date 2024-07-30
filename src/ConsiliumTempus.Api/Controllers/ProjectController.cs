@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Api.Common.Attributes;
 using ConsiliumTempus.Api.Common.Mapping;
+using ConsiliumTempus.Api.Contracts.Project.AddAllowedMember;
 using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
@@ -12,6 +13,7 @@ using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
+using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
@@ -105,6 +107,19 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
         return result.Match(
             createResult => Ok(Mapper.Map<CreateProjectResponse>(createResult)),
+            Problem
+        );
+    }
+
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsProjectOwner)]
+    [HttpPost("Add-Allowed-Member")]
+    public async Task<IActionResult> AddAllowedMember(AddAllowedMemberToProjectRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<AddAllowedMemberToProjectCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            addAllowedMemberResult => Ok(Mapper.Map<AddAllowedMemberToProjectResponse>(addAllowedMemberResult)),
             Problem
         );
     }

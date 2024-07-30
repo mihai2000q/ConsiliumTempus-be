@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Api.Contracts.Project.AddStatus;
+﻿using ConsiliumTempus.Api.Contracts.Project.AddAllowedMember;
+using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Get;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
@@ -109,6 +110,19 @@ internal static partial class Utils
 
             project.AllowedMembers.Should().HaveCount(1);
             project.AllowedMembers[0].Should().Be(owner);
+        }
+
+        internal static void AssertAddAllowedMember(
+            ProjectAggregate project,
+            AddAllowedMemberToProjectRequest request,
+            UserAggregate allowedMember)
+        {
+            project.Id.Value.Should().Be(request.Id);
+            allowedMember.Id.Value.Should().Be(request.CollaboratorId);
+            project.AllowedMembers.Should().ContainSingle(u => u == allowedMember);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertAddStatus(

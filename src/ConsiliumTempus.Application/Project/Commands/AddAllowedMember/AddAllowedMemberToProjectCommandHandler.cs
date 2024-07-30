@@ -12,12 +12,14 @@ public sealed class AddAllowedMemberToProjectCommandHandler(IProjectRepository p
     public async Task<ErrorOr<AddAllowedMemberToProjectResult>> Handle(AddAllowedMemberToProjectCommand command,
         CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetWithCollaborators(ProjectId.Create(command.Id), cancellationToken);
+        var project = await projectRepository.GetWithCollaboratorsAndAllowedMembers(
+            ProjectId.Create(command.Id),
+            cancellationToken);
         if (project is null) return Errors.Project.NotFound;
         if (!project.IsPrivate.Value) return Errors.Project.NotPrivate;
 
         var collaborator = project.Workspace.Memberships
-            .SingleOrDefault(m => m.User.Id.Value == command.AllowedMemberId)
+            .SingleOrDefault(m => m.User.Id.Value == command.CollaboratorId)
             ?.User;
         if (collaborator is null) return Errors.Workspace.CollaboratorNotFound;
         if (project.AllowedMembers.Contains(collaborator)) return Errors.Project.AlreadyAllowedMember;

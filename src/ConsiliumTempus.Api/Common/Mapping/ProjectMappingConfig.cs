@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Api.Contracts.Project.AddAllowedMember;
 using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
@@ -11,6 +12,7 @@ using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
+using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
@@ -43,6 +45,7 @@ public sealed class ProjectMappingConfig : IRegister
         GetCollectionMappings(config);
         GetStatusesMappings(config);
         CreateMappings(config);
+        AddAllowedMemberMappings(config);
         AddStatusMappings(config);
         UpdateMappings(config);
         UpdateFavoritesMappings(config);
@@ -139,6 +142,13 @@ public sealed class ProjectMappingConfig : IRegister
         config.NewConfig<CreateProjectRequest, CreateProjectCommand>();
 
         config.NewConfig<CreateProjectResult, CreateProjectResponse>();
+    }
+
+    private static void AddAllowedMemberMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<AddAllowedMemberToProjectRequest, AddAllowedMemberToProjectCommand>();
+
+        config.NewConfig<AddAllowedMemberToProjectResult, AddAllowedMemberToProjectResponse>();
     }
 
     private static void AddStatusMappings(TypeAdapterConfig config)

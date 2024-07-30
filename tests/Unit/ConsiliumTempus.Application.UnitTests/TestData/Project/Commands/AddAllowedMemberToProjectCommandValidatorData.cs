@@ -28,12 +28,12 @@ internal static class AddAllowedMemberToProjectCommandValidatorData
         }
     }
 
-    internal class GetInvalidAllowedMemberIdCommands : TheoryData<AddAllowedMemberToProjectCommand, string>
+    internal class GetInvalidCollaboratorIdIdCommands : TheoryData<AddAllowedMemberToProjectCommand, string>
     {
-        public GetInvalidAllowedMemberIdCommands()
+        public GetInvalidCollaboratorIdIdCommands()
         {
-            var command = ProjectCommandFactory.CreateAddAllowedMemberToProjectCommand(allowedMemberId: Guid.Empty);
-            Add(command, nameof(command.AllowedMemberId));
+            var command = ProjectCommandFactory.CreateAddAllowedMemberToProjectCommand(collaboratorId: Guid.Empty);
+            Add(command, nameof(command.CollaboratorId));
         }
     }
 }

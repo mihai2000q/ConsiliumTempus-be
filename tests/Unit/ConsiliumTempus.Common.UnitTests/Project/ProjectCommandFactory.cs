@@ -16,11 +16,11 @@ public static class ProjectCommandFactory
 {
     public static AddAllowedMemberToProjectCommand CreateAddAllowedMemberToProjectCommand(
         Guid? id = null,
-        Guid? allowedMemberId = null)
+        Guid? collaboratorId = null)
     {
         return new AddAllowedMemberToProjectCommand(
             id ?? Guid.NewGuid(),
-            allowedMemberId ?? Guid.NewGuid());
+            collaboratorId ?? Guid.NewGuid());
     }
 
     public static AddStatusToProjectCommand CreateAddStatusToProjectCommand(

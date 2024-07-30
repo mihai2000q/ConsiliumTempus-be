@@ -35,12 +35,12 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         workspace.AddUserMembership(MembershipFactory.Create(collaborator));
         var project = ProjectFactory.Create(workspace: workspace, isPrivate: true);
         _projectRepository
-            .GetWithCollaborators(Arg.Any<ProjectId>())
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Any<ProjectId>())
             .Returns(project);
 
         var command = ProjectCommandFactory.CreateAddAllowedMemberToProjectCommand(
             id: project.Id.Value,
-            allowedMemberId: collaborator.Id.Value);
+            collaboratorId: collaborator.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -48,7 +48,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         // Arrange
         await _projectRepository
             .Received(1)
-            .GetWithCollaborators(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new AddAllowedMemberToProjectResult());
@@ -66,12 +66,12 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         var project = ProjectFactory.Create(workspace: workspace, isPrivate: true);
         project.AddAllowedMember(allowedMember);
         _projectRepository
-            .GetWithCollaborators(Arg.Any<ProjectId>())
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Any<ProjectId>())
             .Returns(project);
 
         var command = ProjectCommandFactory.CreateAddAllowedMemberToProjectCommand(
             id: project.Id.Value,
-            allowedMemberId: allowedMember.Id.Value);
+            collaboratorId: allowedMember.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -79,7 +79,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         // Arrange
         await _projectRepository
             .Received(1)
-            .GetWithCollaborators(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
 
         outcome.ValidateError(Errors.Project.AlreadyAllowedMember);
     }
@@ -90,7 +90,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         // Arrange
         var project = ProjectFactory.Create(isPrivate: true);
         _projectRepository
-            .GetWithCollaborators(Arg.Any<ProjectId>())
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Any<ProjectId>())
             .Returns(project);
 
         var command = ProjectCommandFactory.CreateAddAllowedMemberToProjectCommand(id: project.Id.Value);
@@ -101,7 +101,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         // Arrange
         await _projectRepository
             .Received(1)
-            .GetWithCollaborators(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
 
         outcome.ValidateError(Errors.Workspace.CollaboratorNotFound);
     }
@@ -114,7 +114,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
 
         var project = ProjectFactory.Create(isPrivate: false);
         _projectRepository
-            .GetWithCollaborators(Arg.Any<ProjectId>())
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Any<ProjectId>())
             .Returns(project);
 
         // Act
@@ -123,7 +123,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         // Arrange
         await _projectRepository
             .Received(1)
-            .GetWithCollaborators(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
 
         outcome.ValidateError(Errors.Project.NotPrivate);
     }
@@ -135,7 +135,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateAddAllowedMemberToProjectCommand();
 
         _projectRepository
-            .GetWithCollaborators(Arg.Any<ProjectId>())
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Any<ProjectId>())
             .ReturnsNull();
 
         // Act
@@ -144,7 +144,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         // Arrange
         await _projectRepository
             .Received(1)
-            .GetWithCollaborators(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

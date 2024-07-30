@@ -9,7 +9,7 @@ public sealed class AddAllowedMemberToProjectCommandValidator : AbstractValidato
         RuleFor(c => c.Id)
             .NotEmpty();
 
-        RuleFor(c => c.AllowedMemberId)
+        RuleFor(c => c.CollaboratorId)
             .NotEmpty();
     }
 }

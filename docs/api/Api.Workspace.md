@@ -455,7 +455,7 @@ Returns a confirmation message that the workspace overview has been updated succ
 ### Update Owner
 
 Only owners of the workspace can update the owner
-([Workspace Authorization Level: Is Owner](../Security.md/#workspace-authorization-levels));
+([Workspace Authorization Level: Is Workspace Owner](../Security.md/#workspace-authorization-levels));
 
 ```js
 PUT {{host}}/api/workspaces/owner

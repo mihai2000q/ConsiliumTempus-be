@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Api.Contracts.Project.AddStatus;
+﻿using ConsiliumTempus.Api.Contracts.Project.AddAllowedMember;
+using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
@@ -10,6 +11,7 @@ using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
+using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
@@ -80,6 +82,16 @@ internal static partial class Utils
             command.WorkspaceId.Should().Be(request.WorkspaceId);
             command.Name.Should().Be(request.Name);
             command.IsPrivate.Should().Be(request.IsPrivate);
+
+            return true;
+        }
+
+        internal static bool AssertAddAllowedMemberCommand(
+            AddAllowedMemberToProjectCommand command,
+            AddAllowedMemberToProjectRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.CollaboratorId.Should().Be(request.CollaboratorId);
 
             return true;
         }
