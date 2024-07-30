@@ -9,6 +9,14 @@ public static partial class Errors
         public static Error NotFound => Error.NotFound(
             "Project.NotFound",
             "Project could not be found");
+
+        public static Error NotPrivate => Error.Conflict(
+            "Project.NotPrivate",
+            "Project is not private");
+
+        public static Error AlreadyAllowedMember => Error.Conflict(
+            "Project.AlreadyAllowedMember",
+            "This user is already an allowed member");
     }
     
     public static class ProjectStatus

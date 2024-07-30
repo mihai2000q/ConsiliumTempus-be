@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Project.Commands.AddStatus;
+﻿using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
+using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
@@ -13,6 +14,15 @@ namespace ConsiliumTempus.Common.UnitTests.Project;
 
 public static class ProjectCommandFactory
 {
+    public static AddAllowedMemberToProjectCommand CreateAddAllowedMemberToProjectCommand(
+        Guid? id = null,
+        Guid? allowedMemberId = null)
+    {
+        return new AddAllowedMemberToProjectCommand(
+            id ?? Guid.NewGuid(),
+            allowedMemberId ?? Guid.NewGuid());
+    }
+
     public static AddStatusToProjectCommand CreateAddStatusToProjectCommand(
         Guid? id = null,
         string title = Constants.ProjectStatus.Title,
