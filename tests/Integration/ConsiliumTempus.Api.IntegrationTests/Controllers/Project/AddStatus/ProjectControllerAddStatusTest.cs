@@ -43,7 +43,7 @@ public class ProjectControllerAddStatusTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task AddStatusToProject_WhenProjectIsNotFound_ShouldReturnNotFoundError()
+    public async Task AddStatusToProject_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateAddStatusToProjectRequest();
@@ -56,6 +56,8 @@ public class ProjectControllerAddStatusTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.SelectMany(p => p.Statuses).Should().HaveCount(ProjectData.Statuses.Length);
+        dbContext.Projects.SingleOrDefault(p => p.Id == ProjectId.Create(request.Id))
+            .Should().BeNull();
         dbContext.Projects.SelectMany(p => p.Statuses)
             .SingleOrDefault(p => p.Title.Value == request.Title)
             .Should().BeNull();

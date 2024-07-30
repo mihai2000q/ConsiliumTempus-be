@@ -106,6 +106,9 @@ internal static partial class Utils
             project.Sprints[0].Stages.Should().HaveCount(Constants.ProjectStage.Names.Length);
             project.Sprints[0].Stages[0].Tasks
                 .Should().HaveCount(Constants.ProjectTask.Names.Length);
+
+            project.AllowedMembers.Should().HaveCount(1);
+            project.AllowedMembers[0].Should().Be(owner);
         }
 
         internal static void AssertAddStatus(

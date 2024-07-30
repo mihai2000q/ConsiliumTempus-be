@@ -29,6 +29,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
         var expectedProjects = ProjectData.Projects
             .Where(p => p.Workspace.Memberships.Any(m => m.User == user))
+            .Where(p => !p.IsPrivate.Value || p.AllowedMembers.Contains(user))
             .ToList();
         Utils.Project.AssertGetCollectionResponse(
             response!,
@@ -128,6 +129,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
         var expectedProjects = ProjectData.Projects
             .Where(p => p.Workspace.Memberships.Any(m => m.User == user))
+            .Where(p => !p.IsPrivate.Value || p.AllowedMembers.Contains(user))
             .OrderByDescending(p => p.Name.Value)
             .ToList();
         Utils.Project.AssertGetCollectionResponse(
@@ -155,6 +157,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectResponse>();
         var expectedProjects = ProjectData.Projects
             .Where(p => p.Workspace.Memberships.Any(m => m.User == user))
+            .Where(p => !p.IsPrivate.Value || p.AllowedMembers.Contains(user))
             .OrderByDescending(p => p.Name.Value)
             .ThenBy(p => p.LastActivity)
             .ToList();
@@ -189,6 +192,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
 
         var userProjects = ProjectData.Projects
             .Where(p => p.Workspace.Memberships.Any(m => m.User == user))
+            .Where(p => !p.IsPrivate.Value || p.AllowedMembers.Contains(user))
             .ToList();
         var expectedProjects = userProjects
             .OrderBy(p => p.Name.Value)
@@ -210,6 +214,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
     {
         return ProjectData.Projects
             .Where(p => p.Workspace.Memberships.Any(m => m.User == user))
+            .Where(p => !p.IsPrivate.Value || p.AllowedMembers.Contains(user))
             .Where(whereSelector)
             .ToList();
     }

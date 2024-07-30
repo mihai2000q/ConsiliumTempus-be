@@ -17,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IWorkspaceRepository, IWorkspaceProvider
+public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IWorkspaceRepository
 {
     public async Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default)
     {
@@ -54,45 +54,6 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .Include(w => w.Memberships)
             .ThenInclude(m => m.User)
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
-    }
-
-    public async Task<WorkspaceAggregate?> GetByProject(ProjectId id, CancellationToken cancellationToken = default)
-    {
-        var project = await dbContext.Projects
-            .Include(p => p.Workspace)
-            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
-
-        return project?.Workspace;
-    }
-
-    public async Task<WorkspaceAggregate?> GetByProjectSprint(ProjectSprintId id,
-        CancellationToken cancellationToken = default)
-    {
-        var projectSprint = await dbContext.ProjectSprints
-            .Include(ps => ps.Project.Workspace)
-            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
-
-        return projectSprint?.Project.Workspace;
-    }
-
-    public async Task<WorkspaceAggregate?> GetByProjectStage(ProjectStageId id,
-        CancellationToken cancellationToken = default)
-    {
-        var projectStage = await dbContext.Set<ProjectStage>()
-            .Include(ps => ps.Sprint.Project.Workspace)
-            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
-
-        return projectStage?.Sprint.Project.Workspace;
-    }
-
-    public async Task<WorkspaceAggregate?> GetByProjectTask(ProjectTaskId id,
-        CancellationToken cancellationToken = default)
-    {
-        var projectTask = await dbContext.ProjectTasks
-            .Include(pt => pt.Stage.Sprint.Project.Workspace)
-            .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
-
-        return projectTask?.Stage.Sprint.Project.Workspace;
     }
 
     public async Task<List<WorkspaceAggregate>> GetListByUser(

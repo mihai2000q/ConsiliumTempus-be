@@ -24,11 +24,9 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         AuthorizationHandlerContext context,
         PermissionRequirement requirement)
     {
-        if (!Enum.TryParse<Permissions>(requirement.Permission, out var permission)) return;
-
         var subUserId = context.User.Claims
             .SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
-        if (subUserId is null || !Guid.TryParse(subUserId, out var guidUserId)) return;
+        if (!Guid.TryParse(subUserId, out var guidUserId)) return;
 
         using var scope = serviceScopeFactory.CreateScope();
         var permissionProvider = scope.ServiceProvider.GetRequiredService<IPermissionProvider>();
@@ -38,7 +36,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         var request = httpContextAccessor.HttpContext?.Request;
         if (request is null) return;
 
-        var workspaceId = await GetWorkspaceId(request, workspaceProvider, permission);
+        var workspaceId = await GetWorkspaceId(request, workspaceProvider, requirement.Permission);
         if (workspaceId is null)
         {
             context.Succeed(requirement); // let the system return the not found or validation error 
@@ -47,13 +45,15 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
         {
             var userId = UserId.Create(guidUserId);
             var permissions = await permissionProvider.GetPermissions(userId, workspaceId);
-            if (permissions.Contains(requirement.Permission)) context.Succeed(requirement);
+            if (permissions.Contains(requirement.Permission.ToString())) context.Succeed(requirement);
         }
     }
 
     /// <summary>
-    /// Get Workspace id from query, route or body of the request or related entity and
-    /// return it or null when the workspace was either not found, or there is a validation error
+    /// Get Workspace id from query, route or body of the request or related entity
+    /// <returns>
+    /// the workspace or null when the workspace was either not found, or there is a validation error
+    /// </returns>
     /// </summary>
     private static async Task<WorkspaceId?> GetWorkspaceId(
         HttpRequest request,
@@ -62,7 +62,6 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
     {
         var stringId = await GetStringId(request, permission);
 
-        if (string.IsNullOrWhiteSpace(stringId)) return null;
         if (!Guid.TryParse(stringId, out var guidId)) return null;
 
         var workspace = permission switch

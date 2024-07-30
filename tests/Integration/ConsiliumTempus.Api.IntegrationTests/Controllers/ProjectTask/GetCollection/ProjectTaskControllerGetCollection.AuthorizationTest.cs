@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectTask.GetCollection;
@@ -10,6 +11,7 @@ namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectTask.GetCollec
 public class ProjectTaskControllerGetCollectionAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectTaskData())
 {
+    // Permission Authorization
     [Fact]
     public async Task GetCollectionProjectTask_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
@@ -33,28 +35,47 @@ public class ProjectTaskControllerGetCollectionAuthorizationTest(WebAppFactory f
     {
         await AssertForbiddenResponse(ProjectTaskData.Users[1]);
     }
-
-    private async Task AssertSuccessfulResponse(UserAggregate user)
+    
+    // Project Authorization
+    [Fact]
+    public async Task GetCollectionProjectTask_WhenProjectIsNotPrivate_ShouldReturnSuccessResponse()
     {
-        var outcome = await ArrangeAndAct(user);
+        await AssertSuccessfulResponse(ProjectTaskData.Users[4], ProjectTaskData.ProjectStages[^3]);
+    }
+
+    [Fact]
+    public async Task GetCollectionProjectTask_WhenProjectIsPrivateAndIsAllowedMember_ShouldReturnSuccessResponse()
+    {
+        await AssertSuccessfulResponse(ProjectTaskData.Users[0], ProjectTaskData.ProjectStages[^2]);
+    }
+
+    [Fact]
+    public async Task GetCollectionProjectTask_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
+    {
+        await AssertForbiddenResponse(ProjectTaskData.Users[0], ProjectTaskData.ProjectStages[^1]);
+    }
+
+    private async Task AssertSuccessfulResponse(UserAggregate user, ProjectStage? stage = null)
+    {
+        var outcome = await ArrangeAndAct(user, stage);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-    private async Task AssertForbiddenResponse(UserAggregate user)
+    private async Task AssertForbiddenResponse(UserAggregate user, ProjectStage? stage = null)
     {
-        var outcome = await ArrangeAndAct(user);
+        var outcome = await ArrangeAndAct(user, stage);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    private Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
+    private Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user, ProjectStage? stage = null)
     {
         // Arrange
-        var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest(
-            ProjectTaskData.ProjectStages.First().Id.Value);
+        stage ??= ProjectTaskData.ProjectStages.First();
+        var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest(stage.Id.Value);
 
         // Act
         Client.UseCustomToken(user);

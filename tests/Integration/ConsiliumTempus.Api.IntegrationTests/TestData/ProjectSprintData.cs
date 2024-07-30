@@ -100,9 +100,17 @@ internal class ProjectSprintData : ITestData
             Workspaces[0],
             WorkspaceRole.Member),
         MembershipFactory.Create(
+            Users[3],
+            Workspaces[2],
+            WorkspaceRole.Admin),
+        MembershipFactory.Create(
             Users[4],
             Workspaces[0],
-            WorkspaceRole.View)
+            WorkspaceRole.View),
+        MembershipFactory.Create(
+            Users[4],
+            Workspaces[2],
+            WorkspaceRole.Admin)
     ];
 
     public static ProjectAggregate[] Projects { get; } =
@@ -111,8 +119,7 @@ internal class ProjectSprintData : ITestData
             Workspaces[0],
             Users[0],
             "Win NBA",
-            "This is an elaborate plan to win NBA",
-            true),
+            "This is an elaborate plan to win NBA"),
         ProjectFactory.Create(
             Workspaces[1],
             Users[1],
@@ -125,7 +132,25 @@ internal class ProjectSprintData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
-            "Buy a house!")
+            "Buy a house!"),
+        ProjectFactory.Create(
+            Workspaces[2],
+            Users[0],
+            "Something Not Private",
+            isPrivate: false,
+            allowedMembers: [Users[0]]),
+        ProjectFactory.Create(
+            Workspaces[2],
+            Users[0],
+            "Something Private",
+            isPrivate: true,
+            allowedMembers: [Users[0], Users[3]]),
+        ProjectFactory.Create(
+            Workspaces[2],
+            Users[3],
+            "Something More Private",
+            isPrivate: true,
+            allowedMembers: [Users[3]]),
     ];
 
     public static ProjectSprintAggregate[] ProjectSprints { get; } =
@@ -133,8 +158,8 @@ internal class ProjectSprintData : ITestData
         ProjectSprintFactory.Create(
             Projects[0],
             AuditFactory.Create(
-                Users[0], 
-                Users[0], 
+                Users[0],
+                Users[0],
                 new DateTime(DateTime.UtcNow.Year, 1, 16, 0, 0, 0, DateTimeKind.Utc)),
             "Sprint 2 - Qualify on Semi Finals",
             new DateOnly(DateTime.UtcNow.Year, 01, 16),
@@ -142,8 +167,8 @@ internal class ProjectSprintData : ITestData
         ProjectSprintFactory.Create(
             Projects[0],
             AuditFactory.Create(
-                Users[0], 
-                Users[0], 
+                Users[0],
+                Users[0],
                 new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc)),
             "Sprint 1 - Qualify on Quarters",
             new DateOnly(DateTime.UtcNow.Year, 01, 1),
@@ -151,58 +176,114 @@ internal class ProjectSprintData : ITestData
         ProjectSprintFactory.Create(
             Projects[0],
             AuditFactory.Create(
-                Users[0], 
                 Users[0],
-                new DateTime(DateTime.UtcNow.Year- 1, 11, 2, 0, 0, 0, DateTimeKind.Utc)),
+                Users[0],
+                new DateTime(DateTime.UtcNow.Year - 1, 11, 2, 0, 0, 0, DateTimeKind.Utc)),
             "Sprint 0 - Training",
             new DateOnly(DateTime.UtcNow.Year - 1, 11, 22)),
         ProjectSprintFactory.Create(
             Projects[1],
-            AuditFactory.Create(Users[1], Users[1]),
+            AuditFactory.Create(Users[1]),
             "Get the champs lig finals",
             new DateOnly(DateTime.UtcNow.Year, 01, 16)),
         ProjectSprintFactory.Create(
             Projects[3],
-            AuditFactory.Create(Users[0], Users[0]),
+            AuditFactory.Create(Users[0]),
             "Sprint From Last Year",
             new DateOnly(DateTime.UtcNow.Year - 1, 11, 22)),
+
+        ProjectSprintFactory.Create(
+            Projects[4],
+            AuditFactory.Create(Users[0]),
+            "sprint1"),
+        ProjectSprintFactory.Create(
+            Projects[5],
+            AuditFactory.Create(Users[0]),
+            "sprint2"),
+        ProjectSprintFactory.Create(
+            Projects[6],
+            AuditFactory.Create(Users[3]),
+            "sprint3"),
+        
+        ProjectSprintFactory.Create(
+            Projects[4],
+            AuditFactory.Create(Users[0]),
+            "Not Private Project Sprint"),
+        ProjectSprintFactory.Create(
+            Projects[5],
+            AuditFactory.Create(Users[0]),
+            "Private Project Sprint"),
+        ProjectSprintFactory.Create(
+            Projects[6],
+            AuditFactory.Create(Users[3]),
+            "More Private Project Sprint"),
     ];
 
     public static ProjectStage[] ProjectStages { get; } =
     [
         ProjectStageFactory.Create(
             ProjectSprints[0],
-            AuditFactory.Create(Users[0], Users[0]),
+            AuditFactory.Create(Users[0]),
             "To do"),
         ProjectStageFactory.Create(
             ProjectSprints[0],
-            AuditFactory.Create(Users[0], Users[0]),
+            AuditFactory.Create(Users[0]),
             "In Progress",
             1),
         ProjectStageFactory.Create(
             ProjectSprints[0],
-            AuditFactory.Create(Users[0], Users[0]),
+            AuditFactory.Create(Users[0]),
             "Done",
             2),
 
         ProjectStageFactory.Create(
             ProjectSprints[1],
-            AuditFactory.Create(Users[0], Users[0]),
+            AuditFactory.Create(Users[0]),
             "Single Stage"),
 
         ProjectStageFactory.Create(
             ProjectSprints[2],
-            AuditFactory.Create(Users[1], Users[1]),
+            AuditFactory.Create(Users[1]),
             "To do"),
         ProjectStageFactory.Create(
             ProjectSprints[2],
-            AuditFactory.Create(Users[1], Users[1]),
+            AuditFactory.Create(Users[1]),
             "In Progress",
             1),
         ProjectStageFactory.Create(
             ProjectSprints[2],
-            AuditFactory.Create(Users[1], Users[1]),
+            AuditFactory.Create(Users[1]),
             "Done",
-            2)
+            2),
+
+        ProjectStageFactory.Create(
+            ProjectSprints[^3],
+            AuditFactory.Create(Users[0]),
+            "Stage 1"),
+        ProjectStageFactory.Create(
+            ProjectSprints[^3],
+            AuditFactory.Create(Users[0]),
+            "Stage 2",
+            1),
+
+        ProjectStageFactory.Create(
+            ProjectSprints[^2],
+            AuditFactory.Create(Users[0]),
+            "Stage 1"),
+        ProjectStageFactory.Create(
+            ProjectSprints[^2],
+            AuditFactory.Create(Users[0]),
+            "Stage 2",
+            1),
+
+        ProjectStageFactory.Create(
+            ProjectSprints[^1],
+            AuditFactory.Create(Users[0]),
+            "Stage 1"),
+        ProjectStageFactory.Create(
+            ProjectSprints[^1],
+            AuditFactory.Create(Users[0]),
+            "Stage 2",
+            1),
     ];
 }

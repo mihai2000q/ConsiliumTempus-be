@@ -47,6 +47,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .Include(p => p.Favorites)
             .Include(p => p.Statuses.OrderByDescending(s => s.Audit.CreatedDateTime))
             .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
+            .Where(p => !p.IsPrivate.Value || p.AllowedMembers.Any(u => u.Id == userId))
             .WhereIf(workspaceId is not null, p => p.Workspace.Id == workspaceId)
             .ApplyFilters(filters)
             .ApplyOrders(orders)
@@ -63,6 +64,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
         return dbContext.Projects
             .IgnoreAutoIncludes()
             .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
+            .Where(p => !p.IsPrivate.Value || p.AllowedMembers.Any(u => u.Id == userId))
             .WhereIf(workspaceId is not null, p => p.Workspace.Id == workspaceId)
             .ApplyFilters(filters)
             .CountAsync(cancellationToken);

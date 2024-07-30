@@ -3,6 +3,7 @@ using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using ConsiliumTempus.Infrastructure.Extensions;
 
 namespace ConsiliumTempus.Common.IntegrationTests.Workspace;
 
@@ -27,7 +28,7 @@ public static class WorkspaceFactory
             .WithProperty(nameof(WorkspaceAggregate.LastActivity), lastActivity ?? DateTime.UtcNow)
             .WithProperty(nameof(WorkspaceAggregate.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
             .WithProperty(nameof(WorkspaceAggregate.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
-            .WithProperty(nameof(WorkspaceAggregate.Favorites), favorites ?? [])
+            .WithField(nameof(WorkspaceAggregate.Favorites).ToBackingField(), favorites ?? [])
             .Build();
     }
 }

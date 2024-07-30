@@ -40,17 +40,24 @@ So he basically cannot use the application to its fullest
 
 Also, it should be mentioned that there are a few exceptions, such as:
 
-- a few actions can be done only by the owner of the workspace (i.e., giving up ownership to another collaborator)
+- a few actions can be done only by the owner of the workspace, or the owner of the project 
+(i.e., giving up ownership of the workspace/project to another collaborator)
 - a few actions don't require permission, they simply require that you are part of the workspace
   (i.e., leaving a workspace, anyone can do it, but they have to be part of it first)
   
-Those are categorized as **Workspace Authorization Levels**.
+Those are categorized as **Workspace Authorization Levels** and **Project Authorization Levels**.
 
 ## Workspace Authorization Levels
 
-There are only a few levels that differ from just having permission, and those are:
-- **Is Owner**, which requires the user that made the request to be the owner of the workspace
+There are only a few levels in the workspace that differ from just having permission, and those are:
+- **Is Workspace Owner**, which requires the user that made the request to be the owner of the workspace
 - **Is Collaborator**, which requires the user that made the request to be part of the workspace (i.e., a collaborator)
+
+## Project Authorization Levels
+
+There are only a few levels in the project that differ from just having permission, and those are:
+- **Is Project Owner**, which requires the user that made the request to be the owner of the project
+- **Is Allowed**, which requires the user that made the request to be part of the allowed members of a project
 
 ## Workspace Roles
 

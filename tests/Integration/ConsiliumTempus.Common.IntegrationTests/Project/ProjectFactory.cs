@@ -5,6 +5,7 @@ using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Infrastructure.Extensions;
 
 namespace ConsiliumTempus.Common.IntegrationTests.Project;
 
@@ -19,7 +20,8 @@ public static class ProjectFactory
         ProjectLifecycle lifecycle = ProjectLifecycle.Active,
         DateTime? createdDateTime = null,
         DateTime? updatedDateTime = null,
-        List<UserAggregate>? favorites = null)
+        List<UserAggregate>? favorites = null,
+        List<UserAggregate>? allowedMembers = null)
     {
         return EntityBuilder<ProjectAggregate>.Empty()
             .WithProperty(nameof(ProjectAggregate.Id), ProjectId.CreateUnique())
@@ -31,7 +33,8 @@ public static class ProjectFactory
             .WithProperty(nameof(ProjectAggregate.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
             .WithProperty(nameof(ProjectAggregate.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
             .WithProperty(nameof(ProjectAggregate.Workspace), workspace)
-            .WithProperty(nameof(ProjectAggregate.Favorites), favorites ?? [])
+            .WithField(nameof(ProjectAggregate.Favorites).ToBackingField(), favorites ?? [])
+            .WithField(nameof(ProjectAggregate.AllowedMembers).ToBackingField(), allowedMembers ?? [])
             .Build();
     }
 }

@@ -290,6 +290,30 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProjectHasAllowedMember",
+                columns: table => new
+                {
+                    AllowedMembersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectHasAllowedMember", x => new { x.AllowedMembersId, x.ProjectId });
+                    table.ForeignKey(
+                        name: "FK_ProjectHasAllowedMember_Project_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Project",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectHasAllowedMember_User_AllowedMembersId",
+                        column: x => x.AllowedMembersId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectSprint",
                 columns: table => new
                 {
@@ -644,6 +668,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "WorkspaceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectHasAllowedMember_ProjectId",
+                table: "ProjectHasAllowedMember",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProjectSprint_AuditId",
                 table: "ProjectSprint",
                 column: "AuditId");
@@ -760,6 +789,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Membership");
+
+            migrationBuilder.DropTable(
+                name: "ProjectHasAllowedMember");
 
             migrationBuilder.DropTable(
                 name: "ProjectStatus");

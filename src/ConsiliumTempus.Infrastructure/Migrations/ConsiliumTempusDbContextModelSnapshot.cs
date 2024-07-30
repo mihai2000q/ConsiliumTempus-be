@@ -994,6 +994,22 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.ToTable("UserHasFavoriteProject", (string)null);
                 });
 
+            modelBuilder.Entity("ProjectAggregateUserAggregate1", b =>
+                {
+                    b.Property<Guid>("AllowedMembersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProjectAggregate1Id")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ProjectId");
+
+                    b.HasKey("AllowedMembersId", "ProjectAggregate1Id");
+
+                    b.HasIndex("ProjectAggregate1Id");
+
+                    b.ToTable("ProjectHasAllowedMember", (string)null);
+                });
+
             modelBuilder.Entity("UserAggregateWorkspaceAggregate", b =>
                 {
                     b.Property<Guid>("FavoritesId")
@@ -1786,6 +1802,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", null)
                         .WithMany()
                         .HasForeignKey("ProjectAggregateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProjectAggregateUserAggregate1", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", null)
+                        .WithMany()
+                        .HasForeignKey("AllowedMembersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectAggregate1Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

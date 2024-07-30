@@ -3,5 +3,5 @@
 public enum WorkspaceAuthorizationLevel
 {
     IsCollaborator,
-    IsOwner
+    IsWorkspaceOwner
 }

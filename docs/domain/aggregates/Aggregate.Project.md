@@ -15,7 +15,9 @@ class Project
     void RefreshActivity()
     void AddSprint()
     void AddStatus()
-    void RemoveStats()
+    void RemoveStatus()
+    void AddAllowedMember()
+    void RemoveAllowedMember()
 }
 ```
 
@@ -33,7 +35,8 @@ class Project
   "workspace": {},
   "sprints": [{}],
   "statuses": [{}],
-  "favorites": [{}]
+  "favorites": [{}],
+  "allowedMembers": [{}]
 }
 ```
 

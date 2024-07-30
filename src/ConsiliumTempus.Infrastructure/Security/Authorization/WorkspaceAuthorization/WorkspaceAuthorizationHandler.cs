@@ -20,7 +20,7 @@ public sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory serviceSc
     {
         var subUserId = context.User.Claims
             .SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
-        if (subUserId is null || !Guid.TryParse(subUserId, out var guidUserId)) return;
+        if (!Guid.TryParse(subUserId, out var guidUserId)) return;
 
         using var scope = serviceScopeFactory.CreateScope();
         var httpContextAccessor = scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
@@ -46,10 +46,7 @@ public sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory serviceSc
         IWorkspaceProvider workspaceProvider)
     {
         var stringId = await HttpRequestReader.GetStringIdFromBody(request);
-        if (stringId is null) return null;
-
         if (!Guid.TryParse(stringId, out var workspaceId)) return null;
-
         return await workspaceProvider.GetWithMemberships(WorkspaceId.Create(workspaceId));
     }
 
@@ -61,7 +58,7 @@ public sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory serviceSc
         return authorizationLevel switch
         {
             WorkspaceAuthorizationLevel.IsCollaborator => workspace.Memberships.Any(m => m.User.Id == userId),
-            WorkspaceAuthorizationLevel.IsOwner => workspace.Owner.Id == userId,
+            WorkspaceAuthorizationLevel.IsWorkspaceOwner => workspace.Owner.Id == userId,
             _ => throw new ArgumentOutOfRangeException(nameof(authorizationLevel))
         };
     }

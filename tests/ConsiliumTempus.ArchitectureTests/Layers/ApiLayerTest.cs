@@ -1,5 +1,6 @@
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.ArchitectureTests.Core;
+using ConsiliumTempus.ArchitectureTests.TestUtils;
 using Mapster;
 
 namespace ConsiliumTempus.ArchitectureTests.Layers;
@@ -44,6 +45,19 @@ public class ApiLayerTest : BaseArchitectureTest
             .Should()
             .HaveNameEndingWith("MappingConfig")
             .Check(Architecture);
+
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .ResideInNamespace("ConsiliumTempus.Api.Common.Mapping")
+            .Should()
+            .HaveNameEndingWith("MappingConfig")
+            .Check(Architecture);
+
+        Utils.ShouldHaveSameCount(
+            Architecture,
+            typeof(IRegister),
+            "ConsiliumTempus.Api.Common.Mapping");
     }
 
     [Fact]
@@ -70,5 +84,18 @@ public class ApiLayerTest : BaseArchitectureTest
             .Should()
             .HaveNameEndingWith("Controller")
             .Check(Architecture);
+
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .ResideInNamespace("ConsiliumTempus.Api.Controllers")
+            .Should()
+            .HaveNameEndingWith("Controller")
+            .Check(Architecture);
+
+        Utils.ShouldHaveSameCount(
+            Architecture,
+            typeof(ApiController),
+            "ConsiliumTempus.Api.Controllers");
     }
 }

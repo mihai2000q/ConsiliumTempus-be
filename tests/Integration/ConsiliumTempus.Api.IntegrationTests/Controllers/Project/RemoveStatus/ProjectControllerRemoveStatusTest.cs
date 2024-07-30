@@ -16,7 +16,7 @@ public class ProjectControllerRemoveStatusTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task RemoveStatusFromProject_WhenSucceeds_ShouldReturnStatusesFromProject()
+    public async Task RemoveStatusFromProject_WhenSucceeds_ShouldRemoveStatusFromProject()
     {
         // Arrange
         var user = ProjectData.Users.First();

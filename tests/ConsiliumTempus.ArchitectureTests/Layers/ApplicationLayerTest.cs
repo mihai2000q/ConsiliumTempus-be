@@ -1,4 +1,5 @@
 using ConsiliumTempus.ArchitectureTests.Core;
+using ConsiliumTempus.ArchitectureTests.TestUtils;
 using FluentValidation;
 using MediatR;
 
@@ -103,8 +104,21 @@ public class ApplicationLayerTest : BaseArchitectureTest
             .AreAssignableTo(typeof(IPipelineBehavior<,>))
             .Should()
             // Should have been NameEndingWith, however it only works if you add: "`2" at the end
-            .HaveNameContaining("Behavior") 
+            .HaveNameContaining("Behavior")
             .Check(Architecture);
+
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .ResideInNamespace("ConsiliumTempus.Application.Common.Behaviors")
+            .Should()
+            .HaveNameContaining("Behavior")
+            .Check(Architecture);
+
+        Utils.ShouldHaveSameCount(
+            Architecture,
+            typeof(IPipelineBehavior<,>),
+            "ConsiliumTempus.Application.Common.Behaviors");
     }
 
     [Fact]

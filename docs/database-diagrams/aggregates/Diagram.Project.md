@@ -8,6 +8,8 @@
 - **Many-to-one** relationship with the [User](../../domain/aggregates/Aggregate.User.md) aggregate.
 - **Many-to-many** relationship with the [User](../../domain/aggregates/Aggregate.User.md) aggregate
 (through the **UserHasFavoriteProject** entity).
+- **Many-to-many** relationship with the [User](../../domain/aggregates/Aggregate.User.md) aggregate
+(through the **ProjectHasAllowedMember** entity).
 - **One-to-many** relationship with the [Project Status](../../domain/entities/project/Entity.ProjectStatus.md) entity.
 - **One-to-many** relationship with the [Project Sprint](../../domain/aggregates/Aggregate.ProjectSprint.md) entity.
 

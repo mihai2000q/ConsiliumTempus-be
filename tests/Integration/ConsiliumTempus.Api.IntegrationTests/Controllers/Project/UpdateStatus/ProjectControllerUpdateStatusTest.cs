@@ -16,7 +16,7 @@ public class ProjectControllerUpdateStatusTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task UpdateStatusFromProject_WhenSucceeds_ShouldReturnStatusesFromProject()
+    public async Task UpdateStatusFromProject_WhenSucceeds_ShouldReturnUpdateStatusFromProject()
     {
         // Arrange
         var user = ProjectData.Users.First();

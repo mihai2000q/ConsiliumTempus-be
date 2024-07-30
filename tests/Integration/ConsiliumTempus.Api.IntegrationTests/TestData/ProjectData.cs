@@ -98,9 +98,17 @@ internal class ProjectData : ITestData
             Workspaces[0],
             WorkspaceRole.Member),
         MembershipFactory.Create(
+            Users[3],
+            Workspaces[2],
+            WorkspaceRole.Admin),
+        MembershipFactory.Create(
             Users[4],
             Workspaces[0],
-            WorkspaceRole.View)
+            WorkspaceRole.View),
+        MembershipFactory.Create(
+            Users[4],
+            Workspaces[2],
+            WorkspaceRole.Admin)
     ];
 
     public static ProjectAggregate[] Projects { get; } =
@@ -110,13 +118,13 @@ internal class ProjectData : ITestData
             Users[0],
             "Win NBA",
             "This is an elaborate plan to win NBA",
-            true),
+            favorites: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[1],
             Users[1],
             "Win Champions League",
             "Just an idea on how to win the football league",
-            true),
+            favorites: [Users[1]]),
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
@@ -131,9 +139,10 @@ internal class ProjectData : ITestData
             Workspaces[2],
             Users[0],
             "Start a retiring investment plan",
-            "",
+            "Should do it as soon as possible",
             false,
-            ProjectLifecycle.Upcoming),
+            ProjectLifecycle.Upcoming,
+            allowedMembers: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
@@ -142,19 +151,51 @@ internal class ProjectData : ITestData
             false,
             ProjectLifecycle.Archived,
             favorites: [Users[0]]),
+
+        ProjectFactory.Create(
+            Workspaces[2],
+            Users[0],
+            "Something Not Private",
+            isPrivate: false,
+            allowedMembers: [Users[0]]),
+        ProjectFactory.Create(
+            Workspaces[2],
+            Users[0],
+            "Something Private",
+            isPrivate: true,
+            allowedMembers: [Users[0], Users[3]]),
+        ProjectFactory.Create(
+            Workspaces[2],
+            Users[3],
+            "Something More Private",
+            isPrivate: true,
+            allowedMembers: [Users[3]]),
     ];
 
     public static ProjectStatus[] Statuses { get; } =
     [
         ProjectStatusFactory.Create(
             Projects[0],
-            AuditFactory.Create(Users[0], Users[0]),
+            AuditFactory.Create(Users[0]),
             "This is a status update"),
         ProjectStatusFactory.Create(
             Projects[0],
-            AuditFactory.Create(Users[0], Users[0]),
-            "Another status update",
+            AuditFactory.Create(Users[0]),
+            "Another status update 0",
             "Project is off track officially... training is too hard",
             ProjectStatusType.OffTrack),
+
+        ProjectStatusFactory.Create(
+            Projects[^3],
+            AuditFactory.Create(Users[0]),
+            "Another status update 1"),
+        ProjectStatusFactory.Create(
+            Projects[^2],
+            AuditFactory.Create(Users[0]),
+            "Another status update 2"),
+        ProjectStatusFactory.Create(
+            Projects[^1],
+            AuditFactory.Create(Users[0]),
+            "Another status update 3"),
     ];
 }
