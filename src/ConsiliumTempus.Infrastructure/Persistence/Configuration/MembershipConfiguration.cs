@@ -16,6 +16,7 @@ public sealed class MembershipConfiguration : IEntityTypeConfiguration<Membershi
         builder.HasOne(m => m.User)
             .WithMany(u => u.Memberships)
             .HasForeignKey(nameof(UserId));
+        builder.Navigation(m => m.User).AutoInclude();
 
         builder.HasOne(m => m.Workspace)
             .WithMany(w => w.Memberships)

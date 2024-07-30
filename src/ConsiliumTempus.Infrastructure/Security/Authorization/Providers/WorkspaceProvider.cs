@@ -22,7 +22,6 @@ public sealed class WorkspaceProvider(ConsiliumTempusDbContext dbContext) : IWor
     {
         return await dbContext.Workspaces
             .Include(w => w.Memberships)
-            .ThenInclude(m => m.User)
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
     }
 

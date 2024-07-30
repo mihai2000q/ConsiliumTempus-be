@@ -46,7 +46,6 @@ public class WorkspaceControllerAcceptInvitationTest(WebAppFactory factory)
             .AsNoTracking()
             .Include(w => w.Invitations)
             .Include(w => w.Memberships)
-            .ThenInclude(m => m.User)
             .Single(w => w.Id == invitation.Workspace.Id);
         Utils.Workspace.AssertAcceptInvitation(request, updatedWorkspace, collaborator);
     }

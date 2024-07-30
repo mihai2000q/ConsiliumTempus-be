@@ -33,9 +33,7 @@ public class WorkspaceControllerCreateTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length + 1);
         var createdWorkspace = await dbContext.Workspaces
-            .Include(w => w.Owner)
             .Include(w => w.Memberships)
-            .ThenInclude(m => m.User)
             .SingleAsync(w => w.Name.Value == request.Name);
         Utils.Workspace.AssertCreation(createdWorkspace, request, user);
     }

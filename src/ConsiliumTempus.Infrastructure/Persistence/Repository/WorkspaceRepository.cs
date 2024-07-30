@@ -2,17 +2,12 @@
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.Project.ValueObjects;
-using ConsiliumTempus.Domain.ProjectSprint.Entities;
-using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
-using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
-using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
@@ -32,7 +27,6 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
     {
         return await dbContext.Workspaces
             .Include(w => w.Memberships)
-            .ThenInclude(m => m.User)
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
     }
 
@@ -52,7 +46,6 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
         return await dbContext.Workspaces
             .Include(w => w.Invitations)
             .Include(w => w.Memberships)
-            .ThenInclude(m => m.User)
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
     }
 
@@ -88,7 +81,6 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
     {
         return await dbContext.Workspaces
             .Include(w => w.Memberships)
-            .ThenInclude(m => m.User)
             .Where(w => w.Memberships.Any(m => m.User == user))
             .ToListAsync(cancellationToken);
     }
