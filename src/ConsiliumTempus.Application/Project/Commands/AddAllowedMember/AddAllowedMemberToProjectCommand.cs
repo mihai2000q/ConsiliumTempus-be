@@ -3,7 +3,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 
-public record AddAllowedMemberToProjectCommand(
+public sealed record AddAllowedMemberToProjectCommand(
     Guid Id,
     Guid CollaboratorId)
     : IRequest<ErrorOr<AddAllowedMemberToProjectResult>>;
