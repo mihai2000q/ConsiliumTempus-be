@@ -2,7 +2,6 @@
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
-using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.User;
 
