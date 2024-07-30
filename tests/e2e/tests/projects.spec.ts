@@ -2,12 +2,12 @@ import { test } from "@playwright/test";
 import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
 import { deleteUser, registerUser } from "../utils/users.utils";
-import { getPersonalWorkspace } from "../utils/workspaces.utils";
+import { addCollaboratorToWorkspace, getPersonalWorkspace } from "../utils/workspaces.utils";
 import {
   addProjectStatus,
   create2ProjectsIn2DifferentWorkspaces,
   createProject,
-  createProjects,
+  createProjects, getAllowedMembers,
   getProject,
   getProjectOverview,
   getProjects,
@@ -20,6 +20,7 @@ import UpdateOverviewProjectRequest from "../types/requests/project/UpdateOvervi
 import AddStatusToProjectRequest from "../types/requests/project/AddStatusToProjectRequest";
 import UpdateStatusFromProjectRequest from "../types/requests/project/UpdateStatusFromProjectRequest";
 import UpdateFavoritesProjectRequest from "../types/requests/project/UpdateFavoritesProjectRequest";
+import AddAllowedMemberToProjectRequest from "../types/requests/project/AddAllowedMemberToProjectRequest";
 
 test.describe('should allow operations on the project entity', () => {
   let WORKSPACE_ID: string
@@ -346,6 +347,42 @@ test.describe('should allow operations on the project entity', () => {
         createdDateTime: expect.any(String),
       }
     ])
+  })
+
+  test('should add allowed member to project', async ({ request }) => {
+    const createProjectRequest: CreateProjectRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "Project",
+      isPrivate: true
+    }
+    const project = await createProject(request, createProjectRequest)
+
+    const collaborator = await addCollaboratorToWorkspace(request, "some1@gmail.com", WORKSPACE_ID)
+
+    const body: AddAllowedMemberToProjectRequest = {
+      id: project.id,
+      collaboratorId: collaborator.id
+    }
+    const response = await request.post('/api/projects/add-allowed-member', {
+      ...useToken(),
+      data: body
+    });
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    /*const members = await getAllowedMembers(request, body.id)
+    expect(members).toHaveLength(2)
+    expect(members).toStrictEqual(expect.arrayContaining([
+      {
+        id: collaborator.id,
+        name: collaborator.name,
+        email: collaborator.email,
+      }
+    ]))*/
   })
 
   test('should add status to project', async ({ request }) => {

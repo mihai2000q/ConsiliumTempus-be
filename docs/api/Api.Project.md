@@ -16,6 +16,9 @@
   * [Create](#create)
     * [Create Project Request](#create-project-request)
     * [Create Project Response](#create-project-response)
+  * [Add Allowed Member](#add-allowed-member)
+    * [Add Allowed Member To Project Request](#add-allowed-member-to-project-request)
+    * [Add Allowed Member To Project Response](#add-allowed-member-to-project-response)
   * [Add Status](#add-status)
     * [Add Status To Project Request](#add-status-to-project-request)
     * [Add Status To Project Response](#add-status-to-project-response)
@@ -316,6 +319,30 @@ Sends body data that the new project status needs to be created.
 #### Add Status To Project Response
 
 Returns a confirmation message that the project status has been added successfully.
+
+### Add Allowed Member
+
+Can only add allowed members to private projects, and only owners can add more members
+([Project Authorization Level: Is Project Owner](../Security.md/#project-authorization-levels)).
+
+```js
+POST {{host}}/api/projects/add-allowed-member
+```
+
+#### Add Allowed Member To Project Request
+
+Sends body data that the project needs to add the allowed member.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "collaboratorId": "20000000-0000-0000-0000-000000000000"
+}
+```
+
+#### Add Allowed Member To Project Response
+
+Returns a confirmation message that the allowed member has been added to the project successfully.
 
 ### Update
 

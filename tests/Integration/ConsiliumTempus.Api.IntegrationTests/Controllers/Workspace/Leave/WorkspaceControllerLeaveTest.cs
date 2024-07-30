@@ -35,7 +35,6 @@ public class WorkspaceControllerLeaveTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedWorkspace = await dbContext.Workspaces
             .Include(w => w.Memberships)
-            .ThenInclude(m => m.User)
             .SingleAsync(w => w.Id == WorkspaceId.Create(request.Id));
         Utils.Workspace.AssertLeave(request, updatedWorkspace, user);
     }

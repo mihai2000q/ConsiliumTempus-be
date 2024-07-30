@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Api.Contracts.Project.AddStatus;
+﻿using ConsiliumTempus.Api.Contracts.Project.AddAllowedMember;
+using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
@@ -68,6 +69,15 @@ public static class ProjectRequestFactory
             workspaceId ?? Guid.NewGuid(),
             name,
             isPrivate);
+    }
+
+    public static AddAllowedMemberToProjectRequest CreateAddAllowedMemberToProjectRequest(
+        Guid? id = null,
+        Guid? allowedMemberId = null)
+    {
+        return new AddAllowedMemberToProjectRequest(
+            id ?? Guid.NewGuid(),
+            allowedMemberId ?? Guid.NewGuid());
     }
 
     public static AddStatusToProjectRequest CreateAddStatusToProjectRequest(

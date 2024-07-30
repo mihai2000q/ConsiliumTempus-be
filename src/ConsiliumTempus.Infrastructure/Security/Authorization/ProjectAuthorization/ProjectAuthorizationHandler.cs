@@ -72,6 +72,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
                 "Delete" or
                 "RemoveStatus" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.Project),
 
+                "AddAllowedMember" or
                 "AddStatus" or
                 "Update" or
                 "UpdateFavorites" or

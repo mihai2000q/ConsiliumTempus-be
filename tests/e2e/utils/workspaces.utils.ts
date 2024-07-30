@@ -208,3 +208,22 @@ export async function inviteThemToWorkspace(
   const user = await getCurrentUser(request, token)
   return [workspace, user]
 }
+
+export async function addCollaboratorToWorkspace(
+  request: APIRequestContext,
+  collaboratorEmail: string,
+  workspaceId: string
+) {
+  const token = (await registerUser(request, collaboratorEmail)).token
+  await inviteCollaborator(
+    request,
+    {
+      id: workspaceId,
+      email: collaboratorEmail
+    }
+  )
+
+  await acceptInvitation(request, collaboratorEmail, workspaceId, token)
+
+  return await getCurrentUser(request, token)
+}

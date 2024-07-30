@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Project.Commands.AddStatus;
+﻿using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
+using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
@@ -51,6 +52,11 @@ public static class ProjectResultFactory
     public static CreateProjectResult CreateCreateProjectResult()
     {
         return new CreateProjectResult();
+    }
+
+    public static AddAllowedMemberToProjectResult CreateAddAllowedMemberToProjectResult()
+    {
+        return new AddAllowedMemberToProjectResult();
     }
 
     public static AddStatusToProjectResult CreateAddStatusToProjectResult()

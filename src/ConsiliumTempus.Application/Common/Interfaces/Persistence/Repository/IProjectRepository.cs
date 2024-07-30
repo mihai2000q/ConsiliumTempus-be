@@ -12,6 +12,10 @@ public interface IProjectRepository
 {
     Task<ProjectAggregate?> Get(ProjectId projectId, CancellationToken cancellationToken = default);
 
+    Task<ProjectAggregate?> GetWithAllowedMembers(ProjectId projectId, CancellationToken cancellationToken = default);
+
+    Task<ProjectAggregate?> GetWithCollaboratorsAndAllowedMembers(ProjectId projectId, CancellationToken cancellationToken = default);
+
     Task<ProjectAggregate?> GetWithStagesAndWorkspace(ProjectId id, CancellationToken cancellationToken = default);
 
     Task<List<ProjectAggregate>> GetListByUser(

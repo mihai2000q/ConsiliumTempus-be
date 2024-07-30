@@ -22,6 +22,21 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
+    public async Task<ProjectAggregate?> GetWithAllowedMembers(ProjectId id, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Projects
+            .Include(p => p.AllowedMembers)
+            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+    }
+
+    public async Task<ProjectAggregate?> GetWithCollaboratorsAndAllowedMembers(ProjectId id, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Projects
+            .Include(p => p.AllowedMembers)
+            .Include(p => p.Workspace.Memberships)
+            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+    }
+
     public async Task<ProjectAggregate?> GetWithStagesAndWorkspace(ProjectId id,
         CancellationToken cancellationToken = default)
     {

@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Project.Commands.AddStatus;
+﻿using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
+using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
@@ -20,6 +21,21 @@ internal static partial class Utils
 {
     internal static class Project
     {
+        internal static void AssertFromAddAllowedMemberCommand(
+            ProjectAggregate project,
+            AddAllowedMemberToProjectCommand command,
+            UserAggregate collaborator)
+        {
+            project.Id.Value.Should().Be(command.Id);
+            collaborator.Id.Value.Should().Be(command.CollaboratorId);
+
+            project.AllowedMembers.Should().HaveCount(1);
+            project.AllowedMembers[0].Should().Be(collaborator);
+            
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
         internal static void AssertFromAddStatusCommand(
             ProjectAggregate project,
             AddStatusToProjectCommand command,

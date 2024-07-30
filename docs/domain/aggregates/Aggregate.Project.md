@@ -53,6 +53,8 @@ For database design checkout the [Project Diagram](../../database-diagrams/aggre
 ### Domain Errors
 
 - **Not Found** when the project cannot be found
+- **Not Private** when the project is not private
+- **Already Allowed Member** when the user is already an allowed member of the project
 
 ### Domain Events
 

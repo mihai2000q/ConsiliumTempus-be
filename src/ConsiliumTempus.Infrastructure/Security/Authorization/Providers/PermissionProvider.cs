@@ -11,6 +11,7 @@ public sealed class PermissionProvider(ConsiliumTempusDbContext dbContext) : IPe
     public async Task<HashSet<string>> GetPermissions(UserId userId, WorkspaceId workspaceId)
     {
         var membership = await dbContext.Set<Membership>()
+            .IgnoreAutoIncludes()
             .SingleOrDefaultAsync(u => u.User.Id == userId && u.Workspace.Id == workspaceId);
 
         if (membership is null) return [];
