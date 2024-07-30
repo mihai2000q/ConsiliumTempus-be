@@ -195,19 +195,6 @@ internal class ProjectSprintData : ITestData
         ProjectSprintFactory.Create(
             Projects[4],
             AuditFactory.Create(Users[0]),
-            "Not Private Project Sprint"),
-        ProjectSprintFactory.Create(
-            Projects[5],
-            AuditFactory.Create(Users[0]),
-            "Private Project Sprint"),
-        ProjectSprintFactory.Create(
-            Projects[6],
-            AuditFactory.Create(Users[3]),
-            "More Private Project Sprint"),
-
-        ProjectSprintFactory.Create(
-            Projects[4],
-            AuditFactory.Create(Users[0]),
             "sprint1"),
         ProjectSprintFactory.Create(
             Projects[5],
@@ -217,6 +204,19 @@ internal class ProjectSprintData : ITestData
             Projects[6],
             AuditFactory.Create(Users[3]),
             "sprint3"),
+        
+        ProjectSprintFactory.Create(
+            Projects[4],
+            AuditFactory.Create(Users[0]),
+            "Not Private Project Sprint"),
+        ProjectSprintFactory.Create(
+            Projects[5],
+            AuditFactory.Create(Users[0]),
+            "Private Project Sprint"),
+        ProjectSprintFactory.Create(
+            Projects[6],
+            AuditFactory.Create(Users[3]),
+            "More Private Project Sprint"),
     ];
 
     public static ProjectStage[] ProjectStages { get; } =
@@ -257,31 +257,31 @@ internal class ProjectSprintData : ITestData
             2),
 
         ProjectStageFactory.Create(
-            ProjectSprints[5],
+            ProjectSprints[^3],
             AuditFactory.Create(Users[0]),
             "Stage 1"),
         ProjectStageFactory.Create(
-            ProjectSprints[5],
+            ProjectSprints[^3],
             AuditFactory.Create(Users[0]),
             "Stage 2",
             1),
 
         ProjectStageFactory.Create(
-            ProjectSprints[6],
+            ProjectSprints[^2],
             AuditFactory.Create(Users[0]),
             "Stage 1"),
         ProjectStageFactory.Create(
-            ProjectSprints[6],
+            ProjectSprints[^2],
             AuditFactory.Create(Users[0]),
             "Stage 2",
             1),
 
         ProjectStageFactory.Create(
-            ProjectSprints[7],
+            ProjectSprints[^1],
             AuditFactory.Create(Users[0]),
             "Stage 1"),
         ProjectStageFactory.Create(
-            ProjectSprints[7],
+            ProjectSprints[^1],
             AuditFactory.Create(Users[0]),
             "Stage 2",
             1),

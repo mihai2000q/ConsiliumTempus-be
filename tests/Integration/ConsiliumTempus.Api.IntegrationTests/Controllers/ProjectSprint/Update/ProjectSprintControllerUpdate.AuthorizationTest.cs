@@ -40,19 +40,19 @@ public class ProjectSprintControllerUpdateAuthorizationTest(WebAppFactory factor
     [Fact]
     public async Task UpdateProjectSprint_WhenProjectIsNotPrivate_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulResponse(ProjectSprintData.Users[4], ProjectSprintData.ProjectSprints[5]);
+        await AssertSuccessfulResponse(ProjectSprintData.Users[4], ProjectSprintData.ProjectSprints[^3]);
     }
 
     [Fact]
     public async Task UpdateProjectSprint_WhenProjectIsPrivateAndIsAllowedMember_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulResponse(ProjectSprintData.Users[0], ProjectSprintData.ProjectSprints[6]);
+        await AssertSuccessfulResponse(ProjectSprintData.Users[0], ProjectSprintData.ProjectSprints[^2]);
     }
 
     [Fact]
     public async Task UpdateProjectSprint_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenResponse(ProjectSprintData.Users[0], ProjectSprintData.ProjectSprints[7]);
+        await AssertForbiddenResponse(ProjectSprintData.Users[0], ProjectSprintData.ProjectSprints[^1]);
     }
 
     private async Task AssertSuccessfulResponse(UserAggregate user, ProjectSprintAggregate? sprint = null)

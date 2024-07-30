@@ -184,16 +184,17 @@ internal class ProjectData : ITestData
             "Another status update 0",
             "Project is off track officially... training is too hard",
             ProjectStatusType.OffTrack),
+
         ProjectStatusFactory.Create(
-            Projects[6],
+            Projects[^3],
             AuditFactory.Create(Users[0]),
             "Another status update 1"),
         ProjectStatusFactory.Create(
-            Projects[7],
+            Projects[^2],
             AuditFactory.Create(Users[0]),
             "Another status update 2"),
         ProjectStatusFactory.Create(
-            Projects[8],
+            Projects[^1],
             AuditFactory.Create(Users[0]),
             "Another status update 3"),
     ];

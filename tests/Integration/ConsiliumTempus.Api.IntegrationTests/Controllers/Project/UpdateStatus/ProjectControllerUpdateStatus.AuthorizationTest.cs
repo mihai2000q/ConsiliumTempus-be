@@ -40,19 +40,19 @@ public class ProjectControllerUpdateStatusAuthorizationTest(WebAppFactory factor
     [Fact]
     public async Task UpdateStatusFromProject_WhenProjectIsNotPrivate_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulResponse(ProjectData.Users[4], ProjectData.Projects[6]);
+        await AssertSuccessfulResponse(ProjectData.Users[4], ProjectData.Projects[^3]);
     }
 
     [Fact]
     public async Task UpdateStatusFromProject_WhenProjectIsPrivateAndIsAllowedMember_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulResponse(ProjectData.Users[0], ProjectData.Projects[7]);
+        await AssertSuccessfulResponse(ProjectData.Users[0], ProjectData.Projects[^2]);
     }
 
     [Fact]
     public async Task UpdateStatusFromProject_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
     {
-        await AssertForbiddenResponse(ProjectData.Users[0], ProjectData.Projects[8]);
+        await AssertForbiddenResponse(ProjectData.Users[0], ProjectData.Projects[^1]);
     }
 
     private async Task AssertSuccessfulResponse(UserAggregate user, ProjectAggregate? project = null)
