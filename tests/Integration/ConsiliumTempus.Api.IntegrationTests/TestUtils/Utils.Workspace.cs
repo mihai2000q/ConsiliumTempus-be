@@ -139,7 +139,7 @@ internal static partial class Utils
             membership.Id.UserId.Should().Be(collaborator.Id);
             membership.User.Should().Be(collaborator);
             membership.Workspace.Should().Be(workspace);
-            membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+            membership.WorkspaceRole.Should().Be(WorkspaceRole.View);
             membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }

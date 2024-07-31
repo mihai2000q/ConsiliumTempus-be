@@ -80,7 +80,7 @@ internal static partial class Utils
             membership.Id.WorkspaceId.Should().Be(workspace.Id);
             membership.User.Should().Be(user);
             membership.Workspace.Should().Be(workspace);
-            membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+            membership.WorkspaceRole.Should().Be(WorkspaceRole.View);
             membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }

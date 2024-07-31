@@ -30,7 +30,7 @@ public sealed class AcceptInvitationToWorkspaceCommandHandler(
         var membership = Membership.Create(
             user,
             workspace,
-            WorkspaceRole.Admin);
+            WorkspaceRole.View);
         workspace.AddUserMembership(membership);
         workspace.RemoveInvitation(invitation);
         workspace.RefreshActivity();
