@@ -5,10 +5,12 @@ using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
+using ConsiliumTempus.Domain.Common.Entities;
 
 namespace ConsiliumTempus.Common.UnitTests.Workspace;
 
@@ -67,6 +69,17 @@ public static class WorkspaceCommandFactory
         return new UpdateWorkspaceCommand(
             id ?? Guid.NewGuid(),
             name);
+    }
+
+    public static UpdateCollaboratorFromWorkspaceCommand CreateUpdateCollaboratorFromWorkspaceCommand(
+        Guid? id = null,
+        Guid? collaboratorId = null,
+        string? workspaceRole = null)
+    {
+        return new UpdateCollaboratorFromWorkspaceCommand(
+            id ?? Guid.NewGuid(),
+            collaboratorId ?? Guid.NewGuid(),
+            workspaceRole ?? nameof(WorkspaceRole.Admin));
     }
 
     public static UpdateFavoritesWorkspaceCommand CreateUpdateFavoriteWorkspaceCommand(

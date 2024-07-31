@@ -51,7 +51,7 @@ public sealed class Membership : Entity<(UserId UserId, WorkspaceId WorkspaceId)
             workspaceRole.Id);
     }
 
-    public void UpdateWorkspaceRole(WorkspaceRole role)
+    public void Update(WorkspaceRole role)
     {
         _workspaceRoleId = role.Id;
         UpdatedDateTime = DateTime.UtcNow;

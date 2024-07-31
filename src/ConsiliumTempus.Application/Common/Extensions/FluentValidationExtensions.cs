@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Enums;
+﻿using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project.Enums;
 using FluentValidation;
@@ -29,6 +30,12 @@ public static class FluentValidationExtensions
     public static IRuleBuilderOptions<T, DateOnly?> IsPastDate<T>(this IRuleBuilder<T, DateOnly?> ruleBuilder)
     {
         return ruleBuilder.LessThan(DateOnly.FromDateTime(DateTime.UtcNow));
+    }
+
+    public static IRuleBuilderOptions<T, string> IsWorkspaceRole<T>(this IRuleBuilder<T, string> ruleBuilder)
+    {
+        return ruleBuilder.Must(wr => WorkspaceRole.FromName(wr.Capitalize()) is not null)
+            .WithMessage("'{PropertyName}' must be valid workspace role");
     }
 
     public static IRuleBuilderOptions<T, string[]?> HasOrderByFormat<T, TEntity>(
