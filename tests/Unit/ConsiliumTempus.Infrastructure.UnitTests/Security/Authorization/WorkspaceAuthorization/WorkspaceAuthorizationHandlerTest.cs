@@ -202,7 +202,7 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
             .HttpContext;
         _workspaceProvider.DidNotReceive();
 
@@ -239,7 +239,7 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
             .HttpContext;
         _workspaceProvider.DidNotReceive();
 
@@ -276,7 +276,7 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
             .HttpContext;
         _workspaceProvider.DidNotReceive();
 
@@ -313,7 +313,7 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
             .HttpContext;
         await Utils.Authorization.Workspace.VerifyWorkspaceProvider(_workspaceProvider, stringIdType, stringId);
 
@@ -353,7 +353,7 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
             .HttpContext;
         await Utils.Authorization.Workspace.VerifyWorkspaceProvider(_workspaceProvider, stringIdType, stringId);
 
@@ -395,7 +395,7 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
             .HttpContext;
         await Utils.Authorization.Workspace.VerifyWorkspaceProvider(_workspaceProvider, stringIdType, stringId);
 

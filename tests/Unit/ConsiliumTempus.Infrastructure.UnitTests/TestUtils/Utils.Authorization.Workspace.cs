@@ -21,11 +21,13 @@ internal static partial class Utils
                 WorkspaceAuthorizationHandlerData.Method method,
                 WorkspaceAuthorizationHandlerData.RequestLocation requestLocation)
             {
-                var dictionary = new RouteValueDictionary
-                {
-                    ["controller"] = controller.ToString(),
-                    ["method"] = method.ToString()
-                };
+                var dictionary = new RouteValueDictionary { ["controller"] = controller.ToString() };
+
+                httpContextAccessor
+                    .HttpContext!
+                    .Request
+                    .Method
+                    .Returns(method.ToString());
 
                 switch (requestLocation)
                 {
@@ -62,11 +64,13 @@ internal static partial class Utils
             {
                 const string idName = "id";
 
-                var dictionary = new RouteValueDictionary
-                {
-                    ["controller"] = controller.ToString(),
-                    ["method"] = method.ToString()
-                };
+                var dictionary = new RouteValueDictionary { ["controller"] = controller.ToString() };
+
+                httpContextAccessor
+                    .HttpContext!
+                    .Request
+                    .Method
+                    .Returns(method.ToString());
 
                 switch (requestLocation)
                 {
