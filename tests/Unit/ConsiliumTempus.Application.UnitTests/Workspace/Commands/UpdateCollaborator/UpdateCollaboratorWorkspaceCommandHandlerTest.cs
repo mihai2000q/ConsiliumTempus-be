@@ -1,44 +1,41 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
-using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
-using ConsiliumTempus.Common.UnitTests.Common.Entities;
-using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateCollaborator;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using NSubstitute.ReturnsExtensions;
 
-namespace ConsiliumTempus.Application.UnitTests.Workspace.Commands.UpdateOwner;
+namespace ConsiliumTempus.Application.UnitTests.Workspace.Commands.UpdateCollaborator;
 
-public class UpdateOwnerWorkspaceCommandHandlerTest
+public class UpdateCollaboratorFromWorkspaceCommandHandlerTest
 {
     #region Setup
 
     private readonly IWorkspaceRepository _workspaceRepository;
-    private readonly UpdateOwnerWorkspaceCommandHandler _uut;
+    private readonly UpdateCollaboratorFromWorkspaceCommandHandler _uut;
 
-    public UpdateOwnerWorkspaceCommandHandlerTest()
+    public UpdateCollaboratorFromWorkspaceCommandHandlerTest()
     {
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
-        _uut = new UpdateOwnerWorkspaceCommandHandler(_workspaceRepository);
+        _uut = new UpdateCollaboratorFromWorkspaceCommandHandler(_workspaceRepository);
     }
 
     #endregion
 
     [Fact]
-    public async Task HandleUpdateOwnerWorkspaceCommand_WhenIsSuccessful_ShouldUpdateOwnerAndReturnSuccess()
+    public async Task HandleUpdateCollaboratorFromWorkspaceCommand_WhenIsSuccessful_ShouldUpdateAndReturnSuccess()
     {
         // Arrange
-        var workspace = WorkspaceFactory.Create();
-        var owner = UserFactory.Create();
-        workspace.AddUserMembership(MembershipFactory.Create(owner));
+        var workspace = WorkspaceFactory.CreateWithCollaborators();
+        var collaborator = workspace.Memberships[1].User;
         _workspaceRepository
             .GetWithCollaborators(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
-        var command = WorkspaceCommandFactory.CreateUpdateOwnerWorkspaceCommand(
-            id: workspace.Id.Value,
-            ownerId: owner.Id.Value);
+        var command = WorkspaceCommandFactory.CreateUpdateCollaboratorFromWorkspaceCommand(
+            workspace.Id.Value,
+            collaboratorId: collaborator.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -49,19 +46,18 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
             .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
-        outcome.Value.Should().Be(new UpdateOwnerWorkspaceResult());
+        outcome.Value.Should().Be(new UpdateCollaboratorFromWorkspaceResult());
 
-        Utils.Workspace.AssertFromUpdateOwnerCommand(workspace, command, owner);
+        Utils.Workspace.AssertFromUpdateCollaboratorCommand(workspace, command);
     }
 
     [Fact]
-    public async Task
-        HandleUpdateOwnerWorkspaceCommand_WhenCollaboratorIsNotFound_ShouldReturnCollaboratorNotFoundError()
+    public async Task HandleUpdateCollaboratorFromWorkspaceCommand_WhenCollaboratorsIsNull_ShouldReturnCollaboratorNotFoundError()
     {
         // Arrange
-        var command = WorkspaceCommandFactory.CreateUpdateOwnerWorkspaceCommand();
+        var command = WorkspaceCommandFactory.CreateUpdateCollaboratorFromWorkspaceCommand();
 
-        var workspace = WorkspaceFactory.Create();
+        var workspace = WorkspaceFactory.CreateWithCollaborators();
         _workspaceRepository
             .GetWithCollaborators(Arg.Any<WorkspaceId>())
             .Returns(workspace);
@@ -78,10 +74,10 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateOwnerWorkspaceCommand_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleUpdateCollaboratorFromWorkspaceCommand_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var command = WorkspaceCommandFactory.CreateUpdateOwnerWorkspaceCommand();
+        var command = WorkspaceCommandFactory.CreateUpdateCollaboratorFromWorkspaceCommand();
 
         _workspaceRepository
             .GetWithCollaborators(Arg.Any<WorkspaceId>())

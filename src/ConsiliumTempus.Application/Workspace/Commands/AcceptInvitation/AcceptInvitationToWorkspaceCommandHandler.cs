@@ -16,7 +16,7 @@ public sealed class AcceptInvitationToWorkspaceCommandHandler(
     public async Task<ErrorOr<AcceptInvitationToWorkspaceResult>> Handle(AcceptInvitationToWorkspaceCommand command,
         CancellationToken cancellationToken)
     {
-        var workspace = await workspaceRepository.GetWithMembershipsAndInvitations(
+        var workspace = await workspaceRepository.GetWithCollaboratorsAndInvitations(
             WorkspaceId.Create(command.Id),
             cancellationToken);
         if (workspace is null) return Errors.Workspace.NotFound;
@@ -30,7 +30,7 @@ public sealed class AcceptInvitationToWorkspaceCommandHandler(
         var membership = Membership.Create(
             user,
             workspace,
-            WorkspaceRole.Admin);
+            WorkspaceRole.View);
         workspace.AddUserMembership(membership);
         workspace.RemoveInvitation(invitation);
         workspace.RefreshActivity();

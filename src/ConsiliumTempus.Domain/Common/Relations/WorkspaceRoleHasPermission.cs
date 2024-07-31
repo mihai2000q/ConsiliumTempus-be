@@ -29,8 +29,9 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
     private static readonly List<Permissions> ViewPermissions =
     [
         // Workspace
-        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace, Permissions.ReadCollaboratorsFromWorkspace, 
-        Permissions.UpdateFavoritesWorkspace,
+        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace, Permissions.UpdateFavoritesWorkspace,
+        // Workspace - Collaborators
+        Permissions.ReadCollaboratorsFromWorkspace,
         // Project
         Permissions.ReadProject, Permissions.ReadOverviewProject, Permissions.ReadCollectionProject,
         Permissions.UpdateFavoritesProject,
@@ -47,8 +48,10 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
     private static readonly List<Permissions> MemberPermissions =
     [
         // Workspace
-        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace, Permissions.ReadCollaboratorsFromWorkspace, 
+        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace,
         Permissions.UpdateWorkspace, Permissions.UpdateFavoritesWorkspace, Permissions.UpdateOverviewWorkspace,
+        // Workspace - Collaborators
+        Permissions.ReadCollaboratorsFromWorkspace,
         // Project
         Permissions.ReadProject, Permissions.ReadOverviewProject, Permissions.ReadCollectionProject,
         Permissions.UpdateProject, Permissions.UpdateFavoritesProject, Permissions.UpdateOverviewProject,
@@ -70,10 +73,13 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
     private static readonly List<Permissions> AdminPermissions =
     [
         // Workspace
-        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace, Permissions.ReadCollaboratorsFromWorkspace, 
-        Permissions.ReadInvitationsFromWorkspace, Permissions.InviteCollaboratorToWorkspace,
+        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace,
+        Permissions.ReadInvitationsFromWorkspace, 
         Permissions.UpdateWorkspace, Permissions.UpdateFavoritesWorkspace, Permissions.UpdateOverviewWorkspace,
         Permissions.DeleteWorkspace,
+        // Workspace - Collaborators
+        Permissions.InviteCollaboratorToWorkspace, Permissions.ReadCollaboratorsFromWorkspace, 
+        Permissions.UpdateCollaboratorFromWorkspace, 
         // Project
         Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadOverviewProject, Permissions.ReadCollectionProject,
         Permissions.UpdateProject, Permissions.UpdateFavoritesProject, Permissions.UpdateOverviewProject, 

@@ -40,7 +40,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         // Arrange
         var workspace = WorkspaceFactory.Create();
         _workspaceRepository
-            .GetWithMembershipsAndInvitations(Arg.Any<WorkspaceId>())
+            .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         var collaborator = UserFactory.Create();
@@ -63,7 +63,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMembershipsAndInvitations(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+            .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
         await _userRepository
             .Received(1)
             .GetByEmail(Arg.Is<string>(email => email == command.Email));
@@ -89,7 +89,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
 
         var workspace = WorkspaceFactory.Create();
         _workspaceRepository
-            .GetWithMembershipsAndInvitations(Arg.Any<WorkspaceId>())
+            .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         var collaborator = UserFactory.Create();
@@ -105,7 +105,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMembershipsAndInvitations(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+            .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
         await _userRepository
             .Received(1)
             .GetByEmail(Arg.Is<string>(email => email == command.Email));
@@ -122,7 +122,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
 
         var workspace = WorkspaceFactory.Create();
         _workspaceRepository
-            .GetWithMembershipsAndInvitations(Arg.Any<WorkspaceId>())
+            .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         var collaborator = UserFactory.Create();
@@ -138,7 +138,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMembershipsAndInvitations(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+            .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
         await _userRepository
             .Received(1)
             .GetByEmail(Arg.Is<string>(email => email == command.Email));
@@ -155,7 +155,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
 
         var workspace = WorkspaceFactory.Create();
         _workspaceRepository
-            .GetWithMembershipsAndInvitations(Arg.Any<WorkspaceId>())
+            .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         _userRepository
@@ -168,7 +168,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMembershipsAndInvitations(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+            .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
         await _userRepository
             .Received(1)
             .GetByEmail(Arg.Is<string>(email => email == command.Email));
@@ -184,7 +184,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateInviteCollaboratorToWorkspaceCommand();
 
         _workspaceRepository
-            .GetWithMembershipsAndInvitations(Arg.Any<WorkspaceId>())
+            .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
             .ReturnsNull();
 
         // Act
@@ -193,7 +193,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMembershipsAndInvitations(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+            .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
         _userRepository.DidNotReceive();
         _currentUserProvider.DidNotReceive();
 

@@ -12,7 +12,7 @@ public sealed class UpdateOwnerWorkspaceCommandHandler(IWorkspaceRepository work
     public async Task<ErrorOr<UpdateOwnerWorkspaceResult>> Handle(UpdateOwnerWorkspaceCommand command,
         CancellationToken cancellationToken)
     {
-        var workspace = await workspaceRepository.GetWithMemberships(WorkspaceId.Create(command.Id), cancellationToken);
+        var workspace = await workspaceRepository.GetWithCollaborators(WorkspaceId.Create(command.Id), cancellationToken);
         if (workspace is null) return Errors.Workspace.NotFound;
 
         var owner = workspace.Memberships

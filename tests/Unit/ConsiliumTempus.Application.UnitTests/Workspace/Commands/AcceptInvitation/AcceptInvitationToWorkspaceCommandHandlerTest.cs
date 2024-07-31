@@ -38,7 +38,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         var invitation = WorkspaceInvitationFactory.Create();
         workspace.AddInvitation(invitation);
         _workspaceRepository
-            .GetWithMembershipsAndInvitations(Arg.Any<WorkspaceId>())
+            .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         var user = UserFactory.Create();
@@ -56,7 +56,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMembershipsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
+            .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
 
         await _currentUserProvider
             .Received(1)
@@ -76,7 +76,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         var invitation = WorkspaceInvitationFactory.Create();
         workspace.AddInvitation(invitation);
         _workspaceRepository
-            .GetWithMembershipsAndInvitations(Arg.Any<WorkspaceId>())
+            .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         _currentUserProvider
@@ -93,7 +93,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMembershipsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
+            .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
 
         await _currentUserProvider
             .Received(1)
@@ -110,7 +110,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
 
         var workspace = WorkspaceFactory.Create();
         _workspaceRepository
-            .GetWithMembershipsAndInvitations(Arg.Any<WorkspaceId>())
+            .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         // Act
@@ -119,7 +119,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMembershipsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
+            .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
         _currentUserProvider.DidNotReceive();
 
         outcome.ValidateError(Errors.WorkspaceInvitation.NotFound);
@@ -132,7 +132,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateAcceptInvitationToWorkspaceCommand();
 
         _workspaceRepository
-            .GetWithMembershipsAndInvitations(Arg.Any<WorkspaceId>())
+            .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
             .ReturnsNull();
 
         // Act
@@ -141,7 +141,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMembershipsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
+            .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
         _currentUserProvider.DidNotReceive();
 
         outcome.ValidateError(Errors.Workspace.NotFound);

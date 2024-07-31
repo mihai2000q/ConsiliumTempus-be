@@ -34,7 +34,7 @@ public class UserDeletedHandlerTest
     {
         // Arrange
         _workspaceRepository
-            .GetListByUserWithMemberships(Arg.Any<UserAggregate>())
+            .GetListByUserWithCollaborators(Arg.Any<UserAggregate>())
             .Returns(workspaces);
         
         var removedWorkspaces = new List<WorkspaceAggregate>();
@@ -62,7 +62,7 @@ public class UserDeletedHandlerTest
         
         await _workspaceRepository
             .Received(1)
-            .GetListByUserWithMemberships(Arg.Is<UserAggregate>(u => u == user));
+            .GetListByUserWithCollaborators(Arg.Is<UserAggregate>(u => u == user));
 
         var emptyWorkspaces = workspaces
             .Where(w => w.Memberships.Count == 1)

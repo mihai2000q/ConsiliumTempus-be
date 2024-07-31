@@ -14,7 +14,7 @@ public sealed class UserDeletedHandler(
     public async Task Handle(UserDeleted notification, CancellationToken cancellationToken)
     {
         var workspaces =
-            await workspaceRepository.GetListByUserWithMemberships(notification.User, cancellationToken);
+            await workspaceRepository.GetListByUserWithCollaborators(notification.User, cancellationToken);
 
         foreach (var workspace in workspaces)
         {
@@ -29,7 +29,7 @@ public sealed class UserDeletedHandler(
                     .FirstOrDefault(m => m.User != notification.User &&
                                          m.WorkspaceRole.Equals(WorkspaceRole.Admin));
                 var newOwner = newOwnerAdmin ?? workspace.Memberships.First(m => m.User != notification.User);
-                if (newOwnerAdmin is null) newOwner.UpdateWorkspaceRole(WorkspaceRole.Admin);
+                if (newOwnerAdmin is null) newOwner.Update(WorkspaceRole.Admin);
                 workspace.UpdateOwner(newOwner.User);
                 workspace.UpdateIsPersonal(IsPersonal.Create(false));
             }

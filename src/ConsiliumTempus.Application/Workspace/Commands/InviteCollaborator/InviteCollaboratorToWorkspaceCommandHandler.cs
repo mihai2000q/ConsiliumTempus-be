@@ -17,7 +17,7 @@ public sealed class InviteCollaboratorToWorkspaceCommandHandler(
     public async Task<ErrorOr<InviteCollaboratorToWorkspaceResult>> Handle(InviteCollaboratorToWorkspaceCommand command,
         CancellationToken cancellationToken)
     {
-        var workspace = await workspaceRepository.GetWithMembershipsAndInvitations(
+        var workspace = await workspaceRepository.GetWithCollaboratorsAndInvitations(
             WorkspaceId.Create(command.Id),
             cancellationToken);
         if (workspace is null) return Errors.Workspace.NotFound;

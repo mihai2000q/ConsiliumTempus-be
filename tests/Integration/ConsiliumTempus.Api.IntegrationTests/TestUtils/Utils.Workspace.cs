@@ -9,9 +9,11 @@ using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Leave;
 using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOwner;
+using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
@@ -137,7 +139,7 @@ internal static partial class Utils
             membership.Id.UserId.Should().Be(collaborator.Id);
             membership.User.Should().Be(collaborator);
             membership.Workspace.Should().Be(workspace);
-            membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+            membership.WorkspaceRole.Should().Be(WorkspaceRole.View);
             membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
@@ -175,6 +177,24 @@ internal static partial class Utils
             newWorkspace.Name.Value.Should().Be(request.Name);
             newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertUpdateCollaborator(
+            WorkspaceAggregate workspace,
+            UpdateCollaboratorFromWorkspaceRequest request)
+        {
+            // unchanged
+            workspace.Id.Value.Should().Be(request.Id);
+
+            // changed
+            workspace.Memberships.Should().Contain(m => m.User.Id.Value == request.CollaboratorId);
+            var collaboratorMembership = workspace.Memberships
+                .Single(m => m.User.Id.Value == request.CollaboratorId);
+            collaboratorMembership.WorkspaceRole.Name.Should().Be(request.WorkspaceRole.Capitalize());
+            collaboratorMembership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            
+            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdatedFavorites(

@@ -1,9 +1,11 @@
-﻿using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
@@ -78,7 +80,7 @@ internal static partial class Utils
             membership.Id.WorkspaceId.Should().Be(workspace.Id);
             membership.User.Should().Be(user);
             membership.Workspace.Should().Be(workspace);
-            membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+            membership.WorkspaceRole.Should().Be(WorkspaceRole.View);
             membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
@@ -108,6 +110,21 @@ internal static partial class Utils
             workspace.Id.Value.Should().Be(command.Id);
             workspace.Name.Value.Should().Be(command.Name);
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertFromUpdateCollaboratorCommand(
+            WorkspaceAggregate workspace,
+            UpdateCollaboratorFromWorkspaceCommand command)
+        {
+            workspace.Id.Value.Should().Be(command.Id);
+
+            workspace.Memberships.Should().Contain(m => m.User.Id.Value == command.CollaboratorId);
+            var collaboratorMembership = workspace.Memberships
+                .Single(m => m.User.Id.Value == command.CollaboratorId);
+            collaboratorMembership.WorkspaceRole.Name.Should().Be(command.WorkspaceRole.Capitalize());
+            collaboratorMembership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 

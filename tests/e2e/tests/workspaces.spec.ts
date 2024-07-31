@@ -2,6 +2,7 @@ import { test } from "@playwright/test";
 import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
 import {
+  addCollaboratorToWorkspace,
   createWorkspace,
   createWorkspaces,
   getCollaborators,
@@ -26,6 +27,7 @@ import InviteCollaboratorToWorkspaceRequest from "../types/requests/workspace/In
 import AcceptInvitationToWorkspaceRequest from "../types/requests/workspace/AcceptInvitationToWorkspaceRequest";
 import LeaveWorkspaceRequest from "../types/requests/workspace/LeaveWorkspaceRequest";
 import UpdateOwnerWorkspaceRequest from "../types/requests/workspace/UpdateOwnerWorkspaceRequest";
+import UpdateCollaboratorFromWorkspaceRequest from "../types/requests/workspace/UpdateCollaboratorFromWorkspaceRequest";
 
 test.describe('should allow operations on the workspace entity', () => {
   const EMAIL = "michaelj@gmail.com"
@@ -762,6 +764,44 @@ test.describe('should allow operations on the workspace entity', () => {
       isPersonal: false,
       owner: expect.any(Object)
     })
+  })
+
+  test('should update collaborator from workspace', async ({ request }) => {
+    const workspace = await createWorkspace(request, {
+      name: "Some Random Workspace"
+    });
+    const collaborator = await addCollaboratorToWorkspace(request, "some_random_guy@gmaill.com", workspace.id)
+
+    const body: UpdateCollaboratorFromWorkspaceRequest = {
+      id: workspace.id,
+      collaboratorId: collaborator.id,
+      workspaceRole: 'member'
+    }
+    const response = await request.put(`/api/workspaces/collaborators`, {
+      ...useToken(),
+      data: body
+    })
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const collaborators = await getCollaborators(request, workspace.id)
+    expect(collaborators).toHaveLength(2)
+    expect(collaborators).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: expect.any(String),
+        email: EMAIL,
+      },
+      {
+        id: collaborator.id,
+        name: collaborator.firstName + " " + collaborator.lastName,
+        email: collaborator.email,
+      }
+    ])
   })
 
   test('should update workspace favorites', async ({ request }) => {
