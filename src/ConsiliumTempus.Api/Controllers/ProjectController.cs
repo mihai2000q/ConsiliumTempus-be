@@ -111,6 +111,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsCollaborator)]
     [HasProjectAuthorization(ProjectAuthorizationLevel.IsProjectOwner)]
     [HttpPost("Add-Allowed-Member")]
     public async Task<IActionResult> AddAllowedMember(AddAllowedMemberToProjectRequest request, CancellationToken cancellationToken)

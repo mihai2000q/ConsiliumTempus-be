@@ -63,13 +63,13 @@ public sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory serviceSc
 
         return request.RouteValues["controller"] switch
         {
-            "Workspace" => request.RouteValues["method"] switch
+            "Workspace" => request.Method switch
             {
                 "GET" or "DELETE" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.Workspace),
                 "PUT" or "POST" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.Workspace),
                 _ => empty
             },
-            "Project" => request.RouteValues["method"] switch
+            "Project" => request.Method switch
             {
                 "GET" or "DELETE" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.Project),
                 "PUT" or "POST" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.Project),

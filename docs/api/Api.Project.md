@@ -323,6 +323,7 @@ Returns a confirmation message that the project status has been added successful
 ### Add Allowed Member
 
 Can only add allowed members to private projects, and only owners can add more members
+(they have to be collaborators though)
 ([Project Authorization Level: Is Project Owner](../Security.md/#project-authorization-levels)).
 
 ```js
