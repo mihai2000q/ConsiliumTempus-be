@@ -16,6 +16,7 @@ public static class WorkspaceAuthorizationHandlerData
     {
         GET,
         POST,
+        PUT
     }
 
     public enum RequestLocation
@@ -39,6 +40,7 @@ public static class WorkspaceAuthorizationHandlerData
             Add(level, Controller.Workspace, Method.POST, RequestLocation.Body, StringIdType.Workspace);
 
             Add(level, Controller.Project, Method.POST, RequestLocation.Body, StringIdType.Project);
+            Add(level, Controller.Project, Method.PUT, RequestLocation.Body, StringIdType.Project);
             Add(level, Controller.Project, Method.GET, RequestLocation.Route, StringIdType.Project);
 
             level = WorkspaceAuthorizationLevel.IsWorkspaceOwner;

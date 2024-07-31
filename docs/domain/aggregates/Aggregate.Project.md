@@ -11,6 +11,7 @@ class Project
     Project Create()
     void Update()
     void UpdateFavorites()
+    void UpdatePrivacy()
     void UpdateOverview()
     void RefreshActivity()
     void AddSprint()

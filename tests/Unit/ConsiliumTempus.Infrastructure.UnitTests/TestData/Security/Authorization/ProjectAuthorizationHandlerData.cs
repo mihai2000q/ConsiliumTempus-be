@@ -102,6 +102,7 @@ public static class ProjectAuthorizationHandlerData
             const StringIdType stringIdType = StringIdType.Project;
 
             Add(level, RequestLocation.Body, null, controller, "AddAllowedMember", stringIdType);
+            Add(level, RequestLocation.Body, null, controller, "UpdatePrivacy", stringIdType);
         }
     }
 }

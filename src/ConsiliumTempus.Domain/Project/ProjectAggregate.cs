@@ -106,6 +106,13 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
             _favorites.Remove(user);
     }
 
+    public void UpdatePrivacy(IsPrivate isPrivate)
+    {
+        IsPrivate = isPrivate;
+        UpdatedDateTime = DateTime.UtcNow;
+        RefreshActivity();
+    }
+
     public void UpdateOverview(Description description)
     {
         Description = description;

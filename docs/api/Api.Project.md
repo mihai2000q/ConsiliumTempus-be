@@ -31,6 +31,9 @@
   * [Update Favorites](#update-favorites)
     * [Update Favorites Project Request](#update-favorites-project-request)
     * [Update Favorites Project Response](#update-favorites-project-response)
+  * [Update Privacy](#update-privacy)
+    * [Update Privacy Project Request](#update-privacy-project-request)
+    * [Update Privacy Project Response](#update-privacy-project-response)
   * [Update Overview](#update-overview)
     * [Update Overview Project Request](#update-overview-project-request)
     * [Update Overview Project Response](#update-overview-project-response)
@@ -439,6 +442,31 @@ Sends body data that the project favorites need to be updated.
 ```
 
 #### Update Favorites Project Response
+
+Returns a confirmation message that the project favorites have been updated successfully.
+
+### Update Privacy
+
+Can only add allowed members to private projects, and only owners can add more members
+(they have to be collaborators though)
+([Project Authorization Level: Is Project Owner](../Security.md/#project-authorization-levels)).
+
+```js
+PUT {{host}}/api/projects/privacy
+```
+
+#### Update Privacy Project Request
+
+Sends body data that the project favorites need to be updated.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "isFavorite": true
+}
+```
+
+#### Update Privacy Project Response
 
 Returns a confirmation message that the project favorites have been updated successfully.
 

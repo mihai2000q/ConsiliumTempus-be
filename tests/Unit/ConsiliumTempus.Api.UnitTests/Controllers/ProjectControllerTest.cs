@@ -12,6 +12,7 @@ using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdatePrivacy;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
@@ -23,6 +24,7 @@ using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdatePrivacy;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetAllowedMembers;
@@ -516,6 +518,53 @@ public class ProjectControllerTest
             .Received(1)
             .Send(Arg.Is<UpdateFavoritesProjectCommand>(command =>
                 Utils.Project.AssertUpdateFavoritesCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task UpdatePrivacy_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdatePrivacyProjectRequest();
+
+        var result = ProjectResultFactory.CreateUpdatePrivacyProjectResult();
+        _mediator
+            .Send(Arg.Any<UpdatePrivacyProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.UpdatePrivacy(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdatePrivacyProjectCommand>(command =>
+                Utils.Project.AssertUpdatePrivacyCommand(command, request)));
+
+        var response = outcome.ToResponse<UpdatePrivacyProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task UpdatePrivacy_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdatePrivacyProjectRequest();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdatePrivacyProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.UpdatePrivacy(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdatePrivacyProjectCommand>(command =>
+                Utils.Project.AssertUpdatePrivacyCommand(command, request)));
 
         outcome.ValidateError(error);
     }
