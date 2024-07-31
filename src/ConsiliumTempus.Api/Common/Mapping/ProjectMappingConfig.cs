@@ -8,6 +8,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
+using ConsiliumTempus.Api.Contracts.Project.LeavePrivate;
 using ConsiliumTempus.Api.Contracts.Project.RemoveAllowedMember;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
@@ -20,6 +21,7 @@ using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.LeavePrivate;
 using ConsiliumTempus.Application.Project.Commands.RemoveAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
@@ -63,6 +65,7 @@ public sealed class ProjectMappingConfig : IRegister
         UpdateOwnerMappings(config);
         UpdateStatusMappings(config);
         DeleteMappings(config);
+        LeavePrivateMappings(config);
         RemoveAllowedMemberMappings(config);
         RemoveStatusMappings(config);
     }
@@ -228,6 +231,13 @@ public sealed class ProjectMappingConfig : IRegister
         config.NewConfig<DeleteProjectRequest, DeleteProjectCommand>();
 
         config.NewConfig<DeleteProjectResult, DeleteProjectResponse>();
+    }
+
+    private static void LeavePrivateMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<LeavePrivateProjectRequest, LeavePrivateProjectCommand>();
+
+        config.NewConfig<LeavePrivateProjectResult, LeavePrivateProjectResponse>();
     }
 
     private static void RemoveAllowedMemberMappings(TypeAdapterConfig config)

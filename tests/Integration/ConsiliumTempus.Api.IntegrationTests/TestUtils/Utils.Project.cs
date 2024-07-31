@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
+using ConsiliumTempus.Api.Contracts.Project.LeavePrivate;
 using ConsiliumTempus.Api.Contracts.Project.RemoveAllowedMember;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
@@ -245,13 +246,25 @@ internal static partial class Utils
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
+        
+        internal static void AssertLeavePrivate(
+            ProjectAggregate project,
+            LeavePrivateProjectRequest request,
+            UserAggregate user)
+        {
+            project.Id.Value.Should().Be(request.Id);
+            project.AllowedMembers.Should().NotContain(u => u == user);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
 
         internal static void AssertRemoveAllowedMember(
             ProjectAggregate project,
             RemoveAllowedMemberFromProjectRequest request)
         {
             project.Id.Value.Should().Be(request.Id);
-            project.AllowedMembers.Should().NotContain(s => s.Id.Value == request.AllowedMemberId);
+            project.AllowedMembers.Should().NotContain(u => u.Id.Value == request.AllowedMemberId);
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

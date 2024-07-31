@@ -8,6 +8,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
+using ConsiliumTempus.Api.Contracts.Project.LeavePrivate;
 using ConsiliumTempus.Api.Contracts.Project.RemoveAllowedMember;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
@@ -22,6 +23,7 @@ using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.LeavePrivate;
 using ConsiliumTempus.Application.Project.Commands.RemoveAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
@@ -755,6 +757,53 @@ public class ProjectControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task LeavePrivate_WhenIsSuccessful_ShouldReturnSuccess()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateLeavePrivateProjectRequest();
+
+        var result = ProjectResultFactory.CreateLeavePrivateProjectResult();
+        _mediator
+            .Send(Arg.Any<LeavePrivateProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.LeavePrivate(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<LeavePrivateProjectCommand>(command =>
+                Utils.Project.AssertLeavePrivateCommand(command, request)));
+
+        var response = outcome.ToResponse<LeavePrivateProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task LeavePrivate_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateLeavePrivateProjectRequest();
+
+        var error = Errors.Project.NotFound;
+        _mediator
+            .Send(Arg.Any<LeavePrivateProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.LeavePrivate(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<LeavePrivateProjectCommand>(command => 
+                Utils.Project.AssertLeavePrivateCommand(command, request)));
 
         outcome.ValidateError(error);
     }

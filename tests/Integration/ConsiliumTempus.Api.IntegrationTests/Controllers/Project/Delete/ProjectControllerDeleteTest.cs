@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Project.ValueObjects;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Delete;
 
@@ -50,7 +51,8 @@ public class ProjectControllerDeleteTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length);
-        dbContext.Projects.AsEnumerable()
-            .SingleOrDefault(p => p.Id.Value == request.Id).Should().BeNull();
+        dbContext.Projects
+            .SingleOrDefault(p => p.Id == ProjectId.Create(request.Id))
+            .Should().BeNull();
     }
 }

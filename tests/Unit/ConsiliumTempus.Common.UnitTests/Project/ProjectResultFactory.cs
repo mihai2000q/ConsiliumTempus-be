@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.LeavePrivate;
 using ConsiliumTempus.Application.Project.Commands.RemoveAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
@@ -108,6 +109,11 @@ public static class ProjectResultFactory
     public static DeleteProjectResult CreateDeleteProjectResult()
     {
         return new DeleteProjectResult();
+    }
+
+    public static LeavePrivateProjectResult CreateLeavePrivateProjectResult()
+    {
+        return new LeavePrivateProjectResult();
     }
 
     public static RemoveAllowedMemberFromProjectResult CreateRemoveAllowedMemberFromProjectResult()

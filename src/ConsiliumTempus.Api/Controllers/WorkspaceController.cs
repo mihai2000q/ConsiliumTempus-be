@@ -248,7 +248,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
     }
 
     [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsCollaborator)]
-    [HttpDelete("Leave")]
+    [HttpDelete("{id:guid}/Leave")]
     public async Task<IActionResult> Leave(LeaveWorkspaceRequest request, CancellationToken cancellationToken)
     {
         var command = Mapper.Map<LeaveWorkspaceCommand>(request);

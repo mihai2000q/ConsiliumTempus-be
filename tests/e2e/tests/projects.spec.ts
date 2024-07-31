@@ -4,7 +4,7 @@ import { expect } from "../utils/matchers";
 import { deleteUser, registerUser } from "../utils/users.utils";
 import { addCollaboratorToWorkspace, getPersonalWorkspace } from "../utils/workspaces.utils";
 import {
-  addAllowedMemberToProject,
+  addAllowedMemberToProject, addMeToAllowedMembers,
   addProjectStatus,
   create2ProjectsIn2DifferentWorkspaces,
   createProject,
@@ -699,6 +699,29 @@ test.describe('should allow operations on the project entity', () => {
 
     const projects = await getProjects(request)
     expect(projects).toHaveLength(0)
+  })
+
+  test('should leave private project', async ({ request }) => {
+    const project = await addMeToAllowedMembers(
+      request,
+      "project_owner@gmail.com",
+      WORKSPACE_ID
+    )
+
+    const response = await request.delete(`/api/projects/${project.id}/leave`, useToken());
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const projects = await getProjects(request)
+    expect(projects).not.toEqual(expect.arrayContaining([
+      {
+        id: project.id
+      }
+    ]))
   })
 
   test('should remove allowed member from project', async ({ request }) => {

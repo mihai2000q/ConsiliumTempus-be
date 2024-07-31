@@ -4,6 +4,7 @@ import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceR
 import { getCurrentUser, registerUser } from "./users.utils";
 import InviteCollaboratorToWorkspaceRequest from "../types/requests/workspace/InviteCollaboratorToWorkspaceRequest";
 import AcceptInvitationToWorkspaceRequest from "../types/requests/workspace/AcceptInvitationToWorkspaceRequest";
+import UpdateCollaboratorFromWorkspaceRequest from "../types/requests/workspace/UpdateCollaboratorFromWorkspaceRequest";
 
 export async function getPersonalWorkspace(request: APIRequestContext, token?: string | undefined) {
   const response = await request.get('/api/workspaces?isPersonalWorkspaceFirst=true', useToken(token))
@@ -226,4 +227,16 @@ export async function addCollaboratorToWorkspace(
   await acceptInvitation(request, collaboratorEmail, workspaceId, token)
 
   return await getCurrentUser(request, token)
+}
+
+export async function updateCollaborator(
+  request: APIRequestContext,
+  updateCollaboratorFromWorkspaceRequest: UpdateCollaboratorFromWorkspaceRequest
+) {
+  const response = await request.put(`/api/workspaces/collaborators`, {
+    ...useToken(),
+    data: updateCollaboratorFromWorkspaceRequest
+  })
+
+  expect(response.ok()).toBeTruthy()
 }
