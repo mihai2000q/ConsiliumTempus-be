@@ -189,7 +189,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
     }
     
     [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsCollaborator)]
-    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsProjectOwner)]
     [HttpPut("Privacy")]
     public async Task<IActionResult> UpdatePrivacy(UpdatePrivacyProjectRequest request,
         CancellationToken cancellationToken)
