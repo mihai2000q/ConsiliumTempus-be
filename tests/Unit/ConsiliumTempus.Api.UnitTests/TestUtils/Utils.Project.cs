@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
+using ConsiliumTempus.Api.Contracts.Project.RemoveAllowedMember;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
@@ -18,6 +19,7 @@ using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.RemoveAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
@@ -192,6 +194,16 @@ internal static partial class Utils
             DeleteProjectRequest request)
         {
             command.Id.Should().Be(request.Id);
+
+            return true;
+        }
+
+        internal static bool AssertRemoveAllowedMemberCommand(
+            RemoveAllowedMemberFromProjectCommand command,
+            RemoveAllowedMemberFromProjectRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.AllowedMemberId.Should().Be(request.AllowedMemberId);
 
             return true;
         }

@@ -9,6 +9,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
+using ConsiliumTempus.Api.Contracts.Project.RemoveAllowedMember;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
@@ -20,6 +21,7 @@ using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.RemoveAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
@@ -260,6 +262,21 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
         return result.Match(
             deleteResult => Ok(Mapper.Map<DeleteProjectResponse>(deleteResult)),
+            Problem
+        );
+    }
+
+    [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsCollaborator)]
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsProjectOwner)]
+    [HttpDelete("{id:guid}/Remove-Allowed-Member/{allowedMemberId:guid}")]
+    public async Task<IActionResult> RemoveAllowedMember(RemoveAllowedMemberFromProjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<RemoveAllowedMemberFromProjectCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            removeAllowedMemberResult => Ok(Mapper.Map<RemoveAllowedMemberFromProjectResponse>(removeAllowedMemberResult)),
             Problem
         );
     }

@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
+using ConsiliumTempus.Api.Contracts.Project.RemoveAllowedMember;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
@@ -170,6 +171,17 @@ public static class ProjectRequestFactory
         return new DeleteProjectRequest
         {
             Id = id ?? Guid.NewGuid()
+        };
+    }
+
+    public static RemoveAllowedMemberFromProjectRequest CreateRemoveAllowedMemberFromProjectRequest(
+        Guid? id = null,
+        Guid? allowedMemberId = null)
+    {
+        return new RemoveAllowedMemberFromProjectRequest
+        {
+            Id = id ?? Guid.NewGuid(),
+            AllowedMemberId = allowedMemberId ?? Guid.NewGuid(),
         };
     }
 

@@ -46,6 +46,9 @@
   * [Delete](#delete)
     * [Delete Project Request](#delete-project-request)
     * [Delete Project Response](#delete-project-response)
+  * [Remove Allowed Member](#remove-allowed-member)
+    * [Remove Allowed Member From Project Request](#remove-allowed-member-from-project-request)
+    * [Remove Allowed Member From Project Response](#remove-allowed-member-from-project-response)
   * [Remove Status](#remove-status)
     * [Remove Status From Project Request](#remove-status-from-project-request)
     * [Remove Status From Project Response](#remove-status-from-project-response)
@@ -339,6 +342,31 @@ Sends body data that the new project needs to be created.
 
 Returns a confirmation message that the project has been created successfully.
 
+### Add Allowed Member
+
+Can only add allowed members to private projects, and only owners can add more members
+(they have to be collaborators though)
+([Project Authorization Level: Is Project Owner](../Security.md/#project-authorization-levels)).
+
+```js
+POST {{host}}/api/projects/add-allowed-member
+```
+
+#### Add Allowed Member To Project Request
+
+Sends body data that the project needs to add the allowed member.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "collaboratorId": "20000000-0000-0000-0000-000000000000"
+}
+```
+
+#### Add Allowed Member To Project Response
+
+Returns a confirmation message that the allowed member has been added to the project successfully.
+
 ### Add Status
 
 Only admin users that are part of the workspace can add a status to the project
@@ -367,31 +395,6 @@ Sends body data that the new project status needs to be created.
 #### Add Status To Project Response
 
 Returns a confirmation message that the project status has been added successfully.
-
-### Add Allowed Member
-
-Can only add allowed members to private projects, and only owners can add more members
-(they have to be collaborators though)
-([Project Authorization Level: Is Project Owner](../Security.md/#project-authorization-levels)).
-
-```js
-POST {{host}}/api/projects/add-allowed-member
-```
-
-#### Add Allowed Member To Project Request
-
-Sends body data that the project needs to add the allowed member.
-
-```json
-{
-  "id": "10000000-0000-0000-0000-000000000000",
-  "collaboratorId": "20000000-0000-0000-0000-000000000000"
-}
-```
-
-#### Add Allowed Member To Project Response
-
-Returns a confirmation message that the allowed member has been added to the project successfully.
 
 ### Update
 
@@ -574,6 +577,27 @@ Sends the id of the project inside the route request.
 #### Delete Project Response
 
 Returns a confirmation message that the project has been deleted successfully.
+
+### Remove Allowed Member
+
+Can only remove allowed members from private projects, and only owners can remove members
+(they have to be collaborators though)
+([Project Authorization Level: Is Project Owner](../Security.md/#project-authorization-levels)).
+
+```js
+DELETE {{host}}/api/projects/{id}/remove-status/{allowedMemberId}
+```
+
+- **id** is a 36-character string
+- **allowedMemberId** is a 36-character string
+
+#### Remove Allowed Member From Project Request
+
+Sends the id of the project and id of the allowed member inside the route request.
+
+#### Remove Allowed Member From Project Response
+
+Returns a confirmation message that the allowed member has been removed from project successfully.
 
 ### Remove Status
 

@@ -4,6 +4,7 @@ import { expect } from "../utils/matchers";
 import { deleteUser, registerUser } from "../utils/users.utils";
 import { addCollaboratorToWorkspace, getPersonalWorkspace } from "../utils/workspaces.utils";
 import {
+  addAllowedMemberToProject,
   addProjectStatus,
   create2ProjectsIn2DifferentWorkspaces,
   createProject,
@@ -698,6 +699,38 @@ test.describe('should allow operations on the project entity', () => {
 
     const projects = await getProjects(request)
     expect(projects).toHaveLength(0)
+  })
+
+  test('should remove allowed member from project', async ({ request }) => {
+    const [project, allowedMember] = await addAllowedMemberToProject(request, WORKSPACE_ID)
+
+    const response = await request.delete(
+      `/api/projects/${project.id}/remove-allowed-member/${allowedMember.id}`,
+      useToken()
+    );
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const members = await getAllowedMembers(request, project.id)
+    expect(members).toHaveLength(1)
+    expect(members).not.toStrictEqual([
+      {
+        id: allowedMember.id,
+        name: expect.any(String),
+        email: allowedMember.email,
+      }
+    ])
+    expect(members).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: expect.any(String),
+        email: EMAIL
+      }
+    ])
   })
 
   test('should remove status from project', async ({ request }) => {
