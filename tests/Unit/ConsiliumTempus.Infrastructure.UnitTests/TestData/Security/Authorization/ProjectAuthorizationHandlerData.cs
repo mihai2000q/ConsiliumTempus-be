@@ -44,6 +44,7 @@ public static class ProjectAuthorizationHandlerData
             Add(level, requestLocation, null, controller, "GetAllowedMembers", stringIdType);
             Add(level, requestLocation, null, controller, "GetStatuses", stringIdType);
             Add(level, requestLocation, null, controller, "Delete", stringIdType);
+            Add(level, requestLocation, null, controller, "LeavePrivate", stringIdType);
             Add(level, requestLocation, null, controller, "RemoveStatus", stringIdType);
 
             requestLocation = RequestLocation.Body;
