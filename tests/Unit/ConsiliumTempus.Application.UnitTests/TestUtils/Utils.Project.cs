@@ -6,6 +6,7 @@ using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdatePrivacy;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
@@ -130,7 +131,20 @@ internal static partial class Utils
             UpdateFavoritesProjectCommand command,
             UserAggregate currentUser)
         {
+            project.Id.Value.Should().Be(command.Id);
             project.IsFavorite(currentUser).Should().Be(command.IsFavorite);
+        }
+
+        internal static void AssertFromUpdatePrivacyCommand(
+            ProjectAggregate project,
+            UpdatePrivacyProjectCommand command)
+        {
+            project.Id.Value.Should().Be(command.Id);
+            project.IsPrivate.Value.Should().Be(command.IsPrivate);
+            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
         
         internal static void AssertFromUpdateOverviewCommand(

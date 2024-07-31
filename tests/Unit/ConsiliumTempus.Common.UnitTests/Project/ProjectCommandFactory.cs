@@ -6,6 +6,7 @@ using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdatePrivacy;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Domain.Project.Enums;
@@ -96,6 +97,15 @@ public static class ProjectCommandFactory
         return new UpdateFavoritesProjectCommand(
             id ?? Guid.NewGuid(),
             isFavorite);
+    }
+
+    public static UpdatePrivacyProjectCommand CreateUpdatePrivacyProjectCommand(
+        Guid? id = null,
+        bool isPrivate = false)
+    {
+        return new UpdatePrivacyProjectCommand(
+            id ?? Guid.NewGuid(),
+            isPrivate);
     }
     
     public static UpdateOverviewProjectCommand CreateUpdateOverviewProjectCommand(
