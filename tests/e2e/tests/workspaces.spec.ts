@@ -797,7 +797,7 @@ test.describe('should allow operations on the workspace entity', () => {
         email: EMAIL,
       },
       {
-        id: body.id,
+        id: collaborator.id,
         name: collaborator.firstName + " " + collaborator.lastName,
         email: collaborator.email,
       }

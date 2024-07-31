@@ -192,7 +192,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
     }
     
     [HasPermission(Permissions.UpdateCollaboratorFromWorkspace)]
-    [HttpPut("Collaborator")]
+    [HttpPut("Collaborators")]
     public async Task<IActionResult> UpdateCollaborator(UpdateCollaboratorFromWorkspaceRequest request,
         CancellationToken cancellationToken)
     {

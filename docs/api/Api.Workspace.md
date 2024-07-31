@@ -410,7 +410,7 @@ Only admins that are part of the workspace can update a collaborator
 ([Update Collaborator From Workspace Permission](../Security.md/#permissions)).
 
 ```js
-PUT {{host}}/api/workspaces/collaborator
+PUT {{host}}/api/workspaces/collaborators
 ```
 
 #### Update Collaborator Workspace Request

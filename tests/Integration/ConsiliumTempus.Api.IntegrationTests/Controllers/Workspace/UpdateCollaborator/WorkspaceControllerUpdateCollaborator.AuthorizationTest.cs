@@ -61,6 +61,6 @@ public class WorkspaceControllerUpdateCollaboratorAuthorizationTest(WebAppFactor
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Put("api/workspaces/Collaborator", request);
+        return await Client.Put("api/workspaces/Collaborators", request);
     }
 }

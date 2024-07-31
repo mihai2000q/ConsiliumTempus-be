@@ -23,7 +23,7 @@ public class WorkspaceControllerUpdateCollaboratorValidationTest(WebAppFactory f
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/workspaces/Collaborator", request);
+        var outcome = await Client.Put("api/workspaces/Collaborators", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -38,7 +38,7 @@ public class WorkspaceControllerUpdateCollaboratorValidationTest(WebAppFactory f
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
-        var outcome = await Client.Put("api/workspaces/Collaborator", request);
+        var outcome = await Client.Put("api/workspaces/Collaborators", request);
 
         // Assert
         await outcome.ValidateValidationErrors();

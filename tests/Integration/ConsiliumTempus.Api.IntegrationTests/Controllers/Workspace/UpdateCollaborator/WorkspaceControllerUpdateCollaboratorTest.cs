@@ -30,7 +30,7 @@ public class WorkspaceControllerUpdateCollaboratorTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Put("api/workspaces/Collaborator", request);
+        var outcome = await Client.Put("api/workspaces/Collaborators", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -52,7 +52,8 @@ public class WorkspaceControllerUpdateCollaboratorTest(WebAppFactory factory)
         var request = WorkspaceRequestFactory.CreateUpdateCollaboratorFromWorkspaceRequest(workspace.Id.Value);
 
         // Act
-        var outcome = await Client.Put("api/workspaces/Collaborator", request);
+        Client.UseCustomToken(WorkspaceData.Users.First());
+        var outcome = await Client.Put("api/workspaces/Collaborators", request);
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.CollaboratorNotFound);
@@ -72,7 +73,7 @@ public class WorkspaceControllerUpdateCollaboratorTest(WebAppFactory factory)
         var request = WorkspaceRequestFactory.CreateUpdateCollaboratorFromWorkspaceRequest(id: Guid.NewGuid());
 
         // Act
-        var outcome = await Client.Put("api/workspaces/Collaborator", request);
+        var outcome = await Client.Put("api/workspaces/Collaborators", request);
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);
