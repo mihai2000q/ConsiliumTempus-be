@@ -129,7 +129,7 @@ public class PermissionAuthorizationHandlerTest
         ]));
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
-        Utils.Authorization.MockEmptyHttpRequest(_httpContextAccessor, requestLocation);
+        Utils.Authorization.Permission.MockEmptyHttpRequest(_httpContextAccessor, requestLocation);
 
         // Act
         await _uut.HandleAsync(context);
@@ -161,7 +161,7 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         const string stringId = "";
-        Utils.Authorization.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
 
         // Act
         await _uut.HandleAsync(context);
@@ -193,7 +193,7 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         const string stringId = "not guid";
-        Utils.Authorization.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
 
         // Act
         await _uut.HandleAsync(context);
@@ -225,7 +225,7 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.NewGuid().ToString();
-        Utils.Authorization.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
 
         // Act
         await _uut.HandleAsync(context);
@@ -234,7 +234,7 @@ public class PermissionAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-        await Utils.Authorization.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
+        await Utils.Authorization.Permission.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
         _permissionProvider.DidNotReceive();
 
         context.HasSucceeded.Should().BeTrue();
@@ -258,10 +258,10 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.NewGuid().ToString();
-        Utils.Authorization.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
 
         var workspace = WorkspaceFactory.Create();
-        Utils.Authorization.MockWorkspaceProvider(_workspaceProvider, workspace);
+        Utils.Authorization.Permission.MockWorkspaceProvider(_workspaceProvider, workspace);
 
         _permissionProvider
             .GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>())
@@ -274,7 +274,7 @@ public class PermissionAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-        await Utils.Authorization.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
+        await Utils.Authorization.Permission.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
         await _permissionProvider
             .Received(1)
             .GetPermissions(
@@ -302,10 +302,10 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.NewGuid().ToString();
-        Utils.Authorization.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
 
         var workspace = WorkspaceFactory.Create();
-        Utils.Authorization.MockWorkspaceProvider(_workspaceProvider, workspace);
+        Utils.Authorization.Permission.MockWorkspaceProvider(_workspaceProvider, workspace);
 
         _permissionProvider
             .GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>())
@@ -318,7 +318,7 @@ public class PermissionAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-        await Utils.Authorization.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
+        await Utils.Authorization.Permission.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
         await _permissionProvider
             .Received(1)
             .GetPermissions(
