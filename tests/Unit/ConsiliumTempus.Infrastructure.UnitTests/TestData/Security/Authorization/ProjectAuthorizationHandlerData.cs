@@ -41,6 +41,7 @@ public static class ProjectAuthorizationHandlerData
             var stringIdType = StringIdType.Project;
             Add(level, requestLocation, null, controller, "Get", stringIdType);
             Add(level, requestLocation, null, controller, "GetOverview", stringIdType);
+            Add(level, requestLocation, null, controller, "GetAllowedMembers", stringIdType);
             Add(level, requestLocation, null, controller, "GetStatuses", stringIdType);
             Add(level, requestLocation, null, controller, "Delete", stringIdType);
             Add(level, requestLocation, null, controller, "RemoveStatus", stringIdType);
