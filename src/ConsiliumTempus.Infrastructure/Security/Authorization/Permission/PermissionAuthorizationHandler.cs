@@ -112,13 +112,16 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             // Workspace
             Permissions.ReadWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.ReadOverviewWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
-            Permissions.ReadCollaboratorsFromWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
             Permissions.ReadInvitationsFromWorkspace => HttpRequestReader.GetStringIdFromQuery(request, typeof(WorkspaceAggregate).ToCamelId()),
-            Permissions.InviteCollaboratorToWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateFavoritesWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.UpdateOverviewWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.DeleteWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
+
+            // Workspace - Collaborators
+            Permissions.InviteCollaboratorToWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
+            Permissions.ReadCollaboratorsFromWorkspace => HttpRequestReader.GetStringIdFromRoute(request),
+            Permissions.UpdateCollaboratorFromWorkspace => await HttpRequestReader.GetStringIdFromBody(request),
 
             // Project
             Permissions.CreateProject => await HttpRequestReader.GetStringIdFromBody(request, typeof(WorkspaceAggregate).ToCamelId()),

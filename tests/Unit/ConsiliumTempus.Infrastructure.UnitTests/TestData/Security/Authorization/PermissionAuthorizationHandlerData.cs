@@ -31,13 +31,16 @@ public static class PermissionAuthorizationHandlerData
             // Workspace
             Add(Permissions.ReadWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
             Add(Permissions.ReadOverviewWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
-            Add(Permissions.ReadCollaboratorsFromWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
             Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Query, typeof(WorkspaceAggregate).ToCamelId(), StringIdType.Workspace);
-            Add(Permissions.InviteCollaboratorToWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
             Add(Permissions.UpdateWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
             Add(Permissions.UpdateFavoritesWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
             Add(Permissions.UpdateOverviewWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
             Add(Permissions.DeleteWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
+
+            // Workspace - Collaborators
+            Add(Permissions.InviteCollaboratorToWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
+            Add(Permissions.ReadCollaboratorsFromWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
+            Add(Permissions.UpdateCollaboratorFromWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
 
             // Project
             Add(Permissions.CreateProject, RequestLocation.Body, typeof(WorkspaceAggregate).ToCamelId(), StringIdType.Workspace);
