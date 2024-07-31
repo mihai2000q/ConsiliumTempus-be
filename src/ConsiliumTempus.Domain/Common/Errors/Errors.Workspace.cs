@@ -14,8 +14,8 @@ public static partial class Errors
             "Workspace.DeletePersonalWorkspace",
             "Personal Workspaces cannot be deleted, not even by their owners");
 
-        public static Error LeaveOwnedWorkspace => Error.Conflict(
-            "Workspace.LeaveOwnedWorkspace",
+        public static Error LeaveOwned => Error.Conflict(
+            "Workspace.LeaveOwned",
             "Workspaces cannot be left by their owners");
 
         public static Error CollaboratorNotFound => Error.NotFound(

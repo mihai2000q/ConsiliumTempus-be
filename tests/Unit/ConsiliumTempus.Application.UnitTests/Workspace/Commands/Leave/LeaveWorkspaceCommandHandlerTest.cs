@@ -92,7 +92,7 @@ public class LeaveWorkspaceCommandHandlerTest
             .Received(1)
             .GetCurrentUserAfterPermissionCheck();
 
-        outcome.ValidateError(Errors.Workspace.LeaveOwnedWorkspace);
+        outcome.ValidateError(Errors.Workspace.LeaveOwned);
     }
 
     [Fact]

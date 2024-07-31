@@ -9,6 +9,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
+using ConsiliumTempus.Api.Contracts.Project.LeavePrivate;
 using ConsiliumTempus.Api.Contracts.Project.RemoveAllowedMember;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
@@ -21,6 +22,7 @@ using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.LeavePrivate;
 using ConsiliumTempus.Application.Project.Commands.RemoveAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
@@ -262,6 +264,21 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
         return result.Match(
             deleteResult => Ok(Mapper.Map<DeleteProjectResponse>(deleteResult)),
+            Problem
+        );
+    }
+
+    [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsCollaborator)]
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
+    [HttpDelete("{id:guid}/Leave")]
+    public async Task<IActionResult> LeavePrivate(LeavePrivateProjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<LeavePrivateProjectCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            leavePrivateResult => Ok(Mapper.Map<LeavePrivateProjectResponse>(leavePrivateResult)),
             Problem
         );
     }

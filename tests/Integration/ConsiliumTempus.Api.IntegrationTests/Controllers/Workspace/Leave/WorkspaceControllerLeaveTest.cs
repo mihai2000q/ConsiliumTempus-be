@@ -25,7 +25,7 @@ public class WorkspaceControllerLeaveTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Post("api/workspaces/Leave", request);
+        var outcome = await Client.Delete($"api/workspaces/{request.Id}/leave");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -49,10 +49,10 @@ public class WorkspaceControllerLeaveTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Post("api/workspaces/Leave", request);
+        var outcome = await Client.Delete($"api/workspaces/{request.Id}/leave");
 
         // Assert
-        await outcome.ValidateError(Errors.Workspace.LeaveOwnedWorkspace);
+        await outcome.ValidateError(Errors.Workspace.LeaveOwned);
 
         workspace.Owner.Should().Be(user);
     }
@@ -64,7 +64,7 @@ public class WorkspaceControllerLeaveTest(WebAppFactory factory)
         var request = WorkspaceRequestFactory.CreateLeaveWorkspaceRequest();
 
         // Act
-        var outcome = await Client.Post("api/workspaces/Leave", request);
+        var outcome = await Client.Delete($"api/workspaces/{request.Id}/leave");
 
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);

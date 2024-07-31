@@ -1,4 +1,8 @@
-﻿namespace ConsiliumTempus.Api.Contracts.Workspace.Leave;
+﻿using Microsoft.AspNetCore.Mvc;
 
-public sealed record LeaveWorkspaceRequest(
-    Guid Id);
+namespace ConsiliumTempus.Api.Contracts.Workspace.Leave;
+
+public sealed record LeaveWorkspaceRequest
+{
+    [FromRoute] public Guid Id { get; init; }
+}

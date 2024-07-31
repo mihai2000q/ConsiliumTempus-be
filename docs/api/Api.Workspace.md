@@ -28,9 +28,6 @@
   * [Reject Invitation](#reject-invitation)
     * [Reject Invitation To Workspace Request](#reject-invitation-to-workspace-request)
     * [Reject Invitation To Workspace Response](#reject-invitation-to-workspace-response)
-  * [Leave](#leave)
-    * [Leave Workspace Request](#leave-workspace-request)
-    * [Leave Workspace Response](#leave-workspace-response)
   * [Update](#update)
     * [Update Workspace Request](#update-workspace-request)
     * [Update Workspace Response](#update-workspace-response)
@@ -46,6 +43,9 @@
   * [Delete](#delete)
     * [Delete Workspace Request](#delete-workspace-request)
     * [Delete Workspace Response](#delete-workspace-response)
+  * [Leave](#leave)
+    * [Leave Workspace Request](#leave-workspace-request)
+    * [Leave Workspace Response](#leave-workspace-response)
 
 ## Workspace
 
@@ -357,29 +357,6 @@ Sends body data needed to reject the invitation to the workspace.
 
 Returns a confirmation message that the invitation has been rejected successfully.
 
-### Leave
-
-Only member or admin users that are part of the workspace can update it
-([Workspace Authorization Level: Is Collaborator](../Security.md/#workspace-authorization-levels));
-
-```js
-PUT {{host}}/api/workspaces/leave
-```
-
-#### Leave Workspace Request
-
-Sends body data that the workspace needs to be left.
-
-```json
-{
-  "id": "10000000-0000-0000-0000-000000000000"
-}
-```
-
-#### Leave Workspace Response
-
-Returns a confirmation message that the workspace has been left successfully.
-
 ### Update
 
 Only member or admin users that are part of the workspace can update it
@@ -519,3 +496,23 @@ Sends the id of the workspace inside the route request.
 #### Delete Workspace Response
 
 Returns a confirmation message that the workspace has been deleted successfully.
+
+
+### Leave
+
+Only member or admin users that are part of the workspace can update it
+([Workspace Authorization Level: Is Collaborator](../Security.md/#workspace-authorization-levels));
+
+```js
+DELETE {{host}}/api/workspaces/{id}/leave
+```
+
+- **id** is a 36 characters strings
+
+#### Leave Workspace Request
+
+Sends the id of the workspace inside the route request.
+
+#### Leave Workspace Response
+
+Returns a confirmation message that the workspace has been left successfully.

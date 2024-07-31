@@ -46,6 +46,9 @@
   * [Delete](#delete)
     * [Delete Project Request](#delete-project-request)
     * [Delete Project Response](#delete-project-response)
+  * [Leave Private](#leave-private)
+    * [Leave Private Project Request](#leave-private-project-request)
+    * [Leave Private Project Response](#leave-private-project-response)
   * [Remove Allowed Member](#remove-allowed-member)
     * [Remove Allowed Member From Project Request](#remove-allowed-member-from-project-request)
     * [Remove Allowed Member From Project Response](#remove-allowed-member-from-project-response)
@@ -577,6 +580,25 @@ Sends the id of the project inside the route request.
 #### Delete Project Response
 
 Returns a confirmation message that the project has been deleted successfully.
+
+### Leave Private
+
+Only when the project is private, can the allowed members leave it (also, they have to be collaborators)
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+
+```js
+DELETE {{host}}/api/projects/{id}/leave
+```
+
+- **id** is a 36 characters strings
+
+#### Leave Private Project Request
+
+Sends the id of the project inside the route request.
+
+#### Leave Private Project Response
+
+Returns a confirmation message that the project has been left successfully.
 
 ### Remove Allowed Member
 

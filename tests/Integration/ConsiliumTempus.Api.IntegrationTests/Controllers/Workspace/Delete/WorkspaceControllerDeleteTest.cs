@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.Delete;
 
@@ -65,8 +66,8 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length);
-        dbContext.Workspaces.AsEnumerable()
-            .SingleOrDefault(w => w.Id.Value == request.Id)
+        dbContext.Workspaces
+            .SingleOrDefault(w => w.Id == WorkspaceId.Create(request.Id))
             .Should().BeNull();
     }
 }

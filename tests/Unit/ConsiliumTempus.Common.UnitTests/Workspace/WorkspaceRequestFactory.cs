@@ -114,13 +114,6 @@ public static class WorkspaceRequestFactory
             invitationId ?? Guid.NewGuid());
     }
 
-    public static LeaveWorkspaceRequest CreateLeaveWorkspaceRequest(
-        Guid? id = null)
-    {
-        return new LeaveWorkspaceRequest(
-            id ?? Guid.NewGuid());
-    }
-
     public static UpdateWorkspaceRequest CreateUpdateWorkspaceRequest(
         Guid? id = null,
         string name = Constants.Workspace.Name)
@@ -171,6 +164,14 @@ public static class WorkspaceRequestFactory
     public static DeleteWorkspaceRequest CreateDeleteWorkspaceRequest(Guid? id = null)
     {
         return new DeleteWorkspaceRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
+    }
+
+    public static LeaveWorkspaceRequest CreateLeaveWorkspaceRequest(Guid? id = null)
+    {
+        return new LeaveWorkspaceRequest
         {
             Id = id ?? Guid.NewGuid()
         };

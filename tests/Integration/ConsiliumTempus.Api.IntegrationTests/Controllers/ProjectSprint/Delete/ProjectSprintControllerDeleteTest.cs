@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Delete;
@@ -58,8 +59,8 @@ public class ProjectSprintControllerDeleteTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length);
-        dbContext.ProjectSprints.AsEnumerable()
-            .SingleOrDefault(p => p.Id.Value == request.Id)
+        dbContext.ProjectSprints
+            .SingleOrDefault(p => p.Id == ProjectSprintId.Create(request.Id))
             .Should().NotBeNull();
     }
 
@@ -77,8 +78,8 @@ public class ProjectSprintControllerDeleteTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length);
-        dbContext.ProjectSprints.AsEnumerable()
-            .SingleOrDefault(p => p.Id.Value == request.Id)
+        dbContext.ProjectSprints
+            .SingleOrDefault(p => p.Id == ProjectSprintId.Create(request.Id))
             .Should().BeNull();
     }
 }

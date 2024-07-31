@@ -1,9 +1,16 @@
 import { APIRequestContext, expect } from "@playwright/test";
 import { useToken } from "./utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
-import { addCollaboratorToWorkspace, createWorkspace, getPersonalWorkspace } from "./workspaces.utils";
+import {
+  acceptInvitation,
+  addCollaboratorToWorkspace,
+  createWorkspace,
+  getPersonalWorkspace, inviteCollaborator,
+  updateCollaborator
+} from "./workspaces.utils";
 import AddStatusToProjectRequest from "../types/requests/project/AddStatusToProjectRequest";
 import AddAllowedMemberToProjectRequest from "../types/requests/project/AddAllowedMemberToProjectRequest";
+import { getCurrentUser, registerUser } from "./users.utils";
 
 export async function getProject(request: APIRequestContext, projectId: string) {
   const response = await request.get(`/api/projects/${projectId}`, useToken())
@@ -17,8 +24,8 @@ export async function getProjectOverview(request: APIRequestContext, projectId: 
   return await response.json()
 }
 
-export async function getProjects(request: APIRequestContext) {
-  const response = await request.get('/api/projects', useToken())
+export async function getProjects(request: APIRequestContext, token?: string | undefined) {
+  const response = await request.get('/api/projects', useToken(token))
   expect(response.ok()).toBeTruthy()
   return (await response.json()).projects
 }
@@ -41,6 +48,18 @@ export async function getAllowedMembers(request: APIRequestContext, projectId: s
   return (await response.json()).allowedMembers
 }
 
+export async function addAllowedMember(
+  request: APIRequestContext,
+  addAllowedMemberToProjectRequest: AddAllowedMemberToProjectRequest,
+  token?: string | undefined
+) {
+  const response = await request.post('/api/projects/add-allowed-member', {
+    ...useToken(token),
+    data: addAllowedMemberToProjectRequest
+  });
+  expect(response.ok()).toBeTruthy()
+}
+
 export async function addAllowedMemberToProject(
   request: APIRequestContext,
   collaboratorEmail: string,
@@ -55,16 +74,63 @@ export async function addAllowedMemberToProject(
 
   const collaborator = await addCollaboratorToWorkspace(request, collaboratorEmail, workspaceId)
 
-  const body: AddAllowedMemberToProjectRequest = {
-    id: project.id,
-    collaboratorId: collaborator.id
-  }
-  const response = await request.post('/api/projects/add-allowed-member', {
-    ...useToken(),
-    data: body
-  });
-  expect(response.ok()).toBeTruthy()
+  await addAllowedMember(
+    request,
+    {
+      id: project.id,
+      collaboratorId: collaborator.id
+    }
+  )
   return [project, collaborator]
+}
+
+export async function addMeToAllowedMembers(
+  request: APIRequestContext,
+  projectOwnerEmail: string,
+  workspaceId: string
+) {
+  const token = (await registerUser(request, projectOwnerEmail)).token
+  await inviteCollaborator(
+    request,
+    {
+      id: workspaceId,
+      email: projectOwnerEmail
+    }
+  )
+
+  await acceptInvitation(request, projectOwnerEmail, workspaceId, token)
+
+  const projectOwner = await getCurrentUser(request, token)
+
+  await updateCollaborator(
+    request,
+    {
+      id: workspaceId,
+      collaboratorId: projectOwner.id,
+      workspaceRole: 'Admin'
+    }
+  )
+
+  const project = await createProject(
+    request,
+    {
+      workspaceId: workspaceId,
+      name: "Project",
+      isPrivate: true
+    },
+    token
+  )
+  const me = await getCurrentUser(request)
+  await addAllowedMember(
+    request,
+    {
+      id: project.id,
+      collaboratorId: me.id,
+    },
+    token
+  )
+
+  return project
 }
 
 export async function addProjectStatus(
@@ -81,15 +147,16 @@ export async function addProjectStatus(
 
 export async function createProject(
   request: APIRequestContext,
-  body: CreateProjectRequest
+  body: CreateProjectRequest,
+  token?: string | undefined
 ) {
   const response = await request.post('/api/projects', {
-    ...useToken(),
+    ...useToken(token),
     data: body
   })
   expect(response.ok()).toBeTruthy()
 
-  return (await getProjects(request)).filter((p: { name: string }) => p.name === body.name)[0]
+  return (await getProjects(request, token)).filter((p: { name: string }) => p.name === body.name)[0]
 }
 
 export async function create2ProjectsIn2DifferentWorkspaces(request: APIRequestContext) {

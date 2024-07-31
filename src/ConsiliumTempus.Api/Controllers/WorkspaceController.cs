@@ -165,19 +165,6 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         );
     }
 
-    [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsCollaborator)]
-    [HttpPost("Leave")]
-    public async Task<IActionResult> Leave(LeaveWorkspaceRequest request, CancellationToken cancellationToken)
-    {
-        var command = Mapper.Map<LeaveWorkspaceCommand>(request);
-        var result = await Mediator.Send(command, cancellationToken);
-
-        return result.Match(
-            leaveResult => Ok(Mapper.Map<LeaveWorkspaceResponse>(leaveResult)),
-            Problem
-        );
-    }
-
     [HasPermission(Permissions.UpdateWorkspace)]
     [HttpPut]
     public async Task<IActionResult> Update(UpdateWorkspaceRequest request, CancellationToken cancellationToken)
@@ -256,6 +243,19 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
         return result.Match(
             deleteResult => Ok(Mapper.Map<DeleteWorkspaceResponse>(deleteResult)),
+            Problem
+        );
+    }
+
+    [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsCollaborator)]
+    [HttpDelete("{id:guid}/Leave")]
+    public async Task<IActionResult> Leave(LeaveWorkspaceRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<LeaveWorkspaceCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            leaveResult => Ok(Mapper.Map<LeaveWorkspaceResponse>(leaveResult)),
             Problem
         );
     }
