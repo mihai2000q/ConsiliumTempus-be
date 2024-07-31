@@ -1,4 +1,4 @@
-export default interface UpdateOverviewProjectRequest {
+export default interface UpdateOwnerProjectRequest {
   id: string,
-  description: string
+  ownerId: string
 }
