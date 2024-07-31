@@ -6,6 +6,7 @@ using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdateOwner;
 using ConsiliumTempus.Application.Project.Commands.UpdatePrivacy;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
@@ -153,6 +154,18 @@ internal static partial class Utils
         {
             project.Id.Value.Should().Be(command.Id);
             project.Description.Value.Should().Be(command.Description);
+            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertFromUpdateOwnerCommand(
+            ProjectAggregate project,
+            UpdateOwnerProjectCommand command)
+        {
+            project.Id.Value.Should().Be(command.Id);
+            project.Owner.Id.Value.Should().Be(command.OwnerId);
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

@@ -113,6 +113,13 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
         RefreshActivity();
     }
 
+    public void UpdateOwner(UserAggregate owner)
+    {
+        Owner = owner;
+        UpdatedDateTime = DateTime.UtcNow;
+        RefreshActivity();
+    }
+
     public void UpdateOverview(Description description)
     {
         Description = description;

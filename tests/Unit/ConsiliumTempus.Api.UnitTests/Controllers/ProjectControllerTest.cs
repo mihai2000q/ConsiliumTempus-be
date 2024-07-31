@@ -12,6 +12,7 @@ using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdateOwner;
 using ConsiliumTempus.Api.Contracts.Project.UpdatePrivacy;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Api.Controllers;
@@ -24,6 +25,7 @@ using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdateOwner;
 using ConsiliumTempus.Application.Project.Commands.UpdatePrivacy;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
@@ -612,6 +614,53 @@ public class ProjectControllerTest
             .Received(1)
             .Send(Arg.Is<UpdateOverviewProjectCommand>(command =>
                 Utils.Project.AssertUpdateOverviewCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task UpdateOwner_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdateOwnerProjectRequest();
+
+        var result = ProjectResultFactory.CreateUpdateOwnerProjectResult();
+        _mediator
+            .Send(Arg.Any<UpdateOwnerProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.UpdateOwner(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateOwnerProjectCommand>(command =>
+                Utils.Project.AssertUpdateOwnerCommand(command, request)));
+
+        var response = outcome.ToResponse<UpdateOwnerProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task UpdateOwner_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateUpdateOwnerProjectRequest();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdateOwnerProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.UpdateOwner(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateOwnerProjectCommand>(command =>
+                Utils.Project.AssertUpdateOwnerCommand(command, request)));
 
         outcome.ValidateError(error);
     }

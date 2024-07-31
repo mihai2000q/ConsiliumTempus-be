@@ -13,6 +13,7 @@ using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdateOwner;
 using ConsiliumTempus.Api.Contracts.Project.UpdatePrivacy;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
@@ -23,6 +24,7 @@ using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdateOwner;
 using ConsiliumTempus.Application.Project.Commands.UpdatePrivacy;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
@@ -214,6 +216,21 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
         return result.Match(
             updateOverviewResult => Ok(Mapper.Map<UpdateOverviewProjectResponse>(updateOverviewResult)),
+            Problem
+        );
+    }
+
+    [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsCollaborator)]
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsProjectOwner)]
+    [HttpPut("Owner")]
+    public async Task<IActionResult> UpdateOwner(UpdateOwnerProjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateOwnerProjectCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateOwnerResult => Ok(Mapper.Map<UpdateOwnerProjectResponse>(updateOwnerResult)),
             Problem
         );
     }
