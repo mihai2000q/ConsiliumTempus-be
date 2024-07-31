@@ -6,6 +6,7 @@ using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdatePrivacy;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetAllowedMembers;
@@ -80,6 +81,11 @@ public static class ProjectResultFactory
     public static UpdateFavoritesProjectResult CreateUpdateFavoritesProjectResult()
     {
         return new UpdateFavoritesProjectResult();
+    }
+
+    public static UpdatePrivacyProjectResult CreateUpdatePrivacyProjectResult()
+    {
+        return new UpdatePrivacyProjectResult();
     }
 
     public static UpdateOverviewProjectResult CreateUpdateOverviewProjectResult()

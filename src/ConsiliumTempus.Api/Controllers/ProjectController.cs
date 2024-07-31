@@ -13,6 +13,7 @@ using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdatePrivacy;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
@@ -22,6 +23,7 @@ using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdatePrivacy;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetAllowedMembers;
@@ -182,6 +184,21 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
 
         return result.Match(
             updateFavoritesResult => Ok(Mapper.Map<UpdateFavoritesProjectResponse>(updateFavoritesResult)),
+            Problem
+        );
+    }
+    
+    [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsCollaborator)]
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
+    [HttpPut("Privacy")]
+    public async Task<IActionResult> UpdatePrivacy(UpdatePrivacyProjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdatePrivacyProjectCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updatePrivacyResult => Ok(Mapper.Map<UpdatePrivacyProjectResponse>(updatePrivacyResult)),
             Problem
         );
     }

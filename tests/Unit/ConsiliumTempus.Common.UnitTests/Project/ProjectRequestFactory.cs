@@ -11,6 +11,7 @@ using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdatePrivacy;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Domain.Project.Enums;
@@ -119,6 +120,15 @@ public static class ProjectRequestFactory
         return new UpdateFavoritesProjectRequest(
             id ?? Guid.NewGuid(),
             isFavorite);
+    }
+
+    public static UpdatePrivacyProjectRequest CreateUpdatePrivacyProjectRequest(
+        Guid? id = null,
+        bool isPrivate = false)
+    {
+        return new UpdatePrivacyProjectRequest(
+            id ?? Guid.NewGuid(),
+            isPrivate);
     }
 
     public static UpdateOverviewProjectRequest CreateUpdateOverviewProjectRequest(

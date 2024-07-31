@@ -22,6 +22,7 @@ import AddStatusToProjectRequest from "../types/requests/project/AddStatusToProj
 import UpdateStatusFromProjectRequest from "../types/requests/project/UpdateStatusFromProjectRequest";
 import UpdateFavoritesProjectRequest from "../types/requests/project/UpdateFavoritesProjectRequest";
 import AddAllowedMemberToProjectRequest from "../types/requests/project/AddAllowedMemberToProjectRequest";
+import UpdatePrivacyProjectRequest from "../types/requests/project/UpdatePrivacyProjectRequest";
 
 test.describe('should allow operations on the project entity', () => {
   const EMAIL = "michaeljordan@example.com"
@@ -524,6 +525,41 @@ test.describe('should allow operations on the project entity', () => {
       lifecycle: 'Active',
       owner: expect.any(Object),
       isPrivate: createProjectRequest.isPrivate,
+      latestStatus: null,
+      workspace: expect.any(Object)
+    })
+  })
+
+  test('should update project privacy', async ({ request }) => {
+    const createProjectRequest: CreateProjectRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "New Project",
+      isPrivate: false
+    }
+    const project = await createProject(request, createProjectRequest)
+
+    const body: UpdatePrivacyProjectRequest = {
+      id: project.id,
+      isPrivate: false
+    }
+    const response = await request.put('/api/projects/privacy', {
+      ...useToken(),
+      data: body
+    })
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const projects = await getProject(request, project.id)
+    expect(projects).toStrictEqual({
+      name: createProjectRequest.name,
+      isFavorite: false,
+      lifecycle: 'Active',
+      owner: expect.any(Object),
+      isPrivate: body.isPrivate,
       latestStatus: null,
       workspace: expect.any(Object)
     })

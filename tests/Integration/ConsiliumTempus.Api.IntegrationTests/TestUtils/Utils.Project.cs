@@ -10,6 +10,7 @@ using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdatePrivacy;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
@@ -179,6 +180,21 @@ internal static partial class Utils
 
             // changed
             newProject.IsFavorite(user).Should().Be(request.IsFavorite);
+        }
+
+        internal static void AssertUpdatePrivacy(
+            ProjectAggregate project,
+            UpdatePrivacyProjectRequest request)
+        {
+            // unchanged
+            project.Id.Value.Should().Be(request.Id);
+
+            // changed
+            project.IsPrivate.Value.Should().Be(request.IsPrivate);
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdateOverview(
