@@ -31,12 +31,15 @@
   * [Update Favorites](#update-favorites)
     * [Update Favorites Project Request](#update-favorites-project-request)
     * [Update Favorites Project Response](#update-favorites-project-response)
-  * [Update Privacy](#update-privacy)
-    * [Update Privacy Project Request](#update-privacy-project-request)
-    * [Update Privacy Project Response](#update-privacy-project-response)
   * [Update Overview](#update-overview)
     * [Update Overview Project Request](#update-overview-project-request)
     * [Update Overview Project Response](#update-overview-project-response)
+  * [Update Owner](#update-owner)
+    * [Update Owner Project Request](#update-owner-project-request)
+    * [Update Owner Project Response](#update-owner-project-response)
+  * [Update Privacy](#update-privacy)
+    * [Update Privacy Project Request](#update-privacy-project-request)
+    * [Update Privacy Project Response](#update-privacy-project-response)
   * [Update Status](#update-status)
     * [Update Status From Project Request](#update-status-from-project-request)
     * [Update Status From Project Response](#update-status-from-project-response)
@@ -445,31 +448,6 @@ Sends body data that the project favorites need to be updated.
 
 Returns a confirmation message that the project favorites have been updated successfully.
 
-### Update Privacy
-
-Can only add allowed members to private projects, and only owners can add more members
-(they have to be collaborators though)
-([Project Authorization Level: Is Project Owner](../Security.md/#project-authorization-levels)).
-
-```js
-PUT {{host}}/api/projects/privacy
-```
-
-#### Update Privacy Project Request
-
-Sends body data that the project favorites need to be updated.
-
-```json
-{
-  "id": "10000000-0000-0000-0000-000000000000",
-  "isFavorite": true
-}
-```
-
-#### Update Privacy Project Response
-
-Returns a confirmation message that the project favorites have been updated successfully.
-
 ### Update Overview
 
 All members that are part of the workspace can update a project overview
@@ -496,6 +474,54 @@ Sends body data that the project overview needs to be updated.
 #### Update Overview Project Response
 
 Returns a confirmation message that the project overview has been updated successfully.
+
+### Update Owner
+
+Only project owners can change the owner (and both the new and old owners have to be collaborators)
+([Project Authorization Level: Is Project Owner](../Security.md/#project-authorization-levels)).
+
+```js
+PUT {{host}}/api/projects/owner
+```
+
+#### Update Owner Project Request
+
+Sends body data that the project needs to update the owner.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "isFavorite": true
+}
+```
+
+#### Update Owner Project Response
+
+Returns a confirmation message that the project owner has been updated successfully.
+
+### Update Privacy
+
+Only project owners can change the privacy (and he needs to be a collaborator)
+([Project Authorization Level: Is Project Owner](../Security.md/#project-authorization-levels)).
+
+```js
+PUT {{host}}/api/projects/privacy
+```
+
+#### Update Privacy Project Request
+
+Sends body data that the project needs to update the privacy.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "isPrivate": true
+}
+```
+
+#### Update Privacy Project Response
+
+Returns a confirmation message that the project privacy has been updated successfully.
 
 ### Update Status
 

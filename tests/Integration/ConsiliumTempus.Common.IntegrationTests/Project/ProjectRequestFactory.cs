@@ -11,6 +11,7 @@ using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdateOwner;
 using ConsiliumTempus.Api.Contracts.Project.UpdatePrivacy;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
@@ -122,15 +123,6 @@ public static class ProjectRequestFactory
             isFavorite);
     }
 
-    public static UpdatePrivacyProjectRequest CreateUpdatePrivacyProjectRequest(
-        Guid? id = null,
-        bool isPrivate = false)
-    {
-        return new UpdatePrivacyProjectRequest(
-            id ?? Guid.NewGuid(),
-            isPrivate);
-    }
-
     public static UpdateOverviewProjectRequest CreateUpdateOverviewProjectRequest(
         Guid? id = null,
         string description = Constants.Project.Description)
@@ -138,6 +130,24 @@ public static class ProjectRequestFactory
         return new UpdateOverviewProjectRequest(
             id ?? Guid.NewGuid(),
             description);
+    }
+
+    public static UpdateOwnerProjectRequest CreateUpdateOwnerProjectRequest(
+        Guid? id = null,
+        Guid? ownerId = null)
+    {
+        return new UpdateOwnerProjectRequest(
+            id ?? Guid.NewGuid(),
+            ownerId ?? Guid.NewGuid());
+    }
+
+    public static UpdatePrivacyProjectRequest CreateUpdatePrivacyProjectRequest(
+        Guid? id = null,
+        bool isPrivate = false)
+    {
+        return new UpdatePrivacyProjectRequest(
+            id ?? Guid.NewGuid(),
+            isPrivate);
     }
 
     public static UpdateStatusFromProjectRequest CreateUpdateStatusFromProjectRequest(

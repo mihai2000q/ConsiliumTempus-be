@@ -12,6 +12,7 @@ using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Project.UpdateOverview;
+using ConsiliumTempus.Api.Contracts.Project.UpdateOwner;
 using ConsiliumTempus.Api.Contracts.Project.UpdatePrivacy;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
@@ -22,6 +23,7 @@ using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
+using ConsiliumTempus.Application.Project.Commands.UpdateOwner;
 using ConsiliumTempus.Application.Project.Commands.UpdatePrivacy;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
@@ -56,6 +58,7 @@ public sealed class ProjectMappingConfig : IRegister
         UpdateFavoritesMappings(config);
         UpdatePrivacyMappings(config);
         UpdateOverviewMappings(config);
+        UpdateOwnerMappings(config);
         UpdateStatusMappings(config);
         DeleteMappings(config);
         RemoveStatusMappings(config);
@@ -201,6 +204,13 @@ public sealed class ProjectMappingConfig : IRegister
         config.NewConfig<UpdateOverviewProjectRequest, UpdateOverviewProjectCommand>();
 
         config.NewConfig<UpdateOverviewProjectResult, UpdateOverviewProjectResponse>();
+    }
+
+    private static void UpdateOwnerMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateOwnerProjectRequest, UpdateOwnerProjectCommand>();
+
+        config.NewConfig<UpdateOwnerProjectResult, UpdateOwnerProjectResponse>();
     }
 
     private static void UpdateStatusMappings(TypeAdapterConfig config)
