@@ -41,6 +41,31 @@ export async function getAllowedMembers(request: APIRequestContext, projectId: s
   return (await response.json()).allowedMembers
 }
 
+export async function addAllowedMemberToProject(
+  request: APIRequestContext,
+  collaboratorEmail: string,
+  workspaceId: string
+) {
+  const createProjectRequest: CreateProjectRequest = {
+    workspaceId: workspaceId,
+    name: "Project",
+    isPrivate: true
+  }
+  const project = await createProject(request, createProjectRequest)
+
+  const collaborator = await addCollaboratorToWorkspace(request, collaboratorEmail, workspaceId)
+
+  const body: AddAllowedMemberToProjectRequest = {
+    id: project.id,
+    collaboratorId: collaborator.id
+  }
+  const response = await request.post('/api/projects/add-allowed-member', {
+    ...useToken(),
+    data: body
+  });
+  expect(response.ok()).toBeTruthy()
+  return [project, collaborator]
+}
 
 export async function addProjectStatus(
   request: APIRequestContext,

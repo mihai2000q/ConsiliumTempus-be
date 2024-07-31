@@ -8,6 +8,7 @@ using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
+using ConsiliumTempus.Api.Contracts.Project.RemoveAllowedMember;
 using ConsiliumTempus.Api.Contracts.Project.RemoveStatus;
 using ConsiliumTempus.Api.Contracts.Project.Update;
 using ConsiliumTempus.Api.Contracts.Project.UpdateFavorites;
@@ -21,6 +22,7 @@ using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.RemoveAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
@@ -753,6 +755,53 @@ public class ProjectControllerTest
         await _mediator
             .Received(1)
             .Send(Arg.Is<DeleteProjectCommand>(command => Utils.Project.AssertDeleteCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task RemoveAllowedMember_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateRemoveAllowedMemberFromProjectRequest();
+
+        var result = ProjectResultFactory.CreateRemoveAllowedMemberFromProjectResult();
+        _mediator
+            .Send(Arg.Any<RemoveAllowedMemberFromProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.RemoveAllowedMember(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<RemoveAllowedMemberFromProjectCommand>(command =>
+                Utils.Project.AssertRemoveAllowedMemberCommand(command, request)));
+
+        var response = outcome.ToResponse<RemoveAllowedMemberFromProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task RemoveAllowedMember_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateRemoveAllowedMemberFromProjectRequest();
+
+        var error = Errors.Project.NotFound;
+        _mediator
+            .Send(Arg.Any<RemoveAllowedMemberFromProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.RemoveAllowedMember(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<RemoveAllowedMemberFromProjectCommand>(command =>
+                Utils.Project.AssertRemoveAllowedMemberCommand(command, request)));
 
         outcome.ValidateError(error);
     }

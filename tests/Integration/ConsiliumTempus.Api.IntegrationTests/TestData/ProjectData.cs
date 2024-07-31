@@ -157,7 +157,8 @@ internal class ProjectData : ITestData
             Workspaces[2],
             Users[1],
             "Something Private - owner not anymore",
-            description: "but the owner used to be a collaborator, however this was fixed already"),
+            description: "but the owner used to be a collaborator, however this was fixed already",
+            allowedMembers: [Users[1], Users[0]]),
 
         ProjectFactory.Create(
             Workspaces[2],
