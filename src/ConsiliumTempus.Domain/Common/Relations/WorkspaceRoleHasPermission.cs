@@ -54,6 +54,8 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
         Permissions.UpdateProject, Permissions.UpdateFavoritesProject, Permissions.UpdateOverviewProject,
         // Project - Project Status
         Permissions.ReadStatusesFromProject, Permissions.UpdateStatusFromProject,
+        // Project - Allowed Members
+        Permissions.ReadAllowedMembersFromProject,
         // Project Sprint
         Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint,
         // Project Sprint - Project Stage
@@ -79,6 +81,8 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
         // Project - Project Status
         Permissions.AddStatusToProject, Permissions.ReadStatusesFromProject, Permissions.RemoveStatusFromProject,
         Permissions.UpdateStatusFromProject,
+        // Project - Allowed Members
+        Permissions.ReadAllowedMembersFromProject,
         // Project Sprint
         Permissions.CreateProjectSprint, Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint,
         Permissions.UpdateProjectSprint, Permissions.DeleteProjectSprint,

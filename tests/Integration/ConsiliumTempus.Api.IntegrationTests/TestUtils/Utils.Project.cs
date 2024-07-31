@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Get;
+using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
@@ -77,11 +78,18 @@ internal static partial class Utils
             IReadOnlyList<ProjectStatus> statuses,
             int totalCount)
         {
-            response.Statuses
-                .OrderBy(s => s.Id)
-                .Zip(statuses.OrderBy(s => s.Id.Value))
+            response.Statuses.Zip(statuses.OrderByDescending(s => s.Audit.UpdatedDateTime))
                 .Should().AllSatisfy(p => AssertProjectStatusResponse(p.First, p.Second));
             response.TotalCount.Should().Be(totalCount);
+        }
+
+        internal static void AssertGetAllowedMembersResponse(
+            GetAllowedMembersFromProjectResponse response,
+            IReadOnlyList<UserAggregate> allowedMembers)
+        {
+            response.AllowedMembers
+                .Zip(allowedMembers.OrderBy(s => s.Name.Value))
+                .Should().AllSatisfy(p => AssertUserResponse(p.First, p.Second));
         }
 
         internal static void AssertCreation(
@@ -317,6 +325,15 @@ internal static partial class Utils
             return project.Statuses
                 .OrderByDescending(s => s.Audit.CreatedDateTime)
                 .First();
+        }
+        
+        private static void AssertUserResponse(
+            GetAllowedMembersFromProjectResponse.UserResponse userResponse,
+            UserAggregate user)
+        {
+            userResponse.Id.Should().Be(user.Id.Value);
+            userResponse.Name.Should().Be(user.Name.Value);
+            userResponse.Email.Should().Be(user.Credentials.Email);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -45,9 +46,44 @@ public sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory serviceSc
         HttpRequest request,
         IWorkspaceProvider workspaceProvider)
     {
-        var stringId = await HttpRequestReader.GetStringIdFromBody(request);
+        var (stringId, idType) = await GetStringId(request);
         if (!Guid.TryParse(stringId, out var workspaceId)) return null;
-        return await workspaceProvider.GetWithMemberships(WorkspaceId.Create(workspaceId));
+        return idType switch
+        {
+            StringIdType.Workspace => await workspaceProvider.GetWithMemberships(WorkspaceId.Create(workspaceId)),
+            StringIdType.Project => await workspaceProvider.GetByProjectWithMemberships(ProjectId.Create(workspaceId)),
+            StringIdType.Empty => null,
+            _ => throw new ArgumentOutOfRangeException(nameof(request))
+        };
+    }
+
+    private static async Task<(string?, StringIdType)> GetStringId(HttpRequest request)
+    {
+        (string?, StringIdType) empty = (null, StringIdType.Empty);
+
+        return request.RouteValues["controller"] switch
+        {
+            "Workspace" => request.Method switch
+            {
+                "GET" or "DELETE" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.Workspace),
+                "PUT" or "POST" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.Workspace),
+                _ => empty
+            },
+            "Project" => request.Method switch
+            {
+                "GET" or "DELETE" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.Project),
+                "PUT" or "POST" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.Project),
+                _ => empty
+            },
+            _ => empty
+        };
+    }
+
+    private enum StringIdType
+    {
+        Empty,
+        Workspace,
+        Project,
     }
 
     private static bool IsAuthorized(

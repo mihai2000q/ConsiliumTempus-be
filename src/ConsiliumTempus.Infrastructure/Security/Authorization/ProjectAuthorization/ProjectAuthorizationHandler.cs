@@ -68,6 +68,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
             {
                 "Get" or
                 "GetOverview" or
+                "GetAllowedMembers" or
                 "GetStatuses" or
                 "Delete" or
                 "RemoveStatus" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.Project),

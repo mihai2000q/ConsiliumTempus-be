@@ -200,7 +200,7 @@ public class ProjectAuthorizationHandlerTest
         ]));
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
-        Utils.Authorization.MockEmptyHttpRequest(_httpContextAccessor, requestLocation, controller, requestAction);
+        Utils.Authorization.Project.MockEmptyHttpRequest(_httpContextAccessor, requestLocation, controller, requestAction);
 
         // Act
         await _uut.HandleAsync(context);
@@ -234,7 +234,7 @@ public class ProjectAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         const string stringId = "";
-        Utils.Authorization.MockHttpRequest(
+        Utils.Authorization.Project.MockHttpRequest(
             _httpContextAccessor,
             requestLocation,
             idType,
@@ -274,7 +274,7 @@ public class ProjectAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         const string stringId = "not guid";
-        Utils.Authorization.MockHttpRequest(
+        Utils.Authorization.Project.MockHttpRequest(
             _httpContextAccessor,
             requestLocation,
             idType,
@@ -315,7 +315,7 @@ public class ProjectAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, userClaims, null);
 
         var stringId = Guid.NewGuid().ToString();
-        Utils.Authorization.MockHttpRequest(
+        Utils.Authorization.Project.MockHttpRequest(
             _httpContextAccessor,
             requestLocation,
             idType,
@@ -330,7 +330,7 @@ public class ProjectAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
             .HttpContext;
-        await Utils.Authorization.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
+        await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().BeTrue();
     }
@@ -355,10 +355,10 @@ public class ProjectAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, userClaims, null);
 
         var project = ProjectFactory.Create(isPrivate: false);
-        Utils.Authorization.MockProjectProvider(_projectProvider, project);
+        Utils.Authorization.Project.MockProjectProvider(_projectProvider, project);
 
         var stringId = Guid.NewGuid().ToString();
-        Utils.Authorization.MockHttpRequest(
+        Utils.Authorization.Project.MockHttpRequest(
             _httpContextAccessor,
             requestLocation,
             idType,
@@ -373,7 +373,7 @@ public class ProjectAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
             .HttpContext;
-        await Utils.Authorization.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
+        await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
         projectAuthorizationLevel.Should().Be(ProjectAuthorizationLevel.IsAllowed);
         context.HasSucceeded.Should().BeTrue();
@@ -400,10 +400,10 @@ public class ProjectAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, userClaims, null);
 
         var project = ProjectFactory.Create(isPrivate: true);
-        Utils.Authorization.MockProjectProvider(_projectProvider, project);
+        Utils.Authorization.Project.MockProjectProvider(_projectProvider, project);
 
         var stringId = project.Id.Value.ToString();
-        Utils.Authorization.MockHttpRequest(
+        Utils.Authorization.Project.MockHttpRequest(
             _httpContextAccessor,
             requestLocation,
             idType,
@@ -418,7 +418,7 @@ public class ProjectAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
             .HttpContext;
-        await Utils.Authorization.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
+        await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().BeFalse();
     }
@@ -445,10 +445,10 @@ public class ProjectAuthorizationHandlerTest
 
         var project = ProjectFactory.Create(owner: user, isPrivate: true);
         project.AddAllowedMember(user);
-        Utils.Authorization.MockProjectProvider(_projectProvider, project);
+        Utils.Authorization.Project.MockProjectProvider(_projectProvider, project);
 
         var stringId = project.Id.Value.ToString();
-        Utils.Authorization.MockHttpRequest(
+        Utils.Authorization.Project.MockHttpRequest(
             _httpContextAccessor,
             requestLocation,
             idType,
@@ -463,7 +463,7 @@ public class ProjectAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
             .HttpContext;
-        await Utils.Authorization.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
+        await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().BeTrue();
     }

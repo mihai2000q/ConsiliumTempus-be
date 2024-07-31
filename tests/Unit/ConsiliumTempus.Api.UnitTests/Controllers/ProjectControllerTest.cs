@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
+using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
@@ -24,6 +25,7 @@ using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
+using ConsiliumTempus.Application.Project.Queries.GetAllowedMembers;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Application.Project.Queries.GetStatuses;
@@ -236,6 +238,53 @@ public class ProjectControllerTest
             .Received(1)
             .Send(Arg.Is<GetStatusesFromProjectQuery>(q =>
                 Utils.Project.AssertGetStatusesFromProjectQuery(q, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task GetAllowedMembers_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateGetAllowedMembersFromProjectRequest();
+
+        var result = ProjectResultFactory.CreateGetAllowedMembersFromProjectResult();
+        _mediator
+            .Send(Arg.Any<GetAllowedMembersFromProjectQuery>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.GetAllowedMembers(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetAllowedMembersFromProjectQuery>(q =>
+                Utils.Project.AssertGetAllowedMembersFromProjectQuery(q, request)));
+
+        var response = outcome.ToResponse<GetAllowedMembersFromProjectResponse>();
+        Utils.Project.AssertGetAllowedMembersResponse(response, result);
+    }
+
+    [Fact]
+    public async Task GetAllowedMembers_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectRequestFactory.CreateGetAllowedMembersFromProjectRequest();
+
+        var error = Errors.Project.NotFound;
+        _mediator
+            .Send(Arg.Any<GetAllowedMembersFromProjectQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetAllowedMembers(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetAllowedMembersFromProjectQuery>(q =>
+                Utils.Project.AssertGetAllowedMembersFromProjectQuery(q, request)));
 
         outcome.ValidateError(error);
     }

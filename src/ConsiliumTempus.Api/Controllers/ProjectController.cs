@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
+using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
@@ -23,6 +24,7 @@ using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
+using ConsiliumTempus.Application.Project.Queries.GetAllowedMembers;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Application.Project.Queries.GetStatuses;
@@ -98,6 +100,21 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
+    [HasPermission(Permissions.ReadAllowedMembersFromProject)]
+    [HttpGet("{id:guid}/Allowed-Members")]
+    public async Task<IActionResult> GetAllowedMembers(GetAllowedMembersFromProjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var query = Mapper.Map<GetAllowedMembersFromProjectQuery>(request);
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return result.Match(
+            getAllowedMembersResult => Ok(Mapper.Map<GetAllowedMembersFromProjectResponse>(getAllowedMembersResult)),
+            Problem
+        );
+    }
+
     [HasPermission(Permissions.CreateProject)]
     [HttpPost]
     public async Task<IActionResult> Create(CreateProjectRequest request, CancellationToken cancellationToken)
@@ -111,9 +128,11 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         );
     }
 
+    [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsCollaborator)]
     [HasProjectAuthorization(ProjectAuthorizationLevel.IsProjectOwner)]
     [HttpPost("Add-Allowed-Member")]
-    public async Task<IActionResult> AddAllowedMember(AddAllowedMemberToProjectRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddAllowedMember(AddAllowedMemberToProjectRequest request,
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<AddAllowedMemberToProjectCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
@@ -155,7 +174,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
     [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.UpdateFavoritesProject)]
     [HttpPut("Favorites")]
-    public async Task<IActionResult> UpdateFavorites(UpdateFavoritesProjectRequest request, 
+    public async Task<IActionResult> UpdateFavorites(UpdateFavoritesProjectRequest request,
         CancellationToken cancellationToken)
     {
         var command = Mapper.Map<UpdateFavoritesProjectCommand>(request);

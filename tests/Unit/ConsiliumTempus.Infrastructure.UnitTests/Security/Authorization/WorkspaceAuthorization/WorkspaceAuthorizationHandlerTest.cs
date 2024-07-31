@@ -1,16 +1,16 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text.Json;
 using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Enums;
-using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Security.Authorization.WorkspaceAuthorization;
 using ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorization;
+using ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute.ReturnsExtensions;
 
@@ -47,8 +47,8 @@ public class WorkspaceAuthorizationHandlerTest
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(WorkspaceAuthorizationLevel.IsCollaborator) };
-        var user = new ClaimsPrincipal();
-        var context = new AuthorizationHandlerContext(requirements, user, null);
+        var userClaims = new ClaimsPrincipal();
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
 
         // Act
         await _uut.HandleAsync(context);
@@ -65,11 +65,11 @@ public class WorkspaceAuthorizationHandlerTest
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(WorkspaceAuthorizationLevel.IsCollaborator) };
-        var user = new ClaimsPrincipal();
-        user.AddIdentity(new ClaimsIdentity([
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
             new Claim(JwtRegisteredClaimNames.Sub, "")
         ]));
-        var context = new AuthorizationHandlerContext(requirements, user, null);
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
 
         // Act
         await _uut.HandleAsync(context);
@@ -86,11 +86,11 @@ public class WorkspaceAuthorizationHandlerTest
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(WorkspaceAuthorizationLevel.IsCollaborator) };
-        var user = new ClaimsPrincipal();
-        user.AddIdentity(new ClaimsIdentity([
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
             new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
         ]));
-        var context = new AuthorizationHandlerContext(requirements, user, null);
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
 
         _httpContextAccessor
             .HttpContext
@@ -108,23 +108,28 @@ public class WorkspaceAuthorizationHandlerTest
         context.HasSucceeded.Should().BeFalse();
     }
 
-    [Fact]
-    public async Task WorkspaceAuthorizationHandler_WhenRequestIsEmpty_ShouldSucceed()
+    [Theory]
+    [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
+    public async Task ProjectAuthorizationHandler_WhenRequestControllerIsEmpty_ShouldSucceed(
+        WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
+        WorkspaceAuthorizationHandlerData.Controller _1,
+        WorkspaceAuthorizationHandlerData.Method _2,
+        WorkspaceAuthorizationHandlerData.RequestLocation _3,
+        WorkspaceAuthorizationHandlerData.StringIdType _4)
     {
         // Arrange
-        var requirements = new[] { new WorkspaceAuthorizationRequirement(WorkspaceAuthorizationLevel.IsCollaborator) };
-        var user = new ClaimsPrincipal();
-        user.AddIdentity(new ClaimsIdentity([
+        var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
             new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
         ]));
-        var context = new AuthorizationHandlerContext(requirements, user, null);
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
 
-        var bodyStream = JsonSerializer.SerializeToUtf8Bytes(new Dictionary<string, string>());
         _httpContextAccessor
             .HttpContext!
             .Request
-            .Body
-            .Returns(new MemoryStream(bodyStream));
+            .RouteValues
+            .Returns(new RouteValueDictionary());
 
         // Act
         await _uut.HandleAsync(context);
@@ -134,116 +139,158 @@ public class WorkspaceAuthorizationHandlerTest
             .Received(2)
             .HttpContext;
         _workspaceProvider.DidNotReceive();
-
-        context.HasSucceeded.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task WorkspaceAuthorizationHandler_WhenRequestIdIsEmpty_ShouldSucceed()
-    {
-        // Arrange
-        var requirements = new[] { new WorkspaceAuthorizationRequirement(WorkspaceAuthorizationLevel.IsCollaborator) };
-        var user = new ClaimsPrincipal();
-        user.AddIdentity(new ClaimsIdentity([
-            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
-        ]));
-        var context = new AuthorizationHandlerContext(requirements, user, null);
-
-        const string stringId = "";
-        var body = new Dictionary<string, string> { ["id"] = stringId };
-        var bodyStream = JsonSerializer.SerializeToUtf8Bytes(body);
-        _httpContextAccessor
-            .HttpContext!
-            .Request
-            .Body
-            .Returns(new MemoryStream(bodyStream));
-
-        // Act
-        await _uut.HandleAsync(context);
-
-        // Assert
-        _ = _httpContextAccessor
-            .Received(2)
-            .HttpContext;
-        _workspaceProvider.DidNotReceive();
-
-        context.HasSucceeded.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task WorkspaceAuthorizationHandler_WhenRequestIdIsNotGuid_ShouldSucceed()
-    {
-        // Arrange
-        var requirements = new[] { new WorkspaceAuthorizationRequirement(WorkspaceAuthorizationLevel.IsCollaborator) };
-        var user = new ClaimsPrincipal();
-        user.AddIdentity(new ClaimsIdentity([
-            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
-        ]));
-        var context = new AuthorizationHandlerContext(requirements, user, null);
-
-        const string stringId = "not guid";
-        var body = new Dictionary<string, string> { ["id"] = stringId };
-        var bodyStream = JsonSerializer.SerializeToUtf8Bytes(body);
-        _httpContextAccessor
-            .HttpContext!
-            .Request
-            .Body
-            .Returns(new MemoryStream(bodyStream));
-
-        // Act
-        await _uut.HandleAsync(context);
-
-        // Assert
-        _ = _httpContextAccessor
-            .Received(2)
-            .HttpContext;
-        _workspaceProvider.DidNotReceive();
-
-        context.HasSucceeded.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task WorkspaceAuthorizationHandler_WhenWorkspaceIsNull_ShouldSucceed()
-    {
-        // Arrange
-        var requirements = new[] { new WorkspaceAuthorizationRequirement(WorkspaceAuthorizationLevel.IsCollaborator) };
-        var user = new ClaimsPrincipal();
-        user.AddIdentity(new ClaimsIdentity([
-            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
-        ]));
-        var context = new AuthorizationHandlerContext(requirements, user, null);
-
-        var stringId = Guid.NewGuid().ToString();
-        var body = new Dictionary<string, string> { ["id"] = stringId };
-        var bodyStream = JsonSerializer.SerializeToUtf8Bytes(body);
-        _httpContextAccessor
-            .HttpContext!
-            .Request
-            .Body
-            .Returns(new MemoryStream(bodyStream));
-
-        _workspaceProvider
-            .GetWithMemberships(Arg.Any<WorkspaceId>())
-            .ReturnsNull();
-
-        // Act
-        await _uut.HandleAsync(context);
-
-        // Assert
-        _ = _httpContextAccessor
-            .Received(2)
-            .HttpContext;
-        await _workspaceProvider
-            .Received(1)
-            .GetWithMemberships(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));
 
         context.HasSucceeded.Should().BeTrue();
     }
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task WorkspaceAuthorizationHandler_WhenNotAuthorized_ShouldFail(
-        WorkspaceAuthorizationLevel workspaceAuthorizationLevel)
+    public async Task ProjectAuthorizationHandler_WhenRequestMethodIsEmpty_ShouldSucceed(
+        WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
+        WorkspaceAuthorizationHandlerData.Controller controller,
+        WorkspaceAuthorizationHandlerData.Method _1,
+        WorkspaceAuthorizationHandlerData.RequestLocation _2,
+        WorkspaceAuthorizationHandlerData.StringIdType _3)
+    {
+        // Arrange
+        var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
+
+        _httpContextAccessor
+            .HttpContext!
+            .Request
+            .RouteValues
+            .Returns(new RouteValueDictionary { ["controller"] = controller.ToString() });
+
+        // Act
+        await _uut.HandleAsync(context);
+
+        // Assert
+        _ = _httpContextAccessor
+            .Received(2)
+            .HttpContext;
+        _workspaceProvider.DidNotReceive();
+
+        context.HasSucceeded.Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
+    public async Task WorkspaceAuthorizationHandler_WhenRequestIsEmpty_ShouldSucceed(
+        WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
+        WorkspaceAuthorizationHandlerData.Controller controller,
+        WorkspaceAuthorizationHandlerData.Method method,
+        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
+        WorkspaceAuthorizationHandlerData.StringIdType _1)
+    {
+        // Arrange
+        var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
+
+        Utils.Authorization.Workspace.MockEmptyHttpRequest(_httpContextAccessor, controller, method, requestLocation);
+
+        // Act
+        await _uut.HandleAsync(context);
+
+        // Assert
+        _ = _httpContextAccessor
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .HttpContext;
+        _workspaceProvider.DidNotReceive();
+
+        context.HasSucceeded.Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
+    public async Task WorkspaceAuthorizationHandler_WhenRequestIdIsEmpty_ShouldSucceed(
+        WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
+        WorkspaceAuthorizationHandlerData.Controller controller,
+        WorkspaceAuthorizationHandlerData.Method method,
+        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
+        WorkspaceAuthorizationHandlerData.StringIdType _1)
+    {
+        // Arrange
+        var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
+
+        const string stringId = "";
+        Utils.Authorization.Workspace.MockHttpRequest(
+            _httpContextAccessor,
+            controller,
+            method,
+            requestLocation,
+            stringId);
+
+        // Act
+        await _uut.HandleAsync(context);
+
+        // Assert
+        _ = _httpContextAccessor
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .HttpContext;
+        _workspaceProvider.DidNotReceive();
+
+        context.HasSucceeded.Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
+    public async Task WorkspaceAuthorizationHandler_WhenRequestIdIsNotGuid_ShouldSucceed(
+        WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
+        WorkspaceAuthorizationHandlerData.Controller controller,
+        WorkspaceAuthorizationHandlerData.Method method,
+        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
+        WorkspaceAuthorizationHandlerData.StringIdType _1)
+    {
+        // Arrange
+        var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
+
+        const string stringId = "not guid";
+        Utils.Authorization.Workspace.MockHttpRequest(
+            _httpContextAccessor,
+            controller,
+            method,
+            requestLocation,
+            stringId);
+
+        // Act
+        await _uut.HandleAsync(context);
+
+        // Assert
+        _ = _httpContextAccessor
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .HttpContext;
+        _workspaceProvider.DidNotReceive();
+
+        context.HasSucceeded.Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
+    public async Task WorkspaceAuthorizationHandler_WhenWorkspaceIsNull_ShouldSucceed(
+        WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
+        WorkspaceAuthorizationHandlerData.Controller controller,
+        WorkspaceAuthorizationHandlerData.Method method,
+        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
+        WorkspaceAuthorizationHandlerData.StringIdType stringIdType)
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
@@ -254,29 +301,61 @@ public class WorkspaceAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.NewGuid().ToString();
-        var body = new Dictionary<string, string> { ["id"] = stringId };
-        var bodyStream = JsonSerializer.SerializeToUtf8Bytes(body);
-        _httpContextAccessor
-            .HttpContext!
-            .Request
-            .Body
-            .Returns(new MemoryStream(bodyStream));
-
-        var workspace = WorkspaceFactory.Create();
-        _workspaceProvider
-            .GetWithMemberships(Arg.Any<WorkspaceId>())
-            .Returns(workspace);
+        Utils.Authorization.Workspace.MockHttpRequest(
+            _httpContextAccessor,
+            controller,
+            method,
+            requestLocation,
+            stringId);
 
         // Act
         await _uut.HandleAsync(context);
 
         // Assert
         _ = _httpContextAccessor
-            .Received(2)
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
             .HttpContext;
-        await _workspaceProvider
-            .Received(1)
-            .GetWithMemberships(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));
+        await Utils.Authorization.Workspace.VerifyWorkspaceProvider(_workspaceProvider, stringIdType, stringId);
+
+        context.HasSucceeded.Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
+    public async Task WorkspaceAuthorizationHandler_WhenNotAuthorized_ShouldFail(
+        WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
+        WorkspaceAuthorizationHandlerData.Controller controller,
+        WorkspaceAuthorizationHandlerData.Method method,
+        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
+        WorkspaceAuthorizationHandlerData.StringIdType stringIdType)
+    {
+        // Arrange
+        var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
+
+        var workspace = WorkspaceFactory.Create();
+        Utils.Authorization.Workspace.MockWorkspaceProvider(_workspaceProvider, workspace);
+
+        var stringId = workspace.Id.ToString();
+        Utils.Authorization.Workspace.MockHttpRequest(
+            _httpContextAccessor,
+            controller,
+            method,
+            requestLocation,
+            stringId);
+
+        // Act
+        await _uut.HandleAsync(context);
+
+        // Assert
+        _ = _httpContextAccessor
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .HttpContext;
+        await Utils.Authorization.Workspace.VerifyWorkspaceProvider(_workspaceProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().BeFalse();
     }
@@ -284,7 +363,11 @@ public class WorkspaceAuthorizationHandlerTest
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
     public async Task WorkspaceAuthorizationHandler_WhenIsAuthorized_ShouldSucceed(
-        WorkspaceAuthorizationLevel workspaceAuthorizationLevel)
+        WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
+        WorkspaceAuthorizationHandlerData.Controller controller,
+        WorkspaceAuthorizationHandlerData.Method method,
+        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
+        WorkspaceAuthorizationHandlerData.StringIdType stringIdType)
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
@@ -294,32 +377,27 @@ public class WorkspaceAuthorizationHandlerTest
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())
         ]));
         var context = new AuthorizationHandlerContext(requirements, userClaims, null);
-        
-        var workspace = WorkspaceFactory.Create(owner: user);
-        var stringId = workspace.Id.ToString();
-        var body = new Dictionary<string, string> { ["id"] = stringId };
-        var bodyStream = JsonSerializer.SerializeToUtf8Bytes(body);
-        _httpContextAccessor
-            .HttpContext!
-            .Request
-            .Body
-            .Returns(new MemoryStream(bodyStream));
 
+        var workspace = WorkspaceFactory.Create(owner: user);
         workspace.AddUserMembership(MembershipFactory.Create(user));
-        _workspaceProvider
-            .GetWithMemberships(Arg.Any<WorkspaceId>())
-            .Returns(workspace);
+        Utils.Authorization.Workspace.MockWorkspaceProvider(_workspaceProvider, workspace);
+
+        var stringId = workspace.Id.ToString();
+        Utils.Authorization.Workspace.MockHttpRequest(
+            _httpContextAccessor,
+            controller,
+            method,
+            requestLocation,
+            stringId);
 
         // Act
         await _uut.HandleAsync(context);
 
         // Assert
         _ = _httpContextAccessor
-            .Received(2)
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
             .HttpContext;
-        await _workspaceProvider
-            .Received(1)
-            .GetWithMemberships(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));
+        await Utils.Authorization.Workspace.VerifyWorkspaceProvider(_workspaceProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().BeTrue();
     }

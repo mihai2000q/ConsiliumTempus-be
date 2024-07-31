@@ -26,6 +26,8 @@ public enum Permissions
     ReadStatusesFromProject,
     UpdateStatusFromProject,
     RemoveStatusFromProject,
+    // Project - Allowed Members
+    ReadAllowedMembersFromProject,
     // Project Sprint
     CreateProjectSprint,
     ReadProjectSprint,

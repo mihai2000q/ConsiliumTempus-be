@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
+using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
@@ -22,6 +23,7 @@ using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
+using ConsiliumTempus.Application.Project.Queries.GetAllowedMembers;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Application.Project.Queries.GetStatuses;
@@ -44,6 +46,7 @@ public sealed class ProjectMappingConfig : IRegister
         GetOverviewMappings(config);
         GetCollectionMappings(config);
         GetStatusesMappings(config);
+        GetAllowedMembersMappings(config);
         CreateMappings(config);
         AddAllowedMemberMappings(config);
         AddStatusMappings(config);
@@ -132,6 +135,17 @@ public sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.UpdatedBy, src => src.Audit.UpdatedBy)
             .Map(dest => dest.UpdatedDateTime, src => src.Audit.UpdatedDateTime);
         config.NewConfig<UserAggregate, GetStatusesFromProjectResponse.UserResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.Email, src => src.Credentials.Email);
+    }
+
+    private static void GetAllowedMembersMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<GetAllowedMembersFromProjectRequest, GetAllowedMembersFromProjectQuery>();
+
+        config.NewConfig<GetAllowedMembersFromProjectResult, GetAllowedMembersFromProjectResponse>();
+        config.NewConfig<UserAggregate, GetAllowedMembersFromProjectResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);

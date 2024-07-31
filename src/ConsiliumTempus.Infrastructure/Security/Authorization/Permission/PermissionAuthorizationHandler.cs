@@ -77,7 +77,8 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.AddStatusToProject or 
             Permissions.ReadStatusesFromProject or 
             Permissions.RemoveStatusFromProject or 
-            Permissions.UpdateStatusFromProject => await workspaceProvider.GetByProject(ProjectId.Create(guidId)),
+            Permissions.UpdateStatusFromProject or
+            Permissions.ReadAllowedMembersFromProject => await workspaceProvider.GetByProject(ProjectId.Create(guidId)),
 
             Permissions.ReadProjectSprint or
             Permissions.UpdateProjectSprint or
@@ -135,6 +136,9 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.UpdateStatusFromProject => await HttpRequestReader.GetStringIdFromBody(request),
             Permissions.RemoveStatusFromProject => HttpRequestReader.GetStringIdFromRoute(request),
 
+            // Project - Allowed Members
+            Permissions.ReadAllowedMembersFromProject => HttpRequestReader.GetStringIdFromRoute(request),
+            
             // Project Sprint
             Permissions.CreateProjectSprint => await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()),
             Permissions.ReadProjectSprint => HttpRequestReader.GetStringIdFromRoute(request),

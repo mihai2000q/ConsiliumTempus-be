@@ -55,6 +55,9 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.UpdateStatusFromProject, RequestLocation.Body, null, StringIdType.Project);
             Add(Permissions.RemoveStatusFromProject, RequestLocation.Route, null, StringIdType.Project);
 
+            // Project - Allowed Members
+            Add(Permissions.ReadAllowedMembersFromProject, RequestLocation.Route, null, StringIdType.Project);
+
             // Project Sprint
             Add(Permissions.CreateProjectSprint, RequestLocation.Body, typeof(ProjectAggregate).ToCamelId(), StringIdType.Project);
             Add(Permissions.ReadProjectSprint, RequestLocation.Route, null, StringIdType.ProjectSprint);

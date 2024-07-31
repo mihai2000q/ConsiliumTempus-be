@@ -8,6 +8,7 @@ using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
+using ConsiliumTempus.Application.Project.Queries.GetAllowedMembers;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetStatuses;
 using ConsiliumTempus.Common.UnitTests.Project.Entities;
@@ -47,6 +48,13 @@ public static class ProjectResultFactory
         return new GetStatusesFromProjectResult(
             statuses ?? ProjectStatusFactory.CreateList(),
             totalCount);
+    }
+
+    public static GetAllowedMembersFromProjectResult CreateGetAllowedMembersFromProjectResult(
+        List<UserAggregate>? allowedMembers = null)
+    {
+        return new GetAllowedMembersFromProjectResult(
+            allowedMembers?.AsReadOnly() ?? UserFactory.CreateList().AsReadOnly());
     }
 
     public static CreateProjectResult CreateCreateProjectResult()

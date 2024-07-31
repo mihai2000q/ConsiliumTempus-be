@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Project.Queries.Get;
+using ConsiliumTempus.Application.Project.Queries.GetAllowedMembers;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Application.Project.Queries.GetStatuses;
@@ -7,16 +8,19 @@ namespace ConsiliumTempus.Common.UnitTests.Project;
 
 public static class ProjectQueryFactory
 {
-    public static GetProjectQuery CreateGetProjectQuery(
-        Guid? id = null)
+    public static GetProjectQuery CreateGetProjectQuery(Guid? id = null)
     {
         return new GetProjectQuery(id ?? Guid.NewGuid());
     }
 
-    public static GetOverviewProjectQuery CreateGetOverviewProjectQuery(
-        Guid? id = null)
+    public static GetOverviewProjectQuery CreateGetOverviewProjectQuery(Guid? id = null)
     {
         return new GetOverviewProjectQuery(id ?? Guid.NewGuid());
+    }
+
+    public static GetAllowedMembersFromProjectQuery CreateGetAllowedMembersFromProjectQuery(Guid? id = null)
+    {
+        return new GetAllowedMembersFromProjectQuery(id ?? Guid.NewGuid());
     }
 
     public static GetCollectionProjectQuery CreateGetCollectionProjectQuery(
@@ -34,10 +38,8 @@ public static class ProjectQueryFactory
             workspaceId);
     }
     
-    public static GetStatusesFromProjectQuery CreateGetStatusesFromProjectQuery(
-        Guid? id = null)
+    public static GetStatusesFromProjectQuery CreateGetStatusesFromProjectQuery(Guid? id = null)
     {
-        return new GetStatusesFromProjectQuery(
-            id ?? Guid.NewGuid());
+        return new GetStatusesFromProjectQuery(id ?? Guid.NewGuid());
     }
 }

@@ -118,7 +118,8 @@ internal class ProjectData : ITestData
             Users[0],
             "Win NBA",
             "This is an elaborate plan to win NBA",
-            favorites: [Users[0]]),
+            favorites: [Users[0]],
+            allowedMembers: [Users[0], Users[3]]),
         ProjectFactory.Create(
             Workspaces[1],
             Users[1],
@@ -151,6 +152,12 @@ internal class ProjectData : ITestData
             false,
             ProjectLifecycle.Archived,
             favorites: [Users[0]]),
+
+        ProjectFactory.Create(
+            Workspaces[2],
+            Users[1],
+            "Something Private - owner not anymore",
+            description: "but the owner used to be a collaborator, however this was fixed already"),
 
         ProjectFactory.Create(
             Workspaces[2],
