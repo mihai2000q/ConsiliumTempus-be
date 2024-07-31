@@ -15,7 +15,8 @@ import {
   getWorkspaces,
   inviteCollaborator,
   inviteCollaboratorWithRegister,
-  inviteMeToWorkspace, inviteThemToWorkspace
+  inviteMeToWorkspace,
+  inviteThemToWorkspace
 } from "../utils/workspaces.utils";
 import { PersonalWorkspaceName } from "../utils/constants";
 import { deleteUser, registerUser } from "../utils/users.utils";
@@ -25,7 +26,6 @@ import UpdateOverviewWorkspaceRequest from "../types/requests/workspace/UpdateOv
 import UpdateFavoritesWorkspaceRequest from "../types/requests/workspace/UpdateFavoritesWorkspaceRequest";
 import InviteCollaboratorToWorkspaceRequest from "../types/requests/workspace/InviteCollaboratorToWorkspaceRequest";
 import AcceptInvitationToWorkspaceRequest from "../types/requests/workspace/AcceptInvitationToWorkspaceRequest";
-import LeaveWorkspaceRequest from "../types/requests/workspace/LeaveWorkspaceRequest";
 import UpdateOwnerWorkspaceRequest from "../types/requests/workspace/UpdateOwnerWorkspaceRequest";
 import UpdateCollaboratorFromWorkspaceRequest from "../types/requests/workspace/UpdateCollaboratorFromWorkspaceRequest";
 
@@ -711,31 +711,6 @@ test.describe('should allow operations on the workspace entity', () => {
     expect(invitations).toHaveLength(0)
   })
 
-  test('should leave workspace', async ({ request }) => {
-    const workspace = await inviteMeToWorkspace(request, "somebody_else@yahoo.com", EMAIL)
-
-    const body: LeaveWorkspaceRequest = {
-      id: workspace.id,
-    }
-    const response = await request.post('/api/workspaces/leave', {
-      ...useToken(),
-      data: body
-    })
-
-    expect(response.ok()).toBeTruthy()
-
-    expect(await response.json()).toStrictEqual({
-      message: expect.any(String)
-    })
-
-    const workspaces = await getWorkspaces(request)
-    expect(workspaces).toEqual(expect.not.arrayContaining([
-      {
-        id: workspace.id
-      }
-    ]))
-  })
-
   test('should update workspace', async ({ request }) => {
     const createWorkspaceRequest: CreateWorkspaceRequest = {
       name: "Some workspace",
@@ -906,5 +881,24 @@ test.describe('should allow operations on the workspace entity', () => {
 
     const newWorkspaces = await getWorkspaces(request)
     expect(newWorkspaces).not.toStrictEqual(expect.arrayContaining([workspace]))
+  })
+
+  test('should leave workspace', async ({ request }) => {
+    const workspace = await inviteMeToWorkspace(request, "somebody_else@yahoo.com", EMAIL)
+
+    const response = await request.delete(`/api/workspaces/${workspace.id}/leave`, useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const workspaces = await getWorkspaces(request)
+    expect(workspaces).toEqual(expect.not.arrayContaining([
+      {
+        id: workspace.id
+      }
+    ]))
   })
 })

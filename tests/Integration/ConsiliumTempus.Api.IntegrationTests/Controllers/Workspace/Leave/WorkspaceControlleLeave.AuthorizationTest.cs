@@ -47,6 +47,6 @@ public class WorkspaceControllerLeaveAuthorizationTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Post("api/workspaces/leave", request);
+        return await Client.Delete($"api/workspaces/{request.Id}/leave");
     }
 }

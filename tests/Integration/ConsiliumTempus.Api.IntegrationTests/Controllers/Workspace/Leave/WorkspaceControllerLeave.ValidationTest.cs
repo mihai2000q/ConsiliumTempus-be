@@ -20,7 +20,7 @@ public class WorkspaceControllerLeaveValidationTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Post("api/workspaces/Leave", request);
+        var outcome = await Client.Delete($"api/workspaces/{request.Id}/leave");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -33,7 +33,7 @@ public class WorkspaceControllerLeaveValidationTest(WebAppFactory factory)
         var request = WorkspaceRequestFactory.CreateLeaveWorkspaceRequest(id: Guid.Empty);
 
         // Act
-        var outcome = await Client.Post("api/workspaces/Leave", request);
+        var outcome = await Client.Delete($"api/workspaces/{request.Id}/leave");
 
         // Assert
         await outcome.ValidateValidationErrors();
