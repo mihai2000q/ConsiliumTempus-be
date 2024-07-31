@@ -77,6 +77,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
                 "AddStatus" or
                 "Update" or
                 "UpdateFavorites" or
+                "UpdatePrivacy" or
                 "UpdateOverview" or
                 "UpdateStatus" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.Project),
 
