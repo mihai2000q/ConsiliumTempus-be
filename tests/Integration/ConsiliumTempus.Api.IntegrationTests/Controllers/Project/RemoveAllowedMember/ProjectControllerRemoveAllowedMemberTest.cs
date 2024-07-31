@@ -45,6 +45,25 @@ public class ProjectControllerRemoveAllowedMemberTest(WebAppFactory factory)
     }
 
     [Fact]
+    public async Task RemoveAllowedMemberFromProject_WhenRequestHasCurrentUserAsAllowedMember_ShouldReturnRemoveYourselfError()
+    {
+        // Arrange
+        var project = ProjectData.Projects[^2];
+        var user = project.AllowedMembers[0];
+        var request = ProjectRequestFactory.CreateRemoveAllowedMemberFromProjectRequest(
+            project.Id.Value,
+            user.Id.Value);
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Delete($"api/projects/" +
+                                          $"{request.Id}/Remove-Allowed-Member/{request.AllowedMemberId}");
+
+        // Assert
+        await outcome.ValidateError(Errors.Project.RemoveYourself);
+    }
+
+    [Fact]
     public async Task RemoveAllowedMemberFromProject_WhenAllowedMemberIsNull_ShouldReturnAllowedMemberNotFoundError()
     {
         // Arrange

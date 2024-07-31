@@ -21,6 +21,10 @@ public static partial class Errors
         public static Error AlreadyAllowedMember => Error.Conflict(
             "Project.AlreadyAllowedMember",
             "This user is already an allowed member");
+
+        public static Error RemoveYourself => Error.Conflict(
+            "Project.RemoveYourself",
+            "You cannot remove yourself from allowed members");
     }
     
     public static class ProjectStatus
