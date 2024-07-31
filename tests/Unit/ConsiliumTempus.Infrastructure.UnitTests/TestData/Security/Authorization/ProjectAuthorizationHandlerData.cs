@@ -104,7 +104,7 @@ public static class ProjectAuthorizationHandlerData
             Add(level, RequestLocation.Body, null, controller, "AddAllowedMember", stringIdType);
             Add(level, RequestLocation.Body, null, controller, "UpdateOwner", stringIdType);
             Add(level, RequestLocation.Body, null, controller, "UpdatePrivacy", stringIdType);
-            Add(level, RequestLocation.Body, null, controller, "RemoveAllowedMember", stringIdType);
+            Add(level, RequestLocation.Route, null, controller, "RemoveAllowedMember", stringIdType);
         }
     }
 }

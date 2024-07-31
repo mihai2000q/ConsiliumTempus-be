@@ -702,7 +702,7 @@ test.describe('should allow operations on the project entity', () => {
   })
 
   test('should remove allowed member from project', async ({ request }) => {
-    const [project, allowedMember] = await addAllowedMemberToProject(request, WORKSPACE_ID)
+    const [project, allowedMember] = await addAllowedMemberToProject(request, "new_user@gmail.com", WORKSPACE_ID)
 
     const response = await request.delete(
       `/api/projects/${project.id}/remove-allowed-member/${allowedMember.id}`,

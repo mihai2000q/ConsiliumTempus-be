@@ -14,14 +14,15 @@ public class ProjectControllerRemoveAllowedMemberValidationTest(WebAppFactory fa
     public async Task RemoveAllowedMemberFromProject_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var project = ProjectData.Projects[^1];
-        var collaborator = ProjectData.Users[4];
+        var project = ProjectData.Projects[^2];
+        var user = project.Owner;
+        var allowedMember = project.AllowedMembers.First(u => u != user);
         var request = ProjectRequestFactory.CreateRemoveAllowedMemberFromProjectRequest(
             project.Id.Value,
-            collaborator.Id.Value);
+            allowedMember.Id.Value);
 
         // Act
-        Client.UseCustomToken(project.Owner);
+        Client.UseCustomToken(user);
         var outcome = await Client.Delete($"api/projects/" +
                                           $"{request.Id}/Remove-Allowed-Member/{request.AllowedMemberId}");
 

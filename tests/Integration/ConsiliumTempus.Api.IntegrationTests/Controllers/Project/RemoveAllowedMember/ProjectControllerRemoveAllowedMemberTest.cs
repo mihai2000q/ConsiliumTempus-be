@@ -19,7 +19,7 @@ public class ProjectControllerRemoveAllowedMemberTest(WebAppFactory factory)
     public async Task RemoveAllowedMemberFromProject_WhenSucceeds_ShouldRemoveAllowedMemberFromProjectAndReturnSuccessResponse()
     {
         // Arrange
-        var project = ProjectData.Projects[^1];
+        var project = ProjectData.Projects[^2];
         var user = project.Owner;
         var allowedMember = project.AllowedMembers.First(u => u != user);
         var request = ProjectRequestFactory.CreateRemoveAllowedMemberFromProjectRequest(
