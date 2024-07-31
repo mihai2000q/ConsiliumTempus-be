@@ -118,7 +118,8 @@ internal class ProjectData : ITestData
             Users[0],
             "Win NBA",
             "This is an elaborate plan to win NBA",
-            favorites: [Users[0]]),
+            favorites: [Users[0]],
+            allowedMembers: [Users[0], Users[3]]),
         ProjectFactory.Create(
             Workspaces[1],
             Users[1],

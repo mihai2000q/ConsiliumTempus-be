@@ -13,6 +13,9 @@
   * [Get Statuses](#get-statuses)
     * [Get Statuses From Project Request](#get-statuses-from-project-request)
     * [Get Statuses From Project Request](#get-statuses-from-project-response)
+  * [Get Allowed Members](#get-allowed-members)
+    * [Get Allowed Members From Project Request](#get-allowed-members-from-project-request)
+    * [Get Allowed Members From Project Request](#get-allowed-members-from-project-response)
   * [Create](#create)
     * [Create Project Request](#create-project-request)
     * [Create Project Response](#create-project-response)
@@ -263,6 +266,45 @@ Returns the project statuses and their total count.
     }
   ],
   "totalCount": 5
+}
+```
+
+### Get Allowed Members
+
+Only Members of the workspace can read the allowed members of a project
+([Read Allowed Members From Project Permission](../Security.md/#permissions))
+
+When the project is private, only allowed members can read the allowed members
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+
+```js
+GET {{host}}/api/projects/{id}/allowed-members
+```
+
+- **id** is a 36-character string
+
+#### Get Allowed Members From Project Request
+
+It sends the id of the project on the route of the request.
+
+#### Get Allowed Members From Project Response
+
+Returns the allowed members.
+
+```json
+{
+  "allowedMembers": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "name": "Michael Jordan",
+      "email": "michael@jordan.com"
+    },
+    {
+      "id": "20000000-0000-0000-0000-000000000000",
+      "name": "Stephen Curry",
+      "email": "stephen@curry.com"
+    }
+  ]
 }
 ```
 

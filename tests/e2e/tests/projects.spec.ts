@@ -7,7 +7,8 @@ import {
   addProjectStatus,
   create2ProjectsIn2DifferentWorkspaces,
   createProject,
-  createProjects, getAllowedMembers,
+  createProjects,
+  getAllowedMembers,
   getProject,
   getProjectOverview,
   getProjects,
@@ -23,10 +24,11 @@ import UpdateFavoritesProjectRequest from "../types/requests/project/UpdateFavor
 import AddAllowedMemberToProjectRequest from "../types/requests/project/AddAllowedMemberToProjectRequest";
 
 test.describe('should allow operations on the project entity', () => {
+  const EMAIL = "michaeljordan@example.com"
   let WORKSPACE_ID: string
 
   test.beforeEach('should register user and get workspace id', async ({ request }) => {
-    process.env.API_TOKEN = (await registerUser(request)).token
+    process.env.API_TOKEN = (await registerUser(request, EMAIL)).token
     WORKSPACE_ID = (await getPersonalWorkspace(request)).id
   })
 
@@ -315,6 +317,31 @@ test.describe('should allow operations on the project entity', () => {
     })
   })
 
+  test('should get allowed members from project', async ({ request }) => {
+    const createProjectRequest: CreateProjectRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "Project",
+      isPrivate: true
+    }
+    const project = await createProject(request, createProjectRequest)
+
+    const response = await request.get(`/api/projects/${project.id}/allowed-members`, useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    const json = await response.json()
+    expect(json.allowedMembers).toHaveLength(1)
+    expect(json).toStrictEqual({
+      allowedMembers: [
+        {
+          id: expect.any(String),
+          name: expect.any(String),
+          email: EMAIL
+        }
+      ]
+    })
+  })
+
   test('should create project', async ({ request }) => {
     const body: CreateProjectRequest = {
       workspaceId: WORKSPACE_ID,
@@ -374,15 +401,20 @@ test.describe('should allow operations on the project entity', () => {
       message: expect.any(String)
     })
 
-    /*const members = await getAllowedMembers(request, body.id)
+    const members = await getAllowedMembers(request, body.id)
     expect(members).toHaveLength(2)
-    expect(members).toStrictEqual(expect.arrayContaining([
+    expect(members).toStrictEqual([
+      {
+        id: expect.any(String),
+        name: expect.any(String),
+        email: EMAIL
+      },
       {
         id: collaborator.id,
-        name: collaborator.name,
+        name: collaborator.firstName + " " + collaborator.lastName,
         email: collaborator.email,
       }
-    ]))*/
+    ])
   })
 
   test('should add status to project', async ({ request }) => {

@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
+using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
@@ -21,6 +22,7 @@ using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.Project.Queries.Get;
+using ConsiliumTempus.Application.Project.Queries.GetAllowedMembers;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Application.Project.Queries.GetOverview;
 using ConsiliumTempus.Application.Project.Queries.GetStatuses;
@@ -69,6 +71,15 @@ internal static partial class Utils
         internal static bool AssertGetStatusesFromProjectQuery(
             GetStatusesFromProjectQuery query,
             GetStatusesFromProjectRequest request)
+        {
+            query.Id.Should().Be(request.Id);
+
+            return true;
+        }
+
+        internal static bool AssertGetAllowedMembersFromProjectQuery(
+            GetAllowedMembersFromProjectQuery query,
+            GetAllowedMembersFromProjectRequest request)
         {
             query.Id.Should().Be(request.Id);
 
@@ -209,6 +220,14 @@ internal static partial class Utils
             response.TotalCount.Should().Be(result.TotalCount);
         }
 
+        internal static void AssertGetAllowedMembersResponse(
+            GetAllowedMembersFromProjectResponse response,
+            GetAllowedMembersFromProjectResult result)
+        {
+            response.AllowedMembers.Zip(result.AllowedMembers)
+                .Should().AllSatisfy(p => AssertUserResponse(p.First, p.Second));
+        }
+
         private static void AssertProjectStatusResponse(
             GetProjectResponse.ProjectStatusResponse? response,
             ProjectStatus? projectStatus)
@@ -316,6 +335,15 @@ internal static partial class Utils
             }
 
             userResponse!.Id.Should().Be(user.Id.Value);
+            userResponse.Name.Should().Be(user.Name.Value);
+            userResponse.Email.Should().Be(user.Credentials.Email);
+        }
+
+        private static void AssertUserResponse(
+            GetAllowedMembersFromProjectResponse.UserResponse userResponse,
+            UserAggregate user)
+        {
+            userResponse.Id.Should().Be(user.Id.Value);
             userResponse.Name.Should().Be(user.Name.Value);
             userResponse.Email.Should().Be(user.Credentials.Email);
         }

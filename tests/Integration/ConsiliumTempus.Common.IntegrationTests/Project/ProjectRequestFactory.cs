@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.Project.AddStatus;
 using ConsiliumTempus.Api.Contracts.Project.Create;
 using ConsiliumTempus.Api.Contracts.Project.Delete;
 using ConsiliumTempus.Api.Contracts.Project.Get;
+using ConsiliumTempus.Api.Contracts.Project.GetAllowedMembers;
 using ConsiliumTempus.Api.Contracts.Project.GetCollection;
 using ConsiliumTempus.Api.Contracts.Project.GetOverview;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
@@ -54,6 +55,14 @@ public static class ProjectRequestFactory
     public static GetStatusesFromProjectRequest CreateGetStatusesFromProjectRequest(Guid? id = null)
     {
         return new GetStatusesFromProjectRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
+    }
+
+    public static GetAllowedMembersFromProjectRequest CreateGetAllowedMembersFromProjectRequest(Guid? id = null)
+    {
+        return new GetAllowedMembersFromProjectRequest
         {
             Id = id ?? Guid.NewGuid()
         };

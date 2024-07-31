@@ -1,8 +1,9 @@
 import { APIRequestContext, expect } from "@playwright/test";
 import { useToken } from "./utils";
 import CreateProjectRequest from "../types/requests/project/CreateProjectRequest";
-import { createWorkspace, getPersonalWorkspace } from "./workspaces.utils";
+import { addCollaboratorToWorkspace, createWorkspace, getPersonalWorkspace } from "./workspaces.utils";
 import AddStatusToProjectRequest from "../types/requests/project/AddStatusToProjectRequest";
+import AddAllowedMemberToProjectRequest from "../types/requests/project/AddAllowedMemberToProjectRequest";
 
 export async function getProject(request: APIRequestContext, projectId: string) {
   const response = await request.get(`/api/projects/${projectId}`, useToken())
