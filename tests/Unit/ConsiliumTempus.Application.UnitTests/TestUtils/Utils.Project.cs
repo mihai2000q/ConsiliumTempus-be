@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.LeavePrivate;
 using ConsiliumTempus.Application.Project.Commands.RemoveAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
@@ -102,6 +103,18 @@ internal static partial class Utils
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             return true;
+        }
+
+        internal static void AssertFromLeavePrivateCommand(
+            ProjectAggregate project,
+            LeavePrivateProjectCommand command,
+            UserAggregate user)
+        {
+            project.Id.Value.Should().Be(command.Id);
+            project.AllowedMembers.Should().NotContain(u => u == user);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertFromRemoveAllowedMemberCommand(

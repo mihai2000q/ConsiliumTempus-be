@@ -49,7 +49,7 @@ For database design checkout the [Workspace Diagram](../../database-diagrams/agg
 
 - **Not Found** when the workspace cannot be found
 - **Delete Personal Workspace** when the workspace is personal, it cannot be deleted (not even by their owner)
-- **Leave Owned Workspace** when the workspace cannot be left by their owner
+- **Leave Owned** when the workspace cannot be left by their owner
 - **Collaborator Not Found** when the collaborator cannot be found within the workspace
 
 ### Value Objects

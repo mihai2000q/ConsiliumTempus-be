@@ -57,6 +57,7 @@ For database design checkout the [Project Diagram](../../database-diagrams/aggre
 - **Allowed Member Not Found** when the allowed member cannot be found
 - **Not Private** when the project is not private
 - **Already Allowed Member** when the user is already an allowed member of the project
+- **Leave Owned** when the user is trying to leave from the allowed members of a project that they own
 - **Remove Yourself** when the user tries to remove himself from the allowed members of the project
 
 ### Domain Events

@@ -22,6 +22,10 @@ public static partial class Errors
             "Project.AlreadyAllowedMember",
             "This user is already an allowed member");
 
+        public static Error LeaveOwned => Error.Conflict(
+            "Project.LeaveOwned",
+            "Projects cannot be left by their owners");
+
         public static Error RemoveYourself => Error.Conflict(
             "Project.RemoveYourself",
             "You cannot remove yourself from allowed members");

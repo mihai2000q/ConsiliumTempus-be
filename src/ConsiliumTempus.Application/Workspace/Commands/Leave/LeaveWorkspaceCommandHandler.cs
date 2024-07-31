@@ -20,10 +20,8 @@ public sealed class LeaveWorkspaceCommandHandler(
             cancellationToken);
         if (workspace is null) return Errors.Workspace.NotFound;
 
-        // TODO: Remove this, and use the memberships
         var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
-
-        if (workspace.Owner == user) return Errors.Workspace.LeaveOwnedWorkspace;
+        if (workspace.Owner == user) return Errors.Workspace.LeaveOwned;
 
         var membership = workspace.Memberships.Single(m => m.User == user);
         workspace.RemoveUserMembership(membership);

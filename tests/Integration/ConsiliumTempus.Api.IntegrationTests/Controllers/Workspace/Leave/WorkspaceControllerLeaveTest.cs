@@ -52,7 +52,7 @@ public class WorkspaceControllerLeaveTest(WebAppFactory factory)
         var outcome = await Client.Post("api/workspaces/Leave", request);
 
         // Assert
-        await outcome.ValidateError(Errors.Workspace.LeaveOwnedWorkspace);
+        await outcome.ValidateError(Errors.Workspace.LeaveOwned);
 
         workspace.Owner.Should().Be(user);
     }
