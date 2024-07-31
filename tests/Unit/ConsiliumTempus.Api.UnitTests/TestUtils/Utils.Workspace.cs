@@ -10,6 +10,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Leave;
 using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOwner;
@@ -20,6 +21,7 @@ using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
@@ -145,6 +147,17 @@ internal static partial class Utils
         {
             command.Id.Should().Be(request.Id);
             command.Name.Should().Be(request.Name);
+
+            return true;
+        }
+
+        internal static bool AssertUpdateCollaboratorCommand(
+            UpdateCollaboratorFromWorkspaceCommand command,
+            UpdateCollaboratorFromWorkspaceRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.CollaboratorId.Should().Be(request.CollaboratorId);
+            command.WorkspaceRole.Should().Be(request.WorkspaceRole);
 
             return true;
         }

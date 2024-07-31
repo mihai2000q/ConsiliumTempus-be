@@ -11,6 +11,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Leave;
 using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOwner;
@@ -23,6 +24,7 @@ using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
@@ -566,6 +568,53 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<UpdateWorkspaceCommand>(
                 command => Utils.Workspace.AssertUpdateCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task UpdateCollaborator_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateUpdateCollaboratorFromWorkspaceRequest();
+
+        var result = WorkspaceResultFactory.CreateUpdateCollaboratorFromWorkspaceResult();
+        _mediator
+            .Send(Arg.Any<UpdateCollaboratorFromWorkspaceCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.UpdateCollaborator(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateCollaboratorFromWorkspaceCommand>(command =>
+                Utils.Workspace.AssertUpdateCollaboratorCommand(command, request)));
+
+        var response = outcome.ToResponse<UpdateCollaboratorFromWorkspaceResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task UpdateCollaborator_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateUpdateCollaboratorFromWorkspaceRequest();
+
+        var error = Errors.Workspace.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdateCollaboratorFromWorkspaceCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.UpdateCollaborator(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateCollaboratorFromWorkspaceCommand>(command =>
+                Utils.Workspace.AssertUpdateCollaboratorCommand(command, request)));
 
         outcome.ValidateError(error);
     }

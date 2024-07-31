@@ -12,6 +12,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Leave;
 using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
+using ConsiliumTempus.Api.Contracts.Workspace.UpdateCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateFavorites;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOwner;
@@ -22,6 +23,7 @@ using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
+using ConsiliumTempus.Application.Workspace.Commands.UpdateCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
@@ -185,6 +187,20 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
         return result.Match(
             updateResult => Ok(Mapper.Map<UpdateWorkspaceResponse>(updateResult)),
+            Problem
+        );
+    }
+    
+    [HasPermission(Permissions.UpdateCollaboratorFromWorkspace)]
+    [HttpPut("Collaborator")]
+    public async Task<IActionResult> UpdateCollaborator(UpdateCollaboratorFromWorkspaceRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateCollaboratorFromWorkspaceCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateCollaboratorResult => Ok(Mapper.Map<UpdateCollaboratorFromWorkspaceResponse>(updateCollaboratorResult)),
             Problem
         );
     }

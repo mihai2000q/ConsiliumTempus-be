@@ -404,6 +404,31 @@ Sends body data that the new workspace needs to be updated.
 
 Returns a confirmation message that the workspace has been updated successfully.
 
+### Update Collaborator
+
+Only admins that are part of the workspace can update a collaborator
+([Update Collaborator From Workspace Permission](../Security.md/#permissions)).
+
+```js
+PUT {{host}}/api/workspaces/collaborator
+```
+
+#### Update Collaborator Workspace Request
+
+Sends body data needed to update a collaborator.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "collaboratorId": "This is the new description of the workspace overview",
+  "workspaceRole": "Member"
+}
+```
+
+#### Update Collaborator Workspace Response
+
+Returns a confirmation message that the collaborator has been updated successfully.
+
 ### Update Favorites
 
 Anyone that is part of the workspace can add it to their favorites
