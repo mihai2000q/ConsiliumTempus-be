@@ -21,7 +21,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
     }
 
-    public async Task<WorkspaceAggregate?> GetWithMemberships(
+    public async Task<WorkspaceAggregate?> GetWithCollaborators(
         WorkspaceId id,
         CancellationToken cancellationToken = default)
     {
@@ -39,7 +39,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
     }
     
-    public async Task<WorkspaceAggregate?> GetWithMembershipsAndInvitations(
+    public async Task<WorkspaceAggregate?> GetWithCollaboratorsAndInvitations(
         WorkspaceId id,
         CancellationToken cancellationToken = default)
     {
@@ -76,7 +76,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .CountAsync(cancellationToken);
     }
 
-    public async Task<List<WorkspaceAggregate>> GetListByUserWithMemberships(UserAggregate user,
+    public async Task<List<WorkspaceAggregate>> GetListByUserWithCollaborators(UserAggregate user,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Workspaces

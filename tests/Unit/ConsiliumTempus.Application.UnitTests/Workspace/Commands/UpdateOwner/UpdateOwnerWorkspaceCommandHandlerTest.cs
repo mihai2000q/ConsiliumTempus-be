@@ -33,7 +33,7 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
         var owner = UserFactory.Create();
         workspace.AddUserMembership(MembershipFactory.Create(owner));
         _workspaceRepository
-            .GetWithMemberships(Arg.Any<WorkspaceId>())
+            .GetWithCollaborators(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         var command = WorkspaceCommandFactory.CreateUpdateOwnerWorkspaceCommand(
@@ -46,7 +46,7 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMemberships(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+            .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateOwnerWorkspaceResult());
@@ -63,7 +63,7 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
 
         var workspace = WorkspaceFactory.Create();
         _workspaceRepository
-            .GetWithMemberships(Arg.Any<WorkspaceId>())
+            .GetWithCollaborators(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         // Act
@@ -72,7 +72,7 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMemberships(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+            .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.Workspace.CollaboratorNotFound);
     }
@@ -84,7 +84,7 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateUpdateOwnerWorkspaceCommand();
 
         _workspaceRepository
-            .GetWithMemberships(Arg.Any<WorkspaceId>())
+            .GetWithCollaborators(Arg.Any<WorkspaceId>())
             .ReturnsNull();
 
         // Act
@@ -93,7 +93,7 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMemberships(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+            .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

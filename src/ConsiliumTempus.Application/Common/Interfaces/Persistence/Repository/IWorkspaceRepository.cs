@@ -11,7 +11,7 @@ public interface IWorkspaceRepository
 {
     Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default);
 
-    Task<WorkspaceAggregate?> GetWithMemberships(
+    Task<WorkspaceAggregate?> GetWithCollaborators(
         WorkspaceId id,
         CancellationToken cancellationToken = default);
 
@@ -19,7 +19,7 @@ public interface IWorkspaceRepository
         WorkspaceId id,
         CancellationToken cancellationToken = default);
 
-    Task<WorkspaceAggregate?> GetWithMembershipsAndInvitations(
+    Task<WorkspaceAggregate?> GetWithCollaboratorsAndInvitations(
         WorkspaceId id,
         CancellationToken cancellationToken = default);
 
@@ -35,7 +35,7 @@ public interface IWorkspaceRepository
         IEnumerable<IFilter<WorkspaceAggregate>> filters,
         CancellationToken cancellationToken = default);
 
-    Task<List<WorkspaceAggregate>> GetListByUserWithMemberships(UserAggregate user,
+    Task<List<WorkspaceAggregate>> GetListByUserWithCollaborators(UserAggregate user,
         CancellationToken cancellationToken = default);
 
     Task<List<UserAggregate>> GetCollaborators(

@@ -15,7 +15,7 @@ public sealed class LeaveWorkspaceCommandHandler(
     public async Task<ErrorOr<LeaveWorkspaceResult>> Handle(LeaveWorkspaceCommand command,
         CancellationToken cancellationToken)
     {
-        var workspace = await workspaceRepository.GetWithMemberships(
+        var workspace = await workspaceRepository.GetWithCollaborators(
             WorkspaceId.Create(command.Id),
             cancellationToken);
         if (workspace is null) return Errors.Workspace.NotFound;

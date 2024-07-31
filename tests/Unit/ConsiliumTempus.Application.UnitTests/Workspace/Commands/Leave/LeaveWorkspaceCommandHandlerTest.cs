@@ -42,7 +42,7 @@ public class LeaveWorkspaceCommandHandlerTest
         var workspace = WorkspaceFactory.Create();
         workspace.AddUserMembership(MembershipFactory.Create(user));
         _workspaceRepository
-            .GetWithMemberships(Arg.Any<WorkspaceId>())
+            .GetWithCollaborators(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         var command = WorkspaceCommandFactory.CreateLeaveWorkspaceCommand(
@@ -54,7 +54,7 @@ public class LeaveWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMemberships(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+            .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
         await _currentUserProvider
             .Received(1)
             .GetCurrentUserAfterPermissionCheck();
@@ -78,7 +78,7 @@ public class LeaveWorkspaceCommandHandlerTest
 
         var workspace = WorkspaceFactory.Create(owner: user);
         _workspaceRepository
-            .GetWithMemberships(Arg.Any<WorkspaceId>())
+            .GetWithCollaborators(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
         // Act
@@ -87,7 +87,7 @@ public class LeaveWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMemberships(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+            .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
         await _currentUserProvider
             .Received(1)
             .GetCurrentUserAfterPermissionCheck();
@@ -102,7 +102,7 @@ public class LeaveWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateLeaveWorkspaceCommand();
 
         _workspaceRepository
-            .GetWithMemberships(Arg.Any<WorkspaceId>())
+            .GetWithCollaborators(Arg.Any<WorkspaceId>())
             .ReturnsNull();
 
         // Act
@@ -111,7 +111,7 @@ public class LeaveWorkspaceCommandHandlerTest
         // Assert
         await _workspaceRepository
             .Received(1)
-            .GetWithMemberships(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+            .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
         _currentUserProvider.DidNotReceive();
 
         outcome.ValidateError(Errors.Workspace.NotFound);
