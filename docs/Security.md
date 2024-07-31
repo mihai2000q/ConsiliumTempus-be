@@ -96,6 +96,7 @@ The permissions will be classified on their respective component:
   - Read Statuses
   - Update Status
   - Remove Status
+  - Read Allowed Members
 - Project Sprint
   - Create
   - Read
@@ -144,6 +145,7 @@ The Access Control List of the system is the following:
 | Read Statuses From Project        |      |   X    |   X   |
 | Update Status From Project        |      |   X    |   X   |
 | Remove Status From Project        |      |        |   X   |
+| Read Allowed Members From Project |      |   X    |   X   |
 | Create Project Sprint             |      |        |   X   |
 | Read Project Sprint               |  X   |   X    |   X   |
 | Read Collection Project Sprint    |  X   |   X    |   X   |

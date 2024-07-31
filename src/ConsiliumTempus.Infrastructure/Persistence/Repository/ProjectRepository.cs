@@ -25,7 +25,10 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
     public async Task<ProjectAggregate?> GetWithAllowedMembers(ProjectId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.Projects
-            .Include(p => p.AllowedMembers)
+            .Include(p => p.AllowedMembers
+                .OrderBy(u => u.FirstName.Value)
+                .ThenBy(u => u.LastName.Value)
+                .ThenBy(u => u.Credentials.Email))
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
