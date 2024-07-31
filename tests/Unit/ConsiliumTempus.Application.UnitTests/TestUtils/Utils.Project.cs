@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.Project.Commands.Create;
 using ConsiliumTempus.Application.Project.Commands.Delete;
+using ConsiliumTempus.Application.Project.Commands.RemoveAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 using ConsiliumTempus.Application.Project.Commands.Update;
 using ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
@@ -102,7 +103,18 @@ internal static partial class Utils
 
             return true;
         }
-        
+
+        internal static void AssertFromRemoveAllowedMemberCommand(
+            ProjectAggregate project,
+            RemoveAllowedMemberFromProjectCommand command)
+        {
+            project.Id.Value.Should().Be(command.Id);
+            project.AllowedMembers.Should().NotContain(s => s.Id.Value == command.AllowedMemberId);
+
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
         internal static void AssertFromRemoveStatusCommand(
             ProjectAggregate project,
             RemoveStatusFromProjectCommand command)
