@@ -30,6 +30,7 @@ public sealed class RemoveAllowedMemberFromProjectCommandHandler(
 
         project.RemoveAllowedMember(allowedMember);
         project.RefreshActivity();
+
         return new RemoveAllowedMemberFromProjectResult();
     }
 }

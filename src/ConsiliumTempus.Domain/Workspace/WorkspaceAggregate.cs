@@ -69,6 +69,9 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
             DateTime.UtcNow,
             DateTime.UtcNow);
 
+        var membership = Membership.Create(owner, workspace, WorkspaceRole.Admin);
+        workspace.AddUserMembership(membership);
+
         return workspace;
     }
     

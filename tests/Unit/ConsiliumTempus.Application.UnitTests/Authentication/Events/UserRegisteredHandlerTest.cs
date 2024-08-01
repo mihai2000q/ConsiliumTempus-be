@@ -1,8 +1,9 @@
 ﻿using ConsiliumTempus.Application.Authentication.Events;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.User;
-using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.User.Events;
+using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Application.UnitTests.Authentication.Events;
 
@@ -10,7 +11,14 @@ public class UserRegisteredHandlerTest
 {
     #region Setup
 
-    private readonly UserRegisteredHandler _uut = new();
+    private readonly IWorkspaceRepository _workspaceRepository;
+    private readonly UserRegisteredHandler _uut;
+
+    public UserRegisteredHandlerTest()
+    {
+        _workspaceRepository = Substitute.For<IWorkspaceRepository>();
+        _uut = new UserRegisteredHandler(_workspaceRepository);
+    }
 
     #endregion
 
@@ -24,11 +32,9 @@ public class UserRegisteredHandlerTest
         await _uut.Handle(new UserRegistered(user), default);
 
         // Assert
-        user.Memberships.Should().HaveCount(1);
-        Utils.Membership.Assert(
-            user.Memberships[0],
-            user,
-            Constants.Workspace.Name,
-            Constants.Workspace.Description);
+        await _workspaceRepository
+            .Received(1)
+            .Add(Arg.Is<WorkspaceAggregate>(workspace =>
+                Utils.User.AssertFromUserRegistered(user, workspace)));
     }
 }

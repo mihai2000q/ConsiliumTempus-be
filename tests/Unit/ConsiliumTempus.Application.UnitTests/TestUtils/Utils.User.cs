@@ -1,8 +1,11 @@
 ﻿using ConsiliumTempus.Application.Authentication.Commands.Register;
 using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
+using ConsiliumTempus.Domain.Common.Constants;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.Events;
+using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -29,8 +32,9 @@ internal static partial class Utils
             user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             user.DomainEvents.Should().HaveCount(1);
-            user.DomainEvents[0].Should().BeOfType<UserRegistered>();
-            ((UserRegistered)user.DomainEvents[0]).User.Should().Be(user);
+            var domainEvent = user.DomainEvents[0];
+            domainEvent.Should().BeOfType<UserRegistered>();
+            ((UserRegistered)domainEvent).User.Should().Be(user);
         }
 
         internal static void AssertFromUpdateCurrentCommand(
@@ -45,6 +49,29 @@ internal static partial class Utils
                 user.Role!.Value.Should().Be(command.Role);
             user.DateOfBirth.Should().Be(command.DateOfBirth);
             user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static bool AssertFromUserRegistered(UserAggregate user, WorkspaceAggregate workspace)
+        {
+            workspace.Memberships.Should().HaveCount(1);
+            var membership = workspace.Memberships[0];
+            membership.Id.Should().Be((user.Id, membership.Workspace.Id));
+            membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            membership.User.Should().Be(user);
+            membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+            membership.DomainEvents.Should().BeEmpty();
+
+            membership.Workspace.Id.Value.Should().NotBeEmpty();
+            membership.Workspace.Name.Value.Should().Be(Constants.Workspace.Name);
+            membership.Workspace.Description.Value.Should().Be(Constants.Workspace.Description);
+            membership.Workspace.Owner.Should().Be(user);
+            membership.Workspace.IsPersonal.Value.Should().Be(true);
+            membership.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            membership.Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            membership.Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            return true;
         }
 
         internal static void AssertUser(UserAggregate outcome, UserAggregate expected)

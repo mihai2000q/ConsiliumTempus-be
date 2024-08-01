@@ -254,6 +254,7 @@ internal static partial class Utils
         {
             project.Id.Value.Should().Be(request.Id);
             project.AllowedMembers.Should().NotContain(u => u == user);
+            project.Favorites.Should().NotContain(user);
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -265,6 +266,7 @@ internal static partial class Utils
         {
             project.Id.Value.Should().Be(request.Id);
             project.AllowedMembers.Should().NotContain(u => u.Id.Value == request.AllowedMemberId);
+            project.Favorites.Should().NotContain(u => u.Id.Value == request.AllowedMemberId);
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

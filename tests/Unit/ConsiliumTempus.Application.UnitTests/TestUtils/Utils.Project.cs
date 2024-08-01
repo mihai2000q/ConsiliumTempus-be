@@ -36,7 +36,7 @@ internal static partial class Utils
             project.AllowedMembers.Should().HaveCount(2);
             project.AllowedMembers[0].Should().Be(project.Owner);
             project.AllowedMembers[1].Should().Be(collaborator);
-            
+
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
@@ -47,7 +47,7 @@ internal static partial class Utils
             UserAggregate user)
         {
             project.Id.Value.Should().Be(command.Id);
-            
+
             project.Statuses.Should().HaveCount(1);
             var status = project.LatestStatus;
             status.Should().NotBeNull();
@@ -62,7 +62,7 @@ internal static partial class Utils
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static bool AssertFromCreateCommand(
             ProjectAggregate project,
             CreateProjectCommand command,
@@ -87,8 +87,9 @@ internal static partial class Utils
             project.AllowedMembers[0].Should().Be(owner);
 
             project.DomainEvents.Should().HaveCount(1);
-            project.DomainEvents[0].Should().BeOfType<ProjectCreated>();
-            ((ProjectCreated)project.DomainEvents[0]).Project.Should().Be(project);
+            var domainEvent = project.DomainEvents[0];
+            domainEvent.Should().BeOfType<ProjectCreated>();
+            ((ProjectCreated)domainEvent).Project.Should().Be(project);
 
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
@@ -114,6 +115,12 @@ internal static partial class Utils
             project.Id.Value.Should().Be(command.Id);
             project.AllowedMembers.Should().NotContain(u => u == user);
 
+            project.DomainEvents.Should().HaveCount(1);
+            var domainEvent = project.DomainEvents[0];
+            domainEvent.Should().BeOfType<AllowedMemberRemovedFromProject>();
+            ((AllowedMemberRemovedFromProject)domainEvent).Project.Should().Be(project);
+            ((AllowedMemberRemovedFromProject)domainEvent).User.Should().Be(user);
+
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
@@ -125,6 +132,12 @@ internal static partial class Utils
             project.Id.Value.Should().Be(command.Id);
             project.AllowedMembers.Should().NotContain(s => s.Id.Value == command.AllowedMemberId);
 
+            project.DomainEvents.Should().HaveCount(1);
+            var domainEvent = project.DomainEvents[0];
+            domainEvent.Should().BeOfType<AllowedMemberRemovedFromProject>();
+            ((AllowedMemberRemovedFromProject)domainEvent).Project.Should().Be(project);
+            ((AllowedMemberRemovedFromProject)domainEvent).User.Id.Value.Should().Be(command.AllowedMemberId);
+
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
@@ -135,7 +148,7 @@ internal static partial class Utils
         {
             project.Id.Value.Should().Be(command.Id);
             project.Statuses.Should().NotContain(s => s.Id.Value == command.StatusId);
-            
+
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
@@ -173,7 +186,7 @@ internal static partial class Utils
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertFromUpdateOverviewCommand(
             ProjectAggregate project,
             UpdateOverviewProjectCommand command)
@@ -197,7 +210,7 @@ internal static partial class Utils
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertFromUpdateStatusCommand(
             ProjectAggregate project,
             UpdateStatusFromProjectCommand command,

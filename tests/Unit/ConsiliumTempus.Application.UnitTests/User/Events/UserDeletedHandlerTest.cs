@@ -28,7 +28,7 @@ public class UserDeletedHandlerTest
 
     [Theory]
     [ClassData(typeof(UserDeletedHandlerData.GetData))]
-    public async Task HandleUserDelete_WhenSuccessful_ShouldEitherDeleteWorkspaceOrTransferOwnership(
+    public async Task HandleUserDelete_WhenSuccessful_ShouldRemoveDataRelatedToTheUser(
         List<WorkspaceAggregate> workspaces,
         UserAggregate user)
     {
@@ -36,7 +36,7 @@ public class UserDeletedHandlerTest
         _workspaceRepository
             .GetListByUserWithCollaborators(Arg.Any<UserAggregate>())
             .Returns(workspaces);
-        
+
         var removedWorkspaces = new List<WorkspaceAggregate>();
         _workspaceRepository
             .When(wr => wr.Remove(Arg.Any<WorkspaceAggregate>()))
@@ -45,9 +45,11 @@ public class UserDeletedHandlerTest
         var ownerWorkspaces = workspaces
             .Where(w => w.Owner == user && w.Memberships.Count > 1)
             .ToList();
-        
+
+        var domainEvent = new UserDeleted(user);
+
         // Act
-        await _uut.Handle(new UserDeleted(user), default);
+        await _uut.Handle(domainEvent, default);
 
         // Assert
         await _userRepository
@@ -59,7 +61,7 @@ public class UserDeletedHandlerTest
         await _userRepository
             .Received(1)
             .RemoveWorkspaceInvitationsByUser(user);
-        
+
         await _workspaceRepository
             .Received(1)
             .GetListByUserWithCollaborators(Arg.Is<UserAggregate>(u => u == user));
@@ -83,7 +85,7 @@ public class UserDeletedHandlerTest
         {
             w.Owner.Should().NotBe(user);
             w.IsPersonal.Value.Should().BeFalse();
-            
+
             var oldWorkspace = ownerWorkspaces.Single(x => x.Id == w.Id);
             var newAdminOwner = oldWorkspace.Memberships
                 .FirstOrDefault(m => m.WorkspaceRole.Equals(WorkspaceRole.Admin) && m.User != user);
@@ -95,7 +97,7 @@ public class UserDeletedHandlerTest
             {
                 var oldMembership = oldWorkspace.Memberships.First(m => m.User != user);
                 oldMembership.WorkspaceRole.Should().NotBe(WorkspaceRole.Admin);
-                
+
                 var newOwner = w.Memberships.Single(m => m.Id == oldMembership.Id);
                 newOwner.WorkspaceRole.Should().NotBe(oldMembership.WorkspaceRole);
                 newOwner.WorkspaceRole.Should().Be(WorkspaceRole.Admin);

@@ -10,7 +10,6 @@ class User
 {
     User Register()
     void Update()
-    void AddWorkspaceMembership()
 }
 ```
 

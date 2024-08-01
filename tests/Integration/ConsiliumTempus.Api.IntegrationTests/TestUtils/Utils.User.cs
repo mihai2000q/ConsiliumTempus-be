@@ -53,18 +53,19 @@ internal static partial class Utils
             user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             user.Memberships.Should().HaveCount(1);
-            user.Memberships[0].User.Should().Be(user);
-            user.Memberships[0].WorkspaceRole.Should().Be(WorkspaceRole.Admin);
-            user.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            user.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            var membership = user.Memberships[0];
+            membership.User.Should().Be(user);
+            membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+            membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
-            user.Memberships[0].Workspace.Name.Value.Should().Be(Constants.Workspace.Name);
-            user.Memberships[0].Workspace.Description.Value.Should().Be(Constants.Workspace.Description);
-            user.Memberships[0].Workspace.Owner.Should().Be(user);
-            user.Memberships[0].Workspace.IsPersonal.Value.Should().Be(true);
-            user.Memberships[0].Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            user.Memberships[0].Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            user.Memberships[0].Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            membership.Workspace.Name.Value.Should().Be(Constants.Workspace.Name);
+            membership.Workspace.Description.Value.Should().Be(Constants.Workspace.Description);
+            membership.Workspace.Owner.Should().Be(user);
+            membership.Workspace.IsPersonal.Value.Should().Be(true);
+            membership.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            membership.Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            membership.Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
         }
 
         internal static void AssertUpdate(

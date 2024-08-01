@@ -35,6 +35,8 @@ public class ProjectControllerLeavePrivateTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedProject = await dbContext.Projects
+            .AsNoTracking()
+            .Include(p => p.Favorites)
             .Include(p => p.AllowedMembers)
             .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
         Utils.Project.AssertLeavePrivate(updatedProject, request, user);

@@ -171,7 +171,8 @@ internal class ProjectData : ITestData
             Users[0],
             "Something Private",
             isPrivate: true,
-            allowedMembers: [Users[0], Users[3]]),
+            allowedMembers: [Users[0], Users[3]],
+            favorites: [Users[3]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[3],

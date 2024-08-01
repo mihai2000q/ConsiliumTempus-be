@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Domain.Common.Entities;
+﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.User.Events;
 using ConsiliumTempus.Domain.Workspace;
@@ -8,19 +8,16 @@ using Constants = ConsiliumTempus.Domain.Common.Constants.Constants;
 
 namespace ConsiliumTempus.Application.Authentication.Events;
 
-public sealed class UserRegisteredHandler : INotificationHandler<UserRegistered>
+public sealed class UserRegisteredHandler(IWorkspaceRepository workspaceRepository) 
+    : INotificationHandler<UserRegistered>
 {
-    public Task Handle(UserRegistered notification, CancellationToken cancellationToken)
+    public async Task Handle(UserRegistered notification, CancellationToken cancellationToken)
     {
         var workspace = WorkspaceAggregate.Create(
             Name.Create(Constants.Workspace.Name),
             Description.Create(Constants.Workspace.Description),
             notification.User,
             IsPersonal.Create(true));
-
-        var membership = Membership.Create(notification.User, workspace, WorkspaceRole.Admin);
-        notification.User.AddWorkspaceMembership(membership);
-
-        return Task.CompletedTask;
+        await workspaceRepository.Add(workspace, cancellationToken);
     }
 }
