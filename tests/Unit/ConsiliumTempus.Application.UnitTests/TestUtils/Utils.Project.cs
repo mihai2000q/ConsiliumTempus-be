@@ -117,9 +117,9 @@ internal static partial class Utils
 
             project.DomainEvents.Should().HaveCount(1);
             var domainEvent = project.DomainEvents[0];
-            domainEvent.Should().BeOfType<RemovedAllowedMemberFromProject>();
-            ((RemovedAllowedMemberFromProject)domainEvent).Project.Should().Be(project);
-            ((RemovedAllowedMemberFromProject)domainEvent).User.Should().Be(user);
+            domainEvent.Should().BeOfType<AllowedMemberRemovedFromProject>();
+            ((AllowedMemberRemovedFromProject)domainEvent).Project.Should().Be(project);
+            ((AllowedMemberRemovedFromProject)domainEvent).User.Should().Be(user);
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -134,9 +134,9 @@ internal static partial class Utils
 
             project.DomainEvents.Should().HaveCount(1);
             var domainEvent = project.DomainEvents[0];
-            domainEvent.Should().BeOfType<RemovedAllowedMemberFromProject>();
-            ((RemovedAllowedMemberFromProject)domainEvent).Project.Should().Be(project);
-            ((RemovedAllowedMemberFromProject)domainEvent).User.Id.Value.Should().Be(command.AllowedMemberId);
+            domainEvent.Should().BeOfType<AllowedMemberRemovedFromProject>();
+            ((AllowedMemberRemovedFromProject)domainEvent).Project.Should().Be(project);
+            ((AllowedMemberRemovedFromProject)domainEvent).User.Id.Value.Should().Be(command.AllowedMemberId);
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

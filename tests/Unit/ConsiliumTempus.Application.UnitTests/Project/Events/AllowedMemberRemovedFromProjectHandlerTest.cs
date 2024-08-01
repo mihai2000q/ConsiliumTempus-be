@@ -4,27 +4,27 @@ using ConsiliumTempus.Domain.Project.Events;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Events;
 
-public class RemovedAllowedMemberFromProjectHandlerTest
+public class AllowedMemberRemovedFromProjectHandlerTest
 {
     #region Setup
 
-    private readonly RemovedAllowedMemberFromProjectHandler _uut;
+    private readonly AllowedMemberRemovedFromProjectHandler _uut;
 
-    public RemovedAllowedMemberFromProjectHandlerTest()
+    public AllowedMemberRemovedFromProjectHandlerTest()
     {
-        _uut = new RemovedAllowedMemberFromProjectHandler();
+        _uut = new AllowedMemberRemovedFromProjectHandler();
     }
 
     #endregion
 
     [Fact]
-    public async Task HandleRemovedAllowedMemberFromProject_WhenSucceeds_ShouldRemoveProjectFromUsersFavorites()
+    public async Task HandleAllowedMemberRemovedFromProject_WhenSucceeds_ShouldRemoveProjectFromUsersFavorites()
     {
         // Arrange
         var project = ProjectFactory.CreateWithAllowedMembers();
         var user = project.AllowedMembers[1];
         project.UpdateFavorites(true, user);
-        var domainEvent = new RemovedAllowedMemberFromProject(project, user);
+        var domainEvent = new AllowedMemberRemovedFromProject(project, user);
 
         // Act
         await _uut.Handle(domainEvent, default);

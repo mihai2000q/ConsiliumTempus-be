@@ -3,9 +3,9 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Events;
 
-public sealed class RemovedAllowedMemberFromProjectHandler : INotificationHandler<RemovedAllowedMemberFromProject>
+public sealed class AllowedMemberRemovedFromProjectHandler : INotificationHandler<AllowedMemberRemovedFromProject>
 {
-    public Task Handle(RemovedAllowedMemberFromProject notification, CancellationToken cancellationToken)
+    public Task Handle(AllowedMemberRemovedFromProject notification, CancellationToken cancellationToken)
     {
         notification.Project.UpdateFavorites(false, notification.User);
 

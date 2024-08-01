@@ -158,6 +158,6 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
     public void RemoveAllowedMember(UserAggregate member)
     {
         _allowedMembers.Remove(member);
-        AddDomainEvent(new RemovedAllowedMemberFromProject(this, member));
+        AddDomainEvent(new AllowedMemberRemovedFromProject(this, member));
     }
 }

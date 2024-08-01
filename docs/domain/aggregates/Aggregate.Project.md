@@ -64,7 +64,7 @@ For database design checkout the [Project Diagram](../../database-diagrams/aggre
 ### Domain Events
 
 - **Project Created** when the project gets created, it will also create sprints, stages and tasks as examples for user. 
-- **Removed Allowed Member From Project** when a user gets removed from allowed members of a project, 
+- **Allowed Member Removed From Project** when a user gets removed from allowed members of a project, 
 it also makes sure that the user does not keep the project on favorites 
 
 ### Filters
