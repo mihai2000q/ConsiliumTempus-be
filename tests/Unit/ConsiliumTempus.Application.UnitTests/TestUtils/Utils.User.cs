@@ -32,8 +32,9 @@ internal static partial class Utils
             user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             user.DomainEvents.Should().HaveCount(1);
-            user.DomainEvents[0].Should().BeOfType<UserRegistered>();
-            ((UserRegistered)user.DomainEvents[0]).User.Should().Be(user);
+            var domainEvent = user.DomainEvents[0];
+            domainEvent.Should().BeOfType<UserRegistered>();
+            ((UserRegistered)domainEvent).User.Should().Be(user);
         }
 
         internal static void AssertFromUpdateCurrentCommand(

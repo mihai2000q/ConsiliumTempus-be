@@ -53,8 +53,9 @@ public class DeleteCurrentUserCommandHandlerTest
         outcome.Value.Should().Be(new DeleteCurrentUserResult());
 
         user.DomainEvents.Should().HaveCount(1);
-        user.DomainEvents[0].Should().BeOfType<UserDeleted>();
-        ((UserDeleted)user.DomainEvents[0]).User.Should().Be(user);
+        var domainEvent = user.DomainEvents[0];
+        domainEvent.Should().BeOfType<UserDeleted>();
+        ((UserDeleted)domainEvent).User.Should().Be(user);
     }
 
     [Fact]

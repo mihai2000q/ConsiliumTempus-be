@@ -20,10 +20,10 @@ public class ProjectCreatedHandlerTest
         // Arrange
         var owner = UserFactory.Create();
         var project = ProjectFactory.CreateWithSprints(owner: owner, sprintsCount: 0);
-        var notification = new ProjectCreated(project);
+        var domainEvent = new ProjectCreated(project);
 
         // Act
-        await _uut.Handle(notification, default);
+        await _uut.Handle(domainEvent, default);
 
         // Assert
         project.Sprints.Should().HaveCount(1);

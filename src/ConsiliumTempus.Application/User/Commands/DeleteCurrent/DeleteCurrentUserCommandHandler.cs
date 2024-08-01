@@ -16,7 +16,6 @@ public sealed class DeleteCurrentUserCommandHandler(
         CancellationToken cancellationToken)
     {
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
-
         if (user is null) return Errors.User.NotFound;
 
         userRepository.Remove(user);
