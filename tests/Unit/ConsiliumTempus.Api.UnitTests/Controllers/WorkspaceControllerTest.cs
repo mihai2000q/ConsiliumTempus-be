@@ -8,6 +8,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
+using ConsiliumTempus.Api.Contracts.Workspace.KickCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Leave;
 using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
@@ -21,6 +22,7 @@ using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.KickCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
@@ -479,53 +481,6 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task Leave_WhenIsSuccessful_ShouldReturnResponse()
-    {
-        // Arrange
-        var request = WorkspaceRequestFactory.CreateLeaveWorkspaceRequest();
-
-        var result = WorkspaceResultFactory.CreateLeaveWorkspaceResult();
-        _mediator
-            .Send(Arg.Any<LeaveWorkspaceCommand>())
-            .Returns(result);
-
-        // Act
-        var outcome = await _uut.Leave(request, default);
-
-        // Assert
-        await _mediator
-            .Received(1)
-            .Send(Arg.Is<LeaveWorkspaceCommand>(
-                command => Utils.Workspace.AssertLeaveCommand(command, request)));
-
-        var response = outcome.ToResponse<LeaveWorkspaceResponse>();
-        response.Message.Should().Be(result.Message);
-    }
-
-    [Fact]
-    public async Task Leave_WhenItFails_ShouldReturnProblem()
-    {
-        // Arrange
-        var request = WorkspaceRequestFactory.CreateLeaveWorkspaceRequest();
-
-        var error = Errors.User.NotFound;
-        _mediator
-            .Send(Arg.Any<LeaveWorkspaceCommand>())
-            .Returns(error);
-
-        // Act
-        var outcome = await _uut.Leave(request, default);
-
-        // Assert
-        await _mediator
-            .Received(1)
-            .Send(Arg.Is<LeaveWorkspaceCommand>(
-                command => Utils.Workspace.AssertLeaveCommand(command, request)));
-
-        outcome.ValidateError(error);
-    }
-
-    [Fact]
     public async Task Update_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
@@ -803,6 +758,100 @@ public class WorkspaceControllerTest
             .Received(1)
             .Send(Arg.Is<DeleteWorkspaceCommand>(command =>
                 Utils.Workspace.AssertDeleteCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task KickCollaborator_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateKickCollaboratorFromWorkspaceRequest();
+
+        var result = WorkspaceResultFactory.CreateKickCollaboratorFromWorkspaceResult();
+        _mediator
+            .Send(Arg.Any<KickCollaboratorFromWorkspaceCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.KickCollaborator(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<KickCollaboratorFromWorkspaceCommand>(
+                command => Utils.Workspace.AssertKickCollaboratorCommand(command, request)));
+
+        var response = outcome.ToResponse<KickCollaboratorFromWorkspaceResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task KickCollaborator_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateKickCollaboratorFromWorkspaceRequest();
+
+        var error = Errors.User.NotFound;
+        _mediator
+            .Send(Arg.Any<KickCollaboratorFromWorkspaceCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.KickCollaborator(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<KickCollaboratorFromWorkspaceCommand>(
+                command => Utils.Workspace.AssertKickCollaboratorCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task Leave_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateLeaveWorkspaceRequest();
+
+        var result = WorkspaceResultFactory.CreateLeaveWorkspaceResult();
+        _mediator
+            .Send(Arg.Any<LeaveWorkspaceCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.Leave(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<LeaveWorkspaceCommand>(
+                command => Utils.Workspace.AssertLeaveCommand(command, request)));
+
+        var response = outcome.ToResponse<LeaveWorkspaceResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task Leave_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = WorkspaceRequestFactory.CreateLeaveWorkspaceRequest();
+
+        var error = Errors.User.NotFound;
+        _mediator
+            .Send(Arg.Any<LeaveWorkspaceCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.Leave(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<LeaveWorkspaceCommand>(
+                command => Utils.Workspace.AssertLeaveCommand(command, request)));
 
         outcome.ValidateError(error);
     }

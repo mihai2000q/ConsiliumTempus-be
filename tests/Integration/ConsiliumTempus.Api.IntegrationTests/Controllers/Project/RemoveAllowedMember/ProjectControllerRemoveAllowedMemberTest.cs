@@ -44,27 +44,28 @@ public class ProjectControllerRemoveAllowedMemberTest(WebAppFactory factory)
         Utils.Project.AssertRemoveAllowedMember(updatedProject, request);
     }
 
+    /// The test should return Remove Yourself Error, but,
+    /// at the moment, only the owner is authorized to access this endpoint,
+    /// So the test only works if if the owner makes the request
     [Fact]
-    public async Task RemoveAllowedMemberFromProject_WhenCurrentUserIsRemoved_ShouldReturnRemoveYourselfError()
+    public async Task RemoveAllowedMemberFromProject_WhenCurrentUserIsRemoved_ShouldReturnRemoveOwnerError()
     {
         // Arrange
         var project = ProjectData.Projects[^2];
-        var user = project.AllowedMembers[0];
+        var allowedMember = project.Owner;
         var request = ProjectRequestFactory.CreateRemoveAllowedMemberFromProjectRequest(
             project.Id.Value,
-            user.Id.Value);
+            allowedMember.Id.Value);
 
         // Act
-        Client.UseCustomToken(user);
+        Client.UseCustomToken(allowedMember);
         var outcome = await Client.Delete($"api/projects/" +
                                           $"{request.Id}/Remove-Allowed-Member/{request.AllowedMemberId}");
 
         // Assert
-        await outcome.ValidateError(Errors.Project.RemoveYourself);
+        await outcome.ValidateError(Errors.Project.RemoveOwner);
     }
 
-    /// At the moment, only the owner is authorized to access this endpoint,
-    /// So this test is kind of useless, as it would return "Remove Yourself" Error anyway
     [Fact]
     public async Task RemoveAllowedMemberFromProject_WhenOwnerIsRemoved_ShouldReturnRemoveOwnerError()
     {

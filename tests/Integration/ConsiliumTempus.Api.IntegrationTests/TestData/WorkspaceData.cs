@@ -128,7 +128,7 @@ internal class WorkspaceData : ITestData
         MembershipFactory.Create(
             Users[5],
             Workspaces[0],
-            WorkspaceRole.View),
+            WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[3],

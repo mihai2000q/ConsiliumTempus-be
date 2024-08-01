@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Domain.Common.Models;
 
-public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
+public abstract class Enumeration<TEnum> : Entity<int>
     where TEnum : Enumeration<TEnum>
 {
     private static readonly Dictionary<int, TEnum> Enumerations = CreateEnumerations();
@@ -11,13 +11,11 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
     {
     }
 
-    protected Enumeration(int id, string name)
+    protected Enumeration(int id, string name) : base(id)
     {
-        Id = id;
         Name = name;
     }
 
-    public int Id { get; }
     public string Name { get; } = string.Empty;
 
     public static TEnum? FromValue(int value)
@@ -35,23 +33,6 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
     public static TEnum[] GetValues()
     {
         return Enumerations.Values.ToArray();
-    }
-
-    public bool Equals(Enumeration<TEnum>? other)
-    {
-        if (other is null) return false;
-
-        return GetType() == other.GetType() && Id == other.Id;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return obj is Enumeration<TEnum> other && Equals(other);
-    }
-
-    public override int GetHashCode()
-    {
-        return Id.GetHashCode();
     }
 
     public override string ToString()

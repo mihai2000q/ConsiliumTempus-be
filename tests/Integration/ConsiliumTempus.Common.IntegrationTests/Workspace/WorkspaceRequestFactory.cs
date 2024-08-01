@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
+using ConsiliumTempus.Api.Contracts.Workspace.KickCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Leave;
 using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
@@ -28,7 +29,7 @@ public static class WorkspaceRequestFactory
             Id = id ?? Guid.NewGuid()
         };
     }
-    
+
     public static GetOverviewWorkspaceRequest CreateGetOverviewWorkspaceRequest(Guid? id = null)
     {
         return new GetOverviewWorkspaceRequest
@@ -133,7 +134,7 @@ public static class WorkspaceRequestFactory
             collaboratorId ?? Guid.NewGuid(),
             workspaceRole ?? nameof(WorkspaceRole.Admin));
     }
-    
+
     public static UpdateFavoritesWorkspaceRequest CreateUpdateFavoritesWorkspaceRequest(
         Guid? id = null,
         bool isFavorite = false)
@@ -166,6 +167,17 @@ public static class WorkspaceRequestFactory
         return new DeleteWorkspaceRequest
         {
             Id = id ?? Guid.NewGuid()
+        };
+    }
+
+    public static KickCollaboratorFromWorkspaceRequest CreateKickCollaboratorFromWorkspaceRequest(
+        Guid? id = null,
+        Guid? collaboratorId = null)
+    {
+        return new KickCollaboratorFromWorkspaceRequest
+        {
+            Id = id ?? Guid.NewGuid(),
+            CollaboratorId = collaboratorId ?? Guid.NewGuid(),
         };
     }
 

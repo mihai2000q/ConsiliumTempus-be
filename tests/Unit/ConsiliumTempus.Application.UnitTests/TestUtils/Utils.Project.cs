@@ -33,8 +33,9 @@ internal static partial class Utils
             project.Id.Value.Should().Be(command.Id);
             collaborator.Id.Value.Should().Be(command.CollaboratorId);
 
-            project.AllowedMembers.Should().HaveCount(1);
-            project.AllowedMembers[0].Should().Be(collaborator);
+            project.AllowedMembers.Should().HaveCount(2);
+            project.AllowedMembers[0].Should().Be(project.Owner);
+            project.AllowedMembers[1].Should().Be(collaborator);
             
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

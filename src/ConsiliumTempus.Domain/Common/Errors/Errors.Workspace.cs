@@ -26,7 +26,7 @@ public static partial class Errors
             "Project.KickYourself",
             "You cannot kick yourself from workspace");
 
-        public static Error KickOwner => Error.Conflict(
+        public static Error KickOwner => Error.Forbidden(
             "Project.KickOwner",
             "You cannot kick the owner of the workspace");
     }

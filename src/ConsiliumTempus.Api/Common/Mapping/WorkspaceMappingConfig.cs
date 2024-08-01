@@ -8,6 +8,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
+using ConsiliumTempus.Api.Contracts.Workspace.KickCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Leave;
 using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
@@ -19,6 +20,7 @@ using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.KickCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
@@ -54,13 +56,14 @@ public sealed class WorkspaceMappingConfig : IRegister
         InviteCollaboratorMappings(config);
         AcceptInvitationMappings(config);
         RejectInvitationMappings(config);
-        LeaveMappings(config);
         UpdateMappings(config);
         UpdateCollaboratorMappings(config);
         UpdateFavoritesMappings(config);
         UpdateOverviewMappings(config);
         UpdateOwnerMappings(config);
         DeleteMappings(config);
+        LeaveMappings(config);
+        KickCollaboratorMappings(config);
     }
 
     private static void GetMappings(TypeAdapterConfig config)
@@ -161,13 +164,6 @@ public sealed class WorkspaceMappingConfig : IRegister
         config.NewConfig<RejectInvitationToWorkspaceResult, RejectInvitationToWorkspaceResponse>();
     }
 
-    private static void LeaveMappings(TypeAdapterConfig config)
-    {
-        config.NewConfig<LeaveWorkspaceRequest, LeaveWorkspaceCommand>();
-
-        config.NewConfig<LeaveWorkspaceResult, LeaveWorkspaceResponse>();
-    }
-
     private static void UpdateMappings(TypeAdapterConfig config)
     {
         config.NewConfig<UpdateWorkspaceRequest, UpdateWorkspaceCommand>();
@@ -208,5 +204,19 @@ public sealed class WorkspaceMappingConfig : IRegister
         config.NewConfig<DeleteWorkspaceRequest, DeleteWorkspaceCommand>();
 
         config.NewConfig<DeleteWorkspaceResult, DeleteWorkspaceResponse>();
+    }
+    
+    private static void LeaveMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<LeaveWorkspaceRequest, LeaveWorkspaceCommand>();
+
+        config.NewConfig<LeaveWorkspaceResult, LeaveWorkspaceResponse>();
+    }
+
+    private static void KickCollaboratorMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<KickCollaboratorFromWorkspaceRequest, KickCollaboratorFromWorkspaceCommand>();
+
+        config.NewConfig<KickCollaboratorFromWorkspaceResult, KickCollaboratorFromWorkspaceResponse>();
     }
 }

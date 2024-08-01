@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.KickCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
@@ -42,7 +43,7 @@ public static class WorkspaceResultFactory
             totalCount,
             currentUser ?? UserFactory.Create());
     }
-    
+
     public static GetCollaboratorsFromWorkspaceResult CreateGetCollaboratorsFromWorkspaceResult(
         List<UserAggregate>? collaborators = null)
     {
@@ -58,7 +59,7 @@ public static class WorkspaceResultFactory
             invitations ?? WorkspaceInvitationFactory.CreateList(),
             TotalCount: totalCount);
     }
-    
+
     public static CreateWorkspaceResult CreateCreateWorkspaceResult()
     {
         return new CreateWorkspaceResult();
@@ -79,11 +80,6 @@ public static class WorkspaceResultFactory
         return new RejectInvitationToWorkspaceResult();
     }
 
-    public static LeaveWorkspaceResult CreateLeaveWorkspaceResult()
-    {
-        return new LeaveWorkspaceResult();
-    }
-    
     public static UpdateWorkspaceResult CreateUpdateWorkspaceResult()
     {
         return new UpdateWorkspaceResult();
@@ -98,7 +94,7 @@ public static class WorkspaceResultFactory
     {
         return new UpdateFavoritesWorkspaceResult();
     }
-    
+
     public static UpdateOverviewWorkspaceResult CreateUpdateOverviewWorkspaceResult()
     {
         return new UpdateOverviewWorkspaceResult();
@@ -108,9 +104,19 @@ public static class WorkspaceResultFactory
     {
         return new UpdateOwnerWorkspaceResult();
     }
-    
+
     public static DeleteWorkspaceResult CreateDeleteWorkspaceResult()
     {
         return new DeleteWorkspaceResult();
+    }
+
+    public static KickCollaboratorFromWorkspaceResult CreateKickCollaboratorFromWorkspaceResult()
+    {
+        return new KickCollaboratorFromWorkspaceResult();
+    }
+
+    public static LeaveWorkspaceResult CreateLeaveWorkspaceResult()
+    {
+        return new LeaveWorkspaceResult();
     }
 }

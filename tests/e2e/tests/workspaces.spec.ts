@@ -2,6 +2,7 @@ import { test } from "@playwright/test";
 import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
 import {
+  acceptInvitation,
   addCollaboratorToWorkspace,
   createWorkspace,
   createWorkspaces,
@@ -19,7 +20,7 @@ import {
   inviteThemToWorkspace
 } from "../utils/workspaces.utils";
 import { PersonalWorkspaceName } from "../utils/constants";
-import { deleteUser, registerUser } from "../utils/users.utils";
+import { deleteUser, getCurrentUser, registerUser } from "../utils/users.utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
 import UpdateWorkspaceRequest from "../types/requests/workspace/UpdateWorkspaceRequest";
 import UpdateOverviewWorkspaceRequest from "../types/requests/workspace/UpdateOverviewWorkspaceRequest";
@@ -881,6 +882,37 @@ test.describe('should allow operations on the workspace entity', () => {
 
     const newWorkspaces = await getWorkspaces(request)
     expect(newWorkspaces).not.toStrictEqual(expect.arrayContaining([workspace]))
+  })
+
+  test('should kick collaborator from workspace', async ({ request }) => {
+    const collaboratorEmail = "somebody_else_numero2@yahoo.com"
+    const collaboratorToken = (await registerUser(request, collaboratorEmail)).token
+    const workspace = await createWorkspace(request, { name: "yet another workspace" })
+    await inviteCollaborator(request, {
+      id: workspace.id,
+      email: collaboratorEmail
+    })
+    await acceptInvitation(request, collaboratorEmail, workspace.id, collaboratorToken)
+
+    const collaborator = await getCurrentUser(request, collaboratorToken)
+
+    const response = await request.delete(
+      `/api/workspaces/${workspace.id}/kick-collaborator/${collaborator.id}`,
+      useToken()
+    )
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const collaborators = await getCollaborators(request, workspace.id)
+    expect(collaborators).toEqual(expect.not.arrayContaining([
+      {
+        id: collaborator.id
+      }
+    ]))
   })
 
   test('should leave workspace', async ({ request }) => {

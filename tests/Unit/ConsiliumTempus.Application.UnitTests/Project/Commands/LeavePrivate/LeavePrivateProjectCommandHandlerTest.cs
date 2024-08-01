@@ -35,7 +35,7 @@ public class LeavePrivateProjectCommandHandlerTest
             .GetWithAllowedMembers(Arg.Any<ProjectId>())
             .Returns(project);
 
-        var allowedMember = project.AllowedMembers[0];
+        var allowedMember = project.AllowedMembers[1];
         _currentUserProvider
             .GetCurrentUserAfterPermissionCheck()
             .Returns(allowedMember);
