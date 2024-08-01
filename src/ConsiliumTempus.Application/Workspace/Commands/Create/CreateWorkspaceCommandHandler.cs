@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
-using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
@@ -27,9 +26,6 @@ public sealed class CreateWorkspaceCommandHandler(
             user,
             IsPersonal.Create(false));
         await workspaceRepository.Add(workspace, cancellationToken);
-
-        var membership = Membership.Create(user, workspace, WorkspaceRole.Admin);
-        workspace.AddUserMembership(membership);
 
         return new CreateWorkspaceResult();
     }

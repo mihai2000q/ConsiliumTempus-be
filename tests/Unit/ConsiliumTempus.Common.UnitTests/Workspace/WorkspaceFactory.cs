@@ -16,14 +16,11 @@ public static class WorkspaceFactory
         UserAggregate? owner = null,
         bool isPersonal = false)
     {
-        owner ??= UserFactory.Create();
-        var workspace = WorkspaceAggregate.Create(
+        return WorkspaceAggregate.Create(
             Name.Create(name),
             Description.Create(description),
-            owner,
+            owner ?? UserFactory.Create(),
             IsPersonal.Create(isPersonal));
-        workspace.AddUserMembership(MembershipFactory.Create(owner, workspace));
-        return workspace;
     }
 
     public static WorkspaceAggregate CreateWithCollaborators(
@@ -33,13 +30,11 @@ public static class WorkspaceFactory
         bool isPersonal = false,
         int collaboratorsCount = 5)
     {
-        owner ??= UserFactory.Create();
         var workspace = WorkspaceAggregate.Create(
             Name.Create(name),
             Description.Create(description),
-            owner,
+            owner ?? UserFactory.Create(),
             IsPersonal.Create(isPersonal));
-        workspace.AddUserMembership(MembershipFactory.Create(owner, workspace));
 
         Enumerable
             .Range(0, collaboratorsCount)
