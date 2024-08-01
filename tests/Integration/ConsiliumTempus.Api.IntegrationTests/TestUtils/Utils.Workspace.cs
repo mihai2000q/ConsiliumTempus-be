@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
+using ConsiliumTempus.Api.Contracts.Workspace.KickCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Leave;
 using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
@@ -154,16 +155,6 @@ internal static partial class Utils
             workspace.Memberships.Should().NotContain(i => i.User == collaborator);
         }
 
-        internal static void AssertLeave(
-            LeaveWorkspaceRequest request,
-            WorkspaceAggregate workspace,
-            UserAggregate user)
-        {
-            workspace.Id.Value.Should().Be(request.Id);
-            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            workspace.Memberships.Should().NotContain(i => i.User == user);
-        }
-
         internal static void AssertUpdated(
             WorkspaceAggregate workspace,
             WorkspaceAggregate newWorkspace,
@@ -235,6 +226,25 @@ internal static partial class Utils
             newWorkspace.Owner.Should().Be(owner);
             newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static void AssertLeave(
+            LeaveWorkspaceRequest request,
+            WorkspaceAggregate workspace,
+            UserAggregate user)
+        {
+            workspace.Id.Value.Should().Be(request.Id);
+            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.Memberships.Should().NotContain(i => i.User == user);
+        }
+
+        internal static void AssertKickCollaborator(
+            KickCollaboratorFromWorkspaceRequest request,
+            WorkspaceAggregate workspace)
+        {
+            workspace.Id.Value.Should().Be(request.Id);
+            workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.Memberships.Should().NotContain(i => i.User.Id.Value == request.CollaboratorId);
         }
         
         private static void AssertUserResponse(

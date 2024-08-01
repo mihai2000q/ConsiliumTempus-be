@@ -9,6 +9,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
+using ConsiliumTempus.Api.Contracts.Workspace.KickCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Leave;
 using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
@@ -20,6 +21,7 @@ using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.KickCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
@@ -243,6 +245,19 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
         return result.Match(
             deleteResult => Ok(Mapper.Map<DeleteWorkspaceResponse>(deleteResult)),
+            Problem
+        );
+    }
+
+    [HasPermission(Permissions.KickCollaboratorFromWorkspace)]
+    [HttpDelete("{id:guid}/Kick-Collaborator/{collaboratorId:guid}")]
+    public async Task<IActionResult> KickCollaborator(KickCollaboratorFromWorkspaceRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<KickCollaboratorFromWorkspaceCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            kickCollaboratorResult => Ok(Mapper.Map<KickCollaboratorFromWorkspaceResponse>(kickCollaboratorResult)),
             Problem
         );
     }

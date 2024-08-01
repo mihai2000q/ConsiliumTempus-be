@@ -20,13 +20,15 @@ internal static partial class Utils
         { ErrorType.Validation, HttpStatusCode.BadRequest },
         { ErrorType.Unauthorized, HttpStatusCode.Unauthorized },
         { ErrorType.NotFound, HttpStatusCode.NotFound },
-        { ErrorType.Conflict, HttpStatusCode.Conflict }
+        { ErrorType.Conflict, HttpStatusCode.Conflict },
+        { ErrorType.Forbidden, HttpStatusCode.Forbidden },
     };
 
     private static readonly Dictionary<HttpStatusCode, int> StatusCodesMap = new()
     {
         { HttpStatusCode.BadRequest, StatusCodes.Status400BadRequest },
         { HttpStatusCode.Unauthorized, StatusCodes.Status401Unauthorized },
+        { HttpStatusCode.Forbidden, StatusCodes.Status403Forbidden },
         { HttpStatusCode.NotFound, StatusCodes.Status404NotFound },
         { HttpStatusCode.Conflict, StatusCodes.Status409Conflict }
     };

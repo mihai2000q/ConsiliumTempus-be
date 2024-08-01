@@ -84,6 +84,7 @@ The permissions will be classified on their respective component:
   - Invite Collaborator
   - Read Collaborators
   - Update Collaborator
+  - Kick Collaborator
 - Project
   - Create
   - Read
@@ -135,6 +136,7 @@ The Access Control List of the system is the following:
 | Invite Collaborator To Workspace   |      |        |   X   |
 | Read Collaborators From Workspace  |  X   |   X    |   X   |
 | Update Collaborator From Workspace |      |        |   X   |
+| Kick Collaborator From Workspace   |      |        |   X   |
 | Create Project                     |      |        |   X   |
 | Read Project                       |  X   |   X    |   X   |
 | Read Overview Project              |  X   |   X    |   X   |

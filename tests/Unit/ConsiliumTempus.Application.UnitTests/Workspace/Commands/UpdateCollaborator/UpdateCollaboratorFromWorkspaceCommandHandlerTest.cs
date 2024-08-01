@@ -24,7 +24,7 @@ public class UpdateCollaboratorFromWorkspaceCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleUpdateCollaboratorFromWorkspaceCommand_WhenIsSuccessful_ShouldUpdateAndReturnSuccess()
+    public async Task HandleUpdateCollaboratorFromWorkspaceCommand_WhenIsSuccessful_ShouldUpdateCollaboratorAndReturnSuccess()
     {
         // Arrange
         var workspace = WorkspaceFactory.CreateWithCollaborators();

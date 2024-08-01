@@ -31,6 +31,9 @@
   * [Update](#update)
     * [Update Workspace Request](#update-workspace-request)
     * [Update Workspace Response](#update-workspace-response)
+  * [Update Collaborator](#update-collaborator)
+    * [Update Collaborator From Workspace Request](#update-collaborator-from-workspace-request)
+    * [Update Collaborator From Workspace Response](#update-collaborator-from-workspace-response)
   * [Update Favorites](#update-favorites)
     * [Update Favorites Workspace Request](#update-favorites-workspace-request)
     * [Update Favorites Workspace Response](#update-favorites-workspace-response)
@@ -43,6 +46,9 @@
   * [Delete](#delete)
     * [Delete Workspace Request](#delete-workspace-request)
     * [Delete Workspace Response](#delete-workspace-response)
+  * [Kick Collaborator](#kick-collaboratora)
+    * [Kick Collaborator From Workspace Request](#kick-collaboratora-from-workspace-request)
+    * [Kick Collaborator From Workspace Response](#kick-collaboratora-from-workspace-response)
   * [Leave](#leave)
     * [Leave Workspace Request](#leave-workspace-request)
     * [Leave Workspace Response](#leave-workspace-response)
@@ -390,7 +396,7 @@ Only admins that are part of the workspace can update a collaborator
 PUT {{host}}/api/workspaces/collaborators
 ```
 
-#### Update Collaborator Workspace Request
+#### Update Collaborator From Workspace Request
 
 Sends body data needed to update a collaborator.
 
@@ -402,7 +408,7 @@ Sends body data needed to update a collaborator.
 }
 ```
 
-#### Update Collaborator Workspace Response
+#### Update Collaborator From Workspace Response
 
 Returns a confirmation message that the collaborator has been updated successfully.
 
@@ -497,10 +503,29 @@ Sends the id of the workspace inside the route request.
 
 Returns a confirmation message that the workspace has been deleted successfully.
 
+### Kick Collaborator
+
+Only admin users that are part of the workspace can kick other collaborators
+([Kick Collaborator From Workspace](../Security.md/#permissions))
+
+```js
+DELETE {{host}}/api/workspaces/{id}/kick-collaborator/{collaboratorId}
+```
+
+- **id** is a 36 characters strings
+- **collaboratorId** is a 36 characters strings
+
+#### Kick Collaborator From Workspace Request
+
+Sends the id of the workspace and of the collaborator inside the route request.
+
+#### Kick Collaborator From Workspace Response
+
+Returns a confirmation message that the collaborator has been kicked from the workspace successfully.
 
 ### Leave
 
-Only member or admin users that are part of the workspace can update it
+Everyone can leave the workspace, as long as they are collaborators
 ([Workspace Authorization Level: Is Collaborator](../Security.md/#workspace-authorization-levels));
 
 ```js

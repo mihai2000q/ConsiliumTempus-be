@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.KickCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
@@ -85,6 +86,14 @@ internal static partial class Utils
             membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
+        internal static void AssertFromKickCollaboratorCommand(
+            KickCollaboratorFromWorkspaceCommand command,
+            WorkspaceAggregate workspace)
+        {
+            workspace.Id.Value.Should().Be(command.Id);
+            workspace.Memberships.Should().NotContain(m => m.User.Id.Value == command.CollaboratorId);
+        }
+
         internal static void AssertFromRejectInvitationCommand(
             RejectInvitationToWorkspaceCommand command,
             WorkspaceAggregate workspace)
@@ -149,10 +158,10 @@ internal static partial class Utils
 
         internal static void AssertFromUpdateOwnerCommand(
             WorkspaceAggregate workspace,
-            UpdateOwnerWorkspaceCommand command,
-            UserAggregate owner)
+            UpdateOwnerWorkspaceCommand command)
         {
             workspace.Id.Value.Should().Be(command.Id);
+            workspace.Owner.Id.Value.Should().Be(command.OwnerId);
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }

@@ -32,7 +32,7 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
     {
         // Arrange
         var project = ProjectFactory.CreateWithAllowedMembers(isPrivate: true);
-        var allowedMember = project.AllowedMembers[0];
+        var allowedMember = project.AllowedMembers[1];
         _projectRepository
             .GetWithAllowedMembers(Arg.Any<ProjectId>())
             .Returns(project);
@@ -64,11 +64,11 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
 
     [Fact]
     public async Task 
-        HandleRemoveAllowedMemberFromProjectCommand_WhenCommandHasCurrentUserAsAllowedMember_ShouldReturnRemoveYourselfError()
+        HandleRemoveAllowedMemberFromProjectCommand_WhenCurrentUserIsRemoved_ShouldReturnRemoveYourselfError()
     {
         // Arrange
         var project = ProjectFactory.CreateWithAllowedMembers(isPrivate: true);
-        var allowedMember = project.AllowedMembers[0];
+        var allowedMember = project.AllowedMembers[1];
         _projectRepository
             .GetWithAllowedMembers(Arg.Any<ProjectId>())
             .Returns(project);
@@ -93,6 +93,33 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
             .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.RemoveYourself);
+    }
+
+    [Fact]
+    public async Task 
+        HandleRemoveAllowedMemberFromProjectCommand_WhenOwnerIsRemoved_ShouldReturnRemoveOwnerError()
+    {
+        // Arrange
+        var project = ProjectFactory.CreateWithAllowedMembers(isPrivate: true);
+        var allowedMember = project.Owner;
+        _projectRepository
+            .GetWithAllowedMembers(Arg.Any<ProjectId>())
+            .Returns(project);
+
+        var command = ProjectCommandFactory.CreateRemoveAllowedMemberFromProjectCommand(
+            project.Id.Value,
+            allowedMember.Id.Value);
+
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Arrange
+        await _projectRepository
+            .Received(1)
+            .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
+        _currentUserProvider.DidNotReceive();
+
+        outcome.ValidateError(Errors.Project.RemoveOwner);
     }
 
     [Fact]

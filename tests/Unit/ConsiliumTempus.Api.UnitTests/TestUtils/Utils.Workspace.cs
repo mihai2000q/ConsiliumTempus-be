@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.Contracts.Workspace.GetCollection;
 using ConsiliumTempus.Api.Contracts.Workspace.GetInvitations;
 using ConsiliumTempus.Api.Contracts.Workspace.GetOverview;
 using ConsiliumTempus.Api.Contracts.Workspace.InviteCollaborator;
+using ConsiliumTempus.Api.Contracts.Workspace.KickCollaborator;
 using ConsiliumTempus.Api.Contracts.Workspace.Leave;
 using ConsiliumTempus.Api.Contracts.Workspace.RejectInvitation;
 using ConsiliumTempus.Api.Contracts.Workspace.Update;
@@ -18,6 +19,7 @@ using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.KickCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
@@ -132,15 +134,6 @@ internal static partial class Utils
             return true;
         }
 
-        internal static bool AssertLeaveCommand(
-            LeaveWorkspaceCommand command,
-            LeaveWorkspaceRequest request)
-        {
-            command.Id.Should().Be(request.Id);
-
-            return true;
-        }
-
         internal static bool AssertUpdateCommand(
             UpdateWorkspaceCommand command,
             UpdateWorkspaceRequest request)
@@ -195,6 +188,25 @@ internal static partial class Utils
         internal static bool AssertDeleteCommand(
             DeleteWorkspaceCommand command,
             DeleteWorkspaceRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+
+            return true;
+        }
+
+        internal static bool AssertKickCollaboratorCommand(
+            KickCollaboratorFromWorkspaceCommand command,
+            KickCollaboratorFromWorkspaceRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.CollaboratorId.Should().Be(request.CollaboratorId);
+
+            return true;
+        }
+
+        internal static bool AssertLeaveCommand(
+            LeaveWorkspaceCommand command,
+            LeaveWorkspaceRequest request)
         {
             command.Id.Should().Be(request.Id);
 

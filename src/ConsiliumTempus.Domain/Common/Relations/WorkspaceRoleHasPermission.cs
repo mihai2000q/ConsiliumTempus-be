@@ -79,7 +79,7 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
         Permissions.DeleteWorkspace,
         // Workspace - Collaborators
         Permissions.InviteCollaboratorToWorkspace, Permissions.ReadCollaboratorsFromWorkspace, 
-        Permissions.UpdateCollaboratorFromWorkspace, 
+        Permissions.UpdateCollaboratorFromWorkspace, Permissions.KickCollaboratorFromWorkspace,
         // Project
         Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadOverviewProject, Permissions.ReadCollectionProject,
         Permissions.UpdateProject, Permissions.UpdateFavoritesProject, Permissions.UpdateOverviewProject, 

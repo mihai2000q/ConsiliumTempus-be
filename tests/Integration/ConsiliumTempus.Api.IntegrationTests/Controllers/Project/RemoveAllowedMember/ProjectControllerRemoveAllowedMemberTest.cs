@@ -44,15 +44,37 @@ public class ProjectControllerRemoveAllowedMemberTest(WebAppFactory factory)
         Utils.Project.AssertRemoveAllowedMember(updatedProject, request);
     }
 
+    /// The test should return Remove Yourself Error, but,
+    /// at the moment, only the owner is authorized to access this endpoint,
+    /// So the test only works if if the owner makes the request
     [Fact]
-    public async Task RemoveAllowedMemberFromProject_WhenRequestHasCurrentUserAsAllowedMember_ShouldReturnRemoveYourselfError()
+    public async Task RemoveAllowedMemberFromProject_WhenCurrentUserIsRemoved_ShouldReturnRemoveOwnerError()
     {
         // Arrange
         var project = ProjectData.Projects[^2];
-        var user = project.AllowedMembers[0];
+        var allowedMember = project.Owner;
         var request = ProjectRequestFactory.CreateRemoveAllowedMemberFromProjectRequest(
             project.Id.Value,
-            user.Id.Value);
+            allowedMember.Id.Value);
+
+        // Act
+        Client.UseCustomToken(allowedMember);
+        var outcome = await Client.Delete($"api/projects/" +
+                                          $"{request.Id}/Remove-Allowed-Member/{request.AllowedMemberId}");
+
+        // Assert
+        await outcome.ValidateError(Errors.Project.RemoveOwner);
+    }
+
+    [Fact]
+    public async Task RemoveAllowedMemberFromProject_WhenOwnerIsRemoved_ShouldReturnRemoveOwnerError()
+    {
+        // Arrange
+        var project = ProjectData.Projects[^2];
+        var user = project.Owner;
+        var request = ProjectRequestFactory.CreateRemoveAllowedMemberFromProjectRequest(
+            project.Id.Value,
+            project.Owner.Id.Value);
 
         // Act
         Client.UseCustomToken(user);
@@ -60,7 +82,7 @@ public class ProjectControllerRemoveAllowedMemberTest(WebAppFactory factory)
                                           $"{request.Id}/Remove-Allowed-Member/{request.AllowedMemberId}");
 
         // Assert
-        await outcome.ValidateError(Errors.Project.RemoveYourself);
+        await outcome.ValidateError(Errors.Project.RemoveOwner); 
     }
 
     [Fact]

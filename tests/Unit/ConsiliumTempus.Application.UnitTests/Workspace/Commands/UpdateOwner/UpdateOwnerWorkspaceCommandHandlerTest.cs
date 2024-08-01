@@ -51,7 +51,7 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateOwnerWorkspaceResult());
 
-        Utils.Workspace.AssertFromUpdateOwnerCommand(workspace, command, owner);
+        Utils.Workspace.AssertFromUpdateOwnerCommand(workspace, command);
     }
 
     [Fact]
