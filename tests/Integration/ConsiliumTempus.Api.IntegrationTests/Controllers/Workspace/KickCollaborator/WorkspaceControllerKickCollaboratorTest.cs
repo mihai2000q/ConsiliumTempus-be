@@ -22,12 +22,12 @@ public class WorkspaceControllerKickCollaboratorTest(WebAppFactory factory)
         // Arrange
         var user = WorkspaceData.Users.First();
         var workspace = WorkspaceData.Workspaces.First();
-        var collaborator = workspace.Memberships
-            .First(m => m.User != user && m.User != workspace.Owner)
-            .User;
+        var collaborator = WorkspaceData.Users[3];
         var request = WorkspaceRequestFactory.CreateKickCollaboratorFromWorkspaceRequest(
             id: workspace.Id.Value,
             collaboratorId: collaborator.Id.Value);
+
+        var projectToBeRemoved = WorkspaceData.Projects[^1];
 
         // Act
         Client.UseCustomToken(user);
@@ -40,9 +40,18 @@ public class WorkspaceControllerKickCollaboratorTest(WebAppFactory factory)
         response!.Message.Should().Be("Collaborator has been kicked from workspace successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        var updatedWorkspace = dbContext.Workspaces
+
+        dbContext.Projects.SingleOrDefault(p => p.Id == projectToBeRemoved.Id)
+            .Should().BeNull();
+
+        var updatedWorkspace = await dbContext.Workspaces
+            .Include(w => w.Projects)
+            .ThenInclude(p => p.AllowedMembers)
+            .Include(w => w.Projects)
+            .ThenInclude(p => p.Favorites)
+            .Include(w => w.Favorites)
             .Include(w => w.Memberships)
-            .Single(u => u.Id == WorkspaceId.Create(request.Id));
+            .SingleAsync(w => w.Id == WorkspaceId.Create(request.Id));
         Utils.Workspace.AssertKickCollaborator(request, updatedWorkspace);
     }
 

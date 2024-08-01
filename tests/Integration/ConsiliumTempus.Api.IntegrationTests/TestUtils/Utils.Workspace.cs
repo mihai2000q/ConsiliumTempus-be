@@ -236,6 +236,14 @@ internal static partial class Utils
             workspace.Id.Value.Should().Be(request.Id);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.Memberships.Should().NotContain(i => i.User == user);
+            workspace.IsFavorite(user).Should().BeFalse();
+
+            workspace.Projects.Should().AllSatisfy(project =>
+            {
+                project.IsFavorite(user).Should().BeFalse();
+                project.Owner.Should().NotBe(user);
+                project.AllowedMembers.Should().NotContain(user);
+            });
         }
 
         internal static void AssertKickCollaborator(
@@ -244,7 +252,15 @@ internal static partial class Utils
         {
             workspace.Id.Value.Should().Be(request.Id);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            workspace.Memberships.Should().NotContain(i => i.User.Id.Value == request.CollaboratorId);
+            workspace.Memberships.Should().NotContain(m => m.User.Id.Value == request.CollaboratorId);
+            workspace.Favorites.Should().NotContain(f => f.Id.Value == request.CollaboratorId);
+
+            workspace.Projects.Should().AllSatisfy(project =>
+            {
+                project.Favorites.Should().NotContain(f => f.Id.Value == request.CollaboratorId);
+                project.Owner.Id.Value.Should().NotBe(request.CollaboratorId);
+                project.AllowedMembers.Should().NotContain(a => a.Id.Value == request.CollaboratorId);
+            });
         }
         
         private static void AssertUserResponse(
