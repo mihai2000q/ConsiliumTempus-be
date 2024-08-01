@@ -54,6 +54,12 @@ For database design checkout the [Workspace Diagram](../../database-diagrams/agg
 - **Kick Yourself** when the user tries to kick themselves from the workspace
 - **Kick Owner** when the user tries to kick the owner of the workspace
 
+### Domain Events
+
+- **Collaborator Removed From Workspace** when a collaborator gets removed from the workspace.
+This event makes sure that the user does not keep the workspace or any project on favorites,
+and also removes them from the allowed members of a project and chooses another owner if it's the case.
+
 ### Value Objects
 
 - **IsPersonal** which encapsulates a boolean *Value*, 

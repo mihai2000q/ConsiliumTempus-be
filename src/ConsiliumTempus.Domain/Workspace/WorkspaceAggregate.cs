@@ -6,6 +6,7 @@ using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace.Entities;
+using ConsiliumTempus.Domain.Workspace.Events;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Workspace;
@@ -77,7 +78,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     
     public bool IsFavorite(UserAggregate user)
     {
-        return _favorites.SingleOrDefault(u => u == user) is not null;
+        return _favorites.Contains(user);
     }
 
     public void Update(Name name)
@@ -130,6 +131,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     public void RemoveUserMembership(Membership membership)
     {
         _memberships.Remove(membership);
+        AddDomainEvent(new CollaboratorRemovedFromWorkspace(this, membership.User));
     }
 
     public void AddInvitation(WorkspaceInvitation invitation)

@@ -89,7 +89,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
 
     public bool IsFavorite(UserAggregate user)
     {
-        return _favorites.SingleOrDefault(u => u == user) is not null;
+        return _favorites.Contains(user);
     }
 
     public void Update(Name name, ProjectLifecycle lifecycle)
