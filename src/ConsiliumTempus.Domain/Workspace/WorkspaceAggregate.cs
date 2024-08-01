@@ -143,4 +143,13 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     {
         _invitations.Remove(invitation);
     }
+
+    public UserAggregate NextProjectOwner()
+    {
+        return Memberships
+            .OrderBy(m => m.User == Owner)
+            .ThenByDescending(m => m.WorkspaceRole.Id)
+            .First()
+            .User;
+    }
 }

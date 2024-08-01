@@ -19,6 +19,7 @@ class Workspace
     void RefreshActivity()
     void AddInvitation()
     void RemoveInvitation()
+    User NextProjectOwner()
 }
 ```
 

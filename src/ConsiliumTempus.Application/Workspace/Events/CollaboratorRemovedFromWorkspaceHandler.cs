@@ -32,11 +32,7 @@ public sealed class CollaboratorRemovedFromWorkspaceHandler(IProjectRepository p
                 project.UpdateFavorites(false, collaborator);
 
             if (project.Owner != collaborator) continue;
-            var newOwner = workspace.Memberships
-                .OrderBy(m => m.User == workspace.Owner)
-                .ThenByDescending(m => m.WorkspaceRole.Id)
-                .First()
-                .User;
+            var newOwner = workspace.NextProjectOwner();
             project.UpdateOwner(newOwner);
         }
     }
