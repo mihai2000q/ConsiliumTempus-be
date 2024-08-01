@@ -34,6 +34,11 @@ public interface IProjectRepository
         IEnumerable<IFilter<ProjectAggregate>> filters,
         CancellationToken cancellationToken = default);
 
+    Task<List<ProjectAggregate>> GetRelatedListByUserAndWorkspace(
+        UserId userId,
+        WorkspaceId workspaceId,
+        CancellationToken cancellationToken = default);
+
     Task<List<ProjectStatus>> GetStatuses(ProjectId id, CancellationToken cancellationToken = default);
 
     Task<int> GetStatusesCount(ProjectId id, CancellationToken cancellationToken = default);

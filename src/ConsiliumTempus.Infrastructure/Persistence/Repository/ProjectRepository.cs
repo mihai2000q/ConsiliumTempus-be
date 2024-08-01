@@ -96,6 +96,22 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .CountAsync(cancellationToken);
     }
 
+    public Task<List<ProjectAggregate>> GetRelatedListByUserAndWorkspace(
+        UserId userId,
+        WorkspaceId workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.Projects
+            .Include(p => p.Favorites)
+            .Include(p => p.AllowedMembers)
+            .Where(p => p.Workspace.Id == workspaceId)
+            .Where(p => 
+                !p.IsPrivate.Value || p.AllowedMembers.Any(u => u.Id == userId) ||
+                p.Owner.Id == userId ||
+                p.Favorites.Any(f => f.Id == userId))
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<List<ProjectStatus>> GetStatuses(ProjectId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.Set<ProjectStatus>()

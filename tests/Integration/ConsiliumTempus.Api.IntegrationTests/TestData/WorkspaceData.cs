@@ -1,9 +1,12 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
+using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Common.IntegrationTests.Workspace.Entities;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.Entities;
@@ -19,7 +22,8 @@ internal class WorkspaceData : ITestData
             Users,
             Workspaces,
             Memberships,
-            WorkspaceInvitations
+            WorkspaceInvitations,
+            Projects
         ];
     }
 
@@ -169,5 +173,75 @@ internal class WorkspaceData : ITestData
             Users[0],
             Users[7],
             Workspaces[2]),
+    ];
+
+    public static ProjectAggregate[] Projects { get; } =
+    [
+        ProjectFactory.Create(
+            Workspaces[0],
+            Users[0],
+            "Win NBA",
+            "This is an elaborate plan to win NBA",
+            favorites: [Users[0]],
+            allowedMembers: [Users[0], Users[3]]),
+        ProjectFactory.Create(
+            Workspaces[1],
+            Users[1],
+            "Win Champions League",
+            "Just an idea on how to win the football league",
+            favorites: [Users[1]]),
+        ProjectFactory.Create(
+            Workspaces[0],
+            Users[0],
+            "Win Another Tournament"),
+        ProjectFactory.Create(
+            Workspaces[2],
+            Users[0],
+            "Get a house",
+            "this is actually really important",
+            favorites: [Users[0]]),
+        ProjectFactory.Create(
+            Workspaces[2],
+            Users[0],
+            "Start a retiring investment plan",
+            "Should do it as soon as possible",
+            false,
+            ProjectLifecycle.Upcoming,
+            allowedMembers: [Users[0]]),
+        ProjectFactory.Create(
+            Workspaces[2],
+            Users[0],
+            "Start a new life",
+            "criminal activity",
+            false,
+            ProjectLifecycle.Archived,
+            favorites: [Users[0]]),
+
+        ProjectFactory.Create(
+            Workspaces[0],
+            Users[1],
+            "Something Private - owner not anymore",
+            description: "but the owner used to be a collaborator, however this was fixed already",
+            allowedMembers: [Users[1], Users[0]]),
+
+        ProjectFactory.Create(
+            Workspaces[0],
+            Users[0],
+            "Something Not Private",
+            isPrivate: false,
+            allowedMembers: [Users[0]]),
+        ProjectFactory.Create(
+            Workspaces[0],
+            Users[0],
+            "Something Private",
+            isPrivate: true,
+            allowedMembers: [Users[0], Users[3]],
+            favorites: [Users[3]]),
+        ProjectFactory.Create(
+            Workspaces[0],
+            Users[3],
+            "Something More Private",
+            isPrivate: true,
+            allowedMembers: [Users[3]]),
     ];
 }

@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
 using ConsiliumTempus.Application.ProjectSprint.Commands.MoveStage;
@@ -59,7 +60,7 @@ internal static partial class Utils
 
             if (command.KeepPreviousStages)
             {
-                if (project.Sprints.Count != 0)
+                if (project.Sprints.IsNotEmpty())
                 {
                     projectSprint.Stages.Should().HaveSameCount(project.Sprints[0].Stages);
                     projectSprint.Stages
@@ -87,7 +88,7 @@ internal static partial class Utils
                 projectSprint.Stages[0].Tasks.Should().BeEmpty();
             }
 
-            if (project.Sprints.Count != 0)
+            if (project.Sprints.IsNotEmpty())
             {
                 if (previousSprintEndDate is null)
                     project.Sprints[0].EndDate.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));

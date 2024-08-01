@@ -23,6 +23,8 @@ public class WorkspaceControllerLeaveTest(WebAppFactory factory)
         var workspace = WorkspaceData.Workspaces.First();
         var request = WorkspaceRequestFactory.CreateLeaveWorkspaceRequest(workspace.Id.Value);
 
+        var projectToBeRemoved = WorkspaceData.Projects[^1];
+
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Delete($"api/workspaces/{request.Id}/leave");
@@ -33,7 +35,16 @@ public class WorkspaceControllerLeaveTest(WebAppFactory factory)
         response!.Message.Should().Be("Workspace has been left successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        
+        dbContext.Projects.SingleOrDefault(p => p.Id == projectToBeRemoved.Id)
+            .Should().BeNull();
+        
         var updatedWorkspace = await dbContext.Workspaces
+            .Include(w => w.Projects)
+            .ThenInclude(p => p.AllowedMembers)
+            .Include(w => w.Projects)
+            .ThenInclude(p => p.Favorites)
+            .Include(w => w.Favorites)
             .Include(w => w.Memberships)
             .SingleAsync(w => w.Id == WorkspaceId.Create(request.Id));
         Utils.Workspace.AssertLeave(request, updatedWorkspace, user);
