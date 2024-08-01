@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ErrorOr;
@@ -27,7 +28,7 @@ public sealed class GetCollectionProjectSprintQueryHandler(IProjectSprintReposit
             query.FromThisYear,
             cancellationToken);
 
-        if (sprints.Count == 0 && filters.Count == 0 && query.FromThisYear)
+        if (sprints.IsEmpty() && filters.IsEmpty() && query.FromThisYear)
         {
             sprints = [await projectSprintRepository.GetFirstByProject(projectId, filters, cancellationToken)];
         }

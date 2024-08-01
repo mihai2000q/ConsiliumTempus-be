@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Application.UnitTests.TestData.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
@@ -74,7 +75,7 @@ public class GetCollectionProjectSprintQueryHandlerTest
                 Arg.Is<bool>(f => f == query.FromThisYear));
         
         outcome.IsError.Should().BeFalse();
-        if (sprints.Count == 0 && query.FromThisYear)
+        if (sprints.IsEmpty() && query.FromThisYear)
         {
             outcome.Value.Sprints.Should().HaveCount(1);
             outcome.Value.Sprints[0].Should().Be(sprint);
