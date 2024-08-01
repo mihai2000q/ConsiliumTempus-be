@@ -80,6 +80,8 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestam
             DateTime.UtcNow,
             DateTime.UtcNow);
 
+        project.AddAllowedMember(owner);
+
         project.AddDomainEvent(new ProjectCreated(project));
 
         return project;

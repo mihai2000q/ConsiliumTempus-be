@@ -23,7 +23,6 @@ public static class ProjectFactory
             IsPrivate.Create(isPrivate),
             workspace ?? WorkspaceFactory.Create(),
             owner ?? UserFactory.Create());
-        project.AddAllowedMember(project.Owner);
 
         project.ClearDomainEvents();
 
@@ -43,7 +42,6 @@ public static class ProjectFactory
             IsPrivate.Create(isPrivate),
             workspace ?? WorkspaceFactory.Create(),
             owner ?? UserFactory.Create());
-        project.AddAllowedMember(project.Owner);
 
         ProjectSprintFactory
             .CreateList(sprintsCount, project: project, endDate: sprintEndDate)
@@ -66,7 +64,6 @@ public static class ProjectFactory
             IsPrivate.Create(isPrivate),
             workspace ?? WorkspaceFactory.Create(),
             owner ?? UserFactory.Create());
-        project.AddAllowedMember(project.Owner);
 
         project.ClearDomainEvents();
 
@@ -90,7 +87,6 @@ public static class ProjectFactory
             IsPrivate.Create(isPrivate),
             workspace ?? WorkspaceFactory.Create(),
             owner ?? UserFactory.Create());
-        project.AddAllowedMember(project.Owner);
 
         project.ClearDomainEvents();
 
