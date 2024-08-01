@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Create;
 using ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
+using ConsiliumTempus.Application.Workspace.Commands.KickCollaborator;
 using ConsiliumTempus.Application.Workspace.Commands.Leave;
 using ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 using ConsiliumTempus.Application.Workspace.Commands.Update;
@@ -83,6 +84,14 @@ internal static partial class Utils
             membership.WorkspaceRole.Should().Be(WorkspaceRole.View);
             membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertFromKickCollaboratorCommand(
+            KickCollaboratorFromWorkspaceCommand command,
+            WorkspaceAggregate workspace)
+        {
+            workspace.Id.Value.Should().Be(command.Id);
+            workspace.Memberships.Should().NotContain(m => m.User.Id.Value == command.CollaboratorId);
         }
 
         internal static void AssertFromRejectInvitationCommand(

@@ -51,6 +51,8 @@ For database design checkout the [Workspace Diagram](../../database-diagrams/agg
 - **Delete Personal Workspace** when the workspace is personal, it cannot be deleted (not even by their owner)
 - **Leave Owned** when the workspace cannot be left by their owner
 - **Collaborator Not Found** when the collaborator cannot be found within the workspace
+- **Kick Yourself** when the user tries to kick themselves from the workspace
+- **Kick Owner** when the user tries to kick the owner of the workspace
 
 ### Value Objects
 

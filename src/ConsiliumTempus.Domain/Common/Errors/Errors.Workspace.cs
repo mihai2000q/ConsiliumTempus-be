@@ -21,6 +21,14 @@ public static partial class Errors
         public static Error CollaboratorNotFound => Error.NotFound(
             "Workspace.CollaboratorNotFound",
             "Collaborator could not be found inside workspace");
+
+        public static Error KickYourself => Error.Conflict(
+            "Project.KickYourself",
+            "You cannot kick yourself from workspace");
+
+        public static Error KickOwner => Error.Conflict(
+            "Project.KickOwner",
+            "You cannot kick the owner of the workspace");
     }
 
     public static class WorkspaceInvitation
