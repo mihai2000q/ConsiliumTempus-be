@@ -149,10 +149,10 @@ internal static partial class Utils
 
         internal static void AssertFromUpdateOwnerCommand(
             WorkspaceAggregate workspace,
-            UpdateOwnerWorkspaceCommand command,
-            UserAggregate owner)
+            UpdateOwnerWorkspaceCommand command)
         {
             workspace.Id.Value.Should().Be(command.Id);
+            workspace.Owner.Id.Value.Should().Be(command.OwnerId);
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
