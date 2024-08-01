@@ -23,6 +23,7 @@ public sealed class RemoveAllowedMemberFromProjectCommandHandler(
         var allowedMember = project.AllowedMembers
             .SingleOrDefault(u => u.Id.Value == command.AllowedMemberId);
         if (allowedMember is null) return Errors.Project.AllowedMemberNotFound;
+        if (allowedMember == project.Owner) return Errors.Project.RemoveOwner;
 
         var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
         if (allowedMember == user) return Errors.Project.RemoveYourself;

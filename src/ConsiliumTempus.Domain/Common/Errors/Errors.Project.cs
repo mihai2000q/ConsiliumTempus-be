@@ -29,6 +29,10 @@ public static partial class Errors
         public static Error RemoveYourself => Error.Conflict(
             "Project.RemoveYourself",
             "You cannot remove yourself from allowed members");
+
+        public static Error RemoveOwner => Error.Forbidden(
+            "Project.RemoveOwner",
+            "You cannot remove the owner from allowed members");
     }
     
     public static class ProjectStatus

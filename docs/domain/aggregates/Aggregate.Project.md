@@ -59,6 +59,7 @@ For database design checkout the [Project Diagram](../../database-diagrams/aggre
 - **Already Allowed Member** when the user is already an allowed member of the project
 - **Leave Owned** when the user is trying to leave from the allowed members of a project that they own
 - **Remove Yourself** when the user tries to remove himself from the allowed members of the project
+- **Remove Owner** when the user tries to remove the owner of the project from the allowed members
 
 ### Domain Events
 
