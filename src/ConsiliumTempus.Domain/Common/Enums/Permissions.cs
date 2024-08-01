@@ -14,6 +14,7 @@ public enum Permissions
     InviteCollaboratorToWorkspace,
     ReadCollaboratorsFromWorkspace,
     UpdateCollaboratorFromWorkspace,
+    KickCollaboratorFromWorkspace,
     // Project
     CreateProject,
     ReadProject,
