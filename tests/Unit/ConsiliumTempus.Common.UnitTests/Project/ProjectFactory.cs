@@ -102,7 +102,7 @@ public static class ProjectFactory
     {
         return Enumerable
             .Range(0, count)
-            .Select(_ => CreateWithSprints())
+            .Select(_ => Create())
             .ToList();
     }
 }

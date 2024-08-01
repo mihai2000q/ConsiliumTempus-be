@@ -13,8 +13,11 @@ using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 using ConsiliumTempus.Application.Workspace.Queries.Get;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Events;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -166,8 +169,47 @@ internal static partial class Utils
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
+        internal static void AssertFromRemovedCollaborator(
+            CollaboratorRemovedFromWorkspace domainEvent,
+            List<ProjectAggregate> projects,
+            List<ProjectAggregate> ownedProjects,
+            List<ProjectAggregate> favoritesProjects)
+        {
+            var (workspace, collaborator) = domainEvent;
+            workspace.IsFavorite(collaborator).Should().BeFalse();
+            projects.Should().AllSatisfy(p =>
+            {
+                p.Owner.Should().NotBe(collaborator);
+                p.AllowedMembers.Should().NotContain(collaborator);
+                if (p.IsFavorite(collaborator))
+                {
+                    p.DomainEvents.Should().HaveCount(1);
+                    p.DomainEvents[0].Should().BeOfType<AllowedMemberRemovedFromProject>();
+                }
+            });
+
+            var newOwner = workspace.Memberships
+                .OrderBy(m => m.User == workspace.Owner)
+                .ThenByDescending(m => m.WorkspaceRole.Id)
+                .First()
+                .User;
+            projects.Where(ownedProjects.Contains).Should().AllSatisfy(p =>
+                p.Owner.Should().Be(newOwner));
+
+            projects.Where(favoritesProjects.Contains).Should().AllSatisfy(p =>
+            {
+                if (p.IsFavorite(collaborator))
+                {
+                    p.DomainEvents.Should().HaveCount(1);
+                    p.DomainEvents[0].Should().BeOfType<AllowedMemberRemovedFromProject>();
+                }
+                else
+                    p.DomainEvents.Should().BeEmpty();
+            });
+        }
+
         internal static void AssertWorkspace(
-            GetWorkspaceResult outcome, 
+            GetWorkspaceResult outcome,
             WorkspaceAggregate expected,
             UserAggregate user)
         {
@@ -184,9 +226,9 @@ internal static partial class Utils
 
             outcome.CurrentUser.Should().Be(user);
         }
-        
+
         internal static void AssertWorkspace(
-            WorkspaceAggregate outcome, 
+            WorkspaceAggregate outcome,
             WorkspaceAggregate expected)
         {
             outcome.Id.Should().Be(expected.Id);

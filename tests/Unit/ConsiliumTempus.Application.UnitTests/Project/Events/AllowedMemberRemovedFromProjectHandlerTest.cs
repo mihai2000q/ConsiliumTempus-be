@@ -30,6 +30,6 @@ public class AllowedMemberRemovedFromProjectHandlerTest
         await _uut.Handle(domainEvent, default);
 
         // Assert
-        project.Favorites.Should().NotContain(u => u != user);
+        project.IsFavorite(user).Should().BeFalse();
     }
 }

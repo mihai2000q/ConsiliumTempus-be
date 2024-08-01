@@ -7,8 +7,8 @@ public sealed class AllowedMemberRemovedFromProjectHandler : INotificationHandle
 {
     public Task Handle(AllowedMemberRemovedFromProject notification, CancellationToken cancellationToken)
     {
-        notification.Project.UpdateFavorites(false, notification.User);
-
+        var (project, user) = notification;
+        if (project.IsFavorite(user)) project.UpdateFavorites(false, user);
         return Task.CompletedTask;
     }
 }
