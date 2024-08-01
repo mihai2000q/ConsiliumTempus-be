@@ -25,6 +25,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
     public async Task<ProjectAggregate?> GetWithAllowedMembers(ProjectId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.Projects
+            .Include(p => p.Favorites)
             .Include(p => p.AllowedMembers
                 .OrderBy(u => u.FirstName.Value)
                 .ThenBy(u => u.LastName.Value)

@@ -21,7 +21,7 @@ public class ProjectControllerRemoveAllowedMemberTest(WebAppFactory factory)
         // Arrange
         var project = ProjectData.Projects[^2];
         var user = project.Owner;
-        var allowedMember = project.AllowedMembers.First(u => u != user);
+        var allowedMember = project.AllowedMembers[1];
         var request = ProjectRequestFactory.CreateRemoveAllowedMemberFromProjectRequest(
             project.Id.Value,
             allowedMember.Id.Value);
@@ -39,6 +39,8 @@ public class ProjectControllerRemoveAllowedMemberTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedProject = await dbContext.Projects
+            .AsNoTracking()
+            .Include(p => p.Favorites)
             .Include(p => p.AllowedMembers)
             .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
         Utils.Project.AssertRemoveAllowedMember(updatedProject, request);
