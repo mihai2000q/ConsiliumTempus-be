@@ -80,9 +80,4 @@ public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
         DateOfBirth = dateOfBirth;
         UpdatedDateTime = DateTime.UtcNow;
     }
-
-    public void AddWorkspaceMembership(Membership membership)
-    {
-        _memberships.Add(membership);
-    }
 }
