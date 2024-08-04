@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Interfaces;
+﻿using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
@@ -38,9 +39,18 @@ public interface IWorkspaceRepository
     Task<List<WorkspaceAggregate>> GetListByUserWithCollaborators(UserAggregate user,
         CancellationToken cancellationToken = default);
 
-    Task<List<UserAggregate>> GetCollaborators(
+    Task<List<Membership>> GetCollaborators(
         WorkspaceId id,
         string? searchValue,
+        IReadOnlyList<IFilter<Membership>> filters,
+        IReadOnlyList<IOrder<Membership>> orders,
+        PaginationInfo? paginationInfo,
+        CancellationToken cancellationToken = default);
+
+    Task<int> GetCollaboratorsCount(
+        WorkspaceId id,
+        string? searchValue,
+        IReadOnlyList<IFilter<Membership>> filters,
         CancellationToken cancellationToken = default);
 
     Task<List<WorkspaceInvitation>> GetInvitations(

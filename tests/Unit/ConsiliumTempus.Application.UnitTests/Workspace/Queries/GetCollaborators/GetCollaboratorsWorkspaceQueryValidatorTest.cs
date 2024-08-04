@@ -27,6 +27,11 @@ public class GetCollaboratorsFromWorkspaceQueryValidatorTest
     
     [Theory]
     [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidIdQueries))]
+    [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidPageSizeAndCurrentPageQueries))]
+    [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidPageSizeQueries))]
+    [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidCurrentPageQueries))]
+    [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidOrderByQueries))]
+    [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidSearchQueries))]
     public async Task ValidateGetCollaboratorsFromWorkspaceQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollaboratorsFromWorkspaceQuery query,
         string property)

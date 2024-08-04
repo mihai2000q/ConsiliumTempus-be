@@ -1,4 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Common.Filters;
+using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Common.Orders;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ErrorOr;
 using MediatR;
@@ -11,11 +14,25 @@ public sealed class GetCollaboratorsFromWorkspaceQueryHandler(IWorkspaceReposito
     public async Task<ErrorOr<GetCollaboratorsFromWorkspaceResult>> Handle(GetCollaboratorsFromWorkspaceQuery query,
         CancellationToken cancellationToken)
     {
+        var workspaceId = WorkspaceId.Create(query.Id);
+        var filters = MembershipFilter.Parse(query.Search);
+        var orders = MembershipOrder.Parse(query.OrderBy);
+        var paginationInfo = PaginationInfo.Create(query.PageSize, query.CurrentPage);
+        var searchValue = query.SearchValue?.Trim();
+
         var collaborators = await workspaceRepository.GetCollaborators(
-            WorkspaceId.Create(query.Id),
-            query.SearchValue?.Trim(),
+            workspaceId,
+            searchValue,
+            filters, 
+            orders,
+            paginationInfo, 
+            cancellationToken);
+        var totalCount = await workspaceRepository.GetCollaboratorsCount(
+            workspaceId,
+            searchValue,
+            filters,
             cancellationToken);
 
-        return new GetCollaboratorsFromWorkspaceResult(collaborators);
+        return new GetCollaboratorsFromWorkspaceResult(collaborators, totalCount);
     }
 }

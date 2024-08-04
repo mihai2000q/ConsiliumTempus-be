@@ -20,7 +20,7 @@ public abstract class MembershipOrder : Order<Membership>
         new OrderProperties.Membership.CreatedDateTimeProperty(),
         new OrderProperties.Membership.UpdatedDateTimeProperty()
     ];
-    
+
     private MembershipOrder(Expression<Func<Membership, object?>> propertySelector, OrderType orderType)
         : base(propertySelector, orderType)
     {
