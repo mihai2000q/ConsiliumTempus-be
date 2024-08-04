@@ -85,23 +85,41 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<UserAggregate>> GetCollaborators(
+    public async Task<List<Membership>> GetCollaborators(
         WorkspaceId id,
         string? searchValue,
+        IReadOnlyList<IFilter<Membership>> filters,
+        IReadOnlyList<IOrder<Membership>> orders,
+        PaginationInfo? paginationInfo,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Set<Membership>()
             .Include(m => m.User)
             .Where(m => m.Workspace.Id == id)
-            .Select(m => m.User)
             .WhereIf(!string.IsNullOrWhiteSpace(searchValue),
-                u =>
-                    u.Credentials.Email.Contains(searchValue!) ||
-                    (u.FirstName.Value + " " + u.LastName.Value).Contains(searchValue!))
-            .OrderBy(u => u.FirstName.Value)
-            .ThenBy(u => u.LastName.Value)
-            .ThenBy(u => u.Credentials.Email)
+                m =>
+                    m.User.Credentials.Email.Contains(searchValue!) ||
+                    (m.User.FirstName.Value + " " + m.User.LastName.Value).Contains(searchValue!))
+            .ApplyFilters(filters)
+            .ApplyOrders(orders)
+            .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<int> GetCollaboratorsCount(
+        WorkspaceId id,
+        string? searchValue,
+        IReadOnlyList<IFilter<Membership>> filters,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Set<Membership>()
+            .Include(m => m.User)
+            .Where(m => m.Workspace.Id == id)
+            .WhereIf(!string.IsNullOrWhiteSpace(searchValue),
+                m =>
+                    m.User.Credentials.Email.Contains(searchValue!) ||
+                    (m.User.FirstName.Value + " " + m.User.LastName.Value).Contains(searchValue!))
+            .CountAsync(cancellationToken);
     }
 
     public async Task<List<WorkspaceInvitation>> GetInvitations(

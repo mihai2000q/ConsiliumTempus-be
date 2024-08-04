@@ -20,12 +20,9 @@ public static class QueryableExtensions
     {
         if (orders.Count == 0) return queryable;
         var orderedQueryable = queryable.ApplyOrder(orders[0]);
-        for (var i = 1; i < orders.Count; i++)
-        {
-            orderedQueryable = orderedQueryable.ThenApplyOrder(orders[i]);
-        }
-
-        return orderedQueryable;
+        return orders
+            .Skip(1)
+            .Aggregate(orderedQueryable, ThenApplyOrder);
     }
 
     public static IQueryable<TSource> Paginate<TSource>(
