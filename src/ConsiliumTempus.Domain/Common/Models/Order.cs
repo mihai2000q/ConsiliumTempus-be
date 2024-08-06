@@ -30,21 +30,22 @@ public class Order<TEntity> : IOrder<TEntity>
         if (orders is null) return [];
 
         return orders
-            .Select(stringOrder => ParseOrder(stringOrder, orderProperties))
+            .SelectMany(stringOrder => ParseOrder(stringOrder, orderProperties))
             .ToList();
     }
 
-    private static Order<TEntity> ParseOrder(
+    private static IEnumerable<Order<TEntity>> ParseOrder(
         string order,
         IReadOnlyList<OrderProperty<TEntity>> orderProperties)
     {
         var splitOrder = order.Trim().Split(Order.Separator);
 
-        var propertySelector = orderProperties
+        var propertySelectors = orderProperties
             .Single(op => op.Identifier == splitOrder[0])
-            .PropertySelector;
+            .PropertySelectors;
         var orderType = splitOrder[1] == Order.Descending ? OrderType.Descending : OrderType.Ascending;
 
-        return new Order<TEntity>(propertySelector, orderType);
+        return propertySelectors
+            .Select(propertySelector => new Order<TEntity>(propertySelector, orderType));
     }
 }

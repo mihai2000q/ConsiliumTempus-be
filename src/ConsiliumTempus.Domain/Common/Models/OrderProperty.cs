@@ -4,7 +4,7 @@ namespace ConsiliumTempus.Domain.Common.Models;
 
 public abstract record OrderProperty<TEntity>(
     string Identifier,
-    Expression<Func<TEntity, object?>> PropertySelector)
+    params Expression<Func<TEntity, object?>>[] PropertySelectors)
 {
     public string Identifier { get; } = UpperCamelCaseToSnakeCase(Identifier);
 
