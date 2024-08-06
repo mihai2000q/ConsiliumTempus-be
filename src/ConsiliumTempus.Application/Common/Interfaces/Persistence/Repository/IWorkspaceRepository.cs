@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -36,8 +37,7 @@ public interface IWorkspaceRepository
         IEnumerable<IFilter<WorkspaceAggregate>> filters,
         CancellationToken cancellationToken = default);
 
-    Task<List<WorkspaceAggregate>> GetListByUserWithCollaborators(UserAggregate user,
-        CancellationToken cancellationToken = default);
+    Task<List<WorkspaceAggregate>> GetListByOwner(UserId userId, CancellationToken cancellationToken = default);
 
     Task<List<Membership>> GetCollaborators(
         WorkspaceId id,

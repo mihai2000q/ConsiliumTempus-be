@@ -14,8 +14,6 @@ public interface IUserRepository
     void Remove(UserAggregate user);
 
     Task NullifyAuditsByUser(UserAggregate user, CancellationToken cancellationToken = default);
-    
-    Task RemoveProjectsByOwner(UserAggregate owner, CancellationToken cancellationToken = default);
 
     Task RemoveWorkspaceInvitationsByUser(UserAggregate user, CancellationToken cancellationToken = default);
 }

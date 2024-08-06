@@ -3,6 +3,7 @@ using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.Events;
 using ConsiliumTempus.Domain.Workspace;
@@ -50,7 +51,75 @@ internal static partial class Utils
             user.DateOfBirth.Should().Be(command.DateOfBirth);
             user.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
+        internal static void AssertFromUserDeleted(
+            UserAggregate user,
+            List<WorkspaceAggregate> workspaces,
+            List<ProjectAggregate> projects,
+            List<WorkspaceAggregate> ownedWorkspaces,
+            List<ProjectAggregate> ownedProjects)
+        {
+            // Update Owned Workspaces
+            var preservedWorkspaces = workspaces
+                .Where(w => w.Memberships.Count > 1)
+                .ToList();
+
+            preservedWorkspaces.Should()
+                .HaveSameCount(ownedWorkspaces)
+                .And
+                .BeEquivalentTo(ownedWorkspaces)
+                .And
+                .AllSatisfy(w =>
+                {
+                    w.Owner.Should().NotBe(user);
+                    w.IsPersonal.Value.Should().BeFalse();
+
+                    var oldWorkspace = ownedWorkspaces.Single(x => x.Id == w.Id);
+                    var newAdminOwner = oldWorkspace.Memberships
+                        .FirstOrDefault(m => m.WorkspaceRole == WorkspaceRole.Admin && m.User != user);
+                    if (newAdminOwner is not null)
+                    {
+                        w.Owner.Should().Be(newAdminOwner.User);
+                    }
+                    else
+                    {
+                        var oldMembership = oldWorkspace.Memberships.First(m => m.User != user);
+                        oldMembership.WorkspaceRole.Should().NotBe(WorkspaceRole.Admin);
+
+                        var newOwner = w.Memberships.Single(m => m.Id == oldMembership.Id);
+                        newOwner.WorkspaceRole.Should().NotBe(oldMembership.WorkspaceRole);
+                        newOwner.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+                        newOwner.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+                        w.Owner.Should().Be(oldMembership.User);
+                    }
+                });
+
+            // Update Owned Projects
+            var preservedProjects = projects
+                .Where(p => p.Workspace.Memberships.Count > 1 && (!p.IsPrivate.Value || p.AllowedMembers.Count > 1))
+                .ToList();
+
+            preservedProjects.Should()
+                .HaveSameCount(ownedProjects)
+                .And
+                .BeEquivalentTo(ownedProjects)
+                .And
+                .AllSatisfy(p =>
+                {
+                    p.Owner.Should().NotBe(user);
+                    p.AllowedMembers.Should().HaveCountGreaterThan(1);
+
+                    var newOwner = p.IsPrivate.Value
+                        ? p.AllowedMembers.First(u => u != user)
+                        : p.Workspace.Memberships
+                            .OrderByDescending(m => m.WorkspaceRole.Id)
+                            .First(m => m.User != user)
+                            .User;
+                    p.Owner.Should().Be(newOwner);
+                    p.AllowedMembers.Should().Contain(newOwner);
+                });
+        }
+
         internal static bool AssertFromUserRegistered(UserAggregate user, WorkspaceAggregate workspace)
         {
             workspace.Memberships.Should().HaveCount(1);
