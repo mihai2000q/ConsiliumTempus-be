@@ -29,7 +29,7 @@ For database design, check out the [Membership Diagram](../../database-diagrams/
 ### Filters
 
 - **UserName** to filter by the name of the user
-- **WorkspaceRoleId** to filter by the workspace role id
+- **WorkspaceRoleName** to filter by the workspace role name
 
 ### Orders
 
@@ -39,5 +39,5 @@ For database design, check out the [Membership Diagram](../../database-diagrams/
 - **UserName** to order by the name of the user
 - **WorkspaceRoleId** to order by the workspace role id
 - **WorkspaceRoleName** to order by the workspace role name
-- **WorkspaceCreatedDateTime** to order by the creation date
-- **WorkspaceUpdatedDateTime** to order by the last modified date
+- **CreatedDateTime** to order by the creation date
+- **UpdatedDateTime** to order by the last modified date
