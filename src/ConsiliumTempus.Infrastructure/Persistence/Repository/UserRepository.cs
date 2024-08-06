@@ -42,13 +42,6 @@ public sealed class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRe
         audits.ForEach(a => a.Nullify());
     }
 
-    public async Task RemoveProjectsByOwner(UserAggregate owner, CancellationToken cancellationToken = default)
-    {
-        await dbContext.Projects
-            .Where(p => p.Owner == owner)
-            .ExecuteDeleteAsync(cancellationToken);
-    }
-
     public async Task RemoveWorkspaceInvitationsByUser(UserAggregate user, CancellationToken cancellationToken = default)
     {
         await dbContext.Set<WorkspaceInvitation>()

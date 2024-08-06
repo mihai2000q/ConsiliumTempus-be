@@ -12,7 +12,7 @@ namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
 internal static partial class Utils
 {
-    private static readonly TimeSpan TimeSpanPrecision = 15.Seconds();
+    internal static readonly TimeSpan TimeSpanPrecision = 15.Seconds();
 
     internal static void ValidateError<T>(this ErrorOr<T> error, Error expectedError)
     {
