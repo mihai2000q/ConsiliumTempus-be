@@ -131,7 +131,8 @@ internal class UserData : ITestData
             Users[0],
             "Win NBA",
             "This is an elaborate plan to win NBA",
-            true)
+            true,
+            allowedMembers: [Users[0]])
     ];
 
     public static ProjectSprintAggregate[] ProjectSprints { get; } =
