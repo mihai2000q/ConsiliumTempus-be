@@ -1168,7 +1168,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.WorkspaceRole", null)
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.WorkspaceRole", "WorkspaceRole")
                         .WithMany()
                         .HasForeignKey("_workspaceRoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1177,6 +1177,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Navigation("User");
 
                     b.Navigation("Workspace");
+
+                    b.Navigation("WorkspaceRole");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.WorkspaceRoleHasPermission", b =>

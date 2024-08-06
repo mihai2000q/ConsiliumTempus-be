@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240801080710_InitialCreate")]
+    [Migration("20240806154401_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -1171,7 +1171,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.WorkspaceRole", null)
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.WorkspaceRole", "WorkspaceRole")
                         .WithMany()
                         .HasForeignKey("_workspaceRoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1180,6 +1180,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Navigation("User");
 
                     b.Navigation("Workspace");
+
+                    b.Navigation("WorkspaceRole");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.WorkspaceRoleHasPermission", b =>

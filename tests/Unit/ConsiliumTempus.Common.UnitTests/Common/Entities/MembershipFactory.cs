@@ -18,4 +18,12 @@ public static class MembershipFactory
             workspace ?? WorkspaceFactory.Create(),
             workspaceRole ?? WorkspaceRole.Member);
     }
+
+    public static List<Membership> CreateList(int count = 5)
+    {
+        return Enumerable
+            .Repeat(0, count)
+            .Select(_ => Create())
+            .ToList();
+    }
 }

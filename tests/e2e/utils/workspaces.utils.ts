@@ -108,7 +108,7 @@ export async function inviteCollaborator(
 
 export async function getCollaborators(request: APIRequestContext, workspaceId: string) {
   const response = await request.get(
-    `/api/workspaces/${workspaceId}/collaborators`,
+    `/api/workspaces/${workspaceId}/collaborators?orderBy=user_name.asc&orderBy=user_email.asc`,
     useToken()
   )
   expect(response.ok()).toBeTruthy()

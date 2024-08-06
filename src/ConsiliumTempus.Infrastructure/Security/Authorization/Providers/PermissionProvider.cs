@@ -12,15 +12,13 @@ public sealed class PermissionProvider(ConsiliumTempusDbContext dbContext) : IPe
     {
         var membership = await dbContext.Set<Membership>()
             .IgnoreAutoIncludes()
+            .Include(m => m.WorkspaceRole)
+            .ThenInclude(wr => wr.Permissions)
             .SingleOrDefaultAsync(u => u.User.Id == userId && u.Workspace.Id == workspaceId);
-
-        if (membership is null) return [];
-
-        return dbContext.Set<WorkspaceRole>()
-            .Include(wr => wr.Permissions)
-            .Single(wr => wr == membership.WorkspaceRole)
+        return membership
+            ?.WorkspaceRole
             .Permissions
             .Select(x => x.Name)
-            .ToHashSet();
+            .ToHashSet() ?? [];
     }
 }

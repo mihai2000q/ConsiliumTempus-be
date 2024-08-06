@@ -57,11 +57,19 @@ public static class WorkspaceRequestFactory
 
     public static GetCollaboratorsFromWorkspaceRequest CreateGetCollaboratorsFromWorkspaceRequest(
         Guid? id = null,
+        int? pageSize = null,
+        int? currentPage = null,
+        string[]? orderBy = null,
+        string[]? search = null,
         string searchValue = "")
     {
         return new GetCollaboratorsFromWorkspaceRequest
         {
             Id = id ?? Guid.NewGuid(),
+            PageSize = pageSize,
+            CurrentPage = currentPage,
+            OrderBy = orderBy,
+            Search = search,
             SearchValue = searchValue
         };
     }

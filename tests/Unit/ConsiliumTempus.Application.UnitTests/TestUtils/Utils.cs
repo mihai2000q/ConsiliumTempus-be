@@ -25,10 +25,10 @@ internal static partial class Utils
     {
         var customOrderPosition = 0;
         tasks.OrderBy(t => t.CustomOrderPosition.Value)
-            .Should().AllSatisfy(t => 
+            .Should().AllSatisfy(t =>
                 t.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
-    
+
     internal static void ShouldBeOrdered(this IReadOnlyList<ProjectStage> stages)
     {
         var customOrderPosition = 0;
@@ -43,7 +43,7 @@ internal static partial class Utils
         audit.UpdatedBy.Should().Be(createdBy);
         audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
     }
-    
+
     internal static void ShouldBeUpdated(this Audit audit, UserAggregate updatedBy)
     {
         audit.UpdatedBy.Should().Be(updatedBy);
@@ -68,7 +68,7 @@ internal static partial class Utils
             .Zip(orderBy)
             .All(x => x.First.AssertOrder(x.Second, orderProperties));
     }
-    
+
     internal static bool AssertFilters<TEntity>(
         this IReadOnlyList<IFilter<TEntity>> filters,
         string[]? search,
@@ -79,7 +79,7 @@ internal static partial class Utils
             .Zip(search)
             .All(x => x.First.AssertFilter(x.Second, filterProperties));
     }
-    
+
     private static bool AssertOrder<TEntity>(
         this IOrder<TEntity> order,
         string stringOrder,
@@ -93,7 +93,8 @@ internal static partial class Utils
 
         return orderProperties
             .Single(op => op.Identifier == split[0])
-            .PropertySelector == order.PropertySelector;
+            .PropertySelectors
+            .Any(propertySelector => propertySelector == order.PropertySelector);
     }
 
     private static bool AssertFilter<TEntity>(
@@ -105,7 +106,7 @@ internal static partial class Utils
 
         return true;
     }
-    
+
     private static (string, string, string) SplitFilter(string filter)
     {
         var result = new List<string>();

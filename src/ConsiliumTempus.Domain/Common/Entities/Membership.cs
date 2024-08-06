@@ -29,12 +29,18 @@ public sealed class Membership : Entity<(UserId UserId, WorkspaceId WorkspaceId)
         _workspaceRoleId = workspaceRoleId;
     }
 
-    private int _workspaceRoleId;
+    private int _workspaceRoleId; // used to persist in the database
+    private readonly WorkspaceRole? _workspaceRole; // used to retrieve from database
 
     public override (UserId UserId, WorkspaceId WorkspaceId) Id => new(User.Id, Workspace.Id);
     public UserAggregate User { get; init; } = null!;
     public WorkspaceAggregate Workspace { get; init; } = null!;
-    public WorkspaceRole WorkspaceRole => WorkspaceRole.GetValues().Single(wr => wr.Id == _workspaceRoleId);
+    public WorkspaceRole WorkspaceRole
+    {
+        get => _workspaceRole ?? WorkspaceRole.GetValues().Single(wr => wr.Id == _workspaceRoleId);
+        init => _workspaceRole = value;
+    }
+
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
 

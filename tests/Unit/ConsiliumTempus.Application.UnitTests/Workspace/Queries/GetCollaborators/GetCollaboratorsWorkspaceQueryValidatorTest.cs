@@ -27,9 +27,15 @@ public class GetCollaboratorsFromWorkspaceQueryValidatorTest
     
     [Theory]
     [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidIdQueries))]
+    [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidPageSizeAndCurrentPageQueries))]
+    [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidPageSizeQueries))]
+    [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidCurrentPageQueries))]
+    [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidOrderByQueries))]
+    [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidSearchQueries))]
     public async Task ValidateGetCollaboratorsFromWorkspaceQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetCollaboratorsFromWorkspaceQuery query,
-        string property)
+        string property,
+        short expectedErrors)
     {
         // Arrange - parameterized
 
@@ -38,7 +44,7 @@ public class GetCollaboratorsFromWorkspaceQueryValidatorTest
 
         // Assert
         outcome.IsValid.Should().BeFalse();
-        outcome.Errors.Should().HaveCount(1);
+        outcome.Errors.Should().HaveCount(expectedErrors);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
 }

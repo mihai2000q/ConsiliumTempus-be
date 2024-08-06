@@ -25,3 +25,20 @@ class Membership
 ```
 
 For database design, check out the [Membership Diagram](../../database-diagrams/entities/Diagram.Membership.md).
+
+### Filters
+
+- **UserName** to filter by the name of the user
+- **WorkspaceRoleId** to filter by the workspace role id
+- **WorkspaceRoleName** to filter by the workspace role name
+
+### Orders
+
+- **UserEmail** to order by the email of the user
+- **UserFirstName** to order by the first name of the user
+- **UserLastName** to order by the last name of the user
+- **UserName** to order by the name of the user
+- **WorkspaceRoleId** to order by the workspace role id
+- **WorkspaceRoleName** to order by the workspace role name
+- **CreatedDateTime** to order by the creation date
+- **UpdatedDateTime** to order by the last modified date

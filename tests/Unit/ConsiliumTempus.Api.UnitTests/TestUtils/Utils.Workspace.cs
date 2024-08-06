@@ -32,6 +32,7 @@ using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Application.Workspace.Queries.GetInvitations;
 using ConsiliumTempus.Application.Workspace.Queries.GetOverview;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.Entities;
@@ -78,6 +79,10 @@ internal static partial class Utils
             GetCollaboratorsFromWorkspaceRequest request)
         {
             query.Id.Should().Be(request.Id);
+            query.CurrentPage.Should().Be(request.CurrentPage);
+            query.PageSize.Should().Be(request.PageSize);
+            query.OrderBy.Should().BeEquivalentTo(request.OrderBy);
+            query.Search.Should().BeEquivalentTo(request.Search);
             query.SearchValue.Should().Be(request.SearchValue);
 
             return true;
@@ -244,7 +249,8 @@ internal static partial class Utils
             GetCollaboratorsFromWorkspaceResult result)
         {
             response.Collaborators.Zip(result.Collaborators)
-                .Should().AllSatisfy(p => AssertUserResponse(p.First, p.Second));
+                .Should().AllSatisfy(p => AssertCollaboratorResponse(p.First, p.Second));
+            response.TotalCount.Should().Be(result.TotalCount);
         }
 
         internal static void AssertGetInvitationsResponse(
@@ -287,13 +293,14 @@ internal static partial class Utils
             response.Email.Should().Be(user.Credentials.Email);
         }
 
-        private static void AssertUserResponse(
-            GetCollaboratorsFromWorkspaceResponse.UserResponse response,
-            UserAggregate user)
+        private static void AssertCollaboratorResponse(
+            GetCollaboratorsFromWorkspaceResponse.CollaboratorResponse response,
+            Membership membership)
         {
-            response.Id.Should().Be(user.Id.Value);
-            response.Name.Should().Be(user.Name.Value);
-            response.Email.Should().Be(user.Credentials.Email);
+            response.Id.Should().Be(membership.User.Id.Value);
+            response.Name.Should().Be(membership.User.Name.Value);
+            response.Email.Should().Be(membership.User.Credentials.Email);
+            response.WorkspaceRole.Should().Be(membership.WorkspaceRole.Name);
         }
 
         private static void AssertWorkspaceInvitationResponse(

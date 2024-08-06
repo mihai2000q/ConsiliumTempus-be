@@ -173,7 +173,7 @@ Only users that are part of the workspace can retrieve it
 ([Read Collaborators From Workspace Permission](../Security.md/#permissions)).
 
 ```js
-GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle
+GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle&pageSize=2&currentPage=1orderBy=user_name.asc&orderBy=workspace_role_id.desc&search=workspace_role_id eq 1
 ```
 
 - **id** is a 36 characters strings
@@ -182,6 +182,10 @@ GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle
 
 Sends the id of the workspace inside the route request and the following query parameters:
 
+- **pageSize** is used to specify the size of the page
+- **currentPage** is used to specify the current page
+- **orderBy** is used to order the collection
+- **search** is used to filter the collection
 - **searchValue** to search through the collaborators by email, name, or other identifier
 
 #### Get Collaborators From Workspace Response
@@ -194,12 +198,14 @@ Returns the collaborators.
     {
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Michael Jordan",
-      "email": "michaelj@gmail.com"
+      "email": "michaelj@gmail.com",
+      "workspaceRole": "Admin"
     },
     {
       "id": "20000000-0000-0000-0000-000000000000",
       "name": "Stephen Curry",
-      "email": "stephenc@gmail.com"
+      "email": "stephenc@gmail.com",
+      "workspaceRole": "Member"
     }
   ]
 }

@@ -15,10 +15,18 @@ public static class WorkspaceQueryFactory
     
     public static GetCollaboratorsFromWorkspaceQuery CreateGetCollaboratorsFromWorkspaceQuery(
         Guid? id = null,
+        int? pageSize = null,
+        int? currentPage = null,
+        string[]? orderBy = null,
+        string[]? search = null,
         string searchValue = "")
     {
         return new GetCollaboratorsFromWorkspaceQuery(
             id ?? Guid.NewGuid(),
+            currentPage,
+            pageSize,
+            orderBy,
+            search,
             searchValue);
     }
 
