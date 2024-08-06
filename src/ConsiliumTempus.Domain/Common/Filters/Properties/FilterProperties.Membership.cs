@@ -11,6 +11,10 @@ internal static partial class FilterProperties
             m => m.User.FirstName.Value + " " + m.User.LastName.Value);
 
         internal sealed class WorkspaceRoleIdFilterProperty() : FilterProperty<Entities.Membership>(
+            nameof(Entities.Membership.WorkspaceRole) + nameof(Entities.Membership.WorkspaceRole.Id),
+            m => m.WorkspaceRole.Id);
+
+        internal sealed class WorkspaceRoleNameFilterProperty() : FilterProperty<Entities.Membership>(
             nameof(Entities.Membership.WorkspaceRole) + nameof(Entities.Membership.WorkspaceRole.Name),
             m => m.WorkspaceRole.Name);
     }

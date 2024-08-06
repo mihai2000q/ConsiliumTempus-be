@@ -46,6 +46,9 @@ public static class GetCollaboratorsFromWorkspaceQueryValidatorData
                     "workspace_role_id eq 1", "workspace_role_id neq 2",
                     "workspace_role_id lt 1", "workspace_role_id lte 2",
                     "workspace_role_id gt 1", "workspace_role_id gte 2",
+                    // Workspace Role Name
+                    "workspace_role_name ct something", "workspace_role_name sw something",
+                    "workspace_role_name eq something", "workspace_role_name neq something",
                 ]);
             Add(query);
 
