@@ -3,6 +3,7 @@ using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -38,7 +39,7 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .Include(w => w.Invitations)
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
     }
-    
+
     public async Task<WorkspaceAggregate?> GetWithCollaboratorsAndInvitations(
         WorkspaceId id,
         CancellationToken cancellationToken = default)
@@ -76,12 +77,12 @@ public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IW
             .CountAsync(cancellationToken);
     }
 
-    public async Task<List<WorkspaceAggregate>> GetListByUserWithCollaborators(UserAggregate user,
+    public async Task<List<WorkspaceAggregate>> GetListByOwner(UserId userId,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Workspaces
             .Include(w => w.Memberships)
-            .Where(w => w.Memberships.Any(m => m.User == user))
+            .Where(w => w.Owner.Id == userId)
             .ToListAsync(cancellationToken);
     }
 
