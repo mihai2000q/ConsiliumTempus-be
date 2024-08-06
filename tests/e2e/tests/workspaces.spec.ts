@@ -267,10 +267,7 @@ test.describe('should allow operations on the workspace entity', () => {
         id: expect.any(String),
         name: expect.any(String),
         email: EMAIL,
-        workspaceRole: {
-          id: expect.any(String),
-          name: 'Admin'
-        }
+        workspaceRole: 'Admin'
       }
     ])
   })

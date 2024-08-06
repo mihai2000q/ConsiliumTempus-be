@@ -29,6 +29,7 @@ For database design, check out the [Membership Diagram](../../database-diagrams/
 ### Filters
 
 - **UserName** to filter by the name of the user
+- **WorkspaceRoleId** to filter by the workspace role id
 - **WorkspaceRoleName** to filter by the workspace role name
 
 ### Orders
