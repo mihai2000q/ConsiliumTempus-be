@@ -22,13 +22,13 @@ public sealed class MembershipConfiguration : IEntityTypeConfiguration<Membershi
             .WithMany(w => w.Memberships)
             .HasForeignKey(nameof(WorkspaceId));
 
-        builder.HasOne<WorkspaceRole>()
+        builder.HasOne<WorkspaceRole>(m => m.WorkspaceRole)
             .WithMany()
             .HasForeignKey(nameof(Membership.WorkspaceRole).ToIdBackingField())
             .IsRequired();
         builder.Property(nameof(Membership.WorkspaceRole).ToIdBackingField())
             .HasColumnName(nameof(Membership.WorkspaceRole).ToId());
-        builder.Ignore(m => m.WorkspaceRole);
+        builder.Navigation(m => m.WorkspaceRole).AutoInclude();
 
         builder.Ignore(m => m.Id);
         builder.HasKey(nameof(UserId), nameof(WorkspaceId));
