@@ -33,6 +33,7 @@ using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Application.Workspace.Queries.GetInvitations;
 using ConsiliumTempus.Application.Workspace.Queries.GetOverview;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.Entities;
@@ -113,10 +114,11 @@ public sealed class WorkspaceMappingConfig : IRegister
         config.NewConfig<GetCollaboratorsFromWorkspaceRequest, GetCollaboratorsFromWorkspaceQuery>();
 
         config.NewConfig<GetCollaboratorsFromWorkspaceResult, GetCollaboratorsFromWorkspaceResponse>();
-        config.NewConfig<UserAggregate, GetCollaboratorsFromWorkspaceResponse.UserResponse>()
-            .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Email, src => src.Credentials.Email);
+        config.NewConfig<Membership, GetCollaboratorsFromWorkspaceResponse.CollaboratorResponse>()
+            .Map(dest => dest.Id, src => src.User.Id.Value)
+            .Map(dest => dest.Name, src => src.User.Name.Value)
+            .Map(dest => dest.Email, src => src.User.Credentials.Email)
+            .Map(dest => dest.WorkspaceRole, src => src.WorkspaceRole.Name);
     }
 
     private static void GetInvitationsMappings(TypeAdapterConfig config)

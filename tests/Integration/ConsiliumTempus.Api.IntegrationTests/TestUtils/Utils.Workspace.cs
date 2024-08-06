@@ -36,7 +36,7 @@ internal static partial class Utils
             response.IsPersonal.Should().Be(workspace.IsPersonal.Value);
             AssertUserResponse(response.Owner, workspace.Owner);
         }
-        
+
         internal static void AssertGetOverviewResponse(
             GetOverviewWorkspaceResponse response,
             WorkspaceAggregate workspace)
@@ -70,11 +70,19 @@ internal static partial class Utils
 
         internal static void AssertGetCollaboratorsResponse(
             GetCollaboratorsFromWorkspaceResponse response,
-            IEnumerable<UserAggregate> collaborators)
+            IEnumerable<Membership> collaborators,
+            int totalCount,
+            bool isOrdered = false)
         {
-            response.Collaborators
-                .Zip(collaborators.OrderBy(c => c.FirstName.Value))
-                .Should().AllSatisfy(x => AssertUserResponse(x.First, x.Second));
+            if (isOrdered)
+                response.Collaborators.Zip(collaborators)
+                    .Should().AllSatisfy(x => AssertCollaboratorResponse(x.First, x.Second));
+            else
+                response.Collaborators
+                    .OrderBy(c => c.Id)
+                    .Zip(collaborators.OrderBy(c => c.Id.UserId.Value))
+                    .Should().AllSatisfy(x => AssertCollaboratorResponse(x.First, x.Second));
+            response.TotalCount.Should().Be(totalCount);
         }
 
         internal static void AssertGetInvitationsResponse(
@@ -183,7 +191,7 @@ internal static partial class Utils
                 .Single(m => m.User.Id.Value == request.CollaboratorId);
             collaboratorMembership.WorkspaceRole.Name.Should().Be(request.WorkspaceRole.Capitalize());
             collaboratorMembership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            
+
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
@@ -199,7 +207,7 @@ internal static partial class Utils
             // changed
             newWorkspace.IsFavorite(user).Should().Be(request.IsFavorite);
         }
-        
+
         internal static void AssertUpdatedOverview(
             WorkspaceAggregate newWorkspace,
             UpdateOverviewWorkspaceRequest request)
@@ -227,7 +235,7 @@ internal static partial class Utils
             newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertLeave(
             LeaveWorkspaceRequest request,
             WorkspaceAggregate workspace,
@@ -262,7 +270,7 @@ internal static partial class Utils
                 project.AllowedMembers.Should().NotContain(a => a.Id.Value == request.CollaboratorId);
             });
         }
-        
+
         private static void AssertUserResponse(
             GetWorkspaceResponse.UserResponse response,
             UserAggregate user)
@@ -288,14 +296,15 @@ internal static partial class Utils
             response.Owner.Name.Should().Be(owner.Name.Value);
             response.Owner.Email.Should().Be(owner.Credentials.Email);
         }
-        
-        private static void AssertUserResponse(
-            GetCollaboratorsFromWorkspaceResponse.UserResponse response,
-            UserAggregate user)
+
+        private static void AssertCollaboratorResponse(
+            GetCollaboratorsFromWorkspaceResponse.CollaboratorResponse response,
+            Membership membership)
         {
-            response.Id.Should().Be(user.Id.Value);
-            response.Name.Should().Be(user.Name.Value);
-            response.Email.Should().Be(user.Credentials.Email);
+            response.Id.Should().Be(membership.User.Id.Value);
+            response.Name.Should().Be(membership.User.Name.Value);
+            response.Email.Should().Be(membership.User.Credentials.Email);
+            response.WorkspaceRole.Should().Be(membership.WorkspaceRole.Name);
         }
 
         private static void AssertWorkspaceInvitationResponse(

@@ -267,6 +267,10 @@ test.describe('should allow operations on the workspace entity', () => {
         id: expect.any(String),
         name: expect.any(String),
         email: EMAIL,
+        workspaceRole: {
+          id: expect.any(String),
+          name: 'Admin'
+        }
       }
     ])
   })
@@ -669,11 +673,13 @@ test.describe('should allow operations on the workspace entity', () => {
         id: expect.any(String),
         name: expect.any(String),
         email: EMAIL,
+        workspaceRole: 'View'
       },
       {
         id: expect.any(String),
         name: expect.any(String),
         email: senderEmail,
+        workspaceRole: 'Admin'
       }
     ])
   })
@@ -751,7 +757,7 @@ test.describe('should allow operations on the workspace entity', () => {
     const body: UpdateCollaboratorFromWorkspaceRequest = {
       id: workspace.id,
       collaboratorId: collaborator.id,
-      workspaceRole: 'member'
+      workspaceRole: 'Member'
     }
     const response = await request.put(`/api/workspaces/collaborators`, {
       ...useToken(),
@@ -771,11 +777,13 @@ test.describe('should allow operations on the workspace entity', () => {
         id: expect.any(String),
         name: expect.any(String),
         email: EMAIL,
+        workspaceRole: 'Admin'
       },
       {
         id: collaborator.id,
         name: collaborator.firstName + " " + collaborator.lastName,
         email: collaborator.email,
+        workspaceRole: body.workspaceRole
       }
     ])
   })
