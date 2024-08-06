@@ -12,23 +12,25 @@ public static class GetCollaboratorsFromWorkspaceQueryValidatorData
         {
             var query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery();
             Add(query);
-            
+
             query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery(
                 orderBy: [],
                 search: []);
             Add(query);
 
             query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery(
-                orderBy: [
-                    "user_email.asc", "user_first_name.asc", "user_last_name.asc", "user_name.asc", 
+                orderBy:
+                [
+                    "user_email.asc", "user_first_name.asc", "user_last_name.asc", "user_name.asc",
                     "workspace_role_id.asc", "workspace_role_name.asc",
                     "created_date_time.asc", "updated_date_time.asc"
                 ]);
             Add(query);
 
             query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery(
-                orderBy: [
-                    "user_email.desc", "user_first_name.desc", "user_last_name.desc", "user_name.desc", 
+                orderBy:
+                [
+                    "user_email.desc", "user_first_name.desc", "user_last_name.desc", "user_name.desc",
                     "workspace_role_id.desc", "workspace_role_name.desc",
                     "created_date_time.desc", "updated_date_time.desc"
                 ]);
@@ -38,10 +40,11 @@ public static class GetCollaboratorsFromWorkspaceQueryValidatorData
                 search:
                 [
                     // User Name
-                    "user_name ct something", "user_name sw something", "user_name eq something", "user_name neq something",
+                    "user_name ct something", "user_name sw something", "user_name eq something",
+                    "user_name neq something",
                     // Workspace Role ID
-                    "workspace_role_id eq 1", "workspace_role_id neq 2", 
-                    "workspace_role_id lt 1", "workspace_role_id lte 2", 
+                    "workspace_role_id eq 1", "workspace_role_id neq 2",
+                    "workspace_role_id lt 1", "workspace_role_id lte 2",
                     "workspace_role_id gt 1", "workspace_role_id gte 2",
                 ]);
             Add(query);
@@ -50,13 +53,13 @@ public static class GetCollaboratorsFromWorkspaceQueryValidatorData
                 Guid.NewGuid(),
                 1,
                 10,
-                ["workspace_role_id.desc, user_email.asc"],
+                ["workspace_role_id.desc", "user_email.asc"],
                 ["user_name sw Cla"],
                 null);
             Add(query);
         }
     }
-    
+
     internal class GetInvalidIdQueries : TheoryData<GetCollaboratorsFromWorkspaceQuery, string, short>
     {
         public GetInvalidIdQueries()
@@ -65,8 +68,9 @@ public static class GetCollaboratorsFromWorkspaceQueryValidatorData
             Add(query, nameof(query.Id), 1);
         }
     }
-    
-    internal class GetInvalidPageSizeAndCurrentPageQueries : TheoryData<GetCollaboratorsFromWorkspaceQuery, string, short>
+
+    internal class
+        GetInvalidPageSizeAndCurrentPageQueries : TheoryData<GetCollaboratorsFromWorkspaceQuery, string, short>
     {
         public GetInvalidPageSizeAndCurrentPageQueries()
         {
@@ -173,7 +177,7 @@ public static class GetCollaboratorsFromWorkspaceQueryValidatorData
     {
         public GetInvalidSearchQueries()
         {
-            const string correct = "name eq something";
+            const string correct = "user_name eq something";
 
             // Separator Validation
             var query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery(

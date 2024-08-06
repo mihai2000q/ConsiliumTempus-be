@@ -23,8 +23,8 @@ public static class WorkspaceQueryFactory
     {
         return new GetCollaboratorsFromWorkspaceQuery(
             id ?? Guid.NewGuid(),
-            pageSize,
             currentPage,
+            pageSize,
             orderBy,
             search,
             searchValue);

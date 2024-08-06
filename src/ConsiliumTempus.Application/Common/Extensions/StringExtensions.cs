@@ -33,7 +33,6 @@ public static class StringExtensions
         return str.CapitalizeWord();
     }
 
-
     public static string CapitalizeWord(this string word) =>
         word.ToUpper()[0] + word.ToLower()[1..];
 
