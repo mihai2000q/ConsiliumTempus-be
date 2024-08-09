@@ -1,6 +1,8 @@
-﻿namespace ConsiliumTempus.Domain.Common.Models;
+﻿using ConsiliumTempus.Domain.Common.Interfaces;
 
-public abstract class AggregateRootId<TId> : ValueObject
+namespace ConsiliumTempus.Domain.Common.Models;
+
+public abstract class AggregateRootId<TId> : ValueObject, IAggregateRootId
     where TId : notnull
 {
     public abstract TId Value { get; protected set; }

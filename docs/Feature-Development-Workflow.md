@@ -109,7 +109,7 @@ but its implementation will be a look alike with the **ProjectId**.
 Next, we will create the **Aggregate** class, inside the package **Project**:
 
 ```csharp
-public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>
+public sealed class ProjectAggregate : AggregateRoot<ProjectId>
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectAggregate()
@@ -146,7 +146,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>
 
 Notice the following:
 
-- the sealed class inherits from our domain's **AggregateRoot**, which needs a strong-typed Id and the type of the Id.
+- the sealed class inherits from our domain's **AggregateRoot**, which needs a strong-typed Id
 - the private no args constructor is needed for **Entity Framework Core** to create them from the database using
   reflection
 - the default constructor should be private, and it calls the base one with the Id

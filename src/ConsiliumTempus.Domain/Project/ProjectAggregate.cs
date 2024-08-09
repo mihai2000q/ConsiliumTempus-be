@@ -12,7 +12,7 @@ using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.Project;
 
-public sealed class ProjectAggregate : AggregateRoot<ProjectId, Guid>, ITimestamps
+public sealed class ProjectAggregate : AggregateRoot<ProjectId>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectAggregate()

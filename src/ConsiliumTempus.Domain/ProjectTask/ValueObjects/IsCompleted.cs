@@ -29,5 +29,6 @@ public sealed class IsCompleted : ValueObject
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
+        if (CompletedOn is not null) yield return CompletedOn;
     }
 }

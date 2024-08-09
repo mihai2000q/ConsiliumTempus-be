@@ -11,7 +11,7 @@ using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Workspace;
 
-public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITimestamps
+public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private WorkspaceAggregate()

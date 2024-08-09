@@ -1,8 +1,9 @@
-﻿namespace ConsiliumTempus.Domain.Common.Models;
+﻿using ConsiliumTempus.Domain.Common.Interfaces;
 
-public abstract class AggregateRoot<TId, TIdType> : Entity<TId>
-    where TId : AggregateRootId<TIdType>
-    where TIdType : notnull
+namespace ConsiliumTempus.Domain.Common.Models;
+
+public abstract class AggregateRoot<TId> : Entity<TId>
+    where TId : IAggregateRootId
 {
     protected AggregateRoot()
     {

@@ -10,7 +10,7 @@ using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Domain.ProjectTask;
 
-public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, ITimestamps
+public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectTaskAggregate()

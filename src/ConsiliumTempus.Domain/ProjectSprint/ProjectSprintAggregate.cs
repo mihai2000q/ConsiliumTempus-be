@@ -9,7 +9,7 @@ using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Domain.ProjectSprint;
 
-public sealed class ProjectSprintAggregate : AggregateRoot<ProjectSprintId, Guid>
+public sealed class ProjectSprintAggregate : AggregateRoot<ProjectSprintId>
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectSprintAggregate()

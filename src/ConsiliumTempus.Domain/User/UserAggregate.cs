@@ -8,7 +8,7 @@ using ConsiliumTempus.Domain.User.ValueObjects;
 
 namespace ConsiliumTempus.Domain.User;
 
-public sealed class UserAggregate : AggregateRoot<UserId, Guid>, ITimestamps
+public sealed class UserAggregate : AggregateRoot<UserId>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private UserAggregate()
