@@ -8,15 +8,14 @@ using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 
-public sealed class NumberCustomFieldSetup : CustomFieldSetupAggregate
+public sealed class TextCustomFieldSetupAggregate : CustomFieldSetupAggregate
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
-    private NumberCustomFieldSetup()
+    private TextCustomFieldSetupAggregate()
     {
     }
 
-    private NumberCustomFieldSetup(
-        NumberCustomFieldSettings settings,
+    private TextCustomFieldSetupAggregate(
         CustomFieldSetupId id,
         Name name,
         Description description,
@@ -24,26 +23,21 @@ public sealed class NumberCustomFieldSetup : CustomFieldSetupAggregate
         ProjectAggregate? project,
         Audit audit) : base(id, name, description, workspace, project, audit)
     {
-        Settings = settings;
     }
 
-    public NumberCustomFieldSettings Settings { get; init; } = null!;
-
-    public static NumberCustomFieldSetup Create(
-        NumberCustomFieldSettings settings,
+    public static TextCustomFieldSetupAggregate Create(
         Name name,
         Description description,
         WorkspaceAggregate? workspace,
         ProjectAggregate? project,
         UserAggregate createdBy)
     {
-        return new NumberCustomFieldSetup(
-            settings,
-            CustomFieldSetupId.CreateUnique(),
+        return new TextCustomFieldSetupAggregate(
+            CustomFieldSetupId.CreateUnique(), 
             name,
             description,
-            workspace,
-            project,
+            workspace, 
+            project, 
             Audit.Create(createdBy));
     }
 }

@@ -48,9 +48,9 @@ public sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<Cus
     }
 }
 
-public sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfiguration<NumberCustomFieldSetup>
+public sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfiguration<NumberCustomFieldSetupAggregate>
 {
-    public void Configure(EntityTypeBuilder<NumberCustomFieldSetup> builder)
+    public void Configure(EntityTypeBuilder<NumberCustomFieldSetupAggregate> builder)
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
@@ -70,9 +70,9 @@ public sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfigurati
     }
 }
 
-public sealed class SingleSelectCustomFieldSetupConfiguration : IEntityTypeConfiguration<SingleSelectCustomFieldSetup>
+public sealed class SingleSelectCustomFieldSetupConfiguration : IEntityTypeConfiguration<SingleSelectCustomFieldSetupAggregate>
 {
-    public void Configure(EntityTypeBuilder<SingleSelectCustomFieldSetup> builder)
+    public void Configure(EntityTypeBuilder<SingleSelectCustomFieldSetupAggregate> builder)
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
@@ -81,7 +81,7 @@ public sealed class SingleSelectCustomFieldSetupConfiguration : IEntityTypeConfi
         builder.OwnsMany(s => s.Options, ConfigureOptions);
     }
 
-    private static void ConfigureOptions(OwnedNavigationBuilder<SingleSelectCustomFieldSetup, SingleSelectOption> builder)
+    private static void ConfigureOptions(OwnedNavigationBuilder<SingleSelectCustomFieldSetupAggregate, SingleSelectOption> builder)
     {
         builder.ToTable(nameof(SingleSelectOption));
 
@@ -95,9 +95,9 @@ public sealed class SingleSelectCustomFieldSetupConfiguration : IEntityTypeConfi
     }
 }
 
-public sealed class TextCustomFieldSetupConfiguration : IEntityTypeConfiguration<TextCustomFieldSetup>
+public sealed class TextCustomFieldSetupConfiguration : IEntityTypeConfiguration<TextCustomFieldSetupAggregate>
 {
-    public void Configure(EntityTypeBuilder<TextCustomFieldSetup> builder)
+    public void Configure(EntityTypeBuilder<TextCustomFieldSetupAggregate> builder)
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
