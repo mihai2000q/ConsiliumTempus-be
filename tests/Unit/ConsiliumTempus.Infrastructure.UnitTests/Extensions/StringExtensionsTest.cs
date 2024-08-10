@@ -5,6 +5,19 @@ namespace ConsiliumTempus.Infrastructure.UnitTests.Extensions;
 public class StringExtensionsTest
 {
     [Theory]
+    [InlineData("first", "second", "first.second")]
+    public void Dot_ShouldConcatenate2StringsWithDotSymbol(string input1, string input2, string expected)
+    {
+        // Arrange - parameterized
+
+        // Act
+        var outcome = input1.Dot(input2);
+
+        // Assert
+        outcome.Should().Be(expected);
+    }
+
+    [Theory]
     [InlineData("", "")]
     [InlineData("A", "a")]
     [InlineData("AB", "aB")]
