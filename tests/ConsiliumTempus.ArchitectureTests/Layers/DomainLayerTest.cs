@@ -2,6 +2,7 @@
 using ConsiliumTempus.ArchitectureTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 
 namespace ConsiliumTempus.ArchitectureTests.Layers;
 
@@ -98,6 +99,8 @@ public class DomainLayerTest : BaseArchitectureTest
             .AreAssignableTo(typeof(Entity<>))
             .And()
             .AreNot(typeof(Entity<>), typeof(AggregateRoot<>))
+            .And()
+            .AreNotAbstract()
             .GetObjects(Architecture)
             .ShouldHavePrivateParameterlessConstructor();
     }
@@ -111,6 +114,8 @@ public class DomainLayerTest : BaseArchitectureTest
             .AreAssignableTo(typeof(AggregateRoot<>))
             .And()
             .AreNot(typeof(AggregateRoot<>))
+            .And()
+            .AreNotAbstract()
             .GetObjects(Architecture)
             .ShouldHavePrivateParameterlessConstructor();
     }
