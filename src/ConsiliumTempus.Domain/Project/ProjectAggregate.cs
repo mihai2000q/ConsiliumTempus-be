@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.Project.Events;
@@ -46,6 +47,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId>, ITimestamps
     private readonly List<ProjectStatus> _statuses = [];
     private readonly List<UserAggregate> _favorites = [];
     private readonly List<UserAggregate> _allowedMembers = [];
+    private readonly List<CustomFieldSetupAggregate> _customFieldSetups = [];
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
@@ -59,6 +61,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId>, ITimestamps
     public IReadOnlyList<ProjectStatus> Statuses => _statuses.AsReadOnly();
     public IReadOnlyList<UserAggregate> Favorites => _favorites.AsReadOnly();
     public IReadOnlyList<UserAggregate> AllowedMembers => _allowedMembers.AsReadOnly();
+    public IReadOnlyList<CustomFieldSetupAggregate> CustomFieldSetups => _customFieldSetups.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
 
