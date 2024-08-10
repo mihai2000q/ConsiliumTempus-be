@@ -6,4 +6,9 @@ public static partial class PropertiesValidation
     {
         public const short NameMaximumLength = 50;
     }
+
+    public static class SingleSelectOption
+    {
+        public const short ValueMaximumLength = 50;
+    }
 }

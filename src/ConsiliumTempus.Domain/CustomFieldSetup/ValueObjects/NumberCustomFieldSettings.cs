@@ -10,23 +10,35 @@ public sealed class NumberCustomFieldSettings : ValueObject
     {
     }
 
-    private NumberCustomFieldSettings(string currencyCode, short decimals)
+    private NumberCustomFieldSettings(
+        string currencyCode, 
+        short decimals,
+        bool rounding)
     {
         CurrencyCode = currencyCode;
         Decimals = decimals;
+        Rounding = rounding;
     }
 
     public string CurrencyCode { get; init; } = string.Empty;
     public short Decimals { get; init; }
+    public bool Rounding { get; init; }
 
-    public static NumberCustomFieldSettings Create(string currencyCode, short decimals)
+    public static NumberCustomFieldSettings Create(
+        string currencyCode, 
+        short decimals,
+        bool rounding)
     {
-        return new NumberCustomFieldSettings(currencyCode, decimals);
+        return new NumberCustomFieldSettings(
+            currencyCode,
+            decimals, 
+            rounding);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return CurrencyCode;
         yield return Decimals;
+        yield return Rounding;
     }
 }

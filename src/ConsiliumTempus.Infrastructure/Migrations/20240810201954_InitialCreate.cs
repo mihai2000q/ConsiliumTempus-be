@@ -290,6 +290,105 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CustomFieldSetup.Number",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CurrencyCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Decimals = table.Column<short>(type: "smallint", nullable: false),
+                    Rounding = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomFieldSetup.Number", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.Number_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.Number_Project_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Project",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.Number_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomFieldSetup.SingleSelect",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomFieldSetup.SingleSelect", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.SingleSelect_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.SingleSelect_Project_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Project",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.SingleSelect_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomFieldSetup.Text",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomFieldSetup.Text", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.Text_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.Text_Project_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Project",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.Text_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectHasAllowedMember",
                 columns: table => new
                 {
@@ -388,6 +487,27 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_UserHasFavoriteProject_User_FavoritesId",
                         column: x => x.FavoritesId,
                         principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SingleSelectOption",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomOrderPosition = table.Column<int>(type: "int", nullable: false),
+                    SingleSelectCustomFieldSetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SingleSelectOption", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SingleSelectOption_CustomFieldSetup.SingleSelect_SingleSelectCustomFieldSetupId",
+                        column: x => x.SingleSelectCustomFieldSetupId,
+                        principalTable: "CustomFieldSetup.SingleSelect",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -655,6 +775,51 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.Number_AuditId",
+                table: "CustomFieldSetup.Number",
+                column: "AuditId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.Number_ProjectId",
+                table: "CustomFieldSetup.Number",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.Number_WorkspaceId",
+                table: "CustomFieldSetup.Number",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.SingleSelect_AuditId",
+                table: "CustomFieldSetup.SingleSelect",
+                column: "AuditId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.SingleSelect_ProjectId",
+                table: "CustomFieldSetup.SingleSelect",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.SingleSelect_WorkspaceId",
+                table: "CustomFieldSetup.SingleSelect",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.Text_AuditId",
+                table: "CustomFieldSetup.Text",
+                column: "AuditId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.Text_ProjectId",
+                table: "CustomFieldSetup.Text",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.Text_WorkspaceId",
+                table: "CustomFieldSetup.Text",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Membership_WorkspaceId",
                 table: "Membership",
                 column: "WorkspaceId");
@@ -750,6 +915,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "RefreshTokenId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SingleSelectOption_SingleSelectCustomFieldSetupId",
+                table: "SingleSelectOption",
+                column: "SingleSelectCustomFieldSetupId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
                 table: "User",
                 column: "Email",
@@ -795,6 +965,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CustomFieldSetup.Number");
+
+            migrationBuilder.DropTable(
+                name: "CustomFieldSetup.Text");
+
+            migrationBuilder.DropTable(
                 name: "Membership");
 
             migrationBuilder.DropTable(
@@ -808,6 +984,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "RefreshTokenHistory");
+
+            migrationBuilder.DropTable(
+                name: "SingleSelectOption");
 
             migrationBuilder.DropTable(
                 name: "UserHasFavoriteProject");
@@ -826,6 +1005,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");
+
+            migrationBuilder.DropTable(
+                name: "CustomFieldSetup.SingleSelect");
 
             migrationBuilder.DropTable(
                 name: "Permission");

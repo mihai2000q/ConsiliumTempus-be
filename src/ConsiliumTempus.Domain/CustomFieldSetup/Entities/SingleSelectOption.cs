@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Models;
 
-namespace ConsiliumTempus.Domain.Common.Entities;
+namespace ConsiliumTempus.Domain.CustomFieldSetup.Entities;
 
 public sealed class SingleSelectOption : Entity<Guid>
 {

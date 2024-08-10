@@ -51,6 +51,9 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
 
         builder.HasMany(w => w.Invitations)
             .WithOne(i => i.Workspace);
+
+        builder.HasMany(w => w.CustomFieldSetups)
+            .WithOne(cfs => cfs.Workspace);
     }
 }
 
