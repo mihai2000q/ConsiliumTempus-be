@@ -5,19 +5,6 @@ namespace ConsiliumTempus.Application.UnitTests.Common.Extensions;
 public class StringExtensionsTest
 {
     [Theory]
-    [InlineData("first", "second", "first&second")]
-    public void And_ShouldConcatenate2StringsWithAndSymbol(string input1, string input2, string expected)
-    {
-        // Arrange - parameterized
-
-        // Act
-        var outcome = input1.And(input2);
-
-        // Assert
-        outcome.Should().Be(expected);
-    }
-
-    [Theory]
     [InlineData("first", "second", "first.second")]
     public void Dot_ShouldConcatenate2StringsWithDotSymbol(string input1, string input2, string expected)
     {

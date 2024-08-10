@@ -73,11 +73,11 @@ internal static class GetCollectionWorkspaceQueryValidatorData
         {
             var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
                 pageSize: 1);
-            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)), 1);
+            Add(query, nameof(query.PageSize).Dot(nameof(query.CurrentPage)), 1);
 
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
                 currentPage: 1);
-            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)), 1);
+            Add(query, nameof(query.PageSize).Dot(nameof(query.CurrentPage)), 1);
         }
     }
 

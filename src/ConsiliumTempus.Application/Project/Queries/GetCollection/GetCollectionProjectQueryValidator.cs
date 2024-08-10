@@ -12,7 +12,7 @@ public sealed class GetCollectionProjectQueryValidator : AbstractValidator<GetCo
         RuleFor(q => q)
             .Must(q => q.PageSize is not null ? q.CurrentPage is not null : q.CurrentPage is null)
             .WithMessage("Both the 'PageSize' and the 'CurrentPage' have to either be set or unset.")
-            .WithName(nameof(GetCollectionProjectQuery.PageSize).And(nameof(GetCollectionProjectQuery.CurrentPage)));
+            .WithName(nameof(GetCollectionProjectQuery.PageSize).Dot(nameof(GetCollectionProjectQuery.CurrentPage)));
 
         RuleFor(q => q.PageSize)
             .GreaterThan(0);

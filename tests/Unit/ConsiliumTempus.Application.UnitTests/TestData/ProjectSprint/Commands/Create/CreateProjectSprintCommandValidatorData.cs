@@ -70,12 +70,12 @@ internal static class CreateProjectSprintCommandValidatorData
             var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
                 startDate: new DateOnly(2022, 10, 10),
                 endDate: new DateOnly(2022, 10, 10));
-            Add(command, nameof(command.StartDate).And(nameof(command.EndDate)), 1);
+            Add(command, nameof(command.StartDate).Dot(nameof(command.EndDate)), 1);
 
             command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
                 startDate: new DateOnly(2022, 10, 10),
                 endDate: new DateOnly(2022, 10, 9));
-            Add(command, nameof(command.StartDate).And(nameof(command.EndDate)), 1);
+            Add(command, nameof(command.StartDate).Dot(nameof(command.EndDate)), 1);
         }
     }
     

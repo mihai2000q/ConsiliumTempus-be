@@ -19,7 +19,7 @@ public sealed class CreateProjectSprintCommandValidator : AbstractValidator<Crea
         RuleFor(c => c)
             .Must(c => c.StartDate < c.EndDate)
             .WithMessage("The 'EndDate' must be bigger than the 'StartDate'")
-            .WithName(nameof(CreateProjectSprintCommand.StartDate).And(nameof(CreateProjectSprintCommand.EndDate)))
+            .WithName(nameof(CreateProjectSprintCommand.StartDate).Dot(nameof(CreateProjectSprintCommand.EndDate)))
             .When(c => c.StartDate is not null && c.EndDate is not null);
 
         When(c => c.ProjectStatus is not null, () =>
