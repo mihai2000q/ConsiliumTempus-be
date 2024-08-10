@@ -23,7 +23,7 @@ public static class FluentValidationExtensions
 
     public static IRuleBuilderOptions<T, string> IsEmail<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
-        return ruleBuilder.Must(e => Regex.RegexStore.EmailRegex().IsMatch(e))
+        return ruleBuilder.Matches(Regex.RegexStore.EmailRegex())
             .WithMessage("'{PropertyName}' must be valid email");
     }
 
@@ -36,6 +36,19 @@ public static class FluentValidationExtensions
     {
         return ruleBuilder.Must(wr => WorkspaceRole.FromName(wr.Capitalize()) is not null)
             .WithMessage("'{PropertyName}' must be valid workspace role");
+    }
+
+    public static IRuleBuilderOptions<T, string> IsCurrencyCode<T>(this IRuleBuilder<T, string> ruleBuilder)
+    {
+        return ruleBuilder
+            .Matches("^[A-Z]{3}$")
+            .WithMessage("'{PropertyName}' must be valid Currency Code");
+    }
+
+    public static IRuleBuilderOptions<T, string> IsColor<T>(this IRuleBuilder<T, string> ruleBuilder)
+    {
+        return ruleBuilder.Matches(Regex.RegexStore.ColorRegex())
+            .WithMessage("'{PropertyName}' must be valid color");
     }
 
     public static IRuleBuilderOptions<T, string[]?> HasOrderByFormat<T, TEntity>(
