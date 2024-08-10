@@ -2,7 +2,6 @@
 using ConsiliumTempus.ArchitectureTests.TestUtils;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.CustomFieldSetup;
 
 namespace ConsiliumTempus.ArchitectureTests.Layers;
 
