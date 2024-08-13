@@ -27,7 +27,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
     await deleteUser(request)
   })
 
-  test('should get custom fields from project', async ({ request }) => {
+  test('should get custom field setups from project', async ({ request }) => {
     const textCustomField = await createCustomFieldSetup(request, {
       projectId: PROJECT_ID,
       name: "New Text Custom Field",
@@ -74,9 +74,9 @@ test.describe('should allow operations on the custom field setup entity', () => 
         name: numberCustomField.name,
         description: numberCustomField.description,
         settings: {
-          currencyCode: numberCustomField.numberSettings!.currencyCode,
-          decimals: numberCustomField.numberSettings!.decimals,
-          rounding: numberCustomField.numberSettings!.rounding,
+          currencyCode: numberCustomField.settings.currencyCode,
+          decimals: numberCustomField.settings.decimals,
+          rounding: numberCustomField.settings.rounding,
         }
       },
       {
@@ -85,12 +85,12 @@ test.describe('should allow operations on the custom field setup entity', () => 
         description: singleSelectCustomField.description,
         options: [
           {
-            value: singleSelectCustomField.singleSelectOptions![0].value,
-            color: singleSelectCustomField.singleSelectOptions![0].color,
+            value: singleSelectCustomField.options[0].value,
+            color: singleSelectCustomField.options[0].color,
           },
           {
-            value: singleSelectCustomField.singleSelectOptions![1].value,
-            color: singleSelectCustomField.singleSelectOptions![1].color,
+            value: singleSelectCustomField.options[1].value,
+            color: singleSelectCustomField.options[1].color,
           }
         ]
       },
