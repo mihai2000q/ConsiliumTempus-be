@@ -35,15 +35,15 @@ public class UpdateStatusFromProjectCommandHandlerTest
         _projectRepository
             .Get(Arg.Any<ProjectId>())
             .Returns(project);
-        
+
         var user = UserFactory.Create();
         _currentUserProvider
             .GetCurrentUserAfterPermissionCheck()
             .Returns(user);
-        
+
         var command = ProjectCommandFactory.CreateUpdateStatusFromProjectCommand(
-            id: project.Id.Value,
-            statusId: project.Statuses[0].Id.Value);
+            project.Id.Value,
+            project.Statuses[0].Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -61,7 +61,7 @@ public class UpdateStatusFromProjectCommandHandlerTest
 
         Utils.Project.AssertFromUpdateStatusCommand(project, command, user);
     }
-    
+
     [Fact]
     public async Task HandleUpdateStatusFromProjectCommand_WhenProjectStatusIsNull_ShouldReturnStatusNotFoundError()
     {
@@ -70,8 +70,8 @@ public class UpdateStatusFromProjectCommandHandlerTest
         _projectRepository
             .Get(Arg.Any<ProjectId>())
             .Returns(project);
-        
-        var command = ProjectCommandFactory.CreateUpdateStatusFromProjectCommand(id: project.Id.Value);
+
+        var command = ProjectCommandFactory.CreateUpdateStatusFromProjectCommand(project.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);

@@ -66,7 +66,7 @@ public class WorkspaceControllerAcceptInvitationTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.User.NotFound);
 
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync(); 
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.SingleOrDefault(w => w.Id == WorkspaceId.Create(request.Id))
             .Should().NotBeNull();
         dbContext.Set<WorkspaceInvitation>()
@@ -88,7 +88,7 @@ public class WorkspaceControllerAcceptInvitationTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.WorkspaceInvitation.NotFound);
 
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync(); 
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.SingleOrDefault(w => w.Id == WorkspaceId.Create(request.Id))
             .Should().NotBeNull();
         dbContext.Set<WorkspaceInvitation>()
@@ -108,7 +108,7 @@ public class WorkspaceControllerAcceptInvitationTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);
 
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync(); 
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.SingleOrDefault(w => w.Id == WorkspaceId.Create(request.Id))
             .Should().BeNull();
     }

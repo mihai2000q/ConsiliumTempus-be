@@ -14,7 +14,7 @@ public abstract class WorkspaceFilter : Filter<WorkspaceAggregate>
         new FilterProperties.Workspace.IsPersonalFilterProperty(),
         new FilterProperties.Workspace.LastActivityProperty(),
         new FilterProperties.Workspace.CreatedDateTimeProperty(),
-        new FilterProperties.Workspace.UpdatedDateTimeProperty(),
+        new FilterProperties.Workspace.UpdatedDateTimeProperty()
     ];
 
     private WorkspaceFilter(Expression<Func<WorkspaceAggregate, bool>> predicate) : base(predicate)

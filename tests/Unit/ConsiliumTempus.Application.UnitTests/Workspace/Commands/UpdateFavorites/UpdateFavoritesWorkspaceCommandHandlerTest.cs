@@ -35,13 +35,13 @@ public class UpdateFavoritesWorkspaceCommandHandlerTest
         _workspaceRepository
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);
-        
+
         var currentUser = UserFactory.Create();
         _currentUserProvider
             .GetCurrentUserAfterPermissionCheck()
             .Returns(currentUser);
 
-        var command = WorkspaceCommandFactory.CreateUpdateFavoriteWorkspaceCommand(id: workspace.Id.Value);
+        var command = WorkspaceCommandFactory.CreateUpdateFavoriteWorkspaceCommand(workspace.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);

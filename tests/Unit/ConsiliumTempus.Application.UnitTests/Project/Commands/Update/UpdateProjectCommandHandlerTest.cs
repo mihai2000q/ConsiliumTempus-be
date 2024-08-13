@@ -32,7 +32,7 @@ public class UpdateProjectCommandHandlerTest
             .Get(Arg.Any<ProjectId>())
             .Returns(project);
 
-        var command = ProjectCommandFactory.CreateUpdateProjectCommand(id: project.Id.Value);
+        var command = ProjectCommandFactory.CreateUpdateProjectCommand(project.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);

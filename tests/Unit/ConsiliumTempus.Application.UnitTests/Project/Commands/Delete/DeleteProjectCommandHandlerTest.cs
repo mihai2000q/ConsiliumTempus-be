@@ -33,7 +33,7 @@ public class DeleteProjectCommandHandlerTest
             .Get(Arg.Any<ProjectId>())
             .Returns(project);
 
-        var command = ProjectCommandFactory.CreateDeleteProjectCommand(id: project.Id.Value);
+        var command = ProjectCommandFactory.CreateDeleteProjectCommand(project.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);

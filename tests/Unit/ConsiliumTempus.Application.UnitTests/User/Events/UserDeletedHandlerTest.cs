@@ -72,7 +72,7 @@ public class UserDeletedHandlerTest
         await _workspaceRepository
             .Received(1)
             .GetListByOwner(Arg.Is<UserId>(uId => uId == user.Id));
-        
+
         var emptyWorkspaces = workspaces
             .Where(w => w.Memberships.Count == 1)
             .ToList();
@@ -80,7 +80,7 @@ public class UserDeletedHandlerTest
             .Received(emptyWorkspaces.Count)
             .Remove(Arg.Any<WorkspaceAggregate>());
         removedWorkspaces.Should().BeEquivalentTo(emptyWorkspaces);
-        
+
         await _projectRepository
             .Received(1)
             .GetListByOwner(Arg.Is<UserId>(uId => uId == user.Id));
@@ -99,7 +99,7 @@ public class UserDeletedHandlerTest
         await _userRepository
             .Received(1)
             .RemoveWorkspaceInvitationsByUser(user);
-        
+
         Utils.User.AssertFromUserDeleted(user, workspaces, projects, ownedWorkspaces, ownedProjects);
     }
 }

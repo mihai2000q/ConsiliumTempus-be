@@ -25,9 +25,12 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
         config.NewConfig<GetCollectionCustomFieldSetupResult, GetCollectionCustomFieldSetupFromProjectResponse>();
         config.NewConfig<CustomFieldSetupAggregate,
                 GetCollectionCustomFieldSetupFromProjectResponse.CustomFieldSetupResponse>()
-            .Include<NumberCustomFieldSetupAggregate, GetCollectionCustomFieldSetupFromProjectResponse.NumberCustomFieldSetupResponse>()
-            .Include<SingleSelectCustomFieldSetupAggregate, GetCollectionCustomFieldSetupFromProjectResponse.SingleSelectCustomFieldSetupResponse>()
-            .Include<TextCustomFieldSetupAggregate, GetCollectionCustomFieldSetupFromProjectResponse.TextCustomFieldSetupResponse>()
+            .Include<NumberCustomFieldSetupAggregate,
+                GetCollectionCustomFieldSetupFromProjectResponse.NumberCustomFieldSetupResponse>()
+            .Include<SingleSelectCustomFieldSetupAggregate,
+                GetCollectionCustomFieldSetupFromProjectResponse.SingleSelectCustomFieldSetupResponse>()
+            .Include<TextCustomFieldSetupAggregate,
+                GetCollectionCustomFieldSetupFromProjectResponse.TextCustomFieldSetupResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value);

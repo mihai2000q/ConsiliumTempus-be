@@ -10,7 +10,7 @@ public class GetProjectSprintQueryValidatorTest
     private readonly GetProjectSprintQueryValidator _uut = new();
 
     #endregion
-    
+
     [Theory]
     [ClassData(typeof(GetProjectSprintQueryValidatorData.GetValidQueries))]
     public async Task ValidateGetProjectSprintQuery_WhenQueryIsValid_ShouldReturnTrue(GetProjectSprintQuery query)
@@ -23,10 +23,10 @@ public class GetProjectSprintQueryValidatorTest
         outcome.IsValid.Should().BeTrue();
         outcome.Errors.Should().BeEmpty();
     }
-    
+
     [Theory]
     [ClassData(typeof(GetProjectSprintQueryValidatorData.GetInvalidIdQueries))]
-    public async Task ValidateGetProjectSprintQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse( 
+    public async Task ValidateGetProjectSprintQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         GetProjectSprintQuery query,
         string property)
     {

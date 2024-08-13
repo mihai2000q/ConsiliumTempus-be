@@ -10,7 +10,7 @@ public abstract class ProjectSprintFilter : Filter<ProjectSprintAggregate>
 {
     public static readonly IReadOnlyList<FilterProperty<ProjectSprintAggregate>> FilterProperties =
     [
-        new FilterProperties.ProjectSprint.NameFilterProperty(),
+        new FilterProperties.ProjectSprint.NameFilterProperty()
     ];
 
     private ProjectSprintFilter(Expression<Func<ProjectSprintAggregate, bool>> predicate) : base(predicate)

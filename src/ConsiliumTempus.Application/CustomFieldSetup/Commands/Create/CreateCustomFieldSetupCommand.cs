@@ -9,7 +9,7 @@ public sealed record CreateCustomFieldSetupCommand(
     string Name,
     string Description,
     string Type,
-    CreateCustomFieldSetupCommand.NumberSettingsCommand? NumberSettings, 
+    CreateCustomFieldSetupCommand.NumberSettingsCommand? NumberSettings,
     List<CreateCustomFieldSetupCommand.SingleSelectOptionCommand>? SingleSelectOptions)
     : IRequest<ErrorOr<CreateCustomFieldSetupResult>>
 {

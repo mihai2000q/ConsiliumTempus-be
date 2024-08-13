@@ -14,7 +14,7 @@ public sealed class CreateProjectTaskCommandHandler(
     IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<CreateProjectTaskCommand, ErrorOr<CreateProjectTaskResult>>
 {
-    public async Task<ErrorOr<CreateProjectTaskResult>> Handle(CreateProjectTaskCommand command, 
+    public async Task<ErrorOr<CreateProjectTaskResult>> Handle(CreateProjectTaskCommand command,
         CancellationToken cancellationToken)
     {
         var stage = await projectSprintRepository.GetStageWithTasksAndWorkspace(

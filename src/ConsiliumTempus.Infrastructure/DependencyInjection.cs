@@ -34,7 +34,8 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddAppAuthentication(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddAppAuthentication(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var jwtSettings = new JwtSettings();
         configuration.Bind(JwtSettings.SectionName, jwtSettings);

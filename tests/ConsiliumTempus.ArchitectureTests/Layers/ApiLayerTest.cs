@@ -30,7 +30,7 @@ public class ApiLayerTest : BaseArchitectureTest
             .And()
             .AreNotAbstract()
             .And()
-            .AreNot(typeof(Program), 
+            .AreNot(typeof(Program),
                 typeof(GetCollectionCustomFieldSetupFromProjectResponse.CustomFieldSetupResponse))
             .Should()
             .BeSealed()

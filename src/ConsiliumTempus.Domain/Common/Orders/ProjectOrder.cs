@@ -16,7 +16,7 @@ public abstract class ProjectOrder : Order<ProjectAggregate>
         new OrderProperties.Project.CreatedDateTimeProperty(),
         new OrderProperties.Project.UpdatedDateTimeProperty()
     ];
-    
+
     private ProjectOrder(Expression<Func<ProjectAggregate, object?>> propertySelector, OrderType orderType)
         : base(propertySelector, orderType)
     {

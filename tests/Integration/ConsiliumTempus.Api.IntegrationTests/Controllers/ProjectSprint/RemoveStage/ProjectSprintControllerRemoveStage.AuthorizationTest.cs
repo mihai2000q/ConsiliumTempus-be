@@ -50,7 +50,8 @@ public class ProjectSprintControllerRemoveStageAuthorizationTest(WebAppFactory f
     }
 
     [Fact]
-    public async Task RemoveStageFromProjectSprint_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
+    public async Task
+        RemoveStageFromProjectSprint_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectSprintData.Users[0], ProjectSprintData.ProjectSprints[^1]);
     }

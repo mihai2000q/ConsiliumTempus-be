@@ -101,7 +101,8 @@ public sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext) 
             .ToListAsync(cancellationToken);
     }
 
-    public Task<ProjectStage?> GetStageWithTasksAndWorkspace(ProjectStageId id, CancellationToken cancellationToken = default)
+    public Task<ProjectStage?> GetStageWithTasksAndWorkspace(ProjectStageId id,
+        CancellationToken cancellationToken = default)
     {
         return dbContext.Set<ProjectStage>()
             .Include(ps => ps.Sprint.Project.Workspace)

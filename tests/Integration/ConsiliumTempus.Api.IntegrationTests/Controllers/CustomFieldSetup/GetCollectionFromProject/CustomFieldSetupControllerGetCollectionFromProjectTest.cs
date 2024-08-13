@@ -33,7 +33,8 @@ public class CustomFieldSetupControllerGetCollectionFromProjectTest(WebAppFactor
     }
 
     [Fact]
-    public async Task GetCollectionCustomFieldSetupFromProject_WhenProjectIsNotFound_ShouldReturnEmptyCustomFieldSetups()
+    public async Task
+        GetCollectionCustomFieldSetupFromProject_WhenProjectIsNotFound_ShouldReturnEmptyCustomFieldSetups()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateGetCollectionCustomFieldSetupFromProjectRequest(

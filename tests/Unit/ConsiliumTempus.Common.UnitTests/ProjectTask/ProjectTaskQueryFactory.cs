@@ -9,7 +9,7 @@ public static class ProjectTaskQueryFactory
     {
         return new GetProjectTaskQuery(id ?? Guid.NewGuid());
     }
-    
+
     public static GetCollectionProjectTaskQuery CreateGetCollectionProjectTaskQuery(
         Guid? projectStageId = null,
         string[]? search = null,

@@ -85,7 +85,8 @@ public class WorkspaceControllerGetInvitationsTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetInvitationsWorkspace_WhenRequestHasIsSenderFalseAndPaginationInfo_ShouldReturnPaginatedInvitationsForCollaborator()
+    public async Task
+        GetInvitationsWorkspace_WhenRequestHasIsSenderFalseAndPaginationInfo_ShouldReturnPaginatedInvitationsForCollaborator()
     {
         // Arrange
         var user = WorkspaceData.Users[7];

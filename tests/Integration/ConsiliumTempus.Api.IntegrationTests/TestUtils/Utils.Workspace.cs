@@ -53,17 +53,13 @@ internal static partial class Utils
         {
             response.Workspaces.Should().HaveCount(workspaces.Count);
             if (isOrdered)
-            {
                 response.Workspaces.Zip(workspaces)
                     .Should().AllSatisfy(x => AssertWorkspaceResponse(x.First, x.Second, user));
-            }
             else
-            {
                 response.Workspaces
                     .OrderBy(w => w.Id)
                     .Zip(workspaces.OrderBy(w => w.Id.Value))
                     .Should().AllSatisfy(x => AssertWorkspaceResponse(x.First, x.Second, user));
-            }
 
             response.TotalCount.Should().Be(totalCount);
         }

@@ -63,9 +63,10 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
             expectedCollaborators.Count,
             true);
     }
-    
+
     [Fact]
-    public async Task GetCollaboratorsFromWorkspace_WhenRequestHasOrderByAndPagination_ShouldReturnOrderedAndPaginatedCollaborators()
+    public async Task
+        GetCollaboratorsFromWorkspace_WhenRequestHasOrderByAndPagination_ShouldReturnOrderedAndPaginatedCollaborators()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();

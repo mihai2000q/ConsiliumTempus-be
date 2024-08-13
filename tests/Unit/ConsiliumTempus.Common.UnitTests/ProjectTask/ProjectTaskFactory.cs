@@ -18,13 +18,13 @@ public static class ProjectTaskFactory
         UserAggregate? createdBy = null)
     {
         return ProjectTaskAggregate.Create(
-            Name.Create(name), 
-            Description.Create(description), 
-            CustomOrderPosition.Create(customOrderPosition), 
+            Name.Create(name),
+            Description.Create(description),
+            CustomOrderPosition.Create(customOrderPosition),
             createdBy ?? UserFactory.Create(),
             stage ?? ProjectStageFactory.Create());
     }
-    
+
     public static List<ProjectTaskAggregate> CreateList(int count = 5)
     {
         return Enumerable

@@ -25,7 +25,8 @@ public class StringExtensionsTest
     [InlineData("ThisIsAVariable", "thisIsAVariable")]
     [InlineData("Someone", "someone")]
     [InlineData("ExpectedValue", "expectedValue")]
-    public void FromPascalToCamelCase_LeaveWorkspaceShouldReturnStringWithCamelCaseNotation(string input, string expected)
+    public void FromPascalToCamelCase_LeaveWorkspaceShouldReturnStringWithCamelCaseNotation(string input,
+        string expected)
     {
         // Arrange - parameterized
 
@@ -76,7 +77,8 @@ public class StringExtensionsTest
     [InlineData("aB", "_aBId")]
     [InlineData("Role", "_roleId")]
     [InlineData("WorkspaceRole", "_workspaceRoleId")]
-    public void ToIdBackingField_LeaveWorkspaceShouldReturnStringWithIdBackingFieldNotation(string input, string expected)
+    public void ToIdBackingField_LeaveWorkspaceShouldReturnStringWithIdBackingFieldNotation(string input,
+        string expected)
     {
         // Arrange - parameterized
 

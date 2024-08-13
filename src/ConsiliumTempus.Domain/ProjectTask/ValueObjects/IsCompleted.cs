@@ -22,7 +22,7 @@ public sealed class IsCompleted : ValueObject
     public static IsCompleted Create(bool value, DateTime? completedOn = null)
     {
         return new IsCompleted(
-            value, 
+            value,
             completedOn);
     }
 

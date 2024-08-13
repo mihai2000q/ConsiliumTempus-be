@@ -49,7 +49,7 @@ public class ProjectCreatedHandlerTest
                 // ReSharper disable once AccessToModifiedClosure
                 stage.CustomOrderPosition.Value.Should().Be(count++);
                 stage.Sprint.Should().Be(project.Sprints[0]);
-                
+
                 stage.Audit.CreatedBy.Should().Be(owner);
                 stage.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
                 stage.Audit.UpdatedBy.Should().Be(owner);

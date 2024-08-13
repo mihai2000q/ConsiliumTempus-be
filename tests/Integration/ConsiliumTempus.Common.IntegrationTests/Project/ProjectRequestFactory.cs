@@ -190,7 +190,7 @@ public static class ProjectRequestFactory
         return new RemoveAllowedMemberFromProjectRequest
         {
             Id = id ?? Guid.NewGuid(),
-            AllowedMemberId = allowedMemberId ?? Guid.NewGuid(),
+            AllowedMemberId = allowedMemberId ?? Guid.NewGuid()
         };
     }
 
@@ -201,7 +201,7 @@ public static class ProjectRequestFactory
         return new RemoveStatusFromProjectRequest
         {
             Id = id ?? Guid.NewGuid(),
-            StatusId = statusId ?? Guid.NewGuid(),
+            StatusId = statusId ?? Guid.NewGuid()
         };
     }
 }

@@ -16,7 +16,8 @@ public class ProjectControllerRemoveAllowedMemberTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task RemoveAllowedMemberFromProject_WhenSucceeds_ShouldRemoveAllowedMemberFromProjectAndReturnSuccessResponse()
+    public async Task
+        RemoveAllowedMemberFromProject_WhenSucceeds_ShouldRemoveAllowedMemberFromProjectAndReturnSuccessResponse()
     {
         // Arrange
         var project = ProjectData.Projects[^2];
@@ -84,7 +85,7 @@ public class ProjectControllerRemoveAllowedMemberTest(WebAppFactory factory)
                                           $"{request.Id}/Remove-Allowed-Member/{request.AllowedMemberId}");
 
         // Assert
-        await outcome.ValidateError(Errors.Project.RemoveOwner); 
+        await outcome.ValidateError(Errors.Project.RemoveOwner);
     }
 
     [Fact]
@@ -109,7 +110,7 @@ public class ProjectControllerRemoveAllowedMemberTest(WebAppFactory factory)
             .AllowedMembers
             .Should().NotContain(u => u.Id.Value == request.AllowedMemberId);
     }
-    
+
     [Fact]
     public async Task RemoveAllowedMemberFromProject_WhenIsNotPrivate_ShouldReturnNotPrivateError()
     {
@@ -130,7 +131,7 @@ public class ProjectControllerRemoveAllowedMemberTest(WebAppFactory factory)
             .IsPrivate.Value
             .Should().BeFalse();
     }
-    
+
     [Fact]
     public async Task RemoveAllowedMemberFromProject_WhenIsNotFound_ShouldReturnNotFoundError()
     {

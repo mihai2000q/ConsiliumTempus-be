@@ -22,7 +22,7 @@ public static class ProjectSprintCommandFactory
             name,
             onTop);
     }
-    
+
     public static CreateProjectSprintCommand CreateCreateProjectSprintCommand(
         Guid? projectId = null,
         string name = Constants.ProjectSprint.Name,
@@ -39,7 +39,7 @@ public static class ProjectSprintCommandFactory
             keepPreviousStages,
             projectStatus);
     }
-    
+
     public static CreateProjectSprintCommand.CreateProjectStatus CreateCreateProjectStatus(
         string title = Constants.ProjectStatus.Title,
         string? status = null,
@@ -50,12 +50,12 @@ public static class ProjectSprintCommandFactory
             status ?? ProjectStatusType.AtRisk.ToString(),
             description);
     }
-    
+
     public static DeleteProjectSprintCommand CreateDeleteProjectSprintCommand(Guid? id = null)
     {
         return new DeleteProjectSprintCommand(id ?? Guid.NewGuid());
     }
-    
+
     public static MoveStageFromProjectSprintCommand CreateMoveStageFromProjectSprintCommand(
         Guid? projectSprintId = null,
         Guid? stageId = null,
@@ -66,7 +66,7 @@ public static class ProjectSprintCommandFactory
             stageId ?? Guid.NewGuid(),
             overStageId ?? Guid.NewGuid());
     }
-    
+
     public static RemoveStageFromProjectSprintCommand CreateRemoveStageFromProjectSprintCommand(
         Guid? projectSprintId = null,
         Guid? stageId = null)
@@ -75,7 +75,7 @@ public static class ProjectSprintCommandFactory
             projectSprintId ?? Guid.NewGuid(),
             stageId ?? Guid.NewGuid());
     }
-    
+
     public static UpdateProjectSprintCommand CreateUpdateProjectSprintCommand(
         Guid? id = null,
         string name = Constants.ProjectSprint.Name,
@@ -88,7 +88,7 @@ public static class ProjectSprintCommandFactory
             startDate,
             endDate);
     }
-    
+
     public static UpdateStageFromProjectSprintCommand CreateUpdateStageFromProjectSprintCommand(
         Guid? projectSprintId = null,
         Guid? stageId = null,

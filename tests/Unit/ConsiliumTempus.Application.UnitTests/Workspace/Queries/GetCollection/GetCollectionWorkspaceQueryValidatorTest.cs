@@ -16,14 +16,14 @@ public class GetCollectionWorkspaceQueryValidatorTest
     public async Task ValidateGetCollectionWorkspaceQuery_WhenValid_ShouldReturnTrue(GetCollectionWorkspaceQuery query)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAsync(query);
 
         // Assert
         outcome.IsValid.Should().BeTrue();
     }
-    
+
     [Theory]
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidPageSizeAndCurrentPageQueries))]
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidPageSizeQueries))]
@@ -31,12 +31,12 @@ public class GetCollectionWorkspaceQueryValidatorTest
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidOrderByQueries))]
     [ClassData(typeof(GetCollectionWorkspaceQueryValidatorData.GetInvalidSearchQueries))]
     public async Task ValidateGetCollectionWorkspaceQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(
-        GetCollectionWorkspaceQuery query, 
+        GetCollectionWorkspaceQuery query,
         string property,
         short expectedErrors)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAsync(query);
 

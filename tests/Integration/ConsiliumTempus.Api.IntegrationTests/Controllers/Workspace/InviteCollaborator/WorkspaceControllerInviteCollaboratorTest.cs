@@ -64,7 +64,7 @@ public class WorkspaceControllerInviteCollaboratorTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.WorkspaceInvitation.AlreadyCollaborator);
 
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync(); 
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.SingleOrDefault(w => w.Id == WorkspaceId.Create(request.Id))
             .Should().NotBeNull();
         dbContext
@@ -92,7 +92,7 @@ public class WorkspaceControllerInviteCollaboratorTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.WorkspaceInvitation.AlreadyInvited);
 
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync(); 
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.SingleOrDefault(w => w.Id == WorkspaceId.Create(request.Id))
             .Should().NotBeNull();
         dbContext
@@ -114,7 +114,7 @@ public class WorkspaceControllerInviteCollaboratorTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Workspace.NotFound);
 
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync(); 
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.Workspaces.SingleOrDefault(w => w.Id == WorkspaceId.Create(request.Id))
             .Should().BeNull();
     }

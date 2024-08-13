@@ -47,7 +47,7 @@ internal static partial class Utils
             newRefreshToken.RefreshTimes.Should().Be(1);
             newRefreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertAlreadyRefreshed(
             Domain.Authentication.RefreshToken refreshToken,
             string token)

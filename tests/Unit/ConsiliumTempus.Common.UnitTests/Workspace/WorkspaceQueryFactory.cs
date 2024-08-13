@@ -12,7 +12,7 @@ public static class WorkspaceQueryFactory
     {
         return new GetWorkspaceQuery(id ?? Guid.NewGuid());
     }
-    
+
     public static GetCollaboratorsFromWorkspaceQuery CreateGetCollaboratorsFromWorkspaceQuery(
         Guid? id = null,
         int? pageSize = null,

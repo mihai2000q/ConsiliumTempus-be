@@ -13,7 +13,8 @@ public class RemoveStageFromProjectSprintCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(RemoveStageFromProjectSprintCommandValidatorData.GetValidCommands))]
-    public async Task ValidateRemoveStageFromProjectSprintCommand_WhenValid_ShouldReturnTrue(RemoveStageFromProjectSprintCommand command)
+    public async Task ValidateRemoveStageFromProjectSprintCommand_WhenValid_ShouldReturnTrue(
+        RemoveStageFromProjectSprintCommand command)
     {
         // Arrange - parameterized
 

@@ -18,11 +18,11 @@ public class ProjectControllerGetCollectionAuthorizationTest(WebAppFactory facto
         // Act
         Client.UseCustomToken(ProjectData.Users[0]);
         var outcome = await Client.Get("api/projects");
-        
+
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     [Fact]
     public async Task GetCollectionProject_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {

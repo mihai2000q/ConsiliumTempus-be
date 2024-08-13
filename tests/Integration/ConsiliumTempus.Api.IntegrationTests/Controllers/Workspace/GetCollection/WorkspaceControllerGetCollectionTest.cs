@@ -48,7 +48,8 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionWorkspace_WhenRequestHasIsPersonalWorkspaceFirst_ShouldReturnWorkspacesWithPersonalWorkspaceFirst()
+    public async Task
+        GetCollectionWorkspace_WhenRequestHasIsPersonalWorkspaceFirst_ShouldReturnWorkspacesWithPersonalWorkspaceFirst()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
@@ -111,7 +112,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
         var user = WorkspaceData.Users.First();
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
             orderBy: ["name.asc"]);
-        
+
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Get($"api/Workspaces?{request.OrderBy?.ToOrderByQueryParam()}");
@@ -131,7 +132,8 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionWorkspace_WhenRequestHasNameAscAndLastActivityAscOrder_ShouldReturnWorkspacesOrderedByNameAscending()
+    public async Task
+        GetCollectionWorkspace_WhenRequestHasNameAscAndLastActivityAscOrder_ShouldReturnWorkspacesOrderedByNameAscending()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
@@ -158,7 +160,8 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionWorkspace_WhenRequestHasPaginationAndOrder_ShouldReturnWorkspacesPaginatedAndOrdered()
+    public async Task
+        GetCollectionWorkspace_WhenRequestHasPaginationAndOrder_ShouldReturnWorkspacesPaginatedAndOrdered()
     {
         // Arrange
         var user = WorkspaceData.Users.First();

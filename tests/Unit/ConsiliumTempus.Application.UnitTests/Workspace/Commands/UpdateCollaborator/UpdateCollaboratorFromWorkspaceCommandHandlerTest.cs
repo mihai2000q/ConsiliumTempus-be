@@ -24,7 +24,8 @@ public class UpdateCollaboratorFromWorkspaceCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleUpdateCollaboratorFromWorkspaceCommand_WhenIsSuccessful_ShouldUpdateCollaboratorAndReturnSuccess()
+    public async Task
+        HandleUpdateCollaboratorFromWorkspaceCommand_WhenIsSuccessful_ShouldUpdateCollaboratorAndReturnSuccess()
     {
         // Arrange
         var workspace = WorkspaceFactory.CreateWithCollaborators();
@@ -35,7 +36,7 @@ public class UpdateCollaboratorFromWorkspaceCommandHandlerTest
 
         var command = WorkspaceCommandFactory.CreateUpdateCollaboratorFromWorkspaceCommand(
             workspace.Id.Value,
-            collaboratorId: collaborator.Id.Value);
+            collaborator.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -52,7 +53,8 @@ public class UpdateCollaboratorFromWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateCollaboratorFromWorkspaceCommand_WhenCollaboratorsIsNull_ShouldReturnCollaboratorNotFoundError()
+    public async Task
+        HandleUpdateCollaboratorFromWorkspaceCommand_WhenCollaboratorsIsNull_ShouldReturnCollaboratorNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateUpdateCollaboratorFromWorkspaceCommand();

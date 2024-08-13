@@ -13,7 +13,8 @@ public class CreateCustomFieldSetupCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(CreateCustomFieldSetupCommandValidatorData.GetValidCommands))]
-    public async Task ValidateCreateCustomFieldSetupCommand_WhenValid_ShouldReturnTrue(CreateCustomFieldSetupCommand command)
+    public async Task ValidateCreateCustomFieldSetupCommand_WhenValid_ShouldReturnTrue(
+        CreateCustomFieldSetupCommand command)
     {
         // Arrange - parameterized
 

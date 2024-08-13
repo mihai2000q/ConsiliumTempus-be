@@ -11,13 +11,14 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
 public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContext) : ICustomFieldSetupRepository
 {
-    public async Task<CustomFieldSetupAggregate?> Get(CustomFieldSetupId id, CancellationToken cancellationToken = default)
+    public async Task<CustomFieldSetupAggregate?> Get(CustomFieldSetupId id,
+        CancellationToken cancellationToken = default)
     {
         return await dbContext.CustomFieldSetups.FindAsync([id], cancellationToken);
     }
 
     public Task<List<CustomFieldSetupAggregate>> GetList(
-        WorkspaceId? workspaceId, 
+        WorkspaceId? workspaceId,
         ProjectId? projectId,
         CancellationToken cancellationToken = default)
     {

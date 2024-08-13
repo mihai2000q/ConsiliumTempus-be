@@ -43,7 +43,7 @@ public class UpdateProjectTaskCommandHandlerTest
         _userRepository
             .Get(Arg.Any<UserId>())
             .Returns(assignee);
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
@@ -52,11 +52,9 @@ public class UpdateProjectTaskCommandHandlerTest
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
         if (command.AssigneeId is not null)
-        {
             await _userRepository
                 .Received(1)
                 .Get(Arg.Is<UserId>(uId => uId.Value == command.AssigneeId));
-        }
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateProjectTaskResult());

@@ -10,7 +10,8 @@ namespace ConsiliumTempus.Application.Workspace.Queries.GetOverview;
 public sealed class GetOverviewWorkspaceQueryHandler(IWorkspaceRepository workspaceRepository)
     : IRequestHandler<GetOverviewWorkspaceQuery, ErrorOr<WorkspaceAggregate>>
 {
-    public async Task<ErrorOr<WorkspaceAggregate>> Handle(GetOverviewWorkspaceQuery query, CancellationToken cancellationToken)
+    public async Task<ErrorOr<WorkspaceAggregate>> Handle(GetOverviewWorkspaceQuery query,
+        CancellationToken cancellationToken)
     {
         var workspace = await workspaceRepository.Get(WorkspaceId.Create(query.Id), cancellationToken);
         return workspace is not null ? workspace : Errors.Workspace.NotFound;

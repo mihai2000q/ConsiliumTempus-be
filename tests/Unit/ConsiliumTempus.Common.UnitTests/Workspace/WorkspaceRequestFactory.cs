@@ -185,7 +185,7 @@ public static class WorkspaceRequestFactory
         return new KickCollaboratorFromWorkspaceRequest
         {
             Id = id ?? Guid.NewGuid(),
-            CollaboratorId = collaboratorId ?? Guid.NewGuid(),
+            CollaboratorId = collaboratorId ?? Guid.NewGuid()
         };
     }
 

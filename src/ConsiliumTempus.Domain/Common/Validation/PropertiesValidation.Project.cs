@@ -6,7 +6,7 @@ public static partial class PropertiesValidation
     {
         public const short NameMaximumLength = 100;
     }
-    
+
     public static class ProjectStatus
     {
         public const short TitleMaximumLength = 50;

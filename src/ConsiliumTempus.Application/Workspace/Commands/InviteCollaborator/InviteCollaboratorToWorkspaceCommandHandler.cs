@@ -25,7 +25,7 @@ public sealed class InviteCollaboratorToWorkspaceCommandHandler(
         var collaborator = await userRepository.GetByEmail(command.Email.ToLower(), cancellationToken);
         if (collaborator is null) return Errors.User.NotFound;
 
-        if (workspace.Invitations.Any(i => i.Collaborator == collaborator)) 
+        if (workspace.Invitations.Any(i => i.Collaborator == collaborator))
             return Errors.WorkspaceInvitation.AlreadyInvited;
         if (workspace.Memberships.Any(m => m.User == collaborator))
             return Errors.WorkspaceInvitation.AlreadyCollaborator;

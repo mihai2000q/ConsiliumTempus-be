@@ -13,7 +13,8 @@ public class UpdateOverviewWorkspaceCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(UpdateOverviewWorkspaceCommandValidatorData.GetValidCommands))]
-    public async Task ValidateUpdateOverviewWorkspaceCommand_WhenValid_ShouldReturnTrue(UpdateOverviewWorkspaceCommand command)
+    public async Task ValidateUpdateOverviewWorkspaceCommand_WhenValid_ShouldReturnTrue(
+        UpdateOverviewWorkspaceCommand command)
     {
         // Arrange - parameterized
 

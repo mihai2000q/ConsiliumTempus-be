@@ -54,7 +54,7 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
                     "#FF2233"),
                 new CreateCustomFieldSetupOnProjectRequest.SingleSelectOptionRequest(
                     "Low",
-                    "#7788AA"),
+                    "#7788AA")
             ]);
 
         await ActAndAssert(request, user, project);

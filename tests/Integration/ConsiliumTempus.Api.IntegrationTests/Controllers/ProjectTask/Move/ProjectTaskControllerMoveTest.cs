@@ -161,9 +161,9 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
             .ToListAsync();
 
         Utils.ProjectTask.AssertMoveOverTaskToAnotherStage(
-            request, 
-            movedTask, 
-            overTask.Stage, 
+            request,
+            movedTask,
+            overTask.Stage,
             stages,
             expectedCustomOrderPosition);
     }

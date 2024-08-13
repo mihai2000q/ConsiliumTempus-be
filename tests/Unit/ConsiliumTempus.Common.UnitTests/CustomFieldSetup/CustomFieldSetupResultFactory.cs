@@ -12,7 +12,7 @@ public static class CustomFieldSetupResultFactory
         return new GetCollectionCustomFieldSetupResult(
             customFieldSetups ?? CustomFieldSetupFactory.CreateList());
     }
-    
+
     public static CreateCustomFieldSetupResult CreateCreateCustomFieldSetupResult()
     {
         return new CreateCustomFieldSetupResult();

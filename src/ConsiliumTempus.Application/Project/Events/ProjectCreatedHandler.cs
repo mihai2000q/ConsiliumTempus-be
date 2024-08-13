@@ -23,7 +23,7 @@ public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
         Constants.ProjectStage.Names
             .Select((name, index) => ProjectStage.Create(
                 Name.Create(name),
-                CustomOrderPosition.Create(index), 
+                CustomOrderPosition.Create(index),
                 sprint,
                 notification.Project.Owner))
             .ForEach(stage => sprint.AddStage(stage));

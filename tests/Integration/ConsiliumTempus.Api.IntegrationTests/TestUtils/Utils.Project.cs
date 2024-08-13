@@ -61,18 +61,14 @@ internal static partial class Utils
         {
             response.Projects.Should().HaveCount(projects.Count);
             if (isOrdered)
-            {
                 response.Projects
                     .Zip(projects)
                     .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second, user));
-            }
             else
-            {
                 response.Projects
                     .OrderBy(p => p.Id)
                     .Zip(projects.OrderBy(p => p.Id.Value))
                     .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second, user));
-            }
 
             response.TotalCount.Should().Be(totalCount);
         }
@@ -246,7 +242,7 @@ internal static partial class Utils
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertLeavePrivate(
             ProjectAggregate project,
             LeavePrivateProjectRequest request,
@@ -385,7 +381,7 @@ internal static partial class Utils
                 .OrderByDescending(s => s.Audit.CreatedDateTime)
                 .First();
         }
-        
+
         private static void AssertUserResponse(
             GetAllowedMembersFromProjectResponse.UserResponse userResponse,
             UserAggregate user)

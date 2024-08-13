@@ -34,7 +34,8 @@ internal class AuthData : ITestData
             history: [RefreshTokenHistoryFactory.Create(Guid.Parse("90000000-9000-0000-0000-900000000000"))]),
         RefreshTokenFactory.Create(
             Users[0],
-            history: [
+            history:
+            [
                 RefreshTokenHistoryFactory.Create(Guid.Parse("90000000-9000-0000-0000-900000000000")),
                 RefreshTokenHistoryFactory.Create(Guid.Parse("90000000-9000-0000-0000-900000000001"))
             ]),

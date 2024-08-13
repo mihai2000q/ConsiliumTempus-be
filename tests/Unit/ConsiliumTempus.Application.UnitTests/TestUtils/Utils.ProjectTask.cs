@@ -118,7 +118,7 @@ internal static partial class Utils
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertFromUpdateCommand(
             ProjectTaskAggregate task,
             UpdateProjectTaskCommand command,
@@ -131,7 +131,7 @@ internal static partial class Utils
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertFromUpdateIsCompletedCommand(
             ProjectTaskAggregate task,
             UpdateIsCompletedProjectTaskCommand command)

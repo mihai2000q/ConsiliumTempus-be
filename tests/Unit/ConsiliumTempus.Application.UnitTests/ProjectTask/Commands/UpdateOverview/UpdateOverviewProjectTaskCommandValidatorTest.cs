@@ -13,7 +13,8 @@ public class UpdateOverviewProjectTaskCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(UpdateOverviewProjectTaskCommandValidatorData.GetValidCommands))]
-    public async Task ValidateUpdateOverviewProjectTaskCommand_WhenValid_ShouldReturnTrue(UpdateOverviewProjectTaskCommand command)
+    public async Task ValidateUpdateOverviewProjectTaskCommand_WhenValid_ShouldReturnTrue(
+        UpdateOverviewProjectTaskCommand command)
     {
         // Arrange - parameterized
 

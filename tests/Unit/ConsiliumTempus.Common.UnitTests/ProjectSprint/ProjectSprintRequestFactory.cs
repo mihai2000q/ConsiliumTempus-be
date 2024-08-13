@@ -102,7 +102,7 @@ public static class ProjectSprintRequestFactory
             stageId ?? Guid.NewGuid(),
             name);
     }
-    
+
     public static MoveStageFromProjectSprintRequest CreateMoveStageFromProjectSprintRequest(
         Guid? id = null,
         Guid? stageId = null,

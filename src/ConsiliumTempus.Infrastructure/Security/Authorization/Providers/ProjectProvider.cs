@@ -17,7 +17,8 @@ public sealed class ProjectProvider(ConsiliumTempusDbContext dbContext) : IProje
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<ProjectAggregate?> GetByProjectSprint(ProjectSprintId id, CancellationToken cancellationToken = default)
+    public async Task<ProjectAggregate?> GetByProjectSprint(ProjectSprintId id,
+        CancellationToken cancellationToken = default)
     {
         var sprint = await dbContext.ProjectSprints
             .Include(ps => ps.Project)
@@ -27,7 +28,8 @@ public sealed class ProjectProvider(ConsiliumTempusDbContext dbContext) : IProje
         return sprint?.Project;
     }
 
-    public async Task<ProjectAggregate?> GetByProjectStage(ProjectStageId id, CancellationToken cancellationToken = default)
+    public async Task<ProjectAggregate?> GetByProjectStage(ProjectStageId id,
+        CancellationToken cancellationToken = default)
     {
         var stage = await dbContext.Set<ProjectStage>()
             .Include(ps => ps.Sprint.Project)
@@ -37,7 +39,8 @@ public sealed class ProjectProvider(ConsiliumTempusDbContext dbContext) : IProje
         return stage?.Sprint.Project;
     }
 
-    public async Task<ProjectAggregate?> GetByProjectTask(ProjectTaskId id, CancellationToken cancellationToken = default)
+    public async Task<ProjectAggregate?> GetByProjectTask(ProjectTaskId id,
+        CancellationToken cancellationToken = default)
     {
         var task = await dbContext.ProjectTasks
             .Include(pt => pt.Stage.Sprint.Project)

@@ -38,7 +38,8 @@ public class GetCollectionCustomFieldSetupQueryHandlerTest
         // Assert
         await _customFieldSetupRepository
             .Received(1)
-            .GetList(Arg.Is<WorkspaceId?>(wId => query.WorkspaceId != null ? wId!.Value == query.WorkspaceId : wId == null), 
+            .GetList(
+                Arg.Is<WorkspaceId?>(wId => query.WorkspaceId != null ? wId!.Value == query.WorkspaceId : wId == null),
                 Arg.Is<ProjectId?>(pId => query.ProjectId != null ? pId!.Value == query.ProjectId : pId == null));
 
         outcome.IsError.Should().BeFalse();

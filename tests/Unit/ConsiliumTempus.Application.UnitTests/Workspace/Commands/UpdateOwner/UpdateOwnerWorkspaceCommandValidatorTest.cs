@@ -13,7 +13,8 @@ public class UpdateOwnerWorkspaceCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(UpdateOwnerWorkspaceCommandValidatorData.GetValidCommands))]
-    public async Task ValidateUpdateOwnerWorkspaceCommand_WhenValid_ShouldReturnTrue(UpdateOwnerWorkspaceCommand command)
+    public async Task ValidateUpdateOwnerWorkspaceCommand_WhenValid_ShouldReturnTrue(
+        UpdateOwnerWorkspaceCommand command)
     {
         // Arrange - parameterized
 

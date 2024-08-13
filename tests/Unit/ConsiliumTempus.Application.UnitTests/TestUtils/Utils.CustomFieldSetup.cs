@@ -49,7 +49,7 @@ internal static partial class Utils
                 default:
                     throw new ArgumentOutOfRangeException(nameof(command));
             }
-            
+
             return true;
         }
 
@@ -60,7 +60,7 @@ internal static partial class Utils
             customFieldSetup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
             var setup = (NumberCustomFieldSetupAggregate)customFieldSetup;
             setup.Settings.CurrencyCode.Should().Be(command.NumberSettings!.CurrencyCode);
-            setup.Settings.Decimals.Should().Be((short) command.NumberSettings.Decimals);
+            setup.Settings.Decimals.Should().Be((short)command.NumberSettings.Decimals);
             setup.Settings.Rounding.Should().Be(command.NumberSettings.Rounding);
         }
 

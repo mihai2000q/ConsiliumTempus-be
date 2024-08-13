@@ -16,7 +16,7 @@ public abstract class ProjectFilter : Filter<ProjectAggregate>
         new FilterProperties.Project.LatestStatusProperty(),
         new FilterProperties.Project.LastActivityProperty(),
         new FilterProperties.Project.CreatedDateTimeProperty(),
-        new FilterProperties.Project.UpdatedDateTimeProperty(),
+        new FilterProperties.Project.UpdatedDateTimeProperty()
     ];
 
     private ProjectFilter(Expression<Func<ProjectAggregate, bool>> predicate) : base(predicate)

@@ -20,7 +20,7 @@ public static class CustomFieldSetupRequestFactory
             name,
             description,
             type.ToString(),
-            numberSettings, 
+            numberSettings,
             singleSelectOptions);
     }
 

@@ -13,7 +13,8 @@ public class GetCollectionCustomFieldSetupQueryValidatorTest
 
     [Theory]
     [ClassData(typeof(GetCollectionCustomFieldSetupQueryValidatorData.GetValidQueries))]
-    public async Task ValidateGetCollectionCustomFieldSetupQuery_WhenValid_ShouldReturnTrue(GetCollectionCustomFieldSetupQuery query)
+    public async Task ValidateGetCollectionCustomFieldSetupQuery_WhenValid_ShouldReturnTrue(
+        GetCollectionCustomFieldSetupQuery query)
     {
         // Arrange - parameterized
 

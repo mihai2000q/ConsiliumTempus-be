@@ -9,7 +9,7 @@ namespace ConsiliumTempus.Application.Project.Queries.GetAllowedMembers;
 public sealed class GetAllowedMembersFromProjectQueryHandler(IProjectRepository projectRepository)
     : IRequestHandler<GetAllowedMembersFromProjectQuery, ErrorOr<GetAllowedMembersFromProjectResult>>
 {
-    public async Task<ErrorOr<GetAllowedMembersFromProjectResult>> Handle(GetAllowedMembersFromProjectQuery query, 
+    public async Task<ErrorOr<GetAllowedMembersFromProjectResult>> Handle(GetAllowedMembersFromProjectQuery query,
         CancellationToken cancellationToken)
     {
         var project = await projectRepository.GetWithAllowedMembers(ProjectId.Create(query.Id), cancellationToken);

@@ -10,7 +10,7 @@ public class GetStagesFromProjectSprintQueryValidatorTest
     private readonly GetStagesFromProjectSprintQueryValidator _uut = new();
 
     #endregion
-    
+
     [Theory]
     [ClassData(typeof(GetStagesFromProjectSprintQueryValidatorData.GetValidQueries))]
     public async Task ValidateGetStagesFromProjectSprintQuery_WhenQueryIsValid_ShouldReturnTrue(
@@ -24,7 +24,7 @@ public class GetStagesFromProjectSprintQueryValidatorTest
         outcome.IsValid.Should().BeTrue();
         outcome.Errors.Should().BeEmpty();
     }
-    
+
     [Theory]
     [ClassData(typeof(GetStagesFromProjectSprintQueryValidatorData.GetInvalidIdQueries))]
     public async Task ValidateGetStagesFromProjectSprintQuery_WhenIdIsInvalid_ShouldReturnFalse(

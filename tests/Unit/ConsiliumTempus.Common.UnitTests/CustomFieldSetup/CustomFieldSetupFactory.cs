@@ -22,12 +22,12 @@ public static class CustomFieldSetupFactory
     {
         return TextCustomFieldSetupAggregate.Create(
             Name.Create(name),
-            Description.Create(description), 
+            Description.Create(description),
             workspace,
             project,
             createdBy ?? UserFactory.Create());
     }
-    
+
     public static NumberCustomFieldSetupAggregate CreateNumber(
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
@@ -40,14 +40,14 @@ public static class CustomFieldSetupFactory
             numberSettings ?? NumberCustomFieldSettings.Create(
                 Constants.CustomFieldSetup.CurrencyCode,
                 Constants.CustomFieldSetup.Decimals,
-                true), 
+                true),
             Name.Create(name),
-            Description.Create(description), 
+            Description.Create(description),
             workspace,
             project,
             createdBy ?? UserFactory.Create());
     }
-    
+
     public static SingleSelectCustomFieldSetupAggregate CreateSingleSelect(
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
@@ -57,19 +57,19 @@ public static class CustomFieldSetupFactory
         UserAggregate? createdBy = null)
     {
         return SingleSelectCustomFieldSetupAggregate.Create(
-            options ?? 
+            options ??
             [
                 SingleSelectOption.Create(
-                    Constants.SingleSelectOption.Value1,     
+                    Constants.SingleSelectOption.Value1,
                     Constants.SingleSelectOption.Color,
-                    0), 
+                    0),
                 SingleSelectOption.Create(
-                    Constants.SingleSelectOption.Value2,     
+                    Constants.SingleSelectOption.Value2,
                     Constants.SingleSelectOption.Color,
-                    1),
-            ], 
+                    1)
+            ],
             Name.Create(name),
-            Description.Create(description), 
+            Description.Create(description),
             workspace,
             project,
             createdBy ?? UserFactory.Create());
@@ -79,7 +79,7 @@ public static class CustomFieldSetupFactory
         int count = 5)
     {
         var random = new Random();
-        
+
         return Enumerable
             .Range(0, count)
             .Select(_ =>

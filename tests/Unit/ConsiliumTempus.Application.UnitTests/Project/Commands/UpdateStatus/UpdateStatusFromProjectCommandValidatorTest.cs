@@ -13,7 +13,8 @@ public class UpdateStatusFromProjectCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(UpdateStatusFromProjectCommandValidatorData.GetValidCommands))]
-    public async Task ValidateUpdateStatusFromProjectCommand_WhenValid_ShouldReturnTrue(UpdateStatusFromProjectCommand command)
+    public async Task ValidateUpdateStatusFromProjectCommand_WhenValid_ShouldReturnTrue(
+        UpdateStatusFromProjectCommand command)
     {
         // Arrange - parameterized
 

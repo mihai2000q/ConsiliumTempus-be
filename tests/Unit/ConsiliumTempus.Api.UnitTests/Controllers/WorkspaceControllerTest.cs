@@ -526,7 +526,7 @@ public class WorkspaceControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task UpdateCollaborator_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -667,7 +667,7 @@ public class WorkspaceControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task UpdateOwner_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -761,7 +761,7 @@ public class WorkspaceControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task KickCollaborator_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -808,7 +808,7 @@ public class WorkspaceControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task Leave_WhenIsSuccessful_ShouldReturnResponse()
     {

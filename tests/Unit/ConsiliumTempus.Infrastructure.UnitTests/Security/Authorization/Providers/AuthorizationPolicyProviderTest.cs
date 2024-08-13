@@ -47,7 +47,7 @@ public class AuthorizationPolicyProviderTest
     [Theory]
     [InlineData(ProjectAuthorizationLevel.IsAllowed)]
     [InlineData(ProjectAuthorizationLevel.IsProjectOwner)]
-    public async Task 
+    public async Task
         AuthorizationPolicyProvider_WhenPolicyIsProjectAuthorizationLevel_ShouldReturnNewPolicyWithPermissionRequirement(
             ProjectAuthorizationLevel projectAuthorizationLevel)
     {
@@ -64,7 +64,7 @@ public class AuthorizationPolicyProviderTest
     }
 
     [Fact]
-    public async Task 
+    public async Task
         AuthorizationPolicyProvider_WhenPolicyIsPermissions_ShouldReturnNewPolicyWithPermissionRequirement()
     {
         // Arrange

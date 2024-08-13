@@ -10,30 +10,30 @@ public class UpdateProjectSprintCommandValidatorTest
     private readonly UpdateProjectSprintCommandValidator _uut = new();
 
     #endregion
-    
+
     [Theory]
     [ClassData(typeof(UpdateProjectSprintCommandValidatorData.GetValidCommands))]
     public async Task ValidateUpdateProjectSprintCommand_WhenValid_ShouldReturnTrue(UpdateProjectSprintCommand command)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAsync(command);
 
         // Assert
         outcome.IsValid.Should().BeTrue();
     }
-    
+
     [Theory]
     [ClassData(typeof(UpdateProjectSprintCommandValidatorData.GetInvalidIdCommands))]
     [ClassData(typeof(UpdateProjectSprintCommandValidatorData.GetInvalidNameCommands))]
     [ClassData(typeof(UpdateProjectSprintCommandValidatorData.GetInvalidStartEndDateCommands))]
     public async Task ValidateUpdateProjectSprintCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
-        UpdateProjectSprintCommand command, 
+        UpdateProjectSprintCommand command,
         string property)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAsync(command);
 
@@ -42,5 +42,4 @@ public class UpdateProjectSprintCommandValidatorTest
         outcome.Errors.Should().HaveCount(1);
         outcome.Errors.Should().AllSatisfy(e => e.PropertyName.Should().Be(property));
     }
-    
 }

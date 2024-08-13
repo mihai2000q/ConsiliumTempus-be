@@ -45,11 +45,11 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
     {
         return new SingleSelectCustomFieldSetupAggregate(
             options,
-            CustomFieldSetupId.CreateUnique(), 
+            CustomFieldSetupId.CreateUnique(),
             name,
-            description,  
-            workspace, 
-            project, 
+            description,
+            workspace,
+            project,
             Audit.Create(createdBy));
     }
 

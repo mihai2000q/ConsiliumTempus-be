@@ -10,7 +10,7 @@ public sealed class UpdateProjectCommandValidator : AbstractValidator<UpdateProj
     {
         RuleFor(c => c.Id)
             .NotEmpty();
-        
+
         RuleFor(c => c.Lifecycle)
             .NotEmpty()
             .IsEnumName(typeof(ProjectLifecycle), false);

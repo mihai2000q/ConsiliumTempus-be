@@ -32,7 +32,7 @@ public class UpdatePrivacyProjectCommandHandlerTest
             .Get(Arg.Any<ProjectId>())
             .Returns(project);
 
-        var command = ProjectCommandFactory.CreateUpdatePrivacyProjectCommand(id: project.Id.Value);
+        var command = ProjectCommandFactory.CreateUpdatePrivacyProjectCommand(project.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);

@@ -33,7 +33,7 @@ public static class ProjectResultFactory
             project ?? ProjectFactory.Create(),
             user ?? UserFactory.Create());
     }
-    
+
     public static GetCollectionProjectResult CreateGetCollectionProjectResult(
         List<ProjectAggregate>? projects = null,
         int totalCount = 25,

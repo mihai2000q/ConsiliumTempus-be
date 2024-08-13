@@ -12,7 +12,7 @@ public sealed record CreateCustomFieldSetupOnProjectRequest(
         string CurrencyCode,
         int Decimals,
         bool Rounding);
-    
+
     public sealed record SingleSelectOptionRequest(
         string Value,
         string Color);

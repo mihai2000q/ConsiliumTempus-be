@@ -10,7 +10,7 @@ namespace ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 public sealed class GetCollectionCustomFieldSetupQueryHandler(ICustomFieldSetupRepository customFieldSetupRepository)
     : IRequestHandler<GetCollectionCustomFieldSetupQuery, ErrorOr<GetCollectionCustomFieldSetupResult>>
 {
-    public async Task<ErrorOr<GetCollectionCustomFieldSetupResult>> Handle(GetCollectionCustomFieldSetupQuery query, 
+    public async Task<ErrorOr<GetCollectionCustomFieldSetupResult>> Handle(GetCollectionCustomFieldSetupQuery query,
         CancellationToken cancellationToken)
     {
         var customFieldSetups = await customFieldSetupRepository.GetList(

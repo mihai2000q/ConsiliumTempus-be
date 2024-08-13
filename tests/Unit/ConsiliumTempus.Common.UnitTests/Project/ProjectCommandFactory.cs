@@ -39,7 +39,7 @@ public static class ProjectCommandFactory
             status.ToString(),
             description);
     }
-    
+
     public static AddStatusToProjectCommand CreateAddStatusToProjectCommandWithStatus(string status)
     {
         return new AddStatusToProjectCommand(
@@ -48,7 +48,7 @@ public static class ProjectCommandFactory
             status,
             Constants.ProjectStatus.Description);
     }
-    
+
     public static CreateProjectCommand CreateCreateProjectCommand(
         Guid? workspaceId = null,
         string name = Constants.Project.Name,
@@ -59,7 +59,7 @@ public static class ProjectCommandFactory
             name,
             isPrivate);
     }
-    
+
     public static DeleteProjectCommand CreateDeleteProjectCommand(Guid? id = null)
     {
         return new DeleteProjectCommand(id ?? Guid.NewGuid());
@@ -87,7 +87,7 @@ public static class ProjectCommandFactory
             id ?? Guid.NewGuid(),
             statusId ?? Guid.NewGuid());
     }
-    
+
     public static UpdateProjectCommand CreateUpdateProjectCommand(
         Guid? id = null,
         string name = Constants.Project.Name,
@@ -98,7 +98,7 @@ public static class ProjectCommandFactory
             name,
             lifecycle.ToString());
     }
-    
+
     public static UpdateProjectCommand CreateUpdateProjectCommandWithLifecycle(string lifecycle)
     {
         return new UpdateProjectCommand(
@@ -124,7 +124,7 @@ public static class ProjectCommandFactory
             id ?? Guid.NewGuid(),
             isPrivate);
     }
-    
+
     public static UpdateOverviewProjectCommand CreateUpdateOverviewProjectCommand(
         Guid? id = null,
         string name = Constants.Project.Description)
@@ -142,7 +142,7 @@ public static class ProjectCommandFactory
             id ?? Guid.NewGuid(),
             ownerId ?? Guid.NewGuid());
     }
-    
+
     public static UpdateStatusFromProjectCommand CreateUpdateStatusFromProjectCommand(
         Guid? id = null,
         Guid? statusId = null,
@@ -157,11 +157,11 @@ public static class ProjectCommandFactory
             status.ToString(),
             description);
     }
-    
+
     public static UpdateStatusFromProjectCommand CreateUpdateStatusFromProjectCommandWithStatus(string status)
     {
         return new UpdateStatusFromProjectCommand(
-            Guid.NewGuid(), 
+            Guid.NewGuid(),
             Guid.NewGuid(),
             Constants.ProjectStatus.Title,
             status,

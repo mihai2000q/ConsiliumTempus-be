@@ -12,7 +12,7 @@ public abstract class MembershipFilter : Filter<Membership>
     [
         new FilterProperties.Membership.UserNameFilterProperty(),
         new FilterProperties.Membership.WorkspaceRoleIdFilterProperty(),
-        new FilterProperties.Membership.WorkspaceRoleNameFilterProperty(),
+        new FilterProperties.Membership.WorkspaceRoleNameFilterProperty()
     ];
 
     private MembershipFilter(Expression<Func<Membership, bool>> predicate) : base(predicate)

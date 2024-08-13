@@ -66,7 +66,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, ITimestamps
         var workspace = new WorkspaceAggregate(
             WorkspaceId.CreateUnique(),
             name,
-            description, 
+            description,
             owner,
             isPersonal,
             DateTime.UtcNow,
@@ -78,7 +78,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, ITimestamps
 
         return workspace;
     }
-    
+
     public bool IsFavorite(UserAggregate user)
     {
         return _favorites.Contains(user);

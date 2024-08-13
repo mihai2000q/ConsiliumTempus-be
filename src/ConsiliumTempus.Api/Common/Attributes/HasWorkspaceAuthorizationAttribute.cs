@@ -3,5 +3,5 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ConsiliumTempus.Api.Common.Attributes;
 
-public sealed class HasWorkspaceAuthorizationAttribute(WorkspaceAuthorizationLevel workspaceAuthorizationLevel) 
+public sealed class HasWorkspaceAuthorizationAttribute(WorkspaceAuthorizationLevel workspaceAuthorizationLevel)
     : AuthorizeAttribute(workspaceAuthorizationLevel.ToString());

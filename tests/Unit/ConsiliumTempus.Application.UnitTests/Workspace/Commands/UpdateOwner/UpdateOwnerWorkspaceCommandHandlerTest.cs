@@ -37,8 +37,8 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
             .Returns(workspace);
 
         var command = WorkspaceCommandFactory.CreateUpdateOwnerWorkspaceCommand(
-            id: workspace.Id.Value,
-            ownerId: owner.Id.Value);
+            workspace.Id.Value,
+            owner.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);

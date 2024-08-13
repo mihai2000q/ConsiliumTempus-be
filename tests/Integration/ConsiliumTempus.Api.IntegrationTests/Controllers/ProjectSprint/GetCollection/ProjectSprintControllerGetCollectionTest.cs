@@ -32,7 +32,7 @@ public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory)
             project.Sprints,
             project.Sprints.Count);
     }
-    
+
     [Fact]
     public async Task GetCollectionProjectSprint_WhenRequestHasSearchNameContains_ShouldReturnSprints()
     {
@@ -55,13 +55,13 @@ public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory)
         var expectedSprints = project.Sprints
             .Where(ps => ps.Name.Value.ToLower().StartsWith("sprint 1"))
             .ToList();
-        
+
         Utils.ProjectSprint.AssertGetCollectionResponse(
             response!,
             expectedSprints,
             expectedSprints.Count);
     }
-    
+
     [Fact]
     public async Task GetCollectionProjectSprint_WhenRequestHasSearchNameContainsAndFromThisYear_ShouldReturnSprints()
     {
@@ -82,22 +82,22 @@ public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectSprintResponse>();
-        
+
         var date = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var expectedSprints = project.Sprints
             .Where(ps => ps.Name.Value.ToLower().Contains("sprint 1"))
-            .Where(ps => 
+            .Where(ps =>
                 ps.StartDate >= DateOnly.FromDateTime(date) ||
                 ps.EndDate >= DateOnly.FromDateTime(date) ||
                 ps.Audit.CreatedDateTime >= date)
             .ToList();
-        
+
         Utils.ProjectSprint.AssertGetCollectionResponse(
             response!,
             expectedSprints,
             expectedSprints.Count);
     }
-    
+
     [Fact]
     public async Task GetCollectionProjectSprint_WhenRequestHasFromThisYear_ShouldReturnSprints()
     {
@@ -116,21 +116,21 @@ public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectSprintResponse>();
-        
+
         var date = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var expectedSprints = project.Sprints
-            .Where(ps => 
+            .Where(ps =>
                 ps.StartDate >= DateOnly.FromDateTime(date) ||
                 ps.EndDate >= DateOnly.FromDateTime(date) ||
                 ps.Audit.CreatedDateTime >= date)
             .ToList();
-        
+
         Utils.ProjectSprint.AssertGetCollectionResponse(
             response!,
             expectedSprints,
             expectedSprints.Count);
     }
-    
+
     [Fact]
     public async Task GetCollectionProjectSprint_WhenRequestHasFromThisYearAndInitialEmptyReturn_ShouldReturnSprints()
     {
@@ -149,7 +149,7 @@ public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
         var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectSprintResponse>();
-        
+
         Utils.ProjectSprint.AssertGetCollectionResponse(
             response!,
             [project.Sprints[^1]],

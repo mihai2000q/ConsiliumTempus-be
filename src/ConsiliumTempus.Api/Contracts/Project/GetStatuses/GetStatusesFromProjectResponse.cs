@@ -16,7 +16,7 @@ public sealed record GetStatusesFromProjectResponse(
         DateTime CreatedDateTime,
         UserResponse? UpdatedBy,
         DateTime UpdatedDateTime);
-    
+
     public sealed record UserResponse(
         Guid Id,
         string Name,

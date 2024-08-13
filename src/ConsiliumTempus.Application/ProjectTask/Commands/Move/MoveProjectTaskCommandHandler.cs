@@ -13,7 +13,7 @@ public sealed class MoveProjectTaskCommandHandler(IProjectTaskRepository project
         CancellationToken cancellationToken)
     {
         var task = await projectTaskRepository.GetWithTasksAndWorkspace(
-            ProjectTaskId.Create(command.Id), 
+            ProjectTaskId.Create(command.Id),
             cancellationToken);
         if (task is null) return Errors.ProjectTask.NotFound;
 

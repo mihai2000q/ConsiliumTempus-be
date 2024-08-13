@@ -37,7 +37,7 @@ public static class ProjectQueryFactory
             search,
             workspaceId);
     }
-    
+
     public static GetStatusesFromProjectQuery CreateGetStatusesFromProjectQuery(Guid? id = null)
     {
         return new GetStatusesFromProjectQuery(id ?? Guid.NewGuid());

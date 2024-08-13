@@ -24,7 +24,7 @@ public static class ProjectStatusFactory
             project ?? ProjectFactory.Create(),
             createdBy ?? UserFactory.Create());
     }
-    
+
     public static List<ProjectStatus> CreateList(int count = 5)
     {
         return Enumerable

@@ -23,7 +23,7 @@ internal static partial class Utils
                 .Zip(customFieldSetups.OrderBy(c => c.Id.Value))
                 .Should().AllSatisfy(x => AssertCustomFieldSetup(x.First, x.Second));
         }
-        
+
         internal static void AssertCreateOnProject(
             CreateCustomFieldSetupOnProjectRequest request,
             CustomFieldSetupAggregate customFieldSetup,
@@ -94,7 +94,7 @@ internal static partial class Utils
             response.Value.Should().Be(singleSelectOption.Value);
             response.Color.Should().Be(singleSelectOption.Color);
         }
-        
+
         private static void AssertNumberCustomFieldSetup(
             CustomFieldSetupAggregate customFieldSetup,
             CreateCustomFieldSetupOnProjectRequest request)
@@ -102,7 +102,7 @@ internal static partial class Utils
             customFieldSetup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
             var setup = (NumberCustomFieldSetupAggregate)customFieldSetup;
             setup.Settings.CurrencyCode.Should().Be(request.NumberSettings!.CurrencyCode);
-            setup.Settings.Decimals.Should().Be((short) request.NumberSettings.Decimals);
+            setup.Settings.Decimals.Should().Be((short)request.NumberSettings.Decimals);
             setup.Settings.Rounding.Should().Be(request.NumberSettings.Rounding);
         }
 

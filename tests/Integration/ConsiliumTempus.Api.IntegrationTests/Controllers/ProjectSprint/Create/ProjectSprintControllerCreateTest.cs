@@ -30,7 +30,8 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task CreateProjectSprint_WhenRequestHasKeepPreviousStages_ShouldCreateKeepStagesAndReturnSuccessResponse()
+    public async Task
+        CreateProjectSprint_WhenRequestHasKeepPreviousStages_ShouldCreateKeepStagesAndReturnSuccessResponse()
     {
         // Arrange
         var user = ProjectSprintData.Users[1];
@@ -43,7 +44,8 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task CreateProjectSprint_WhenRequestHasKeepPreviousStagesAndIsFirstSprint_ShouldCreateAndReturnSuccessResponse()
+    public async Task
+        CreateProjectSprint_WhenRequestHasKeepPreviousStagesAndIsFirstSprint_ShouldCreateAndReturnSuccessResponse()
     {
         // Arrange
         var user = ProjectSprintData.Users.First();

@@ -12,20 +12,21 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
 {
     [HttpGet("Project/{projectId:guid}")]
     public async Task<IActionResult> GetCollectionFromProject(
-        GetCollectionCustomFieldSetupFromProjectRequest request, 
+        GetCollectionCustomFieldSetupFromProjectRequest request,
         CancellationToken cancellationToken)
     {
         var command = Mapper.Map<GetCollectionCustomFieldSetupQuery>(request);
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            getCollectionResult => Ok(Mapper.Map<GetCollectionCustomFieldSetupFromProjectResponse>(getCollectionResult)),
+            getCollectionResult =>
+                Ok(Mapper.Map<GetCollectionCustomFieldSetupFromProjectResponse>(getCollectionResult)),
             Problem
         );
     }
 
     [HttpPost("Project")]
-    public async Task<IActionResult> CreateOnProject(CreateCustomFieldSetupOnProjectRequest request, 
+    public async Task<IActionResult> CreateOnProject(CreateCustomFieldSetupOnProjectRequest request,
         CancellationToken cancellationToken)
     {
         var command = Mapper.Map<CreateCustomFieldSetupCommand>(request);

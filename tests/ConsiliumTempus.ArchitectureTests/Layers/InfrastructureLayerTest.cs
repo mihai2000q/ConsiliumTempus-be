@@ -85,7 +85,7 @@ public class InfrastructureLayerTest : BaseArchitectureTest
             .Should()
             .HaveNameEndingWith("Interceptor")
             .Check(Architecture);
-        
+
         ArchRuleDefinition
             .Classes()
             .That()

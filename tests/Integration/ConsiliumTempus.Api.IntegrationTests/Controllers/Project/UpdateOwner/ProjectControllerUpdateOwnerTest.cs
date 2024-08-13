@@ -22,7 +22,7 @@ public class ProjectControllerUpdateOwnerTest(WebAppFactory factory)
         var collaborator = ProjectData.Users[3];
         var project = ProjectData.Projects.First();
         var request = ProjectRequestFactory.CreateUpdateOwnerProjectRequest(
-            project.Id.Value, 
+            project.Id.Value,
             collaborator.Id.Value);
 
         // Act

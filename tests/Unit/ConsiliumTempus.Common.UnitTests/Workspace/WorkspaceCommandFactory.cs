@@ -100,7 +100,7 @@ public static class WorkspaceCommandFactory
             id ?? Guid.NewGuid(),
             isFavorite);
     }
-    
+
     public static UpdateOverviewWorkspaceCommand CreateUpdateOverviewWorkspaceCommand(
         Guid? id = null,
         string description = Constants.Workspace.Description)

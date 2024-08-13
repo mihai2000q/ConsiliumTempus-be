@@ -527,7 +527,7 @@ public class ProjectControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task UpdatePrivacy_WhenIsSuccessful_ShouldReturnResponse()
     {
@@ -760,7 +760,7 @@ public class ProjectControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task LeavePrivate_WhenIsSuccessful_ShouldReturnSuccess()
     {
@@ -802,7 +802,7 @@ public class ProjectControllerTest
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<LeavePrivateProjectCommand>(command => 
+            .Send(Arg.Is<LeavePrivateProjectCommand>(command =>
                 Utils.Project.AssertLeavePrivateCommand(command, request)));
 
         outcome.ValidateError(error);

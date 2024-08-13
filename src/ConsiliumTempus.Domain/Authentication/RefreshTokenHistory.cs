@@ -25,7 +25,7 @@ public sealed class RefreshTokenHistory : Entity<Guid>
     public JwtId JwtId { get; init; } = default!;
     public DateTime CreatedDateTime { get; init; }
     public RefreshToken RefreshToken { get; init; } = default!;
-    
+
     public static RefreshTokenHistory Create(
         RefreshToken refreshToken,
         JwtId jwtId)

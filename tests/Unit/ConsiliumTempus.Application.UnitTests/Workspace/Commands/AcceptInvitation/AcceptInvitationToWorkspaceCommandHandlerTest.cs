@@ -31,7 +31,8 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleAcceptInvitationToWorkspaceCommand_WhenIsSuccessful_ShouldAddUserRemoveInvitationAndReturnSuccessResponse()
+    public async Task
+        HandleAcceptInvitationToWorkspaceCommand_WhenIsSuccessful_ShouldAddUserRemoveInvitationAndReturnSuccessResponse()
     {
         // Arrange
         var workspace = WorkspaceFactory.Create();
@@ -86,7 +87,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateAcceptInvitationToWorkspaceCommand(
             workspace.Id.Value,
             invitation.Id.Value);
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
@@ -101,9 +102,10 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
 
         outcome.ValidateError(Errors.User.NotFound);
     }
-    
+
     [Fact]
-    public async Task HandleAcceptInvitationToWorkspaceCommand_WhenInvitationIsNull_ShouldReturnInvitationNotFoundError()
+    public async Task
+        HandleAcceptInvitationToWorkspaceCommand_WhenInvitationIsNull_ShouldReturnInvitationNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateAcceptInvitationToWorkspaceCommand();
@@ -124,7 +126,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
 
         outcome.ValidateError(Errors.WorkspaceInvitation.NotFound);
     }
-    
+
     [Fact]
     public async Task HandleAcceptInvitationToWorkspaceCommand_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {

@@ -21,7 +21,7 @@ internal static partial class Utils
         { ErrorType.Unauthorized, HttpStatusCode.Unauthorized },
         { ErrorType.NotFound, HttpStatusCode.NotFound },
         { ErrorType.Conflict, HttpStatusCode.Conflict },
-        { ErrorType.Forbidden, HttpStatusCode.Forbidden },
+        { ErrorType.Forbidden, HttpStatusCode.Forbidden }
     };
 
     private static readonly Dictionary<HttpStatusCode, int> StatusCodesMap = new()

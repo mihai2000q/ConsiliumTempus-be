@@ -9,7 +9,7 @@ namespace ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 public sealed class DeleteProjectTaskCommandHandler(IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<DeleteProjectTaskCommand, ErrorOr<DeleteProjectTaskResult>>
 {
-    public async Task<ErrorOr<DeleteProjectTaskResult>> Handle(DeleteProjectTaskCommand command, 
+    public async Task<ErrorOr<DeleteProjectTaskResult>> Handle(DeleteProjectTaskCommand command,
         CancellationToken cancellationToken)
     {
         var stage = await projectSprintRepository.GetStageWithTasksAndWorkspace(

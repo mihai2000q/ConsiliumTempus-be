@@ -10,11 +10,13 @@ public enum Permissions
     UpdateFavoritesWorkspace,
     UpdateOverviewWorkspace,
     DeleteWorkspace,
+
     // Workspace - Collaborators
     InviteCollaboratorToWorkspace,
     ReadCollaboratorsFromWorkspace,
     UpdateCollaboratorFromWorkspace,
     KickCollaboratorFromWorkspace,
+
     // Project
     CreateProject,
     ReadProject,
@@ -24,25 +26,30 @@ public enum Permissions
     UpdateFavoritesProject,
     UpdateOverviewProject,
     DeleteProject,
+
     // Project - Project Status
     AddStatusToProject,
     ReadStatusesFromProject,
     UpdateStatusFromProject,
     RemoveStatusFromProject,
+
     // Project - Allowed Members
     ReadAllowedMembersFromProject,
+
     // Project Sprint
     CreateProjectSprint,
     ReadProjectSprint,
     ReadCollectionProjectSprint,
     UpdateProjectSprint,
     DeleteProjectSprint,
+
     // Project Sprint - Project Stage
     ReadStagesFromProjectSprint,
     AddStageToProjectSprint,
     MoveStageFromProjectSprint,
     UpdateStageFromProjectSprint,
     RemoveStageFromProjectSprint,
+
     // Project Task
     CreateProjectTask,
     ReadProjectTask,

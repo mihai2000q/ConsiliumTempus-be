@@ -25,7 +25,7 @@ public class ProjectSprintControllerAddStageTest(WebAppFactory factory)
         var user = ProjectSprintData.Users.First();
         var sprint = ProjectSprintData.ProjectSprints.First();
         var request = ProjectSprintRequestFactory.CreateAddStageToProjectSprintRequest(sprint.Id.Value);
-        
+
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Post("api/projects/sprints/Add-Stage", request);

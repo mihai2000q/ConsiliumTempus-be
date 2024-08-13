@@ -35,7 +35,7 @@ public class ProjectTaskControllerGetCollectionAuthorizationTest(WebAppFactory f
     {
         await AssertForbiddenResponse(ProjectTaskData.Users[1]);
     }
-    
+
     // Project Authorization
     [Fact]
     public async Task GetCollectionProjectTask_WhenProjectIsNotPrivate_ShouldReturnSuccessResponse()

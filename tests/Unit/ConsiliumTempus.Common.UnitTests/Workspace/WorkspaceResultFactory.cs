@@ -61,7 +61,7 @@ public static class WorkspaceResultFactory
     {
         return new GetInvitationsWorkspaceResult(
             invitations ?? WorkspaceInvitationFactory.CreateList(),
-            TotalCount: totalCount);
+            totalCount);
     }
 
     public static CreateWorkspaceResult CreateCreateWorkspaceResult()

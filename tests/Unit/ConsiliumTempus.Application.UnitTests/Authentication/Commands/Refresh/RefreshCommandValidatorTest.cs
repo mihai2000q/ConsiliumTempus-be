@@ -10,29 +10,29 @@ public class RefreshCommandValidatorTest
     private readonly RefreshCommandValidator _uut = new();
 
     #endregion
-    
+
     [Theory]
     [ClassData(typeof(RefreshCommandValidatorData.GetValidCommands))]
     public async Task ValidateRefreshCommand_WhenValid_ShouldReturnTrue(RefreshCommand command)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAsync(command);
 
         // Assert
         outcome.IsValid.Should().BeTrue();
     }
-    
+
     [Theory]
     [ClassData(typeof(RefreshCommandValidatorData.GetInvalidTokenCommands))]
     [ClassData(typeof(RefreshCommandValidatorData.GetInvalidRefreshTokenCommands))]
     public async Task ValidateRefreshCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
-        RefreshCommand command, 
+        RefreshCommand command,
         string property)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAsync(command);
 

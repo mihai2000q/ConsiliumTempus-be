@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 
-public sealed class InviteCollaboratorToWorkspaceCommandValidator 
+public sealed class InviteCollaboratorToWorkspaceCommandValidator
     : AbstractValidator<InviteCollaboratorToWorkspaceCommand>
 {
     public InviteCollaboratorToWorkspaceCommandValidator()

@@ -33,7 +33,7 @@ public class JwtTokenValidatorTest
         options
             .Value
             .Returns(_jwtSettings);
-        
+
         _userProvider = Substitute.For<IUserProvider>();
         _uut = new JwtTokenValidator(options, _userProvider);
     }
@@ -58,7 +58,7 @@ public class JwtTokenValidatorTest
     public void ValidateRefreshToken_WhenInvalid_ShouldReturnFalse(RefreshToken refreshToken)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = _uut.ValidateRefreshToken(refreshToken);
 

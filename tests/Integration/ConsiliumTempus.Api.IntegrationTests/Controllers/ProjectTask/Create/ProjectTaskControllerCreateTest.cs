@@ -33,7 +33,7 @@ public class ProjectTaskControllerCreateTest(WebAppFactory factory)
 
         await AssertSuccess(outcome, request, user);
     }
-    
+
     [Fact]
     public async Task CreateProjectTask_WhenRequestHasOnTop_ShouldCreateAndReturnSuccessResponse()
     {

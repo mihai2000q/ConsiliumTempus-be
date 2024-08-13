@@ -26,14 +26,14 @@ public sealed class SingleSelectOption : Entity<Guid>
     public int CustomOrderPosition { get; }
 
     public static SingleSelectOption Create(
-        string value, 
+        string value,
         string color,
         int customOrderPosition)
     {
         return new SingleSelectOption(
             Guid.NewGuid(),
-            value, 
-            color, 
+            value,
+            color,
             customOrderPosition);
     }
 }

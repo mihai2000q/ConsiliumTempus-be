@@ -141,7 +141,8 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionProject_WhenRequestHasNameDescAndLastActivityAscOrder_ShouldReturnProjectsOrderedByDescendingName()
+    public async Task
+        GetCollectionProject_WhenRequestHasNameDescAndLastActivityAscOrder_ShouldReturnProjectsOrderedByDescendingName()
     {
         // Arrange
         var user = ProjectData.Users.First();

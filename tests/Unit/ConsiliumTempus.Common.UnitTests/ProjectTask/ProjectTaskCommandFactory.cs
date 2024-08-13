@@ -20,7 +20,7 @@ public static class ProjectTaskCommandFactory
             name,
             onTop);
     }
-    
+
     public static MoveProjectTaskCommand CreateMoveProjectTaskCommand(
         Guid? id = null,
         Guid? overId = null)
@@ -29,7 +29,7 @@ public static class ProjectTaskCommandFactory
             id ?? Guid.NewGuid(),
             overId ?? Guid.NewGuid());
     }
-    
+
     public static DeleteProjectTaskCommand CreateDeleteProjectTaskCommand(
         Guid? id = null,
         Guid? stageId = null)
@@ -38,7 +38,7 @@ public static class ProjectTaskCommandFactory
             id ?? Guid.NewGuid(),
             stageId ?? Guid.NewGuid());
     }
-    
+
     public static UpdateProjectTaskCommand CreateUpdateProjectTaskCommand(
         Guid? id = null,
         string name = Constants.ProjectTask.Name,
@@ -58,7 +58,7 @@ public static class ProjectTaskCommandFactory
             id ?? Guid.NewGuid(),
             isCompleted);
     }
-    
+
     public static UpdateOverviewProjectTaskCommand CreateUpdateOverviewProjectTaskCommand(
         Guid? id = null,
         string name = Constants.ProjectTask.Name,

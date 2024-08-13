@@ -103,7 +103,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
     [HasPermission(Permissions.ReadInvitationsFromWorkspace)]
     [HttpGet("Invitations")]
-    public async Task<IActionResult> GetInvitations(GetInvitationsWorkspaceRequest request, 
+    public async Task<IActionResult> GetInvitations(GetInvitationsWorkspaceRequest request,
         CancellationToken cancellationToken)
     {
         var query = Mapper.Map<GetInvitationsWorkspaceQuery>(request);
@@ -179,7 +179,7 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
             Problem
         );
     }
-    
+
     [HasPermission(Permissions.UpdateCollaboratorFromWorkspace)]
     [HttpPut("Collaborators")]
     public async Task<IActionResult> UpdateCollaborator(UpdateCollaboratorFromWorkspaceRequest request,
@@ -189,7 +189,8 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            updateCollaboratorResult => Ok(Mapper.Map<UpdateCollaboratorFromWorkspaceResponse>(updateCollaboratorResult)),
+            updateCollaboratorResult =>
+                Ok(Mapper.Map<UpdateCollaboratorFromWorkspaceResponse>(updateCollaboratorResult)),
             Problem
         );
     }
@@ -251,7 +252,8 @@ public sealed class WorkspaceController(IMapper mapper, ISender mediator) : ApiC
 
     [HasPermission(Permissions.KickCollaboratorFromWorkspace)]
     [HttpDelete("{id:guid}/Kick-Collaborator/{collaboratorId:guid}")]
-    public async Task<IActionResult> KickCollaborator(KickCollaboratorFromWorkspaceRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> KickCollaborator(KickCollaboratorFromWorkspaceRequest request,
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<KickCollaboratorFromWorkspaceCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);

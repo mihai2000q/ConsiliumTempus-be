@@ -35,13 +35,13 @@ public class UpdateProjectSprintCommandHandlerTest
         _currentUserProvider
             .GetCurrentUserAfterPermissionCheck()
             .Returns(user);
-        
+
         var sprint = ProjectSprintFactory.Create(createdBy: user);
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);
-        
-        var command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand(id: sprint.Id.Value);
+
+        var command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand(sprint.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -56,7 +56,7 @@ public class UpdateProjectSprintCommandHandlerTest
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateProjectSprintResult());
-        
+
         Utils.ProjectSprint.AssertFromUpdateCommand(sprint, command, user);
     }
 
@@ -69,7 +69,7 @@ public class UpdateProjectSprintCommandHandlerTest
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .ReturnsNull();
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 

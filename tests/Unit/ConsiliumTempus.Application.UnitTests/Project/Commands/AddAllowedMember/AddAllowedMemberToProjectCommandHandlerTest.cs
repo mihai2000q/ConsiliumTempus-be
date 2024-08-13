@@ -39,8 +39,8 @@ public class AddAllowedMemberToProjectCommandHandlerTest
             .Returns(project);
 
         var command = ProjectCommandFactory.CreateAddAllowedMemberToProjectCommand(
-            id: project.Id.Value,
-            collaboratorId: collaborator.Id.Value);
+            project.Id.Value,
+            collaborator.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -57,7 +57,8 @@ public class AddAllowedMemberToProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleAddAllowedMemberToProjectCommand_WhenIsAlreadyAllowedMember_ShouldReturnAlreadyAllowedMemberError()
+    public async Task
+        HandleAddAllowedMemberToProjectCommand_WhenIsAlreadyAllowedMember_ShouldReturnAlreadyAllowedMemberError()
     {
         // Arrange
         var allowedMember = UserFactory.Create();
@@ -70,8 +71,8 @@ public class AddAllowedMemberToProjectCommandHandlerTest
             .Returns(project);
 
         var command = ProjectCommandFactory.CreateAddAllowedMemberToProjectCommand(
-            id: project.Id.Value,
-            collaboratorId: allowedMember.Id.Value);
+            project.Id.Value,
+            allowedMember.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -85,7 +86,8 @@ public class AddAllowedMemberToProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleAddAllowedMemberToProjectCommand_WhenCollaboratorIsNull_ShouldReturnCollaboratorNotFoundError()
+    public async Task
+        HandleAddAllowedMemberToProjectCommand_WhenCollaboratorIsNull_ShouldReturnCollaboratorNotFoundError()
     {
         // Arrange
         var project = ProjectFactory.Create(isPrivate: true);
@@ -93,7 +95,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
             .GetWithCollaboratorsAndAllowedMembers(Arg.Any<ProjectId>())
             .Returns(project);
 
-        var command = ProjectCommandFactory.CreateAddAllowedMemberToProjectCommand(id: project.Id.Value);
+        var command = ProjectCommandFactory.CreateAddAllowedMemberToProjectCommand(project.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -105,7 +107,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
 
         outcome.ValidateError(Errors.Workspace.CollaboratorNotFound);
     }
-    
+
     [Fact]
     public async Task HandleAddAllowedMemberToProjectCommand_WhenProjectIsNotPrivate_ShouldReturnNotPrivateError()
     {

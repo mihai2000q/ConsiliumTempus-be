@@ -24,7 +24,7 @@ public class GetUserQueryValidatorTest
         outcome.IsValid.Should().BeTrue();
         outcome.Errors.Should().BeEmpty();
     }
-    
+
     [Theory]
     [ClassData(typeof(GetUserQueryValidatorData.GetInvalidIdQueries))]
     public async Task ValidateGetUserQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(

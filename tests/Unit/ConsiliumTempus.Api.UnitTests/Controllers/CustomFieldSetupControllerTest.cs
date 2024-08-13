@@ -75,7 +75,7 @@ public class CustomFieldSetupControllerTest
 
         outcome.ValidateError(error);
     }
-    
+
     [Fact]
     public async Task CreateOnProject_WhenIsSuccessful_ShouldReturnResponse()
     {

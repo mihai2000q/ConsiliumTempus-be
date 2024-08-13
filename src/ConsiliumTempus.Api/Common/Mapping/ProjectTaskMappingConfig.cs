@@ -88,7 +88,7 @@ public sealed class ProjectTaskMappingConfig : IRegister
 
         config.NewConfig<CreateProjectTaskResult, CreateProjectTaskResponse>();
     }
-    
+
     private static void UpdateMappings(TypeAdapterConfig config)
     {
         config.NewConfig<UpdateProjectTaskRequest, UpdateProjectTaskCommand>();

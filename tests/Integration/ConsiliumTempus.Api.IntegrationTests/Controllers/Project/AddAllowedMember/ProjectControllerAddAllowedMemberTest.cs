@@ -89,7 +89,7 @@ public class ProjectControllerAddAllowedMemberTest(WebAppFactory factory)
             .Memberships
             .Should().NotContain(m => m.User.Id.Value == request.CollaboratorId);
     }
-    
+
     [Fact]
     public async Task AddAllowedMemberToProject_WhenIsNotPrivate_ShouldReturnNotPrivateError()
     {
@@ -109,7 +109,7 @@ public class ProjectControllerAddAllowedMemberTest(WebAppFactory factory)
             .IsPrivate.Value
             .Should().BeFalse();
     }
-    
+
     [Fact]
     public async Task AddAllowedMemberToProject_WhenIsNotFound_ShouldReturnNotFoundError()
     {

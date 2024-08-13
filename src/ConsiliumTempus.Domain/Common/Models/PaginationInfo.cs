@@ -16,7 +16,7 @@ public sealed class PaginationInfo
         if (pageSize is null || currentPage is null) return default;
         return new PaginationInfo(pageSize.Value, currentPage.Value);
     }
-    
+
     public void Deconstruct(out int pageSize, out int currentPage)
     {
         pageSize = PageSize;
@@ -30,7 +30,7 @@ public sealed class PaginationInfo
 
     public override bool Equals(object? obj)
     {
-        return ReferenceEquals(this, obj) || obj is PaginationInfo other && Equals(other);
+        return ReferenceEquals(this, obj) || (obj is PaginationInfo other && Equals(other));
     }
 
     private bool Equals(PaginationInfo other)

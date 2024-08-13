@@ -33,11 +33,11 @@ public sealed class TextCustomFieldSetupAggregate : CustomFieldSetupAggregate
         UserAggregate createdBy)
     {
         return new TextCustomFieldSetupAggregate(
-            CustomFieldSetupId.CreateUnique(), 
+            CustomFieldSetupId.CreateUnique(),
             name,
             description,
-            workspace, 
-            project, 
+            workspace,
+            project,
             Audit.Create(createdBy));
     }
 }

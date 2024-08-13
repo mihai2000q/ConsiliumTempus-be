@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Project.Commands.RemoveAllowedMember;
 
-public sealed class RemoveAllowedMemberFromProjectCommandValidator 
+public sealed class RemoveAllowedMemberFromProjectCommandValidator
     : AbstractValidator<RemoveAllowedMemberFromProjectCommand>
 {
     public RemoveAllowedMemberFromProjectCommandValidator()

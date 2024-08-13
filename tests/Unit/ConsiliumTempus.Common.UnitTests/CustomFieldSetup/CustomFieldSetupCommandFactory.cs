@@ -21,10 +21,10 @@ public static class CustomFieldSetupCommandFactory
             name,
             description,
             type.ToString(),
-            numberSettings, 
+            numberSettings,
             singleSelectOptions);
     }
-    
+
     public static CreateCustomFieldSetupCommand CreateCreateCustomFieldSetupCommandWithType(string type)
     {
         return new CreateCustomFieldSetupCommand(
@@ -33,7 +33,7 @@ public static class CustomFieldSetupCommandFactory
             Constants.CustomFieldSetup.Name,
             Constants.CustomFieldSetup.Description,
             type,
-            null, 
+            null,
             null);
     }
 }

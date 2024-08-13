@@ -36,10 +36,10 @@ public sealed record GetCollectionCustomFieldSetupFromProjectResponse(
             string Value,
             string Color);
     }
-    
+
     public sealed record TextCustomFieldSetupResponse(
         Guid Id,
         string Name,
-        string Description) 
+        string Description)
         : CustomFieldSetupResponse(Id, Name, Description);
 }

@@ -13,7 +13,8 @@ public class UpdateFavoritesProjectCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(UpdateFavoritesProjectCommandValidatorData.GetValidCommands))]
-    public async Task ValidateUpdateFavoritesProjectCommand_WhenValid_ShouldReturnTrue(UpdateFavoritesProjectCommand command)
+    public async Task ValidateUpdateFavoritesProjectCommand_WhenValid_ShouldReturnTrue(
+        UpdateFavoritesProjectCommand command)
     {
         // Arrange - parameterized
 

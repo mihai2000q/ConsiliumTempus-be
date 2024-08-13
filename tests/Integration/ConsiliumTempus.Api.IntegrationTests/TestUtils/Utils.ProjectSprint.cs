@@ -46,7 +46,7 @@ internal static partial class Utils
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
             response.TotalCount.Should().Be(totalCount);
         }
-        
+
         internal static void AssertGetStagesResponse(
             GetStagesFromProjectSprintResponse response,
             IReadOnlyList<ProjectStage> stages)
@@ -72,7 +72,7 @@ internal static partial class Utils
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            
+
             if (request.KeepPreviousStages)
             {
                 if (project.Sprints.Count != 0)
@@ -91,7 +91,9 @@ internal static partial class Utils
                         });
                 }
                 else
+                {
                     sprint.Stages.Should().BeEmpty();
+                }
             }
             else
             {
@@ -168,13 +170,13 @@ internal static partial class Utils
             sprint.Id.Value.Should().Be(request.Id);
             var stage = sprint.Stages.Single(s => s.Id.Value == request.StageId);
             stage.Name.Value.Should().Be(request.Name);
-            
+
             stage.Audit.ShouldBeUpdated(updatedBy);
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertMovedStage(
             ProjectSprintAggregate sprint,
             MoveStageFromProjectSprintRequest request,
@@ -216,7 +218,7 @@ internal static partial class Utils
             response.EndDate.Should().Be(projectSprint.EndDate);
             response.CreatedDateTime.Should().Be(projectSprint.Audit.CreatedDateTime);
         }
-        
+
         private static void AssertStageResponse(
             GetStagesFromProjectSprintResponse.ProjectStageResponse response,
             ProjectStage projectStage)
@@ -224,7 +226,7 @@ internal static partial class Utils
             response.Id.Should().Be(projectStage.Id.Value);
             response.Name.Should().Be(projectStage.Name.Value);
         }
-        
+
         private static void AssertUserResponse(
             GetProjectSprintResponse.UserResponse? response,
             UserAggregate? user)
@@ -234,7 +236,7 @@ internal static partial class Utils
                 response.Should().BeNull();
                 return;
             }
-            
+
             response!.Id.Should().Be(user.Id.Value);
             response.Name.Should().Be(user.Name.Value);
             response.Email.Should().Be(user.Credentials.Email);

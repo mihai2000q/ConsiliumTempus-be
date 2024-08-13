@@ -8,5 +8,5 @@ public sealed record GetCollectionWorkspaceQuery(
     int? PageSize,
     int? CurrentPage,
     string[]? OrderBy,
-    string[]? Search) 
+    string[]? Search)
     : IRequest<ErrorOr<GetCollectionWorkspaceResult>>;

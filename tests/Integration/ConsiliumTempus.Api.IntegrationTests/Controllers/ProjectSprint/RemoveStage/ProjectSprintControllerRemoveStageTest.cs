@@ -69,7 +69,7 @@ public class ProjectSprintControllerRemoveStageTest(WebAppFactory factory)
         dbContext.Set<ProjectStage>().SingleOrDefault(p => p.Id == ProjectStageId.Create(request.StageId))
             .Should().BeNull();
     }
-    
+
     [Fact]
     public async Task RemoveStageFromProjectSprint_WhenThereIsOnlyOneStage_ShouldReturnOnlyOneStageError()
     {

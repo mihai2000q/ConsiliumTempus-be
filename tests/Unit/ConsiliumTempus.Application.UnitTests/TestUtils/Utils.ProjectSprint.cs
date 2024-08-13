@@ -76,7 +76,9 @@ internal static partial class Utils
                         });
                 }
                 else
+                {
                     projectSprint.Stages.Should().BeEmpty();
+                }
             }
             else
             {
@@ -121,7 +123,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static void AssertFromMoveStageCommand(
             Domain.ProjectSprint.Entities.ProjectStage stage,
             MoveStageFromProjectSprintCommand command,
@@ -135,7 +137,7 @@ internal static partial class Utils
             var sprint = stage.Sprint;
 
             sprint.Stages.ShouldBeOrdered();
-            
+
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }

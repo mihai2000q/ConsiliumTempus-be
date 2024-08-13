@@ -67,7 +67,7 @@ public sealed class ProjectSprintAggregate : AggregateRoot<ProjectSprintId>
         EndDate = endDate;
         Audit.Update(updatedBy);
     }
-    
+
     public void UpdateEndDate(DateOnly? endDate, UserAggregate updatedBy)
     {
         EndDate = endDate;

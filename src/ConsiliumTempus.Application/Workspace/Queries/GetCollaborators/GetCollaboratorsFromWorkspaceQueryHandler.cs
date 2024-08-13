@@ -23,9 +23,9 @@ public sealed class GetCollaboratorsFromWorkspaceQueryHandler(IWorkspaceReposito
         var collaborators = await workspaceRepository.GetCollaborators(
             workspaceId,
             searchValue,
-            filters, 
+            filters,
             orders,
-            paginationInfo, 
+            paginationInfo,
             cancellationToken);
         var totalCount = await workspaceRepository.GetCollaboratorsCount(
             workspaceId,

@@ -102,7 +102,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId>, ITimestamps
         UpdatedDateTime = DateTime.UtcNow;
         RefreshActivity();
     }
-    
+
     public void UpdateFavorites(bool isFavorite, UserAggregate user)
     {
         if (isFavorite)

@@ -34,7 +34,7 @@ public sealed class WorkspaceProvider(ConsiliumTempusDbContext dbContext) : IWor
         return project?.Workspace;
     }
 
-    public async Task<WorkspaceAggregate?> GetByProjectWithMemberships(ProjectId id, 
+    public async Task<WorkspaceAggregate?> GetByProjectWithMemberships(ProjectId id,
         CancellationToken cancellationToken = default)
     {
         var project = await dbContext.Projects

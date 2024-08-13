@@ -17,7 +17,7 @@ public static class WorkspaceAuthorizationHandlerData
         GET,
         POST,
         PUT,
-        DELETE,
+        DELETE
     }
 
     public enum RequestLocation

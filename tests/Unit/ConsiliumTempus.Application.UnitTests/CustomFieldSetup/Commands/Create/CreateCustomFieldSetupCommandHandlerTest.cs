@@ -100,7 +100,7 @@ public class CreateCustomFieldSetupCommandHandlerTest
         Utils.CustomFieldSetup.AssertFromCreateCommand(
             command,
             capturedCustomFieldSetup!,
-            user, 
+            user,
             workspace,
             project);
     }

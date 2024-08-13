@@ -44,7 +44,7 @@ public class ProjectSprintControllerUpdateStageTest(WebAppFactory factory)
             .SingleAsync(ps => ps.Id == sprint.Id);
         Utils.ProjectSprint.AssertUpdatedStage(newSprint, request, user);
     }
-    
+
     [Fact]
     public async Task UpdateStageFromProjectSprint_WhenStageIsNotFound_ShouldReturnStageNotFoundError()
     {

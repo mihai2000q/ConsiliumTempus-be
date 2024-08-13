@@ -32,7 +32,7 @@ public class UpdateOverviewWorkspaceCommandHandlerTest
             .Get(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
-        var command = WorkspaceCommandFactory.CreateUpdateOverviewWorkspaceCommand(id: workspace.Id.Value);
+        var command = WorkspaceCommandFactory.CreateUpdateOverviewWorkspaceCommand(workspace.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);

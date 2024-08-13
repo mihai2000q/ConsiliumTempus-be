@@ -11,7 +11,7 @@ public abstract class ProjectTaskFilter : Filter<ProjectTaskAggregate>
     public static readonly IReadOnlyList<FilterProperty<ProjectTaskAggregate>> FilterProperties =
     [
         new FilterProperties.ProjectTask.NameFilterProperty(),
-        new FilterProperties.ProjectTask.IsCompletedFilterProperty(),
+        new FilterProperties.ProjectTask.IsCompletedFilterProperty()
     ];
 
     private ProjectTaskFilter(Expression<Func<ProjectTaskAggregate, bool>> predicate) : base(predicate)

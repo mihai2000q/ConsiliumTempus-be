@@ -31,7 +31,7 @@ public class GetCollectionProjectTaskQueryHandlerTest
     {
         // Arrange
         var query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery();
-        
+
         var tasks = ProjectTaskFactory.CreateList();
         _projectTaskRepository
             .GetListByStage(
@@ -47,7 +47,7 @@ public class GetCollectionProjectTaskQueryHandlerTest
                 Arg.Any<ProjectStageId>(),
                 Arg.Any<IReadOnlyList<IFilter<ProjectTaskAggregate>>>())
             .Returns(projectTasksCount);
-        
+
         // Act
         var outcome = await _uut.Handle(query, default);
 

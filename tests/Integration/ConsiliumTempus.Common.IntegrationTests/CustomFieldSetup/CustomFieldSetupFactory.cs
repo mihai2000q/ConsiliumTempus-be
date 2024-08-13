@@ -24,7 +24,7 @@ public static class CustomFieldSetupFactory
             Constants.CustomFieldSetup.CurrencyCode,
             Constants.CustomFieldSetup.Decimals,
             true);
-        
+
         return EntityBuilder<NumberCustomFieldSetupAggregate>.Empty()
             .WithProperty(nameof(NumberCustomFieldSetupAggregate.Id), CustomFieldSetupId.CreateUnique())
             .WithProperty(nameof(NumberCustomFieldSetupAggregate.Name), Name.Create(name))
@@ -35,7 +35,7 @@ public static class CustomFieldSetupFactory
             .WithProperty(nameof(NumberCustomFieldSetupAggregate.Settings), settings)
             .Build();
     }
-    
+
     public static SingleSelectCustomFieldSetupAggregate CreateSingleSelect(
         WorkspaceAggregate? workspace,
         ProjectAggregate? project,
@@ -54,7 +54,7 @@ public static class CustomFieldSetupFactory
             .WithField(nameof(SingleSelectCustomFieldSetupAggregate.Options).ToBackingField(), options)
             .Build();
     }
-    
+
     public static TextCustomFieldSetupAggregate CreateText(
         WorkspaceAggregate? workspace,
         ProjectAggregate? project,

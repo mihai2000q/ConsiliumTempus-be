@@ -38,7 +38,7 @@ public abstract class CustomFieldSetupAggregate : AggregateRoot<CustomFieldSetup
     public Audit Audit { get; init; } = null!;
 
     protected void Update(
-        Name name, 
+        Name name,
         Description description,
         UserAggregate updatedBy)
     {
