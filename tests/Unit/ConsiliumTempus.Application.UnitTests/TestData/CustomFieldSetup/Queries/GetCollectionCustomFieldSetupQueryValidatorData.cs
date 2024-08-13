@@ -26,6 +26,11 @@ public static class GetCollectionCustomFieldSetupQueryValidatorData
         {
             var query = CustomFieldSetupQueryFactory.CreateGetCollectionCustomFieldSetupQuery();
             Add(query, nameof(query.WorkspaceId).Dot(nameof(query.ProjectId)));
+
+            query = CustomFieldSetupQueryFactory.CreateGetCollectionCustomFieldSetupQuery(
+                Guid.Empty,
+                Guid.Empty);
+            Add(query, nameof(query.WorkspaceId).Dot(nameof(query.ProjectId)));
         }
     }
 }

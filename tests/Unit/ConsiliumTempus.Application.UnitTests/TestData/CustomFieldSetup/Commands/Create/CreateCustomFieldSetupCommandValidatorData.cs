@@ -33,6 +33,11 @@ internal static class CreateCustomFieldSetupCommandValidatorData
         {
             var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand();
             Add(command, nameof(command.WorkspaceId).Dot(nameof(command.ProjectId)));
+            
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                Guid.Empty,
+                Guid.Empty);
+            Add(command, nameof(command.WorkspaceId).Dot(nameof(command.ProjectId)));
         }
     }
 
