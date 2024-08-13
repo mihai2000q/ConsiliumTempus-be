@@ -21,7 +21,7 @@ test.describe('should allow operations on the project task entity', () => {
     const project = await createProject(request, {
       workspaceId: workspace.id,
       name: "Project name",
-      isPrivate: true
+      isPrivate: false
     })
     const sprints = await getProjectSprints(request, project.id)
     const stages = await getProjectStages(request, sprints[0].id)
