@@ -10,7 +10,7 @@ namespace ConsiliumTempus.Api.Controllers;
 
 public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
-    [HttpGet("project/{projectId:guid}")]
+    [HttpGet("Project/{projectId:guid}")]
     public async Task<IActionResult> GetCollectionFromProject(
         GetCollectionCustomFieldSetupFromProjectRequest request, 
         CancellationToken cancellationToken)
@@ -24,7 +24,7 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
-    [HttpPost]
+    [HttpPost("Project")]
     public async Task<IActionResult> CreateOnProject(CreateCustomFieldSetupOnProjectRequest request, 
         CancellationToken cancellationToken)
     {

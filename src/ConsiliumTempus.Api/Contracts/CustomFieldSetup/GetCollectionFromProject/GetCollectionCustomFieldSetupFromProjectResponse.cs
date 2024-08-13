@@ -6,7 +6,7 @@ namespace ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProjec
 public sealed record GetCollectionCustomFieldSetupFromProjectResponse(
     List<GetCollectionCustomFieldSetupFromProjectResponse.CustomFieldSetupResponse> CustomFieldSetups)
 {
-    public abstract record CustomFieldSetupResponse(
+    public record CustomFieldSetupResponse(
         Guid Id,
         string Name,
         string Description);

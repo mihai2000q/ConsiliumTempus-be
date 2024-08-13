@@ -8,6 +8,7 @@ using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using Microsoft.EntityFrameworkCore;
 
@@ -83,6 +84,8 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length);
         dbContext.ProjectSprints.SingleOrDefault(p => p.Name.Value == request.Name)
+            .Should().BeNull();
+        dbContext.Projects.SingleOrDefault(p => p.Id == ProjectId.Create(request.ProjectId))
             .Should().BeNull();
     }
 

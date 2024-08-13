@@ -21,7 +21,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         public static bool AssertCreateCustomFieldSetupCommand(
             CreateCustomFieldSetupCommand command,
             CreateCustomFieldSetupOnProjectRequest request)
@@ -40,7 +40,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         public static void AssertGetCollectionCustomFieldSetupFromProjectResponse(
             GetCollectionCustomFieldSetupFromProjectResponse response,
             GetCollectionCustomFieldSetupResult result)
@@ -83,7 +83,8 @@ internal static partial class Utils
         }
 
         private static void AssertSingleSelectOptionResponse(
-            GetCollectionCustomFieldSetupFromProjectResponse.SingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse response,
+            GetCollectionCustomFieldSetupFromProjectResponse.SingleSelectCustomFieldSetupResponse.
+                SingleSelectOptionResponse response,
             SingleSelectOption singleSelectOption)
         {
             response.Id.Should().Be(singleSelectOption.Id);
