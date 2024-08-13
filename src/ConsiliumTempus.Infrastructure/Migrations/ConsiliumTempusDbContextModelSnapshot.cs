@@ -1099,21 +1099,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.ToTable("UserHasFavoriteWorkspace", (string)null);
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.NumberCustomFieldSetup", b =>
+            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.NumberCustomFieldSetupAggregate", b =>
                 {
                     b.HasBaseType("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate");
 
                     b.ToTable("CustomFieldSetup.Number", (string)null);
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.SingleSelectCustomFieldSetup", b =>
+            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.SingleSelectCustomFieldSetupAggregate", b =>
                 {
                     b.HasBaseType("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate");
 
                     b.ToTable("CustomFieldSetup.SingleSelect", (string)null);
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.TextCustomFieldSetup", b =>
+            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.TextCustomFieldSetupAggregate", b =>
                 {
                     b.HasBaseType("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate");
 
@@ -1955,11 +1955,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.NumberCustomFieldSetup", b =>
+            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.NumberCustomFieldSetupAggregate", b =>
                 {
                     b.OwnsOne("ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects.NumberCustomFieldSettings", "Settings", b1 =>
                         {
-                            b1.Property<Guid>("NumberCustomFieldSetupId")
+                            b1.Property<Guid>("NumberCustomFieldSetupAggregateId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("CurrencyCode")
@@ -1975,19 +1975,19 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasColumnType("bit")
                                 .HasColumnName("Rounding");
 
-                            b1.HasKey("NumberCustomFieldSetupId");
+                            b1.HasKey("NumberCustomFieldSetupAggregateId");
 
                             b1.ToTable("CustomFieldSetup.Number");
 
                             b1.WithOwner()
-                                .HasForeignKey("NumberCustomFieldSetupId");
+                                .HasForeignKey("NumberCustomFieldSetupAggregateId");
                         });
 
                     b.Navigation("Settings")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.SingleSelectCustomFieldSetup", b =>
+            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.SingleSelectCustomFieldSetupAggregate", b =>
                 {
                     b.OwnsMany("ConsiliumTempus.Domain.CustomFieldSetup.Entities.SingleSelectOption", "Options", b1 =>
                         {
@@ -2001,7 +2001,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.Property<int>("CustomOrderPosition")
                                 .HasColumnType("int");
 
-                            b1.Property<Guid>("SingleSelectCustomFieldSetupId")
+                            b1.Property<Guid>("SingleSelectCustomFieldSetupAggregateId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
@@ -2011,12 +2011,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.HasKey("Id");
 
-                            b1.HasIndex("SingleSelectCustomFieldSetupId");
+                            b1.HasIndex("SingleSelectCustomFieldSetupAggregateId");
 
                             b1.ToTable("SingleSelectOption", (string)null);
 
                             b1.WithOwner()
-                                .HasForeignKey("SingleSelectCustomFieldSetupId");
+                                .HasForeignKey("SingleSelectCustomFieldSetupAggregateId");
                         });
 
                     b.Navigation("Options");

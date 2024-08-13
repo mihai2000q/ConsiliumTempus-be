@@ -499,14 +499,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Value = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CustomOrderPosition = table.Column<int>(type: "int", nullable: false),
-                    SingleSelectCustomFieldSetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SingleSelectCustomFieldSetupAggregateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SingleSelectOption", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SingleSelectOption_CustomFieldSetup.SingleSelect_SingleSelectCustomFieldSetupId",
-                        column: x => x.SingleSelectCustomFieldSetupId,
+                        name: "FK_SingleSelectOption_CustomFieldSetup.SingleSelect_SingleSelectCustomFieldSetupAggregateId",
+                        column: x => x.SingleSelectCustomFieldSetupAggregateId,
                         principalTable: "CustomFieldSetup.SingleSelect",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -915,9 +915,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "RefreshTokenId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SingleSelectOption_SingleSelectCustomFieldSetupId",
+                name: "IX_SingleSelectOption_SingleSelectCustomFieldSetupAggregateId",
                 table: "SingleSelectOption",
-                column: "SingleSelectCustomFieldSetupId");
+                column: "SingleSelectCustomFieldSetupAggregateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
