@@ -29,7 +29,7 @@ public sealed class UpdateStatusFromProjectCommandHandler(
 
         status.Update(
             Title.Create(command.Title),
-            Enum.Parse<ProjectStatusType>(command.Status),
+            Enum.Parse<ProjectStatusType>(command.Status, true),
             Description.Create(command.Description),
             user);
 

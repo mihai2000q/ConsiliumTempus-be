@@ -27,7 +27,7 @@ public sealed class AddStatusToProjectCommandHandler(
 
         project.AddStatus(ProjectStatus.Create(
             Title.Create(command.Title),
-            Enum.Parse<ProjectStatusType>(command.Status),
+            Enum.Parse<ProjectStatusType>(command.Status, true),
             Description.Create(command.Description),
             project,
             user));
