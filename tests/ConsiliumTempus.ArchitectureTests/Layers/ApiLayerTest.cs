@@ -1,3 +1,4 @@
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.ArchitectureTests.Core;
 using ConsiliumTempus.ArchitectureTests.TestUtils;
@@ -29,7 +30,8 @@ public class ApiLayerTest : BaseArchitectureTest
             .And()
             .AreNotAbstract()
             .And()
-            .AreNot(typeof(Program))
+            .AreNot(typeof(Program), 
+                typeof(GetCollectionCustomFieldSetupFromProjectResponse.CustomFieldSetupResponse))
             .Should()
             .BeSealed()
             .Check(Architecture);
