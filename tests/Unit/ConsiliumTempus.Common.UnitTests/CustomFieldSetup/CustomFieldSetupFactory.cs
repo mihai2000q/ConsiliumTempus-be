@@ -13,7 +13,7 @@ namespace ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 
 public static class CustomFieldSetupFactory
 {
-    public static CustomFieldSetupAggregate CreateText(
+    public static TextCustomFieldSetupAggregate CreateText(
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
         WorkspaceAggregate? workspace = null,
@@ -28,7 +28,7 @@ public static class CustomFieldSetupFactory
             createdBy ?? UserFactory.Create());
     }
     
-    public static CustomFieldSetupAggregate CreateNumber(
+    public static NumberCustomFieldSetupAggregate CreateNumber(
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
         NumberCustomFieldSettings? numberSettings = null,
@@ -87,7 +87,7 @@ public static class CustomFieldSetupFactory
                 var randomNumber = random.Next(3);
                 return randomNumber switch
                 {
-                    1 => CreateText(),
+                    1 => CreateText() as CustomFieldSetupAggregate,
                     2 => CreateNumber(),
                     _ => CreateSingleSelect()
                 };
