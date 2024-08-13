@@ -25,10 +25,15 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
         ProjectAggregate? project,
         Audit audit) : base(id, name, description, workspace, project, audit)
     {
-        Options = options;
+        _options = options;
     }
 
-    public List<SingleSelectOption> Options { get; private set; } = null!;
+    private List<SingleSelectOption> _options = [];
+
+    public IReadOnlyList<SingleSelectOption> Options => _options
+        .OrderBy(o => o.CustomOrderPosition)
+        .ToList()
+        .AsReadOnly();
 
     public static SingleSelectCustomFieldSetupAggregate Create(
         List<SingleSelectOption> options,
@@ -54,7 +59,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
         Description description,
         UserAggregate updatedBy)
     {
-        Options = options;
+        _options = options;
         base.Update(name, description, updatedBy);
     }
 }
