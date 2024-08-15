@@ -58,6 +58,9 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
 
         builder.OwnsMany(t => t.Comments, ConfigureComments);
         builder.Navigation(t => t.Comments).AutoInclude(false);
+
+        builder.HasMany(t => t.CustomFields)
+            .WithOne();
     }
 
     private static void ConfigureComments(OwnedNavigationBuilder<ProjectTaskAggregate, ProjectTaskComment> builder)
@@ -81,5 +84,77 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
 
         builder.HasOne(c => c.Task)
             .WithMany(t => t.Comments);
+    }
+}
+
+public sealed class CustomFieldConfiguration : IEntityTypeConfiguration<CustomField>
+{
+    public void Configure(EntityTypeBuilder<CustomField> builder)
+    {
+        builder.UseTpcMappingStrategy();
+
+        builder.HasKey(cf => cf.Id);
+        builder.Property(cf => cf.Id)
+            .HasConversion(
+                id => id.Value,
+                value => CustomFieldId.Create(value));
+
+        builder.HasOne(cf => cf.Task)
+            .WithMany(t => t.CustomFields);
+    }
+}
+
+public sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<NumberCustomField>
+{
+    public void Configure(EntityTypeBuilder<NumberCustomField> builder)
+    {
+        builder.ToTable(nameof(CustomField)
+            .Dot(nameof(NumberCustomField).Replace(nameof(CustomField), "")));
+
+        builder.OwnsOne(ncf => ncf.Number)
+            .Property(n => n.Value)
+            .HasColumnName(nameof(NumberCustomField.Number))
+            .HasPrecision(38, PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum);
+
+        builder.HasOne(ncf => ncf.Setup)
+            .WithMany();
+    }
+}
+
+public sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfiguration<SingleSelectCustomField>
+{
+    public void Configure(EntityTypeBuilder<SingleSelectCustomField> builder)
+    {
+        builder.ToTable(nameof(CustomField)
+            .Dot(nameof(SingleSelectCustomField).Replace(nameof(CustomField), "")));
+
+        builder.OwnsOne(ncf => ncf.Option, ob =>
+        {
+            ob.Property(o => o.Value)
+                .HasMaxLength(PropertiesValidation.SingleSelectOption.ValueMaximumLength)
+                .HasColumnName(nameof(SelectedOption.Value));
+
+            ob.Property(o => o.Color)
+                .HasColumnName(nameof(SelectedOption.Color));
+        });
+
+        builder.HasOne(ncf => ncf.Setup)
+            .WithMany();
+    }
+}
+
+public sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<TextCustomField>
+{
+    public void Configure(EntityTypeBuilder<TextCustomField> builder)
+    {
+        builder.ToTable(nameof(CustomField)
+            .Dot(nameof(TextCustomField).Replace(nameof(CustomField), "")));
+
+        builder.OwnsOne(ncf => ncf.Text)
+            .Property(n => n.Value)
+            .HasColumnName(nameof(TextCustomField.Text));
+
+        builder.HasOne(ncf => ncf.Setup)
+            .WithMany();
     }
 }
