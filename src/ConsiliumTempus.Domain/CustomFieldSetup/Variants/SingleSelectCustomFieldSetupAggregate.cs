@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Entities;
+using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
@@ -43,7 +44,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
         ProjectAggregate? project,
         UserAggregate createdBy)
     {
-        return new SingleSelectCustomFieldSetupAggregate(
+        var setup = new SingleSelectCustomFieldSetupAggregate(
             options,
             CustomFieldSetupId.CreateUnique(),
             name,
@@ -51,6 +52,10 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
             workspace,
             project,
             Audit.Create(createdBy));
+
+        setup.AddDomainEvent(new CustomFieldSetupCreated(setup));
+
+        return setup;
     }
 
     public void Update(

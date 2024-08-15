@@ -25,8 +25,8 @@ public sealed class SingleSelectCustomField : CustomField
     public SingleSelectCustomFieldSetupAggregate Setup { get; init; } = null!;
 
     public static SingleSelectCustomField Create(
-        SingleSelectCustomFieldSetupAggregate setup,
         SelectedOption? option,
+        SingleSelectCustomFieldSetupAggregate setup,
         ProjectTaskAggregate task)
     {
         return new SingleSelectCustomField(

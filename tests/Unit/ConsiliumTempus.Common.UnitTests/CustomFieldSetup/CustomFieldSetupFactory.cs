@@ -20,12 +20,16 @@ public static class CustomFieldSetupFactory
         ProjectAggregate? project = null,
         UserAggregate? createdBy = null)
     {
-        return TextCustomFieldSetupAggregate.Create(
+        var setup = TextCustomFieldSetupAggregate.Create(
             Name.Create(name),
             Description.Create(description),
             workspace,
             project,
             createdBy ?? UserFactory.Create());
+
+        setup.ClearDomainEvents();
+
+        return setup;
     }
 
     public static NumberCustomFieldSetupAggregate CreateNumber(
@@ -36,7 +40,7 @@ public static class CustomFieldSetupFactory
         ProjectAggregate? project = null,
         UserAggregate? createdBy = null)
     {
-        return NumberCustomFieldSetupAggregate.Create(
+        var setup = NumberCustomFieldSetupAggregate.Create(
             numberSettings ?? NumberCustomFieldSettings.Create(
                 Constants.CustomFieldSetup.CurrencyCode,
                 Constants.CustomFieldSetup.Decimals,
@@ -46,6 +50,10 @@ public static class CustomFieldSetupFactory
             workspace,
             project,
             createdBy ?? UserFactory.Create());
+        
+        setup.ClearDomainEvents();
+
+        return setup;
     }
 
     public static SingleSelectCustomFieldSetupAggregate CreateSingleSelect(
@@ -56,7 +64,7 @@ public static class CustomFieldSetupFactory
         ProjectAggregate? project = null,
         UserAggregate? createdBy = null)
     {
-        return SingleSelectCustomFieldSetupAggregate.Create(
+        var setup = SingleSelectCustomFieldSetupAggregate.Create(
             options ??
             [
                 SingleSelectOption.Create(
@@ -73,6 +81,10 @@ public static class CustomFieldSetupFactory
             workspace,
             project,
             createdBy ?? UserFactory.Create());
+        
+        setup.ClearDomainEvents();
+
+        return setup;
     }
 
     public static List<CustomFieldSetupAggregate> CreateList(

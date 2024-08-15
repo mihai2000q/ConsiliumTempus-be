@@ -25,7 +25,7 @@ public sealed class TextCustomField : CustomField
     public TextCustomFieldSetupAggregate Setup { get; init; } = null!;
 
     public static TextCustomField Create(
-        Text text,
+        Text? text,
         TextCustomFieldSetupAggregate setup,
         ProjectTaskAggregate task)
     {

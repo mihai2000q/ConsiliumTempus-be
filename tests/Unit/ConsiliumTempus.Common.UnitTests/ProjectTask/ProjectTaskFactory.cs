@@ -17,12 +17,16 @@ public static class ProjectTaskFactory
         ProjectStage? stage = null,
         UserAggregate? createdBy = null)
     {
-        return ProjectTaskAggregate.Create(
+        var task = ProjectTaskAggregate.Create(
             Name.Create(name),
             Description.Create(description),
             CustomOrderPosition.Create(customOrderPosition),
             createdBy ?? UserFactory.Create(),
             stage ?? ProjectStageFactory.Create());
+
+        task.ClearDomainEvents();
+
+        return task;
     }
 
     public static List<ProjectTaskAggregate> CreateList(int count = 5)

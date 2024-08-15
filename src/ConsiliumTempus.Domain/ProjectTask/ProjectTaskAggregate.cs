@@ -5,6 +5,7 @@ using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
+using ConsiliumTempus.Domain.ProjectTask.Events;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User;
 
@@ -63,7 +64,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
         UserAggregate createdBy,
         ProjectStage stage)
     {
-        return new ProjectTaskAggregate(
+        var task = new ProjectTaskAggregate(
             ProjectTaskId.CreateUnique(),
             name,
             description,
@@ -73,6 +74,10 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
             stage,
             DateTime.UtcNow,
             DateTime.UtcNow);
+
+        task.AddDomainEvent(new ProjectTaskCreated(task));
+
+        return task;
     }
 
     public void Update(
