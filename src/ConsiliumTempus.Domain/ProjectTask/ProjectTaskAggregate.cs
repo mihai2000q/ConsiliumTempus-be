@@ -38,6 +38,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
         UpdatedDateTime = updatedDateTime;
     }
 
+    private readonly List<CustomField> _customFields = [];
     private readonly List<ProjectTaskComment> _comments = [];
 
     public Name Name { get; private set; } = default!;
@@ -50,7 +51,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
     public DateOnly? DueDate { get; private set; }
     public TimeSpan? EstimatedDuration { get; private set; }
     public ProjectStage Stage { get; private set; } = default!;
-
+    public IReadOnlyList<CustomField> CustomFields => _customFields.AsReadOnly();
     public IReadOnlyList<ProjectTaskComment> Comments => _comments.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
@@ -103,6 +104,16 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
     public void UpdateCustomOrderPosition(CustomOrderPosition customOrderPosition)
     {
         CustomOrderPosition = customOrderPosition;
+    }
+
+    public void AddCustomField(CustomField customField)
+    {
+        _customFields.Add(customField);
+    }
+
+    public void RemoveCustomField(CustomField customField)
+    {
+        _customFields.Add(customField);
     }
 
     public void AddComment(ProjectTaskComment comment)
