@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
@@ -67,5 +68,15 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .Where(t => t.Stage.Id == stageId)
             .ApplyFilters(filters)
             .CountAsync(cancellationToken);
+    }
+
+    public Task<List<ProjectTaskAggregate>> GetListByProject(
+        ProjectId projectId,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.ProjectTasks
+            .IgnoreAutoIncludes()
+            .Where(t => t.Stage.Sprint.Project.Id == projectId)
+            .ToListAsync(cancellationToken);
     }
 }
