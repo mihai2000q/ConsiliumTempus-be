@@ -149,7 +149,7 @@ internal static class CreateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.Number,
                 numberSettings: new CreateCustomFieldSetupCommand.NumberSettingsCommand(
                     "USD",
-                    10,
+                    PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum + 1,
                     true));
             Add(command, nameof(command.NumberSettings).Dot(nameof(command.NumberSettings.Decimals)));
         }

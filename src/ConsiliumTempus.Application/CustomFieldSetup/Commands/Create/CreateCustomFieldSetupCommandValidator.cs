@@ -37,7 +37,7 @@ public sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<C
 
                     RuleFor(c => c.NumberSettings!.Decimals)
                         .GreaterThanOrEqualTo(0)
-                        .LessThanOrEqualTo(9);
+                        .LessThanOrEqualTo(PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum);
                 });
             });
 

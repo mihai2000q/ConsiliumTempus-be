@@ -6,7 +6,6 @@ using ConsiliumTempus.Domain.CustomFieldSetup.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
-using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
 
