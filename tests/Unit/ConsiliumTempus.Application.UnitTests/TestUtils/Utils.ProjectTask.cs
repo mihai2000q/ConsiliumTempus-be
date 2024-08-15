@@ -4,8 +4,11 @@ using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
+using ConsiliumTempus.Domain.ProjectTask.Events;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
@@ -35,7 +38,10 @@ internal static partial class Utils
             task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Comments.Should().BeEmpty();
-            task.DomainEvents.Should().BeEmpty();
+            task.DomainEvents.Should().HaveCount(1);
+            var domainEvent = task.DomainEvents[0];
+            domainEvent.Should().BeOfType<ProjectTaskCreated>();
+            ((ProjectTaskCreated)domainEvent).ProjectTask.Should().Be(task);
 
             stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -159,6 +165,37 @@ internal static partial class Utils
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertFromProjectTaskCreated(
+            ProjectTaskCreated domainEvent,
+            List<CustomFieldSetupAggregate> setups)
+        {
+            domainEvent.ProjectTask.CustomFields.Should().HaveSameCount(setups);
+            domainEvent.ProjectTask.CustomFields
+                .Zip(setups)
+                .Should().AllSatisfy(x =>
+                {
+                    var (customField, setup) = x;
+                    customField.Id.Value.Should().NotBeEmpty();
+                    customField.Task.Should().Be(domainEvent.ProjectTask);
+
+                    switch (customField)
+                    {
+                        case NumberCustomField numberCustomField:
+                            numberCustomField.Number.Should().BeNull();
+                            numberCustomField.Setup.Should().Be(setup);
+                            break;
+                        case SingleSelectCustomField singleSelectCustomField:
+                            singleSelectCustomField.Option.Should().BeNull();
+                            singleSelectCustomField.Setup.Should().Be(setup);
+                            break;
+                        case TextCustomField textCustomField:
+                            textCustomField.Text.Should().BeNull();
+                            textCustomField.Setup.Should().Be(setup);
+                            break;
+                    }
+                });
         }
 
         internal static void AssertProjectTask(

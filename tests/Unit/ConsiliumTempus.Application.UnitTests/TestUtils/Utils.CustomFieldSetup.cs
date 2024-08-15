@@ -2,8 +2,11 @@
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.Entities;
+using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -13,7 +16,7 @@ internal static partial class Utils
 {
     internal static class CustomFieldSetup
     {
-        internal static bool AssertFromCreateCommand(
+        internal static void AssertFromCreateCommand(
             CreateCustomFieldSetupCommand command,
             CustomFieldSetupAggregate customFieldSetup,
             UserAggregate user,
@@ -24,6 +27,10 @@ internal static partial class Utils
             customFieldSetup.Name.Value.Should().Be(command.Name);
             customFieldSetup.Description.Value.Should().Be(command.Description);
             customFieldSetup.Audit.ShouldBeCreated(user);
+            customFieldSetup.DomainEvents.Should().HaveCount(1);
+            var domainEvent = customFieldSetup.DomainEvents[0];
+            domainEvent.Should().BeOfType<CustomFieldSetupCreated>();
+            ((CustomFieldSetupCreated)domainEvent).CustomFieldSetup.Should().Be(customFieldSetup);
 
             if (command.WorkspaceId is not null)
                 customFieldSetup.Workspace.Should().Be(workspace);
@@ -49,8 +56,43 @@ internal static partial class Utils
                 default:
                     throw new ArgumentOutOfRangeException(nameof(command));
             }
+        }
 
-            return true;
+        internal static void AssertFromCustomFieldSetupCreated(
+            CustomFieldSetupCreated domainEvent,
+            List<ProjectTaskAggregate> tasks)
+        {
+            var setup = domainEvent.CustomFieldSetup;
+            tasks.Should().AllSatisfy(task =>
+            {
+                task.CustomFields.Should().HaveCount(1);
+                var customField = task.CustomFields[0];
+
+                switch (setup)
+                {
+                    case NumberCustomFieldSetupAggregate:
+                        customField.Should().BeOfType<NumberCustomField>();
+                        customField.Task.Should().Be(task);
+                        customField.Id.Value.Should().NotBeEmpty();
+                        ((NumberCustomField)customField).Number.Should().BeNull();
+                        ((NumberCustomField)customField).Setup.Should().Be(setup);
+                        break;
+                    case SingleSelectCustomFieldSetupAggregate:
+                        customField.Should().BeOfType<SingleSelectCustomField>();
+                        customField.Task.Should().Be(task);
+                        customField.Id.Value.Should().NotBeEmpty();
+                        ((SingleSelectCustomField)customField).Option.Should().BeNull();
+                        ((SingleSelectCustomField)customField).Setup.Should().Be(setup);
+                        break;
+                    case TextCustomFieldSetupAggregate:
+                        customField.Should().BeOfType<TextCustomField>();
+                        customField.Task.Should().Be(task);
+                        customField.Id.Value.Should().NotBeEmpty();
+                        ((TextCustomField)customField).Text.Should().BeNull();
+                        ((TextCustomField)customField).Setup.Should().Be(setup);
+                        break;
+                }
+            });
         }
 
         private static void AssertNumberCustomFieldSetup(
