@@ -22,6 +22,11 @@ public sealed class DecimalNumber : ValueObject
         return new DecimalNumber(value);
     }
 
+    public DecimalNumber Copy()
+    {
+        return new DecimalNumber(Value);
+    }
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;

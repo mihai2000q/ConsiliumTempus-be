@@ -23,15 +23,15 @@ public abstract class CustomField : Entity<CustomFieldId>
         {
             NumberCustomFieldSetupAggregate numberSetup =>
                 NumberCustomField.Create(
-                    null,
+                    numberSetup.DefaultNumber?.Copy(), 
                     numberSetup),
             SingleSelectCustomFieldSetupAggregate singleSelectSetup =>
                 SingleSelectCustomField.Create(
-                    null,
+                    singleSelectSetup.DefaultOption,
                     singleSelectSetup),
             TextCustomFieldSetupAggregate textSetup =>
                 TextCustomField.Create(
-                    null,
+                    textSetup.DefaultText?.Copy(), 
                     textSetup),
             _ => throw new ArgumentOutOfRangeException(nameof(setup), setup, "Type Not Supported")
         };

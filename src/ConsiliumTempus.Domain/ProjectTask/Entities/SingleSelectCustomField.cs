@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 
@@ -12,7 +13,7 @@ public sealed class SingleSelectCustomField : CustomField
     }
 
     private SingleSelectCustomField(
-        SelectedOption? option,
+        SingleSelectOption? option,
         SingleSelectCustomFieldSetupAggregate setup,
         CustomFieldId id) : base(id)
     {
@@ -20,11 +21,11 @@ public sealed class SingleSelectCustomField : CustomField
         Setup = setup;
     }
 
-    public SelectedOption? Option { get; init; }
+    public SingleSelectOption? Option { get; init; }
     public SingleSelectCustomFieldSetupAggregate Setup { get; init; } = null!;
 
     public static SingleSelectCustomField Create(
-        SelectedOption? option,
+        SingleSelectOption? option,
         SingleSelectCustomFieldSetupAggregate setup)
     {
         return new SingleSelectCustomField(

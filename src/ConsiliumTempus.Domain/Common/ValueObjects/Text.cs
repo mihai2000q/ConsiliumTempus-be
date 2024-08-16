@@ -22,6 +22,11 @@ public sealed class Text : ValueObject
         return new Text(value);
     }
 
+    public Text Copy()
+    {
+        return new Text(Value);
+    }
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
