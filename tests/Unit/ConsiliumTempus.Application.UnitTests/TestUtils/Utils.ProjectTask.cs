@@ -178,7 +178,6 @@ internal static partial class Utils
                 {
                     var (customField, setup) = x;
                     customField.Id.Value.Should().NotBeEmpty();
-                    customField.Task.Should().Be(domainEvent.ProjectTask);
 
                     switch (customField)
                     {

@@ -13,32 +13,26 @@ public abstract class CustomField : Entity<CustomFieldId>
     {
     }
 
-    protected CustomField(CustomFieldId id, ProjectTaskAggregate task) : base(id)
+    protected CustomField(CustomFieldId id) : base(id)
     {
-        Task = task;
     }
 
-    public ProjectTaskAggregate Task { get; init; } = null!;
-
-    public static CustomField Create(CustomFieldSetupAggregate setup, ProjectTaskAggregate task)
+    public static CustomField Create(CustomFieldSetupAggregate setup)
     {
         return setup switch
         {
             NumberCustomFieldSetupAggregate numberSetup =>
                 NumberCustomField.Create(
                     null,
-                    numberSetup,
-                    task),
+                    numberSetup),
             SingleSelectCustomFieldSetupAggregate singleSelectSetup =>
                 SingleSelectCustomField.Create(
                     null,
-                    singleSelectSetup,
-                    task),
+                    singleSelectSetup),
             TextCustomFieldSetupAggregate textSetup =>
                 TextCustomField.Create(
                     null,
-                    textSetup,
-                    task),
+                    textSetup),
             _ => throw new ArgumentOutOfRangeException(nameof(setup), setup, "Type Not Supported")
         };
     }

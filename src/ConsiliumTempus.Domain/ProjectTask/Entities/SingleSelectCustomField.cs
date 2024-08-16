@@ -14,8 +14,7 @@ public sealed class SingleSelectCustomField : CustomField
     private SingleSelectCustomField(
         SelectedOption? option,
         SingleSelectCustomFieldSetupAggregate setup,
-        CustomFieldId id,
-        ProjectTaskAggregate task) : base(id, task)
+        CustomFieldId id) : base(id)
     {
         Option = option;
         Setup = setup;
@@ -26,13 +25,11 @@ public sealed class SingleSelectCustomField : CustomField
 
     public static SingleSelectCustomField Create(
         SelectedOption? option,
-        SingleSelectCustomFieldSetupAggregate setup,
-        ProjectTaskAggregate task)
+        SingleSelectCustomFieldSetupAggregate setup)
     {
         return new SingleSelectCustomField(
             option,
             setup,
-            CustomFieldId.CreateUnique(),
-            task);
+            CustomFieldId.CreateUnique());
     }
 }

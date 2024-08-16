@@ -68,26 +68,21 @@ internal static partial class Utils
                 task.CustomFields.Should().HaveCount(1);
                 var customField = task.CustomFields[0];
 
+                customField.Id.Value.Should().NotBeEmpty();
                 switch (setup)
                 {
                     case NumberCustomFieldSetupAggregate:
                         customField.Should().BeOfType<NumberCustomField>();
-                        customField.Task.Should().Be(task);
-                        customField.Id.Value.Should().NotBeEmpty();
                         ((NumberCustomField)customField).Number.Should().BeNull();
                         ((NumberCustomField)customField).Setup.Should().Be(setup);
                         break;
                     case SingleSelectCustomFieldSetupAggregate:
                         customField.Should().BeOfType<SingleSelectCustomField>();
-                        customField.Task.Should().Be(task);
-                        customField.Id.Value.Should().NotBeEmpty();
                         ((SingleSelectCustomField)customField).Option.Should().BeNull();
                         ((SingleSelectCustomField)customField).Setup.Should().Be(setup);
                         break;
                     case TextCustomFieldSetupAggregate:
                         customField.Should().BeOfType<TextCustomField>();
-                        customField.Task.Should().Be(task);
-                        customField.Id.Value.Should().NotBeEmpty();
                         ((TextCustomField)customField).Text.Should().BeNull();
                         ((TextCustomField)customField).Setup.Should().Be(setup);
                         break;
