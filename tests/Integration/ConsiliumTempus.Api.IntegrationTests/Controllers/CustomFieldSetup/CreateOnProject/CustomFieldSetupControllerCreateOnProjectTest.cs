@@ -29,10 +29,12 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
         var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(
             project.Id.Value,
             type: CustomFieldType.Number,
-            numberSettings: new CreateCustomFieldSetupOnProjectRequest.NumberSettingsRequest(
-                "USD",
-                2,
-                false));
+            numberCustomFieldSetup: new CreateCustomFieldSetupOnProjectRequest.CreateNumberCustomFieldSetupRequest(
+                new CreateCustomFieldSetupOnProjectRequest.CreateNumberCustomFieldSetupRequest.NumberSettingsRequest(
+                    "USD",
+                    2,
+                    false),
+                null));
 
         await ActAndAssert(request, user, project);
     }
@@ -47,15 +49,21 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
         var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(
             project.Id.Value,
             type: CustomFieldType.SingleSelect,
-            singleSelectOptions:
-            [
-                new CreateCustomFieldSetupOnProjectRequest.SingleSelectOptionRequest(
-                    "High",
-                    "#FF2233"),
-                new CreateCustomFieldSetupOnProjectRequest.SingleSelectOptionRequest(
-                    "Low",
-                    "#7788AA")
-            ]);
+            singleSelectCustomFieldSetup: new
+                CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest(
+                    [
+                        new CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest.
+                            SingleSelectOptionRequest(
+                                "1",
+                                "High",
+                                "#FF2233"),
+                        new CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest.
+                            SingleSelectOptionRequest(
+                                "2",
+                                "Low",
+                                "#7788AA")
+                    ],
+                    null));
 
         await ActAndAssert(request, user, project);
     }
@@ -67,7 +75,9 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
         // Arrange
         var user = CustomFieldSetupData.Users.First();
         var project = CustomFieldSetupData.Projects.First();
-        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(project.Id.Value);
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(
+            project.Id.Value,
+            textCustomFieldSetup: new CreateCustomFieldSetupOnProjectRequest.CreateTextCustomFieldSetupRequest(null));
 
         await ActAndAssert(request, user, project);
     }
@@ -121,7 +131,7 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
             .Include(t => t.CustomFields)
             .Where(t => t.Stage.Sprint.Project == project)
             .ToListAsync();
-        
+
         Utils.CustomFieldSetup.AssertCreateOnProject(
             request,
             createdCustomFieldSetup,

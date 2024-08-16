@@ -3,8 +3,23 @@ export default interface CreateCustomFieldSetupOnProjectRequest {
   name: string,
   description: string,
   type: string,
-  numberSettings?: NumberSettings | undefined,
-  singleSelectOptions?: SingleSelectOption[] | undefined
+  numberCustomFieldSetup?: NumberCustomFieldSetup,
+  singleSelectCustomFieldSetup?: SingleSelectCustomFieldSetup,
+  textCustomFieldSetup?: TextCustomFieldSetup
+}
+
+interface NumberCustomFieldSetup {
+  settings: NumberSettings,
+  defaultNumber?: number
+}
+
+interface SingleSelectCustomFieldSetup {
+  options: SingleSelectOption[],
+  defaultOptionId?: string
+}
+
+interface TextCustomFieldSetup {
+  defaultText?: string
 }
 
 interface NumberSettings {
@@ -14,6 +29,7 @@ interface NumberSettings {
 }
 
 interface SingleSelectOption {
+  id: string,
   value: string,
   color: string
 }

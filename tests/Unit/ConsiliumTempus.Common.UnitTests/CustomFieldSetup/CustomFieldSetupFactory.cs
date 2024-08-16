@@ -1,8 +1,9 @@
-﻿using ConsiliumTempus.Common.UnitTests.TestConstants;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup;
-using ConsiliumTempus.Domain.CustomFieldSetup.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
@@ -13,28 +14,10 @@ namespace ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 
 public static class CustomFieldSetupFactory
 {
-    public static TextCustomFieldSetupAggregate CreateText(
-        string name = Constants.CustomFieldSetup.Name,
-        string description = Constants.CustomFieldSetup.Description,
-        WorkspaceAggregate? workspace = null,
-        ProjectAggregate? project = null,
-        UserAggregate? createdBy = null)
-    {
-        var setup = TextCustomFieldSetupAggregate.Create(
-            Name.Create(name),
-            Description.Create(description),
-            workspace,
-            project,
-            createdBy ?? UserFactory.Create());
-
-        setup.ClearDomainEvents();
-
-        return setup;
-    }
-
     public static NumberCustomFieldSetupAggregate CreateNumber(
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
+        decimal? defaultNumber = null,
         NumberCustomFieldSettings? numberSettings = null,
         WorkspaceAggregate? workspace = null,
         ProjectAggregate? project = null,
@@ -45,6 +28,7 @@ public static class CustomFieldSetupFactory
                 Constants.CustomFieldSetup.CurrencyCode,
                 Constants.CustomFieldSetup.Decimals,
                 true),
+            defaultNumber.IfNotNull(DecimalNumber.Create),
             Name.Create(name),
             Description.Create(description),
             workspace,
@@ -60,6 +44,7 @@ public static class CustomFieldSetupFactory
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
         List<SingleSelectOption>? options = null,
+        SingleSelectOption? defaultOption = null,
         WorkspaceAggregate? workspace = null,
         ProjectAggregate? project = null,
         UserAggregate? createdBy = null)
@@ -76,6 +61,7 @@ public static class CustomFieldSetupFactory
                     Constants.SingleSelectOption.Color,
                     1)
             ],
+            defaultOption,
             Name.Create(name),
             Description.Create(description),
             workspace,
@@ -87,23 +73,34 @@ public static class CustomFieldSetupFactory
         return setup;
     }
 
-    public static List<CustomFieldSetupAggregate> CreateList(
-        int count = 5)
+    public static TextCustomFieldSetupAggregate CreateText(
+        string name = Constants.CustomFieldSetup.Name,
+        string description = Constants.CustomFieldSetup.Description,
+        string? defaultText = null,
+        WorkspaceAggregate? workspace = null,
+        ProjectAggregate? project = null,
+        UserAggregate? createdBy = null)
     {
-        var random = new Random();
+        var setup = TextCustomFieldSetupAggregate.Create(
+            defaultText.IfNotNull(Text.Create),
+            Name.Create(name),
+            Description.Create(description),
+            workspace,
+            project,
+            createdBy ?? UserFactory.Create());
 
-        return Enumerable
-            .Range(0, count)
-            .Select(_ =>
-            {
-                var randomNumber = random.Next(3);
-                return randomNumber switch
-                {
-                    1 => CreateText() as CustomFieldSetupAggregate,
-                    2 => CreateNumber(),
-                    _ => CreateSingleSelect()
-                };
-            })
-            .ToList();
+        setup.ClearDomainEvents();
+
+        return setup;
+    }
+
+    public static List<CustomFieldSetupAggregate> CreateList()
+    {
+        return 
+        [
+            CreateNumber(),
+            CreateSingleSelect(),
+            CreateText()
+        ];
     }
 }

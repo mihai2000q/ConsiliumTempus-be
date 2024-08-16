@@ -2,8 +2,8 @@
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup;
-using ConsiliumTempus.Domain.CustomFieldSetup.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 
 namespace ConsiliumTempus.Api.UnitTests.TestUtils;
@@ -31,12 +31,21 @@ internal static partial class Utils
             command.Name.Should().Be(request.Name);
             command.Description.Should().Be(request.Description);
             command.Type.Should().Be(request.Type);
-            command.NumberSettings?.CurrencyCode.Should().Be(request.NumberSettings!.CurrencyCode);
-            command.NumberSettings?.Decimals.Should().Be(request.NumberSettings!.Decimals);
-            command.NumberSettings?.Rounding.Should().Be(request.NumberSettings!.Rounding);
-            command.SingleSelectOptions
-                ?.Zip(request.SingleSelectOptions!)
+
+            command.NumberCustomFieldSetup?.Settings.CurrencyCode
+                .Should().Be(request.NumberCustomFieldSetup!.Settings.CurrencyCode);
+            command.NumberCustomFieldSetup?.Settings.Decimals
+                .Should().Be(request.NumberCustomFieldSetup!.Settings.Decimals);
+            command.NumberCustomFieldSetup?.Settings.Rounding
+                .Should().Be(request.NumberCustomFieldSetup!.Settings.Rounding);
+            command.NumberCustomFieldSetup?.DefaultNumber.Should().Be(request.NumberCustomFieldSetup!.DefaultNumber);
+
+            command.SingleSelectCustomFieldSetup?.Options
+                .Zip(request.SingleSelectCustomFieldSetup!.Options)
                 .Should().AllSatisfy(x => AssertSingleSelectOptionCommand(x.First, x.Second));
+            command.SingleSelectCustomFieldSetup?.DefaultOptionId.Should().Be(request.SingleSelectCustomFieldSetup!.DefaultOptionId);
+
+            command.TextCustomFieldSetup?.DefaultText.Should().Be(request.TextCustomFieldSetup!.DefaultText);
 
             return true;
         }
@@ -93,9 +102,10 @@ internal static partial class Utils
         }
 
         private static void AssertSingleSelectOptionCommand(
-            CreateCustomFieldSetupCommand.SingleSelectOptionCommand singleSelectOptionCommand,
-            CreateCustomFieldSetupOnProjectRequest.SingleSelectOptionRequest singleSelectOptionRequest)
+            CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand singleSelectOptionCommand,
+            CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest singleSelectOptionRequest)
         {
+            singleSelectOptionCommand.Id.Should().Be(singleSelectOptionRequest.Id);
             singleSelectOptionCommand.Value.Should().Be(singleSelectOptionRequest.Value);
             singleSelectOptionCommand.Color.Should().Be(singleSelectOptionRequest.Color);
         }

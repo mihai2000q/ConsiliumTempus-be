@@ -12,16 +12,18 @@ public static class CustomFieldSetupRequestFactory
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
         CustomFieldType type = CustomFieldType.Text,
-        CreateCustomFieldSetupOnProjectRequest.NumberSettingsRequest? numberSettings = null,
-        List<CreateCustomFieldSetupOnProjectRequest.SingleSelectOptionRequest>? singleSelectOptions = null)
+        CreateCustomFieldSetupOnProjectRequest.CreateNumberCustomFieldSetupRequest? numberCustomFieldSetup = null,
+        CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest? singleSelectCustomFieldSetup = null,
+        CreateCustomFieldSetupOnProjectRequest.CreateTextCustomFieldSetupRequest? textCustomFieldSetup = null)
     {
         return new CreateCustomFieldSetupOnProjectRequest(
             projectId,
             name,
             description,
             type.ToString(),
-            numberSettings,
-            singleSelectOptions);
+            numberCustomFieldSetup,
+            singleSelectCustomFieldSetup,
+            textCustomFieldSetup);
     }
 
     public static GetCollectionCustomFieldSetupFromProjectRequest CreateGetCollectionCustomFieldSetupFromProjectRequest(

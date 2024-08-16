@@ -292,7 +292,7 @@ internal class ProjectTaskData : ITestData
             AuditFactory.Create(Users[0]),
             [
                 SingleSelectOptionFactory.Create(), 
-                SingleSelectOptionFactory.Create(customOrderPosition: 1), 
+                SingleSelectOptionFactory.Create(orderPosition: 1), 
             ],
             "Select only one field"),
         CustomFieldSetupFactory.CreateText(

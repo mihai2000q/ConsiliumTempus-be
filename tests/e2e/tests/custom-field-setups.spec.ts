@@ -4,8 +4,7 @@ import { getPersonalWorkspace } from "../utils/workspaces.utils";
 import { createProject } from "../utils/projects.utils";
 import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
-import CreateCustomFieldSetupOnProjectRequest
-  from "../types/requests/custom-field-setup/CreateCustomFieldSetupOnProjectRequest";
+import CreateCustomFieldSetupOnProjectRequest from "../types/requests/custom-field-setup/CreateCustomFieldSetupOnProjectRequest";
 import { createCustomFieldSetup, getCustomFieldSetupsFromProject } from "../utils/custom-field-setup.utils";
 
 test.describe('should allow operations on the custom field setup entity', () => {
@@ -32,17 +31,22 @@ test.describe('should allow operations on the custom field setup entity', () => 
       projectId: PROJECT_ID,
       name: "New Text Custom Field",
       description: "Represents a custom field",
-      type: 'text'
+      type: 'text',
+      textCustomFieldSetup: {
+        defaultText: undefined
+      }
     })
     const numberCustomField = await createCustomFieldSetup(request, {
       projectId: PROJECT_ID,
       name: "Budget",
       description: "Represents a custom field",
       type: 'number',
-      numberSettings: {
-        currencyCode: "USD",
-        decimals: 2,
-        rounding: true
+      numberCustomFieldSetup: {
+        settings: {
+          currencyCode: "USD",
+          decimals: 2,
+          rounding: true
+        }
       }
     })
     const singleSelectCustomField = await createCustomFieldSetup(request, {
@@ -50,16 +54,20 @@ test.describe('should allow operations on the custom field setup entity', () => 
       name: "Priority",
       description: "Represents a custom field",
       type: 'singleSelect',
-      singleSelectOptions: [
-        {
-          value: "High",
-          color: "#FF1122"
-        },
-        {
-          value: "Low",
-          color: "#1122FF"
-        }
-      ]
+      singleSelectCustomFieldSetup: {
+        options: [
+          {
+            id: "1",
+            value: "High",
+            color: "#FF1122"
+          },
+          {
+            id: "2",
+            value: "Low",
+            color: "#1122FF"
+          }
+        ]
+      }
     })
 
     const response = await request.get(`/api/customFieldSetups/project/${PROJECT_ID}`, useToken())
@@ -109,10 +117,13 @@ test.describe('should allow operations on the custom field setup entity', () => 
         name: "Budget",
         description: "Represents a custom field",
         type: 'number',
-        numberSettings: {
-          currencyCode: "USD",
-          decimals: 2,
-          rounding: true
+        numberCustomFieldSetup: {
+          settings: {
+            currencyCode: "USD",
+            decimals: 2,
+            rounding: true
+          },
+          defaultNumber: 1
         }
       }
       const response = await request.post('/api/customFieldSetups/project', {
@@ -134,9 +145,9 @@ test.describe('should allow operations on the custom field setup entity', () => 
           name: body.name,
           description: body.description,
           settings: {
-            currencyCode: body.numberSettings!.currencyCode,
-            decimals: body.numberSettings!.decimals,
-            rounding: body.numberSettings!.rounding,
+            currencyCode: body.numberCustomFieldSetup?.settings.currencyCode,
+            decimals: body.numberCustomFieldSetup?.settings!.decimals,
+            rounding: body.numberCustomFieldSetup?.settings!.rounding,
           }
         }
       ])
@@ -148,16 +159,21 @@ test.describe('should allow operations on the custom field setup entity', () => 
         name: "Priority",
         description: "Represents a custom field",
         type: 'singleSelect',
-        singleSelectOptions: [
-          {
-            value: "High",
-            color: "#FF1122"
-          },
-          {
-            value: "Low",
-            color: "#1122FF"
-          }
-        ]
+        singleSelectCustomFieldSetup: {
+          options: [
+            {
+              id: '1',
+              value: "High",
+              color: "#FF1122"
+            },
+            {
+              id: '2',
+              value: "Low",
+              color: "#1122FF"
+            }
+          ],
+          defaultOptionId: '2'
+        }
       }
       const response = await request.post('/api/customFieldSetups/project', {
         ...useToken(),
@@ -179,12 +195,12 @@ test.describe('should allow operations on the custom field setup entity', () => 
           description: body.description,
           options: [
             {
-              value: body.singleSelectOptions![0].value,
-              color: body.singleSelectOptions![0].color,
+              value: body.singleSelectCustomFieldSetup?.options[0].value,
+              color: body.singleSelectCustomFieldSetup?.options[0].color,
             },
             {
-              value: body.singleSelectOptions![1].value,
-              color: body.singleSelectOptions![1].color,
+              value: body.singleSelectCustomFieldSetup?.options[1].value,
+              color: body.singleSelectCustomFieldSetup?.options[1].color,
             }
           ]
         }
@@ -196,7 +212,10 @@ test.describe('should allow operations on the custom field setup entity', () => 
         projectId: PROJECT_ID,
         name: "New Text Custom Field",
         description: "Represents a custom field",
-        type: 'text'
+        type: 'text',
+        textCustomFieldSetup: {
+          defaultText: "default"
+        }
       }
       const response = await request.post('/api/customFieldSetups/project', {
         ...useToken(),

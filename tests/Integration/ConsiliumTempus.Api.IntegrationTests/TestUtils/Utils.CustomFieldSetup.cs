@@ -1,8 +1,8 @@
 ﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup;
-using ConsiliumTempus.Domain.CustomFieldSetup.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -49,6 +49,7 @@ internal static partial class Utils
                     AssertSingleSelectCustomFieldSetup(customFieldSetup, request);
                     break;
                 case CustomFieldType.Text:
+                    AssertTextCustomFieldSetup(customFieldSetup, request);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(request));
@@ -129,9 +130,9 @@ internal static partial class Utils
         {
             customFieldSetup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
             var setup = (NumberCustomFieldSetupAggregate)customFieldSetup;
-            setup.Settings.CurrencyCode.Should().Be(request.NumberSettings!.CurrencyCode);
-            setup.Settings.Decimals.Should().Be((short)request.NumberSettings.Decimals);
-            setup.Settings.Rounding.Should().Be(request.NumberSettings.Rounding);
+            setup.Settings.CurrencyCode.Should().Be(request.NumberCustomFieldSetup!.Settings.CurrencyCode);
+            setup.Settings.Decimals.Should().Be((short)request.NumberCustomFieldSetup.Settings.Decimals);
+            setup.Settings.Rounding.Should().Be(request.NumberCustomFieldSetup.Settings.Rounding);
         }
 
         private static void AssertSingleSelectCustomFieldSetup(
@@ -141,18 +142,39 @@ internal static partial class Utils
             customFieldSetup.Should().BeOfType<SingleSelectCustomFieldSetupAggregate>();
             var setup = (SingleSelectCustomFieldSetupAggregate)customFieldSetup;
             var index = 0;
-            setup.Options.Zip(request.SingleSelectOptions!)
+            setup.Options
+                .Zip(request.SingleSelectCustomFieldSetup!.Options)
                 .Should().AllSatisfy(x => AssertSingleSelectOption(x.First, x.Second, index++));
+            if (request.SingleSelectCustomFieldSetup.DefaultOptionId is null)
+                setup.DefaultOption.Should().BeNull();
+            else
+            {
+                var optionIndex = request.SingleSelectCustomFieldSetup.Options
+                    .FindIndex(o => o.Id == request.SingleSelectCustomFieldSetup.DefaultOptionId);
+                setup.DefaultOption.Should().Be(setup.Options[optionIndex]);
+            }
+        }
+
+        private static void AssertTextCustomFieldSetup(
+            CustomFieldSetupAggregate customFieldSetup,
+            CreateCustomFieldSetupOnProjectRequest request)
+        {
+            customFieldSetup.Should().BeOfType<TextCustomFieldSetupAggregate>();
+            var setup = (TextCustomFieldSetupAggregate)customFieldSetup;
+            if (request.TextCustomFieldSetup!.DefaultText is null)
+                setup.DefaultText.Should().BeNull();
+            else
+                setup.DefaultText!.Value.Should().Be(request.TextCustomFieldSetup.DefaultText);
         }
 
         private static void AssertSingleSelectOption(
             SingleSelectOption singleSelectOption,
-            CreateCustomFieldSetupOnProjectRequest.SingleSelectOptionRequest singleSelectOptionRequest,
+            CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest singleSelectOptionRequest,
             int index)
         {
             singleSelectOption.Value.Should().Be(singleSelectOptionRequest.Value);
             singleSelectOption.Color.Should().Be(singleSelectOptionRequest.Color);
-            singleSelectOption.CustomOrderPosition.Should().Be(index);
+            singleSelectOption.OrderPosition.Should().Be(index);
         }
     }
 }
