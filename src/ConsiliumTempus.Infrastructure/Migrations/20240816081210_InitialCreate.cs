@@ -590,8 +590,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ProjectTaskAggregateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectTaskAggregateId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Number = table.Column<decimal>(type: "decimal(38,9)", precision: 38, scale: 9, nullable: true),
                     SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -608,12 +607,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField.Number_ProjectTask_ProjectTaskAggregateId",
                         column: x => x.ProjectTaskAggregateId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CustomField.Number_ProjectTask_TaskId",
-                        column: x => x.TaskId,
-                        principalTable: "ProjectTask",
                         principalColumn: "Id");
                 });
 
@@ -622,8 +615,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ProjectTaskAggregateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectTaskAggregateId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Value = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -641,12 +633,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField.SingleSelect_ProjectTask_ProjectTaskAggregateId",
                         column: x => x.ProjectTaskAggregateId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CustomField.SingleSelect_ProjectTask_TaskId",
-                        column: x => x.TaskId,
-                        principalTable: "ProjectTask",
                         principalColumn: "Id");
                 });
 
@@ -655,8 +641,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ProjectTaskAggregateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectTaskAggregateId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -672,12 +657,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_CustomField.Text_ProjectTask_ProjectTaskAggregateId",
                         column: x => x.ProjectTaskAggregateId,
-                        principalTable: "ProjectTask",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CustomField.Text_ProjectTask_TaskId",
-                        column: x => x.TaskId,
                         principalTable: "ProjectTask",
                         principalColumn: "Id");
                 });
@@ -882,11 +861,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "SetupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomField.Number_TaskId",
-                table: "CustomField.Number",
-                column: "TaskId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CustomField.SingleSelect_ProjectTaskAggregateId",
                 table: "CustomField.SingleSelect",
                 column: "ProjectTaskAggregateId");
@@ -897,11 +871,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "SetupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomField.SingleSelect_TaskId",
-                table: "CustomField.SingleSelect",
-                column: "TaskId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CustomField.Text_ProjectTaskAggregateId",
                 table: "CustomField.Text",
                 column: "ProjectTaskAggregateId");
@@ -910,11 +879,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "IX_CustomField.Text_SetupId",
                 table: "CustomField.Text",
                 column: "SetupId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CustomField.Text_TaskId",
-                table: "CustomField.Text",
-                column: "TaskId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomFieldSetup.Number_AuditId",

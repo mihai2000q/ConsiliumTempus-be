@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240815112054_InitialCreate")]
+    [Migration("20240816081210_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -946,17 +946,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ProjectTaskAggregateId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("TaskId")
+                    b.Property<Guid?>("ProjectTaskAggregateId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectTaskAggregateId");
-
-                    b.HasIndex("TaskId");
 
                     b.ToTable((string)null);
 
@@ -1589,15 +1584,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     b.HasOne("ConsiliumTempus.Domain.ProjectTask.ProjectTaskAggregate", null)
                         .WithMany("CustomFields")
-                        .HasForeignKey("ProjectTaskAggregateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConsiliumTempus.Domain.ProjectTask.ProjectTaskAggregate", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId");
-
-                    b.Navigation("Task");
+                        .HasForeignKey("ProjectTaskAggregateId");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.ProjectTaskAggregate", b =>

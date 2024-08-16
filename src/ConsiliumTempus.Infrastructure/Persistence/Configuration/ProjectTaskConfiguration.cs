@@ -98,9 +98,6 @@ public sealed class CustomFieldConfiguration : IEntityTypeConfiguration<CustomFi
             .HasConversion(
                 id => id.Value,
                 value => CustomFieldId.Create(value));
-
-        builder.HasOne(cf => cf.Task)
-            .WithMany(t => t.CustomFields);
     }
 }
 
@@ -118,6 +115,7 @@ public sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<Nu
 
         builder.HasOne(ncf => ncf.Setup)
             .WithMany();
+        builder.Navigation(ncf => ncf.Setup).AutoInclude();
     }
 }
 
@@ -138,8 +136,9 @@ public sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfigurat
                 .HasColumnName(nameof(SelectedOption.Color));
         });
 
-        builder.HasOne(ncf => ncf.Setup)
+        builder.HasOne(s => s.Setup)
             .WithMany();
+        builder.Navigation(s => s.Setup).AutoInclude();
     }
 }
 
@@ -150,11 +149,12 @@ public sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<Text
         builder.ToTable(nameof(CustomField)
             .Dot(nameof(TextCustomField).Replace(nameof(CustomField), "")));
 
-        builder.OwnsOne(ncf => ncf.Text)
+        builder.OwnsOne(tcf => tcf.Text)
             .Property(n => n.Value)
             .HasColumnName(nameof(TextCustomField.Text));
 
-        builder.HasOne(ncf => ncf.Setup)
+        builder.HasOne(tcf => tcf.Setup)
             .WithMany();
+        builder.Navigation(tcf => tcf.Setup).AutoInclude();
     }
 }
