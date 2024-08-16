@@ -72,19 +72,19 @@ internal static partial class Utils
                 customField.Id.Value.Should().NotBeEmpty();
                 switch (setup)
                 {
-                    case NumberCustomFieldSetupAggregate:
+                    case NumberCustomFieldSetupAggregate numberSetup:
                         customField.Should().BeOfType<NumberCustomField>();
-                        ((NumberCustomField)customField).Number.Should().BeNull();
+                        ((NumberCustomField)customField).Number.Should().Be(numberSetup.DefaultNumber);
                         ((NumberCustomField)customField).Setup.Should().Be(setup);
                         break;
-                    case SingleSelectCustomFieldSetupAggregate:
+                    case SingleSelectCustomFieldSetupAggregate singleSelectSetup:
                         customField.Should().BeOfType<SingleSelectCustomField>();
-                        ((SingleSelectCustomField)customField).Option.Should().BeNull();
+                        ((SingleSelectCustomField)customField).Option.Should().Be(singleSelectSetup.DefaultOption);
                         ((SingleSelectCustomField)customField).Setup.Should().Be(setup);
                         break;
-                    case TextCustomFieldSetupAggregate:
+                    case TextCustomFieldSetupAggregate textSetup:
                         customField.Should().BeOfType<TextCustomField>();
-                        ((TextCustomField)customField).Text.Should().BeNull();
+                        ((TextCustomField)customField).Text.Should().Be(textSetup.DefaultText);
                         ((TextCustomField)customField).Setup.Should().Be(setup);
                         break;
                 }

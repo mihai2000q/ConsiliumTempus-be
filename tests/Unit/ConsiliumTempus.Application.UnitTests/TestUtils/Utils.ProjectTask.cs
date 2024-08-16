@@ -5,6 +5,7 @@ using ConsiliumTempus.Application.ProjectTask.Commands.Update;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
@@ -182,15 +183,20 @@ internal static partial class Utils
                     switch (customField)
                     {
                         case NumberCustomField numberCustomField:
-                            numberCustomField.Number.Should().BeNull();
+                            setup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
+                            numberCustomField.Number
+                                .Should().Be(((NumberCustomFieldSetupAggregate)setup).DefaultNumber);
                             numberCustomField.Setup.Should().Be(setup);
                             break;
                         case SingleSelectCustomField singleSelectCustomField:
-                            singleSelectCustomField.Option.Should().BeNull();
+                            setup.Should().BeOfType<SingleSelectCustomFieldSetupAggregate>();
+                            singleSelectCustomField.Option
+                                .Should().Be(((SingleSelectCustomFieldSetupAggregate)setup).DefaultOption);
                             singleSelectCustomField.Setup.Should().Be(setup);
                             break;
                         case TextCustomField textCustomField:
-                            textCustomField.Text.Should().BeNull();
+                            setup.Should().BeOfType<TextCustomFieldSetupAggregate>();
+                            textCustomField.Text.Should().Be(((TextCustomFieldSetupAggregate)setup).DefaultText);
                             textCustomField.Setup.Should().Be(setup);
                             break;
                     }
