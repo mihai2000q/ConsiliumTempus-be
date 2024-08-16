@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
@@ -66,16 +67,25 @@ internal static partial class Utils
                 switch (customField)
                 {
                     case NumberCustomField numberCustomField:
-                        customFieldSetups.Should().Contain(numberCustomField.Setup);
-                        numberCustomField.Number.Should().BeNull();
+                        var numberSetup = customFieldSetups
+                            .SingleOrDefault(s => s == numberCustomField.Setup) 
+                            as NumberCustomFieldSetupAggregate;
+                        numberSetup.Should().NotBeNull();
+                        numberCustomField.Number.Should().Be(numberSetup!.DefaultNumber);
                         break;
                     case SingleSelectCustomField singleSelectCustomField:
-                        customFieldSetups.Should().Contain(singleSelectCustomField.Setup);
-                        singleSelectCustomField.Option.Should().BeNull();
+                        var singleSelectSetup = customFieldSetups
+                                .SingleOrDefault(s => s == singleSelectCustomField.Setup) 
+                            as SingleSelectCustomFieldSetupAggregate;
+                        singleSelectSetup.Should().NotBeNull();
+                        singleSelectCustomField.Option.Should().Be(singleSelectSetup!.DefaultOption);
                         break;
                     case TextCustomField textCustomField:
-                        customFieldSetups.Should().Contain(textCustomField.Setup);
-                        textCustomField.Text.Should().BeNull();
+                        var textSetup = customFieldSetups
+                                .SingleOrDefault(s => s == textCustomField.Setup) 
+                            as TextCustomFieldSetupAggregate;
+                        textSetup.Should().NotBeNull();
+                        textCustomField.Text.Should().Be(textSetup!.DefaultText);
                         break;
                 }
             });

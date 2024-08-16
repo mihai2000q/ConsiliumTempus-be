@@ -63,18 +63,24 @@ internal static partial class Utils
                 {
                     case CustomFieldType.Number:
                         customField.Should().BeOfType<NumberCustomField>();
+                        customFieldSetup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
                         ((NumberCustomField)customField).Setup.Should().Be(customFieldSetup);
-                        ((NumberCustomField)customField).Number.Should().BeNull();
+                        ((NumberCustomField)customField).Number
+                            .Should().Be(((NumberCustomFieldSetupAggregate)customFieldSetup).DefaultNumber);
                         break;
                     case CustomFieldType.SingleSelect:
                         customField.Should().BeOfType<SingleSelectCustomField>();
+                        customFieldSetup.Should().BeOfType<SingleSelectCustomFieldSetupAggregate>();
                         ((SingleSelectCustomField)customField).Setup.Should().Be(customFieldSetup);
-                        ((SingleSelectCustomField)customField).Option.Should().BeNull();
+                        ((SingleSelectCustomField)customField).Option
+                            .Should().Be(((SingleSelectCustomFieldSetupAggregate)customFieldSetup).DefaultOption);
                         break;
                     case CustomFieldType.Text:
                         customField.Should().BeOfType<TextCustomField>();
+                        customFieldSetup.Should().BeOfType<TextCustomFieldSetupAggregate>();
                         ((TextCustomField)customField).Setup.Should().Be(customFieldSetup);
-                        ((TextCustomField)customField).Text.Should().BeNull();
+                        ((TextCustomField)customField).Text
+                            .Should().Be(((TextCustomFieldSetupAggregate)customFieldSetup).DefaultText);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(request));
