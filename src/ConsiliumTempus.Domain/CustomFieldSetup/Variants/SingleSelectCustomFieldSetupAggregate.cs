@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.CustomFieldSetup.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
@@ -19,6 +18,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
 
     private SingleSelectCustomFieldSetupAggregate(
         List<SingleSelectOption> options,
+        SingleSelectOption? defaultOption,
         CustomFieldSetupId id,
         Name name,
         Description description,
@@ -27,17 +27,20 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
         Audit audit) : base(id, name, description, workspace, project, audit)
     {
         _options = options;
+        DefaultOption = defaultOption;
     }
 
     private List<SingleSelectOption> _options = [];
 
+    public SingleSelectOption? DefaultOption { get; private set; }
     public IReadOnlyList<SingleSelectOption> Options => _options
-        .OrderBy(o => o.CustomOrderPosition)
+        .OrderBy(o => o.OrderPosition)
         .ToList()
         .AsReadOnly();
 
     public static SingleSelectCustomFieldSetupAggregate Create(
         List<SingleSelectOption> options,
+        SingleSelectOption? defaultOption,
         Name name,
         Description description,
         WorkspaceAggregate? workspace,
@@ -46,6 +49,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
     {
         var setup = new SingleSelectCustomFieldSetupAggregate(
             options,
+            defaultOption,
             CustomFieldSetupId.CreateUnique(),
             name,
             description,
@@ -60,11 +64,13 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
 
     public void Update(
         List<SingleSelectOption> options,
+        SingleSelectOption? defaultOption,
         Name name,
         Description description,
         UserAggregate updatedBy)
     {
         _options = options;
+        DefaultOption = defaultOption;
         base.Update(name, description, updatedBy);
     }
 }

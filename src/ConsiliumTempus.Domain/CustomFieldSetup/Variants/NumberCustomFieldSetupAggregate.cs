@@ -18,6 +18,7 @@ public sealed class NumberCustomFieldSetupAggregate : CustomFieldSetupAggregate
 
     private NumberCustomFieldSetupAggregate(
         NumberCustomFieldSettings settings,
+        DecimalNumber? defaultNumber,
         CustomFieldSetupId id,
         Name name,
         Description description,
@@ -26,12 +27,15 @@ public sealed class NumberCustomFieldSetupAggregate : CustomFieldSetupAggregate
         Audit audit) : base(id, name, description, workspace, project, audit)
     {
         Settings = settings;
+        DefaultNumber = defaultNumber;
     }
 
-    public NumberCustomFieldSettings Settings { get; init; } = null!;
+    public NumberCustomFieldSettings Settings { get; private set; } = null!;
+    public DecimalNumber? DefaultNumber { get; private set; }
 
     public static NumberCustomFieldSetupAggregate Create(
         NumberCustomFieldSettings settings,
+        DecimalNumber? defaultNumber,
         Name name,
         Description description,
         WorkspaceAggregate? workspace,
@@ -40,6 +44,7 @@ public sealed class NumberCustomFieldSetupAggregate : CustomFieldSetupAggregate
     {
         var setup = new NumberCustomFieldSetupAggregate(
             settings,
+            defaultNumber,
             CustomFieldSetupId.CreateUnique(),
             name,
             description,
@@ -50,5 +55,17 @@ public sealed class NumberCustomFieldSetupAggregate : CustomFieldSetupAggregate
         setup.AddDomainEvent(new CustomFieldSetupCreated(setup));
 
         return setup;
+    }
+
+    public void Update(
+        NumberCustomFieldSettings settings,
+        DecimalNumber? defaultNumber,
+        Name name,
+        Description description,
+        UserAggregate updatedBy)
+    {
+        Settings = settings;
+        DefaultNumber = defaultNumber;
+        base.Update(name, description, updatedBy);
     }
 }

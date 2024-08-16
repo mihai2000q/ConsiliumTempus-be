@@ -1,25 +1,25 @@
 using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Models;
 
-namespace ConsiliumTempus.Domain.ProjectTask.ValueObjects;
+namespace ConsiliumTempus.Domain.Common.ValueObjects;
 
-public sealed class Text : ValueObject
+public sealed class DecimalNumber : ValueObject
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
-    private Text()
+    private DecimalNumber()
     {
     }
 
-    private Text(string value)
+    private DecimalNumber(decimal value)
     {
         Value = value;
     }
 
-    public string Value { get; } = string.Empty;
+    public decimal Value { get; }
 
-    public static Text Create(string value)
+    public static DecimalNumber Create(decimal value)
     {
-        return new Text(value);
+        return new DecimalNumber(value);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

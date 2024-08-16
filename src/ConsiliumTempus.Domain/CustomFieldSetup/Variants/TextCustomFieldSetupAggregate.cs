@@ -17,6 +17,7 @@ public sealed class TextCustomFieldSetupAggregate : CustomFieldSetupAggregate
     }
 
     private TextCustomFieldSetupAggregate(
+        Text? defaultText,
         CustomFieldSetupId id,
         Name name,
         Description description,
@@ -24,9 +25,13 @@ public sealed class TextCustomFieldSetupAggregate : CustomFieldSetupAggregate
         ProjectAggregate? project,
         Audit audit) : base(id, name, description, workspace, project, audit)
     {
+        DefaultText = defaultText;
     }
 
+    public Text? DefaultText { get; private set; }
+
     public static TextCustomFieldSetupAggregate Create(
+        Text? defaultText,
         Name name,
         Description description,
         WorkspaceAggregate? workspace,
@@ -34,6 +39,7 @@ public sealed class TextCustomFieldSetupAggregate : CustomFieldSetupAggregate
         UserAggregate createdBy)
     {
         var setup = new TextCustomFieldSetupAggregate(
+            defaultText,
             CustomFieldSetupId.CreateUnique(),
             name,
             description,
@@ -44,5 +50,15 @@ public sealed class TextCustomFieldSetupAggregate : CustomFieldSetupAggregate
         setup.AddDomainEvent(new CustomFieldSetupCreated(setup));
 
         return setup;
+    }
+
+    public void Update(
+        Text? defaultText,
+        Name name,
+        Description description,
+        UserAggregate updatedBy)
+    {
+        DefaultText = defaultText;
+        base.Update(name, description, updatedBy);
     }
 }

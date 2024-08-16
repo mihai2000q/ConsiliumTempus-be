@@ -11,9 +11,4 @@ public static partial class PropertiesValidation
             public const short DecimalsMaximum = 9;
         }
     }
-
-    public static class SingleSelectOption
-    {
-        public const short ValueMaximumLength = 50;
-    }
 }
