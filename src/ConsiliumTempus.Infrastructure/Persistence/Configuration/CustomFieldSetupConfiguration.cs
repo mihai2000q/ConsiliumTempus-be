@@ -2,7 +2,6 @@
 using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup;
-using ConsiliumTempus.Domain.CustomFieldSetup.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Infrastructure.Extensions;
@@ -37,10 +36,12 @@ public sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<Cus
             .HasColumnName(nameof(Description));
 
         builder.HasOne(cfs => cfs.Workspace)
-            .WithMany(w => w.CustomFieldSetups);
+            .WithMany(w => w.CustomFieldSetups)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(cfs => cfs.Project)
-            .WithMany(p => p.CustomFieldSetups);
+            .WithMany(p => p.CustomFieldSetups)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(cfs => cfs.Audit)
             .WithMany();
@@ -67,31 +68,36 @@ public sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfigurati
             nb.Property(n => n.Rounding)
                 .HasColumnName(nameof(NumberCustomFieldSettings.Rounding));
         });
+
+        builder.OwnsOne(n => n.DefaultNumber)
+            .Property(dn => dn.Value)
+            .HasPrecision(38, PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum)
+            .HasColumnName(nameof(NumberCustomFieldSetupAggregate.DefaultNumber));
     }
 }
 
-public sealed class SingleSelectCustomFieldSetupConfiguration : IEntityTypeConfiguration<SingleSelectCustomFieldSetupAggregate>
+public sealed class
+    SingleSelectCustomFieldSetupConfiguration : IEntityTypeConfiguration<SingleSelectCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<SingleSelectCustomFieldSetupAggregate> builder)
     {
-        builder.ToTable(nameof(CustomFieldSetupAggregate)
+        var tableName = nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dot(CustomFieldType.SingleSelect.ToString()));
+            .Dot(CustomFieldType.SingleSelect.ToString());
+        builder.ToTable(tableName);
 
-        builder.OwnsMany(s => s.Options, ConfigureOptions);
-    }
+        builder.HasMany(s => s.Options)
+            .WithOne()
+            .HasForeignKey("SetupId")
+            .IsRequired();
+        builder.Navigation(s => s.Options).AutoInclude();
 
-    private static void ConfigureOptions(OwnedNavigationBuilder<SingleSelectCustomFieldSetupAggregate, SingleSelectOption> builder)
-    {
-        builder.ToTable(nameof(SingleSelectOption));
-
-        builder.HasKey(o => o.Id);
-
-        builder.Property(o => o.Value)
-            .HasMaxLength(PropertiesValidation.SingleSelectOption.ValueMaximumLength);
-
-        builder.Property(o => o.Color);
-        builder.Property(o => o.CustomOrderPosition);
+        builder.HasOne(s => s.DefaultOption)
+            .WithOne()
+            .HasForeignKey<SingleSelectCustomFieldSetupAggregate>(
+                nameof(SingleSelectCustomFieldSetupAggregate.DefaultOption).ToId())
+            .IsRequired(false);
+        builder.Navigation(s => s.DefaultOption).AutoInclude();
     }
 }
 
@@ -102,5 +108,9 @@ public sealed class TextCustomFieldSetupConfiguration : IEntityTypeConfiguration
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
             .Dot(CustomFieldType.Text.ToString()));
+
+        builder.OwnsOne(n => n.DefaultText)
+            .Property(dt => dt.Value)
+            .HasColumnName(nameof(TextCustomFieldSetupAggregate.DefaultText));
     }
 }

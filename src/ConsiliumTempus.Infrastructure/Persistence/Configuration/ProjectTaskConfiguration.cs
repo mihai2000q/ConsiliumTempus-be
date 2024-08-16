@@ -60,7 +60,10 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
         builder.Navigation(t => t.Comments).AutoInclude(false);
 
         builder.HasMany(t => t.CustomFields)
-            .WithOne();
+            .WithOne()
+            .HasForeignKey(nameof(ProjectTaskAggregate).TruncateAggregate().ToId())
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     private static void ConfigureComments(OwnedNavigationBuilder<ProjectTaskAggregate, ProjectTaskComment> builder)
@@ -111,7 +114,8 @@ public sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<Nu
         builder.OwnsOne(ncf => ncf.Number)
             .Property(n => n.Value)
             .HasColumnName(nameof(NumberCustomField.Number))
-            .HasPrecision(38, PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum);
+            .HasPrecision(38, PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum)
+            .IsRequired();
 
         builder.HasOne(ncf => ncf.Setup)
             .WithMany();
@@ -151,9 +155,10 @@ public sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<Text
 
         builder.OwnsOne(tcf => tcf.Text)
             .Property(n => n.Value)
-            .HasColumnName(nameof(TextCustomField.Text));
+            .HasColumnName(nameof(TextCustomField.Text))
+            .IsRequired();
 
-        builder.HasOne(tcf => tcf.Setup)
+        builder.HasOne(t => t.Setup)
             .WithMany();
         builder.Navigation(tcf => tcf.Setup).AutoInclude();
     }
