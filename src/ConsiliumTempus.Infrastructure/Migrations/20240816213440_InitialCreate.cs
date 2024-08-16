@@ -625,8 +625,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProjectTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OptionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -867,6 +866,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "SetupId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CustomField.SingleSelect_OptionId",
+                table: "CustomField.SingleSelect",
+                column: "OptionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CustomField.SingleSelect_ProjectTaskId",
                 table: "CustomField.SingleSelect",
                 column: "ProjectTaskId");
@@ -1086,6 +1090,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 principalTable: "CustomFieldSetup.SingleSelect",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_CustomField.SingleSelect_SingleSelectOption_OptionId",
+                table: "CustomField.SingleSelect",
+                column: "OptionId",
+                principalTable: "SingleSelectOption",
+                principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_CustomFieldSetup.SingleSelect_SingleSelectOption_DefaultOptionId",

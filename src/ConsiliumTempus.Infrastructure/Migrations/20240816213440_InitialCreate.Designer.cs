@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240816210607_InitialCreate")]
+    [Migration("20240816213440_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -1190,8 +1190,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     b.HasBaseType("ConsiliumTempus.Domain.ProjectTask.Entities.CustomField");
 
+                    b.Property<Guid?>("OptionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("SetupId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("OptionId");
 
                     b.HasIndex("SetupId");
 
@@ -2182,35 +2187,15 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.SingleSelectCustomField", b =>
                 {
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.SingleSelectOption", "Option")
+                        .WithMany()
+                        .HasForeignKey("OptionId");
+
                     b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.Variants.SingleSelectCustomFieldSetupAggregate", "Setup")
                         .WithMany()
                         .HasForeignKey("SetupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.OwnsOne("ConsiliumTempus.Domain.ProjectTask.ValueObjects.SelectedOption", "Option", b1 =>
-                        {
-                            b1.Property<Guid>("SingleSelectCustomFieldId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Color")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Color");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)")
-                                .HasColumnName("Value");
-
-                            b1.HasKey("SingleSelectCustomFieldId");
-
-                            b1.ToTable("CustomField.SingleSelect");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SingleSelectCustomFieldId");
-                        });
 
                     b.Navigation("Option");
 

@@ -114,8 +114,7 @@ public sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<Nu
         builder.OwnsOne(ncf => ncf.Number)
             .Property(n => n.Value)
             .HasColumnName(nameof(NumberCustomField.Number))
-            .HasPrecision(38, PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum)
-            .IsRequired();
+            .HasPrecision(38, PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum);
 
         builder.HasOne(ncf => ncf.Setup)
             .WithMany();
@@ -130,15 +129,9 @@ public sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfigurat
         builder.ToTable(nameof(CustomField)
             .Dot(nameof(SingleSelectCustomField).Replace(nameof(CustomField), "")));
 
-        builder.OwnsOne(ncf => ncf.Option, ob =>
-        {
-            ob.Property(o => o.Value)
-                .HasMaxLength(PropertiesValidation.SingleSelectOption.ValueMaximumLength)
-                .HasColumnName(nameof(SelectedOption.Value));
-
-            ob.Property(o => o.Color)
-                .HasColumnName(nameof(SelectedOption.Color));
-        });
+        builder.HasOne(s => s.Option)
+            .WithMany();
+        builder.Navigation(s => s.Option).AutoInclude();
 
         builder.HasOne(s => s.Setup)
             .WithMany();
@@ -155,8 +148,7 @@ public sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<Text
 
         builder.OwnsOne(tcf => tcf.Text)
             .Property(n => n.Value)
-            .HasColumnName(nameof(TextCustomField.Text))
-            .IsRequired();
+            .HasColumnName(nameof(TextCustomField.Text));
 
         builder.HasOne(t => t.Setup)
             .WithMany();
