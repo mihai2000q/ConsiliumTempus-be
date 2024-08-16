@@ -1,5 +1,7 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
+using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
+using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup.Entities;
 using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint.Entities;
@@ -7,6 +9,7 @@ using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
 using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
@@ -28,7 +31,8 @@ internal class ProjectTaskData : ITestData
             Projects,
             ProjectSprints,
             ProjectStages,
-            ProjectTasks
+            ProjectTasks,
+            CustomFieldSetups
         ];
     }
 
@@ -263,5 +267,38 @@ internal class ProjectTaskData : ITestData
             ProjectStages[^1],
             "More Private Task 2",
             customOrderPosition: 2),
+    ];
+    
+    public static CustomFieldSetupAggregate[] CustomFieldSetups =
+    [
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            Projects[0],
+            AuditFactory.Create(Users[0]),
+            "A number field"),
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            Projects[0],
+            AuditFactory.Create(Users[0]),
+            name: "Budget"),
+        CustomFieldSetupFactory.CreateText(
+            null,
+            Projects[0],
+            AuditFactory.Create(Users[0]),
+            "Notes field"),
+        CustomFieldSetupFactory.CreateSingleSelect(
+            null,
+            Projects[0],
+            AuditFactory.Create(Users[0]),
+            [
+                SingleSelectOptionFactory.Create(), 
+                SingleSelectOptionFactory.Create(customOrderPosition: 1), 
+            ],
+            "Select only one field"),
+        CustomFieldSetupFactory.CreateText(
+            null,
+            Projects[0],
+            AuditFactory.Create(Users[0]),
+            name: "Another text field setup"),
     ];
 }

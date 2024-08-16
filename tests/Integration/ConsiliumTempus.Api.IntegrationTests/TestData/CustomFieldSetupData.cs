@@ -3,11 +3,17 @@ using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
 using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup.Entities;
 using ConsiliumTempus.Common.IntegrationTests.Project;
+using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
+using ConsiliumTempus.Common.IntegrationTests.ProjectSprint.Entities;
+using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
 using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.ProjectSprint;
+using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -23,6 +29,9 @@ internal class CustomFieldSetupData : ITestData
             Workspaces,
             Memberships,
             Projects,
+            ProjectSprints,
+            ProjectStages,
+            ProjectTasks,
             CustomFieldSetups
         ];
     }
@@ -153,6 +162,131 @@ internal class CustomFieldSetupData : ITestData
             "Something More Private",
             isPrivate: true,
             allowedMembers: [Users[3]]),
+    ];
+    
+    public static ProjectSprintAggregate[] ProjectSprints { get; } =
+    [
+        ProjectSprintFactory.Create(
+            Projects[0],
+            Audit.Create(Users[0]),
+            "Sprint 1 - Qualify on Quarters",
+            new DateOnly(2024, 01, 1),
+            new DateOnly(2024, 01, 15)),
+
+        ProjectSprintFactory.Create(
+            Projects[1],
+            AuditFactory.Create(Users[0]),
+            "Not Private Project Sprint"),
+        ProjectSprintFactory.Create(
+            Projects[2],
+            AuditFactory.Create(Users[0]),
+            "Private Project Sprint"),
+        ProjectSprintFactory.Create(
+            Projects[3],
+            AuditFactory.Create(Users[3]),
+            "More Private Project Sprint"),
+    ];
+
+    public static ProjectStage[] ProjectStages { get; } =
+    [
+        ProjectStageFactory.Create(
+            ProjectSprints[0],
+            AuditFactory.Create(Users[0]),
+            "To do"),
+        ProjectStageFactory.Create(
+            ProjectSprints[0],
+            AuditFactory.Create(Users[0]),
+            "In Progress",
+            1),
+        ProjectStageFactory.Create(
+            ProjectSprints[0],
+            AuditFactory.Create(Users[0]),
+            "Done",
+            2),
+
+        ProjectStageFactory.Create(
+            ProjectSprints[1],
+            AuditFactory.Create(Users[0]),
+            "To do"),
+        ProjectStageFactory.Create(
+            ProjectSprints[2],
+            AuditFactory.Create(Users[0]),
+            "To do"),
+        ProjectStageFactory.Create(
+            ProjectSprints[3],
+            AuditFactory.Create(Users[3]),
+            "To do"),
+    ];
+
+    public static ProjectTaskAggregate[] ProjectTasks { get; } =
+    [
+        ProjectTaskFactory.Create(
+            Users[0],
+            ProjectStages[0],
+            "Should do more dribbling"),
+        ProjectTaskFactory.Create(
+            Users[0],
+            ProjectStages[0],
+            "Should add more stepping to my shots",
+            customOrderPosition: 1,
+            assignee: Users[1],
+            isCompleted: true),
+        ProjectTaskFactory.Create(
+            Users[3],
+            ProjectStages[0],
+            "Should tell Michael to PASS MOORE!!",
+            assignee: Users[0],
+            customOrderPosition: 2),
+        ProjectTaskFactory.Create(
+            Users[3],
+            ProjectStages[0],
+            "Tell Michael to DRIBBLE LESS!!",
+            assignee: Users[0],
+            customOrderPosition: 3),
+
+        ProjectTaskFactory.Create(
+            Users[0],
+            ProjectStages[1],
+            "We want to win the cup"),
+        ProjectTaskFactory.Create(
+            Users[0],
+            ProjectStages[1],
+            "We want to win them all",
+            customOrderPosition: 1),
+        ProjectTaskFactory.Create(
+            Users[0],
+            ProjectStages[1],
+            "We want to go to coffee after",
+            customOrderPosition: 2),
+
+        ProjectTaskFactory.Create(
+            Users[0],
+            ProjectStages[^3],
+            "Not Private Task"),
+        ProjectTaskFactory.Create(
+            Users[0],
+            ProjectStages[^2],
+            "Private Task"),
+        ProjectTaskFactory.Create(
+            Users[3],
+            ProjectStages[^1],
+            "More Private Task"),
+
+        ProjectTaskFactory.Create(
+            Users[0],
+            ProjectStages[^3],
+            "Not Private Task 2",
+            customOrderPosition: 2),
+        ProjectTaskFactory.Create(
+            Users[0],
+            ProjectStages[^2],
+            "Private Task",
+            customOrderPosition: 2),
+        ProjectTaskFactory.Create(
+            Users[3],
+            ProjectStages[^1],
+            "More Private Task 2",
+            customOrderPosition: 2),
     ];
 
     public static CustomFieldSetupAggregate[] CustomFieldSetups =

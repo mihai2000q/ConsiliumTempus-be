@@ -110,14 +110,23 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.CustomFieldSetups.Should().HaveCount(CustomFieldSetupData.CustomFieldSetups.Length + 1);
         var createdCustomFieldSetup = await dbContext.CustomFieldSetups
+            .AsNoTracking()
             .Include(cfs => cfs.Audit)
             .Include(cfs => cfs.Workspace)
             .Include(cfs => cfs.Project)
             .SingleAsync(ps => ps.Name == Name.Create(request.Name));
+
+        var tasks = await dbContext.ProjectTasks
+            .AsNoTracking()
+            .Include(t => t.CustomFields)
+            .Where(t => t.Stage.Sprint.Project == project)
+            .ToListAsync();
+        
         Utils.CustomFieldSetup.AssertCreateOnProject(
             request,
             createdCustomFieldSetup,
             user,
-            project);
+            project,
+            tasks);
     }
 }

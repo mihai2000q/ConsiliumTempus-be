@@ -6,10 +6,12 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -48,7 +50,8 @@ internal static partial class Utils
         internal static void AssertCreation(
             ProjectTaskAggregate task,
             CreateProjectTaskRequest request,
-            UserAggregate user)
+            UserAggregate user,
+            List<CustomFieldSetupAggregate> customFieldSetups)
         {
             task.Name.Value.Should().Be(request.Name);
             task.CustomOrderPosition.Value.Should().Be(request.OnTop ? 0 : task.Stage.Tasks.Count - 1);
@@ -56,6 +59,26 @@ internal static partial class Utils
             task.Assignee.Should().BeNull();
             task.Stage.Id.Value.Should().Be(request.ProjectStageId);
             task.Stage.Tasks.ShouldBeOrdered();
+
+            task.CustomFields.Should().HaveSameCount(customFieldSetups);
+            task.CustomFields.Should().AllSatisfy(customField =>
+            {
+                switch (customField)
+                {
+                    case NumberCustomField numberCustomField:
+                        customFieldSetups.Should().Contain(numberCustomField.Setup);
+                        numberCustomField.Number.Should().BeNull();
+                        break;
+                    case SingleSelectCustomField singleSelectCustomField:
+                        customFieldSetups.Should().Contain(singleSelectCustomField.Setup);
+                        singleSelectCustomField.Option.Should().BeNull();
+                        break;
+                    case TextCustomField textCustomField:
+                        customFieldSetups.Should().Contain(textCustomField.Setup);
+                        textCustomField.Text.Should().BeNull();
+                        break;
+                }
+            });
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

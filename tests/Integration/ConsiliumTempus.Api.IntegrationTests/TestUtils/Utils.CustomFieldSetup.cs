@@ -5,6 +5,8 @@ using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -27,7 +29,8 @@ internal static partial class Utils
             CreateCustomFieldSetupOnProjectRequest request,
             CustomFieldSetupAggregate customFieldSetup,
             UserAggregate user,
-            ProjectAggregate project)
+            ProjectAggregate project,
+            List<ProjectTaskAggregate> tasks)
         {
             customFieldSetup.Id.Value.Should().NotBeEmpty();
             customFieldSetup.Name.Value.Should().Be(request.Name);
@@ -50,6 +53,32 @@ internal static partial class Utils
                 default:
                     throw new ArgumentOutOfRangeException(nameof(request));
             }
+
+            tasks.Should().AllSatisfy(task =>
+            {
+                task.CustomFields.Should().HaveCount(1);
+                var customField = task.CustomFields[0];
+                switch (customFieldType)
+                {
+                    case CustomFieldType.Number:
+                        customField.Should().BeOfType<NumberCustomField>();
+                        ((NumberCustomField)customField).Setup.Should().Be(customFieldSetup);
+                        ((NumberCustomField)customField).Number.Should().BeNull();
+                        break;
+                    case CustomFieldType.SingleSelect:
+                        customField.Should().BeOfType<SingleSelectCustomField>();
+                        ((SingleSelectCustomField)customField).Setup.Should().Be(customFieldSetup);
+                        ((SingleSelectCustomField)customField).Option.Should().BeNull();
+                        break;
+                    case CustomFieldType.Text:
+                        customField.Should().BeOfType<TextCustomField>();
+                        ((TextCustomField)customField).Setup.Should().Be(customFieldSetup);
+                        ((TextCustomField)customField).Text.Should().BeNull();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(request));
+                }
+            });
         }
 
         private static void AssertCustomFieldSetup(
