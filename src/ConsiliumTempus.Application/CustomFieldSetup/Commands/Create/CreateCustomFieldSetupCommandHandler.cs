@@ -1,10 +1,11 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup;
-using ConsiliumTempus.Domain.CustomFieldSetup.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
@@ -67,9 +68,10 @@ public sealed class CreateCustomFieldSetupCommandHandler(
     {
         return NumberCustomFieldSetupAggregate.Create(
             NumberCustomFieldSettings.Create(
-                command.NumberSettings!.CurrencyCode,
-                (short)command.NumberSettings!.Decimals,
-                command.NumberSettings!.Rounding),
+                command.NumberCustomFieldSetup!.Settings.CurrencyCode,
+                (short)command.NumberCustomFieldSetup!.Settings.Decimals,
+                command.NumberCustomFieldSetup!.Settings.Rounding),
+            command.NumberCustomFieldSetup!.DefaultNumber.IfNotNull(DecimalNumber.Create),
             Name.Create(command.Name),
             Description.Create(command.Description),
             _workspace,
@@ -81,13 +83,23 @@ public sealed class CreateCustomFieldSetupCommandHandler(
         CreateCustomFieldSetupCommand command,
         UserAggregate user)
     {
+        var options = command.SingleSelectCustomFieldSetup!.Options.Select((o, index) =>
+                SingleSelectOption.Create(
+                    o.Value,
+                    o.Color,
+                    index))
+            .ToList();
+
+        var defaultOption = command.SingleSelectCustomFieldSetup!.DefaultOptionId.IfNotNull(optionId =>
+        {
+            var optionIndex = command.SingleSelectCustomFieldSetup.Options
+                .FindIndex(x => x.Id == optionId);
+            return options[optionIndex];
+        });
+
         return SingleSelectCustomFieldSetupAggregate.Create(
-            command.SingleSelectOptions!.Select((o, index) =>
-                    SingleSelectOption.Create(
-                        o.Value,
-                        o.Color,
-                        index))
-                .ToList(),
+            options,
+            defaultOption,
             Name.Create(command.Name),
             Description.Create(command.Description),
             _workspace,
@@ -100,6 +112,7 @@ public sealed class CreateCustomFieldSetupCommandHandler(
         UserAggregate user)
     {
         return TextCustomFieldSetupAggregate.Create(
+            command.TextCustomFieldSetup!.DefaultText.IfNotNull(Text.Create),
             Name.Create(command.Name),
             Description.Create(command.Description),
             _workspace,

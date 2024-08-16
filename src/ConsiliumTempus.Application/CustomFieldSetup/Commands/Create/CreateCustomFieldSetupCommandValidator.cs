@@ -24,38 +24,64 @@ public sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<C
         RuleFor(c => c.Type)
             .IsEnumName(typeof(CustomFieldType), false);
 
+        // Number Custom Field Setup
         When(c => c.Type.Equals(CustomFieldType.Number.ToString(), StringComparison.CurrentCultureIgnoreCase),
             () =>
             {
-                RuleFor(c => c.NumberSettings)
+                RuleFor(c => c.NumberCustomFieldSetup)
                     .NotNull();
 
-                When(c => c.NumberSettings is not null, () =>
+                When(c => c.NumberCustomFieldSetup is not null, () =>
                 {
-                    RuleFor(c => c.NumberSettings!.CurrencyCode)
+                    RuleFor(c => c.NumberCustomFieldSetup!.Settings.CurrencyCode)
                         .IsCurrencyCode();
 
-                    RuleFor(c => c.NumberSettings!.Decimals)
+                    RuleFor(c => c.NumberCustomFieldSetup!.Settings.Decimals)
                         .GreaterThanOrEqualTo(0)
                         .LessThanOrEqualTo(PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum);
                 });
             });
 
+        // Single Select Custom Field Setup
         When(c => c.Type.Equals(CustomFieldType.SingleSelect.ToString(), StringComparison.CurrentCultureIgnoreCase),
             () =>
             {
-                RuleFor(c => c.SingleSelectOptions)
-                    .NotEmpty();
+                RuleFor(c => c.SingleSelectCustomFieldSetup)
+                    .NotNull();
 
-                RuleForEach(c => c.SingleSelectOptions).ChildRules(option =>
+                When(c => c.SingleSelectCustomFieldSetup is not null, () =>
                 {
-                    option.RuleFor(o => o.Value)
-                        .NotEmpty()
-                        .MaximumLength(PropertiesValidation.SingleSelectOption.ValueMaximumLength);
+                    RuleForEach(c => c.SingleSelectCustomFieldSetup!.Options).ChildRules(option =>
+                    {
+                        option.RuleFor(o => o.Id)
+                            .NotEmpty();
 
-                    option.RuleFor(o => o.Color)
-                        .IsColor();
+                        option.RuleFor(o => o.Value)
+                            .NotEmpty()
+                            .MaximumLength(PropertiesValidation.SingleSelectOption.ValueMaximumLength);
+
+                        option.RuleFor(o => o.Color)
+                            .IsColor();
+                    });
+
+                    When(c => c.SingleSelectCustomFieldSetup!.DefaultOptionId is not null, () =>
+                    {
+                        RuleFor(c => c.SingleSelectCustomFieldSetup)
+                            .Must(c => c!.Options
+                                .FindAll(o => o.Id == c.DefaultOptionId)
+                                .Count == 1)
+                            .WithName(nameof(CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetup)
+                                .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetup.DefaultOptionId)));
+                    });
                 });
+            });
+
+        // Text Custom Field Setup
+        When(c => c.Type.Equals(CustomFieldType.Text.ToString(), StringComparison.CurrentCultureIgnoreCase),
+            () =>
+            {
+                RuleFor(c => c.TextCustomFieldSetup)
+                    .NotNull();
             });
     }
 }

@@ -12,8 +12,9 @@ public static class CustomFieldSetupCommandFactory
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
         CustomFieldType type = CustomFieldType.Text,
-        CreateCustomFieldSetupCommand.NumberSettingsCommand? numberSettings = null,
-        List<CreateCustomFieldSetupCommand.SingleSelectOptionCommand>? singleSelectOptions = null)
+        CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand? numberCustomFieldSetup = null,
+        CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand? singleSelectCustomFieldSetup = null,
+        CreateCustomFieldSetupCommand.CreateTextCustomFieldSetupCommand? textCustomFieldSetup = null)
     {
         return new CreateCustomFieldSetupCommand(
             workspaceId,
@@ -21,8 +22,9 @@ public static class CustomFieldSetupCommandFactory
             name,
             description,
             type.ToString(),
-            numberSettings,
-            singleSelectOptions);
+            numberCustomFieldSetup,
+            singleSelectCustomFieldSetup,
+            textCustomFieldSetup);
     }
 
     public static CreateCustomFieldSetupCommand CreateCreateCustomFieldSetupCommandWithType(string type)
@@ -34,6 +36,7 @@ public static class CustomFieldSetupCommandFactory
             Constants.CustomFieldSetup.Description,
             type,
             null,
-            null);
+            null,
+            new CreateCustomFieldSetupCommand.CreateTextCustomFieldSetupCommand(null));
     }
 }

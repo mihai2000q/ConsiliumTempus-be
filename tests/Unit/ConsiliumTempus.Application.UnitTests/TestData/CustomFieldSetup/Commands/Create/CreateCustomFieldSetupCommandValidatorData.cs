@@ -22,7 +22,8 @@ internal static class CreateCustomFieldSetupCommandValidatorData
                 "This field will represent some notes",
                 CustomFieldType.Text.ToString().ToLower(),
                 null,
-                null);
+                null,
+                new CreateCustomFieldSetupCommand.CreateTextCustomFieldSetupCommand(null));
             Add(command);
         }
     }
@@ -33,7 +34,7 @@ internal static class CreateCustomFieldSetupCommandValidatorData
         {
             var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand();
             Add(command, nameof(command.WorkspaceId).Dot(nameof(command.ProjectId)));
-            
+
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 Guid.Empty,
                 Guid.Empty);
@@ -69,208 +70,350 @@ internal static class CreateCustomFieldSetupCommandValidatorData
         }
     }
 
-    internal class GetInvalidNumberSettingsCommands : TheoryData<CreateCustomFieldSetupCommand, string>
+    internal class GetInvalidNumberCustomFieldSetupCommands : TheoryData<CreateCustomFieldSetupCommand, string>
     {
-        public GetInvalidNumberSettingsCommands()
+        public GetInvalidNumberCustomFieldSetupCommands()
         {
             var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.Number,
-                numberSettings: null);
-            Add(command, nameof(command.NumberSettings));
+                numberCustomFieldSetup: null);
+            Add(command, nameof(command.NumberCustomFieldSetup));
 
             // Currency Code
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.Number,
-                numberSettings: new CreateCustomFieldSetupCommand.NumberSettingsCommand(
-                    "",
-                    0,
-                    true));
-            Add(command, nameof(command.NumberSettings).Dot(nameof(command.NumberSettings.CurrencyCode)));
+                numberCustomFieldSetup: new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand(
+                    new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand.NumberSettingsCommand(
+                        "",
+                        0,
+                        true),
+                    null));
+            Add(command, nameof(command.NumberCustomFieldSetup)
+                .Dot(nameof(command.NumberCustomFieldSetup.Settings)));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.Number,
-                numberSettings: new CreateCustomFieldSetupCommand.NumberSettingsCommand(
-                    "usd",
-                    0,
-                    false));
-            Add(command, nameof(command.NumberSettings).Dot(nameof(command.NumberSettings.CurrencyCode)));
+                numberCustomFieldSetup: new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand(
+                    new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand.NumberSettingsCommand(
+                        "usd",
+                        0,
+                        true),
+                    null));
+            Add(command, nameof(command.NumberCustomFieldSetup)
+                .Dot(nameof(command.NumberCustomFieldSetup.Settings)));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.Number,
-                numberSettings: new CreateCustomFieldSetupCommand.NumberSettingsCommand(
-                    "USd",
-                    0,
-                    true));
-            Add(command, nameof(command.NumberSettings).Dot(nameof(command.NumberSettings.CurrencyCode)));
+                numberCustomFieldSetup: new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand(
+                    new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand.NumberSettingsCommand(
+                        "USd",
+                        0,
+                        true),
+                    null));
+            Add(command, nameof(command.NumberCustomFieldSetup)
+                .Dot(nameof(command.NumberCustomFieldSetup.Settings)));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.Number,
-                numberSettings: new CreateCustomFieldSetupCommand.NumberSettingsCommand(
-                    "USdd",
-                    0,
-                    true));
-            Add(command, nameof(command.NumberSettings).Dot(nameof(command.NumberSettings.CurrencyCode)));
+                numberCustomFieldSetup: new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand(
+                    new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand.NumberSettingsCommand(
+                        "USdd",
+                        0,
+                        true),
+                    null));
+            Add(command, nameof(command.NumberCustomFieldSetup)
+                .Dot(nameof(command.NumberCustomFieldSetup.Settings)));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.Number,
-                numberSettings: new CreateCustomFieldSetupCommand.NumberSettingsCommand(
-                    "USDd",
-                    0,
-                    true));
-            Add(command, nameof(command.NumberSettings).Dot(nameof(command.NumberSettings.CurrencyCode)));
+                numberCustomFieldSetup: new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand(
+                    new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand.NumberSettingsCommand(
+                        "USDd",
+                        0,
+                        true),
+                    null));
+            Add(command, nameof(command.NumberCustomFieldSetup)
+                .Dot(nameof(command.NumberCustomFieldSetup.Settings)));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.Number,
-                numberSettings: new CreateCustomFieldSetupCommand.NumberSettingsCommand(
-                    "USDD",
-                    0,
-                    true));
-            Add(command, nameof(command.NumberSettings).Dot(nameof(command.NumberSettings.CurrencyCode)));
+                numberCustomFieldSetup: new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand(
+                    new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand.NumberSettingsCommand(
+                        "USDD",
+                        0,
+                        true),
+                    null));
+            Add(command, nameof(command.NumberCustomFieldSetup)
+                .Dot(nameof(command.NumberCustomFieldSetup.Settings)));
 
             // Decimals
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.Number,
-                numberSettings: new CreateCustomFieldSetupCommand.NumberSettingsCommand(
-                    "USD",
-                    -1,
-                    true));
-            Add(command, nameof(command.NumberSettings).Dot(nameof(command.NumberSettings.Decimals)));
+                numberCustomFieldSetup: new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand(
+                    new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand.NumberSettingsCommand(
+                        "USD",
+                        -1,
+                        true),
+                    null));
+            Add(command, nameof(command.NumberCustomFieldSetup)
+                .Dot(nameof(command.NumberCustomFieldSetup.Settings)));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.Number,
-                numberSettings: new CreateCustomFieldSetupCommand.NumberSettingsCommand(
-                    "USD",
-                    PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum + 1,
-                    true));
-            Add(command, nameof(command.NumberSettings).Dot(nameof(command.NumberSettings.Decimals)));
+                numberCustomFieldSetup: new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand(
+                    new CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand.NumberSettingsCommand(
+                        "USD",
+                        PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum + 1,
+                        true),
+                    null));
+            Add(command, nameof(command.NumberCustomFieldSetup)
+                .Dot(nameof(command.NumberCustomFieldSetup.Settings)));
         }
     }
 
-    internal class GetInvalidSingleSelectOptionsCommands : TheoryData<CreateCustomFieldSetupCommand, string>
+    internal class GetInvalidSingleSelectCustomFieldSetupCommands : TheoryData<CreateCustomFieldSetupCommand, string>
     {
-        public GetInvalidSingleSelectOptionsCommands()
+        public GetInvalidSingleSelectCustomFieldSetupCommands()
         {
             var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.SingleSelect,
-                singleSelectOptions: null);
-            Add(command, nameof(command.SingleSelectOptions));
+                singleSelectCustomFieldSetup: null);
+            Add(command, nameof(command.SingleSelectCustomFieldSetup));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.SingleSelect,
-                singleSelectOptions: []);
-            Add(command, nameof(command.SingleSelectOptions));
+                singleSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand(
+                        [],
+                        null));
+            Add(command, nameof(command.SingleSelectCustomFieldSetup)
+                .Dot(nameof(command.SingleSelectCustomFieldSetup.Options)));
+
+            // Id
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand(
+                        [
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "",
+                                    "Some Value",
+                                    "#22FF22")
+                        ],
+                        null));
+            Add(command, nameof(command.SingleSelectCustomFieldSetup) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand
+                    .SingleSelectOptionCommand.Id)));
 
             // Value
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.SingleSelect,
-                singleSelectOptions:
-                [
-                    new CreateCustomFieldSetupCommand.SingleSelectOptionCommand(
-                        "",
-                        "#22FF22")
-                ]);
-            Add(command, nameof(command.SingleSelectOptions) + "[0]"
-                .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectOptionCommand.Value)));
+                singleSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand(
+                        [
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "1",
+                                    "",
+                                    "#22FF22")
+                        ],
+                        null));
+            Add(command, nameof(command.SingleSelectCustomFieldSetup) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand
+                    .SingleSelectOptionCommand.Value)));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.SingleSelect,
-                singleSelectOptions:
-                [
-                    new CreateCustomFieldSetupCommand.SingleSelectOptionCommand(
-                        new string('a', PropertiesValidation.SingleSelectOption.ValueMaximumLength + 1),
-                        "#22FF22")
-                ]);
-            Add(command, nameof(command.SingleSelectOptions) + "[0]"
-                .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectOptionCommand.Value)));
+                singleSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand(
+                        [
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "1",
+                                    new string('a', PropertiesValidation.SingleSelectOption.ValueMaximumLength + 1),
+                                    "#22FF22")
+                        ],
+                        null));
+            Add(command, nameof(command.SingleSelectCustomFieldSetup) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand
+                    .SingleSelectOptionCommand.Value)));
 
             // Color
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.SingleSelect,
-                singleSelectOptions:
-                [
-                    new CreateCustomFieldSetupCommand.SingleSelectOptionCommand(
-                        "High",
-                        "")
-                ]);
-            Add(command, nameof(command.SingleSelectOptions) + "[0]"
-                .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectOptionCommand.Color)));
+                singleSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand(
+                        [
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "1",
+                                    "High",
+                                    "")
+                        ],
+                        null));
+            Add(command, nameof(command.SingleSelectCustomFieldSetup) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand
+                    .SingleSelectOptionCommand.Color)));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.SingleSelect,
-                singleSelectOptions:
-                [
-                    new CreateCustomFieldSetupCommand.SingleSelectOptionCommand(
-                        "High",
-                        "not a color")
-                ]);
-            Add(command, nameof(command.SingleSelectOptions) + "[0]"
-                .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectOptionCommand.Color)));
+                singleSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand(
+                        [
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "1",
+                                    "High",
+                                    "not a color")
+                        ],
+                        null));
+            Add(command, nameof(command.SingleSelectCustomFieldSetup) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand
+                    .SingleSelectOptionCommand.Color)));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.SingleSelect,
-                singleSelectOptions:
-                [
-                    new CreateCustomFieldSetupCommand.SingleSelectOptionCommand(
-                        "High",
-                        "FF2233")
-                ]);
-            Add(command, nameof(command.SingleSelectOptions) + "[0]"
-                .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectOptionCommand.Color)));
+                singleSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand(
+                        [
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "1",
+                                    "High",
+                                    "FF2233")
+                        ],
+                        null));
+            Add(command, nameof(command.SingleSelectCustomFieldSetup) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand
+                    .SingleSelectOptionCommand.Color)));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.SingleSelect,
-                singleSelectOptions:
-                [
-                    new CreateCustomFieldSetupCommand.SingleSelectOptionCommand(
-                        "High",
-                        "#FF223")
-                ]);
-            Add(command, nameof(command.SingleSelectOptions) + "[0]"
-                .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectOptionCommand.Color)));
+                singleSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand(
+                        [
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "1",
+                                    "High",
+                                    "#F2233")
+                        ],
+                        null));
+            Add(command, nameof(command.SingleSelectCustomFieldSetup) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand
+                    .SingleSelectOptionCommand.Color)));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.SingleSelect,
-                singleSelectOptions:
-                [
-                    new CreateCustomFieldSetupCommand.SingleSelectOptionCommand(
-                        "High",
-                        "#GG2233")
-                ]);
-            Add(command, nameof(command.SingleSelectOptions) + "[0]"
-                .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectOptionCommand.Color)));
+                singleSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand(
+                        [
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "1",
+                                    "High",
+                                    "#GG2233")
+                        ],
+                        null));
+            Add(command, nameof(command.SingleSelectCustomFieldSetup) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand
+                    .SingleSelectOptionCommand.Color)));
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.SingleSelect,
-                singleSelectOptions:
-                [
-                    new CreateCustomFieldSetupCommand.SingleSelectOptionCommand(
-                        "High",
-                        "#FF2233"),
-                    new CreateCustomFieldSetupCommand.SingleSelectOptionCommand(
-                        "",
-                        "#11EE33")
-                ]);
-            Add(command, nameof(command.SingleSelectOptions) + "[1]"
-                .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectOptionCommand.Value)));
+                singleSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand(
+                        [
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "1",
+                                    "High",
+                                    "#FF2233"),
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "2",
+                                    "",
+                                    "#11EE33")
+                        ],
+                        null));
+            Add(command, nameof(command.SingleSelectCustomFieldSetup) + "[1]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand
+                    .SingleSelectOptionCommand.Value)));
+            
+            // Default Option Id
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand(
+                        [
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "1",
+                                    "High",
+                                    "#FF2233"),
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "2",
+                                    "Low",
+                                    "#11EE33")
+                        ],
+                        "3"));
+            Add(command, nameof(command.SingleSelectCustomFieldSetup)
+                .Dot(nameof(command.SingleSelectCustomFieldSetup.DefaultOptionId)));
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand(
+                        [
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "1",
+                                    "High",
+                                    "#FF2233"),
+                            new CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.
+                                SingleSelectOptionCommand(
+                                    "1",
+                                    "Low",
+                                    "#11EE33")
+                        ],
+                        "1"));
+            Add(command, nameof(command.SingleSelectCustomFieldSetup)
+                .Dot(nameof(command.SingleSelectCustomFieldSetup.DefaultOptionId)));
+        }
+    }
+    
+    internal class GetInvalidTextCustomFieldSetupCommands : TheoryData<CreateCustomFieldSetupCommand, string>
+    {
+        public GetInvalidTextCustomFieldSetupCommands()
+        {
+            var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                textCustomFieldSetup: null);
+            Add(command, nameof(command.TextCustomFieldSetup));
         }
     }
 }

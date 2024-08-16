@@ -1,7 +1,6 @@
 ﻿using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.CustomFieldSetup.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;

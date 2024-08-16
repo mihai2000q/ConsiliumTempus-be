@@ -31,9 +31,6 @@ public class ProjectTaskCreatedHandlerTest
         var domainEvent = new ProjectTaskCreated(ProjectTaskFactory.Create());
 
         var customFieldSetups = CustomFieldSetupFactory.CreateList();
-        customFieldSetups.Add(CustomFieldSetupFactory.CreateNumber());
-        customFieldSetups.Add(CustomFieldSetupFactory.CreateSingleSelect());
-        customFieldSetups.Add(CustomFieldSetupFactory.CreateText());
         _customFieldSetupRepository
             .GetList(Arg.Any<WorkspaceId?>(), Arg.Any<ProjectId?>())
             .Returns(customFieldSetups);

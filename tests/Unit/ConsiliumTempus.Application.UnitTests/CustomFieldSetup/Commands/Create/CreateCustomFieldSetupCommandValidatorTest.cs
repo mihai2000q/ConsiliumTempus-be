@@ -29,8 +29,9 @@ public class CreateCustomFieldSetupCommandValidatorTest
     [ClassData(typeof(CreateCustomFieldSetupCommandValidatorData.GetInvalidWorkspaceIdAndProjectIdCommands))]
     [ClassData(typeof(CreateCustomFieldSetupCommandValidatorData.GetInvalidNameCommands))]
     [ClassData(typeof(CreateCustomFieldSetupCommandValidatorData.GetInvalidTypeCommands))]
-    [ClassData(typeof(CreateCustomFieldSetupCommandValidatorData.GetInvalidNumberSettingsCommands))]
-    [ClassData(typeof(CreateCustomFieldSetupCommandValidatorData.GetInvalidSingleSelectOptionsCommands))]
+    [ClassData(typeof(CreateCustomFieldSetupCommandValidatorData.GetInvalidNumberCustomFieldSetupCommands))]
+    [ClassData(typeof(CreateCustomFieldSetupCommandValidatorData.GetInvalidSingleSelectCustomFieldSetupCommands))]
+    [ClassData(typeof(CreateCustomFieldSetupCommandValidatorData.GetInvalidTextCustomFieldSetupCommands))]
     public async Task ValidateCreateCustomFieldSetupCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         CreateCustomFieldSetupCommand command,
         string property)

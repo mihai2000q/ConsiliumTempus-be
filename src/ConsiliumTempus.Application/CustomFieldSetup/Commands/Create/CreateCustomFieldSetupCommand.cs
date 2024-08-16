@@ -9,16 +9,31 @@ public sealed record CreateCustomFieldSetupCommand(
     string Name,
     string Description,
     string Type,
-    CreateCustomFieldSetupCommand.NumberSettingsCommand? NumberSettings,
-    List<CreateCustomFieldSetupCommand.SingleSelectOptionCommand>? SingleSelectOptions)
+    CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand? NumberCustomFieldSetup,
+    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand? SingleSelectCustomFieldSetup,
+    CreateCustomFieldSetupCommand.CreateTextCustomFieldSetupCommand? TextCustomFieldSetup)
     : IRequest<ErrorOr<CreateCustomFieldSetupResult>>
 {
-    public sealed record NumberSettingsCommand(
-        string CurrencyCode,
-        int Decimals,
-        bool Rounding);
+    public sealed record CreateNumberCustomFieldSetupCommand(
+        CreateNumberCustomFieldSetupCommand.NumberSettingsCommand Settings,
+        decimal? DefaultNumber)
+    {
+        public sealed record NumberSettingsCommand(
+            string CurrencyCode,
+            int Decimals,
+            bool Rounding);
+    }
 
-    public sealed record SingleSelectOptionCommand(
-        string Value,
-        string Color);
+    public sealed record CreateSingleSelectCustomFieldSetupCommand(
+        List<CreateSingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand> Options,
+        string? DefaultOptionId)
+    {
+        public sealed record SingleSelectOptionCommand(
+            string Id,
+            string Value,
+            string Color);
+    }
+
+    public sealed record CreateTextCustomFieldSetupCommand(
+        string? DefaultText);
 }
