@@ -317,14 +317,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomFieldSetup.Number_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Project",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CustomFieldSetup.Number_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,
                         principalTable: "Workspace",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -352,14 +350,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomFieldSetup.Text_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Project",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CustomFieldSetup.Text_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,
                         principalTable: "Workspace",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -560,8 +556,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField.Number_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -586,8 +581,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField.Text_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -635,8 +629,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField.SingleSelect_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -664,14 +657,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomFieldSetup.SingleSelect_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Project",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CustomFieldSetup.SingleSelect_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,
                         principalTable: "Workspace",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

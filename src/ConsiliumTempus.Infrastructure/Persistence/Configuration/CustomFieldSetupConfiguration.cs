@@ -38,11 +38,10 @@ public sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<Cus
 
         builder.HasOne(cfs => cfs.Workspace)
             .WithMany(w => w.CustomFieldSetups)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(cfs => cfs.Project)
-            .WithMany(p => p.CustomFieldSetups)
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithMany(p => p.CustomFieldSetups);
 
         builder.HasOne(cfs => cfs.Audit)
             .WithMany();

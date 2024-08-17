@@ -63,7 +63,7 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
             .WithOne()
             .HasForeignKey(nameof(ProjectTaskAggregate).TruncateAggregate().ToId())
             .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
     }
 
     private static void ConfigureComments(OwnedNavigationBuilder<ProjectTaskAggregate, ProjectTaskComment> builder)
