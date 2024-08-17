@@ -16,6 +16,7 @@ using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -35,10 +36,11 @@ internal class ProjectTaskData : ITestData
             ProjectSprints,
             ProjectStages,
             ProjectTasks,
+            CustomFields
         ];
     }
 
-    public static UserAggregate[] Users { get; } =
+    public static readonly UserAggregate[] Users =
     [
         UserFactory.Create(
             "michaelj@gmail.com",
@@ -69,7 +71,7 @@ internal class ProjectTaskData : ITestData
             "James"),
     ];
 
-    public static WorkspaceAggregate[] Workspaces { get; } =
+    public static readonly WorkspaceAggregate[] Workspaces =
     [
         WorkspaceFactory.Create(
             Users[0],
@@ -86,7 +88,7 @@ internal class ProjectTaskData : ITestData
             true),
     ];
 
-    public static Membership[] Memberships { get; } =
+    public static readonly Membership[] Memberships =
     [
         MembershipFactory.Create(
             Users[0],
@@ -118,7 +120,7 @@ internal class ProjectTaskData : ITestData
             WorkspaceRole.Admin)
     ];
 
-    public static ProjectAggregate[] Projects { get; } =
+    public static readonly ProjectAggregate[] Projects =
     [
         ProjectFactory.Create(
             Workspaces[0],
@@ -145,31 +147,31 @@ internal class ProjectTaskData : ITestData
             isPrivate: true,
             allowedMembers: [Users[3]]),
     ];
-    
-    public static CustomFieldSetupAggregate[] CustomFieldSetups =
+
+    public static readonly CustomFieldSetupAggregate[] CustomFieldSetups =
     [
         CustomFieldSetupFactory.CreateNumber(
             null,
             Projects[0],
             AuditFactory.Create(Users[0]),
             name: "Budget"),
-        CustomFieldSetupFactory.CreateText(
-            null,
-            Projects[0],
-            AuditFactory.Create(Users[0]),
-            "Notes field"),
         CustomFieldSetupFactory.CreateSingleSelect(
             null,
             Projects[0],
             AuditFactory.Create(Users[0]),
             [
-                SingleSelectOptionFactory.Create(), 
-                SingleSelectOptionFactory.Create(orderPosition: 1), 
+                SingleSelectOptionFactory.Create(),
+                SingleSelectOptionFactory.Create(orderPosition: 1),
             ],
             "Select only one field"),
+        CustomFieldSetupFactory.CreateText(
+            null,
+            Projects[0],
+            AuditFactory.Create(Users[0]),
+            "Notes field"),
     ];
 
-    public static ProjectSprintAggregate[] ProjectSprints { get; } =
+    public static readonly ProjectSprintAggregate[] ProjectSprints =
     [
         ProjectSprintFactory.Create(
             Projects[0],
@@ -192,7 +194,7 @@ internal class ProjectTaskData : ITestData
             "More Private Project Sprint"),
     ];
 
-    public static ProjectStage[] ProjectStages { get; } =
+    public static readonly ProjectStage[] ProjectStages =
     [
         ProjectStageFactory.Create(
             ProjectSprints[0],
@@ -223,37 +225,19 @@ internal class ProjectTaskData : ITestData
             "To do"),
     ];
 
-    public static ProjectTaskAggregate[] ProjectTasks { get; } =
+    public static readonly ProjectTaskAggregate[] ProjectTasks =
     [
         ProjectTaskFactory.Create(
             Users[0],
             ProjectStages[0],
-            "Should do more dribbling",
-            customFields: 
-            [
-                CustomFieldFactory.CreateNumber(
-                    (NumberCustomFieldSetupAggregate)CustomFieldSetups[0],
-                    500), 
-                CustomFieldFactory.CreateSingleSelect(
-                    (SingleSelectCustomFieldSetupAggregate)CustomFieldSetups[1],
-                    ((SingleSelectCustomFieldSetupAggregate)CustomFieldSetups[1]).Options[0]), 
-                CustomFieldFactory.CreateText(
-                    (TextCustomFieldSetupAggregate)CustomFieldSetups[2],
-                    "Something"), 
-            ]),
+            "Should do more dribbling"),
         ProjectTaskFactory.Create(
             Users[0],
             ProjectStages[0],
             "Should add more stepping to my shots",
             customOrderPosition: 1,
             assignee: Users[1],
-            isCompleted: true,
-            customFields: 
-            [
-                CustomFieldFactory.CreateNumber((NumberCustomFieldSetupAggregate)CustomFieldSetups[0]), 
-                CustomFieldFactory.CreateSingleSelect((SingleSelectCustomFieldSetupAggregate)CustomFieldSetups[1]), 
-                CustomFieldFactory.CreateText((TextCustomFieldSetupAggregate)CustomFieldSetups[2]), 
-            ]),
+            isCompleted: true),
         ProjectTaskFactory.Create(
             Users[3],
             ProjectStages[0],
@@ -310,5 +294,31 @@ internal class ProjectTaskData : ITestData
             ProjectStages[^1],
             "More Private Task 2",
             customOrderPosition: 2),
+    ];
+
+    public static readonly CustomField[] CustomFields =
+    [
+        CustomFieldFactory.CreateNumber(
+            ProjectTasks[0],
+            (NumberCustomFieldSetupAggregate)CustomFieldSetups[0],
+            500),
+        CustomFieldFactory.CreateSingleSelect(
+            ProjectTasks[0],
+            (SingleSelectCustomFieldSetupAggregate)CustomFieldSetups[1],
+            ((SingleSelectCustomFieldSetupAggregate)CustomFieldSetups[1]).Options[0]),
+        CustomFieldFactory.CreateText(
+            ProjectTasks[0],
+            (TextCustomFieldSetupAggregate)CustomFieldSetups[2],
+            "Something"),
+
+        CustomFieldFactory.CreateNumber(
+            ProjectTasks[1],
+            (NumberCustomFieldSetupAggregate)CustomFieldSetups[0]),
+        CustomFieldFactory.CreateSingleSelect(
+            ProjectTasks[1],
+            (SingleSelectCustomFieldSetupAggregate)CustomFieldSetups[1]),
+        CustomFieldFactory.CreateText(
+            ProjectTasks[1],
+            (TextCustomFieldSetupAggregate)CustomFieldSetups[2]),
     ];
 }

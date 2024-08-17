@@ -26,7 +26,7 @@ internal class UserData : ITestData
         ];
     }
 
-    public static UserAggregate[] Users { get; } =
+    public static readonly UserAggregate[] Users =
     [
         UserFactory.Create(
             "michaelj@gmail.com",
@@ -62,7 +62,7 @@ internal class UserData : ITestData
             "Durant"),
     ];
 
-    public static WorkspaceAggregate[] Workspaces { get; } =
+    public static readonly WorkspaceAggregate[] Workspaces =
     [
         WorkspaceFactory.Create(
             Users[0],
@@ -84,7 +84,7 @@ internal class UserData : ITestData
             true), // normally not possible, but testing out multiple use cases at once
     ];
 
-    public static Membership[] Memberships { get; } =
+    public static readonly Membership[] Memberships =
     [
         MembershipFactory.Create(
             Users[0],
@@ -124,7 +124,7 @@ internal class UserData : ITestData
             WorkspaceRole.Admin)
     ];
 
-    public static ProjectAggregate[] Projects { get; } =
+    public static readonly ProjectAggregate[] Projects =
     [
         ProjectFactory.Create(
             Workspaces[0],
@@ -135,7 +135,7 @@ internal class UserData : ITestData
             allowedMembers: [Users[0]])
     ];
 
-    public static ProjectSprintAggregate[] ProjectSprints { get; } =
+    public static readonly ProjectSprintAggregate[] ProjectSprints =
     [
         ProjectSprintFactory.Create(
             Projects[0],

@@ -2,10 +2,8 @@
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
-using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User;
-using ConsiliumTempus.Infrastructure.Extensions;
 
 namespace ConsiliumTempus.Common.IntegrationTests.ProjectTask;
 
@@ -20,8 +18,7 @@ public static class ProjectTaskFactory
         bool isCompleted = false,
         UserAggregate? assignee = null,
         DateTime? createdDateTime = null,
-        DateTime? updatedDateTime = null,
-        List<CustomField>? customFields = null)
+        DateTime? updatedDateTime = null)
     {
         return EntityBuilder<ProjectTaskAggregate>.Empty()
             .WithProperty(nameof(ProjectTaskAggregate.Id), ProjectTaskId.CreateUnique())
@@ -34,7 +31,6 @@ public static class ProjectTaskFactory
             .WithProperty(nameof(ProjectTaskAggregate.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
             .WithProperty(nameof(ProjectTaskAggregate.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
             .WithProperty(nameof(ProjectTaskAggregate.Stage), stage)
-            .WithField(nameof(ProjectTaskAggregate.CustomFields).ToBackingField(), customFields ?? [])
             .Build();
     }
 }

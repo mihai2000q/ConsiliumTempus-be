@@ -30,7 +30,7 @@ internal class WorkspaceData : ITestData
         ];
     }
 
-    public static UserAggregate[] Users { get; } =
+    public static readonly UserAggregate[] Users =
     [
         UserFactory.Create(
             "michaelj@gmail.com",
@@ -76,7 +76,7 @@ internal class WorkspaceData : ITestData
             "Franklin")
     ];
 
-    public static WorkspaceAggregate[] Workspaces { get; } =
+    public static readonly WorkspaceAggregate[] Workspaces =
     [
         WorkspaceFactory.Create(
             Users[0],
@@ -106,7 +106,7 @@ internal class WorkspaceData : ITestData
             "Hi There")
     ];
 
-    public static Membership[] Memberships { get; } =
+    public static readonly Membership[] Memberships =
     [
         MembershipFactory.Create(
             Users[0],
@@ -154,7 +154,7 @@ internal class WorkspaceData : ITestData
             WorkspaceRole.Admin),
     ];
 
-    public static WorkspaceInvitation[] WorkspaceInvitations { get; } =
+    public static readonly WorkspaceInvitation[] WorkspaceInvitations =
     [
         WorkspaceInvitationFactory.Create(
             Users[0],
@@ -178,7 +178,7 @@ internal class WorkspaceData : ITestData
             Workspaces[2]),
     ];
 
-    public static ProjectAggregate[] Projects { get; } =
+    public static readonly ProjectAggregate[] Projects =
     [
         ProjectFactory.Create(
             Workspaces[0],
@@ -248,7 +248,7 @@ internal class WorkspaceData : ITestData
             allowedMembers: [Users[3]]),
     ];
     
-    public static CustomFieldSetupAggregate[] CustomFieldSetups =
+    public static readonly CustomFieldSetupAggregate[] CustomFieldSetups =
     [
         CustomFieldSetupFactory.CreateNumber(
             null,

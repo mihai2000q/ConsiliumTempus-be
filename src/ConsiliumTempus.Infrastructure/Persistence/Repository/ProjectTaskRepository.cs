@@ -81,10 +81,11 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .ToListAsync(cancellationToken);
     }
 
-    public Task DeleteCustomFieldsByTask(ProjectTaskId id, CancellationToken cancellationToken = default)
+    public async Task DeleteCustomFieldsByTask(ProjectTaskId id, CancellationToken cancellationToken = default)
     {
-        return dbContext.Set<CustomField>()
+        var fields = await dbContext.Set<CustomField>()
             .Where(cf => cf.ProjectTask.Id == id)
-            .ExecuteDeleteAsync(cancellationToken);
+            .ToListAsync(cancellationToken);
+        dbContext.Set<CustomField>().RemoveRange(fields);
     }
 }
