@@ -317,7 +317,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomFieldSetup.Number_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Project",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_CustomFieldSetup.Number_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,
@@ -350,7 +351,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomFieldSetup.Text_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Project",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_CustomFieldSetup.Text_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,
@@ -657,7 +659,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomFieldSetup.SingleSelect_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Project",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_CustomFieldSetup.SingleSelect_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,

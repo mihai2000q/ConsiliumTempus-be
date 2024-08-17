@@ -4,7 +4,6 @@ using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
-using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -41,7 +40,8 @@ public sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<Cus
             .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(cfs => cfs.Project)
-            .WithMany(p => p.CustomFieldSetups);
+            .WithMany(p => p.CustomFieldSetups)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(cfs => cfs.Audit)
             .WithMany();

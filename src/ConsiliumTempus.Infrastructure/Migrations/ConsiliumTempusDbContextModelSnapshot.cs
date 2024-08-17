@@ -1366,7 +1366,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")
                         .WithMany("CustomFieldSetups")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", "Workspace")
                         .WithMany("CustomFieldSetups")
