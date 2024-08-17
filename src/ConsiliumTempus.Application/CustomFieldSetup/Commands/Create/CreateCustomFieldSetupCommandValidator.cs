@@ -64,13 +64,19 @@ public sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<C
                             .IsColor();
                     });
 
+                    RuleFor(c => c.SingleSelectCustomFieldSetup!.Options)
+                        .NotEmpty()
+                        .Must(options => 
+                            options.DistinctBy(o => o.Id).Count() == options.Count)
+                        .WithMessage("{PropertyName} cannot have duplicate ids");
+
                     When(c => c.SingleSelectCustomFieldSetup!.DefaultOptionId is not null, () =>
                     {
                         RuleFor(c => c.SingleSelectCustomFieldSetup)
                             .Must(c => c!.Options
-                                .FindAll(o => o.Id == c.DefaultOptionId)
-                                .Count == 1)
-                            .WithName(nameof(CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetup)
+                                .FirstOrDefault(o => o.Id == c.DefaultOptionId) is not null)
+                            .WithMessage("{PropertyName} could not be found within the provided options")
+                            .OverridePropertyName(nameof(CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetup)
                                 .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetup.DefaultOptionId)));
                     });
                 });

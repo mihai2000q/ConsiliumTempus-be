@@ -12,17 +12,20 @@ internal static class CreateCustomFieldSetupCommandHandlerData
         {
             // Workspace and Project
             var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
-                Guid.NewGuid());
+                Guid.NewGuid(),
+                textCustomFieldSetup: new CreateCustomFieldSetupCommand.CreateTextCustomFieldSetupCommand(null));
             Add(command);
             
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 null,
-                Guid.NewGuid());
+                Guid.NewGuid(),
+                textCustomFieldSetup: new CreateCustomFieldSetupCommand.CreateTextCustomFieldSetupCommand(null));
             Add(command);
             
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 Guid.NewGuid(),
-                Guid.NewGuid());
+                Guid.NewGuid(),
+                textCustomFieldSetup: new CreateCustomFieldSetupCommand.CreateTextCustomFieldSetupCommand(null));
             Add(command);
 
             // Number
