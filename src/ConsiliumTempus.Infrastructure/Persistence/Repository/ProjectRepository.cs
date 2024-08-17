@@ -124,6 +124,14 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<ProjectAggregate>> GetListByWorkspace(WorkspaceId workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.Projects
+            .Where(p => p.Workspace.Id == workspaceId)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<List<ProjectStatus>> GetStatuses(ProjectId id, CancellationToken cancellationToken = default)
     {
         return await dbContext.Set<ProjectStatus>()

@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
@@ -28,6 +29,18 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<CustomFieldSetupAggregate>> GetListByWorkspaceOrProjects(
+        WorkspaceId workspaceId,
+        List<ProjectAggregate> projects,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.CustomFieldSetups
+            .Where(cfs => 
+                (cfs.Workspace != null && cfs.Workspace.Id == workspaceId) ||
+                (cfs.Project != null && projects.Contains(cfs.Project)))
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task Add(CustomFieldSetupAggregate customFieldSetup, CancellationToken cancellationToken = default)
     {
         await dbContext.CustomFieldSetups.AddAsync(customFieldSetup, cancellationToken);
@@ -36,5 +49,10 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
     public void Remove(CustomFieldSetupAggregate customFieldSetup)
     {
         dbContext.CustomFieldSetups.Remove(customFieldSetup);
+    }
+
+    public void RemoveRange(List<CustomFieldSetupAggregate> customFieldSetups)
+    {
+        dbContext.CustomFieldSetups.RemoveRange(customFieldSetups);
     }
 }

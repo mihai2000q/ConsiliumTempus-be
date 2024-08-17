@@ -42,6 +42,8 @@ public interface IProjectRepository
 
     Task<List<ProjectAggregate>> GetListByOwner(UserId userId, CancellationToken cancellationToken = default);
 
+    Task<List<ProjectAggregate>> GetListByWorkspace(WorkspaceId workspaceId, CancellationToken cancellationToken = default);
+
     Task<List<ProjectStatus>> GetStatuses(ProjectId id, CancellationToken cancellationToken = default);
 
     Task<int> GetStatusesCount(ProjectId id, CancellationToken cancellationToken = default);
