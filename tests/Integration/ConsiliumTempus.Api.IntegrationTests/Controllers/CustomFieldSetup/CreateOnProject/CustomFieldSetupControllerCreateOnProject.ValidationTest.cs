@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Api.IntegrationTests.Core;
+﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
@@ -15,7 +16,9 @@ public class CustomFieldSetupControllerCreateOnProjectValidationTest(WebAppFacto
     {
         // Arrange
         var project = CustomFieldSetupData.Projects.First();
-        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(project.Id.Value);
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(
+            project.Id.Value,
+            textCustomFieldSetup: new CreateCustomFieldSetupOnProjectRequest.CreateTextCustomFieldSetupRequest(null));
 
         // Act
         Client.UseCustomToken(CustomFieldSetupData.Users.First());

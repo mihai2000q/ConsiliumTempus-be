@@ -86,7 +86,9 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
     public async Task CreateCustomFieldSetupOnProject_WhenProjectIsNotFound_ShouldReturnProjectNotFoundError()
     {
         // Arrange
-        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(Guid.NewGuid());
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(
+            Guid.NewGuid(),
+            textCustomFieldSetup: new CreateCustomFieldSetupOnProjectRequest.CreateTextCustomFieldSetupRequest(null));
 
         // Act
         var outcome = await Client.Post("api/customFieldSetups/project", request);
