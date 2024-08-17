@@ -15,6 +15,6 @@ public sealed class ProjectTaskCreatedHandler(ICustomFieldSetupRepository custom
             null,
             task.Stage.Sprint.Project.Id,
             cancellationToken);
-        customFieldSetups.ForEach(setup => task.AddCustomField(CustomField.Create(setup)));
+        customFieldSetups.ForEach(setup => task.AddCustomField(CustomField.Create(setup, task)));
     }
 }

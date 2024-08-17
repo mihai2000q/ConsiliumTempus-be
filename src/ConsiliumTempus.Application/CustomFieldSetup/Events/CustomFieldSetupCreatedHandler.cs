@@ -14,6 +14,6 @@ public sealed class CustomFieldSetupCreatedHandler(IProjectTaskRepository projec
         if (setup.Project is null) return;
 
         var tasks = await projectTaskRepository.GetListByProject(setup.Project.Id, cancellationToken);
-        tasks.ForEach(task => task.AddCustomField(CustomField.Create(setup)));
+        tasks.ForEach(task => task.AddCustomField(CustomField.Create(setup, task)));
     }
 }

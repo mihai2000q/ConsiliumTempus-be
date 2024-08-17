@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.Events;
 using ErrorOr;
 using MediatR;
 
@@ -21,6 +22,7 @@ public sealed class DeleteProjectTaskCommandHandler(IProjectSprintRepository pro
         if (task is null) return Errors.ProjectTask.NotFound;
 
         stage.RemoveTask(task);
+        task.AddDomainEvent(new ProjectTaskDeleted(task));
         stage.Sprint.Project.RefreshActivity();
 
         return new DeleteProjectTaskResult();

@@ -56,6 +56,10 @@ internal static partial class Utils
             DeleteProjectTaskCommand command)
         {
             task.Id.Value.Should().Be(command.Id);
+            task.DomainEvents.Should().HaveCount(1);
+            var domainEvent = task.DomainEvents[0];
+            domainEvent.Should().BeOfType<ProjectTaskDeleted>();
+            ((ProjectTaskDeleted)domainEvent).ProjectTask.Should().Be(task);
 
             var stage = task.Stage;
 
@@ -179,6 +183,7 @@ internal static partial class Utils
                 {
                     var (customField, setup) = x;
                     customField.Id.Value.Should().NotBeEmpty();
+                    customField.ProjectTask.Should().Be(domainEvent.ProjectTask);
 
                     switch (customField)
                     {

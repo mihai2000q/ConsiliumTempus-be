@@ -70,6 +70,7 @@ internal static partial class Utils
                 var customField = task.CustomFields[0];
 
                 customField.Id.Value.Should().NotBeEmpty();
+                customField.ProjectTask.Should().Be(task);
                 switch (setup)
                 {
                     case NumberCustomFieldSetupAggregate numberSetup:
