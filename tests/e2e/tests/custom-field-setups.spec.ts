@@ -27,7 +27,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
     await deleteUser(request)
   })
 
-  test.describe('should get custom field', () => {
+  test.describe('should allow retrieval of custom field', () => {
     test('should get number custom field', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
@@ -327,5 +327,36 @@ test.describe('should allow operations on the custom field setup entity', () => 
         }
       ])
     })
+  })
+
+  test('should delete custom field setup', async ({ request }) => {
+    const textCustomField = await createCustomFieldSetup(request, {
+      projectId: PROJECT_ID,
+      name: "New Text Custom Field",
+      description: "Represents a custom field",
+      type: 'text',
+      textCustomFieldSetup: {
+        defaultText: undefined
+      }
+    })
+
+    const response = await request.delete(`/api/customFieldSetups/${textCustomField.id}`, useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const customFieldSetups = await getCustomFieldSetupsFromProject(request, PROJECT_ID)
+    expect(customFieldSetups).toHaveLength(0)
+    expect(customFieldSetups).toStrictEqual(expect.not.arrayContaining([
+      {
+        id: textCustomField.id,
+        name: textCustomField.name,
+        description: textCustomField.description,
+        type: 'Text'
+      }
+    ]))
   })
 })

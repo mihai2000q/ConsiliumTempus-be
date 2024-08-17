@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 
@@ -16,5 +17,10 @@ public static class CustomFieldSetupResultFactory
     public static CreateCustomFieldSetupResult CreateCreateCustomFieldSetupResult()
     {
         return new CreateCustomFieldSetupResult();
+    }
+
+    public static DeleteCustomFieldSetupResult CreateDeleteCustomFieldSetupResult()
+    {
+        return new DeleteCustomFieldSetupResult();
     }
 }

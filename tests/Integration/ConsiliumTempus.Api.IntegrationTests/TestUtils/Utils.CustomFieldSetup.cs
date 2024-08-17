@@ -46,6 +46,10 @@ internal static partial class Utils
                     throw new ArgumentOutOfRangeException(nameof(request));
             }
 
+            customFieldSetup.Workspace?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            customFieldSetup.Project?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            customFieldSetup.Project?.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
             tasks.Should().AllSatisfy(task =>
             {
                 task.CustomFields.Should().HaveCount(1);

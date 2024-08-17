@@ -1,7 +1,9 @@
 ﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using MapsterMapper;
@@ -15,8 +17,8 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get(GetCustomFieldSetupRequest request, CancellationToken cancellationToken)
     {
-        var command = Mapper.Map<GetCustomFieldSetupQuery>(request);
-        var result = await Mediator.Send(command, cancellationToken);
+        var query = Mapper.Map<GetCustomFieldSetupQuery>(request);
+        var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
             setup => Ok(Mapper.Map<GetCustomFieldSetupResponse>(setup)),
@@ -29,8 +31,8 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         GetCollectionCustomFieldSetupFromProjectRequest request,
         CancellationToken cancellationToken)
     {
-        var command = Mapper.Map<GetCollectionCustomFieldSetupQuery>(request);
-        var result = await Mediator.Send(command, cancellationToken);
+        var query = Mapper.Map<GetCollectionCustomFieldSetupQuery>(request);
+        var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
             getCollectionResult =>
@@ -48,6 +50,18 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
 
         return result.Match(
             createResult => Ok(Mapper.Map<CreateCustomFieldSetupOnProjectResponse>(createResult)),
+            Problem
+        );
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(DeleteCustomFieldSetupRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<DeleteCustomFieldSetupCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            setup => Ok(Mapper.Map<DeleteCustomFieldSetupResponse>(setup)),
             Problem
         );
     }

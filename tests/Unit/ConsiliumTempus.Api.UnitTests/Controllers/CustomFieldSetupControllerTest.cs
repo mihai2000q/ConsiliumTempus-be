@@ -1,11 +1,13 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestData;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
@@ -169,6 +171,53 @@ public class CustomFieldSetupControllerTest
             .Received(1)
             .Send(Arg.Is<CreateCustomFieldSetupCommand>(c =>
                 Utils.CustomFieldSetup.AssertCreateCustomFieldSetupCommand(c, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task Delete_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateDeleteCustomFieldSetupRequest();
+
+        var result = CustomFieldSetupResultFactory.CreateDeleteCustomFieldSetupResult();
+        _mediator
+            .Send(Arg.Any<DeleteCustomFieldSetupCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.Delete(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<DeleteCustomFieldSetupCommand>(c =>
+                Utils.CustomFieldSetup.AssertDeleteCustomFieldSetupCommand(c, request)));
+
+        var response = outcome.ToResponse<DeleteCustomFieldSetupResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task Delete_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateDeleteCustomFieldSetupRequest();
+
+        var error = Errors.CustomFieldSetup.NotFound;
+        _mediator
+            .Send(Arg.Any<DeleteCustomFieldSetupCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.Delete(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<DeleteCustomFieldSetupCommand>(c =>
+                Utils.CustomFieldSetup.AssertDeleteCustomFieldSetupCommand(c, request)));
 
         outcome.ValidateError(error);
     }

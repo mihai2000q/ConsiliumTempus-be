@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
@@ -25,6 +26,14 @@ public static class CustomFieldSetupRequestFactory
             numberCustomFieldSetup,
             singleSelectCustomFieldSetup,
             textCustomFieldSetup);
+    }
+
+    public static DeleteCustomFieldSetupRequest CreateDeleteCustomFieldSetupRequest(Guid? id = null)
+    {
+        return new DeleteCustomFieldSetupRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
     }
 
     public static GetCustomFieldSetupRequest CreateGetCustomFieldSetupRequest(Guid? id = null)
