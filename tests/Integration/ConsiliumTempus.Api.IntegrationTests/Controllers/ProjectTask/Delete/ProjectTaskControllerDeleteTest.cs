@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,11 +41,17 @@ public class ProjectTaskControllerDeleteTest(WebAppFactory factory)
         dbContext.ProjectTasks.Should().HaveCount(ProjectTaskData.ProjectTasks.Length - 1);
         (await dbContext.ProjectTasks.FindAsync(task.Id))
             .Should().BeNull();
+
         var stage = await dbContext.Set<ProjectStage>()
             .AsNoTracking()
             .Include(s => s.Sprint.Project.Workspace)
             .Include(s => s.Tasks.OrderBy(t => t.CustomOrderPosition.Value))
             .SingleAsync(s => s.Id == task.Stage.Id);
+
+        dbContext.Set<CustomField>()
+            .Where(cf => cf.ProjectTask == task)
+            .Should().BeEmpty();
+
         Utils.ProjectTask.AssertDelete(stage, request);
     }
 
