@@ -15,7 +15,8 @@ public sealed class TextCustomField : CustomField
     private TextCustomField(
         Text? text,
         TextCustomFieldSetupAggregate setup,
-        CustomFieldId id) : base(id)
+        CustomFieldId id,
+        ProjectTaskAggregate projectTask) : base(id, projectTask)
     {
         Text = text;
         Setup = setup;
@@ -26,11 +27,13 @@ public sealed class TextCustomField : CustomField
 
     public static TextCustomField Create(
         Text? text,
-        TextCustomFieldSetupAggregate setup)
+        TextCustomFieldSetupAggregate setup,
+        ProjectTaskAggregate projectTask)
     {
         return new TextCustomField(
             text,
             setup,
-            CustomFieldId.CreateUnique());
+            CustomFieldId.CreateUnique(),
+            projectTask);
     }
 }

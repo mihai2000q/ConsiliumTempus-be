@@ -15,7 +15,8 @@ public sealed class NumberCustomField : CustomField
     private NumberCustomField(
         DecimalNumber? number,
         NumberCustomFieldSetupAggregate setup,
-        CustomFieldId id) : base(id)
+        CustomFieldId id,
+        ProjectTaskAggregate projectTask) : base(id, projectTask)
     {
         Number = number;
         Setup = setup;
@@ -26,11 +27,13 @@ public sealed class NumberCustomField : CustomField
 
     public static NumberCustomField Create(
         DecimalNumber? decimalNumber,
-        NumberCustomFieldSetupAggregate setup)
+        NumberCustomFieldSetupAggregate setup,
+        ProjectTaskAggregate projectTask)
     {
         return new NumberCustomField(
             decimalNumber,
             setup,
-            CustomFieldId.CreateUnique());
+            CustomFieldId.CreateUnique(),
+            projectTask);
     }
 }
