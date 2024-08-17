@@ -1,7 +1,9 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Workspace.Events;
+using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.Workspace;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace.Events;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -36,6 +38,11 @@ public class WorkspaceDeletedHandlerTest
             .GetListByWorkspace(Arg.Any<WorkspaceId>())
             .Returns(projects);
 
+        var customFieldSetups = CustomFieldSetupFactory.CreateList();
+        _customFieldSetupRepository
+            .GetListByWorkspaceOrProjects(Arg.Any<WorkspaceId>(), Arg.Any<List<ProjectAggregate>>())
+            .Returns(customFieldSetups);
+
         // Act
         await _uut.Handle(domainEvent, default);
 
@@ -45,8 +52,11 @@ public class WorkspaceDeletedHandlerTest
             .GetListByWorkspace(Arg.Is<WorkspaceId>(wId => wId == domainEvent.Workspace.Id));
 
         await _customFieldSetupRepository
-            .DeleteByWorkspaceOrProjects(
+            .GetListByWorkspaceOrProjects(
                 Arg.Is<WorkspaceId>(wId => wId == domainEvent.Workspace.Id),
                 Arg.Is<List<ProjectAggregate>>(p => p == projects));
+        _customFieldSetupRepository
+            .Received(1)
+            .RemoveRange(Arg.Is<List<CustomFieldSetupAggregate>>(cfs => cfs == customFieldSetups));
     }
 }

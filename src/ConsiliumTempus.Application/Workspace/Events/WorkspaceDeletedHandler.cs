@@ -14,9 +14,10 @@ public sealed class WorkspaceDeletedHandler(
         var workspace = notification.Workspace;
 
         var projects = await projectRepository.GetListByWorkspace(workspace.Id, cancellationToken);
-        await customFieldSetupRepository.DeleteByWorkspaceOrProjects(
+        var customFieldSetups = await customFieldSetupRepository.GetListByWorkspaceOrProjects(
             workspace.Id,
             projects,
             cancellationToken);
+        customFieldSetupRepository.RemoveRange(customFieldSetups);
     }
 }
