@@ -4,6 +4,7 @@ using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
@@ -78,5 +79,12 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .IgnoreAutoIncludes()
             .Where(t => t.Stage.Sprint.Project.Id == projectId)
             .ToListAsync(cancellationToken);
+    }
+
+    public Task DeleteCustomFieldsByTask(ProjectTaskId id, CancellationToken cancellationToken = default)
+    {
+        return dbContext.Set<CustomField>()
+            .Where(cf => cf.ProjectTask.Id == id)
+            .ExecuteDeleteAsync(cancellationToken);
     }
 }

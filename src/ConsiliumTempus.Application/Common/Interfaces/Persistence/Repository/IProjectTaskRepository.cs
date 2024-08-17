@@ -36,4 +36,8 @@ public interface IProjectTaskRepository
     Task<List<ProjectTaskAggregate>> GetListByProject(
         ProjectId projectId,
         CancellationToken cancellationToken = default);
+
+    Task DeleteCustomFieldsByTask(
+        ProjectTaskId id,
+        CancellationToken cancellationToken = default);
 }
