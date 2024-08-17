@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using Mapster;
@@ -53,17 +54,17 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
         config.NewConfig<GetCollectionCustomFieldSetupFromProjectRequest, GetCollectionCustomFieldSetupQuery>();
 
         config.NewConfig<GetCollectionCustomFieldSetupResult, GetCollectionCustomFieldSetupFromProjectResponse>();
-        config.NewConfig<CustomFieldSetupAggregate,
+        config.NewConfig<CustomFieldSetupAggregate, 
                 GetCollectionCustomFieldSetupFromProjectResponse.CustomFieldSetupResponse>()
-            .Include<NumberCustomFieldSetupAggregate,
-                GetCollectionCustomFieldSetupFromProjectResponse.NumberCustomFieldSetupResponse>()
-            .Include<SingleSelectCustomFieldSetupAggregate,
-                GetCollectionCustomFieldSetupFromProjectResponse.SingleSelectCustomFieldSetupResponse>()
-            .Include<TextCustomFieldSetupAggregate,
-                GetCollectionCustomFieldSetupFromProjectResponse.TextCustomFieldSetupResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value);
+            .Map(dest => dest.Description, src => src.Description.Value)
+            .Map(dest => dest.Type, src =>
+                src is NumberCustomFieldSetupAggregate 
+                    ? CustomFieldType.Number.ToString()
+                    : src is SingleSelectCustomFieldSetupAggregate 
+                        ? CustomFieldType.SingleSelect.ToString()
+                        : CustomFieldType.Text.ToString());
     }
 
     private static void CreateOnProjectMappings(TypeAdapterConfig config)

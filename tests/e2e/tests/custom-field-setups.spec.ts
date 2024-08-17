@@ -4,7 +4,8 @@ import { getPersonalWorkspace } from "../utils/workspaces.utils";
 import { createProject } from "../utils/projects.utils";
 import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
-import CreateCustomFieldSetupOnProjectRequest from "../types/requests/custom-field-setup/CreateCustomFieldSetupOnProjectRequest";
+import CreateCustomFieldSetupOnProjectRequest
+  from "../types/requests/custom-field-setup/CreateCustomFieldSetupOnProjectRequest";
 import { createCustomFieldSetup, getCustomFieldSetupsFromProject } from "../utils/custom-field-setup.utils";
 
 test.describe('should allow operations on the custom field setup entity', () => {
@@ -196,31 +197,19 @@ test.describe('should allow operations on the custom field setup entity', () => 
         id: numberCustomField.id,
         name: numberCustomField.name,
         description: numberCustomField.description,
-        settings: {
-          currencyCode: numberCustomField.settings.currencyCode,
-          decimals: numberCustomField.settings.decimals,
-          rounding: numberCustomField.settings.rounding,
-        }
+        type: 'Number'
       },
       {
         id: singleSelectCustomField.id,
         name: singleSelectCustomField.name,
         description: singleSelectCustomField.description,
-        options: [
-          {
-            value: singleSelectCustomField.options[0].value,
-            color: singleSelectCustomField.options[0].color,
-          },
-          {
-            value: singleSelectCustomField.options[1].value,
-            color: singleSelectCustomField.options[1].color,
-          }
-        ]
+        type: 'SingleSelect'
       },
       {
         id: textCustomField.id,
         name: textCustomField.name,
         description: textCustomField.description,
+        type: 'Text'
       }
     ]))
   })
@@ -258,12 +247,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         {
           id: expect.any(String),
           name: body.name,
-          description: body.description,
-          settings: {
-            currencyCode: body.numberCustomFieldSetup?.settings.currencyCode,
-            decimals: body.numberCustomFieldSetup?.settings!.decimals,
-            rounding: body.numberCustomFieldSetup?.settings!.rounding,
-          }
+          description: body.description
         }
       ])
     })
@@ -307,17 +291,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         {
           id: expect.any(String),
           name: body.name,
-          description: body.description,
-          options: [
-            {
-              value: body.singleSelectCustomFieldSetup?.options[0].value,
-              color: body.singleSelectCustomFieldSetup?.options[0].color,
-            },
-            {
-              value: body.singleSelectCustomFieldSetup?.options[1].value,
-              color: body.singleSelectCustomFieldSetup?.options[1].color,
-            }
-          ]
+          description: body.description
         }
       ])
     })

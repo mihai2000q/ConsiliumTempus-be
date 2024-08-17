@@ -165,38 +165,14 @@ internal static partial class Utils
             response.Name.Should().Be(customFieldSetup.Name.Value);
             response.Description.Should().Be(customFieldSetup.Description.Value);
 
-            switch (response)
+            var mapSetupTypeToEnumType = new Dictionary<Type, CustomFieldType>
             {
-                case GetCollectionCustomFieldSetupFromProjectResponse.NumberCustomFieldSetupResponse numberResponse:
-                {
-                    var numberCustomFieldSetup = (NumberCustomFieldSetupAggregate)customFieldSetup;
-                    numberResponse.Settings.CurrencyCode.Should().Be(numberCustomFieldSetup.Settings.CurrencyCode);
-                    numberResponse.Settings.Decimals.Should().Be(numberCustomFieldSetup.Settings.Decimals);
-                    numberResponse.Settings.Rounding.Should().Be(numberCustomFieldSetup.Settings.Rounding);
-                    break;
-                }
-                case GetCollectionCustomFieldSetupFromProjectResponse.SingleSelectCustomFieldSetupResponse
-                    singleSelectResponse:
-                {
-                    var singleSelectCustomFieldSetup = (SingleSelectCustomFieldSetupAggregate)customFieldSetup;
-                    singleSelectResponse.Options
-                        .Zip(singleSelectCustomFieldSetup.Options)
-                        .Should().AllSatisfy(x => AssertSingleSelectOptionResponse(x.First, x.Second));
-                    break;
-                }
-                case GetCollectionCustomFieldSetupFromProjectResponse.TextCustomFieldSetupResponse:
-                    break;
-            }
-        }
-
-        private static void AssertSingleSelectOptionResponse(
-            GetCollectionCustomFieldSetupFromProjectResponse.SingleSelectCustomFieldSetupResponse.
-                SingleSelectOptionResponse response,
-            SingleSelectOption singleSelectOption)
-        {
-            response.Id.Should().Be(singleSelectOption.Id);
-            response.Value.Should().Be(singleSelectOption.Value);
-            response.Color.Should().Be(singleSelectOption.Color);
+                { typeof(NumberCustomFieldSetupAggregate), CustomFieldType.Number },
+                { typeof(SingleSelectCustomFieldSetupAggregate), CustomFieldType.SingleSelect },
+                { typeof(TextCustomFieldSetupAggregate), CustomFieldType.Text },
+            };
+            
+            response.Type.Should().Be(mapSetupTypeToEnumType[customFieldSetup.GetType()].ToString());
         }
 
         private static void AssertNumberCustomFieldSetup(
