@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Enums;
 
@@ -25,6 +26,11 @@ public static class CustomFieldSetupCommandFactory
             numberCustomFieldSetup,
             singleSelectCustomFieldSetup,
             textCustomFieldSetup);
+    }
+
+    public static DeleteCustomFieldSetupCommand CreateDeleteCustomFieldSetupCommand(Guid? id = null)
+    {
+        return new DeleteCustomFieldSetupCommand(id ?? Guid.NewGuid());
     }
 
     public static CreateCustomFieldSetupCommand CreateCreateCustomFieldSetupCommandWithType(string type)

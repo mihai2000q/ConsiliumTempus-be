@@ -57,6 +57,10 @@ internal static partial class Utils
                 default:
                     throw new ArgumentOutOfRangeException(nameof(command));
             }
+
+            workspace?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project?.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertFromCustomFieldSetupCreated(

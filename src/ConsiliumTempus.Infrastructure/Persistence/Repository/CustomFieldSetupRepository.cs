@@ -17,6 +17,16 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
     {
         return await dbContext.CustomFieldSetups.FindAsync([id], cancellationToken);
     }
+    
+    public Task<CustomFieldSetupAggregate?> GetWithWorkspaceAndProject(
+        CustomFieldSetupId id,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.CustomFieldSetups
+            .Include(cfs => cfs.Workspace)
+            .Include(cfs => cfs.Project)
+            .SingleOrDefaultAsync(cfs => cfs.Id == id, cancellationToken);
+    }
 
     public Task<List<CustomFieldSetupAggregate>> GetList(
         WorkspaceId? workspaceId,
