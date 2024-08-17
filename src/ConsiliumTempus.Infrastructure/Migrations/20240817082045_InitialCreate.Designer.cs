@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240817080438_InitialCreate")]
+    [Migration("20240817082045_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -1632,11 +1632,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.CustomField", b =>
                 {
-                    b.HasOne("ConsiliumTempus.Domain.ProjectTask.ProjectTaskAggregate", null)
+                    b.HasOne("ConsiliumTempus.Domain.ProjectTask.ProjectTaskAggregate", "ProjectTask")
                         .WithMany("CustomFields")
                         .HasForeignKey("ProjectTaskId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("ProjectTask");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.ProjectTaskAggregate", b =>

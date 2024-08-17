@@ -60,9 +60,7 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
         builder.Navigation(t => t.Comments).AutoInclude(false);
 
         builder.HasMany(t => t.CustomFields)
-            .WithOne()
-            .HasForeignKey(nameof(ProjectTaskAggregate).TruncateAggregate().ToId())
-            .IsRequired()
+            .WithOne(cf => cf.ProjectTask)
             .OnDelete(DeleteBehavior.NoAction);
     }
 
@@ -101,6 +99,9 @@ public sealed class CustomFieldConfiguration : IEntityTypeConfiguration<CustomFi
             .HasConversion(
                 id => id.Value,
                 value => CustomFieldId.Create(value));
+
+        builder.HasOne(cf => cf.ProjectTask)
+            .WithMany(t => t.CustomFields);
     }
 }
 
