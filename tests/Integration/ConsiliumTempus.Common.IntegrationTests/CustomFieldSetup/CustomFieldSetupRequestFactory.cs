@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -24,6 +25,14 @@ public static class CustomFieldSetupRequestFactory
             numberCustomFieldSetup,
             singleSelectCustomFieldSetup,
             textCustomFieldSetup);
+    }
+
+    public static GetCustomFieldSetupRequest CreateGetCustomFieldSetupRequest(Guid? id = null)
+    {
+        return new GetCustomFieldSetupRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
     }
 
     public static GetCollectionCustomFieldSetupFromProjectRequest CreateGetCollectionCustomFieldSetupFromProjectRequest(

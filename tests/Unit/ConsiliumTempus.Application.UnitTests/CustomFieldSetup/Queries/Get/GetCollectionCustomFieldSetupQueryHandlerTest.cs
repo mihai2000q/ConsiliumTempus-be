@@ -43,7 +43,7 @@ public class GetCustomFieldSetupQueryHandlerTest
             .Get(Arg.Is<CustomFieldSetupId>(cId => cId.Value == query.Id));
 
         outcome.IsError.Should().BeFalse();
-        outcome.Value.Should().Be(customFieldSetup);
+        outcome.Value.CustomFieldSetup.Should().Be(customFieldSetup);
     }
 
     [Fact]

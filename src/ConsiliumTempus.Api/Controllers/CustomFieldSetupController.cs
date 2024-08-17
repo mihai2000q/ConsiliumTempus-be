@@ -1,6 +1,8 @@
 ﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
+using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using MapsterMapper;
 using MediatR;
@@ -10,6 +12,18 @@ namespace ConsiliumTempus.Api.Controllers;
 
 public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Get(GetCustomFieldSetupRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<GetCustomFieldSetupQuery>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            setup => Ok(Mapper.Map<GetCustomFieldSetupResponse>(setup)),
+            Problem
+        );
+    }
+
     [HttpGet("Project/{projectId:guid}")]
     public async Task<IActionResult> GetCollectionFromProject(
         GetCollectionCustomFieldSetupFromProjectRequest request,

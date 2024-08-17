@@ -1,6 +1,8 @@
 ﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
+using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -12,6 +14,15 @@ internal static partial class Utils
 {
     internal static class CustomFieldSetup
     {
+        public static bool AssertGetCustomFieldSetupQuery(
+            GetCustomFieldSetupQuery query,
+            GetCustomFieldSetupRequest request)
+        {
+            query.Id.Should().Be(request.Id);
+
+            return true;
+        }
+
         public static bool AssertGetCollectionCustomFieldSetupQuery(
             GetCollectionCustomFieldSetupQuery query,
             GetCollectionCustomFieldSetupFromProjectRequest request)
@@ -43,11 +54,36 @@ internal static partial class Utils
             command.SingleSelectCustomFieldSetup?.Options
                 .Zip(request.SingleSelectCustomFieldSetup!.Options)
                 .Should().AllSatisfy(x => AssertSingleSelectOptionCommand(x.First, x.Second));
-            command.SingleSelectCustomFieldSetup?.DefaultOptionId.Should().Be(request.SingleSelectCustomFieldSetup!.DefaultOptionId);
+            command.SingleSelectCustomFieldSetup?.DefaultOptionId.Should()
+                .Be(request.SingleSelectCustomFieldSetup!.DefaultOptionId);
 
             command.TextCustomFieldSetup?.DefaultText.Should().Be(request.TextCustomFieldSetup!.DefaultText);
 
             return true;
+        }
+
+        public static void AssertGetCustomFieldSetupResponse(
+            GetCustomFieldSetupResponse response,
+            GetCustomFieldSetupResult result)
+        {
+            response.CustomFieldSetup.Id.Should().Be(result.CustomFieldSetup.Id.Value);
+            response.CustomFieldSetup.Name.Should().Be(result.CustomFieldSetup.Name.Value);
+            response.CustomFieldSetup.Description.Should().Be(result.CustomFieldSetup.Description.Value);
+            switch (response.CustomFieldSetup)
+            {
+                case GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse numberSetup:
+                    AssertNumberCustomFieldSetupResponse(numberSetup,
+                        (NumberCustomFieldSetupAggregate)result.CustomFieldSetup);
+                    break;
+                case GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse singleSelectSetup:
+                    AssertSingleSelectCustomFieldSetupResponse(singleSelectSetup,
+                        (SingleSelectCustomFieldSetupAggregate)result.CustomFieldSetup);
+                    break;
+                case GetCustomFieldSetupResponse.TextCustomFieldSetupResponse textSetup:
+                    AssertTextCustomFieldSetupResponse(textSetup, 
+                        (TextCustomFieldSetupAggregate)result.CustomFieldSetup);
+                    break;
+            }
         }
 
         public static void AssertGetCollectionCustomFieldSetupFromProjectResponse(
@@ -56,10 +92,54 @@ internal static partial class Utils
         {
             response.CustomFieldSetups
                 .Zip(result.CustomFieldSetups)
-                .Should().AllSatisfy(x => AssertCustomFieldSetup(x.First, x.Second));
+                .Should().AllSatisfy(x => AssertCustomFieldSetupResponse(x.First, x.Second));
         }
 
-        private static void AssertCustomFieldSetup(
+        private static void AssertNumberCustomFieldSetupResponse(
+            GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse response,
+            NumberCustomFieldSetupAggregate numberCustomFieldSetup)
+        {
+            if (numberCustomFieldSetup.DefaultNumber is null)
+                response.DefaultNumber.Should().BeNull();
+            else
+                response.DefaultNumber.Should().Be(numberCustomFieldSetup.DefaultNumber.Value);
+        }
+
+        private static void AssertSingleSelectCustomFieldSetupResponse(
+            GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse response,
+            SingleSelectCustomFieldSetupAggregate singleSelectCustomFieldSetup)
+        {
+            response.Options
+                .Zip(singleSelectCustomFieldSetup.Options)
+                .Should().AllSatisfy(x => AssertSingleSelectOptionResponse(x.First, x.Second));
+
+            if (singleSelectCustomFieldSetup.DefaultOption is null)
+                response.DefaultOption.Should().BeNull();
+            else
+                AssertSingleSelectOptionResponse(response.DefaultOption, singleSelectCustomFieldSetup.DefaultOption);
+        }
+
+        private static void AssertTextCustomFieldSetupResponse(
+            GetCustomFieldSetupResponse.TextCustomFieldSetupResponse response,
+            TextCustomFieldSetupAggregate textCustomFieldSetup)
+        {
+            if (textCustomFieldSetup.DefaultText is null)
+                response.DefaultText.Should().BeNull();
+            else
+                response.DefaultText.Should().Be(textCustomFieldSetup.DefaultText.Value);
+        }
+
+        private static void AssertSingleSelectOptionResponse(
+            GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse? response,
+            SingleSelectOption option)
+        {
+            response.Should().NotBeNull();
+            response!.Id.Should().Be(option.Id);
+            response.Value.Should().Be(option.Value);
+            response.Color.Should().Be(option.Color);
+        }
+
+        private static void AssertCustomFieldSetupResponse(
             GetCollectionCustomFieldSetupFromProjectResponse.CustomFieldSetupResponse response,
             CustomFieldSetupAggregate customFieldSetup)
         {
@@ -102,8 +182,10 @@ internal static partial class Utils
         }
 
         private static void AssertSingleSelectOptionCommand(
-            CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand singleSelectOptionCommand,
-            CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest singleSelectOptionRequest)
+            CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand
+                singleSelectOptionCommand,
+            CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest
+                singleSelectOptionRequest)
         {
             singleSelectOptionCommand.Id.Should().Be(singleSelectOptionRequest.Id);
             singleSelectOptionCommand.Value.Should().Be(singleSelectOptionRequest.Value);

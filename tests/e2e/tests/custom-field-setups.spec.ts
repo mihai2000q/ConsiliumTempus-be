@@ -26,6 +26,121 @@ test.describe('should allow operations on the custom field setup entity', () => 
     await deleteUser(request)
   })
 
+  test.describe('should get custom field', () => {
+    test('should get number custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Budget",
+        description: "Represents a custom field",
+        type: 'number',
+        numberCustomFieldSetup: {
+          settings: {
+            currencyCode: "USD",
+            decimals: 2,
+            rounding: true
+          },
+          defaultNumber: 0
+        }
+      }
+      const numberCustomField = await createCustomFieldSetup(request, createCustomFieldSetupOnProjectRequest)
+      const response = await request.get(`/api/customFieldSetups/${numberCustomField.id}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        customFieldSetup: {
+          id: numberCustomField.id,
+          name: createCustomFieldSetupOnProjectRequest.name,
+          description: createCustomFieldSetupOnProjectRequest.description,
+          settings: {
+            currencyCode: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.currencyCode,
+            decimals: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.decimals,
+            rounding: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.rounding,
+          },
+          defaultNumber: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup?.defaultNumber
+        }
+      })
+    })
+
+    test('should get single select custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Priority",
+        description: "Represents a custom field",
+        type: 'singleSelect',
+        singleSelectCustomFieldSetup: {
+          options: [
+            {
+              id: "1",
+              value: "High",
+              color: "#FF1122"
+            },
+            {
+              id: "2",
+              value: "Low",
+              color: "#1122FF"
+            }
+          ],
+          defaultOptionId: "1"
+        }
+      }
+      const singleSelectCustomField = await createCustomFieldSetup(request, createCustomFieldSetupOnProjectRequest)
+      const response = await request.get(`/api/customFieldSetups/${singleSelectCustomField.id}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        customFieldSetup: {
+          id: singleSelectCustomField.id,
+          name: createCustomFieldSetupOnProjectRequest.name,
+          description: createCustomFieldSetupOnProjectRequest.description,
+          options: [
+            {
+              id: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].id,
+              value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].value,
+              color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].color,
+            },
+            {
+              id: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].id,
+              value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].value,
+              color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].color,
+            }
+          ],
+          defaultOption: {
+            id: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].id,
+            value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].value,
+            color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].color,
+          }
+        }
+      })
+    })
+
+    test('should get text custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Priority",
+        description: "Represents a custom field",
+        type: 'text',
+        textCustomFieldSetup: {
+          defaultText: "some default text"
+        }
+      }
+      const textCustomField = await createCustomFieldSetup(request, createCustomFieldSetupOnProjectRequest)
+      const response = await request.get(`/api/customFieldSetups/${textCustomField.id}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        customFieldSetup: {
+          id: textCustomField.id,
+          name: createCustomFieldSetupOnProjectRequest.name,
+          description: createCustomFieldSetupOnProjectRequest.description,
+          defaultText: createCustomFieldSetupOnProjectRequest.textCustomFieldSetup?.defaultText,
+        }
+      })
+    })
+  })
+
   test('should get custom field setups from project', async ({ request }) => {
     const textCustomField = await createCustomFieldSetup(request, {
       projectId: PROJECT_ID,

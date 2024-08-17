@@ -1,9 +1,12 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Controllers;
+using ConsiliumTempus.Api.UnitTests.TestData;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
+using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -29,6 +32,53 @@ public class CustomFieldSetupControllerTest
 
     #endregion
 
+    [Theory]
+    [ClassData(typeof(CustomFieldSetupControllerData.GetCustomFieldSetupResults))]
+    public async Task Get_WhenIsSuccessful_ShouldReturnResponse(GetCustomFieldSetupResult result)
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateGetCustomFieldSetupRequest();
+
+        _mediator
+            .Send(Arg.Any<GetCustomFieldSetupQuery>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.Get(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCustomFieldSetupQuery>(q => 
+                Utils.CustomFieldSetup.AssertGetCustomFieldSetupQuery(q, request)));
+
+        var response = outcome.ToResponse<GetCustomFieldSetupResponse>();
+        Utils.CustomFieldSetup.AssertGetCustomFieldSetupResponse(response, result);
+    }
+
+    [Fact]
+    public async Task Get_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateGetCollectionCustomFieldSetupFromProjectRequest();
+
+        var error = Errors.CustomFieldSetup.NotFound;
+        _mediator
+            .Send(Arg.Any<GetCollectionCustomFieldSetupQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetCollectionFromProject(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCollectionCustomFieldSetupQuery>(q =>
+                Utils.CustomFieldSetup.AssertGetCollectionCustomFieldSetupQuery(q, request)));
+
+        outcome.ValidateError(error);
+    }
+    
     [Fact]
     public async Task GetCollectionFromProject_WhenIsSuccessful_ShouldReturnResponse()
     {

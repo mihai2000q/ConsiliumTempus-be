@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -7,6 +8,23 @@ namespace ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 
 public static class CustomFieldSetupRequestFactory
 {
+    public static GetCustomFieldSetupRequest CreateGetCustomFieldSetupRequest(Guid? id = null)
+    {
+        return new GetCustomFieldSetupRequest
+        {
+            Id = id ?? Guid.NewGuid()
+        };
+    }
+
+    public static GetCollectionCustomFieldSetupFromProjectRequest CreateGetCollectionCustomFieldSetupFromProjectRequest(
+        Guid? projectId = null)
+    {
+        return new GetCollectionCustomFieldSetupFromProjectRequest
+        {
+            ProjectId = projectId ?? Guid.NewGuid()
+        };
+    }
+
     public static CreateCustomFieldSetupOnProjectRequest CreateCreateCustomFieldSetupOnProjectRequest(
         Guid? projectId = null,
         string name = Constants.CustomFieldSetup.Name,
@@ -24,14 +42,5 @@ public static class CustomFieldSetupRequestFactory
             numberCustomFieldSetup,
             singleSelectCustomFieldSetup,
             textCustomFieldSetup);
-    }
-
-    public static GetCollectionCustomFieldSetupFromProjectRequest CreateGetCollectionCustomFieldSetupFromProjectRequest(
-        Guid? projectId = null)
-    {
-        return new GetCollectionCustomFieldSetupFromProjectRequest
-        {
-            ProjectId = projectId ?? Guid.NewGuid()
-        };
     }
 }

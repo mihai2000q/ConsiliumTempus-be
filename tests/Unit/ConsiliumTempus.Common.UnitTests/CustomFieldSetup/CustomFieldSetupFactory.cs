@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Entities;
@@ -52,10 +53,7 @@ public static class CustomFieldSetupFactory
         var setup = SingleSelectCustomFieldSetupAggregate.Create(
             options ??
             [
-                SingleSelectOption.Create(
-                    Constants.SingleSelectOption.Value1,
-                    Constants.SingleSelectOption.Color,
-                    0),
+                SingleSelectOptionFactory.Create(),
                 SingleSelectOption.Create(
                     Constants.SingleSelectOption.Value2,
                     Constants.SingleSelectOption.Color,
