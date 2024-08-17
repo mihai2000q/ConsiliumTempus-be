@@ -25,7 +25,8 @@ internal class WorkspaceData : ITestData
             Workspaces,
             Memberships,
             WorkspaceInvitations,
-            Projects
+            Projects,
+            CustomFieldSetups
         ];
     }
 
@@ -255,7 +256,7 @@ internal class WorkspaceData : ITestData
             AuditFactory.Create(Users[0])),
         CustomFieldSetupFactory.CreateText(
             null,
-            Projects[1],
+            Projects[2],
             AuditFactory.Create(Users[0])),
         CustomFieldSetupFactory.CreateNumber(
             Workspaces[0],

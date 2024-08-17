@@ -35,6 +35,10 @@ public class ProjectControllerDeleteTest(WebAppFactory factory)
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length - 1);
         var workspace = dbContext.Workspaces.Single(w => w == project.Workspace);
         workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+
+        // All custom field setups depend on the deleted project
+        dbContext.CustomFieldSetups
+            .Should().HaveCount(project.CustomFieldSetups.Count(cfs => cfs.Workspace is not null));
     }
 
     [Fact]
