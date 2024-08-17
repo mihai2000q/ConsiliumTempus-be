@@ -20,6 +20,10 @@ public interface ICustomFieldSetupRepository
         List<ProjectAggregate> projects,
         CancellationToken cancellationToken = default);
 
+    public Task<List<CustomFieldSetupAggregate>> GetListByProject(
+        ProjectId projectId,
+        CancellationToken cancellationToken = default);
+
     Task Add(CustomFieldSetupAggregate customFieldSetup, CancellationToken cancellationToken = default);
 
     void Remove(CustomFieldSetupAggregate customFieldSetup);

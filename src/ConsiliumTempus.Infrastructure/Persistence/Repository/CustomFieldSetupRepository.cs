@@ -41,6 +41,15 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<CustomFieldSetupAggregate>> GetListByProject(
+        ProjectId projectId,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.CustomFieldSetups
+            .Where(cfs => cfs.Workspace == null && cfs.Project != null && cfs.Project.Id == projectId)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task Add(CustomFieldSetupAggregate customFieldSetup, CancellationToken cancellationToken = default)
     {
         await dbContext.CustomFieldSetups.AddAsync(customFieldSetup, cancellationToken);
