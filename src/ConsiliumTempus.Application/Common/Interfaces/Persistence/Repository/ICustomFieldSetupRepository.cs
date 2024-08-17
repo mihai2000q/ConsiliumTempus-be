@@ -15,18 +15,16 @@ public interface ICustomFieldSetupRepository
         ProjectId? projectId,
         CancellationToken cancellationToken = default);
 
-    Task<List<CustomFieldSetupAggregate>> GetListByWorkspaceOrProjects(
-        WorkspaceId workspaceId,
-        List<ProjectAggregate> projects,
-        CancellationToken cancellationToken = default);
-
-    public Task<List<CustomFieldSetupAggregate>> GetListByProject(
-        ProjectId projectId,
-        CancellationToken cancellationToken = default);
-
     Task Add(CustomFieldSetupAggregate customFieldSetup, CancellationToken cancellationToken = default);
 
     void Remove(CustomFieldSetupAggregate customFieldSetup);
 
-    void RemoveRange(List<CustomFieldSetupAggregate> customFieldSetup);
+    Task DeleteByProject(
+        ProjectId projectId,
+        CancellationToken cancellationToken = default);
+
+    Task DeleteByWorkspaceOrProjects(
+        WorkspaceId workspaceId,
+        List<ProjectAggregate> projects,
+        CancellationToken cancellationToken = default);
 }
