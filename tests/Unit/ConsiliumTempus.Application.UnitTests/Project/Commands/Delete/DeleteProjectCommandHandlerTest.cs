@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using NSubstitute.ReturnsExtensions;
 
@@ -48,6 +49,11 @@ public class DeleteProjectCommandHandlerTest
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectResult());
+        
+        project.DomainEvents.Should().HaveCount(1);
+        var domainEvent = project.DomainEvents[0];
+        domainEvent.Should().BeOfType<ProjectDeleted>();
+        ((ProjectDeleted)domainEvent).Project.Should().Be(project);
     }
 
     [Fact]
