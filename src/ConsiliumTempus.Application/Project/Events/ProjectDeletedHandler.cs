@@ -11,9 +11,8 @@ public sealed class ProjectDeletedHandler(ICustomFieldSetupRepository customFiel
     {
         var project = notification.Project;
 
-        var customFieldSetups = await customFieldSetupRepository.GetListByProject(
+        await customFieldSetupRepository.DeleteByProject(
             project.Id,
             cancellationToken);
-        customFieldSetupRepository.RemoveRange(customFieldSetups);
     }
 }
