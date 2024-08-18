@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.CustomFieldSetup.Events;
 using ConsiliumTempus.Application.UnitTests.TestData.CustomFieldSetup.Events;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
+using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.Events;
@@ -30,7 +31,7 @@ public class CustomFieldSetupCreatedHandlerTest
         CustomFieldSetupAggregate setup)
     {
         // Arrange
-        var domainEvent = new CustomFieldSetupCreated(setup);
+        var domainEvent = new AddedCustomFieldSetupToProject(setup, ProjectFactory.Create());
 
         var tasks = ProjectTaskFactory.CreateList();
         _projectTaskRepository
@@ -43,7 +44,7 @@ public class CustomFieldSetupCreatedHandlerTest
         // Assert
         await _projectTaskRepository
             .Received(1)
-            .GetListByProject(Arg.Is<ProjectId>(pId => pId == domainEvent.CustomFieldSetup.Project!.Id));
+            .GetListByProject(Arg.Is<ProjectId>(pId => pId == domainEvent.Project.Id));
 
         Utils.CustomFieldSetup.AssertFromCustomFieldSetupCreated(domainEvent, tasks);
     }

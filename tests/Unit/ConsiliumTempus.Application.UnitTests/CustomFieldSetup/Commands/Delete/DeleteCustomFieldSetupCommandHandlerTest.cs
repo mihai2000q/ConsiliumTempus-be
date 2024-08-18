@@ -31,7 +31,7 @@ public class DeleteCustomFieldSetupCommandHandlerTest
 
         var customFieldSetup = CustomFieldSetupFactory.CreateText();
         _customFieldSetupRepository
-            .GetWithWorkspaceAndProject(Arg.Any<CustomFieldSetupId>())
+            .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
             .Returns(customFieldSetup);
 
         // Act
@@ -40,14 +40,17 @@ public class DeleteCustomFieldSetupCommandHandlerTest
         // Arrange
         await _customFieldSetupRepository
             .Received(1)
-            .GetWithWorkspaceAndProject(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
+            .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteCustomFieldSetupResult());
 
         customFieldSetup.Workspace?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
-        customFieldSetup.Project?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
-        customFieldSetup.Project?.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+        foreach (var project in customFieldSetup.Projects)
+        {
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+        }
     }
 
     [Fact]
@@ -57,7 +60,7 @@ public class DeleteCustomFieldSetupCommandHandlerTest
         var command = CustomFieldSetupCommandFactory.CreateDeleteCustomFieldSetupCommand();
 
         _customFieldSetupRepository
-            .GetWithWorkspaceAndProject(Arg.Any<CustomFieldSetupId>())
+            .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
             .ReturnsNull();
 
         // Act
@@ -66,7 +69,7 @@ public class DeleteCustomFieldSetupCommandHandlerTest
         // Arrange
         await _customFieldSetupRepository
             .Received(1)
-            .GetWithWorkspaceAndProject(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
+            .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.CustomFieldSetup.NotFound);
     }

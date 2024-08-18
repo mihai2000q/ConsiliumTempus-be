@@ -58,8 +58,8 @@ public sealed class CreateCustomFieldSetupCommandHandler(
             _ => throw new ArgumentOutOfRangeException(nameof(command))
         };
         await customFieldSetupRepository.Add(customFieldSetup, cancellationToken);
-        customFieldSetup.Workspace?.RefreshActivity();
-        customFieldSetup.Project?.RefreshActivity();
+        _workspace?.RefreshActivity();
+        _project?.RefreshActivity();
 
         return new CreateCustomFieldSetupResult();
     }

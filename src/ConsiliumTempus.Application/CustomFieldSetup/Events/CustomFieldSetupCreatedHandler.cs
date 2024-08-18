@@ -6,14 +6,12 @@ using MediatR;
 namespace ConsiliumTempus.Application.CustomFieldSetup.Events;
 
 public sealed class CustomFieldSetupCreatedHandler(IProjectTaskRepository projectTaskRepository)
-    : INotificationHandler<CustomFieldSetupCreated>
+    : INotificationHandler<AddedCustomFieldSetupToProject>
 {
-    public async Task Handle(CustomFieldSetupCreated notification, CancellationToken cancellationToken)
+    public async Task Handle(AddedCustomFieldSetupToProject notification, CancellationToken cancellationToken)
     {
-        var setup = notification.CustomFieldSetup;
-        if (setup.Project is null) return;
-
-        var tasks = await projectTaskRepository.GetListByProject(setup.Project.Id, cancellationToken);
+        var (setup, project) = notification;
+        var tasks = await projectTaskRepository.GetListByProject(project.Id, cancellationToken);
         tasks.ForEach(task => task.AddCustomField(CustomField.Create(setup, task)));
     }
 }

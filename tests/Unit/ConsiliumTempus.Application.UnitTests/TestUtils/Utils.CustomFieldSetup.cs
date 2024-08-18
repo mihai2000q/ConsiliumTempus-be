@@ -27,10 +27,6 @@ internal static partial class Utils
             customFieldSetup.Name.Value.Should().Be(command.Name);
             customFieldSetup.Description.Value.Should().Be(command.Description);
             customFieldSetup.Audit.ShouldBeCreated(user);
-            customFieldSetup.DomainEvents.Should().HaveCount(1);
-            var domainEvent = customFieldSetup.DomainEvents[0];
-            domainEvent.Should().BeOfType<CustomFieldSetupCreated>();
-            ((CustomFieldSetupCreated)domainEvent).CustomFieldSetup.Should().Be(customFieldSetup);
 
             if (command.WorkspaceId is not null)
                 customFieldSetup.Workspace.Should().Be(workspace);
@@ -38,9 +34,15 @@ internal static partial class Utils
                 customFieldSetup.Workspace.Should().BeNull();
 
             if (command.ProjectId is not null)
-                customFieldSetup.Project.Should().Be(project);
-            else
-                customFieldSetup.Project.Should().BeNull();
+            {
+                project.Should().NotBeNull();
+                customFieldSetup.Projects.Should().Contain(project!);
+                customFieldSetup.DomainEvents.Should().HaveCount(1);
+                var domainEvent = customFieldSetup.DomainEvents[0];
+                domainEvent.Should().BeOfType<AddedCustomFieldSetupToProject>();
+                ((AddedCustomFieldSetupToProject)domainEvent).CustomFieldSetup.Should().Be(customFieldSetup);
+                ((AddedCustomFieldSetupToProject)domainEvent).Project.Should().Be(project);
+            }
 
             var customFieldType = Enum.Parse<CustomFieldType>(command.Type);
             switch (customFieldType)
@@ -64,10 +66,10 @@ internal static partial class Utils
         }
 
         internal static void AssertFromCustomFieldSetupCreated(
-            CustomFieldSetupCreated domainEvent,
+            AddedCustomFieldSetupToProject domainEvent,
             List<ProjectTaskAggregate> tasks)
         {
-            var setup = domainEvent.CustomFieldSetup;
+            var (setup, _) = domainEvent;
             tasks.Should().AllSatisfy(task =>
             {
                 task.CustomFields.Should().HaveCount(1);
