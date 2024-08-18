@@ -10,24 +10,24 @@ using ConsiliumTempus.Domain.Project.ValueObjects;
 
 namespace ConsiliumTempus.Application.UnitTests.CustomFieldSetup.Events;
 
-public class CustomFieldSetupCreatedHandlerTest
+public class AddedCustomFieldSetupToProjectHandlerTest
 {
     #region Setup
 
     private readonly IProjectTaskRepository _projectTaskRepository;
-    private readonly CustomFieldSetupCreatedHandler _uut;
+    private readonly AddedCustomFieldSetupToProjectHandler _uut;
 
-    public CustomFieldSetupCreatedHandlerTest()
+    public AddedCustomFieldSetupToProjectHandlerTest()
     {
         _projectTaskRepository = Substitute.For<IProjectTaskRepository>();
-        _uut = new CustomFieldSetupCreatedHandler(_projectTaskRepository);
+        _uut = new AddedCustomFieldSetupToProjectHandler(_projectTaskRepository);
     }
 
     #endregion
 
     [Theory]
-    [ClassData(typeof(CustomFieldSetupCreatedHandlerData.GetCustomFieldSetups))]
-    public async Task HandleCustomFieldSetupCreated_WhenSuccessful_ShouldCreateCustomFieldOnAllProjectTasks(
+    [ClassData(typeof(AddedCustomFieldSetupToProjectHandlerData.GetCustomFieldSetups))]
+    public async Task HandleAddedCustomFieldSetupToProject_WhenSuccessful_ShouldCreateCustomFieldOnAllProjectTasks(
         CustomFieldSetupAggregate setup)
     {
         // Arrange
@@ -46,6 +46,6 @@ public class CustomFieldSetupCreatedHandlerTest
             .Received(1)
             .GetListByProject(Arg.Is<ProjectId>(pId => pId == domainEvent.Project.Id));
 
-        Utils.CustomFieldSetup.AssertFromCustomFieldSetupCreated(domainEvent, tasks);
+        Utils.CustomFieldSetup.AssertFromAddedCustomFieldSetupToProject(domainEvent, tasks);
     }
 }

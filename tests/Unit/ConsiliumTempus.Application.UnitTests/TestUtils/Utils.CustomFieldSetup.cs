@@ -85,7 +85,7 @@ internal static partial class Utils
             project?.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
-        internal static void AssertFromCustomFieldSetupCreated(
+        internal static void AssertFromAddedCustomFieldSetupToProject(
             AddedCustomFieldSetupToProject domainEvent,
             List<ProjectTaskAggregate> tasks)
         {

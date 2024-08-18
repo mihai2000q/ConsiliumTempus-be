@@ -4,7 +4,7 @@ using ConsiliumTempus.Domain.CustomFieldSetup;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.CustomFieldSetup.Events;
 
-internal static class CustomFieldSetupCreatedHandlerData
+internal static class AddedCustomFieldSetupToProjectHandlerData
 {
     internal class GetCustomFieldSetups : TheoryData<CustomFieldSetupAggregate>
     {
