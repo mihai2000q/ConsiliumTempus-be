@@ -1,5 +1,7 @@
 ﻿using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -39,5 +41,10 @@ public interface IProjectTaskRepository
 
     Task DeleteCustomFieldsByTask(
         ProjectTaskId id,
+        CancellationToken cancellationToken = default);
+
+    Task DeleteCustomFieldsByProjectAndSetup(
+        CustomFieldSetupAggregate customFieldSetup,
+        ProjectAggregate project,
         CancellationToken cancellationToken = default);
 }

@@ -62,6 +62,7 @@ public abstract class CustomFieldSetupAggregate : AggregateRoot<CustomFieldSetup
 
     public void RemoveProject(ProjectAggregate project)
     {
-        _projects.Remove(project);
+        if (_projects.Remove(project)) 
+            AddDomainEvent(new RemovedCustomFieldSetupFromProject(this, project));
     }
 }
