@@ -152,12 +152,12 @@ internal class ProjectTaskData : ITestData
     [
         CustomFieldSetupFactory.CreateNumber(
             null,
-            Projects[0],
+            [Projects[0]],
             AuditFactory.Create(Users[0]),
             name: "Budget"),
         CustomFieldSetupFactory.CreateSingleSelect(
             null,
-            Projects[0],
+            [Projects[0]],
             AuditFactory.Create(Users[0]),
             [
                 SingleSelectOptionFactory.Create(),
@@ -166,7 +166,7 @@ internal class ProjectTaskData : ITestData
             "Select only one field"),
         CustomFieldSetupFactory.CreateText(
             null,
-            Projects[0],
+            [Projects[0]],
             AuditFactory.Create(Users[0]),
             "Notes field"),
     ];

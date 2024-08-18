@@ -94,7 +94,7 @@ public class ProjectTaskControllerCreateTest(WebAppFactory factory)
             .Single(t => t.Name.Value == request.Name);
 
         var customFieldSetups = await dbContext.CustomFieldSetups
-            .Where(cfs => cfs.Project != null && cfs.Project == createdTask.Stage.Sprint.Project)
+            .Where(cfs => cfs.Projects.Any(p => p == createdTask.Stage.Sprint.Project))
             .ToListAsync();
         
         Utils.ProjectTask.AssertCreation(createdTask, request, user, customFieldSetups);

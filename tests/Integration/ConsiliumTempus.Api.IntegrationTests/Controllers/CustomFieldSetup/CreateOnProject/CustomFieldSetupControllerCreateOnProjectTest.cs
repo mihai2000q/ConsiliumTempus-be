@@ -125,7 +125,7 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
             .AsNoTracking()
             .Include(cfs => cfs.Audit)
             .Include(cfs => cfs.Workspace)
-            .Include(cfs => cfs.Project)
+            .Include(cfs => cfs.Projects)
             .SingleAsync(cfs => cfs.Name == Name.Create(request.Name));
 
         var tasks = await dbContext.ProjectTasks

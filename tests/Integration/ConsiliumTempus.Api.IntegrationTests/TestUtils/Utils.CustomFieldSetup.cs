@@ -28,7 +28,8 @@ internal static partial class Utils
             customFieldSetup.Description.Value.Should().Be(request.Description);
             customFieldSetup.Audit.ShouldBeCreated(user);
             customFieldSetup.Workspace.Should().BeNull();
-            customFieldSetup.Project.Should().Be(project);
+            customFieldSetup.Projects.Should().HaveCount(1);
+            customFieldSetup.Projects.Should().Contain(project);
 
             var customFieldType = Enum.Parse<CustomFieldType>(request.Type);
             switch (customFieldType)
@@ -46,9 +47,8 @@ internal static partial class Utils
                     throw new ArgumentOutOfRangeException(nameof(request));
             }
 
-            customFieldSetup.Workspace?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            customFieldSetup.Project?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            customFieldSetup.Project?.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            customFieldSetup.Projects[0].LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            customFieldSetup.Projects[0].Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             tasks.Should().AllSatisfy(task =>
             {
@@ -121,6 +121,9 @@ internal static partial class Utils
             GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse response,
             NumberCustomFieldSetupAggregate numberCustomFieldSetup)
         {
+            response.Settings.CurrencyCode.Should().Be(numberCustomFieldSetup.Settings.CurrencyCode);
+            response.Settings.Decimals.Should().Be(numberCustomFieldSetup.Settings.Decimals);
+            response.Settings.Rounding.Should().Be(numberCustomFieldSetup.Settings.Rounding);
             if (numberCustomFieldSetup.DefaultNumber is null)
                 response.DefaultNumber.Should().BeNull();
             else

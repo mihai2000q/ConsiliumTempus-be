@@ -293,22 +293,22 @@ internal class CustomFieldSetupData : ITestData
     [
         CustomFieldSetupFactory.CreateNumber(
             null,
-            Projects[0],
+            [Projects[0]],
             AuditFactory.Create(Users[0]),
             "A number field"),
         CustomFieldSetupFactory.CreateNumber(
             null,
-            Projects[0],
+            [Projects[0]],
             AuditFactory.Create(Users[0]),
             name: "Budget"),
         CustomFieldSetupFactory.CreateText(
             null,
-            Projects[0],
+            [Projects[0]],
             AuditFactory.Create(Users[0]),
             "Notes field"),
         CustomFieldSetupFactory.CreateSingleSelect(
         null,
-        Projects[0],
+        [Projects[0]],
         AuditFactory.Create(Users[0]),
         [
             SingleSelectOptionFactory.Create(), 
@@ -317,7 +317,7 @@ internal class CustomFieldSetupData : ITestData
         "Select only one field"),
         CustomFieldSetupFactory.CreateText(
             null,
-            Projects[0],
+            [Projects[0]],
             AuditFactory.Create(Users[0]),
             name: "Another text field setup"),
     ];

@@ -252,19 +252,19 @@ internal class WorkspaceData : ITestData
     [
         CustomFieldSetupFactory.CreateNumber(
             null,
-            Projects[0],
+            [Projects[0]],
             AuditFactory.Create(Users[0])),
         CustomFieldSetupFactory.CreateText(
             null,
-            Projects[2],
+            [Projects[2]],
             AuditFactory.Create(Users[0])),
         CustomFieldSetupFactory.CreateNumber(
             Workspaces[0],
-            Projects[0],
+            [Projects[0]],
             AuditFactory.Create(Users[0])),
         CustomFieldSetupFactory.CreateNumber(
             Workspaces[0],
-            null,
+            [],
             AuditFactory.Create(Users[0])),
     ];
 }

@@ -111,6 +111,9 @@ internal static partial class Utils
             GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse response,
             NumberCustomFieldSetupAggregate numberCustomFieldSetup)
         {
+            response.Settings.CurrencyCode.Should().Be(numberCustomFieldSetup.Settings.CurrencyCode);
+            response.Settings.Decimals.Should().Be(numberCustomFieldSetup.Settings.Decimals);
+            response.Settings.Rounding.Should().Be(numberCustomFieldSetup.Settings.Rounding);
             if (numberCustomFieldSetup.DefaultNumber is null)
                 response.DefaultNumber.Should().BeNull();
             else

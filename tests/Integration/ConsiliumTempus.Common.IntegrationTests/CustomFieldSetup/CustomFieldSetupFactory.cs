@@ -13,7 +13,7 @@ public static class CustomFieldSetupFactory
 {
     public static NumberCustomFieldSetupAggregate CreateNumber(
         WorkspaceAggregate? workspace,
-        ProjectAggregate? project,
+        List<ProjectAggregate> projects,
         Audit audit,
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
@@ -30,14 +30,14 @@ public static class CustomFieldSetupFactory
             .WithProperty(nameof(NumberCustomFieldSetupAggregate.Description), Description.Create(description))
             .WithProperty(nameof(NumberCustomFieldSetupAggregate.Audit), audit)
             .WithProperty(nameof(NumberCustomFieldSetupAggregate.Workspace), workspace)
-            .WithProperty(nameof(NumberCustomFieldSetupAggregate.Project), project)
+            .WithField(nameof(TextCustomFieldSetupAggregate.Projects).ToBackingField(), projects)
             .WithProperty(nameof(NumberCustomFieldSetupAggregate.Settings), settings)
             .Build();
     }
 
     public static SingleSelectCustomFieldSetupAggregate CreateSingleSelect(
         WorkspaceAggregate? workspace,
-        ProjectAggregate? project,
+        List<ProjectAggregate> projects,
         Audit audit,
         List<SingleSelectOption> options,
         string name = Constants.CustomFieldSetup.Name,
@@ -49,14 +49,14 @@ public static class CustomFieldSetupFactory
             .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.Description), Description.Create(description))
             .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.Audit), audit)
             .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.Workspace), workspace)
-            .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.Project), project)
+            .WithField(nameof(TextCustomFieldSetupAggregate.Projects).ToBackingField(), projects)
             .WithField(nameof(SingleSelectCustomFieldSetupAggregate.Options).ToBackingField(), options)
             .Build();
     }
 
     public static TextCustomFieldSetupAggregate CreateText(
         WorkspaceAggregate? workspace,
-        ProjectAggregate? project,
+        List<ProjectAggregate> projects,
         Audit audit,
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description)
@@ -67,7 +67,7 @@ public static class CustomFieldSetupFactory
             .WithProperty(nameof(TextCustomFieldSetupAggregate.Description), Description.Create(description))
             .WithProperty(nameof(TextCustomFieldSetupAggregate.Audit), audit)
             .WithProperty(nameof(TextCustomFieldSetupAggregate.Workspace), workspace)
-            .WithProperty(nameof(TextCustomFieldSetupAggregate.Project), project)
+            .WithField(nameof(TextCustomFieldSetupAggregate.Projects).ToBackingField(), projects)
             .Build();
     }
 }
