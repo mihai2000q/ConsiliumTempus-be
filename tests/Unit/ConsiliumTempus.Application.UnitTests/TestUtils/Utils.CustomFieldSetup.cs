@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
+﻿using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -16,6 +17,25 @@ internal static partial class Utils
 {
     internal static class CustomFieldSetup
     {
+        internal static void AssertAddToProjectCommand(
+            AddCustomFieldSetupToProjectCommand command,
+            CustomFieldSetupAggregate customFieldSetup,
+            ProjectAggregate project)
+        {
+            project.Id.Value.Should().Be(command.ProjectId);
+            customFieldSetup.Id.Value.Should().Be(command.Id);
+            customFieldSetup.Projects.Should().Contain(project);
+            customFieldSetup.DomainEvents.Should().HaveCount(1);
+            var domainEvent = customFieldSetup.DomainEvents[0];
+            domainEvent.Should().BeOfType<AddedCustomFieldSetupToProject>();
+            ((AddedCustomFieldSetupToProject)domainEvent).CustomFieldSetup.Should().Be(customFieldSetup);
+            ((AddedCustomFieldSetupToProject)domainEvent).Project.Should().Be(project);
+            
+            customFieldSetup.Workspace!.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+        }
+        
         internal static void AssertFromCreateCommand(
             CreateCustomFieldSetupCommand command,
             CustomFieldSetupAggregate customFieldSetup,
