@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Domain.CustomFieldSetup;
-using ErrorOr;
+﻿using ErrorOr;
 using MediatR;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
