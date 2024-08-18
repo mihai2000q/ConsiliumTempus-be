@@ -39,9 +39,9 @@ public sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<Cus
             .WithMany(w => w.CustomFieldSetups)
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasOne(cfs => cfs.Project)
+        builder.HasMany(cfs => cfs.Projects)
             .WithMany(p => p.CustomFieldSetups)
-            .OnDelete(DeleteBehavior.SetNull);
+            .UsingEntity("ProjectHasCustomFieldSetup");
 
         builder.HasOne(cfs => cfs.Audit)
             .WithMany();

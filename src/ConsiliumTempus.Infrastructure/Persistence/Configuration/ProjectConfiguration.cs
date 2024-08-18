@@ -65,9 +65,6 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
                 b.Property(nameof(ProjectAggregate) + "1".ToId())
                     .HasColumnName(nameof(ProjectId));
             });
-
-        builder.HasMany(p => p.CustomFieldSetups)
-            .WithOne(cfs => cfs.Project);
     }
 }
 

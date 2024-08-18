@@ -18,13 +18,13 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
         return await dbContext.CustomFieldSetups.FindAsync([id], cancellationToken);
     }
     
-    public Task<CustomFieldSetupAggregate?> GetWithWorkspaceAndProject(
+    public Task<CustomFieldSetupAggregate?> GetWithWorkspaceAndProjects(
         CustomFieldSetupId id,
         CancellationToken cancellationToken = default)
     {
         return dbContext.CustomFieldSetups
             .Include(cfs => cfs.Workspace)
-            .Include(cfs => cfs.Project)
+            .Include(cfs => cfs.Projects)
             .SingleOrDefaultAsync(cfs => cfs.Id == id, cancellationToken);
     }
 
@@ -35,7 +35,7 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
     {
         return dbContext.CustomFieldSetups
             .WhereIf(workspaceId is not null, cfs => cfs.Workspace != null && cfs.Workspace.Id == workspaceId)
-            .WhereIf(projectId is not null, cfs => cfs.Project != null && cfs.Project.Id == projectId)
+            .WhereIf(projectId is not null, cfs => cfs.Projects.Any(p => p.Id == projectId))
             .ToListAsync(cancellationToken);
     }
 
@@ -52,7 +52,8 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
     public async Task DeleteByProject(ProjectId projectId, CancellationToken cancellationToken = default)
     {
         var setups = await dbContext.CustomFieldSetups
-            .Where(cfs => cfs.Workspace == null && cfs.Project != null && cfs.Project.Id == projectId)
+            .Where(cfs => cfs.Workspace == null)
+            .Where(cfs => cfs.Projects.Any(p => p.Id == projectId))
             .ToListAsync(cancellationToken);
         dbContext.CustomFieldSetups.RemoveRange(setups);
     }
@@ -65,7 +66,7 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
         var setups = await dbContext.CustomFieldSetups
             .Where(cfs => 
                 (cfs.Workspace != null && cfs.Workspace.Id == workspaceId) ||
-                (cfs.Project != null && projects.Contains(cfs.Project)))
+                cfs.Projects.Any(projects.Contains))
             .ToListAsync(cancellationToken);
         dbContext.CustomFieldSetups.RemoveRange(setups);
     }

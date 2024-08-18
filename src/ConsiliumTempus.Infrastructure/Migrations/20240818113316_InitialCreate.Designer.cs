@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240817082045_InitialCreate")]
+    [Migration("20240818113316_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -848,17 +848,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("Name");
 
-                    b.Property<Guid?>("ProjectId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("WorkspaceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AuditId");
-
-                    b.HasIndex("ProjectId");
 
                     b.HasIndex("WorkspaceId");
 
@@ -1130,6 +1125,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.ToTable("ProjectHasAllowedMember", (string)null);
                 });
 
+            modelBuilder.Entity("ProjectHasCustomFieldSetup", b =>
+                {
+                    b.Property<Guid>("CustomFieldSetupsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProjectsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("CustomFieldSetupsId", "ProjectsId");
+
+                    b.HasIndex("ProjectsId");
+
+                    b.ToTable("ProjectHasCustomFieldSetup");
+                });
+
             modelBuilder.Entity("UserAggregateWorkspaceAggregate", b =>
                 {
                     b.Property<Guid>("FavoritesId")
@@ -1367,19 +1377,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")
-                        .WithMany("CustomFieldSetups")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", "Workspace")
                         .WithMany("CustomFieldSetups")
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Audit");
-
-                    b.Navigation("Project");
 
                     b.Navigation("Workspace");
                 });
@@ -2057,6 +2060,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProjectHasCustomFieldSetup", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
+                        .WithMany()
+                        .HasForeignKey("CustomFieldSetupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("UserAggregateWorkspaceAggregate", b =>
                 {
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", null)
@@ -2237,8 +2255,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>
                 {
-                    b.Navigation("CustomFieldSetups");
-
                     b.Navigation("Sprints");
 
                     b.Navigation("Statuses");

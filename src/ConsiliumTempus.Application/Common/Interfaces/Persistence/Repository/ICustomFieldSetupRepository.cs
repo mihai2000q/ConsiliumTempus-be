@@ -10,7 +10,7 @@ public interface ICustomFieldSetupRepository
 {
     Task<CustomFieldSetupAggregate?> Get(CustomFieldSetupId id, CancellationToken cancellationToken = default);
 
-    Task<CustomFieldSetupAggregate?> GetWithWorkspaceAndProject(
+    Task<CustomFieldSetupAggregate?> GetWithWorkspaceAndProjects(
         CustomFieldSetupId id,
         CancellationToken cancellationToken = default);
 
