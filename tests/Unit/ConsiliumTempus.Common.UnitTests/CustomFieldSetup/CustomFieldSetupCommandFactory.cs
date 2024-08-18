@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -25,9 +26,9 @@ public static class CustomFieldSetupCommandFactory
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
         CustomFieldType type = CustomFieldType.Text,
-        CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand? numberCustomFieldSetup = null,
-        CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand? singleSelectCustomFieldSetup = null,
-        CreateCustomFieldSetupCommand.CreateTextCustomFieldSetupCommand? textCustomFieldSetup = null)
+        CreateCustomFieldSetupCommand.NumberCustomFieldSetupCommand? numberCustomFieldSetup = null,
+        CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand? singleSelectCustomFieldSetup = null,
+        CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand? textCustomFieldSetup = null)
     {
         return new CreateCustomFieldSetupCommand(
             workspaceId,
@@ -50,7 +51,7 @@ public static class CustomFieldSetupCommandFactory
             type,
             null,
             null,
-            new CreateCustomFieldSetupCommand.CreateTextCustomFieldSetupCommand(null));
+            new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
     }
 
     public static DeleteCustomFieldSetupCommand CreateDeleteCustomFieldSetupCommand(Guid? id = null)
@@ -65,6 +66,37 @@ public static class CustomFieldSetupCommandFactory
         return new RemoveCustomFieldSetupFromProjectCommand(
             id ?? Guid.NewGuid(),
             projectId ?? Guid.NewGuid());
+    }
+    
+    public static UpdateCustomFieldSetupCommand CreateUpdateCustomFieldSetupCommand(
+        Guid? id = null,
+        string name = Constants.CustomFieldSetup.Name,
+        string description = Constants.CustomFieldSetup.Description,
+        CustomFieldType type = CustomFieldType.Text,
+        UpdateCustomFieldSetupCommand.NumberCustomFieldSetupCommand? numberCustomFieldSetup = null,
+        UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand? singleSelectCustomFieldSetup = null,
+        UpdateCustomFieldSetupCommand.TextCustomFieldSetupCommand? textCustomFieldSetup = null)
+    {
+        return new UpdateCustomFieldSetupCommand(
+            id ?? Guid.NewGuid(),
+            name,
+            description,
+            type.ToString(),
+            numberCustomFieldSetup,
+            singleSelectCustomFieldSetup,
+            textCustomFieldSetup);
+    }
+
+    public static UpdateCustomFieldSetupCommand CreateUpdateCustomFieldSetupCommandWithType(string type)
+    {
+        return new UpdateCustomFieldSetupCommand(
+            Guid.NewGuid(),
+            Constants.CustomFieldSetup.Name,
+            Constants.CustomFieldSetup.Description,
+            type,
+            null,
+            null,
+            new UpdateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
     }
 
     public static UpdateWorkspaceCustomFieldSetupCommand CreateUpdateWorkspaceCustomFieldSetupCommand(

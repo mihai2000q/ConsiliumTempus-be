@@ -28,7 +28,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
         DefaultOption = defaultOption;
     }
 
-    private List<SingleSelectOption> _options = [];
+    private readonly List<SingleSelectOption> _options = [];
 
     public SingleSelectOption? DefaultOption { get; private set; }
     public IReadOnlyList<SingleSelectOption> Options => _options
@@ -60,13 +60,11 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
     }
 
     public void Update(
-        List<SingleSelectOption> options,
         SingleSelectOption? defaultOption,
         Name name,
         Description description,
         UserAggregate updatedBy)
     {
-        _options = options;
         DefaultOption = defaultOption;
         base.Update(name, description, updatedBy);
     }

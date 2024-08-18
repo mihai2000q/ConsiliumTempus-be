@@ -9,13 +9,13 @@ public sealed record CreateCustomFieldSetupCommand(
     string Name,
     string Description,
     string Type,
-    CreateCustomFieldSetupCommand.CreateNumberCustomFieldSetupCommand? NumberCustomFieldSetup,
-    CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand? SingleSelectCustomFieldSetup,
-    CreateCustomFieldSetupCommand.CreateTextCustomFieldSetupCommand? TextCustomFieldSetup)
+    CreateCustomFieldSetupCommand.NumberCustomFieldSetupCommand? NumberCustomFieldSetup,
+    CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand? SingleSelectCustomFieldSetup,
+    CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand? TextCustomFieldSetup)
     : IRequest<ErrorOr<CreateCustomFieldSetupResult>>
 {
-    public sealed record CreateNumberCustomFieldSetupCommand(
-        CreateNumberCustomFieldSetupCommand.NumberSettingsCommand Settings,
+    public sealed record NumberCustomFieldSetupCommand(
+        NumberCustomFieldSetupCommand.NumberSettingsCommand Settings,
         decimal? DefaultNumber)
     {
         public sealed record NumberSettingsCommand(
@@ -24,8 +24,8 @@ public sealed record CreateCustomFieldSetupCommand(
             bool Rounding);
     }
 
-    public sealed record CreateSingleSelectCustomFieldSetupCommand(
-        List<CreateSingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand> Options,
+    public sealed record SingleSelectCustomFieldSetupCommand(
+        List<SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand> Options,
         string? DefaultOptionId)
     {
         public sealed record SingleSelectOptionCommand(
@@ -34,6 +34,6 @@ public sealed record CreateCustomFieldSetupCommand(
             string Color);
     }
 
-    public sealed record CreateTextCustomFieldSetupCommand(
+    public sealed record TextCustomFieldSetupCommand(
         string? DefaultText);
 }

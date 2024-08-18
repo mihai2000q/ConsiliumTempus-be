@@ -33,7 +33,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         projectId: PROJECT_ID,
         name: "Budget",
         description: "Represents a custom field",
-        type: 'number',
+        type: 'Number',
         numberCustomFieldSetup: {
           settings: {
             currencyCode: "USD",
@@ -68,7 +68,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         projectId: PROJECT_ID,
         name: "Priority",
         description: "Represents a custom field",
-        type: 'singleSelect',
+        type: 'SingleSelect',
         singleSelectCustomFieldSetup: {
           options: [
             {
@@ -121,7 +121,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         projectId: PROJECT_ID,
         name: "Priority",
         description: "Represents a custom field",
-        type: 'text',
+        type: 'Text',
         textCustomFieldSetup: {
           defaultText: "some default text"
         }
@@ -147,7 +147,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       projectId: PROJECT_ID,
       name: "New Text Custom Field",
       description: "Represents a custom field",
-      type: 'text',
+      type: 'Text',
       textCustomFieldSetup: {
         defaultText: undefined
       }
@@ -156,7 +156,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       projectId: PROJECT_ID,
       name: "Budget",
       description: "Represents a custom field",
-      type: 'number',
+      type: 'Number',
       numberCustomFieldSetup: {
         settings: {
           currencyCode: "USD",
@@ -169,7 +169,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       projectId: PROJECT_ID,
       name: "Priority",
       description: "Represents a custom field",
-      type: 'singleSelect',
+      type: 'SingleSelect',
       singleSelectCustomFieldSetup: {
         options: [
           {
@@ -220,7 +220,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         projectId: PROJECT_ID,
         name: "Budget",
         description: "Represents a custom field",
-        type: 'number',
+        type: 'Number',
         numberCustomFieldSetup: {
           settings: {
             currencyCode: "USD",
@@ -257,7 +257,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         projectId: PROJECT_ID,
         name: "Priority",
         description: "Represents a custom field",
-        type: 'singleSelect',
+        type: 'SingleSelect',
         singleSelectCustomFieldSetup: {
           options: [
             {
@@ -301,7 +301,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         projectId: PROJECT_ID,
         name: "New Text Custom Field",
         description: "Represents a custom field",
-        type: 'text',
+        type: 'Text',
         textCustomFieldSetup: {
           defaultText: "default"
         }
@@ -334,7 +334,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       projectId: PROJECT_ID,
       name: "New Text Custom Field",
       description: "Represents a custom field",
-      type: 'text',
+      type: 'Text',
       textCustomFieldSetup: {
         defaultText: undefined
       }

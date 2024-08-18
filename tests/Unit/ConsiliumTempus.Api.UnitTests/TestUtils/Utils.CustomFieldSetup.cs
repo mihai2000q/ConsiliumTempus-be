@@ -173,7 +173,7 @@ internal static partial class Utils
         }
 
         private static void AssertSingleSelectOptionCommand(
-            CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand
+            CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand
                 singleSelectOptionCommand,
             CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest
                 singleSelectOptionRequest)

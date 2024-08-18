@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -69,13 +70,13 @@ internal static partial class Utils
             switch (customFieldType)
             {
                 case CustomFieldType.Number:
-                    AssertNumberCustomFieldSetup(customFieldSetup, command);
+                    AssertCreateNumberCustomFieldSetup(customFieldSetup, command);
                     break;
                 case CustomFieldType.SingleSelect:
-                    AssertSingleSelectCustomFieldSetup(customFieldSetup, command);
+                    AssertCreateSingleSelectCustomFieldSetup(customFieldSetup, command);
                     break;
                 case CustomFieldType.Text:
-                    AssertTextCustomFieldSetup(customFieldSetup, command);
+                    AssertCreateTextCustomFieldSetup(customFieldSetup, command);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(command));
@@ -103,6 +104,37 @@ internal static partial class Utils
             customFieldSetup.Workspace!.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+        }
+
+        internal static void AssertFromUpdateCommand(
+            UpdateCustomFieldSetupCommand command,
+            CustomFieldSetupAggregate customFieldSetup,
+            UserAggregate user)
+        {
+            customFieldSetup.Id.Value.Should().Be(command.Id);
+            customFieldSetup.Name.Value.Should().Be(command.Name);
+            customFieldSetup.Description.Value.Should().Be(command.Description);
+            customFieldSetup.Audit.ShouldBeUpdated(user);
+
+            switch (customFieldSetup)
+            {
+                case NumberCustomFieldSetupAggregate numberSetup:
+                    AssertUpdateNumberCustomFieldSetup(numberSetup, command);
+                    break;
+                case SingleSelectCustomFieldSetupAggregate singleSelectSetup:
+                    AssertUpdateSingleSelectCustomFieldSetup(singleSelectSetup, command);
+                    break;
+                case TextCustomFieldSetupAggregate textSetup:
+                    AssertUpdateTextCustomFieldSetup(textSetup, command);
+                    break;
+            }
+
+            customFieldSetup.Workspace?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            foreach (var project in customFieldSetup.Projects)
+            {
+                project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+                project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            }
         }
 
         internal static void AssertFromAddedCustomFieldSetupToProject(
@@ -138,7 +170,7 @@ internal static partial class Utils
             });
         }
 
-        private static void AssertNumberCustomFieldSetup(
+        private static void AssertCreateNumberCustomFieldSetup(
             CustomFieldSetupAggregate customFieldSetup,
             CreateCustomFieldSetupCommand command)
         {
@@ -153,7 +185,7 @@ internal static partial class Utils
                 setup.DefaultNumber!.Value.Should().Be(command.NumberCustomFieldSetup.DefaultNumber);
         }
 
-        private static void AssertSingleSelectCustomFieldSetup(
+        private static void AssertCreateSingleSelectCustomFieldSetup(
             CustomFieldSetupAggregate customFieldSetup,
             CreateCustomFieldSetupCommand command)
         {
@@ -173,7 +205,7 @@ internal static partial class Utils
             }
         }
 
-        private static void AssertTextCustomFieldSetup(
+        private static void AssertCreateTextCustomFieldSetup(
             CustomFieldSetupAggregate customFieldSetup,
             CreateCustomFieldSetupCommand command)
         {
@@ -187,13 +219,45 @@ internal static partial class Utils
 
         private static void AssertSingleSelectOption(
             SingleSelectOption singleSelectOption,
-            CreateCustomFieldSetupCommand.CreateSingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand
+            CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand
                 singleSelectOptionCommand,
             int index)
         {
             singleSelectOption.Value.Should().Be(singleSelectOptionCommand.Value);
             singleSelectOption.Color.Should().Be(singleSelectOptionCommand.Color);
             singleSelectOption.OrderPosition.Should().Be(index);
+        }
+        
+        private static void AssertUpdateNumberCustomFieldSetup(
+            NumberCustomFieldSetupAggregate setup,
+            UpdateCustomFieldSetupCommand command)
+        {
+            setup.Settings.CurrencyCode.Should().Be(command.NumberCustomFieldSetup!.Settings.CurrencyCode);
+            setup.Settings.Decimals.Should().Be((short)command.NumberCustomFieldSetup!.Settings.Decimals);
+            setup.Settings.Rounding.Should().Be(command.NumberCustomFieldSetup!.Settings.Rounding);
+            if (command.NumberCustomFieldSetup.DefaultNumber is null)
+                setup.DefaultNumber.Should().BeNull();
+            else
+                setup.DefaultNumber!.Value.Should().Be(command.NumberCustomFieldSetup.DefaultNumber);
+        }
+
+        private static void AssertUpdateSingleSelectCustomFieldSetup(
+            SingleSelectCustomFieldSetupAggregate setup,
+            UpdateCustomFieldSetupCommand command)
+        {
+            var defaultOption = setup.Options
+                .SingleOrDefault(o => o.Id == command.SingleSelectCustomFieldSetup!.DefaultOptionId);
+            setup.DefaultOption.Should().Be(defaultOption);
+        }
+
+        private static void AssertUpdateTextCustomFieldSetup(
+            TextCustomFieldSetupAggregate setup,
+            UpdateCustomFieldSetupCommand command)
+        {
+            if (command.TextCustomFieldSetup!.DefaultText is null)
+                setup.DefaultText.Should().BeNull();
+            else
+                setup.DefaultText!.Value.Should().Be(command.TextCustomFieldSetup.DefaultText);
         }
     }
 }
