@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -83,6 +84,25 @@ internal static partial class Utils
             workspace?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project?.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static void AssertRemoveFromProjectCommand(
+            RemoveCustomFieldSetupFromProjectCommand command,
+            CustomFieldSetupAggregate customFieldSetup,
+            ProjectAggregate project)
+        {
+            project.Id.Value.Should().Be(command.ProjectId);
+            customFieldSetup.Id.Value.Should().Be(command.Id);
+            customFieldSetup.Projects.Should().NotContain(project);
+            customFieldSetup.DomainEvents.Should().HaveCount(1);
+            var domainEvent = customFieldSetup.DomainEvents[0];
+            domainEvent.Should().BeOfType<RemovedCustomFieldSetupFromProject>();
+            ((RemovedCustomFieldSetupFromProject)domainEvent).CustomFieldSetup.Should().Be(customFieldSetup);
+            ((RemovedCustomFieldSetupFromProject)domainEvent).Project.Should().Be(project);
+
+            customFieldSetup.Workspace!.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
         }
 
         internal static void AssertFromAddedCustomFieldSetupToProject(

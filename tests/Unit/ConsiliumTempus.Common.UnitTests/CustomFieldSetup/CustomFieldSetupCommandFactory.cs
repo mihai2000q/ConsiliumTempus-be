@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -55,6 +56,15 @@ public static class CustomFieldSetupCommandFactory
     public static DeleteCustomFieldSetupCommand CreateDeleteCustomFieldSetupCommand(Guid? id = null)
     {
         return new DeleteCustomFieldSetupCommand(id ?? Guid.NewGuid());
+    }
+
+    public static RemoveCustomFieldSetupFromProjectCommand CreateRemoveCustomFieldSetupFromProjectCommand(
+        Guid? id = null,
+        Guid? projectId = null)
+    {
+        return new RemoveCustomFieldSetupFromProjectCommand(
+            id ?? Guid.NewGuid(),
+            projectId ?? Guid.NewGuid());
     }
 
     public static UpdateWorkspaceCustomFieldSetupCommand CreateUpdateWorkspaceCustomFieldSetupCommand(
