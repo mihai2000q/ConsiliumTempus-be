@@ -3,6 +3,7 @@ using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
@@ -59,14 +60,13 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
     }
 
     public async Task DeleteByWorkspaceOrProjects(
-        WorkspaceId workspaceId,
+        WorkspaceAggregate workspace,
         List<ProjectAggregate> projects,
         CancellationToken cancellationToken = default)
     {
         var setups = await dbContext.CustomFieldSetups
-            .Where(cfs => 
-                (cfs.Workspace != null && cfs.Workspace.Id == workspaceId) ||
-                cfs.Projects.Any(projects.Contains))
+            .Where(cfs => cfs.Workspace == workspace || 
+                          (cfs.Workspace == null && cfs.Projects.Any() && projects.Contains(cfs.Projects.First())))
             .ToListAsync(cancellationToken);
         dbContext.CustomFieldSetups.RemoveRange(setups);
     }

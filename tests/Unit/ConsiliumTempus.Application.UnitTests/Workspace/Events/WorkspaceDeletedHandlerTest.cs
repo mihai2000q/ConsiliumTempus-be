@@ -3,6 +3,7 @@ using ConsiliumTempus.Application.Workspace.Events;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.Events;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
@@ -26,7 +27,7 @@ public class WorkspaceDeletedHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleWorksapceDeleted_WhenSuccessful_ShouldRemoveCustomFieldSetupsRelatedToWorkspaceOrProjects()
+    public async Task HandleWorkspaceDeleted_WhenSuccessful_ShouldRemoveCustomFieldSetupsRelatedToWorkspaceOrProjects()
     {
         // Arrange
         var domainEvent = new WorkspaceDeleted(WorkspaceFactory.Create());
@@ -46,7 +47,7 @@ public class WorkspaceDeletedHandlerTest
 
         await _customFieldSetupRepository
             .DeleteByWorkspaceOrProjects(
-                Arg.Is<WorkspaceId>(wId => wId == domainEvent.Workspace.Id),
+                Arg.Is<WorkspaceAggregate>(w => w == domainEvent.Workspace),
                 Arg.Is<List<ProjectAggregate>>(p => p == projects));
     }
 }

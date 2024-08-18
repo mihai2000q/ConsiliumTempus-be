@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
@@ -26,7 +27,7 @@ public interface ICustomFieldSetupRepository
     Task DeleteByProject(ProjectAggregate project, CancellationToken cancellationToken = default);
 
     Task DeleteByWorkspaceOrProjects(
-        WorkspaceId workspaceId,
+        WorkspaceAggregate workspace,
         List<ProjectAggregate> projects,
         CancellationToken cancellationToken = default);
 }
