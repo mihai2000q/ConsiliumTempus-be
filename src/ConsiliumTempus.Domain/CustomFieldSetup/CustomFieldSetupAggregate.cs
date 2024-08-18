@@ -34,7 +34,7 @@ public abstract class CustomFieldSetupAggregate : AggregateRoot<CustomFieldSetup
 
     public Name Name { get; protected set; } = default!;
     public Description Description { get; protected set; } = default!;
-    public WorkspaceAggregate? Workspace { get; init; }
+    public WorkspaceAggregate? Workspace { get; protected set; }
     public IReadOnlyList<ProjectAggregate> Projects => _projects.AsReadOnly();
     public Audit Audit { get; init; } = null!;
 
@@ -45,6 +45,12 @@ public abstract class CustomFieldSetupAggregate : AggregateRoot<CustomFieldSetup
     {
         Name = name;
         Description = description;
+        Audit.Update(updatedBy);
+    }
+    
+    public void UpdateWorkspace(WorkspaceAggregate workspace, UserAggregate updatedBy)
+    {
+        Workspace = workspace;
         Audit.Update(updatedBy);
     }
 

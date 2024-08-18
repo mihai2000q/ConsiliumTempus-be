@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Enums;
 
@@ -38,11 +39,6 @@ public static class CustomFieldSetupCommandFactory
             textCustomFieldSetup);
     }
 
-    public static DeleteCustomFieldSetupCommand CreateDeleteCustomFieldSetupCommand(Guid? id = null)
-    {
-        return new DeleteCustomFieldSetupCommand(id ?? Guid.NewGuid());
-    }
-
     public static CreateCustomFieldSetupCommand CreateCreateCustomFieldSetupCommandWithType(string type)
     {
         return new CreateCustomFieldSetupCommand(
@@ -54,5 +50,19 @@ public static class CustomFieldSetupCommandFactory
             null,
             null,
             new CreateCustomFieldSetupCommand.CreateTextCustomFieldSetupCommand(null));
+    }
+
+    public static DeleteCustomFieldSetupCommand CreateDeleteCustomFieldSetupCommand(Guid? id = null)
+    {
+        return new DeleteCustomFieldSetupCommand(id ?? Guid.NewGuid());
+    }
+
+    public static UpdateWorkspaceCustomFieldSetupCommand CreateUpdateWorkspaceCustomFieldSetupCommand(
+        Guid? id = null,
+        Guid? workspaceId = null)
+    {
+        return new UpdateWorkspaceCustomFieldSetupCommand(
+            id ?? Guid.NewGuid(),
+            workspaceId ?? Guid.NewGuid());
     }
 }
