@@ -9,10 +9,6 @@ public sealed class ProjectDeletedHandler(ICustomFieldSetupRepository customFiel
 {
     public async Task Handle(ProjectDeleted notification, CancellationToken cancellationToken)
     {
-        var project = notification.Project;
-
-        await customFieldSetupRepository.DeleteByProject(
-            project.Id,
-            cancellationToken);
+        await customFieldSetupRepository.DeleteByProject(notification.Project, cancellationToken);
     }
 }

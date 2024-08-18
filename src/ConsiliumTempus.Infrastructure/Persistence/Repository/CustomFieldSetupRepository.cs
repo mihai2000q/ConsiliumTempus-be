@@ -49,11 +49,11 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
         dbContext.CustomFieldSetups.Remove(customFieldSetup);
     }
 
-    public async Task DeleteByProject(ProjectId projectId, CancellationToken cancellationToken = default)
+    public async Task DeleteByProject(ProjectAggregate project, CancellationToken cancellationToken = default)
     {
         var setups = await dbContext.CustomFieldSetups
-            .Where(cfs => cfs.Workspace == null)
-            .Where(cfs => cfs.Projects.Any(p => p.Id == projectId))
+            .Where(c => c.Workspace == null)
+            .Where(cfs => cfs.Projects.Contains(project))
             .ToListAsync(cancellationToken);
         dbContext.CustomFieldSetups.RemoveRange(setups);
     }

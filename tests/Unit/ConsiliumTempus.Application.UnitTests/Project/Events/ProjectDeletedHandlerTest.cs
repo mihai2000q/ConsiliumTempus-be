@@ -1,8 +1,8 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Project.Events;
 using ConsiliumTempus.Common.UnitTests.Project;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Events;
-using ConsiliumTempus.Domain.Project.ValueObjects;
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Events;
 
@@ -33,6 +33,6 @@ public class ProjectDeletedHandlerTest
         // Assert
         await _customFieldSetupRepository
             .Received(1)
-            .DeleteByProject(Arg.Is<ProjectId>(pId => pId == domainEvent.Project.Id));
+            .DeleteByProject(Arg.Is<ProjectAggregate>(p => p == domainEvent.Project));
     }
 }

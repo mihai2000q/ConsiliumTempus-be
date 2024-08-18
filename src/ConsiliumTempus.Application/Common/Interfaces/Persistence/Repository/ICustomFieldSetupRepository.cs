@@ -23,9 +23,7 @@ public interface ICustomFieldSetupRepository
 
     void Remove(CustomFieldSetupAggregate customFieldSetup);
 
-    Task DeleteByProject(
-        ProjectId projectId,
-        CancellationToken cancellationToken = default);
+    Task DeleteByProject(ProjectAggregate project, CancellationToken cancellationToken = default);
 
     Task DeleteByWorkspaceOrProjects(
         WorkspaceId workspaceId,
