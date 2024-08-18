@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
@@ -21,20 +22,20 @@ public abstract class CustomFieldSetupAggregate : AggregateRoot<CustomFieldSetup
         Name name,
         Description description,
         WorkspaceAggregate? workspace,
-        ProjectAggregate? project,
         Audit audit) : base(id)
     {
         Name = name;
         Description = description;
         Workspace = workspace;
-        Project = project;
         Audit = audit;
     }
+
+    private readonly List<ProjectAggregate> _projects = [];
 
     public Name Name { get; protected set; } = default!;
     public Description Description { get; protected set; } = default!;
     public WorkspaceAggregate? Workspace { get; init; }
-    public ProjectAggregate? Project { get; init; }
+    public IReadOnlyList<ProjectAggregate> Projects => _projects.AsReadOnly();
     public Audit Audit { get; init; } = null!;
 
     protected void Update(
@@ -45,5 +46,16 @@ public abstract class CustomFieldSetupAggregate : AggregateRoot<CustomFieldSetup
         Name = name;
         Description = description;
         Audit.Update(updatedBy);
+    }
+
+    public void AddProject(ProjectAggregate project)
+    {
+        _projects.Add(project);
+        AddDomainEvent(new AddedCustomFieldSetupToProject(this, project));
+    }
+
+    public void RemoveProject(ProjectAggregate project)
+    {
+        _projects.Remove(project);
     }
 }

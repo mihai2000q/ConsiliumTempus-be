@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
@@ -22,8 +21,7 @@ public sealed class TextCustomFieldSetupAggregate : CustomFieldSetupAggregate
         Name name,
         Description description,
         WorkspaceAggregate? workspace,
-        ProjectAggregate? project,
-        Audit audit) : base(id, name, description, workspace, project, audit)
+        Audit audit) : base(id, name, description, workspace, audit)
     {
         DefaultText = defaultText;
     }
@@ -44,10 +42,9 @@ public sealed class TextCustomFieldSetupAggregate : CustomFieldSetupAggregate
             name,
             description,
             workspace,
-            project,
             Audit.Create(createdBy));
 
-        setup.AddDomainEvent(new CustomFieldSetupCreated(setup));
+        if (project != null) setup.AddProject(project);
 
         return setup;
     }
