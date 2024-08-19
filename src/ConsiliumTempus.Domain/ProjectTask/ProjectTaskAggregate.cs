@@ -173,7 +173,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
             : (overTask.CustomOrderPosition.Value, CustomOrderPosition.Value, 1);
 
         Stage.Tasks
-            .OrderBy(t => t.CustomOrderPosition.Value)
+            .OrderBy(t => t.CustomOrderPosition)
             .Skip(start)
             .Take(end - start)
             .ForEach(t => t.UpdateCustomOrderPosition(t.CustomOrderPosition + sign));
@@ -217,7 +217,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
     private void ReorderStage()
     {
         Stage.Tasks
-            .OrderBy(t => t.CustomOrderPosition.Value)
+            .OrderBy(t => t.CustomOrderPosition)
             .Skip(CustomOrderPosition.Value + 1)
             .ForEach(t => t.UpdateCustomOrderPosition(t.CustomOrderPosition - 1));
     }

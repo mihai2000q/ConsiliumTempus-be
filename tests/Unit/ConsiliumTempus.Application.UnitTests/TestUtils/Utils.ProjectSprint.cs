@@ -64,8 +64,8 @@ internal static partial class Utils
                 {
                     projectSprint.Stages.Should().HaveSameCount(project.Sprints[0].Stages);
                     projectSprint.Stages
-                        .OrderBy(s => s.CustomOrderPosition.Value)
-                        .Zip(project.Sprints[0].Stages.OrderBy(s => s.CustomOrderPosition.Value))
+                        .OrderBy(s => s.CustomOrderPosition)
+                        .Zip(project.Sprints[0].Stages.OrderBy(s => s.CustomOrderPosition))
                         .Should().AllSatisfy((x) =>
                         {
                             var (newStage, stage) = x;

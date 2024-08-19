@@ -31,8 +31,9 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
     private readonly List<SingleSelectOption> _options = [];
 
     public SingleSelectOption? DefaultOption { get; private set; }
+
     public IReadOnlyList<SingleSelectOption> Options => _options
-        .OrderBy(o => o.OrderPosition)
+        .OrderBy(o => o.CustomOrderPosition)
         .ToList()
         .AsReadOnly();
 
