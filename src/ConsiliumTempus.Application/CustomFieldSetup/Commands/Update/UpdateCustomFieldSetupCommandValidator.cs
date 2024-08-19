@@ -15,7 +15,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
         RuleFor(c => c.Name)
             .NotEmpty()
             .MaximumLength(PropertiesValidation.CustomFieldSetup.NameMaximumLength);
-        
+
         RuleFor(c => c.Type)
             .IsEnumName(typeof(CustomFieldType));
 
@@ -43,6 +43,69 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
             {
                 RuleFor(c => c.SingleSelectCustomFieldSetup)
                     .NotNull();
+
+                When(c => c.SingleSelectCustomFieldSetup != null, () =>
+                {
+                    RuleFor(c => c.SingleSelectCustomFieldSetup!.Operation)
+                        .IsEnumName(typeof(UpdateCustomFieldSetupCommand.SingleSelectOptionOperation))
+                        .When(c => c.SingleSelectCustomFieldSetup!.Operation is not null);
+                    
+                    // Update or Add
+                    RuleFor(c => c.SingleSelectCustomFieldSetup!.NewOption!.Value)
+                        .NotEmpty()
+                        .MaximumLength(PropertiesValidation.SingleSelectOption.ValueMaximumLength)
+                        .When(c => c.SingleSelectCustomFieldSetup!.NewOption != null);
+
+                    RuleFor(c => c.SingleSelectCustomFieldSetup!.NewOption!.Color)
+                        .IsColor()
+                        .When(c => c.SingleSelectCustomFieldSetup!.NewOption != null);
+
+                    // Add
+                    When(
+                        c => c.SingleSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
+                            .SingleSelectOptionOperation.Add.ToString(),
+                        () =>
+                        {
+                            RuleFor(c => c.SingleSelectCustomFieldSetup!.NewOption)
+                                .NotNull();
+                        });
+
+                    // Update
+                    When(
+                        c => c.SingleSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
+                            .SingleSelectOptionOperation.Update.ToString(),
+                        () =>
+                        {
+                            RuleFor(c => c.SingleSelectCustomFieldSetup!.NewOption)
+                                .NotNull();
+
+                            RuleFor(c => c.SingleSelectCustomFieldSetup!.OptionId)
+                                .NotEmpty();
+                        });
+
+                    // Move
+                    When(
+                        c => c.SingleSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
+                            .SingleSelectOptionOperation.Move.ToString(),
+                        () =>
+                        {
+                            RuleFor(c => c.SingleSelectCustomFieldSetup!.OptionId)
+                                .NotEmpty();
+
+                            RuleFor(c => c.SingleSelectCustomFieldSetup!.OverOptionId)
+                                .NotEmpty();
+                        });
+
+                    // Remove
+                    When(
+                        c => c.SingleSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
+                            .SingleSelectOptionOperation.Remove.ToString(),
+                        () =>
+                        {
+                            RuleFor(c => c.SingleSelectCustomFieldSetup!.OptionId)
+                                .NotEmpty();
+                        });
+                });
             });
 
         // Text Custom Field Setup

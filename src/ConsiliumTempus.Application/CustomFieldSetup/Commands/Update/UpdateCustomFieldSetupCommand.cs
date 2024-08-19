@@ -13,6 +13,14 @@ public sealed record UpdateCustomFieldSetupCommand(
     UpdateCustomFieldSetupCommand.TextCustomFieldSetupCommand? TextCustomFieldSetup)
     : IRequest<ErrorOr<UpdateCustomFieldSetupResult>>
 {
+    public enum SingleSelectOptionOperation
+    {
+        Add,
+        Update,
+        Move,
+        Remove,
+    }
+    
     public sealed record NumberCustomFieldSetupCommand(
         NumberCustomFieldSetupCommand.NumberSettingsCommand Settings,
         decimal? DefaultNumber)
@@ -23,7 +31,17 @@ public sealed record UpdateCustomFieldSetupCommand(
             bool Rounding);
     }
 
-    public sealed record SingleSelectCustomFieldSetupCommand(Guid? DefaultOptionId);
+    public sealed record SingleSelectCustomFieldSetupCommand(
+        Guid? DefaultOptionId,
+        string? Operation,
+        SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand? NewOption,
+        Guid? OptionId,
+        Guid? OverOptionId)
+    {
+        public sealed record SingleSelectOptionCommand(
+            string Color,
+            string Value);
+    }
 
     public sealed record TextCustomFieldSetupCommand(
         string? DefaultText);

@@ -1,7 +1,9 @@
 ﻿using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
+using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.CustomFieldSetup.Commands.Update;
 
@@ -41,21 +43,112 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                 id: singleSelectCustomFieldSetup.Id.Value,
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                    null,
+                    null,
+                    null,
+                    null,
                     null));
             Add(command, singleSelectCustomFieldSetup);
 
+            singleSelectCustomFieldSetup = CustomFieldSetupFactory.CreateSingleSelect();
             command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
                 id: singleSelectCustomFieldSetup.Id.Value,
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
-                    Guid.NewGuid()));
+                    singleSelectCustomFieldSetup.Options[0].Id,
+                    null,
+                    null,
+                    null,
+                    null));
             Add(command, singleSelectCustomFieldSetup);
 
+            // Single Select - Options
+            singleSelectCustomFieldSetup = CustomFieldSetupFactory.CreateSingleSelect();
             command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
                 id: singleSelectCustomFieldSetup.Id.Value,
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                    singleSelectCustomFieldSetup.Options[1].Id,
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add.ToString(),
+                    new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
+                        "#FF2233",
+                        "High"),
+                    null,
+                    null));
+            Add(command, singleSelectCustomFieldSetup);
+
+            singleSelectCustomFieldSetup = CustomFieldSetupFactory.CreateSingleSelect();
+            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: singleSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                    singleSelectCustomFieldSetup.Options[0].Id,
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update.ToString(),
+                    new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
+                        "#FF2233",
+                        "High"),
+                    singleSelectCustomFieldSetup.Options[1].Id,
+                    null));
+            Add(command, singleSelectCustomFieldSetup);
+
+            singleSelectCustomFieldSetup = CustomFieldSetupFactory.CreateSingleSelect(
+                options: 
+                [
+                    SingleSelectOptionFactory.Create(), 
+                    SingleSelectOptionFactory.Create(customOrderPosition: 1), 
+                    SingleSelectOptionFactory.Create(customOrderPosition: 2), 
+                    SingleSelectOptionFactory.Create(customOrderPosition: 3), 
+                    SingleSelectOptionFactory.Create(customOrderPosition: 4), 
+                ]);
+            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: singleSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                    singleSelectCustomFieldSetup.Options[0].Id,
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move.ToString(),
+                    null,
+                    singleSelectCustomFieldSetup.Options[1].Id,
+                    singleSelectCustomFieldSetup.Options[3].Id));
+            Add(command, singleSelectCustomFieldSetup);
+            
+            singleSelectCustomFieldSetup = CustomFieldSetupFactory.CreateSingleSelect(
+                options: 
+                [
+                    SingleSelectOptionFactory.Create(), 
+                    SingleSelectOptionFactory.Create(customOrderPosition: 1), 
+                    SingleSelectOptionFactory.Create(customOrderPosition: 2), 
+                    SingleSelectOptionFactory.Create(customOrderPosition: 3), 
+                    SingleSelectOptionFactory.Create(customOrderPosition: 4), 
+                ]);
+            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: singleSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                    singleSelectCustomFieldSetup.Options[0].Id,
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move.ToString(),
+                    null,
+                    singleSelectCustomFieldSetup.Options[3].Id,
                     singleSelectCustomFieldSetup.Options[1].Id));
+            Add(command, singleSelectCustomFieldSetup);
+
+            singleSelectCustomFieldSetup = CustomFieldSetupFactory.CreateSingleSelect(
+                options: 
+                [
+                    SingleSelectOptionFactory.Create(), 
+                    SingleSelectOptionFactory.Create(customOrderPosition: 1), 
+                    SingleSelectOptionFactory.Create(customOrderPosition: 2), 
+                    SingleSelectOptionFactory.Create(customOrderPosition: 3), 
+                    SingleSelectOptionFactory.Create(customOrderPosition: 4), 
+                ]);
+            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: singleSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                    singleSelectCustomFieldSetup.Options[0].Id,
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Remove.ToString(),
+                    null,
+                    singleSelectCustomFieldSetup.Options[2].Id,
+                    null));
             Add(command, singleSelectCustomFieldSetup);
 
             // Text
@@ -71,6 +164,74 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                 type: CustomFieldType.Text,
                 textCustomFieldSetup: new UpdateCustomFieldSetupCommand.TextCustomFieldSetupCommand("Default Text"));
             Add(command, textCustomFieldSetup);
+        }
+    }
+    
+    internal class GetSingleSelectCommands : TheoryData<UpdateCustomFieldSetupCommand, SingleSelectCustomFieldSetupAggregate>
+    {
+        public GetSingleSelectCommands()
+        {
+            // Single Select
+            var singleSelectCustomFieldSetup = CustomFieldSetupFactory.CreateSingleSelect();
+            var command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: singleSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                    Guid.NewGuid(),
+                    null,
+                    null,
+                    null,
+                    null));
+            Add(command, singleSelectCustomFieldSetup);
+
+            // Single Select - Options
+            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: singleSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                    singleSelectCustomFieldSetup.Options[0].Id,
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update.ToString(),
+                    new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
+                        "#FF2233",
+                        "High"),
+                    Guid.NewGuid(),
+                    null));
+            Add(command, singleSelectCustomFieldSetup);
+
+            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: singleSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                    singleSelectCustomFieldSetup.Options[0].Id,
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move.ToString(),
+                    null,
+                    Guid.NewGuid(),
+                    singleSelectCustomFieldSetup.Options[1].Id));
+            Add(command, singleSelectCustomFieldSetup);
+            
+            singleSelectCustomFieldSetup = CustomFieldSetupFactory.CreateSingleSelect();
+            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: singleSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                    singleSelectCustomFieldSetup.Options[0].Id,
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move.ToString(),
+                    null,
+                    singleSelectCustomFieldSetup.Options[1].Id,
+                    Guid.NewGuid()));
+            Add(command, singleSelectCustomFieldSetup);
+
+            singleSelectCustomFieldSetup = CustomFieldSetupFactory.CreateSingleSelect();
+            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: singleSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                    singleSelectCustomFieldSetup.Options[0].Id,
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Remove.ToString(),
+                    null,
+                    Guid.NewGuid(),
+                    null));
+            Add(command, singleSelectCustomFieldSetup);
         }
     }
 }

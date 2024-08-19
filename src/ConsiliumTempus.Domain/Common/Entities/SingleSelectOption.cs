@@ -37,5 +37,15 @@ public sealed class SingleSelectOption : Entity<Guid>
             color,
             customOrderPosition);
     }
+
+    public void Update(string value, string color)
+    {
+        Value = value;
+        Color = color;
+    }
+
+    public void UpdateCustomOrderPosition(CustomOrderPosition customOrderPosition)
+    {
+        CustomOrderPosition = customOrderPosition;
     }
 }

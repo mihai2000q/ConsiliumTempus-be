@@ -8,6 +8,7 @@ using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.CustomFieldSetup.Commands.Update;
@@ -61,6 +62,37 @@ public class UpdateCustomFieldSetupCommandHandlerTest
         outcome.Value.Should().Be(new UpdateCustomFieldSetupResult());
 
         Utils.CustomFieldSetup.AssertFromUpdateCommand(command, customFieldSetup, user);
+    }
+
+    [Theory]
+    [ClassData(typeof(UpdateCustomFieldSetupCommandHandlerData.GetSingleSelectCommands))]
+    public async Task
+        HandleUpdateCustomFieldSetupCommand_WhenSingleSelectOptionIsNull_ShouldReturnSingleSelectOptionNotFoundError(
+            UpdateCustomFieldSetupCommand command,
+            SingleSelectCustomFieldSetupAggregate customFieldSetup)
+    {
+        // Arrange
+        _customFieldSetupRepository
+            .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
+            .Returns(customFieldSetup);
+
+        _currentUserProvider
+            .GetCurrentUserAfterPermissionCheck()
+            .Returns(UserFactory.Create());
+
+        // Act
+        var outcome = await _uut.Handle(command, default);
+
+        // Arrange
+        await _customFieldSetupRepository
+            .Received(1)
+            .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(cId => cId.Value == command.Id));
+
+        await _currentUserProvider
+            .Received(1)
+            .GetCurrentUserAfterPermissionCheck();
+
+        outcome.ValidateError(Errors.SingleSelectOption.NotFound);
     }
 
     [Fact]

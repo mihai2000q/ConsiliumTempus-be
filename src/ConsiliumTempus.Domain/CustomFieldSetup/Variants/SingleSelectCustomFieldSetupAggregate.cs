@@ -69,4 +69,42 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
         DefaultOption = defaultOption;
         base.Update(name, description, updatedBy);
     }
+
+    public void AddOption(SingleSelectOption option)
+    {
+        _options.Add(option);
+    }
+
+    public void RemoveOption(SingleSelectOption option)
+    {
+        for (var i = option.CustomOrderPosition.Value + 1; i < _options.Count; i++)
+        {
+            _options[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
+        }
+        _options.Remove(option);
+    }
+
+    public void MoveOption(SingleSelectOption option, SingleSelectOption overOption)
+    {
+        var newCustomOrderPosition = CustomOrderPosition.Create(overOption.CustomOrderPosition.Value);
+
+        if (option.CustomOrderPosition < overOption.CustomOrderPosition)
+        {
+            // stage is placed on upper position
+            for (var i = option.CustomOrderPosition.Value + 1; i <= overOption.CustomOrderPosition.Value; i++)
+            {
+                _options[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
+            }
+        }
+        else
+        {
+            // stage is placed on lower position
+            for (var i = overOption.CustomOrderPosition.Value; i < option.CustomOrderPosition.Value; i++)
+            {
+                _options[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
+            }
+        }
+
+        option.UpdateCustomOrderPosition(newCustomOrderPosition);
+    }
 }

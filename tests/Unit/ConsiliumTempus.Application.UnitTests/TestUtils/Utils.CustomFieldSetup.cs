@@ -32,12 +32,12 @@ internal static partial class Utils
             domainEvent.Should().BeOfType<AddedCustomFieldSetupToProject>();
             ((AddedCustomFieldSetupToProject)domainEvent).CustomFieldSetup.Should().Be(customFieldSetup);
             ((AddedCustomFieldSetupToProject)domainEvent).Project.Should().Be(project);
-            
+
             customFieldSetup.Workspace!.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
         }
-        
+
         internal static void AssertFromCreateCommand(
             CreateCustomFieldSetupCommand command,
             CustomFieldSetupAggregate customFieldSetup,
@@ -86,7 +86,7 @@ internal static partial class Utils
             project?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project?.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertRemoveFromProjectCommand(
             RemoveCustomFieldSetupFromProjectCommand command,
             CustomFieldSetupAggregate customFieldSetup,
@@ -227,7 +227,7 @@ internal static partial class Utils
             singleSelectOption.Color.Should().Be(singleSelectOptionCommand.Color);
             singleSelectOption.CustomOrderPosition.Value.Should().Be(customOrderPosition);
         }
-        
+
         private static void AssertUpdateNumberCustomFieldSetup(
             NumberCustomFieldSetupAggregate setup,
             UpdateCustomFieldSetupCommand command)
@@ -248,6 +248,42 @@ internal static partial class Utils
             var defaultOption = setup.Options
                 .SingleOrDefault(o => o.Id == command.SingleSelectCustomFieldSetup!.DefaultOptionId);
             setup.DefaultOption.Should().Be(defaultOption);
+
+            if (command.SingleSelectCustomFieldSetup!.Operation is null) return;
+
+            var operation = Enum.Parse<UpdateCustomFieldSetupCommand.SingleSelectOptionOperation>(
+                command.SingleSelectCustomFieldSetup!.Operation);
+            switch (operation)
+            {
+                case UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add:
+                    setup.Options.ShouldBeOrdered();
+                    setup.Options[^1].Value.Should().Be(command.SingleSelectCustomFieldSetup.NewOption!.Value);
+                    setup.Options[^1].Color.Should().Be(command.SingleSelectCustomFieldSetup.NewOption!.Color);
+                    setup.Options[^1].CustomOrderPosition.Value.Should().Be(setup.Options.Count - 1);
+                    break;
+
+                case UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update:
+                    var option = setup.Options
+                        .SingleOrDefault(o => o.Id == command.SingleSelectCustomFieldSetup!.OptionId);
+                    option.Should().NotBeNull();
+                    option!.Value.Should().Be(command.SingleSelectCustomFieldSetup.NewOption!.Value);
+                    option.Color.Should().Be(command.SingleSelectCustomFieldSetup.NewOption!.Color);
+                    break;
+
+                case UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move:
+                    setup.Options.ShouldBeOrdered();
+                    setup.Options.Should().Contain(o => o.Id == command.SingleSelectCustomFieldSetup!.OptionId);
+                    setup.Options.Should().Contain(o => o.Id == command.SingleSelectCustomFieldSetup!.OverOptionId);
+                    break;
+
+                case UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Remove:
+                    setup.Options.ShouldBeOrdered();
+                    setup.Options.Should().NotContain(o => o.Id == command.SingleSelectCustomFieldSetup!.OptionId);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
+            }
         }
 
         private static void AssertUpdateTextCustomFieldSetup(

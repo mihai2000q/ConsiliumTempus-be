@@ -36,6 +36,13 @@ internal static partial class Utils
             .Should().AllSatisfy(s => s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
 
+    internal static void ShouldBeOrdered(this IReadOnlyList<SingleSelectOption> options)
+    {
+        var customOrderPosition = 0;
+        options.OrderBy(s => s.CustomOrderPosition)
+            .Should().AllSatisfy(o => o.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+    }
+
     internal static void ShouldBeCreated(this Audit audit, UserAggregate createdBy)
     {
         audit.CreatedBy.Should().Be(createdBy);
