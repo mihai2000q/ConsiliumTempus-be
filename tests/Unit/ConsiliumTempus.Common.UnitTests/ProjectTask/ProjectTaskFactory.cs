@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
+﻿using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
+using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
+using ConsiliumTempus.Common.UnitTests.ProjectTask.Entities;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.ValueObjects;
@@ -23,6 +25,33 @@ public static class ProjectTaskFactory
             CustomOrderPosition.Create(customOrderPosition),
             createdBy ?? UserFactory.Create(),
             stage ?? ProjectStageFactory.Create());
+
+        task.ClearDomainEvents();
+
+        return task;
+    }
+
+    public static ProjectTaskAggregate CreateWithCustomFields(
+        string name = Constants.ProjectTask.Name,
+        string description = Constants.ProjectTask.Description,
+        int customOrderPosition = 0,
+        ProjectStage? stage = null,
+        UserAggregate? createdBy = null)
+    {
+        var task = ProjectTaskAggregate.Create(
+            Name.Create(name),
+            Description.Create(description),
+            CustomOrderPosition.Create(customOrderPosition),
+            createdBy ?? UserFactory.Create(),
+            stage ?? ProjectStageFactory.Create());
+
+        task.AddCustomField(CustomFieldFactory.CreateNumber(12, task: task));
+        var singleSelectSetup = CustomFieldSetupFactory.CreateSingleSelect();
+        task.AddCustomField(CustomFieldFactory.CreateSingleSelect(
+            singleSelectSetup.Options[0].Id,
+            setup: singleSelectSetup,
+            task: task));
+        task.AddCustomField(CustomFieldFactory.CreateText("Some text", task: task));
 
         task.ClearDomainEvents();
 

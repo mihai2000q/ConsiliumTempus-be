@@ -47,6 +47,16 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
+    public async Task<ProjectTaskAggregate?> GetWithCustomFieldsAndWorkspace(
+        ProjectTaskId id,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.ProjectTasks
+            .Include(t => t.CustomFields)
+            .Include(t => t.Stage.Sprint.Project.Workspace)
+            .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
+    }
+
     public Task<List<ProjectTaskAggregate>> GetListByStage(
         ProjectStageId stageId,
         IReadOnlyList<IFilter<ProjectTaskAggregate>> filters,

@@ -20,7 +20,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
             .IsEnumName(typeof(CustomFieldType));
 
         // Number Custom Field Setup
-        When(c => c.Type.Equals(CustomFieldType.Number.ToString()),
+        When(c => c.Type == CustomFieldType.Number.ToString(),
             () =>
             {
                 RuleFor(c => c.NumberCustomFieldSetup)
@@ -38,7 +38,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
             });
 
         // Single Select Custom Field Setup
-        When(c => c.Type.Equals(CustomFieldType.SingleSelect.ToString()),
+        When(c => c.Type == CustomFieldType.SingleSelect.ToString(),
             () =>
             {
                 RuleFor(c => c.SingleSelectCustomFieldSetup)
@@ -46,7 +46,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
             });
 
         // Text Custom Field Setup
-        When(c => c.Type.Equals(CustomFieldType.Text.ToString()),
+        When(c => c.Type == CustomFieldType.Text.ToString(),
             () =>
             {
                 RuleFor(c => c.TextCustomFieldSetup)

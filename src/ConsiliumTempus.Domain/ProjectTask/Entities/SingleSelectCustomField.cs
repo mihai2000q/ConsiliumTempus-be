@@ -22,7 +22,7 @@ public sealed class SingleSelectCustomField : CustomField
         Setup = setup;
     }
 
-    public SingleSelectOption? Option { get; init; }
+    public SingleSelectOption? Option { get; private set; }
     public SingleSelectCustomFieldSetupAggregate Setup { get; init; } = null!;
 
     public static SingleSelectCustomField Create(
@@ -35,5 +35,10 @@ public sealed class SingleSelectCustomField : CustomField
             setup,
             CustomFieldId.CreateUnique(),
             projectTask);
+    }
+
+    public void Update(SingleSelectOption? option)
+    {
+        Option = option;
     }
 }

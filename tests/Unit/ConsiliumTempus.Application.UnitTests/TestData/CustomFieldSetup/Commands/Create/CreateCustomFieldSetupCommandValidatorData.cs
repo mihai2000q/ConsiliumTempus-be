@@ -22,7 +22,7 @@ internal static class CreateCustomFieldSetupCommandValidatorData
                 null,
                 "New CustomFieldSetup",
                 "This field will represent some notes",
-                CustomFieldType.Text.ToString().ToLower(),
+                CustomFieldType.Text.ToString(),
                 null,
                 null,
                 new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand("Default Text"));

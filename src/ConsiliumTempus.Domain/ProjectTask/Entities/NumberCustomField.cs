@@ -22,7 +22,7 @@ public sealed class NumberCustomField : CustomField
         Setup = setup;
     }
 
-    public DecimalNumber? Number { get; init; }
+    public DecimalNumber? Number { get; private set; }
     public NumberCustomFieldSetupAggregate Setup { get; init; } = null!;
 
     public static NumberCustomField Create(
@@ -35,5 +35,10 @@ public sealed class NumberCustomField : CustomField
             setup,
             CustomFieldId.CreateUnique(),
             projectTask);
+    }
+
+    public void Update(DecimalNumber? number)
+    {
+        Number = number;
     }
 }

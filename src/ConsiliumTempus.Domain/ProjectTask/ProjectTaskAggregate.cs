@@ -99,6 +99,11 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
         Assignee = assignee;
         UpdatedDateTime = DateTime.UtcNow;
     }
+    
+    public void RefreshUpdatedDateTime()
+    {
+        UpdatedDateTime = DateTime.UtcNow;
+    }
 
     public void UpdateIsCompleted(IsCompleted isCompleted)
     {
@@ -112,11 +117,6 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
     }
 
     public void AddCustomField(CustomField customField)
-    {
-        _customFields.Add(customField);
-    }
-
-    public void RemoveCustomField(CustomField customField)
     {
         _customFields.Add(customField);
     }

@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -138,6 +139,40 @@ internal static partial class Utils
             task.Name.Value.Should().Be(command.Name);
             task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+        
+        internal static void AssertFromUpdateCustomFieldCommand(
+            ProjectTaskAggregate task,
+            UpdateCustomFieldFromProjectTaskCommand command)
+        {
+            task.Id.Value.Should().Be(command.Id);
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            var customField = task.CustomFields.SingleOrDefault(cf => cf.Id.Value == command.CustomFieldId);
+            customField.Should().NotBeNull();
+
+            switch (customField)
+            {
+                case NumberCustomField numberCustomField:
+                    if (command.NumberCustomField!.Number is null)
+                        numberCustomField.Number.Should().BeNull();
+                    else
+                        numberCustomField.Number!.Value.Should().Be(command.NumberCustomField.Number);
+                    break;
+                case SingleSelectCustomField singleSelectCustomField:
+                    var option = singleSelectCustomField.Setup.Options
+                        .SingleOrDefault(o => o.Id == command.SingleSelectCustomField!.OptionId);
+                    singleSelectCustomField.Option.Should().Be(option);
+                    break;
+                case TextCustomField textCustomField:
+                    if (command.TextCustomField!.Text is null)
+                        textCustomField.Text.Should().BeNull();
+                    else
+                        textCustomField.Text!.Value.Should().Be(command.TextCustomField.Text);
+                    break;
+            }
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

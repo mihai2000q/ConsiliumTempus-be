@@ -2,9 +2,11 @@
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
+using ConsiliumTempus.Domain.Common.Enums;
 
 namespace ConsiliumTempus.Common.UnitTests.ProjectTask;
 
@@ -48,6 +50,35 @@ public static class ProjectTaskCommandFactory
             id ?? Guid.NewGuid(),
             name,
             assigneeId);
+    }
+
+    public static UpdateCustomFieldFromProjectTaskCommand CreateUpdateCustomFieldFromProjectTaskCommand(
+        Guid? id = null,
+        Guid? customFieldId = null,
+        CustomFieldType type = CustomFieldType.Text,
+        UpdateCustomFieldFromProjectTaskCommand.NumberCustomFieldCommand? numberCustomField = null,
+        UpdateCustomFieldFromProjectTaskCommand.SingleSelectCustomFieldCommand? singleSelectCustomField = null,
+        UpdateCustomFieldFromProjectTaskCommand.TextCustomFieldCommand? textCustomField = null)
+    {
+        return new UpdateCustomFieldFromProjectTaskCommand(
+            id ?? Guid.NewGuid(),
+            customFieldId ?? Guid.NewGuid(),
+            type.ToString(),
+            numberCustomField,
+            singleSelectCustomField,
+            textCustomField);
+    }
+
+    public static UpdateCustomFieldFromProjectTaskCommand CreateUpdateCustomFieldFromProjectTaskCommandWithType(
+        string type)
+    {
+        return new UpdateCustomFieldFromProjectTaskCommand(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            type,
+            null,
+            null,
+            new UpdateCustomFieldFromProjectTaskCommand.TextCustomFieldCommand(null));
     }
 
     public static UpdateIsCompletedProjectTaskCommand CreateUpdateIsCompletedProjectTaskCommand(

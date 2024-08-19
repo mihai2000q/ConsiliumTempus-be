@@ -14,4 +14,11 @@ public static partial class Errors
             "ProjectTask.OverNotFound",
             "Project Task or Project Stage could not be found");
     }
+
+    public static class CustomField
+    {
+        public static Error NotFound => Error.NotFound(
+            "CustomField.NotFound",
+            "Custom Field could not be found");
+    }
 }

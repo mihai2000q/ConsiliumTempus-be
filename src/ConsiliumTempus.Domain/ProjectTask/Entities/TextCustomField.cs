@@ -22,7 +22,7 @@ public sealed class TextCustomField : CustomField
         Setup = setup;
     }
 
-    public Text? Text { get; init; }
+    public Text? Text { get; private set; }
     public TextCustomFieldSetupAggregate Setup { get; init; } = null!;
 
     public static TextCustomField Create(
@@ -35,5 +35,10 @@ public sealed class TextCustomField : CustomField
             setup,
             CustomFieldId.CreateUnique(),
             projectTask);
+    }
+    
+    public void Update(Text? text)
+    {
+        Text = text;
     }
 }
