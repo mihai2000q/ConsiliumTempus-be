@@ -221,11 +221,11 @@ internal static partial class Utils
             SingleSelectOption singleSelectOption,
             CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand
                 singleSelectOptionCommand,
-            int index)
+            int customOrderPosition)
         {
             singleSelectOption.Value.Should().Be(singleSelectOptionCommand.Value);
             singleSelectOption.Color.Should().Be(singleSelectOptionCommand.Color);
-            singleSelectOption.OrderPosition.Should().Be(index);
+            singleSelectOption.CustomOrderPosition.Value.Should().Be(customOrderPosition);
         }
         
         private static void AssertUpdateNumberCustomFieldSetup(

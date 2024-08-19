@@ -89,7 +89,7 @@ public sealed class CreateCustomFieldSetupCommandHandler(
                 SingleSelectOption.Create(
                     o.Value,
                     o.Color,
-                    index))
+                    CustomOrderPosition.Create(index)))
             .ToList();
 
         var defaultOption = command.SingleSelectCustomFieldSetup!.DefaultOptionId.IfNotNull(optionId =>

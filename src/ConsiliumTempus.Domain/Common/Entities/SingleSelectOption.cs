@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Common.Entities;
 
@@ -14,26 +15,27 @@ public sealed class SingleSelectOption : Entity<Guid>
         Guid id,
         string value,
         string color,
-        int orderPosition) : base(id)
+        CustomOrderPosition customOrderPosition) : base(id)
     {
         Value = value;
         Color = color;
-        OrderPosition = orderPosition;
+        CustomOrderPosition = customOrderPosition;
     }
 
-    public string Value { get; } = string.Empty;
-    public string Color { get; } = string.Empty;
-    public int OrderPosition { get; }
+    public string Value { get; private set; } = string.Empty;
+    public string Color { get; private set; } = string.Empty;
+    public CustomOrderPosition CustomOrderPosition { get; private set; } = null!;
 
     public static SingleSelectOption Create(
         string value,
         string color,
-        int orderPosition)
+        CustomOrderPosition customOrderPosition)
     {
         return new SingleSelectOption(
             Guid.NewGuid(),
             value,
             color,
-            orderPosition);
+            customOrderPosition);
+    }
     }
 }

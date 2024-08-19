@@ -672,7 +672,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrderPosition = table.Column<int>(type: "int", nullable: false),
+                    CustomOrderPosition = table.Column<int>(type: "int", nullable: false),
                     SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>

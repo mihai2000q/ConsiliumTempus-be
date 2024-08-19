@@ -312,7 +312,7 @@ internal class CustomFieldSetupData : ITestData
         AuditFactory.Create(Users[0]),
         [
             SingleSelectOptionFactory.Create(), 
-            SingleSelectOptionFactory.Create(orderPosition: 1), 
+            SingleSelectOptionFactory.Create(customOrderPosition: 1), 
         ],
         "Select only one field"),
         CustomFieldSetupFactory.CreateText(

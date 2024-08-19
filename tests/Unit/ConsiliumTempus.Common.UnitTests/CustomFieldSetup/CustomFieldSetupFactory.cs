@@ -57,7 +57,7 @@ public static class CustomFieldSetupFactory
                 SingleSelectOption.Create(
                     Constants.SingleSelectOption.Value2,
                     Constants.SingleSelectOption.Color,
-                    1)
+                    CustomOrderPosition.Create(1))
             ],
             defaultOption,
             Name.Create(name),

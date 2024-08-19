@@ -228,11 +228,11 @@ internal static partial class Utils
         private static void AssertSingleSelectOption(
             SingleSelectOption singleSelectOption,
             CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest singleSelectOptionRequest,
-            int index)
+            int customOrderPosition)
         {
             singleSelectOption.Value.Should().Be(singleSelectOptionRequest.Value);
             singleSelectOption.Color.Should().Be(singleSelectOptionRequest.Color);
-            singleSelectOption.OrderPosition.Should().Be(index);
+            singleSelectOption.CustomOrderPosition.Value.Should().Be(customOrderPosition);
         }
     }
 }

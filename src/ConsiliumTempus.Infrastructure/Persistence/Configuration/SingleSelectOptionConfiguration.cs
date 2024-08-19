@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Validation;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,6 +18,9 @@ public sealed class SingleSelectOptionConfiguration : IEntityTypeConfiguration<S
             .HasMaxLength(PropertiesValidation.SingleSelectOption.ValueMaximumLength);
 
         builder.Property(o => o.Color);
-        builder.Property(o => o.OrderPosition);
+
+        builder.OwnsOne(o => o.CustomOrderPosition)
+            .Property(c => c.Value)
+            .HasColumnName(nameof(CustomOrderPosition));
     }
 }

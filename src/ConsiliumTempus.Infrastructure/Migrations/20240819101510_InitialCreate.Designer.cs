@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240818113316_InitialCreate")]
+    [Migration("20240819101510_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -333,9 +333,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<string>("Color")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OrderPosition")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("SetupId")
                         .HasColumnType("uniqueidentifier");
@@ -1351,6 +1348,26 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .WithMany("Options")
                         .HasForeignKey("SetupId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.CustomOrderPosition", "CustomOrderPosition", b1 =>
+                        {
+                            b1.Property<Guid>("SingleSelectOptionId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("int")
+                                .HasColumnName("CustomOrderPosition");
+
+                            b1.HasKey("SingleSelectOptionId");
+
+                            b1.ToTable("SingleSelectOption");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SingleSelectOptionId");
+                        });
+
+                    b.Navigation("CustomOrderPosition")
                         .IsRequired();
                 });
 
