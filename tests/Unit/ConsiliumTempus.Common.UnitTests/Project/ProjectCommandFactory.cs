@@ -36,17 +36,8 @@ public static class ProjectCommandFactory
         return new AddStatusToProjectCommand(
             id ?? Guid.NewGuid(),
             title,
-            status.ToString(),
-            description);
-    }
-
-    public static AddStatusToProjectCommand CreateAddStatusToProjectCommandWithStatus(string status)
-    {
-        return new AddStatusToProjectCommand(
-            Guid.NewGuid(),
-            Constants.ProjectStatus.Title,
             status,
-            Constants.ProjectStatus.Description);
+            description);
     }
 
     public static CreateProjectCommand CreateCreateProjectCommand(
@@ -96,14 +87,6 @@ public static class ProjectCommandFactory
         return new UpdateProjectCommand(
             id ?? Guid.NewGuid(),
             name,
-            lifecycle.ToString());
-    }
-
-    public static UpdateProjectCommand CreateUpdateProjectCommandWithLifecycle(string lifecycle)
-    {
-        return new UpdateProjectCommand(
-            Guid.NewGuid(),
-            Constants.Project.Name,
             lifecycle);
     }
 

@@ -1,6 +1,7 @@
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Domain.Common.Validation;
+using ConsiliumTempus.Domain.Project.Enums;
 
 namespace ConsiliumTempus.Application.UnitTests.TestData.Project.Commands;
 
@@ -13,16 +14,10 @@ internal static class AddStatusToProjectCommandValidatorData
             var command = ProjectCommandFactory.CreateAddStatusToProjectCommand();
             Add(command);
 
-            command = ProjectCommandFactory.CreateAddStatusToProjectCommandWithStatus("ontrack");
-            Add(command);
-
-            command = ProjectCommandFactory.CreateAddStatusToProjectCommandWithStatus("oNtRaCK");
-            Add(command);
-
             command = new AddStatusToProjectCommand(
                 Guid.NewGuid(),
                 "New Status",
-                "OnTrack",
+                ProjectStatusType.OnTrack,
                 "Some new description");
             Add(command);
         }
@@ -47,24 +42,6 @@ internal static class AddStatusToProjectCommandValidatorData
             command = ProjectCommandFactory.CreateAddStatusToProjectCommand(
                 title: new string('a', PropertiesValidation.ProjectStatus.TitleMaximumLength + 1));
             Add(command, nameof(command.Title), 1);
-        }
-    }
-
-    internal class GetInvalidStatusCommands : TheoryData<AddStatusToProjectCommand, string, short>
-    {
-        public GetInvalidStatusCommands()
-        {
-            var command = ProjectCommandFactory.CreateAddStatusToProjectCommandWithStatus("");
-            Add(command, nameof(command.Status), 2);
-
-            command = ProjectCommandFactory.CreateAddStatusToProjectCommandWithStatus("something");
-            Add(command, nameof(command.Status), 1);
-
-            command = ProjectCommandFactory.CreateAddStatusToProjectCommandWithStatus("on track");
-            Add(command, nameof(command.Status), 1);
-
-            command = ProjectCommandFactory.CreateAddStatusToProjectCommandWithStatus("On Track");
-            Add(command, nameof(command.Status), 1);
         }
     }
 

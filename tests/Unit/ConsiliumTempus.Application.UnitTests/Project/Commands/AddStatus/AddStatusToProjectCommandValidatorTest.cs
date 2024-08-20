@@ -27,7 +27,6 @@ public class AddStatusToProjectCommandValidatorTest
     [Theory]
     [ClassData(typeof(AddStatusToProjectCommandValidatorData.GetInvalidIdCommands))]
     [ClassData(typeof(AddStatusToProjectCommandValidatorData.GetInvalidTitleCommands))]
-    [ClassData(typeof(AddStatusToProjectCommandValidatorData.GetInvalidStatusCommands))]
     [ClassData(typeof(AddStatusToProjectCommandValidatorData.GetInvalidDescriptionCommands))]
     public async Task ValidateAddStatusToProjectCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         AddStatusToProjectCommand command,

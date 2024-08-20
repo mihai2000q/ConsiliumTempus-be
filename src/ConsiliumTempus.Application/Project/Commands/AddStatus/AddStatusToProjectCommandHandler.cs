@@ -3,7 +3,6 @@ using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.Entities;
-using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ErrorOr;
 using MediatR;
@@ -27,7 +26,7 @@ public sealed class AddStatusToProjectCommandHandler(
 
         project.AddStatus(ProjectStatus.Create(
             Title.Create(command.Title),
-            Enum.Parse<ProjectStatusType>(command.Status, true),
+            command.Status,
             Description.Create(command.Description),
             project,
             user));

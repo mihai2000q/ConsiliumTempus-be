@@ -142,7 +142,7 @@ internal static partial class Utils
             var status = project.Statuses.Single(s => s.Title.Value == request.Title);
             status.Id.Value.Should().NotBeEmpty();
             status.Title.Value.Should().Be(request.Title);
-            status.Status.ToString().ToLower().Should().Be(request.Status.ToLower());
+            status.Status.Should().Be(request.Status);
             status.Description.Value.Should().Be(request.Description);
             status.Project.Should().Be(project);
             status.Audit.ShouldBeCreated(createdBy);
@@ -162,7 +162,7 @@ internal static partial class Utils
 
             // changed
             newProject.Name.Value.Should().Be(request.Name);
-            newProject.Lifecycle.ToString().ToLower().Should().Be(request.Lifecycle.ToLower());
+            newProject.Lifecycle.Should().Be(request.Lifecycle);
             newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 

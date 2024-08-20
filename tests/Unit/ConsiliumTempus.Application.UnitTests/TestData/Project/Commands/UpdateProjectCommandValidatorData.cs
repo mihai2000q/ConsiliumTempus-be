@@ -17,7 +17,7 @@ internal static class UpdateProjectCommandValidatorData
             command = new UpdateProjectCommand(
                 Guid.NewGuid(),
                 "New Name",
-                ProjectLifecycle.Archived.ToString().ToLower());
+                ProjectLifecycle.Archived);
             Add(command);
         }
     }
@@ -41,18 +41,6 @@ internal static class UpdateProjectCommandValidatorData
             command = ProjectCommandFactory.CreateUpdateProjectCommand(
                 name: new string('*', PropertiesValidation.Project.NameMaximumLength + 1));
             Add(command, nameof(command.Name), 1);
-        }
-    }
-
-    internal class GetInvalidLifecycleCommands : TheoryData<UpdateProjectCommand, string, short>
-    {
-        public GetInvalidLifecycleCommands()
-        {
-            var command = ProjectCommandFactory.CreateUpdateProjectCommandWithLifecycle("");
-            Add(command, nameof(command.Lifecycle), 2);
-
-            command = ProjectCommandFactory.CreateUpdateProjectCommandWithLifecycle("NotALifecycle");
-            Add(command, nameof(command.Lifecycle), 1);
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿namespace ConsiliumTempus.Api.Contracts.Project.AddStatus;
+﻿using ConsiliumTempus.Domain.Project.Enums;
+
+namespace ConsiliumTempus.Api.Contracts.Project.AddStatus;
 
 public sealed record AddStatusToProjectRequest(
     Guid Id,
     string Title,
-    string Status,
+    ProjectStatusType Status,
     string Description);

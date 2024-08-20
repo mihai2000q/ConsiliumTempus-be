@@ -1,6 +1,8 @@
-﻿namespace ConsiliumTempus.Api.Contracts.Project.Update;
+﻿using ConsiliumTempus.Domain.Project.Enums;
+
+namespace ConsiliumTempus.Api.Contracts.Project.Update;
 
 public sealed record UpdateProjectRequest(
     Guid Id,
     string Name,
-    string Lifecycle);
+    ProjectLifecycle Lifecycle);

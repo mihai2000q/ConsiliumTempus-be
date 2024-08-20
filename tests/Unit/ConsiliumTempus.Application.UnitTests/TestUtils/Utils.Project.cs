@@ -53,7 +53,7 @@ internal static partial class Utils
             status.Should().NotBeNull();
             status!.Id.Value.Should().NotBeEmpty();
             status.Title.Value.Should().Be(command.Title);
-            status.Status.ToString().ToLower().Should().Be(command.Status.ToLower());
+            status.Status.Should().Be(command.Status);
             status.Description.Value.Should().Be(command.Description);
             status.Project.Should().Be(project);
             status.Audit.ShouldBeCreated(user);
@@ -159,7 +159,7 @@ internal static partial class Utils
         {
             project.Id.Value.Should().Be(command.Id);
             project.Name.Value.Should().Be(command.Name);
-            project.Lifecycle.ToString().ToLower().Should().Be(command.Lifecycle.ToLower());
+            project.Lifecycle.Should().Be(command.Lifecycle);
             project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

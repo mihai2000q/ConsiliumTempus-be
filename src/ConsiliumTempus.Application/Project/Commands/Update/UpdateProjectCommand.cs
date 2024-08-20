@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using ConsiliumTempus.Domain.Project.Enums;
+using ErrorOr;
 using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.Update;
@@ -6,5 +7,5 @@ namespace ConsiliumTempus.Application.Project.Commands.Update;
 public sealed record UpdateProjectCommand(
     Guid Id,
     string Name,
-    string Lifecycle)
+    ProjectLifecycle Lifecycle)
     : IRequest<ErrorOr<UpdateProjectResult>>;

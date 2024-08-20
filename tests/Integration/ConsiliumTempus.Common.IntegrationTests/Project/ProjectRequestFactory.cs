@@ -101,7 +101,7 @@ public static class ProjectRequestFactory
         return new AddStatusToProjectRequest(
             id ?? Guid.NewGuid(),
             title,
-            status.ToString(),
+            status,
             description);
     }
 
@@ -113,7 +113,7 @@ public static class ProjectRequestFactory
         return new UpdateProjectRequest(
             id ?? Guid.NewGuid(),
             name,
-            lifecycle.ToString());
+            lifecycle);
     }
 
     public static UpdateFavoritesProjectRequest CreateUpdateFavoritesProjectRequest(
