@@ -103,6 +103,16 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         dbContext.Set<CustomField>().RemoveRange(customFields);
     }
 
+    public async Task DeleteCustomFieldsByProject(
+        ProjectAggregate project,
+        CancellationToken cancellationToken = default)
+    {
+        var customFields = await dbContext.Set<CustomField>()
+            .Where(cf => cf.ProjectTask.Stage.Sprint.Project == project)
+            .ToListAsync(cancellationToken);
+        dbContext.Set<CustomField>().RemoveRange(customFields);
+    }
+
     public async Task DeleteCustomFieldsByProjectAndSetup(
         CustomFieldSetupAggregate customFieldSetup,
         ProjectAggregate project,
