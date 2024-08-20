@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Validation;
-using ConsiliumTempus.Domain.Project.Enums;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.Create;
@@ -27,10 +26,6 @@ public sealed class CreateProjectSprintCommandValidator : AbstractValidator<Crea
             RuleFor(c => c.ProjectStatus!.Title)
                 .NotEmpty()
                 .MaximumLength(PropertiesValidation.ProjectStatus.TitleMaximumLength);
-
-            RuleFor(c => c.ProjectStatus!.Status)
-                .NotEmpty()
-                .IsEnumName(typeof(ProjectStatusType), false);
 
             RuleFor(c => c.ProjectStatus!.Description)
                 .NotEmpty();

@@ -102,7 +102,7 @@ internal static partial class Utils
             {
                 project.LatestStatus.Should().NotBeNull();
                 project.LatestStatus!.Title.Value.Should().Be(command.ProjectStatus.Title);
-                project.LatestStatus!.Status.ToString().ToLower().Should().Be(command.ProjectStatus.Status.ToLower());
+                project.LatestStatus!.Status.Should().Be(command.ProjectStatus.Status);
                 project.LatestStatus!.Description.Value.Should().Be(command.ProjectStatus.Description);
             }
 

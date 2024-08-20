@@ -19,7 +19,7 @@ public sealed class UpdateProjectCommandHandler(IProjectRepository projectReposi
 
         project.Update(
             Name.Create(command.Name),
-            Enum.Parse<ProjectLifecycle>(command.Lifecycle, true));
+            command.Lifecycle);
 
         return new UpdateProjectResult();
     }

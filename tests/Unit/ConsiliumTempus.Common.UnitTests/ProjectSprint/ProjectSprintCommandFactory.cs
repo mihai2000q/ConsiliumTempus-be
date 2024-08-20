@@ -42,12 +42,12 @@ public static class ProjectSprintCommandFactory
 
     public static CreateProjectSprintCommand.CreateProjectStatus CreateCreateProjectStatus(
         string title = Constants.ProjectStatus.Title,
-        string? status = null,
+        ProjectStatusType status = ProjectStatusType.AtRisk,
         string description = Constants.ProjectStatus.Description)
     {
         return new CreateProjectSprintCommand.CreateProjectStatus(
             title,
-            status ?? ProjectStatusType.AtRisk.ToString(),
+            status,
             description);
     }
 

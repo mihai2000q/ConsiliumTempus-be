@@ -67,7 +67,7 @@ public sealed class CreateProjectSprintCommandHandler(
         {
             project.AddStatus(ProjectStatus.Create(
                 Title.Create(command.ProjectStatus.Title),
-                Enum.Parse<ProjectStatusType>(command.ProjectStatus.Status, true),
+                command.ProjectStatus.Status,
                 Description.Create(command.ProjectStatus.Description),
                 project,
                 user));

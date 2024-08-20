@@ -119,7 +119,7 @@ internal static partial class Utils
             {
                 sprint.Project.LatestStatus.Should().NotBeNull();
                 sprint.Project.LatestStatus!.Title.Value.Should().Be(request.ProjectStatus.Title);
-                sprint.Project.LatestStatus.Status.ToString().ToLower().Should().Be(request.ProjectStatus.Status.ToLower());
+                sprint.Project.LatestStatus.Status.Should().Be(request.ProjectStatus.Status);
                 sprint.Project.LatestStatus.Description.Value.Should().Be(request.ProjectStatus.Description);
             }
         }

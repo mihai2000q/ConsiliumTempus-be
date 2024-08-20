@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using ConsiliumTempus.Domain.Project.Enums;
+using ErrorOr;
 using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.Create;
@@ -14,6 +15,6 @@ public sealed record CreateProjectSprintCommand(
 {
     public sealed record CreateProjectStatus(
         string Title,
-        string Status,
+        ProjectStatusType Status,
         string Description);
 }

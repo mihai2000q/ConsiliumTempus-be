@@ -29,7 +29,6 @@ public class CreateProjectSprintCommandValidatorTest
     [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidNameCommands))]
     [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidStartEndDateCommands))]
     [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidProjectStatusTitleCommands))]
-    [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidProjectStatusStatusCommands))]
     [ClassData(typeof(CreateProjectSprintCommandValidatorData.GetInvalidProjectStatusDescriptionCommands))]
     public async Task ValidateCreateProjectSprintCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         CreateProjectSprintCommand command,

@@ -63,12 +63,12 @@ public static class ProjectSprintRequestFactory
 
     public static CreateProjectSprintRequest.CreateProjectStatus CreateCreateProjectStatus(
         string title = Constants.ProjectStatus.Title,
-        string? status = null,
+        ProjectStatusType status = ProjectStatusType.AtRisk,
         string description = Constants.ProjectStatus.Description)
     {
         return new CreateProjectSprintRequest.CreateProjectStatus(
             title,
-            status ?? ProjectStatusType.AtRisk.ToString(),
+            status,
             description);
     }
 
