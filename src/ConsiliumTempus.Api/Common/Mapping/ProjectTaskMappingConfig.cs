@@ -47,10 +47,10 @@ public sealed class ProjectTaskMappingConfig : IRegister
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.IsCompleted, src => src.IsCompleted.Value)
-            .Map(dest => dest.Stage, src => src.Stage)
             .Map(dest => dest.Sprint, src => src.Stage.Sprint)
             .Map(dest => dest.Project, src => src.Stage.Sprint.Project)
             .Map(dest => dest.Workspace, src => src.Stage.Sprint.Project.Workspace);
+
         config.NewConfig<UserAggregate, GetProjectTaskResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
@@ -67,6 +67,48 @@ public sealed class ProjectTaskMappingConfig : IRegister
         config.NewConfig<WorkspaceAggregate, GetProjectTaskResponse.WorkspaceResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value);
+
+        config.NewConfig<NumberCustomField, GetProjectTaskResponse.NumberCustomFieldResponse>()
+            .IgnoreNullValues(true)
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Type, src => CustomFieldType.Number)
+            .Map(dest => dest.Name, src => src.Setup.Name.Value)
+            .Map(dest => dest.Description, src => src.Setup.Description.Value)
+            .Map(dest => dest.Number, src => src.Number!.Value);
+        config.NewConfig<SingleSelectCustomField, GetProjectTaskResponse.SingleSelectCustomFieldResponse>()
+            .IgnoreNullValues(true)
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Type, src => CustomFieldType.SingleSelect)
+            .Map(dest => dest.Name, src => src.Setup.Name.Value)
+            .Map(dest => dest.Description, src => src.Setup.Description.Value)
+            .Map(dest => dest.AvailableOptions, src => src.Setup.Options);
+        config.NewConfig<TextCustomField, GetProjectTaskResponse.TextCustomFieldResponse>()
+            .IgnoreNullValues(true)
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Type, src => CustomFieldType.Text)
+            .Map(dest => dest.Name, src => src.Setup.Name.Value)
+            .Map(dest => dest.Description, src => src.Setup.Description.Value)
+            .Map(dest => dest.Text, src => src.Text!.Value);
+
+        config.NewConfig<CustomField, GetProjectTaskResponse.CustomFieldResponse>()
+            .MapWith(src => Convert(src));
+    }
+
+    private static GetProjectTaskResponse.CustomFieldResponse Convert(CustomField customField)
+    {
+        return customField switch
+        {
+            NumberCustomField numberCustomField =>
+                numberCustomField.Adapt<GetProjectTaskResponse.NumberCustomFieldResponse>(),
+
+            SingleSelectCustomField singleSelectCustomField =>
+                singleSelectCustomField.Adapt<GetProjectTaskResponse.SingleSelectCustomFieldResponse>(),
+
+            TextCustomField textCustomField =>
+                textCustomField.Adapt<GetProjectTaskResponse.TextCustomFieldResponse>(),
+
+            _ => throw new ArgumentOutOfRangeException(nameof(customField), customField, null)
+        };
     }
 
     private static void GetCollectionMappings(TypeAdapterConfig config)
@@ -87,39 +129,41 @@ public sealed class ProjectTaskMappingConfig : IRegister
         config.NewConfig<NumberCustomField, GetCollectionProjectTaskResponse.NumberCustomFieldResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.Number.ToString())
+            .Map(dest => dest.Type, src => CustomFieldType.Number)
             .Map(dest => dest.Name, src => src.Setup.Name.Value)
             .Map(dest => dest.Description, src => src.Setup.Description.Value)
             .Map(dest => dest.Number, src => src.Number!.Value);
         config.NewConfig<SingleSelectCustomField, GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.SingleSelect.ToString())
+            .Map(dest => dest.Type, src => CustomFieldType.SingleSelect)
             .Map(dest => dest.Name, src => src.Setup.Name.Value)
-            .Map(dest => dest.Description, src => src.Setup.Description.Value)
-            .Map(dest => dest.AvailableOptions, src => src.Setup.Options);
+            .Map(dest => dest.Description, src => src.Setup.Description.Value);
         config.NewConfig<TextCustomField, GetCollectionProjectTaskResponse.TextCustomFieldResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.Text.ToString())
+            .Map(dest => dest.Type, src => CustomFieldType.Text)
             .Map(dest => dest.Name, src => src.Setup.Name.Value)
             .Map(dest => dest.Description, src => src.Setup.Description.Value)
             .Map(dest => dest.Text, src => src.Text!.Value);
 
         config.NewConfig<CustomField, GetCollectionProjectTaskResponse.CustomFieldResponse>()
-            .MapWith(src => Convert(src));
+            .MapWith(src => ConvertCollection(src));
     }
 
-    private static GetCollectionProjectTaskResponse.CustomFieldResponse Convert(CustomField customField)
+    private static GetCollectionProjectTaskResponse.CustomFieldResponse ConvertCollection(CustomField customField)
     {
         return customField switch
         {
-            NumberCustomField numberCustomField => 
+            NumberCustomField numberCustomField =>
                 numberCustomField.Adapt<GetCollectionProjectTaskResponse.NumberCustomFieldResponse>(),
-            SingleSelectCustomField singleSelectCustomField => 
+
+            SingleSelectCustomField singleSelectCustomField =>
                 singleSelectCustomField.Adapt<GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse>(),
-            TextCustomField textCustomField => 
+
+            TextCustomField textCustomField =>
                 textCustomField.Adapt<GetCollectionProjectTaskResponse.TextCustomFieldResponse>(),
+
             _ => throw new ArgumentOutOfRangeException(nameof(customField), customField, null)
         };
     }

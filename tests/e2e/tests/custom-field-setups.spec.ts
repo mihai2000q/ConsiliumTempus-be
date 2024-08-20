@@ -253,7 +253,8 @@ test.describe('should allow operations on the custom field setup entity', () => 
         {
           id: expect.any(String),
           name: body.name,
-          description: body.description
+          description: body.description,
+          type: 'Number'
         }
       ])
     })
@@ -297,7 +298,8 @@ test.describe('should allow operations on the custom field setup entity', () => 
         {
           id: expect.any(String),
           name: body.name,
-          description: body.description
+          description: body.description,
+          type: 'SingleSelect'
         }
       ])
     })
@@ -330,6 +332,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
           id: expect.any(String),
           name: body.name,
           description: body.description,
+          type: 'Text'
         }
       ])
     })

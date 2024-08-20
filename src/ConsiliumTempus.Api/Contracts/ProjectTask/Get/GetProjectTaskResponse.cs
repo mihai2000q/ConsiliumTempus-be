@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
+using ConsiliumTempus.Domain.Common.Enums;
 
 namespace ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 
@@ -11,7 +13,8 @@ public sealed record GetProjectTaskResponse(
     GetProjectTaskResponse.ProjectStageResponse Stage,
     GetProjectTaskResponse.ProjectSprintResponse Sprint,
     GetProjectTaskResponse.ProjectResponse Project,
-    GetProjectTaskResponse.WorkspaceResponse Workspace)
+    GetProjectTaskResponse.WorkspaceResponse Workspace,
+    List<GetProjectTaskResponse.CustomFieldResponse> CustomFields)
 {
     public sealed record UserResponse(
         Guid Id,
@@ -34,4 +37,42 @@ public sealed record GetProjectTaskResponse(
     public sealed record WorkspaceResponse(
         Guid Id,
         string Name);
+    
+    [JsonDerivedType(typeof(NumberCustomFieldResponse), nameof(NumberCustomFieldResponse))]
+    [JsonDerivedType(typeof(SingleSelectCustomFieldResponse), nameof(SingleSelectCustomFieldResponse))]
+    [JsonDerivedType(typeof(TextCustomFieldResponse), nameof(TextCustomFieldResponse))]
+    public abstract record CustomFieldResponse(
+        Guid Id,
+        CustomFieldType Type);
+
+    public sealed record NumberCustomFieldResponse(
+        Guid Id,
+        string Name,
+        string Description,
+        CustomFieldType Type,
+        decimal? Number)
+        : CustomFieldResponse(Id, Type);
+
+    public sealed record SingleSelectCustomFieldResponse(
+        Guid Id,
+        string Name,
+        string Description,
+        CustomFieldType Type,
+        SingleSelectCustomFieldResponse.SingleSelectOptionResponse? Option,
+        List<SingleSelectCustomFieldResponse.SingleSelectOptionResponse> AvailableOptions)
+        : CustomFieldResponse(Id, Type)
+    {
+        public sealed record SingleSelectOptionResponse(
+            Guid Id,
+            string Value,
+            string Color);
+    };
+
+    public sealed record TextCustomFieldResponse(
+        Guid Id,
+        string Name,
+        string Description,
+        CustomFieldType Type,
+        string? Text)
+        : CustomFieldResponse(Id, Type);
 }

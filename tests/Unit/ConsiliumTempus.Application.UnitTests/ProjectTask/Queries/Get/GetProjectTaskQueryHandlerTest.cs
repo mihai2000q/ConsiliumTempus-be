@@ -31,7 +31,7 @@ public class GetProjectTaskQueryHandlerTest
 
         var task = ProjectTaskFactory.Create();
         _projectTaskRepository
-            .GetWithStagesAndWorkspace(Arg.Any<ProjectTaskId>())
+            .GetWithCustomFieldsStagesAndWorkspace(Arg.Any<ProjectTaskId>())
             .Returns(task);
 
         // Act
@@ -40,7 +40,7 @@ public class GetProjectTaskQueryHandlerTest
         // Assert
         await _projectTaskRepository
             .Received(1)
-            .GetWithStagesAndWorkspace(Arg.Is<ProjectTaskId>(id => query.Id == id.Value));
+            .GetWithCustomFieldsStagesAndWorkspace(Arg.Is<ProjectTaskId>(id => query.Id == id.Value));
 
         outcome.IsError.Should().BeFalse();
         Utils.ProjectTask.AssertProjectTask(outcome.Value, task);
@@ -53,7 +53,7 @@ public class GetProjectTaskQueryHandlerTest
         var query = ProjectTaskQueryFactory.CreateGetProjectTaskQuery();
 
         _projectTaskRepository
-            .GetWithStagesAndWorkspace(Arg.Any<ProjectTaskId>())
+            .GetWithCustomFieldsStagesAndWorkspace(Arg.Any<ProjectTaskId>())
             .ReturnsNull();
 
         // Act
@@ -62,7 +62,7 @@ public class GetProjectTaskQueryHandlerTest
         // Assert
         await _projectTaskRepository
             .Received(1)
-            .GetWithStagesAndWorkspace(Arg.Is<ProjectTaskId>(id => query.Id == id.Value));
+            .GetWithCustomFieldsStagesAndWorkspace(Arg.Is<ProjectTaskId>(id => query.Id == id.Value));
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);
     }

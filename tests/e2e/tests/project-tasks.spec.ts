@@ -75,8 +75,10 @@ test.describe('should allow operations on the project task entity', () => {
           {
             id: expect.any(String),
             name: projectTask.name,
+            description: "",
             isCompleted: false,
-            assignee: null
+            assignee: null,
+            customFields: []
           }
         ],
         totalCount: 1
@@ -109,14 +111,18 @@ test.describe('should allow operations on the project task entity', () => {
           {
             id: expect.any(String),
             name: projectTask1.name,
+            description: "",
             isCompleted: false,
-            assignee: null
+            assignee: null,
+            customFields: []
           },
           {
             id: expect.any(String),
             name: projectTask2.name,
+            description: "",
             isCompleted: false,
-            assignee: null
+            assignee: null,
+            customFields: []
           }
         ],
         totalCount: 2
@@ -144,8 +150,10 @@ test.describe('should allow operations on the project task entity', () => {
           {
             id: expect.any(String),
             name: projectTask.name,
+            description: "",
             isCompleted: false,
-            assignee: null
+            assignee: null,
+            customFields: []
           }
         ],
         totalCount: 1
@@ -183,14 +191,18 @@ test.describe('should allow operations on the project task entity', () => {
           {
             id: expect.any(String),
             name: projectTask1.name,
+            description: "",
             isCompleted: false,
-            assignee: null
+            assignee: null,
+            customFields: []
           },
           {
             id: expect.any(String),
             name: projectTask2.name,
+            description: "",
             isCompleted: false,
-            assignee: null
+            assignee: null,
+            customFields: []
           }
         ],
         totalCount: 3
@@ -222,8 +234,10 @@ test.describe('should allow operations on the project task entity', () => {
         {
           id: expect.any(String),
           name: body.name,
+          description: "",
           isCompleted: false,
-          assignee: null
+          assignee: null,
+          customFields: []
         }
       ])
     })
@@ -263,20 +277,26 @@ test.describe('should allow operations on the project task entity', () => {
         {
           id: expect.any(String),
           name: body.name,
+          description: "",
           isCompleted: false,
-          assignee: null
+          assignee: null,
+          customFields: []
         },
         {
           id: expect.any(String),
           name: createProjectTaskRequest1.name,
+          description: "",
           isCompleted: false,
-          assignee: null
+          assignee: null,
+          customFields: []
         },
         {
           id: expect.any(String),
           name: createProjectTaskRequest2.name,
+          description: "",
           isCompleted: false,
-          assignee: null
+          assignee: null,
+          customFields: []
         },
       ])
     })
@@ -313,7 +333,8 @@ test.describe('should allow operations on the project task entity', () => {
       stage: expect.any(Object),
       sprint: expect.any(Object),
       project: expect.any(Object),
-      workspace: expect.any(Object)
+      workspace: expect.any(Object),
+      customFields: []
     })
   })
 
@@ -348,7 +369,8 @@ test.describe('should allow operations on the project task entity', () => {
       stage: expect.any(Object),
       sprint: expect.any(Object),
       project: expect.any(Object),
-      workspace: expect.any(Object)
+      workspace: expect.any(Object),
+      customFields: []
     })
   })
 
@@ -385,7 +407,8 @@ test.describe('should allow operations on the project task entity', () => {
       stage: expect.any(Object),
       sprint: expect.any(Object),
       project: expect.any(Object),
-      workspace: expect.any(Object)
+      workspace: expect.any(Object),
+      customFields: []
     })
   })
 
@@ -429,20 +452,26 @@ test.describe('should allow operations on the project task entity', () => {
       {
         id: expect.any(String),
         name: task1.name,
+        description: "",
         isCompleted: false,
-        assignee: null
+        assignee: null,
+        customFields: []
       },
       {
         id: expect.any(String),
         name: task3.name,
+        description: "",
         isCompleted: false,
-        assignee: null
+        assignee: null,
+        customFields: []
       },
       {
         id: expect.any(String),
         name: task2.name,
+        description: "",
         isCompleted: false,
-        assignee: null
+        assignee: null,
+        customFields: []
       }
     ])
   })

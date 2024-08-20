@@ -36,6 +36,9 @@ internal static partial class Utils
             AssertProjectSprintResponse(response.Sprint, task.Stage.Sprint);
             AssertProjectResponse(response.Project, task.Stage.Sprint.Project);
             AssertWorkspaceResponse(response.Workspace, task.Stage.Sprint.Project.Workspace);
+            response.CustomFields.OrderBy(cf => cf.Id) // TODO: Remove Once ordered
+                .Zip(task.CustomFields.OrderBy(cf => cf.Id.Value))
+                .Should().AllSatisfy(x => AssertCustomFieldResponse(x.First, x.Second));
         }
 
         internal static void AssertGetCollectionResponse(
@@ -257,7 +260,8 @@ internal static partial class Utils
         {
             response.Id.Should().Be(sprint.Id.Value);
             response.Name.Should().Be(sprint.Name.Value);
-            response.Stages.Zip(sprint.Stages)
+            response.Stages
+                .Zip(sprint.Stages.OrderBy(s => s.CustomOrderPosition))
                 .Should().AllSatisfy(x => AssertProjectStageResponse(x.First, x.Second));
         }
 
@@ -276,6 +280,88 @@ internal static partial class Utils
             response.Id.Should().Be(workspace.Id.Value);
             response.Name.Should().Be(workspace.Name.Value);
         }
+        
+        private static void AssertCustomFieldResponse(
+            GetProjectTaskResponse.CustomFieldResponse response,
+            CustomField customField)
+        {
+            response.Id.Should().Be(customField.Id.Value);
+
+            switch (response)
+            {
+                case GetProjectTaskResponse.NumberCustomFieldResponse numberResponse:
+                    AssertNumberCustomFieldResponse(numberResponse, customField);
+                    break;
+
+                case GetProjectTaskResponse.SingleSelectCustomFieldResponse singleSelectResponse:
+                    AssertSingleSelectCustomFieldResponse(singleSelectResponse, customField);
+                    break;
+
+                case GetProjectTaskResponse.TextCustomFieldResponse textResponse:
+                    AssertTextCustomFieldResponse(textResponse, customField);
+                    break;
+            }
+        }
+
+        private static void AssertNumberCustomFieldResponse(
+            GetProjectTaskResponse.NumberCustomFieldResponse response,
+            CustomField customField)
+        {
+            customField.Should().BeOfType<NumberCustomField>();
+            var numberCustomField = (NumberCustomField)customField;
+            response.Type.Should().Be(CustomFieldType.Number);
+            response.Name.Should().Be(numberCustomField.Setup.Name.Value);
+            response.Description.Should().Be(numberCustomField.Setup.Description.Value);
+            if (numberCustomField.Number is null)
+                response.Number.Should().BeNull();
+            else
+                response.Number.Should().Be(numberCustomField.Number.Value);
+        }
+
+        private static void AssertSingleSelectCustomFieldResponse(
+            GetProjectTaskResponse.SingleSelectCustomFieldResponse response,
+            CustomField customField)
+        {
+            customField.Should().BeOfType<SingleSelectCustomField>();
+            var singleSelectCustomField = (SingleSelectCustomField)customField;
+            response.Type.Should().Be(CustomFieldType.SingleSelect);
+            response.Name.Should().Be(singleSelectCustomField.Setup.Name.Value);
+            response.Description.Should().Be(singleSelectCustomField.Setup.Description.Value);
+            AssertSingleSelectOptionResponse(response.Option, singleSelectCustomField.Option);
+            response.AvailableOptions
+                .Zip(singleSelectCustomField.Setup.Options)
+                .Should().AllSatisfy(x => AssertSingleSelectOptionResponse(x.First, x.Second));
+        }
+
+        private static void AssertTextCustomFieldResponse(
+            GetProjectTaskResponse.TextCustomFieldResponse response,
+            CustomField customField)
+        {
+            customField.Should().BeOfType<TextCustomField>();
+            var textCustomField = (TextCustomField)customField;
+            response.Type.Should().Be(CustomFieldType.Text);
+            response.Name.Should().Be(textCustomField.Setup.Name.Value);
+            response.Description.Should().Be(textCustomField.Setup.Description.Value);
+            if (textCustomField.Text is null)
+                response.Text.Should().BeNull();
+            else
+                response.Text.Should().Be(textCustomField.Text.Value);
+        }
+
+        private static void AssertSingleSelectOptionResponse(
+            GetProjectTaskResponse.SingleSelectCustomFieldResponse.SingleSelectOptionResponse? response,
+            SingleSelectOption? singleSelectOption)
+        {
+            if (singleSelectOption is null)
+            {
+                response.Should().BeNull();
+                return;
+            }
+
+            response!.Id.Should().Be(singleSelectOption.Id);
+            response.Value.Should().Be(singleSelectOption.Value);
+            response.Color.Should().Be(singleSelectOption.Color);
+        }
 
         private static void AssertResponse(
             GetCollectionProjectTaskResponse.ProjectTaskResponse response,
@@ -285,7 +371,7 @@ internal static partial class Utils
             response.Name.Should().Be(projectTask.Name.Value);
             response.IsCompleted.Should().Be(projectTask.IsCompleted.Value);
             AssertUserResponse(response.Assignee, projectTask.Assignee);
-            response.CustomFields.OrderBy(cf => cf.Id)
+            response.CustomFields.OrderBy(cf => cf.Id) // TODO: Remove Once ordered
                 .Zip(projectTask.CustomFields.OrderBy(cf => cf.Id.Value))
                 .Should().AllSatisfy(x => AssertCustomFieldResponse(x.First, x.Second));
         }
@@ -336,7 +422,6 @@ internal static partial class Utils
             response.Type.Should().Be(CustomFieldType.Number);
             response.Name.Should().Be(numberCustomField.Setup.Name.Value);
             response.Description.Should().Be(numberCustomField.Setup.Description.Value);
-            response.Description.Should().Be(numberCustomField.Setup.Description.Value);
             if (numberCustomField.Number is null)
                 response.Number.Should().BeNull();
             else
@@ -352,11 +437,7 @@ internal static partial class Utils
             response.Type.Should().Be(CustomFieldType.SingleSelect);
             response.Name.Should().Be(singleSelectCustomField.Setup.Name.Value);
             response.Description.Should().Be(singleSelectCustomField.Setup.Description.Value);
-            response.Description.Should().Be(singleSelectCustomField.Setup.Description.Value);
             AssertSingleSelectOptionResponse(response.Option, singleSelectCustomField.Option);
-            response.AvailableOptions
-                .Zip(singleSelectCustomField.Setup.Options)
-                .Should().AllSatisfy(x => AssertSingleSelectOptionResponse(x.First, x.Second));
         }
 
         private static void AssertTextCustomFieldResponse(
@@ -367,7 +448,6 @@ internal static partial class Utils
             var textCustomField = (TextCustomField)customField;
             response.Type.Should().Be(CustomFieldType.Text);
             response.Name.Should().Be(textCustomField.Setup.Name.Value);
-            response.Description.Should().Be(textCustomField.Setup.Description.Value);
             response.Description.Should().Be(textCustomField.Setup.Description.Value);
             if (textCustomField.Text is null)
                 response.Text.Should().BeNull();

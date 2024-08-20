@@ -248,7 +248,6 @@ internal static partial class Utils
             response.Type.Should().Be(CustomFieldType.Number);
             response.Name.Should().Be(numberCustomField.Setup.Name.Value);
             response.Description.Should().Be(numberCustomField.Setup.Description.Value);
-            response.Description.Should().Be(numberCustomField.Setup.Description.Value);
             if (numberCustomField.Number is null)
                 response.Number.Should().BeNull();
             else
@@ -264,11 +263,7 @@ internal static partial class Utils
             response.Type.Should().Be(CustomFieldType.SingleSelect);
             response.Name.Should().Be(singleSelectCustomField.Setup.Name.Value);
             response.Description.Should().Be(singleSelectCustomField.Setup.Description.Value);
-            response.Description.Should().Be(singleSelectCustomField.Setup.Description.Value);
             AssertSingleSelectOptionResponse(response.Option, singleSelectCustomField.Option);
-            response.AvailableOptions
-                .Zip(singleSelectCustomField.Setup.Options)
-                .Should().AllSatisfy(x => AssertSingleSelectOptionResponse(x.First, x.Second));
         }
 
         private static void AssertTextCustomFieldResponse(
@@ -279,7 +274,6 @@ internal static partial class Utils
             var textCustomField = (TextCustomField)customField;
             response.Type.Should().Be(CustomFieldType.Text);
             response.Name.Should().Be(textCustomField.Setup.Name.Value);
-            response.Description.Should().Be(textCustomField.Setup.Description.Value);
             response.Description.Should().Be(textCustomField.Setup.Description.Value);
             if (textCustomField.Text is null)
                 response.Text.Should().BeNull();

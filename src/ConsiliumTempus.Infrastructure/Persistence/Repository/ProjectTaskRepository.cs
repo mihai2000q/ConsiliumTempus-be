@@ -57,6 +57,17 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
+    public async Task<ProjectTaskAggregate?> GetWithCustomFieldsStagesAndWorkspace(
+        ProjectTaskId id,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.ProjectTasks
+            .Include(t => t.CustomFields) // TODO: Missing Order By
+            .Include(t => t.Stage.Sprint.Project.Workspace)
+            .Include(t => t.Stage.Sprint.Stages.OrderBy(s => s.CustomOrderPosition.Value))
+            .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
+    }
+
     public Task<List<ProjectTaskAggregate>> GetListByStage(
         ProjectStageId stageId,
         IReadOnlyList<IFilter<ProjectTaskAggregate>> filters,

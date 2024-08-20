@@ -27,10 +27,8 @@ public class ProjectTaskControllerGetTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetProjectTaskResponse>();
-        Utils.ProjectTask.AssertGetResponse(
-            response!,
-            task);
+        var response = await outcome.Content.ReadFromJsonAsync<GetProjectTaskResponse>(JsonOptions);
+        Utils.ProjectTask.AssertGetResponse(response!, task);
     }
 
     [Fact]

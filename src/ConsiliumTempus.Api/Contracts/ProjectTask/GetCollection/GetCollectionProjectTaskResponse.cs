@@ -42,8 +42,7 @@ public sealed record GetCollectionProjectTaskResponse(
         string Name,
         string Description,
         CustomFieldType Type,
-        SingleSelectCustomFieldResponse.SingleSelectOptionResponse? Option,
-        List<SingleSelectCustomFieldResponse.SingleSelectOptionResponse> AvailableOptions)
+        SingleSelectCustomFieldResponse.SingleSelectOptionResponse? Option)
         : CustomFieldResponse(Id, Type)
     {
         public sealed record SingleSelectOptionResponse(
