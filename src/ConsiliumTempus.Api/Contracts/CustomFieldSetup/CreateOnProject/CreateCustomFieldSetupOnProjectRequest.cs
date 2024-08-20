@@ -1,10 +1,12 @@
-﻿namespace ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+﻿using ConsiliumTempus.Domain.Common.Enums;
+
+namespace ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
 
 public sealed record CreateCustomFieldSetupOnProjectRequest(
     Guid? ProjectId,
     string Name,
     string Description,
-    string Type,
+    CustomFieldType Type,
     CreateCustomFieldSetupOnProjectRequest.CreateNumberCustomFieldSetupRequest? NumberCustomFieldSetup,
     CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest? SingleSelectCustomFieldSetup,
     CreateCustomFieldSetupOnProjectRequest.CreateTextCustomFieldSetupRequest? TextCustomFieldSetup)

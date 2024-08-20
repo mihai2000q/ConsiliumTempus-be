@@ -21,11 +21,8 @@ public sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<C
             .NotEmpty()
             .MaximumLength(PropertiesValidation.CustomFieldSetup.NameMaximumLength);
 
-        RuleFor(c => c.Type)
-            .IsEnumName(typeof(CustomFieldType));
-
         // Number Custom Field Setup
-        When(c => c.Type == CustomFieldType.Number.ToString(),
+        When(c => c.Type == CustomFieldType.Number,
             () =>
             {
                 RuleFor(c => c.NumberCustomFieldSetup)
@@ -43,7 +40,7 @@ public sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<C
             });
 
         // Single Select Custom Field Setup
-        When(c => c.Type == CustomFieldType.SingleSelect.ToString(),
+        When(c => c.Type == CustomFieldType.SingleSelect,
             () =>
             {
                 RuleFor(c => c.SingleSelectCustomFieldSetup)
@@ -83,7 +80,7 @@ public sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<C
             });
 
         // Text Custom Field Setup
-        When(c => c.Type == CustomFieldType.Text.ToString(),
+        When(c => c.Type == CustomFieldType.Text,
             () =>
             {
                 RuleFor(c => c.TextCustomFieldSetup)

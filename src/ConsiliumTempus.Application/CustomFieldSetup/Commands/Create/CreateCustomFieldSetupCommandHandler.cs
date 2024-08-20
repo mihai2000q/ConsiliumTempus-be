@@ -49,8 +49,7 @@ public sealed class CreateCustomFieldSetupCommandHandler(
 
         var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
 
-        var customFieldType = Enum.Parse<CustomFieldType>(command.Type, true);
-        CustomFieldSetupAggregate customFieldSetup = customFieldType switch
+        CustomFieldSetupAggregate customFieldSetup = command.Type switch
         {
             CustomFieldType.Number => GetNumberCustomFieldSetup(command, user),
             CustomFieldType.SingleSelect => GetSingleSelectCustomFieldSetup(command, user),

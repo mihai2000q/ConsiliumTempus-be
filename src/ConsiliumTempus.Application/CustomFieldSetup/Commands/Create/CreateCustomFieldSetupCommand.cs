@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using ConsiliumTempus.Domain.Common.Enums;
+using ErrorOr;
 using MediatR;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
@@ -8,7 +9,7 @@ public sealed record CreateCustomFieldSetupCommand(
     Guid? ProjectId,
     string Name,
     string Description,
-    string Type,
+    CustomFieldType Type,
     CreateCustomFieldSetupCommand.NumberCustomFieldSetupCommand? NumberCustomFieldSetup,
     CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand? SingleSelectCustomFieldSetup,
     CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand? TextCustomFieldSetup)

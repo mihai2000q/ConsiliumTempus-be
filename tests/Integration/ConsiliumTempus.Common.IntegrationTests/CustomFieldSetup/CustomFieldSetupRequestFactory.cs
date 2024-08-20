@@ -22,7 +22,7 @@ public static class CustomFieldSetupRequestFactory
             projectId,
             name,
             description,
-            type.ToString(),
+            type,
             numberCustomFieldSetup,
             singleSelectCustomFieldSetup,
             textCustomFieldSetup);

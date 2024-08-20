@@ -31,8 +31,7 @@ internal static partial class Utils
             customFieldSetup.Projects.Should().HaveCount(1);
             customFieldSetup.Projects.Should().Contain(project);
 
-            var customFieldType = Enum.Parse<CustomFieldType>(request.Type);
-            switch (customFieldType)
+            switch (request.Type)
             {
                 case CustomFieldType.Number:
                     AssertNumberCustomFieldSetup(customFieldSetup, request);
@@ -54,7 +53,7 @@ internal static partial class Utils
             {
                 task.CustomFields.Should().HaveCount(1);
                 var customField = task.CustomFields[0];
-                switch (customFieldType)
+                switch (request.Type)
                 {
                     case CustomFieldType.Number:
                         customField.Should().BeOfType<NumberCustomField>();

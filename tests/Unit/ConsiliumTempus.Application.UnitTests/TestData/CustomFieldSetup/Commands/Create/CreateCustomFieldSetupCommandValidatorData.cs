@@ -22,7 +22,7 @@ internal static class CreateCustomFieldSetupCommandValidatorData
                 null,
                 "New CustomFieldSetup",
                 "This field will represent some notes",
-                CustomFieldType.Text.ToString(),
+                CustomFieldType.Text,
                 null,
                 null,
                 new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand("Default Text"));
@@ -61,18 +61,6 @@ internal static class CreateCustomFieldSetupCommandValidatorData
                 name: new string('a', PropertiesValidation.CustomFieldSetup.NameMaximumLength + 1),
                 textCustomFieldSetup: new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
             Add(command, nameof(command.Name));
-        }
-    }
-
-    internal class GetInvalidTypeCommands : TheoryData<CreateCustomFieldSetupCommand, string>
-    {
-        public GetInvalidTypeCommands()
-        {
-            var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommandWithType("");
-            Add(command, nameof(command.Type));
-
-            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommandWithType("NotAType");
-            Add(command, nameof(command.Type));
         }
     }
 

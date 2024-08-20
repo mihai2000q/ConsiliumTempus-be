@@ -333,7 +333,7 @@ internal static partial class Utils
         {
             customField.Should().BeOfType<NumberCustomField>();
             var numberCustomField = (NumberCustomField)customField;
-            response.Type.Should().Be(CustomFieldType.Number.ToString());
+            response.Type.Should().Be(CustomFieldType.Number);
             response.Name.Should().Be(numberCustomField.Setup.Name.Value);
             response.Description.Should().Be(numberCustomField.Setup.Description.Value);
             response.Description.Should().Be(numberCustomField.Setup.Description.Value);
@@ -349,7 +349,7 @@ internal static partial class Utils
         {
             customField.Should().BeOfType<SingleSelectCustomField>();
             var singleSelectCustomField = (SingleSelectCustomField)customField;
-            response.Type.Should().Be(CustomFieldType.SingleSelect.ToString());
+            response.Type.Should().Be(CustomFieldType.SingleSelect);
             response.Name.Should().Be(singleSelectCustomField.Setup.Name.Value);
             response.Description.Should().Be(singleSelectCustomField.Setup.Description.Value);
             response.Description.Should().Be(singleSelectCustomField.Setup.Description.Value);
@@ -365,7 +365,7 @@ internal static partial class Utils
         {
             customField.Should().BeOfType<TextCustomField>();
             var textCustomField = (TextCustomField)customField;
-            response.Type.Should().Be(CustomFieldType.Text.ToString());
+            response.Type.Should().Be(CustomFieldType.Text);
             response.Name.Should().Be(textCustomField.Setup.Name.Value);
             response.Description.Should().Be(textCustomField.Setup.Description.Value);
             response.Description.Should().Be(textCustomField.Setup.Description.Value);

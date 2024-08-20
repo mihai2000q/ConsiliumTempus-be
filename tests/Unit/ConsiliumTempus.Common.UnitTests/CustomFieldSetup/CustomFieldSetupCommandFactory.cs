@@ -35,23 +35,10 @@ public static class CustomFieldSetupCommandFactory
             projectId,
             name,
             description,
-            type.ToString(),
+            type,
             numberCustomFieldSetup,
             singleSelectCustomFieldSetup,
             textCustomFieldSetup);
-    }
-
-    public static CreateCustomFieldSetupCommand CreateCreateCustomFieldSetupCommandWithType(string type)
-    {
-        return new CreateCustomFieldSetupCommand(
-            Guid.NewGuid(),
-            null,
-            Constants.CustomFieldSetup.Name,
-            Constants.CustomFieldSetup.Description,
-            type,
-            null,
-            null,
-            new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
     }
 
     public static DeleteCustomFieldSetupCommand CreateDeleteCustomFieldSetupCommand(Guid? id = null)

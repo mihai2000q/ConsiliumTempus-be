@@ -66,8 +66,7 @@ internal static partial class Utils
                 ((AddedCustomFieldSetupToProject)domainEvent).Project.Should().Be(project);
             }
 
-            var customFieldType = Enum.Parse<CustomFieldType>(command.Type);
-            switch (customFieldType)
+            switch (command.Type)
             {
                 case CustomFieldType.Number:
                     AssertCreateNumberCustomFieldSetup(customFieldSetup, command);
