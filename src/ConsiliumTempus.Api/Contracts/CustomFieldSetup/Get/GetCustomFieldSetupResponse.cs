@@ -5,18 +5,20 @@ namespace ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed record GetCustomFieldSetupResponse(GetCustomFieldSetupResponse.CustomFieldSetupResponse CustomFieldSetup)
 {
-    public record CustomFieldSetupResponse(
+    public abstract record CustomFieldSetupResponse(
         Guid Id,
         string Name,
-        string Description);
+        string Description, 
+        string Type);
 
     public sealed record NumberCustomFieldSetupResponse(
         Guid Id,
         string Name,
         string Description,
+        string Type,
         NumberCustomFieldSetupResponse.NumberCustomFieldSettingsResponse Settings,
         decimal? DefaultNumber)
-        : CustomFieldSetupResponse(Id, Name, Description)
+        : CustomFieldSetupResponse(Id, Name, Description, Type)
     {
         public sealed record NumberCustomFieldSettingsResponse(
             string CurrencyCode,
@@ -28,9 +30,10 @@ public sealed record GetCustomFieldSetupResponse(GetCustomFieldSetupResponse.Cus
         Guid Id,
         string Name,
         string Description,
+        string Type,
         List<SingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse> Options,
         SingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse? DefaultOption)
-        : CustomFieldSetupResponse(Id, Name, Description)
+        : CustomFieldSetupResponse(Id, Name, Description, Type)
     {
         public sealed record SingleSelectOptionResponse(
             Guid Id,
@@ -42,6 +45,7 @@ public sealed record GetCustomFieldSetupResponse(GetCustomFieldSetupResponse.Cus
         Guid Id,
         string Name,
         string Description,
+        string Type,
         string? DefaultText)
-        : CustomFieldSetupResponse(Id, Name, Description);
+        : CustomFieldSetupResponse(Id, Name, Description, Type);
 }

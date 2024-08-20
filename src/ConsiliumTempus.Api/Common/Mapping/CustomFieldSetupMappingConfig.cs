@@ -24,32 +24,53 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
         CreateOnProjectMappings(config);
         DeleteMappings(config);
     }
-    
+
     private static void GetMappings(TypeAdapterConfig config)
     {
         config.NewConfig<GetCustomFieldSetupRequest, GetCustomFieldSetupQuery>();
 
-        config.NewConfig<GetCollectionCustomFieldSetupResult, GetCustomFieldSetupResponse>();
-        config.NewConfig<CustomFieldSetupAggregate,
-                GetCustomFieldSetupResponse.CustomFieldSetupResponse>()
-            .Include<NumberCustomFieldSetupAggregate,
-                GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse>()
-            .Include<SingleSelectCustomFieldSetupAggregate,
-                GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse>()
-            .Include<TextCustomFieldSetupAggregate,
-                GetCustomFieldSetupResponse.TextCustomFieldSetupResponse>()
-            .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value);
-
+        config.NewConfig<GetCustomFieldSetupResult, GetCustomFieldSetupResponse>();
         config.NewConfig<NumberCustomFieldSetupAggregate, GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
-            .Map(dest => dest.DefaultNumber, 
-                src => src.DefaultNumber!.Value);
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.Description, src => src.Description.Value)
+            .Map(dest => dest.DefaultNumber, src => src.DefaultNumber!.Value)
+            .Map(dest => dest.Type, src => CustomFieldType.Number.ToString());
+        config
+            .NewConfig<SingleSelectCustomFieldSetupAggregate,
+                GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.Description, src => src.Description.Value)
+            .Map(dest => dest.Type, src => CustomFieldType.SingleSelect.ToString());
         config.NewConfig<TextCustomFieldSetupAggregate, GetCustomFieldSetupResponse.TextCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
-            .Map(dest => dest.DefaultText, 
-                src => src.DefaultText!.Value);
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.Description, src => src.Description.Value)
+            .Map(dest => dest.DefaultText, src => src.DefaultText!.Value)
+            .Map(dest => dest.Type, src => CustomFieldType.Text.ToString());
+
+        config.NewConfig<CustomFieldSetupAggregate, GetCustomFieldSetupResponse.CustomFieldSetupResponse>()
+            .MapWith(src => Convert(src));
+    }
+
+    private static GetCustomFieldSetupResponse.CustomFieldSetupResponse Convert(CustomFieldSetupAggregate setup)
+    {
+        return setup switch
+        {
+            NumberCustomFieldSetupAggregate numberSetup =>
+                numberSetup.Adapt<GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse>(),
+
+            SingleSelectCustomFieldSetupAggregate singleSelectSetup =>
+                singleSelectSetup.Adapt<GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse>(),
+
+            TextCustomFieldSetupAggregate textSetup =>
+                textSetup.Adapt<GetCustomFieldSetupResponse.TextCustomFieldSetupResponse>(),
+
+            _ => throw new ArgumentOutOfRangeException(nameof(setup), setup, null)
+        };
     }
 
     private static void GetCollectionFromProjectMappings(TypeAdapterConfig config)
@@ -57,15 +78,15 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
         config.NewConfig<GetCollectionCustomFieldSetupFromProjectRequest, GetCollectionCustomFieldSetupQuery>();
 
         config.NewConfig<GetCollectionCustomFieldSetupResult, GetCollectionCustomFieldSetupFromProjectResponse>();
-        config.NewConfig<CustomFieldSetupAggregate, 
+        config.NewConfig<CustomFieldSetupAggregate,
                 GetCollectionCustomFieldSetupFromProjectResponse.CustomFieldSetupResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.Type, src =>
-                src is NumberCustomFieldSetupAggregate 
+                src is NumberCustomFieldSetupAggregate
                     ? CustomFieldType.Number.ToString()
-                    : src is SingleSelectCustomFieldSetupAggregate 
+                    : src is SingleSelectCustomFieldSetupAggregate
                         ? CustomFieldType.SingleSelect.ToString()
                         : CustomFieldType.Text.ToString());
     }
