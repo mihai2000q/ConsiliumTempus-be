@@ -17,8 +17,8 @@ public sealed class UpdateCustomFieldSetupCommandHandler(
     ICurrentUserProvider currentUserProvider)
     : IRequestHandler<UpdateCustomFieldSetupCommand, ErrorOr<UpdateCustomFieldSetupResult>>
 {
-    private class SingleSelectOptionNotFoundException : Exception;
-    
+    private sealed class SingleSelectOptionNotFoundException : Exception;
+
     public async Task<ErrorOr<UpdateCustomFieldSetupResult>> Handle(UpdateCustomFieldSetupCommand command,
         CancellationToken cancellationToken)
     {
