@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Enums;
 
 namespace ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 
@@ -10,5 +11,5 @@ public sealed record GetCollectionCustomFieldSetupFromProjectResponse(
         Guid Id,
         string Name,
         string Description,
-        string Type);
+        CustomFieldType Type);
 }

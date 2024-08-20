@@ -26,7 +26,8 @@ public class CustomFieldSetupControllerGetCollectionFromProjectTest(WebAppFactor
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionCustomFieldSetupFromProjectResponse>();
+        var response = await outcome.Content
+            .ReadFromJsonAsync<GetCollectionCustomFieldSetupFromProjectResponse>(JsonOptions);
         Utils.CustomFieldSetup.AssertGetCollectionFromProjectResponse(
             response!,
             project.CustomFieldSetups);

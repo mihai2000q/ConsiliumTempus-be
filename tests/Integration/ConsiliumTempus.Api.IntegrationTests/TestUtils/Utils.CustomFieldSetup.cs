@@ -120,7 +120,7 @@ internal static partial class Utils
             GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse response,
             NumberCustomFieldSetupAggregate numberCustomFieldSetup)
         {
-            response.Type.Should().Be(CustomFieldType.Number.ToString());
+            response.Type.Should().Be(CustomFieldType.Number);
             response.Settings.CurrencyCode.Should().Be(numberCustomFieldSetup.Settings.CurrencyCode);
             response.Settings.Decimals.Should().Be(numberCustomFieldSetup.Settings.Decimals);
             response.Settings.Rounding.Should().Be(numberCustomFieldSetup.Settings.Rounding);
@@ -134,7 +134,7 @@ internal static partial class Utils
             GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse response,
             SingleSelectCustomFieldSetupAggregate singleSelectCustomFieldSetup)
         {
-            response.Type.Should().Be(CustomFieldType.SingleSelect.ToString());
+            response.Type.Should().Be(CustomFieldType.SingleSelect);
             response.Options
                 .Zip(singleSelectCustomFieldSetup.Options)
                 .Should().AllSatisfy(x => AssertSingleSelectOptionResponse(x.First, x.Second));
@@ -149,7 +149,7 @@ internal static partial class Utils
             GetCustomFieldSetupResponse.TextCustomFieldSetupResponse response,
             TextCustomFieldSetupAggregate textCustomFieldSetup)
         {
-            response.Type.Should().Be(CustomFieldType.Text.ToString());
+            response.Type.Should().Be(CustomFieldType.Text);
             if (textCustomFieldSetup.DefaultText is null)
                 response.DefaultText.Should().BeNull();
             else
@@ -181,7 +181,7 @@ internal static partial class Utils
                 { typeof(TextCustomFieldSetupAggregate), CustomFieldType.Text },
             };
             
-            response.Type.Should().Be(mapSetupTypeToEnumType[customFieldSetup.GetType()].ToString());
+            response.Type.Should().Be(mapSetupTypeToEnumType[customFieldSetup.GetType()]);
         }
 
         private static void AssertNumberCustomFieldSetup(

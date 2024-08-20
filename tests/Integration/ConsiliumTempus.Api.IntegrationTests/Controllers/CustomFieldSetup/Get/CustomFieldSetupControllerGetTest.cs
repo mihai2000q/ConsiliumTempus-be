@@ -26,7 +26,7 @@ public class CustomFieldSetupControllerGetTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCustomFieldSetupResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<GetCustomFieldSetupResponse>(JsonOptions);
         Utils.CustomFieldSetup.AssertGetResponse(response!, setup);
     }
 

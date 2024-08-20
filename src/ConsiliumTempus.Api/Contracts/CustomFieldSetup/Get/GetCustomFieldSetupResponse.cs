@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using ConsiliumTempus.Domain.Common.Enums;
 
 namespace ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 
@@ -13,13 +14,13 @@ public sealed record GetCustomFieldSetupResponse(GetCustomFieldSetupResponse.Cus
         Guid Id,
         string Name,
         string Description,
-        string Type);
+        CustomFieldType Type);
 
     public sealed record NumberCustomFieldSetupResponse(
         Guid Id,
         string Name,
         string Description,
-        string Type,
+        CustomFieldType Type,
         NumberCustomFieldSetupResponse.NumberCustomFieldSettingsResponse Settings,
         decimal? DefaultNumber)
         : CustomFieldSetupResponse(Id, Name, Description, Type)
@@ -34,7 +35,7 @@ public sealed record GetCustomFieldSetupResponse(GetCustomFieldSetupResponse.Cus
         Guid Id,
         string Name,
         string Description,
-        string Type,
+        CustomFieldType Type,
         List<SingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse> Options,
         SingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse? DefaultOption)
         : CustomFieldSetupResponse(Id, Name, Description, Type)
@@ -49,7 +50,7 @@ public sealed record GetCustomFieldSetupResponse(GetCustomFieldSetupResponse.Cus
         Guid Id,
         string Name,
         string Description,
-        string Type,
+        CustomFieldType Type,
         string? DefaultText)
         : CustomFieldSetupResponse(Id, Name, Description, Type);
 }

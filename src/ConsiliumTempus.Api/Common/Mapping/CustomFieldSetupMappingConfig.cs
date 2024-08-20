@@ -85,10 +85,10 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.Type, src =>
                 src is NumberCustomFieldSetupAggregate
-                    ? CustomFieldType.Number.ToString()
+                    ? CustomFieldType.Number
                     : src is SingleSelectCustomFieldSetupAggregate
-                        ? CustomFieldType.SingleSelect.ToString()
-                        : CustomFieldType.Text.ToString());
+                        ? CustomFieldType.SingleSelect
+                        : CustomFieldType.Text);
     }
 
     private static void CreateOnProjectMappings(TypeAdapterConfig config)

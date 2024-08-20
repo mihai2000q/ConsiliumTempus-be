@@ -50,9 +50,11 @@ test.describe('should allow operations on the custom field setup entity', () => 
 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
+          $type: expect.any(String),
           id: numberCustomField.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
+          type: "Number",
           settings: {
             currencyCode: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.currencyCode,
             decimals: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.decimals,
@@ -92,9 +94,11 @@ test.describe('should allow operations on the custom field setup entity', () => 
 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
+          $type: expect.any(String),
           id: singleSelectCustomField.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
+          type: "SingleSelect",
           options: [
             {
               id: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].id,
@@ -133,9 +137,11 @@ test.describe('should allow operations on the custom field setup entity', () => 
 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
+          $type: expect.any(String),
           id: textCustomField.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
+          type: "Text",
           defaultText: createCustomFieldSetupOnProjectRequest.textCustomFieldSetup?.defaultText,
         }
       })
