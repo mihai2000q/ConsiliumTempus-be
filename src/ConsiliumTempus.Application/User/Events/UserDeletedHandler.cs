@@ -1,7 +1,9 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.Events;
+using ConsiliumTempus.Domain.Workspace.Events;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using MediatR;
 
@@ -29,6 +31,7 @@ public sealed class UserDeletedHandler(
             if (workspace.Memberships.Count == 1)
             {
                 workspaceRepository.Remove(workspace);
+                workspace.AddDomainEvent(new WorkspaceDeleted(workspace));
                 continue;
             }
 
@@ -49,6 +52,7 @@ public sealed class UserDeletedHandler(
             if (project.IsPrivate.Value && project.AllowedMembers.Count == 1)
             {
                 projectRepository.Remove(project);
+                project.AddDomainEvent(new ProjectDeleted(project));
                 continue;
             }
 
