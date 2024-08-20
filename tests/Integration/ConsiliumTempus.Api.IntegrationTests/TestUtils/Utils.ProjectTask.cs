@@ -6,6 +6,8 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
+using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
@@ -283,6 +285,9 @@ internal static partial class Utils
             response.Name.Should().Be(projectTask.Name.Value);
             response.IsCompleted.Should().Be(projectTask.IsCompleted.Value);
             AssertUserResponse(response.Assignee, projectTask.Assignee);
+            response.CustomFields
+                .Zip(projectTask.CustomFields)
+                .Should().AllSatisfy(x => AssertCustomFieldResponse(x.First, x.Second));
         }
 
         private static void AssertUserResponse(
@@ -298,6 +303,91 @@ internal static partial class Utils
             response!.Id.Should().Be(user.Id.Value);
             response.Name.Should().Be(user.Name.Value);
             response.Email.Should().Be(user.Credentials.Email);
+        }
+        
+        private static void AssertCustomFieldResponse(
+            GetCollectionProjectTaskResponse.CustomFieldResponse response,
+            CustomField customField)
+        {
+            response.Id.Should().Be(customField.Id.Value);
+
+            switch (response)
+            {
+                case GetCollectionProjectTaskResponse.NumberCustomFieldResponse numberResponse:
+                    AssertNumberCustomFieldResponse(numberResponse, customField);
+                    break;
+
+                case GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse singleSelectResponse:
+                    AssertSingleSelectCustomFieldResponse(singleSelectResponse, customField);
+                    break;
+
+                case GetCollectionProjectTaskResponse.TextCustomFieldResponse textResponse:
+                    AssertTextCustomFieldResponse(textResponse, customField);
+                    break;
+            }
+        }
+
+        private static void AssertNumberCustomFieldResponse(
+            GetCollectionProjectTaskResponse.NumberCustomFieldResponse response,
+            CustomField customField)
+        {
+            customField.Should().BeOfType<NumberCustomField>();
+            var numberCustomField = (NumberCustomField)customField;
+            response.Type.Should().Be(CustomFieldType.Number.ToString());
+            response.Name.Should().Be(numberCustomField.Setup.Name.Value);
+            response.Description.Should().Be(numberCustomField.Setup.Description.Value);
+            response.Description.Should().Be(numberCustomField.Setup.Description.Value);
+            if (numberCustomField.Number is null)
+                response.Number.Should().BeNull();
+            else
+                response.Number.Should().Be(numberCustomField.Number.Value);
+        }
+
+        private static void AssertSingleSelectCustomFieldResponse(
+            GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse response,
+            CustomField customField)
+        {
+            customField.Should().BeOfType<SingleSelectCustomField>();
+            var singleSelectCustomField = (SingleSelectCustomField)customField;
+            response.Type.Should().Be(CustomFieldType.SingleSelect.ToString());
+            response.Name.Should().Be(singleSelectCustomField.Setup.Name.Value);
+            response.Description.Should().Be(singleSelectCustomField.Setup.Description.Value);
+            response.Description.Should().Be(singleSelectCustomField.Setup.Description.Value);
+            AssertSingleSelectOptionResponse(response.Option, singleSelectCustomField.Option);
+            response.AvailableOptions
+                .Zip(singleSelectCustomField.Setup.Options)
+                .Should().AllSatisfy(x => AssertSingleSelectOptionResponse(x.First, x.Second));
+        }
+
+        private static void AssertTextCustomFieldResponse(
+            GetCollectionProjectTaskResponse.TextCustomFieldResponse response,
+            CustomField customField)
+        {
+            customField.Should().BeOfType<TextCustomField>();
+            var textCustomField = (TextCustomField)customField;
+            response.Type.Should().Be(CustomFieldType.Text.ToString());
+            response.Name.Should().Be(textCustomField.Setup.Name.Value);
+            response.Description.Should().Be(textCustomField.Setup.Description.Value);
+            response.Description.Should().Be(textCustomField.Setup.Description.Value);
+            if (textCustomField.Text is null)
+                response.Text.Should().BeNull();
+            else
+                response.Text.Should().Be(textCustomField.Text.Value);
+        }
+
+        private static void AssertSingleSelectOptionResponse(
+            GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse.SingleSelectOptionResponse? response,
+            SingleSelectOption? singleSelectOption)
+        {
+            if (singleSelectOption is null)
+            {
+                response.Should().BeNull();
+                return;
+            }
+
+            response!.Id.Should().Be(singleSelectOption.Id);
+            response.Value.Should().Be(singleSelectOption.Value);
+            response.Color.Should().Be(singleSelectOption.Color);
         }
     }
 }

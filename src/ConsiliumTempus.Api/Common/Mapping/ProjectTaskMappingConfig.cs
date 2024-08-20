@@ -13,10 +13,12 @@ using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using Mapster;
@@ -75,11 +77,51 @@ public sealed class ProjectTaskMappingConfig : IRegister
         config.NewConfig<ProjectTaskAggregate, GetCollectionProjectTaskResponse.ProjectTaskResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.IsCompleted, src => src.IsCompleted.Value);
         config.NewConfig<UserAggregate, GetCollectionProjectTaskResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
+
+        config.NewConfig<NumberCustomField, GetCollectionProjectTaskResponse.NumberCustomFieldResponse>()
+            .IgnoreNullValues(true)
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Type, src => CustomFieldType.Number.ToString())
+            .Map(dest => dest.Name, src => src.Setup.Name.Value)
+            .Map(dest => dest.Description, src => src.Setup.Description.Value)
+            .Map(dest => dest.Number, src => src.Number!.Value);
+        config.NewConfig<SingleSelectCustomField, GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse>()
+            .IgnoreNullValues(true)
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Type, src => CustomFieldType.SingleSelect.ToString())
+            .Map(dest => dest.Name, src => src.Setup.Name.Value)
+            .Map(dest => dest.Description, src => src.Setup.Description.Value)
+            .Map(dest => dest.AvailableOptions, src => src.Setup.Options);
+        config.NewConfig<TextCustomField, GetCollectionProjectTaskResponse.TextCustomFieldResponse>()
+            .IgnoreNullValues(true)
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Type, src => CustomFieldType.Text.ToString())
+            .Map(dest => dest.Name, src => src.Setup.Name.Value)
+            .Map(dest => dest.Description, src => src.Setup.Description.Value)
+            .Map(dest => dest.Text, src => src.Text!.Value);
+
+        config.NewConfig<CustomField, GetCollectionProjectTaskResponse.CustomFieldResponse>()
+            .MapWith(src => Convert(src));
+    }
+
+    private static GetCollectionProjectTaskResponse.CustomFieldResponse Convert(CustomField customField)
+    {
+        return customField switch
+        {
+            NumberCustomField numberCustomField => 
+                numberCustomField.Adapt<GetCollectionProjectTaskResponse.NumberCustomFieldResponse>(),
+            SingleSelectCustomField singleSelectCustomField => 
+                singleSelectCustomField.Adapt<GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse>(),
+            TextCustomField textCustomField => 
+                textCustomField.Adapt<GetCollectionProjectTaskResponse.TextCustomFieldResponse>(),
+            _ => throw new ArgumentOutOfRangeException(nameof(customField), customField, null)
+        };
     }
 
     private static void CreateMappings(TypeAdapterConfig config)

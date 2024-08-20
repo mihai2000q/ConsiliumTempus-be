@@ -65,4 +65,12 @@ public static class ProjectTaskFactory
             .Select(_ => Create())
             .ToList();
     }
+
+    public static List<ProjectTaskAggregate> CreateListWithCustomFields(int count = 5)
+    {
+        return Enumerable
+            .Range(0, count)
+            .Select(_ => CreateWithCustomFields())
+            .ToList();
+    }
 }

@@ -16,7 +16,7 @@ public static class ProjectTaskResultFactory
         int totalCount = 25)
     {
         return new GetCollectionProjectTaskResult(
-            tasks ?? ProjectTaskFactory.CreateList(),
+            tasks ?? ProjectTaskFactory.CreateListWithCustomFields(),
             totalCount);
     }
 
