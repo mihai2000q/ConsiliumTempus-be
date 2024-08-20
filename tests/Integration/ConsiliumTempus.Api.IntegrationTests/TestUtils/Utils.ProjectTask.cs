@@ -285,8 +285,8 @@ internal static partial class Utils
             response.Name.Should().Be(projectTask.Name.Value);
             response.IsCompleted.Should().Be(projectTask.IsCompleted.Value);
             AssertUserResponse(response.Assignee, projectTask.Assignee);
-            response.CustomFields
-                .Zip(projectTask.CustomFields)
+            response.CustomFields.OrderBy(cf => cf.Id)
+                .Zip(projectTask.CustomFields.OrderBy(cf => cf.Id.Value))
                 .Should().AllSatisfy(x => AssertCustomFieldResponse(x.First, x.Second));
         }
 

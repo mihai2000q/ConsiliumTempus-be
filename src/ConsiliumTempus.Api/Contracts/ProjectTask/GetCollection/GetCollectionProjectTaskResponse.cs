@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 
@@ -19,7 +20,10 @@ public sealed record GetCollectionProjectTaskResponse(
         Guid Id,
         string Name,
         string Email);
-    
+
+    [JsonDerivedType(typeof(NumberCustomFieldResponse), nameof(NumberCustomFieldResponse))]
+    [JsonDerivedType(typeof(SingleSelectCustomFieldResponse), nameof(SingleSelectCustomFieldResponse))]
+    [JsonDerivedType(typeof(TextCustomFieldResponse), nameof(TextCustomFieldResponse))]
     public abstract record CustomFieldResponse(
         Guid Id,
         string Type);
@@ -29,7 +33,7 @@ public sealed record GetCollectionProjectTaskResponse(
         string Name,
         string Description,
         string Type,
-        decimal? Number) 
+        decimal? Number)
         : CustomFieldResponse(Id, Type);
 
     public sealed record SingleSelectCustomFieldResponse(
@@ -52,6 +56,6 @@ public sealed record GetCollectionProjectTaskResponse(
         string Name,
         string Description,
         string Type,
-        string? Text) 
+        string? Text)
         : CustomFieldResponse(Id, Type);
 }

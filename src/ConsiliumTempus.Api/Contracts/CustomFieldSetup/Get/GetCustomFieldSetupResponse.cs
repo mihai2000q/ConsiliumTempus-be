@@ -1,14 +1,18 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed record GetCustomFieldSetupResponse(GetCustomFieldSetupResponse.CustomFieldSetupResponse CustomFieldSetup)
 {
+    [JsonDerivedType(typeof(NumberCustomFieldSetupResponse), nameof(NumberCustomFieldSetupResponse))]
+    [JsonDerivedType(typeof(SingleSelectCustomFieldSetupResponse), nameof(SingleSelectCustomFieldSetupResponse))]
+    [JsonDerivedType(typeof(TextCustomFieldSetupResponse), nameof(TextCustomFieldSetupResponse))]
     public abstract record CustomFieldSetupResponse(
         Guid Id,
         string Name,
-        string Description, 
+        string Description,
         string Type);
 
     public sealed record NumberCustomFieldSetupResponse(
