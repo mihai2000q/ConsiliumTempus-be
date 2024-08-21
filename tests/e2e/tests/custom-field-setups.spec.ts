@@ -101,18 +101,18 @@ test.describe('should allow operations on the custom field setup entity', () => 
           type: "SingleSelect",
           options: [
             {
-              id: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].id,
+              id: expect.any(String),
               value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].value,
               color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].color,
             },
             {
-              id: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].id,
+              id: expect.any(String),
               value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].value,
               color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].color,
             }
           ],
           defaultOption: {
-            id: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].id,
+            id: expect.any(String),
             value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].value,
             color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].color,
           }

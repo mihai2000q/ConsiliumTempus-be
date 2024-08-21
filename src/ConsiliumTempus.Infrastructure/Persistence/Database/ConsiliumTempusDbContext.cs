@@ -14,6 +14,7 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Database;
 
 public sealed class ConsiliumTempusDbContext(
     PublishDomainEventsInterceptor publishDomainEventsInterceptor,
+    SolveCircularDependencyInterceptor solveCircularDependencyInterceptor,
     DbContextOptions<ConsiliumTempusDbContext> options)
     : DbContext(options)
 {
@@ -42,6 +43,7 @@ public sealed class ConsiliumTempusDbContext(
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.AddInterceptors(publishDomainEventsInterceptor);
+        optionsBuilder.AddInterceptors(solveCircularDependencyInterceptor);
         base.OnConfiguring(optionsBuilder);
     }
 }

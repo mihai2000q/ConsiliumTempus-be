@@ -34,7 +34,7 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
                     "USD",
                     2,
                     false),
-                null));
+                12));
 
         await ActAndAssert(request, user, project);
     }
@@ -63,7 +63,7 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
                                 "Low",
                                 "#7788AA")
                     ],
-                    null));
+                    "2"));
 
         await ActAndAssert(request, user, project);
     }
@@ -77,7 +77,7 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
         var project = CustomFieldSetupData.Projects.First();
         var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(
             project.Id.Value,
-            textCustomFieldSetup: new CreateCustomFieldSetupOnProjectRequest.CreateTextCustomFieldSetupRequest(null));
+            textCustomFieldSetup: new CreateCustomFieldSetupOnProjectRequest.CreateTextCustomFieldSetupRequest("Default"));
 
         await ActAndAssert(request, user, project);
     }

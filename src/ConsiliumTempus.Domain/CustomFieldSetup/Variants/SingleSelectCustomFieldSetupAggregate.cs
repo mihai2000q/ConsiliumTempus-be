@@ -70,6 +70,11 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
         base.Update(name, description, updatedBy);
     }
 
+    public void UpdateDefaultOption(SingleSelectOption? defaultOption)
+    {
+        DefaultOption = defaultOption;
+    }
+
     public void AddOption(SingleSelectOption option)
     {
         _options.Add(option);

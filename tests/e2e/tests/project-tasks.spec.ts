@@ -52,7 +52,8 @@ test.describe('should allow operations on the project task entity', () => {
       stage: expect.any(Object),
       sprint: expect.any(Object),
       project: expect.any(Object),
-      workspace: expect.any(Object)
+      workspace: expect.any(Object),
+      customFields: []
     })
   })
 

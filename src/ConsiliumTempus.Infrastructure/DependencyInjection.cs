@@ -107,6 +107,7 @@ public static class DependencyInjection
     private static IServiceCollection AddInterceptors(this IServiceCollection services)
     {
         services.AddScoped<PublishDomainEventsInterceptor>();
+        services.AddScoped<SolveCircularDependencyInterceptor>();
 
         return services;
     }

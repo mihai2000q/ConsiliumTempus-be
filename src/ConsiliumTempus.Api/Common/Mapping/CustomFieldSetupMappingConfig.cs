@@ -40,6 +40,7 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
         config
             .NewConfig<SingleSelectCustomFieldSetupAggregate,
                 GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse>()
+            .IgnoreNullValues(true)
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
