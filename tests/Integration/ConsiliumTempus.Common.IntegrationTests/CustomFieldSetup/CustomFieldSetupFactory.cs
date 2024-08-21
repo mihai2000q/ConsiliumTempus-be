@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Common.IntegrationTests.TestConstants;
+﻿using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
@@ -17,7 +18,8 @@ public static class CustomFieldSetupFactory
         Audit audit,
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
-        NumberCustomFieldSettings? settings = null)
+        NumberCustomFieldSettings? settings = null,
+        decimal? defaultNumber = null)
     {
         settings ??= NumberCustomFieldSettings.Create(
             Constants.CustomFieldSetup.CurrencyCode,
@@ -32,6 +34,7 @@ public static class CustomFieldSetupFactory
             .WithProperty(nameof(NumberCustomFieldSetupAggregate.Workspace), workspace)
             .WithField(nameof(TextCustomFieldSetupAggregate.Projects).ToBackingField(), projects)
             .WithProperty(nameof(NumberCustomFieldSetupAggregate.Settings), settings)
+            .WithProperty(nameof(NumberCustomFieldSetupAggregate.DefaultNumber), defaultNumber.IfNotNull(DecimalNumber.Create))
             .Build();
     }
 
@@ -41,7 +44,8 @@ public static class CustomFieldSetupFactory
         Audit audit,
         List<SingleSelectOption> options,
         string name = Constants.CustomFieldSetup.Name,
-        string description = Constants.CustomFieldSetup.Description)
+        string description = Constants.CustomFieldSetup.Description,
+        SingleSelectOption? defaultOption = null)
     {
         return EntityBuilder<SingleSelectCustomFieldSetupAggregate>.Empty()
             .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.Id), CustomFieldSetupId.CreateUnique())
@@ -51,6 +55,7 @@ public static class CustomFieldSetupFactory
             .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.Workspace), workspace)
             .WithField(nameof(TextCustomFieldSetupAggregate.Projects).ToBackingField(), projects)
             .WithField(nameof(SingleSelectCustomFieldSetupAggregate.Options).ToBackingField(), options)
+            .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.DefaultOption), defaultOption)
             .Build();
     }
 
@@ -59,7 +64,8 @@ public static class CustomFieldSetupFactory
         List<ProjectAggregate> projects,
         Audit audit,
         string name = Constants.CustomFieldSetup.Name,
-        string description = Constants.CustomFieldSetup.Description)
+        string description = Constants.CustomFieldSetup.Description,
+        string? defaultText = null)
     {
         return EntityBuilder<TextCustomFieldSetupAggregate>.Empty()
             .WithProperty(nameof(TextCustomFieldSetupAggregate.Id), CustomFieldSetupId.CreateUnique())
@@ -68,6 +74,7 @@ public static class CustomFieldSetupFactory
             .WithProperty(nameof(TextCustomFieldSetupAggregate.Audit), audit)
             .WithProperty(nameof(TextCustomFieldSetupAggregate.Workspace), workspace)
             .WithField(nameof(TextCustomFieldSetupAggregate.Projects).ToBackingField(), projects)
+            .WithProperty(nameof(TextCustomFieldSetupAggregate.DefaultText), defaultText.IfNotNull(Text.Create))
             .Build();
     }
 }

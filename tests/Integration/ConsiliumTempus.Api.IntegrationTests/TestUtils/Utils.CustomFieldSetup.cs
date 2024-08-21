@@ -212,6 +212,7 @@ internal static partial class Utils
                 var optionIndex = request.SingleSelectCustomFieldSetup.Options
                     .FindIndex(o => o.Id == request.SingleSelectCustomFieldSetup.DefaultOptionId);
                 setup.DefaultOption.Should().Be(setup.Options[optionIndex]);
+                setup.DefaultOptionId.Should().Be(setup.Options[optionIndex].Id);
             }
         }
 

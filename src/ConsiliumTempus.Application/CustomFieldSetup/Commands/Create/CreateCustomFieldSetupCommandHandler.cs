@@ -100,7 +100,7 @@ public sealed class CreateCustomFieldSetupCommandHandler(
 
         return SingleSelectCustomFieldSetupAggregate.Create(
             options,
-            defaultOption,
+            defaultOption?.Id,
             Name.Create(command.Name),
             Description.Create(command.Description),
             _workspace,

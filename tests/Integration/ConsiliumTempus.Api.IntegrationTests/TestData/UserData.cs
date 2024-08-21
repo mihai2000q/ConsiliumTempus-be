@@ -159,6 +159,12 @@ internal class UserData : ITestData
             new DateOnly(2024, 01, 30)),
     ];
 
+    private static readonly SingleSelectOption[] SingleSelectOptions =
+    [
+        SingleSelectOptionFactory.Create(),
+        SingleSelectOptionFactory.Create(customOrderPosition: 1),
+    ];
+
     public static readonly CustomFieldSetupAggregate[] CustomFieldSetups =
     [
         CustomFieldSetupFactory.CreateNumber(
@@ -171,10 +177,11 @@ internal class UserData : ITestData
             [Projects[0]],
             AuditFactory.Create(Users[0]),
             [
-                SingleSelectOptionFactory.Create(),
-                SingleSelectOptionFactory.Create(customOrderPosition: 1),
+                SingleSelectOptions[0],
+                SingleSelectOptions[1]
             ],
-            "Select only one field"),
+            "Select only one field",
+            defaultOption: SingleSelectOptions[0]),
         CustomFieldSetupFactory.CreateText(
             null,
             [Projects[0]],

@@ -1164,10 +1164,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<Guid?>("DefaultOptionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("DefaultOptionId")
-                        .IsUnique()
-                        .HasFilter("[DefaultOptionId] IS NOT NULL");
-
                     b.ToTable("CustomFieldSetup.SingleSelect", (string)null);
                 });
 
@@ -2154,15 +2150,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.Navigation("Settings")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.SingleSelectCustomFieldSetupAggregate", b =>
-                {
-                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.SingleSelectOption", "DefaultOption")
-                        .WithOne()
-                        .HasForeignKey("ConsiliumTempus.Domain.CustomFieldSetup.Variants.SingleSelectCustomFieldSetupAggregate", "DefaultOptionId");
-
-                    b.Navigation("DefaultOption");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.TextCustomFieldSetupAggregate", b =>

@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Enums;
+﻿using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -92,12 +93,8 @@ public sealed class
             .IsRequired();
         builder.Navigation(s => s.Options).AutoInclude();
 
-        builder.HasOne(s => s.DefaultOption)
-            .WithOne()
-            .HasForeignKey<SingleSelectCustomFieldSetupAggregate>(
-                nameof(SingleSelectCustomFieldSetupAggregate.DefaultOption).ToId())
+        builder.Property(s => s.DefaultOptionId)
             .IsRequired(false);
-        builder.Navigation(s => s.DefaultOption).AutoInclude();
     }
 }
 

@@ -17,7 +17,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
 
     private SingleSelectCustomFieldSetupAggregate(
         List<SingleSelectOption> options,
-        SingleSelectOption? defaultOption,
+        Guid? defaultOptionId,
         CustomFieldSetupId id,
         Name name,
         Description description,
@@ -25,12 +25,13 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
         Audit audit) : base(id, name, description, workspace, audit)
     {
         _options = options;
-        DefaultOption = defaultOption;
+        DefaultOptionId = defaultOptionId;
     }
 
     private readonly List<SingleSelectOption> _options = [];
-
-    public SingleSelectOption? DefaultOption { get; private set; }
+    
+    public Guid? DefaultOptionId { get; private set; }
+    public SingleSelectOption? DefaultOption => _options.SingleOrDefault(o => o.Id == DefaultOptionId);
 
     public IReadOnlyList<SingleSelectOption> Options => _options
         .OrderBy(o => o.CustomOrderPosition)
@@ -39,7 +40,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
 
     public static SingleSelectCustomFieldSetupAggregate Create(
         List<SingleSelectOption> options,
-        SingleSelectOption? defaultOption,
+        Guid? defaultOptionId,
         Name name,
         Description description,
         WorkspaceAggregate? workspace,
@@ -48,7 +49,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
     {
         var setup = new SingleSelectCustomFieldSetupAggregate(
             options,
-            defaultOption,
+            defaultOptionId,
             CustomFieldSetupId.CreateUnique(),
             name,
             description,
@@ -61,18 +62,13 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
     }
 
     public void Update(
-        SingleSelectOption? defaultOption,
+        Guid? defaultOptionId,
         Name name,
         Description description,
         UserAggregate updatedBy)
     {
-        DefaultOption = defaultOption;
+        DefaultOptionId = defaultOptionId;
         base.Update(name, description, updatedBy);
-    }
-
-    public void UpdateDefaultOption(SingleSelectOption? defaultOption)
-    {
-        DefaultOption = defaultOption;
     }
 
     public void AddOption(SingleSelectOption option)

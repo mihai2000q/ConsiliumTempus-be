@@ -25,7 +25,7 @@ internal static class CustomFieldSetupControllerData
             };
             Add(new GetCustomFieldSetupResult(CustomFieldSetupFactory.CreateSingleSelect(
                 options: options,
-                defaultOption: options[1])));
+                defaultOptionId: options[1].Id)));
             
             // Text
             Add(new GetCustomFieldSetupResult(CustomFieldSetupFactory.CreateText()));

@@ -45,7 +45,7 @@ public static class CustomFieldSetupFactory
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
         List<SingleSelectOption>? options = null,
-        SingleSelectOption? defaultOption = null,
+        Guid? defaultOptionId = null,
         WorkspaceAggregate? workspace = null,
         ProjectAggregate? project = null,
         UserAggregate? createdBy = null)
@@ -59,7 +59,7 @@ public static class CustomFieldSetupFactory
                     Constants.SingleSelectOption.Color,
                     CustomOrderPosition.Create(1))
             ],
-            defaultOption,
+            defaultOptionId,
             Name.Create(name),
             Description.Create(description),
             workspace,

@@ -82,7 +82,7 @@ public sealed class UpdateCustomFieldSetupCommandHandler(
             throw new SingleSelectOptionNotFoundException();
 
         singleSelectCustomFieldSetup.Update(
-            defaultOption,
+            defaultOption?.Id,
             Name.Create(command.Name),
             Description.Create(command.Description),
             user);
