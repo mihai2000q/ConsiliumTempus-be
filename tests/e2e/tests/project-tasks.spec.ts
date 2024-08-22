@@ -15,7 +15,7 @@ import UpdateCustomFieldFromProjectTaskRequest
   from "../types/requests/project-task/UpdateCustomFieldFromProjectTaskRequest";
 import CreateCustomFieldSetupOnProjectRequest
   from "../types/requests/custom-field-setup/CreateCustomFieldSetupOnProjectRequest";
-import { createCustomFieldSetup } from "../utils/custom-field-setup.utils";
+import { createCustomFieldSetupOnProject } from "../utils/custom-field-setup.utils";
 
 test.describe('should allow operations on the project task entity', () => {
   let PROJECT_ID: string
@@ -364,7 +364,7 @@ test.describe('should allow operations on the project task entity', () => {
           }
         }
       }
-      const customFieldSetup = await createCustomFieldSetup(request, createCustomFieldSetupOnProjectRequest)
+      const customFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
 
       const createProjectTaskRequest: CreateProjectTaskRequest = {
         projectStageId: STAGE_ID,
@@ -436,7 +436,7 @@ test.describe('should allow operations on the project task entity', () => {
           defaultOptionId: "1"
         }
       }
-      const customFieldSetup = await createCustomFieldSetup(request, createCustomFieldSetupOnProjectRequest)
+      const customFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
 
       const createProjectTaskRequest: CreateProjectTaskRequest = {
         projectStageId: STAGE_ID,
@@ -511,7 +511,7 @@ test.describe('should allow operations on the project task entity', () => {
         type: 'Text',
         textCustomFieldSetup: { defaultText: undefined }
       }
-      const customFieldSetup = await createCustomFieldSetup(request, createCustomFieldSetupOnProjectRequest)
+      const customFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
 
       const createProjectTaskRequest: CreateProjectTaskRequest = {
         projectStageId: STAGE_ID,
