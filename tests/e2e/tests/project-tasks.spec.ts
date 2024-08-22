@@ -4,7 +4,7 @@ import { expect } from "../utils/matchers";
 import { deleteUser, registerUser } from "../utils/users.utils";
 import { getPersonalWorkspace } from "../utils/workspaces.utils";
 import { createProject } from "../utils/projects.utils";
-import { addStageToProjectSprint, getProjectSprints, getProjectStages } from "../utils/project-sprint.utils";
+import { addStageToProjectSprint, getProjectSprints } from "../utils/project-sprint.utils";
 import CreateProjectTaskRequest from "../types/requests/project-task/CreateProjectTaskRequest";
 import { createProjectTask, getProjectTask, getProjectTasks } from "../utils/project-task.utils";
 import UpdateProjectTaskRequest from "../types/requests/project-task/UpdateProjectTaskRequest";
@@ -403,6 +403,7 @@ test.describe('should allow operations on the project task entity', () => {
         workspace: expect.any(Object),
         customFields: [
           {
+            $type: expect.any(String),
             id: body.customFieldId,
             name: customFieldSetup.name,
             description: customFieldSetup.description,
@@ -441,14 +442,15 @@ test.describe('should allow operations on the project task entity', () => {
         projectStageId: STAGE_ID,
         name: "task 2"
       }
-      const task = await createProjectTask(request, createProjectTaskRequest)
-
+      const taskId = (await createProjectTask(request, createProjectTaskRequest)).id
+      const task = await getProjectTask(request, taskId)
+      
       const body: UpdateCustomFieldFromProjectTaskRequest = {
-        id: task.id,
+        id: taskId,
         customFieldId: task.customFields[0].id,
         type: 'SingleSelect',
         singleSelectCustomField: {
-          optionId: task.customFields[0].options[1].id,
+          optionId: task.customFields[0].availableOptions[1].id,
         }
       }
       const response = await request.put('/api/projects/tasks/custom-fields', {
@@ -462,7 +464,7 @@ test.describe('should allow operations on the project task entity', () => {
         message: expect.any(String)
       })
 
-      const newTask = await getProjectTask(request, task.id)
+      const newTask = await getProjectTask(request, taskId)
       expect(newTask).toStrictEqual({
         name: createProjectTaskRequest.name,
         description: "",
@@ -474,25 +476,26 @@ test.describe('should allow operations on the project task entity', () => {
         workspace: expect.any(Object),
         customFields: [
           {
+            $type: expect.any(String),
             id: body.customFieldId,
             name: customFieldSetup.name,
             description: customFieldSetup.description,
             type: body.type,
             option: {
-              id: task.customFields[0].options[1].id,
-              color: task.customFields[0].options[1].value,
-              value: task.customFields[0].options[1].color
+              id: task.customFields[0].availableOptions[1].id,
+              color: task.customFields[0].availableOptions[1].color,
+              value: task.customFields[0].availableOptions[1].value
             },
-            options: [
+            availableOptions: [
               {
-                id: customFieldSetup.options[0].id,
-                color: customFieldSetup.options[0].color,
-                value: customFieldSetup.options[0].value,
+                id: task.customFields[0].availableOptions[0].id,
+                color: task.customFields[0].availableOptions[0].color,
+                value: task.customFields[0].availableOptions[0].value,
               },
               {
-                id: customFieldSetup.options[1].id,
-                color: customFieldSetup.options[1].color,
-                value: customFieldSetup.options[1].value,
+                id: task.customFields[0].availableOptions[1].id,
+                color: task.customFields[0].availableOptions[1].color,
+                value: task.customFields[0].availableOptions[1].value,
               }
             ]
           }
@@ -547,6 +550,7 @@ test.describe('should allow operations on the project task entity', () => {
         workspace: expect.any(Object),
         customFields: [
           {
+            $type: expect.any(String),
             id: body.customFieldId,
             name: customFieldSetup.name,
             description: customFieldSetup.description,
