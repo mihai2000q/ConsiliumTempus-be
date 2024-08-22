@@ -31,7 +31,11 @@ test.describe('should allow operations on the project task entity', () => {
     })
     PROJECT_ID = project.id
     const sprints = await getProjectSprints(request, project.id)
-    const stage = await addStageToProjectSprint(request, sprints[0].id)
+    const stage = await addStageToProjectSprint(request, {
+      id: sprints[0].id,
+      name: 'stage 2',
+      onTop: false
+    })
     STAGE_ID = stage.id
   })
 
