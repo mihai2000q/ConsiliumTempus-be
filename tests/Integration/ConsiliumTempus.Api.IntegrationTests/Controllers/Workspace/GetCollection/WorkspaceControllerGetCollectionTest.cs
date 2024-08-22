@@ -90,7 +90,7 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/Workspaces?{request.Search?.ToSearchQueryParam()}");
+        var outcome = await Client.Get($"api/Workspaces?{request.Search.ToSearchQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);

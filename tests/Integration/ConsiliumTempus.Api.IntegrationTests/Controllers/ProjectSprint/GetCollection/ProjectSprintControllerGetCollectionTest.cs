@@ -46,7 +46,7 @@ public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory)
         Client.UseCustomToken(project.Workspace.Memberships[0].User);
         var outcome = await Client.Get($"api/projects/sprints" +
                                        $"?projectId={request.ProjectId}" +
-                                       $"&{request.Search!.ToSearchQueryParam()}");
+                                       $"&{request.Search.ToSearchQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);

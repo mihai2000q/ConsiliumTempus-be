@@ -72,7 +72,7 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
         Client.UseCustomToken(ProjectTaskData.Users.First());
         var outcome = await Client.Get($"api/projects/tasks" +
                                        $"?projectStageId={request.ProjectStageId}" +
-                                       $"&{request.OrderBy?.ToOrderByQueryParam()}");
+                                       $"&{request.OrderBy.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);

@@ -23,7 +23,7 @@ public abstract class ProjectFilter : Filter<ProjectAggregate>
     {
     }
 
-    public static IReadOnlyList<IFilter<ProjectAggregate>> Parse(string[]? search)
+    public static IReadOnlyList<IFilter<ProjectAggregate>> Parse(List<string> search)
     {
         return Parse(search, FilterProperties);
     }

@@ -17,7 +17,7 @@ public abstract class ProjectSprintFilter : Filter<ProjectSprintAggregate>
     {
     }
 
-    public static IReadOnlyList<IFilter<ProjectSprintAggregate>> Parse(string[]? search)
+    public static IReadOnlyList<IFilter<ProjectSprintAggregate>> Parse(List<string> search)
     {
         return Parse(search, FilterProperties);
     }

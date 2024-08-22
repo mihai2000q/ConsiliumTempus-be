@@ -25,13 +25,13 @@ public static class ProjectSprintRequestFactory
 
     public static GetCollectionProjectSprintRequest CreateGetCollectionProjectSprintRequest(
         Guid? id = null,
-        string[]? search = null,
+        List<string>? search = null,
         bool fromThisYear = false)
     {
         return new GetCollectionProjectSprintRequest
         {
             ProjectId = id ?? Guid.NewGuid(),
-            Search = search,
+            Search = search ?? [],
             FromThisYear = fromThisYear
         };
     }

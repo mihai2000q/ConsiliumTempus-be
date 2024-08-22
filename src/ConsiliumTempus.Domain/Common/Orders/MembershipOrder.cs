@@ -26,7 +26,7 @@ public abstract class MembershipOrder : Order<Membership>
     {
     }
 
-    public static IReadOnlyList<IOrder<Membership>> Parse(string[]? orders)
+    public static IReadOnlyList<IOrder<Membership>> Parse(List<string> orders)
     {
         return Parse(orders, OrderProperties);
     }

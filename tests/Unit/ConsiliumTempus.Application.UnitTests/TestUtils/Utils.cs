@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Domain.Common.Entities;
+﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
@@ -67,10 +66,10 @@ internal static partial class Utils
 
     internal static bool AssertOrders<TEntity>(
         this IReadOnlyList<IOrder<TEntity>> orders,
-        string[]? orderBy,
+        List<string> orderBy,
         IEnumerable<OrderProperty<TEntity>> orderProperties)
     {
-        if (orderBy is null) return orders.IsEmpty();
+        orderBy.Should().HaveSameCount(orders);
         return orders
             .Zip(orderBy)
             .All(x => x.First.AssertOrder(x.Second, orderProperties));
@@ -78,10 +77,10 @@ internal static partial class Utils
 
     internal static bool AssertFilters<TEntity>(
         this IReadOnlyList<IFilter<TEntity>> filters,
-        string[]? search,
+        List<string> search,
         IEnumerable<FilterProperty<TEntity>> filterProperties)
     {
-        if (search is null) return filters.IsEmpty();
+        filters.Should().HaveSameCount(search);
         return filters
             .Zip(search)
             .All(x => x.First.AssertFilter(x.Second, filterProperties));

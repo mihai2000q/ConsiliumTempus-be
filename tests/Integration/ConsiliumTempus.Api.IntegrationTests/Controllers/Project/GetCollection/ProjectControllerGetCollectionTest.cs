@@ -73,7 +73,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?{request.Search?.ToSearchQueryParam()}");
+        var outcome = await Client.Get($"api/projects?{request.Search.ToSearchQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -98,7 +98,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?{request.Search?.ToSearchQueryParam()}");
+        var outcome = await Client.Get($"api/projects?{request.Search.ToSearchQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -122,7 +122,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?{request.OrderBy?.ToOrderByQueryParam()}");
+        var outcome = await Client.Get($"api/projects?{request.OrderBy.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -151,7 +151,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Get($"api/projects?{request.OrderBy?.ToOrderByQueryParam()}");
+        var outcome = await Client.Get($"api/projects?{request.OrderBy.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -185,7 +185,7 @@ public class ProjectControllerGetCollectionTest(WebAppFactory factory)
         var outcome = await Client.Get($"api/projects" +
                                        $"?pageSize={request.PageSize}" +
                                        $"&currentPage={request.CurrentPage}" +
-                                       $"&{request.OrderBy?.ToOrderByQueryParam()}");
+                                       $"&{request.OrderBy.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);

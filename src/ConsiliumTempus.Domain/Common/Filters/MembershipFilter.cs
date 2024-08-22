@@ -19,7 +19,7 @@ public abstract class MembershipFilter : Filter<Membership>
     {
     }
 
-    public static IReadOnlyList<IFilter<Membership>> Parse(string[]? search)
+    public static IReadOnlyList<IFilter<Membership>> Parse(List<string> search)
     {
         return Parse(search, FilterProperties);
     }

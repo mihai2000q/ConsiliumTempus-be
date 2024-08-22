@@ -22,7 +22,7 @@ public abstract class ProjectTaskOrder : Order<ProjectTaskAggregate>
     {
     }
 
-    public static IReadOnlyList<IOrder<ProjectTaskAggregate>> Parse(string[]? orders)
+    public static IReadOnlyList<IOrder<ProjectTaskAggregate>> Parse(List<string> orders)
     {
         return Parse(orders, OrderProperties);
     }

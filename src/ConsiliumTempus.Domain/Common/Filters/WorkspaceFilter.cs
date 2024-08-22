@@ -21,7 +21,7 @@ public abstract class WorkspaceFilter : Filter<WorkspaceAggregate>
     {
     }
 
-    public static IReadOnlyList<IFilter<WorkspaceAggregate>> Parse(string[]? search)
+    public static IReadOnlyList<IFilter<WorkspaceAggregate>> Parse(List<string> search)
     {
         return Parse(search, FilterProperties);
     }

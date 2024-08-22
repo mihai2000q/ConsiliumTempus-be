@@ -42,16 +42,16 @@ public static class ProjectRequestFactory
     public static GetCollectionProjectRequest CreateGetCollectionProjectRequest(
         int? pageSize = null,
         int? currentPage = null,
-        string[]? orderBy = null,
-        string[]? search = null,
+        List<string>? orderBy = null,
+        List<string>? search = null,
         Guid? workspaceId = null)
     {
         return new GetCollectionProjectRequest
         {
             PageSize = pageSize,
             CurrentPage = currentPage,
-            OrderBy = orderBy,
-            Search = search,
+            OrderBy = orderBy ?? [],
+            Search = search ?? [],
             WorkspaceId = workspaceId
         };
     }

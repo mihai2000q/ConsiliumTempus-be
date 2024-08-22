@@ -83,12 +83,12 @@ internal static partial class Utils
         audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
     }
 
-    internal static string ToOrderByQueryParam(this string[] orderBy)
+    internal static string ToOrderByQueryParam(this List<string> orderBy)
     {
         return string.Join('&', orderBy.Select(o => $"orderBy={o}"));
     }
 
-    internal static string ToSearchQueryParam(this string[] search)
+    internal static string ToSearchQueryParam(this List<string> search)
     {
         return string.Join('&', search.Select(s => $"search={s}"));
     }

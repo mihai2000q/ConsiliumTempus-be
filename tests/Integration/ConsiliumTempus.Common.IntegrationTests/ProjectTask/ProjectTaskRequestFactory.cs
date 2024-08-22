@@ -23,16 +23,16 @@ public static class ProjectTaskRequestFactory
 
     public static GetCollectionProjectTaskRequest CreateGetCollectionProjectTaskRequest(
         Guid? projectStageId = null,
-        string[]? search = null,
-        string[]? orderBy = null,
+        List<string>? search = null,
+        List<string>? orderBy = null,
         int? currentPage = null,
         int? pageSize = null)
     {
         return new GetCollectionProjectTaskRequest
         {
             ProjectStageId = projectStageId ?? Guid.NewGuid(),
-            Search = search,
-            OrderBy = orderBy,
+            Search = search ?? [],
+            OrderBy = orderBy ?? [],
             CurrentPage = currentPage,
             PageSize = pageSize
         };

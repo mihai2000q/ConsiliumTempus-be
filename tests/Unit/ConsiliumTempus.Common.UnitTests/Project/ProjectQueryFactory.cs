@@ -26,15 +26,15 @@ public static class ProjectQueryFactory
     public static GetCollectionProjectQuery CreateGetCollectionProjectQuery(
         int? pageSize = null,
         int? currentPage = null,
-        string[]? orderBy = null,
-        string[]? search = null,
+        List<string>? orderBy = null,
+        List<string>? search = null,
         Guid? workspaceId = null)
     {
         return new GetCollectionProjectQuery(
             pageSize,
             currentPage,
-            orderBy,
-            search,
+            orderBy ?? [],
+            search ?? [],
             workspaceId);
     }
 

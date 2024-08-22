@@ -17,16 +17,16 @@ public static class WorkspaceQueryFactory
         Guid? id = null,
         int? pageSize = null,
         int? currentPage = null,
-        string[]? orderBy = null,
-        string[]? search = null,
+        List<string>? orderBy = null,
+        List<string>? search = null,
         string searchValue = "")
     {
         return new GetCollaboratorsFromWorkspaceQuery(
             id ?? Guid.NewGuid(),
             currentPage,
             pageSize,
-            orderBy,
-            search,
+            orderBy ?? [],
+            search ?? [],
             searchValue);
     }
 
@@ -34,15 +34,15 @@ public static class WorkspaceQueryFactory
         bool isPersonalWorkspaceFirst = false,
         int? pageSize = null,
         int? currentPage = null,
-        string[]? orderBy = null,
-        string[]? search = null)
+        List<string>? orderBy = null,
+        List<string>? search = null)
     {
         return new GetCollectionWorkspaceQuery(
             isPersonalWorkspaceFirst,
             pageSize,
             currentPage,
-            orderBy,
-            search);
+            orderBy ?? [],
+            search ?? []);
     }
 
     public static GetInvitationsWorkspaceQuery CreateGetInvitationsWorkspaceQuery(
