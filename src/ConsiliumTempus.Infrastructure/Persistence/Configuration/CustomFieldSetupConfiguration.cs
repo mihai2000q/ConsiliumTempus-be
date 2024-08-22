@@ -43,8 +43,11 @@ public sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<Cus
             .WithMany(p => p.CustomFieldSetups)
             .UsingEntity("ProjectHasCustomFieldSetup");
 
-        builder.HasOne(cfs => cfs.Audit)
-            .WithMany();
+        builder.HasOne(s => s.Audit)
+            .WithOne()
+            .HasForeignKey<CustomFieldSetupAggregate>()
+            .IsRequired()
+            .OnDelete(DeleteBehavior.NoAction);
         builder.Navigation(cfs => cfs.Audit).AutoInclude();
     }
 }

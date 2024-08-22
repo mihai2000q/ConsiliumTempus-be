@@ -191,8 +191,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomFieldSetup.Number_Audit_AuditId",
                         column: x => x.AuditId,
                         principalTable: "Audit",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CustomFieldSetup.Number_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,
@@ -218,8 +217,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomFieldSetup.SingleSelect_Audit_AuditId",
                         column: x => x.AuditId,
                         principalTable: "Audit",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CustomFieldSetup.SingleSelect_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,
@@ -245,8 +243,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomFieldSetup.Text_Audit_AuditId",
                         column: x => x.AuditId,
                         principalTable: "Audit",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CustomFieldSetup.Text_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,
@@ -532,8 +529,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_ProjectStage_Audit_AuditId",
                         column: x => x.AuditId,
                         principalTable: "Audit",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ProjectStage_ProjectSprint_SprintId",
                         column: x => x.SprintId,
@@ -895,7 +891,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CustomFieldSetup.Number_AuditId",
                 table: "CustomFieldSetup.Number",
-                column: "AuditId");
+                column: "AuditId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomFieldSetup.Number_WorkspaceId",
@@ -905,7 +902,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CustomFieldSetup.SingleSelect_AuditId",
                 table: "CustomFieldSetup.SingleSelect",
-                column: "AuditId");
+                column: "AuditId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomFieldSetup.SingleSelect_WorkspaceId",
@@ -915,7 +913,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CustomFieldSetup.Text_AuditId",
                 table: "CustomFieldSetup.Text",
-                column: "AuditId");
+                column: "AuditId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomFieldSetup.Text_WorkspaceId",
@@ -955,7 +954,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectSprint_AuditId",
                 table: "ProjectSprint",
-                column: "AuditId");
+                column: "AuditId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectSprint_ProjectId",
@@ -965,7 +965,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectStage_AuditId",
                 table: "ProjectStage",
-                column: "AuditId");
+                column: "AuditId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectStage_SprintId",

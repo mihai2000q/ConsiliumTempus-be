@@ -33,8 +33,10 @@ public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Projec
             .WithOne(s => s.Sprint);
 
         builder.HasOne(s => s.Audit)
-            .WithMany()
-            .OnDelete(DeleteBehavior.ClientCascade); // TODO: Check Why???
+            .WithOne()
+            .HasForeignKey<ProjectSprintAggregate>()
+            .IsRequired()
+            .OnDelete(DeleteBehavior.NoAction);
         builder.Navigation(s => s.Audit).AutoInclude();
     }
 }
@@ -67,7 +69,10 @@ public sealed class ProjectStageConfiguration : IEntityTypeConfiguration<Project
             .WithOne(s => s.Stage);
 
         builder.HasOne(s => s.Audit)
-            .WithMany();
+            .WithOne()
+            .HasForeignKey<ProjectStage>()
+            .IsRequired()
+            .OnDelete(DeleteBehavior.NoAction);
         builder.Navigation(s => s.Audit).AutoInclude();
     }
 }
