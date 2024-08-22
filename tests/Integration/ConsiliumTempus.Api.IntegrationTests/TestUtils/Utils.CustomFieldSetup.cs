@@ -122,8 +122,7 @@ internal static partial class Utils
             IEnumerable<CustomFieldSetupAggregate> customFieldSetups)
         {
             response.CustomFieldSetups
-                .OrderBy(c => c.Id)
-                .Zip(customFieldSetups.OrderBy(c => c.Id.Value))
+                .Zip(customFieldSetups.OrderBy(c => c.Audit.CreatedDateTime))
                 .Should().AllSatisfy(x => AssertCustomFieldSetup(x.First, x.Second));
         }
 
