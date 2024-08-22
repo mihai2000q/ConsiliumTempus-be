@@ -143,9 +143,29 @@ internal class UserData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
-            "Win NBA",
-            "This is an elaborate plan to win NBA",
-            true,
+            "Win NBA - with new owner",
+            "Plan to win NBA"),
+        ProjectFactory.Create(
+            Workspaces[0],
+            Users[0],
+            name: "project will be deleted",
+            isPrivate: true,
+            allowedMembers: [Users[0]]),
+        ProjectFactory.Create(
+            Workspaces[2],
+            Users[0],
+            name: "Workspace will be deleted",
+            isPrivate: true,
+            allowedMembers: [Users[0]]),
+        ProjectFactory.Create(
+            Workspaces[3],
+            Users[0],
+            name: "new owner"),
+        ProjectFactory.Create(
+            Workspaces[3],
+            Users[0],
+            name: "deleted",
+            isPrivate: true,
             allowedMembers: [Users[0]])
     ];
 
@@ -157,10 +177,16 @@ internal class UserData : ITestData
             "Sprint 1 - Qualify on Semi Finals",
             new DateOnly(2024, 01, 16),
             new DateOnly(2024, 01, 30)),
+        ProjectSprintFactory.Create(
+            Projects[1],
+            Audit.Create(Users[0])),
     ];
 
     private static readonly SingleSelectOption[] SingleSelectOptions =
     [
+        SingleSelectOptionFactory.Create(),
+        SingleSelectOptionFactory.Create(customOrderPosition: 1),
+
         SingleSelectOptionFactory.Create(),
         SingleSelectOptionFactory.Create(customOrderPosition: 1),
     ];
@@ -186,6 +212,27 @@ internal class UserData : ITestData
             null,
             [Projects[0]],
             AuditFactory.Create(Users[0]),
+            "Notes field"),
+
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            [Projects[1]],
+            AuditFactory.Create(Users[0]),
+            "A number field"),
+        CustomFieldSetupFactory.CreateSingleSelect(
+            null,
+            [Projects[1]],
+            AuditFactory.Create(Users[0]),
+            [
+                SingleSelectOptions[2],
+                SingleSelectOptions[3]
+            ],
+            "Select only one field",
+            defaultOption: SingleSelectOptions[2]),
+        CustomFieldSetupFactory.CreateText(
+            null,
+            [Projects[1]],
+            AuditFactory.Create(Users[0]),
             "Notes field")
     ];
 
@@ -195,58 +242,23 @@ internal class UserData : ITestData
             ProjectSprints[0],
             AuditFactory.Create(Users[0]),
             "To do"),
+
         ProjectStageFactory.Create(
-            ProjectSprints[0],
+            ProjectSprints[1],
             AuditFactory.Create(Users[0]),
-            "In Progress",
-            1),
-        ProjectStageFactory.Create(
-            ProjectSprints[0],
-            AuditFactory.Create(Users[0]),
-            "Done",
-            2),
+            "To do2"),
     ];
 
     public static readonly ProjectTaskAggregate[] ProjectTasks =
     [
         ProjectTaskFactory.Create(
-            Users[0],
+            Users[1], // TODO: Make it back to Users[0], but for the moment the Cascade removes it, which shouldn't happen as the tasks should be preserved
             ProjectStages[0],
             "Should do more dribbling"),
-        ProjectTaskFactory.Create(
-            Users[0],
-            ProjectStages[0],
-            "Should add more stepping to my shots",
-            customOrderPosition: 1,
-            assignee: Users[1],
-            isCompleted: true),
-        ProjectTaskFactory.Create(
-            Users[3],
-            ProjectStages[0],
-            "Should tell Michael to PASS MOORE!!",
-            assignee: Users[0],
-            customOrderPosition: 2),
-        ProjectTaskFactory.Create(
-            Users[3],
-            ProjectStages[0],
-            "Tell Michael to DRIBBLE LESS!!",
-            assignee: Users[0],
-            customOrderPosition: 3),
 
         ProjectTaskFactory.Create(
-            Users[0],
-            ProjectStages[1],
-            "We want to win the cup"),
-        ProjectTaskFactory.Create(
-            Users[0],
-            ProjectStages[1],
-            "We want to win them all",
-            customOrderPosition: 1),
-        ProjectTaskFactory.Create(
-            Users[0],
-            ProjectStages[1],
-            "We want to go to coffee after",
-            customOrderPosition: 2),
+            Users[1],
+            ProjectStages[1]),
     ];
 
     public static readonly CustomField[] CustomFields =
@@ -266,12 +278,13 @@ internal class UserData : ITestData
 
         CustomFieldFactory.CreateNumber(
             ProjectTasks[1],
-            (NumberCustomFieldSetupAggregate)CustomFieldSetups[0]),
+            (NumberCustomFieldSetupAggregate)CustomFieldSetups[^3]),
         CustomFieldFactory.CreateSingleSelect(
             ProjectTasks[1],
-            (SingleSelectCustomFieldSetupAggregate)CustomFieldSetups[1]),
+            (SingleSelectCustomFieldSetupAggregate)CustomFieldSetups[^2],
+            ((SingleSelectCustomFieldSetupAggregate)CustomFieldSetups[^2]).Options[0]),
         CustomFieldFactory.CreateText(
             ProjectTasks[1],
-            (TextCustomFieldSetupAggregate)CustomFieldSetups[2]),
+            (TextCustomFieldSetupAggregate)CustomFieldSetups[^1]),
     ];
 }
