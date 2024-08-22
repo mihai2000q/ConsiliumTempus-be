@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
@@ -24,6 +25,21 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
 
         return result.Match(
             setup => Ok(Mapper.Map<GetCustomFieldSetupResponse>(setup)),
+            Problem
+        );
+    }
+
+    [HttpGet("Workspace/{workspaceId:guid}")]
+    public async Task<IActionResult> GetCollectionFromWorkspace(
+        GetCollectionCustomFieldSetupFromWorkspaceRequest request,
+        CancellationToken cancellationToken)
+    {
+        var query = Mapper.Map<GetCollectionCustomFieldSetupQuery>(request);
+        var result = await Mediator.Send(query, cancellationToken);
+
+        return result.Match(
+            getCollectionResult =>
+                Ok(Mapper.Map<GetCollectionCustomFieldSetupFromWorkspaceResponse>(getCollectionResult)),
             Problem
         );
     }

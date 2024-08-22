@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestData;
@@ -104,7 +105,7 @@ public class CustomFieldSetupControllerTest
                 Utils.CustomFieldSetup.AssertGetCollectionCustomFieldSetupQuery(q, request)));
 
         var response = outcome.ToResponse<GetCollectionCustomFieldSetupFromProjectResponse>();
-        Utils.CustomFieldSetup.AssertGetCollectionCustomFieldSetupFromProjectResponse(response, result);
+        Utils.CustomFieldSetup.AssertGetCollectionFromProjectResponse(response, result);
     }
 
     [Fact]
@@ -120,6 +121,53 @@ public class CustomFieldSetupControllerTest
 
         // Act
         var outcome = await _uut.GetCollectionFromProject(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCollectionCustomFieldSetupQuery>(q =>
+                Utils.CustomFieldSetup.AssertGetCollectionCustomFieldSetupQuery(q, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task GetCollectionFromWorkspace_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateGetCollectionCustomFieldSetupFromWorkspaceRequest();
+
+        var result = CustomFieldSetupResultFactory.CreateGetCollectionCustomFieldSetupResult();
+        _mediator
+            .Send(Arg.Any<GetCollectionCustomFieldSetupQuery>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.GetCollectionFromWorkspace(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<GetCollectionCustomFieldSetupQuery>(q =>
+                Utils.CustomFieldSetup.AssertGetCollectionCustomFieldSetupQuery(q, request)));
+
+        var response = outcome.ToResponse<GetCollectionCustomFieldSetupFromWorkspaceResponse>();
+        Utils.CustomFieldSetup.AssertGetCollectionFromWorkspaceResponse(response, result);
+    }
+
+    [Fact]
+    public async Task GetCollectionFromWorkspace_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateGetCollectionCustomFieldSetupFromWorkspaceRequest();
+
+        var error = Errors.CustomFieldSetup.NotFound;
+        _mediator
+            .Send(Arg.Any<GetCollectionCustomFieldSetupQuery>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.GetCollectionFromWorkspace(request, default);
 
         // Assert
         await _mediator

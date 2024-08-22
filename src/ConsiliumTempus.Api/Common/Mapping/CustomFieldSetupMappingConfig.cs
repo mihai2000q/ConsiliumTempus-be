@@ -3,6 +3,7 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
@@ -23,6 +24,7 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
     {
         GetMappings(config);
         GetCollectionFromProjectMappings(config);
+        GetCollectionFromWorkspaceMappings(config);
         CreateOnProjectMappings(config);
         UpdateWorkspaceMappings(config);
         DeleteMappings(config);
@@ -81,18 +83,40 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
     {
         config.NewConfig<GetCollectionCustomFieldSetupFromProjectRequest, GetCollectionCustomFieldSetupQuery>();
 
+        var setupTypeToCustomFieldType = new Dictionary<Type, CustomFieldType>
+        {
+            { typeof(NumberCustomFieldSetupAggregate), CustomFieldType.Number },
+            { typeof(SingleSelectCustomFieldSetupAggregate), CustomFieldType.SingleSelect },
+            { typeof(TextCustomFieldSetupAggregate), CustomFieldType.Text },
+        };
+
         config.NewConfig<GetCollectionCustomFieldSetupResult, GetCollectionCustomFieldSetupFromProjectResponse>();
         config.NewConfig<CustomFieldSetupAggregate,
                 GetCollectionCustomFieldSetupFromProjectResponse.CustomFieldSetupResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.Type, src =>
-                src is NumberCustomFieldSetupAggregate
-                    ? CustomFieldType.Number
-                    : src is SingleSelectCustomFieldSetupAggregate
-                        ? CustomFieldType.SingleSelect
-                        : CustomFieldType.Text);
+            .Map(dest => dest.Type, src => setupTypeToCustomFieldType[src.GetType()]);
+    }
+
+    private static void GetCollectionFromWorkspaceMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<GetCollectionCustomFieldSetupFromWorkspaceRequest, GetCollectionCustomFieldSetupQuery>();
+
+        var setupTypeToCustomFieldType = new Dictionary<Type, CustomFieldType>
+        {
+            { typeof(NumberCustomFieldSetupAggregate), CustomFieldType.Number },
+            { typeof(SingleSelectCustomFieldSetupAggregate), CustomFieldType.SingleSelect },
+            { typeof(TextCustomFieldSetupAggregate), CustomFieldType.Text },
+        };
+
+        config.NewConfig<GetCollectionCustomFieldSetupResult, GetCollectionCustomFieldSetupFromWorkspaceResponse>();
+        config.NewConfig<CustomFieldSetupAggregate, 
+                GetCollectionCustomFieldSetupFromWorkspaceResponse.CustomFieldSetupResponse>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Name, src => src.Name.Value)
+            .Map(dest => dest.Description, src => src.Description.Value)
+            .Map(dest => dest.Type, src => setupTypeToCustomFieldType[src.GetType()]);
     }
 
     private static void CreateOnProjectMappings(TypeAdapterConfig config)
@@ -101,7 +125,7 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
 
         config.NewConfig<CreateCustomFieldSetupResult, CreateCustomFieldSetupOnProjectResponse>();
     }
-    
+
     private static void UpdateWorkspaceMappings(TypeAdapterConfig config)
     {
         config.NewConfig<UpdateWorkspaceCustomFieldSetupRequest, UpdateWorkspaceCustomFieldSetupCommand>();

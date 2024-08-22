@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
@@ -27,13 +28,23 @@ internal static partial class Utils
 
             return true;
         }
+        
+        public static bool AssertGetCollectionCustomFieldSetupQuery(
+            GetCollectionCustomFieldSetupQuery query,
+            GetCollectionCustomFieldSetupFromWorkspaceRequest request)
+        {
+            query.WorkspaceId.Should().Be(request.WorkspaceId);
+            query.ProjectId.Should().BeNull();
+
+            return true;
+        }
 
         public static bool AssertGetCollectionCustomFieldSetupQuery(
             GetCollectionCustomFieldSetupQuery query,
             GetCollectionCustomFieldSetupFromProjectRequest request)
         {
-            query.ProjectId.Should().Be(request.ProjectId);
             query.WorkspaceId.Should().BeNull();
+            query.ProjectId.Should().Be(request.ProjectId);
 
             return true;
         }
@@ -109,8 +120,17 @@ internal static partial class Utils
                     break;
             }
         }
+        
+        public static void AssertGetCollectionFromWorkspaceResponse(
+            GetCollectionCustomFieldSetupFromWorkspaceResponse response,
+            GetCollectionCustomFieldSetupResult result)
+        {
+            response.CustomFieldSetups
+                .Zip(result.CustomFieldSetups)
+                .Should().AllSatisfy(x => AssertCustomFieldSetupResponse(x.First, x.Second));
+        }
 
-        public static void AssertGetCollectionCustomFieldSetupFromProjectResponse(
+        public static void AssertGetCollectionFromProjectResponse(
             GetCollectionCustomFieldSetupFromProjectResponse response,
             GetCollectionCustomFieldSetupResult result)
         {
@@ -167,6 +187,24 @@ internal static partial class Utils
             response!.Id.Should().Be(option.Id);
             response.Value.Should().Be(option.Value);
             response.Color.Should().Be(option.Color);
+        }
+
+        private static void AssertCustomFieldSetupResponse(
+            GetCollectionCustomFieldSetupFromWorkspaceResponse.CustomFieldSetupResponse response,
+            CustomFieldSetupAggregate customFieldSetup)
+        {
+            response.Id.Should().Be(customFieldSetup.Id.Value);
+            response.Name.Should().Be(customFieldSetup.Name.Value);
+            response.Description.Should().Be(customFieldSetup.Description.Value);
+
+            var mapSetupTypeToEnumType = new Dictionary<Type, CustomFieldType>
+            {
+                { typeof(NumberCustomFieldSetupAggregate), CustomFieldType.Number },
+                { typeof(SingleSelectCustomFieldSetupAggregate), CustomFieldType.SingleSelect },
+                { typeof(TextCustomFieldSetupAggregate), CustomFieldType.Text },
+            };
+
+            response.Type.Should().Be(mapSetupTypeToEnumType[customFieldSetup.GetType()]);
         }
 
         private static void AssertCustomFieldSetupResponse(

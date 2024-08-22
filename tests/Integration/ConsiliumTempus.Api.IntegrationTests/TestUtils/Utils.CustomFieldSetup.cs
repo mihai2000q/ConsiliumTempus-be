@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -117,6 +118,15 @@ internal static partial class Utils
             }
         }
 
+        public static void AssertGetCollectionFromWorkspaceResponse(
+            GetCollectionCustomFieldSetupFromWorkspaceResponse response,
+            IEnumerable<CustomFieldSetupAggregate> customFieldSetups)
+        {
+            response.CustomFieldSetups
+                .Zip(customFieldSetups.OrderBy(c => c.Audit.CreatedDateTime))
+                .Should().AllSatisfy(x => AssertCustomFieldSetup(x.First, x.Second));
+        }
+
         public static void AssertGetCollectionFromProjectResponse(
             GetCollectionCustomFieldSetupFromProjectResponse response,
             IEnumerable<CustomFieldSetupAggregate> customFieldSetups)
@@ -174,6 +184,24 @@ internal static partial class Utils
             response!.Id.Should().Be(option.Id);
             response.Value.Should().Be(option.Value);
             response.Color.Should().Be(option.Color);
+        }
+
+        private static void AssertCustomFieldSetup(
+            GetCollectionCustomFieldSetupFromWorkspaceResponse.CustomFieldSetupResponse response,
+            CustomFieldSetupAggregate customFieldSetup)
+        {
+            response.Id.Should().Be(customFieldSetup.Id.Value);
+            response.Name.Should().Be(customFieldSetup.Name.Value);
+            response.Description.Should().Be(customFieldSetup.Description.Value);
+
+            var mapSetupTypeToEnumType = new Dictionary<Type, CustomFieldType>
+            {
+                { typeof(NumberCustomFieldSetupAggregate), CustomFieldType.Number },
+                { typeof(SingleSelectCustomFieldSetupAggregate), CustomFieldType.SingleSelect },
+                { typeof(TextCustomFieldSetupAggregate), CustomFieldType.Text },
+            };
+            
+            response.Type.Should().Be(mapSetupTypeToEnumType[customFieldSetup.GetType()]);
         }
         
         private static void AssertCustomFieldSetup(
