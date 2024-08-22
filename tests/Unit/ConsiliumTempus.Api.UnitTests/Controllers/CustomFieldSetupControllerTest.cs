@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Common.Mapping;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.AddToProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
@@ -8,6 +9,7 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestData;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
@@ -268,6 +270,53 @@ public class CustomFieldSetupControllerTest
             .Received(1)
             .Send(Arg.Is<CreateCustomFieldSetupCommand>(c =>
                 Utils.CustomFieldSetup.AssertCreateCustomFieldSetupCommand(c, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task AddToProject_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest();
+
+        var result = CustomFieldSetupResultFactory.CreateAddCustomFieldSetupToProjectResult();
+        _mediator
+            .Send(Arg.Any<AddCustomFieldSetupToProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.AddToProject(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<AddCustomFieldSetupToProjectCommand>(c =>
+                Utils.CustomFieldSetup.AssertAddCustomFieldSetupToProjectCommand(c, request)));
+
+        var response = outcome.ToResponse<AddCustomFieldSetupToProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task AddToProject_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest();
+
+        var error = Errors.CustomFieldSetup.NotFound;
+        _mediator
+            .Send(Arg.Any<AddCustomFieldSetupToProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.AddToProject(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<AddCustomFieldSetupToProjectCommand>(c =>
+                Utils.CustomFieldSetup.AssertAddCustomFieldSetupToProjectCommand(c, request)));
 
         outcome.ValidateError(error);
     }

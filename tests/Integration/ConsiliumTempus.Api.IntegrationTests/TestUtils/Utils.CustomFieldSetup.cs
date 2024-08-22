@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Create;
+﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.AddToProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Create;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
@@ -93,6 +94,15 @@ internal static partial class Utils
                         throw new ArgumentOutOfRangeException(nameof(request));
                 }
             });
+        }
+        
+        public static void AssertAddToProject(
+            AddCustomFieldSetupToProjectRequest request,
+            CustomFieldSetupAggregate customFieldSetup,
+            UserAggregate user)
+        {
+            customFieldSetup.Projects.Should().ContainSingle(p => p.Id.Value == request.ProjectId);
+            customFieldSetup.Audit.ShouldBeUpdated(user);
         }
 
         public static void AssertUpdateWorkspace(

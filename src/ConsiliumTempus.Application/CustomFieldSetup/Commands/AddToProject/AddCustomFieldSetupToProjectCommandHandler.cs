@@ -23,7 +23,7 @@ public sealed class AddCustomFieldSetupToProjectCommandHandler(
 
         var project = await projectRepository.Get(ProjectId.Create(command.ProjectId), cancellationToken);
         if (project is null) return Errors.Project.NotFound;
-        if (customFieldSetup.Projects.Contains(project)) return Errors.CustomFieldSetup.ProjectAlreadyAdded;
+        if (customFieldSetup.Projects.Contains(project)) return Errors.CustomFieldSetup.ProjectAlreadyPresent;
 
         customFieldSetup.AddProject(project);
         project.RefreshActivity();

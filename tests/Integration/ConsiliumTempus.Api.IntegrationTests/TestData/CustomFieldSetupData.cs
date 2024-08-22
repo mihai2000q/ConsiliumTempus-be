@@ -297,10 +297,11 @@ internal class CustomFieldSetupData : ITestData
             AuditFactory.Create(Users[0]),
             "A number field"),
         CustomFieldSetupFactory.CreateNumber(
-            null,
-            [Projects[0]],
+            Workspaces[0],
+            [Projects[2]],
             AuditFactory.Create(Users[0]),
-            name: "Budget"),
+            name: "Budget",
+            defaultNumber: 1000),
         CustomFieldSetupFactory.CreateText(
             null,
             [Projects[0]],

@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Create;
+﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.AddToProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Create;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
@@ -49,6 +50,15 @@ public static class CustomFieldSetupRequestFactory
             numberCustomFieldSetup,
             singleSelectCustomFieldSetup,
             textCustomFieldSetup);
+    }
+
+    public static AddCustomFieldSetupToProjectRequest CreateAddCustomFieldSetupToProjectRequest(
+        Guid? id = null,
+        Guid? projectId = null)
+    {
+        return new AddCustomFieldSetupToProjectRequest(
+            id ?? Guid.NewGuid(),
+            projectId ?? Guid.NewGuid());
     }
 
     public static DeleteCustomFieldSetupRequest CreateDeleteCustomFieldSetupRequest(Guid? id = null)

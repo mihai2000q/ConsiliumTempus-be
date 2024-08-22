@@ -1,10 +1,12 @@
-﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.AddToProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
@@ -82,6 +84,19 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
 
         return result.Match(
             createResult => Ok(Mapper.Map<CreateCustomFieldSetupOnProjectResponse>(createResult)),
+            Problem
+        );
+    }
+
+    [HttpPost("Add-Project")]
+    public async Task<IActionResult> AddToProject(AddCustomFieldSetupToProjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<AddCustomFieldSetupToProjectCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            createResult => Ok(Mapper.Map<AddCustomFieldSetupToProjectResponse>(createResult)),
             Problem
         );
     }

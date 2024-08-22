@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Create;
+﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.AddToProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Create;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
@@ -6,6 +7,7 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
@@ -73,6 +75,16 @@ internal static partial class Utils
             AssertCreateNumberCustomFieldSetupCommand(command.NumberCustomFieldSetup, request.NumberCustomFieldSetup);
             AssertCreateSingleSelectCustomFieldSetupCommand(command.SingleSelectCustomFieldSetup, request.SingleSelectCustomFieldSetup);
             AssertCreateTextCustomFieldSetupCommand(command.TextCustomFieldSetup, request.TextCustomFieldSetup);
+
+            return true;
+        }
+
+        public static bool AssertAddCustomFieldSetupToProjectCommand(
+            AddCustomFieldSetupToProjectCommand command,
+            AddCustomFieldSetupToProjectRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.ProjectId.Should().Be(request.ProjectId);
 
             return true;
         }

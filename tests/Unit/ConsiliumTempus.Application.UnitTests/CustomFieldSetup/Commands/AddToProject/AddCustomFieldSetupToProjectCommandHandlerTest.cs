@@ -65,7 +65,7 @@ public class AddCustomFieldSetupToProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleAddCustomFieldSetupToProjectCommand_WhenItAlreadyHasProject_ShouldReturnProjectAlreadyAddedError()
+    public async Task HandleAddCustomFieldSetupToProjectCommand_WhenItAlreadyHasProject_ShouldReturnProjectAlreadyPresentError()
     {
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateAddCustomFieldSetupToProjectCommand();
@@ -94,7 +94,7 @@ public class AddCustomFieldSetupToProjectCommandHandlerTest
             .Received(1)
             .Get(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
 
-        outcome.ValidateError(Errors.CustomFieldSetup.ProjectAlreadyAdded);
+        outcome.ValidateError(Errors.CustomFieldSetup.ProjectAlreadyPresent);
     }
 
     [Fact]

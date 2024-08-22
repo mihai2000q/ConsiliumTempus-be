@@ -13,6 +13,10 @@ import {
 } from "../utils/custom-field-setup.utils";
 import UpdateWorkspaceCustomFieldSetupRequest
   from "../types/requests/custom-field-setup/UpdateWorkspaceCustomFieldSetupRequest";
+import AddCustomFieldSetupToProjectRequest
+  from "../types/requests/custom-field-setup/AddCustomFieldSetupToProjectRequest";
+import CreateCustomFieldSetupOnWorkspaceRequest
+  from "../types/requests/custom-field-setup/CreateCustomFieldSetupOnWorkspaceRequest";
 
 test.describe('should allow operations on the custom field setup entity', () => {
   let WORKSPACE_ID: string
@@ -155,15 +159,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
   })
 
   test('should get custom field setups from workspace', async ({ request }) => {
-    const textCustomField = await createCustomFieldSetupOnWorkspace(request, {
-      workspaceId: WORKSPACE_ID,
-      name: "New Text Custom Field",
-      description: "Represents a custom field",
-      type: 'Text',
-      textCustomFieldSetup: {
-        defaultText: undefined
-      }
-    })
     const numberCustomField = await createCustomFieldSetupOnWorkspace(request, {
       workspaceId: WORKSPACE_ID,
       name: "Budget",
@@ -197,6 +192,15 @@ test.describe('should allow operations on the custom field setup entity', () => 
         ]
       }
     })
+    const textCustomField = await createCustomFieldSetupOnWorkspace(request, {
+      workspaceId: WORKSPACE_ID,
+      name: "New Text Custom Field",
+      description: "Represents a custom field",
+      type: 'Text',
+      textCustomFieldSetup: {
+        defaultText: undefined
+      }
+    })
 
     const response = await request.get(`/api/customFieldSetups/workspace/${WORKSPACE_ID}`, useToken())
 
@@ -227,15 +231,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
   })
 
   test('should get custom field setups from project', async ({ request }) => {
-    const textCustomField = await createCustomFieldSetupOnProject(request, {
-      projectId: PROJECT_ID,
-      name: "New Text Custom Field",
-      description: "Represents a custom field",
-      type: 'Text',
-      textCustomFieldSetup: {
-        defaultText: undefined
-      }
-    })
     const numberCustomField = await createCustomFieldSetupOnProject(request, {
       projectId: PROJECT_ID,
       name: "Budget",
@@ -267,6 +262,15 @@ test.describe('should allow operations on the custom field setup entity', () => 
             color: "#1122FF"
           }
         ]
+      }
+    })
+    const textCustomField = await createCustomFieldSetupOnProject(request, {
+      projectId: PROJECT_ID,
+      name: "New Text Custom Field",
+      description: "Represents a custom field",
+      type: 'Text',
+      textCustomFieldSetup: {
+        defaultText: undefined
       }
     })
 
@@ -414,6 +418,45 @@ test.describe('should allow operations on the custom field setup entity', () => 
         }
       ])
     })
+  })
+
+  test('should add custom field setup to project', async ({ request }) => {
+    const createCustomFieldSetupOnWorkspaceRequest: CreateCustomFieldSetupOnWorkspaceRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "New Text Custom Field",
+      description: "Represents a custom field",
+      type: 'Text',
+      textCustomFieldSetup: {
+        defaultText: undefined
+      }
+    }
+    const textCustomField = await createCustomFieldSetupOnWorkspace(request, createCustomFieldSetupOnWorkspaceRequest)
+
+    const body: AddCustomFieldSetupToProjectRequest = {
+      id: textCustomField.id,
+      projectId: PROJECT_ID,
+    }
+    const response = await request.post(`/api/customFieldSetups/add-project`, {
+      ...useToken(),
+      data: body
+    })
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const customFieldSetups = await getCustomFieldSetupsFromProject(request, PROJECT_ID)
+    expect(customFieldSetups).toHaveLength(1)
+    expect(customFieldSetups).toStrictEqual([
+      {
+        id: textCustomField.id,
+        name: textCustomField.name,
+        description: textCustomField.description,
+        type: 'Text'
+      }
+    ])
   })
 
   test('should update workspace', async ({ request }) => {
