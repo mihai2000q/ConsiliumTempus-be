@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Domain.Common.Entities;
-using ConsiliumTempus.Domain.Common.Enums;
+﻿using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -93,6 +92,7 @@ public sealed class
             .IsRequired();
         builder.Navigation(s => s.Options).AutoInclude();
 
+        // Circular Dependency if foreign key
         builder.Property(s => s.DefaultOptionId)
             .IsRequired(false);
     }
