@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
@@ -25,6 +26,7 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
         GetMappings(config);
         GetCollectionFromProjectMappings(config);
         GetCollectionFromWorkspaceMappings(config);
+        CreateOnWorkspaceMappings(config);
         CreateOnProjectMappings(config);
         UpdateWorkspaceMappings(config);
         DeleteMappings(config);
@@ -117,6 +119,13 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.Type, src => setupTypeToCustomFieldType[src.GetType()]);
+    }
+
+    private static void CreateOnWorkspaceMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<CreateCustomFieldSetupOnWorkspaceRequest, CreateCustomFieldSetupCommand>();
+
+        config.NewConfig<CreateCustomFieldSetupResult, CreateCustomFieldSetupOnWorkspaceResponse>();
     }
 
     private static void CreateOnProjectMappings(TypeAdapterConfig config)

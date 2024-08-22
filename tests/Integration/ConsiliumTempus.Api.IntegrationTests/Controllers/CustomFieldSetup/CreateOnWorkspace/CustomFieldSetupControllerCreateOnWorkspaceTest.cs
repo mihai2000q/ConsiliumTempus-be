@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Create;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnWorkspace;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
@@ -9,25 +10,26 @@ using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.CreateOnProject;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.CreateOnWorkspace;
 
 [Collection(nameof(CustomFieldSetupControllerCollection))]
-public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory)
+public class CustomFieldSetupControllerCreateOnWorkspaceTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new CustomFieldSetupData())
 {
     [Fact]
     public async Task
-        CreateCustomFieldSetupOnProject_WhenRequestHasNumberType_ShouldCreateNumberCustomFieldSetupAndReturnSuccessResponse()
+        CreateCustomFieldSetupOnWorkspace_WhenRequestHasNumberType_ShouldCreateNumberCustomFieldSetupAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var project = CustomFieldSetupData.Projects.First();
-        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(
-            project.Id.Value,
+        var workspace = CustomFieldSetupData.Workspaces.First();
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest(
+            workspace.Id.Value,
             type: CustomFieldType.Number,
             numberCustomFieldSetup: new CreateCustomFieldSetupRequest.NumberCustomFieldSetupRequest(
                 new CreateCustomFieldSetupRequest.NumberCustomFieldSetupRequest.NumberSettingsRequest(
@@ -41,13 +43,13 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
 
     [Fact]
     public async Task
-        CreateCustomFieldSetupOnProject_WhenRequestHasSingleSelectType_ShouldCreateSingleSelectCustomFieldSetupAndReturnSuccessResponse()
+        CreateCustomFieldSetupOnWorkspace_WhenRequestHasSingleSelectType_ShouldCreateSingleSelectCustomFieldSetupAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var project = CustomFieldSetupData.Projects.First();
-        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(
-            project.Id.Value,
+        var workspace = CustomFieldSetupData.Workspaces.First();
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest(
+            workspace.Id.Value,
             type: CustomFieldType.SingleSelect,
             singleSelectCustomFieldSetup: new
                 CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest(
@@ -70,50 +72,50 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
 
     [Fact]
     public async Task
-        CreateCustomFieldSetupOnProject_WhenRequestHasTextType_ShouldCreateTextCustomFieldSetupAndReturnSuccessResponse()
+        CreateCustomFieldSetupOnWorkspace_WhenRequestHasTextType_ShouldCreateTextCustomFieldSetupAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var project = CustomFieldSetupData.Projects.First();
-        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(
-            project.Id.Value,
+        var workspace = CustomFieldSetupData.Workspaces.First();
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest(
+            workspace.Id.Value,
             textCustomFieldSetup: new CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest("Default"));
 
         await ActAndAssert(request, user);
     }
 
     [Fact]
-    public async Task CreateCustomFieldSetupOnProject_WhenProjectIsNotFound_ShouldReturnProjectNotFoundError()
+    public async Task CreateCustomFieldSetupOnWorkspace_WhenWorkspaceIsNotFound_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
-        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest(
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest(
             Guid.NewGuid(),
             textCustomFieldSetup: new CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest(null));
 
         // Act
-        var outcome = await Client.Post("api/customFieldSetups/project", request);
+        var outcome = await Client.Post("api/customFieldSetups/Workspace", request);
 
         // Assert
-        await outcome.ValidateError(Errors.Project.NotFound);
+        await outcome.ValidateError(Errors.Workspace.NotFound);
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.CustomFieldSetups.Should().HaveCount(CustomFieldSetupData.CustomFieldSetups.Length);
         dbContext.CustomFieldSetups.SingleOrDefault(p => p.Name == Name.Create(request.Name))
             .Should().BeNull();
-        dbContext.Projects.SingleOrDefault(p => p.Id == ProjectId.Create(request.ProjectId))
+        dbContext.Workspaces.SingleOrDefault(p => p.Id == WorkspaceId.Create(request.WorkspaceId))
             .Should().BeNull();
     }
 
-    private async Task ActAndAssert(CreateCustomFieldSetupOnProjectRequest request, UserAggregate user)
+    private async Task ActAndAssert(CreateCustomFieldSetupOnWorkspaceRequest request, UserAggregate user)
     {
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Post("api/customFieldSetups/project", request);
+        var outcome = await Client.Post("api/customFieldSetups/Workspace", request);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var response = await outcome.Content.ReadFromJsonAsync<CreateCustomFieldSetupOnProjectResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<CreateCustomFieldSetupOnWorkspaceResponse>();
         response!.Message.Should().Be("Custom Field Setup has been created successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
@@ -125,16 +127,10 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
             .Include(cfs => cfs.Projects)
             .SingleAsync(cfs => cfs.Name == Name.Create(request.Name));
 
-        var tasks = await dbContext.ProjectTasks
-            .AsNoTracking()
-            .Include(t => t.CustomFields)
-            .Where(t => t.Stage.Sprint.Project.Id == ProjectId.Create(request.ProjectId))
-            .ToListAsync();
-
         Utils.CustomFieldSetup.AssertCreation(
             request,
             createdCustomFieldSetup,
             user,
-            tasks);
+            []);
     }
 }

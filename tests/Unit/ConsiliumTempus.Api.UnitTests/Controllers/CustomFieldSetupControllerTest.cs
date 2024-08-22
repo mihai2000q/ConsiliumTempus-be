@@ -179,6 +179,53 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
+    public async Task CreateOnWorkspace_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest();
+
+        var result = CustomFieldSetupResultFactory.CreateCreateCustomFieldSetupResult();
+        _mediator
+            .Send(Arg.Any<CreateCustomFieldSetupCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.CreateOnWorkspace(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<CreateCustomFieldSetupCommand>(c =>
+                Utils.CustomFieldSetup.AssertCreateCustomFieldSetupCommand(c, request)));
+
+        var response = outcome.ToResponse<CreateCustomFieldSetupOnWorkspaceResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task CreateOnWorkspace_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest();
+
+        var error = Errors.CustomFieldSetup.NotFound;
+        _mediator
+            .Send(Arg.Any<CreateCustomFieldSetupCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.CreateOnWorkspace(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<CreateCustomFieldSetupCommand>(c =>
+                Utils.CustomFieldSetup.AssertCreateCustomFieldSetupCommand(c, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
     public async Task CreateOnProject_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange

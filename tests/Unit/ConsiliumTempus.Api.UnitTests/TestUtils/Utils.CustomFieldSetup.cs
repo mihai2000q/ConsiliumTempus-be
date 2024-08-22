@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Create;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
@@ -28,7 +30,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         public static bool AssertGetCollectionCustomFieldSetupQuery(
             GetCollectionCustomFieldSetupQuery query,
             GetCollectionCustomFieldSetupFromWorkspaceRequest request)
@@ -51,29 +53,26 @@ internal static partial class Utils
 
         public static bool AssertCreateCustomFieldSetupCommand(
             CreateCustomFieldSetupCommand command,
-            CreateCustomFieldSetupOnProjectRequest request)
+            CreateCustomFieldSetupRequest request)
         {
-            command.WorkspaceId.Should().BeNull();
-            command.ProjectId.Should().Be(request.ProjectId);
+            switch (request)
+            {
+                case CreateCustomFieldSetupOnProjectRequest pr:
+                    command.WorkspaceId.Should().BeNull();
+                    command.ProjectId.Should().Be(pr.ProjectId);
+                    break;
+                case CreateCustomFieldSetupOnWorkspaceRequest wr:
+                    command.ProjectId.Should().BeNull();
+                    command.WorkspaceId.Should().Be(wr.WorkspaceId);
+                    break;
+            }
+
             command.Name.Should().Be(request.Name);
             command.Description.Should().Be(request.Description);
             command.Type.Should().Be(request.Type);
-
-            command.NumberCustomFieldSetup?.Settings.CurrencyCode
-                .Should().Be(request.NumberCustomFieldSetup!.Settings.CurrencyCode);
-            command.NumberCustomFieldSetup?.Settings.Decimals
-                .Should().Be(request.NumberCustomFieldSetup!.Settings.Decimals);
-            command.NumberCustomFieldSetup?.Settings.Rounding
-                .Should().Be(request.NumberCustomFieldSetup!.Settings.Rounding);
-            command.NumberCustomFieldSetup?.DefaultNumber.Should().Be(request.NumberCustomFieldSetup!.DefaultNumber);
-
-            command.SingleSelectCustomFieldSetup?.Options
-                .Zip(request.SingleSelectCustomFieldSetup!.Options)
-                .Should().AllSatisfy(x => AssertSingleSelectOptionCommand(x.First, x.Second));
-            command.SingleSelectCustomFieldSetup?.DefaultOptionId.Should()
-                .Be(request.SingleSelectCustomFieldSetup!.DefaultOptionId);
-
-            command.TextCustomFieldSetup?.DefaultText.Should().Be(request.TextCustomFieldSetup!.DefaultText);
+            AssertCreateNumberCustomFieldSetupCommand(command.NumberCustomFieldSetup, request.NumberCustomFieldSetup);
+            AssertCreateSingleSelectCustomFieldSetupCommand(command.SingleSelectCustomFieldSetup, request.SingleSelectCustomFieldSetup);
+            AssertCreateTextCustomFieldSetupCommand(command.TextCustomFieldSetup, request.TextCustomFieldSetup);
 
             return true;
         }
@@ -120,7 +119,7 @@ internal static partial class Utils
                     break;
             }
         }
-        
+
         public static void AssertGetCollectionFromWorkspaceResponse(
             GetCollectionCustomFieldSetupFromWorkspaceResponse response,
             GetCollectionCustomFieldSetupResult result)
@@ -224,11 +223,56 @@ internal static partial class Utils
 
             response.Type.Should().Be(mapSetupTypeToEnumType[customFieldSetup.GetType()]);
         }
+        
+        private static void AssertCreateNumberCustomFieldSetupCommand(
+            CreateCustomFieldSetupCommand.NumberCustomFieldSetupCommand? command,
+            CreateCustomFieldSetupRequest.NumberCustomFieldSetupRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.Settings.CurrencyCode.Should().Be(request.Settings.CurrencyCode);
+            command.Settings.Decimals.Should().Be(request.Settings.Decimals);
+            command.Settings.Rounding.Should().Be(request.Settings.Rounding);
+            command.DefaultNumber.Should().Be(request.DefaultNumber);
+        }
+        
+        private static void AssertCreateSingleSelectCustomFieldSetupCommand(
+            CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand? command,
+            CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.Options
+                .Zip(request.Options)
+                .Should().AllSatisfy(x => AssertSingleSelectOptionCommand(x.First, x.Second));
+            command.DefaultOptionId.Should().Be(request.DefaultOptionId);
+        }
+        
+        private static void AssertCreateTextCustomFieldSetupCommand(
+            CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand? command,
+            CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.DefaultText.Should().Be(request.DefaultText);
+        }
 
         private static void AssertSingleSelectOptionCommand(
             CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand
                 singleSelectOptionCommand,
-            CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest
+            CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest
                 singleSelectOptionRequest)
         {
             singleSelectOptionCommand.Id.Should().Be(singleSelectOptionRequest.Id);

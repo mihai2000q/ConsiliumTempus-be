@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Create;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
@@ -7,7 +9,6 @@ using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
-using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.User;
@@ -18,20 +19,33 @@ internal static partial class Utils
 {
     internal static class CustomFieldSetup
     {
-        internal static void AssertCreateOnProject(
-            CreateCustomFieldSetupOnProjectRequest request,
+        internal static void AssertCreation(
+            CreateCustomFieldSetupRequest request,
             CustomFieldSetupAggregate customFieldSetup,
             UserAggregate user,
-            ProjectAggregate project,
             List<ProjectTaskAggregate> tasks)
         {
             customFieldSetup.Id.Value.Should().NotBeEmpty();
             customFieldSetup.Name.Value.Should().Be(request.Name);
             customFieldSetup.Description.Value.Should().Be(request.Description);
             customFieldSetup.Audit.ShouldBeCreated(user);
-            customFieldSetup.Workspace.Should().BeNull();
-            customFieldSetup.Projects.Should().HaveCount(1);
-            customFieldSetup.Projects.Should().Contain(project);
+            switch (request)
+            {
+                case CreateCustomFieldSetupOnWorkspaceRequest workspaceRequest:
+                    customFieldSetup.Projects.Should().BeEmpty();
+                    customFieldSetup.Workspace.Should().NotBeNull();
+                    customFieldSetup.Workspace!.Id.Value.Should().Be(workspaceRequest.WorkspaceId);
+                    customFieldSetup.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+                    break;
+
+                case CreateCustomFieldSetupOnProjectRequest projectRequest:
+                    customFieldSetup.Workspace.Should().BeNull();
+                    customFieldSetup.Projects.Should().HaveCount(1);
+                    customFieldSetup.Projects[0].Id.Value.Should().Be(projectRequest.ProjectId);
+                    customFieldSetup.Projects[0].LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+                    customFieldSetup.Projects[0].Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+                    break;
+            }
 
             switch (request.Type)
             {
@@ -47,9 +61,6 @@ internal static partial class Utils
                 default:
                     throw new ArgumentOutOfRangeException(nameof(request));
             }
-
-            customFieldSetup.Projects[0].LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            customFieldSetup.Projects[0].Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             tasks.Should().AllSatisfy(task =>
             {
@@ -90,10 +101,10 @@ internal static partial class Utils
             UserAggregate user)
         {
             customFieldSetup.Workspace.Should().NotBeNull();
-            customFieldSetup.Workspace!.Id.Should().Be(request.WorkspaceId);
+            customFieldSetup.Workspace!.Id.Value.Should().Be(request.WorkspaceId);
             customFieldSetup.Audit.ShouldBeUpdated(user);
         }
-        
+
         public static void AssertGetResponse(
             GetCustomFieldSetupResponse response,
             CustomFieldSetupAggregate customFieldSetup)
@@ -108,11 +119,11 @@ internal static partial class Utils
                         (NumberCustomFieldSetupAggregate)customFieldSetup);
                     break;
                 case GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse singleSelectSetup:
-                    AssertSingleSelectCustomFieldSetupResponse(singleSelectSetup, 
+                    AssertSingleSelectCustomFieldSetupResponse(singleSelectSetup,
                         (SingleSelectCustomFieldSetupAggregate)customFieldSetup);
                     break;
                 case GetCustomFieldSetupResponse.TextCustomFieldSetupResponse textSetup:
-                    AssertTextCustomFieldSetupResponse(textSetup, 
+                    AssertTextCustomFieldSetupResponse(textSetup,
                         (TextCustomFieldSetupAggregate)customFieldSetup);
                     break;
             }
@@ -175,7 +186,7 @@ internal static partial class Utils
             else
                 response.DefaultText.Should().Be(textCustomFieldSetup.DefaultText.Value);
         }
-        
+
         private static void AssertSingleSelectOptionResponse(
             GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse? response,
             SingleSelectOption option)
@@ -200,10 +211,10 @@ internal static partial class Utils
                 { typeof(SingleSelectCustomFieldSetupAggregate), CustomFieldType.SingleSelect },
                 { typeof(TextCustomFieldSetupAggregate), CustomFieldType.Text },
             };
-            
+
             response.Type.Should().Be(mapSetupTypeToEnumType[customFieldSetup.GetType()]);
         }
-        
+
         private static void AssertCustomFieldSetup(
             GetCollectionCustomFieldSetupFromProjectResponse.CustomFieldSetupResponse response,
             CustomFieldSetupAggregate customFieldSetup)
@@ -218,13 +229,13 @@ internal static partial class Utils
                 { typeof(SingleSelectCustomFieldSetupAggregate), CustomFieldType.SingleSelect },
                 { typeof(TextCustomFieldSetupAggregate), CustomFieldType.Text },
             };
-            
+
             response.Type.Should().Be(mapSetupTypeToEnumType[customFieldSetup.GetType()]);
         }
 
         private static void AssertNumberCustomFieldSetup(
             CustomFieldSetupAggregate customFieldSetup,
-            CreateCustomFieldSetupOnProjectRequest request)
+            CreateCustomFieldSetupRequest request)
         {
             customFieldSetup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
             var setup = (NumberCustomFieldSetupAggregate)customFieldSetup;
@@ -235,7 +246,7 @@ internal static partial class Utils
 
         private static void AssertSingleSelectCustomFieldSetup(
             CustomFieldSetupAggregate customFieldSetup,
-            CreateCustomFieldSetupOnProjectRequest request)
+            CreateCustomFieldSetupRequest request)
         {
             customFieldSetup.Should().BeOfType<SingleSelectCustomFieldSetupAggregate>();
             var setup = (SingleSelectCustomFieldSetupAggregate)customFieldSetup;
@@ -256,7 +267,7 @@ internal static partial class Utils
 
         private static void AssertTextCustomFieldSetup(
             CustomFieldSetupAggregate customFieldSetup,
-            CreateCustomFieldSetupOnProjectRequest request)
+            CreateCustomFieldSetupRequest request)
         {
             customFieldSetup.Should().BeOfType<TextCustomFieldSetupAggregate>();
             var setup = (TextCustomFieldSetupAggregate)customFieldSetup;
@@ -268,7 +279,8 @@ internal static partial class Utils
 
         private static void AssertSingleSelectOption(
             SingleSelectOption singleSelectOption,
-            CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest singleSelectOptionRequest,
+            CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest
+                singleSelectOptionRequest,
             int customOrderPosition)
         {
             singleSelectOption.Value.Should().Be(singleSelectOptionRequest.Value);

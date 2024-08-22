@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
@@ -55,6 +56,19 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         return result.Match(
             getCollectionResult =>
                 Ok(Mapper.Map<GetCollectionCustomFieldSetupFromProjectResponse>(getCollectionResult)),
+            Problem
+        );
+    }
+
+    [HttpPost("Workspace")]
+    public async Task<IActionResult> CreateOnWorkspace(CreateCustomFieldSetupOnWorkspaceRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<CreateCustomFieldSetupCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            createResult => Ok(Mapper.Map<CreateCustomFieldSetupOnWorkspaceResponse>(createResult)),
             Problem
         );
     }

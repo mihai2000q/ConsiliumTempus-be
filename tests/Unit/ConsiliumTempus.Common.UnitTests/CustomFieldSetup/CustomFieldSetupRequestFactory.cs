@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Create;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
@@ -37,17 +39,36 @@ public static class CustomFieldSetupRequestFactory
         };
     }
 
+    public static CreateCustomFieldSetupOnWorkspaceRequest CreateCreateCustomFieldSetupOnWorkspaceRequest(
+        Guid? workspaceId = null,
+        string name = Constants.CustomFieldSetup.Name,
+        string description = Constants.CustomFieldSetup.Description,
+        CustomFieldType type = CustomFieldType.Text,
+        CreateCustomFieldSetupRequest.NumberCustomFieldSetupRequest? numberCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest? singleSelectCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest? textCustomFieldSetup = null)
+    {
+        return new CreateCustomFieldSetupOnWorkspaceRequest(
+            workspaceId ?? Guid.NewGuid(),
+            name,
+            description,
+            type,
+            numberCustomFieldSetup,
+            singleSelectCustomFieldSetup,
+            textCustomFieldSetup);
+    }
+
     public static CreateCustomFieldSetupOnProjectRequest CreateCreateCustomFieldSetupOnProjectRequest(
         Guid? projectId = null,
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
         CustomFieldType type = CustomFieldType.Text,
-        CreateCustomFieldSetupOnProjectRequest.CreateNumberCustomFieldSetupRequest? numberCustomFieldSetup = null,
-        CreateCustomFieldSetupOnProjectRequest.CreateSingleSelectCustomFieldSetupRequest? singleSelectCustomFieldSetup = null,
-        CreateCustomFieldSetupOnProjectRequest.CreateTextCustomFieldSetupRequest? textCustomFieldSetup = null)
+        CreateCustomFieldSetupRequest.NumberCustomFieldSetupRequest? numberCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest? singleSelectCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest? textCustomFieldSetup = null)
     {
         return new CreateCustomFieldSetupOnProjectRequest(
-            projectId,
+            projectId ?? Guid.NewGuid(),
             name,
             description,
             type,
