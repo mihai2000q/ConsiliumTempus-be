@@ -4,15 +4,21 @@ import { expect } from "../utils/matchers";
 import { deleteUser, registerUser } from "../utils/users.utils";
 import { getPersonalWorkspace } from "../utils/workspaces.utils";
 import { createProject } from "../utils/projects.utils";
-import { getProjectSprints, getProjectStages } from "../utils/project-sprint.utils";
+import { addStageToProjectSprint, getProjectSprints, getProjectStages } from "../utils/project-sprint.utils";
 import CreateProjectTaskRequest from "../types/requests/project-task/CreateProjectTaskRequest";
 import { createProjectTask, getProjectTask, getProjectTasks } from "../utils/project-task.utils";
 import UpdateProjectTaskRequest from "../types/requests/project-task/UpdateProjectTaskRequest";
 import UpdateOverviewProjectTaskRequest from "../types/requests/project-task/UpdateOverviewProjectTaskRequest";
 import MoveProjectTaskRequest from "../types/requests/project-task/MoveProjectTaskRequest";
 import UpdateIsCompletedProjectTaskRequest from "../types/requests/project-task/UpdateIsCompletedProjectTaskRequest";
+import UpdateCustomFieldFromProjectTaskRequest
+  from "../types/requests/project-task/UpdateCustomFieldFromProjectTaskRequest";
+import CreateCustomFieldSetupOnProjectRequest
+  from "../types/requests/custom-field-setup/CreateCustomFieldSetupOnProjectRequest";
+import { createCustomFieldSetup } from "../utils/custom-field-setup.utils";
 
 test.describe('should allow operations on the project task entity', () => {
+  let PROJECT_ID: string
   let STAGE_ID: string
 
   test.beforeEach('should register user and get project id', async ({ request }) => {
@@ -23,9 +29,10 @@ test.describe('should allow operations on the project task entity', () => {
       name: "Project name",
       isPrivate: false
     })
+    PROJECT_ID = project.id
     const sprints = await getProjectSprints(request, project.id)
-    const stages = await getProjectStages(request, sprints[0].id)
-    STAGE_ID = stages[1].id
+    const stage = await addStageToProjectSprint(request, sprints[0].id)
+    STAGE_ID = stage.id
   })
 
   test.afterEach('should delete user', async ({ request }) => {
@@ -336,6 +343,214 @@ test.describe('should allow operations on the project task entity', () => {
       project: expect.any(Object),
       workspace: expect.any(Object),
       customFields: []
+    })
+  })
+
+  test.describe('should update custom field from project task', () => {
+    test('should update number custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Budget",
+        description: "represents budget",
+        type: 'Number',
+        numberCustomFieldSetup: {
+          settings: {
+            decimals: 2,
+            rounding: true
+          }
+        }
+      }
+      const customFieldSetup = await createCustomFieldSetup(request, createCustomFieldSetupOnProjectRequest)
+
+      const createProjectTaskRequest: CreateProjectTaskRequest = {
+        projectStageId: STAGE_ID,
+        name: "task 2"
+      }
+      const task = await createProjectTask(request, createProjectTaskRequest)
+
+      const body: UpdateCustomFieldFromProjectTaskRequest = {
+        id: task.id,
+        customFieldId: task.customFields[0].id,
+        type: 'Number',
+        numberCustomField: {
+          number: 12
+        }
+      }
+      const response = await request.put('/api/projects/tasks/custom-fields', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const newTask = await getProjectTask(request, task.id)
+      expect(newTask).toStrictEqual({
+        name: createProjectTaskRequest.name,
+        description: "",
+        isCompleted: false,
+        assignee: null,
+        stage: expect.any(Object),
+        sprint: expect.any(Object),
+        project: expect.any(Object),
+        workspace: expect.any(Object),
+        customFields: [
+          {
+            id: body.customFieldId,
+            name: customFieldSetup.name,
+            description: customFieldSetup.description,
+            type: body.type,
+            number: body.numberCustomField?.number
+          }
+        ]
+      })
+    })
+
+    test('should update single select custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Priority",
+        description: "Represents a custom field",
+        type: 'SingleSelect',
+        singleSelectCustomFieldSetup: {
+          options: [
+            {
+              id: "1",
+              value: "High",
+              color: "#FF1122"
+            },
+            {
+              id: "2",
+              value: "Low",
+              color: "#1122FF"
+            }
+          ],
+          defaultOptionId: "1"
+        }
+      }
+      const customFieldSetup = await createCustomFieldSetup(request, createCustomFieldSetupOnProjectRequest)
+
+      const createProjectTaskRequest: CreateProjectTaskRequest = {
+        projectStageId: STAGE_ID,
+        name: "task 2"
+      }
+      const task = await createProjectTask(request, createProjectTaskRequest)
+
+      const body: UpdateCustomFieldFromProjectTaskRequest = {
+        id: task.id,
+        customFieldId: task.customFields[0].id,
+        type: 'SingleSelect',
+        singleSelectCustomField: {
+          optionId: task.customFields[0].options[1].id,
+        }
+      }
+      const response = await request.put('/api/projects/tasks/custom-fields', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const newTask = await getProjectTask(request, task.id)
+      expect(newTask).toStrictEqual({
+        name: createProjectTaskRequest.name,
+        description: "",
+        isCompleted: false,
+        assignee: null,
+        stage: expect.any(Object),
+        sprint: expect.any(Object),
+        project: expect.any(Object),
+        workspace: expect.any(Object),
+        customFields: [
+          {
+            id: body.customFieldId,
+            name: customFieldSetup.name,
+            description: customFieldSetup.description,
+            type: body.type,
+            option: {
+              id: task.customFields[0].options[1].id,
+              color: task.customFields[0].options[1].value,
+              value: task.customFields[0].options[1].color
+            },
+            options: [
+              {
+                id: customFieldSetup.options[0].id,
+                color: customFieldSetup.options[0].color,
+                value: customFieldSetup.options[0].value,
+              },
+              {
+                id: customFieldSetup.options[1].id,
+                color: customFieldSetup.options[1].color,
+                value: customFieldSetup.options[1].value,
+              }
+            ]
+          }
+        ]
+      })
+    })
+
+    test('should update text custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Notes",
+        description: "Additional text",
+        type: 'Text',
+        textCustomFieldSetup: { defaultText: undefined }
+      }
+      const customFieldSetup = await createCustomFieldSetup(request, createCustomFieldSetupOnProjectRequest)
+
+      const createProjectTaskRequest: CreateProjectTaskRequest = {
+        projectStageId: STAGE_ID,
+        name: "task 2"
+      }
+      const task = await createProjectTask(request, createProjectTaskRequest)
+
+      const body: UpdateCustomFieldFromProjectTaskRequest = {
+        id: task.id,
+        customFieldId: task.customFields[0].id,
+        type: 'Text',
+        textCustomField: {
+          text: "Some text"
+        }
+      }
+      const response = await request.put('/api/projects/tasks/custom-fields', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const newTask = await getProjectTask(request, task.id)
+      expect(newTask).toStrictEqual({
+        name: createProjectTaskRequest.name,
+        description: "",
+        isCompleted: false,
+        assignee: null,
+        stage: expect.any(Object),
+        sprint: expect.any(Object),
+        project: expect.any(Object),
+        workspace: expect.any(Object),
+        customFields: [
+          {
+            id: body.customFieldId,
+            name: customFieldSetup.name,
+            description: customFieldSetup.description,
+            type: body.type,
+            text: body.textCustomField?.text
+          }
+        ]
+      })
     })
   })
 

@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using ConsiliumTempus.Domain.Common.Enums;
+using ErrorOr;
 using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
@@ -6,7 +7,7 @@ namespace ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 public sealed record UpdateCustomFieldFromProjectTaskCommand(
     Guid Id,
     Guid CustomFieldId,
-    string Type,
+    CustomFieldType Type,
     UpdateCustomFieldFromProjectTaskCommand.NumberCustomFieldCommand? NumberCustomField,
     UpdateCustomFieldFromProjectTaskCommand.SingleSelectCustomFieldCommand? SingleSelectCustomField,
     UpdateCustomFieldFromProjectTaskCommand.TextCustomFieldCommand? TextCustomField)

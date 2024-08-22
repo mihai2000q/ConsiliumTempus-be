@@ -14,22 +14,19 @@ public sealed class UpdateCustomFieldFromProjectTaskCommandValidator
         RuleFor(c => c.CustomFieldId)
             .NotEmpty();
 
-        RuleFor(c => c.Type)
-            .IsEnumName(typeof(CustomFieldType));
-
-        When(c => c.Type == CustomFieldType.Number.ToString(), () =>
+        When(c => c.Type == CustomFieldType.Number, () =>
         {
             RuleFor(c => c.NumberCustomField)
                 .NotNull();
         });
 
-        When(c => c.Type == CustomFieldType.SingleSelect.ToString(), () =>
+        When(c => c.Type == CustomFieldType.SingleSelect, () =>
         {
             RuleFor(c => c.SingleSelectCustomField)
                 .NotNull();
         });
 
-        When(c => c.Type == CustomFieldType.Text.ToString(), () =>
+        When(c => c.Type == CustomFieldType.Text, () =>
         {
             RuleFor(c => c.TextCustomField)
                 .NotNull();

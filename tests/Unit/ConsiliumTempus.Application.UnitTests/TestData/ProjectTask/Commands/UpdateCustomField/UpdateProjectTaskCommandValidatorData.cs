@@ -48,7 +48,7 @@ internal static class UpdateCustomFieldFromProjectTaskCommandValidatorData
             command = new UpdateCustomFieldFromProjectTaskCommand(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                CustomFieldType.SingleSelect.ToString(),
+                CustomFieldType.SingleSelect,
                 null,
                 new UpdateCustomFieldFromProjectTaskCommand.SingleSelectCustomFieldCommand(null),
                 null);
@@ -75,18 +75,6 @@ internal static class UpdateCustomFieldFromProjectTaskCommandValidatorData
                 customFieldId: Guid.Empty,
                 textCustomField: new UpdateCustomFieldFromProjectTaskCommand.TextCustomFieldCommand(null));
             Add(command, nameof(command.CustomFieldId));
-        }
-    }
-
-    internal class GetInvalidTypeCommands : TheoryData<UpdateCustomFieldFromProjectTaskCommand, string>
-    {
-        public GetInvalidTypeCommands()
-        {
-            var command = ProjectTaskCommandFactory.CreateUpdateCustomFieldFromProjectTaskCommandWithType("");
-            Add(command, nameof(command.Type));
-
-            command = ProjectTaskCommandFactory.CreateUpdateCustomFieldFromProjectTaskCommandWithType("not a type");
-            Add(command, nameof(command.Type));
         }
     }
 

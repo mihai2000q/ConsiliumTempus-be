@@ -4,9 +4,11 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateCustomField;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
+using ConsiliumTempus.Domain.Common.Enums;
 
 namespace ConsiliumTempus.Common.UnitTests.ProjectTask;
 
@@ -67,6 +69,23 @@ public static class ProjectTaskRequestFactory
             id ?? Guid.NewGuid(),
             name,
             assigneeId);
+    }
+
+    public static UpdateCustomFieldFromProjectTaskRequest CreateUpdateCustomFieldFromProjectTaskRequest(
+        Guid? id = null,
+        Guid? customFieldId = null,
+        CustomFieldType type = CustomFieldType.Text,
+        UpdateCustomFieldFromProjectTaskRequest.NumberCustomFieldRequest? numberCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.SingleSelectCustomFieldRequest? singleSelectCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.TextCustomFieldRequest? textCustomField = null)
+    {
+        return new UpdateCustomFieldFromProjectTaskRequest(
+            id ?? Guid.NewGuid(),
+            customFieldId ?? Guid.NewGuid(),
+            type,
+            numberCustomField,
+            singleSelectCustomField,
+            textCustomField);
     }
 
     public static UpdateIsCompletedProjectTaskRequest CreateUpdateIsCompletedProjectTaskRequest(

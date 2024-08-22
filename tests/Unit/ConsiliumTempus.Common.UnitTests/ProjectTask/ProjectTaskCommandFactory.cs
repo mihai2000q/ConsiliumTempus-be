@@ -63,22 +63,10 @@ public static class ProjectTaskCommandFactory
         return new UpdateCustomFieldFromProjectTaskCommand(
             id ?? Guid.NewGuid(),
             customFieldId ?? Guid.NewGuid(),
-            type.ToString(),
+            type,
             numberCustomField,
             singleSelectCustomField,
             textCustomField);
-    }
-
-    public static UpdateCustomFieldFromProjectTaskCommand CreateUpdateCustomFieldFromProjectTaskCommandWithType(
-        string type)
-    {
-        return new UpdateCustomFieldFromProjectTaskCommand(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            type,
-            null,
-            null,
-            new UpdateCustomFieldFromProjectTaskCommand.TextCustomFieldCommand(null));
     }
 
     public static UpdateIsCompletedProjectTaskCommand CreateUpdateIsCompletedProjectTaskCommand(

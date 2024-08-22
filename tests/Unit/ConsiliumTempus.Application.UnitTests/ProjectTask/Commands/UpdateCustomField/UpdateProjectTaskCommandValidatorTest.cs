@@ -28,7 +28,6 @@ public class UpdateCustomFieldFromProjectTaskCommandValidatorTest
     [Theory]
     [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidIdCommands))]
     [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidCustomFieldIdCommands))]
-    [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidTypeCommands))]
     [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidNumberCustomFieldCommands))]
     [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidSingleSelectCustomFieldCommands))]
     [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidTextCustomFieldCommands))]

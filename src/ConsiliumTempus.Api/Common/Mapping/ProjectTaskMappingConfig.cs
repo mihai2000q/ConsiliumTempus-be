@@ -4,11 +4,13 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Delete;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateCustomField;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
@@ -34,6 +36,7 @@ public sealed class ProjectTaskMappingConfig : IRegister
         GetCollectionMappings(config);
         CreateMappings(config);
         UpdateMappings(config);
+        UpdateCustomFieldMappings(config);
         UpdateIsCompletedMappings(config);
         UpdateOverviewMappings(config);
         DeleteMappings(config);
@@ -180,6 +183,13 @@ public sealed class ProjectTaskMappingConfig : IRegister
         config.NewConfig<UpdateProjectTaskRequest, UpdateProjectTaskCommand>();
 
         config.NewConfig<UpdateProjectTaskResult, UpdateProjectTaskResponse>();
+    }
+
+    private static void UpdateCustomFieldMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateCustomFieldFromProjectTaskRequest, UpdateCustomFieldFromProjectTaskCommand>();
+
+        config.NewConfig<UpdateCustomFieldFromProjectTaskResult, UpdateCustomFieldFromProjectTaskResponse>();
     }
 
     private static void UpdateIsCompletedMappings(TypeAdapterConfig config)

@@ -4,6 +4,7 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateCustomField;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Domain.Common.Entities;
@@ -73,21 +74,21 @@ internal static partial class Utils
                 {
                     case NumberCustomField numberCustomField:
                         var numberSetup = customFieldSetups
-                            .SingleOrDefault(s => s == numberCustomField.Setup) 
+                                .SingleOrDefault(s => s == numberCustomField.Setup)
                             as NumberCustomFieldSetupAggregate;
                         numberSetup.Should().NotBeNull();
                         numberCustomField.Number.Should().Be(numberSetup!.DefaultNumber);
                         break;
                     case SingleSelectCustomField singleSelectCustomField:
                         var singleSelectSetup = customFieldSetups
-                                .SingleOrDefault(s => s == singleSelectCustomField.Setup) 
+                                .SingleOrDefault(s => s == singleSelectCustomField.Setup)
                             as SingleSelectCustomFieldSetupAggregate;
                         singleSelectSetup.Should().NotBeNull();
                         singleSelectCustomField.Option.Should().Be(singleSelectSetup!.DefaultOption);
                         break;
                     case TextCustomField textCustomField:
                         var textSetup = customFieldSetups
-                                .SingleOrDefault(s => s == textCustomField.Setup) 
+                                .SingleOrDefault(s => s == textCustomField.Setup)
                             as TextCustomFieldSetupAggregate;
                         textSetup.Should().NotBeNull();
                         textCustomField.Text.Should().Be(textSetup!.DefaultText);
@@ -189,6 +190,39 @@ internal static partial class Utils
             newTask.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
+        internal static void AssertUpdateCustomField(
+            ProjectTaskAggregate task,
+            UpdateCustomFieldFromProjectTaskRequest request)
+        {
+            task.Id.Value.Should().Be(request.Id);
+            var customField = task.CustomFields.Single(cf => cf.Id.Value == request.CustomFieldId);
+
+            switch (customField)
+            {
+                case NumberCustomField numberCustomField:
+                    if (request.NumberCustomField!.Number is null)
+                        numberCustomField.Number.Should().BeNull();
+                    else
+                        numberCustomField.Number!.Value.Should().Be(request.NumberCustomField.Number);
+                    break;
+
+                case SingleSelectCustomField singleSelectCustomField:
+                    if (request.SingleSelectCustomField!.OptionId is null)
+                        singleSelectCustomField.Option.Should().BeNull();
+                    else
+                        singleSelectCustomField.Option!.Should().Be(singleSelectCustomField.Setup.Options
+                            .Single(o => o.Id == request.SingleSelectCustomField.OptionId.Value));
+                    break;
+
+                case TextCustomField textCustomField:
+                    if (request.TextCustomField!.Text is null)
+                        textCustomField.Text.Should().BeNull();
+                    else
+                        textCustomField.Text!.Value.Should().Be(request.TextCustomField.Text);
+                    break;
+            }
+        }
+
         internal static void AssertUpdatedIsCompleted(
             ProjectTaskAggregate newTask,
             UpdateIsCompletedProjectTaskRequest request)
@@ -280,7 +314,7 @@ internal static partial class Utils
             response.Id.Should().Be(workspace.Id.Value);
             response.Name.Should().Be(workspace.Name.Value);
         }
-        
+
         private static void AssertCustomFieldResponse(
             GetProjectTaskResponse.CustomFieldResponse response,
             CustomField customField)
@@ -390,7 +424,7 @@ internal static partial class Utils
             response.Name.Should().Be(user.Name.Value);
             response.Email.Should().Be(user.Credentials.Email);
         }
-        
+
         private static void AssertCustomFieldResponse(
             GetCollectionProjectTaskResponse.CustomFieldResponse response,
             CustomField customField)

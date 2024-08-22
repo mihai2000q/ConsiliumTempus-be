@@ -5,12 +5,14 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateCustomField;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
@@ -88,6 +90,19 @@ public sealed class ProjectTaskController(IMapper mapper, ISender mediator) : Ap
 
         return result.Match(
             updateResult => Ok(Mapper.Map<UpdateProjectTaskResponse>(updateResult)),
+            Problem
+        );
+    }
+    
+    [HttpPut("custom-fields")]
+    public async Task<IActionResult> UpdateCustomField(UpdateCustomFieldFromProjectTaskRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateCustomFieldFromProjectTaskCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            updateResult => Ok(Mapper.Map<UpdateCustomFieldFromProjectTaskResponse>(updateResult)),
             Problem
         );
     }

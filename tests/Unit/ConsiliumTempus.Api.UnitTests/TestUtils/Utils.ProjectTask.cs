@@ -4,12 +4,14 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateCustomField;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
@@ -84,6 +86,20 @@ internal static partial class Utils
             return true;
         }
 
+        internal static bool AssertUpdateCustomFieldCommand(
+            UpdateCustomFieldFromProjectTaskCommand command,
+            UpdateCustomFieldFromProjectTaskRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.CustomFieldId.Should().Be(request.CustomFieldId);
+            command.Type.Should().Be(request.Type);
+            AssertNumberCustomFieldRequest(request.NumberCustomField, command.NumberCustomField);
+            AssertSingleSelectCustomFieldRequest(request.SingleSelectCustomField, command.SingleSelectCustomField);
+            AssertTextCustomFieldRequest(request.TextCustomField, command.TextCustomField);
+
+            return true;
+        }
+
         internal static bool AssertUpdateIsCompletedCommand(
             UpdateIsCompletedProjectTaskCommand command,
             UpdateIsCompletedProjectTaskRequest request)
@@ -137,6 +153,45 @@ internal static partial class Utils
             response.Tasks.Zip(result.Tasks)
                 .Should().AllSatisfy(p => AssertProjectTaskResponse(p.First, p.Second));
             response.TotalCount.Should().Be(result.TotalCount);
+        }
+
+        private static void AssertNumberCustomFieldRequest(
+            UpdateCustomFieldFromProjectTaskRequest.NumberCustomFieldRequest? request,
+            UpdateCustomFieldFromProjectTaskCommand.NumberCustomFieldCommand? command)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.Number.Should().Be(request.Number);
+        }
+        
+        private static void AssertSingleSelectCustomFieldRequest(
+            UpdateCustomFieldFromProjectTaskRequest.SingleSelectCustomFieldRequest? request,
+            UpdateCustomFieldFromProjectTaskCommand.SingleSelectCustomFieldCommand? command)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.OptionId.Should().Be(request.OptionId);
+        }
+        
+        private static void AssertTextCustomFieldRequest(
+            UpdateCustomFieldFromProjectTaskRequest.TextCustomFieldRequest? request,
+            UpdateCustomFieldFromProjectTaskCommand.TextCustomFieldCommand? command)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.Text.Should().Be(request.Text);
         }
 
         private static void AssertUserResponse(

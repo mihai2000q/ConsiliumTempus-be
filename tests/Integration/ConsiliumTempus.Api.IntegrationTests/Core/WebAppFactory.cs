@@ -1,6 +1,5 @@
 ﻿using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
 using ConsiliumTempus.Api.IntegrationTests.Core.Authentication;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
