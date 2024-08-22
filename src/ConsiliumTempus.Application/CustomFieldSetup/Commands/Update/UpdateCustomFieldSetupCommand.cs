@@ -26,7 +26,7 @@ public sealed record UpdateCustomFieldSetupCommand(
         decimal? DefaultNumber)
     {
         public sealed record NumberSettingsCommand(
-            string CurrencyCode,
+            string? CurrencyCode,
             int Decimals,
             bool Rounding);
     }

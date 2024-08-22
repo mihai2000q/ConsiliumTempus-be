@@ -20,7 +20,7 @@ public sealed class NumberCustomFieldSettings : ValueObject
         Rounding = rounding;
     }
 
-    public string CurrencyCode { get; init; } = string.Empty;
+    public string? CurrencyCode { get; init; }
     public short Decimals { get; init; }
     public bool Rounding { get; init; }
 
@@ -35,7 +35,7 @@ public sealed class NumberCustomFieldSettings : ValueObject
             rounding);
     }
 
-    protected override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object?> GetEqualityComponents()
     {
         yield return CurrencyCode;
         yield return Decimals;

@@ -38,11 +38,12 @@ public static class FluentValidationExtensions
             .WithMessage("'{PropertyName}' must be valid workspace role");
     }
 
-    public static IRuleBuilderOptions<T, string> IsCurrencyCode<T>(this IRuleBuilder<T, string> ruleBuilder)
+    public static IRuleBuilderOptions<T, string?> IsCurrencyCode<T>(this IRuleBuilder<T, string?> ruleBuilder)
     {
         return ruleBuilder
             .Matches("^[A-Z]{3}$")
-            .WithMessage("'{PropertyName}' must be valid Currency Code");
+            .WithMessage("'{PropertyName}' must be valid Currency Code")
+            .When(s => s is not null);
     }
 
     public static IRuleBuilderOptions<T, string> IsColor<T>(this IRuleBuilder<T, string> ruleBuilder)

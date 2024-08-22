@@ -23,7 +23,7 @@ interface TextCustomFieldSetup {
 }
 
 interface NumberSettings {
-  currencyCode: string,
+  currencyCode?: string,
   decimals: number,
   rounding: boolean,
 }

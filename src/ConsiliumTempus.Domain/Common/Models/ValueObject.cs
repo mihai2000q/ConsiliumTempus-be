@@ -27,7 +27,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
 
     public static bool operator !=(ValueObject? left, ValueObject? right)
     {
-        if (left is null && right is null) return true;
+        if (left is null && right is null) return false;
         return left is null || !left.Equals(right);
     }
 

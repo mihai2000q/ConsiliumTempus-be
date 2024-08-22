@@ -16,7 +16,7 @@ public sealed record CreateCustomFieldSetupOnProjectRequest(
         decimal? DefaultNumber)
     {
         public sealed record NumberSettingsRequest(
-            string CurrencyCode,
+            string? CurrencyCode,
             int Decimals,
             bool Rounding);
     }
