@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -80,6 +81,16 @@ internal static partial class Utils
                         throw new ArgumentOutOfRangeException(nameof(request));
                 }
             });
+        }
+
+        public static void AssertUpdateWorkspace(
+            UpdateWorkspaceCustomFieldSetupRequest request,
+            CustomFieldSetupAggregate customFieldSetup,
+            UserAggregate user)
+        {
+            customFieldSetup.Workspace.Should().NotBeNull();
+            customFieldSetup.Workspace!.Id.Should().Be(request.WorkspaceId);
+            customFieldSetup.Audit.ShouldBeUpdated(user);
         }
         
         public static void AssertGetResponse(

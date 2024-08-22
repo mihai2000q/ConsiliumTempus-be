@@ -4,7 +4,6 @@ using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
-using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectTask.UpdateCustomField;

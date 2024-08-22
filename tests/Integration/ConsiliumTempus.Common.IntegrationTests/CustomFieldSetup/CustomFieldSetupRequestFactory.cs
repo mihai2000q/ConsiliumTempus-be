@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Enums;
 
@@ -51,5 +52,14 @@ public static class CustomFieldSetupRequestFactory
         {
             ProjectId = projectId ?? Guid.NewGuid()
         };
+    }
+
+    public static UpdateWorkspaceCustomFieldSetupRequest CreateUpdateWorkspaceCustomFieldSetupRequest(
+        Guid? id = null,
+        Guid? workspaceId = null)
+    {
+        return new UpdateWorkspaceCustomFieldSetupRequest(
+            id ?? Guid.NewGuid(),
+            workspaceId ?? Guid.NewGuid());
     }
 }

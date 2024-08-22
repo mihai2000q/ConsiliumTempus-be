@@ -2,8 +2,10 @@
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Entities;
@@ -61,6 +63,16 @@ internal static partial class Utils
                 .Be(request.SingleSelectCustomFieldSetup!.DefaultOptionId);
 
             command.TextCustomFieldSetup?.DefaultText.Should().Be(request.TextCustomFieldSetup!.DefaultText);
+
+            return true;
+        }
+
+        public static bool AssertUpdateWorkspaceCustomFieldSetupCommand(
+            UpdateWorkspaceCustomFieldSetupCommand command,
+            UpdateWorkspaceCustomFieldSetupRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.WorkspaceId.Should().Be(request.WorkspaceId);
 
             return true;
         }
