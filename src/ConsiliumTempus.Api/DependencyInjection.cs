@@ -18,10 +18,7 @@ public static class DependencyInjection
             .AddSingleton<ProblemDetailsFactory, ConsiliumTempusProblemDetailsFactory>()
             .AddCorsPolicies()
             .AddControllers()
-            .AddJsonOptions(o =>
-            {
-                o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+            .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
     }
 
     public static void AddLogger(this ILoggingBuilder logging, IConfiguration configuration)

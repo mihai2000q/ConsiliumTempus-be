@@ -118,6 +118,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
     public Task<List<ProjectAggregate>> GetListByOwner(UserId userId, CancellationToken cancellationToken = default)
     {
         return dbContext.Projects
+            .AsSplitQuery()
             .Include(p => p.AllowedMembers)
             .Include(p => p.Workspace.Memberships)
             .Where(p => p.Owner.Id == userId)
