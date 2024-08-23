@@ -6,10 +6,12 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
@@ -104,6 +106,16 @@ internal static partial class Utils
             DeleteCustomFieldSetupRequest request)
         {
             command.Id.Should().Be(request.Id);
+
+            return true;
+        }
+
+        public static bool AssertRemoveCustomFieldSetupFromProjectCommand(
+            RemoveCustomFieldSetupFromProjectCommand command,
+            RemoveCustomFieldSetupFromProjectRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.ProjectId.Should().Be(request.ProjectId);
 
             return true;
         }

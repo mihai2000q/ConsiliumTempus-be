@@ -51,7 +51,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<ProjectAggregate?> GetWithStagesAndWorkspace(ProjectId id,
+    public async Task<ProjectAggregate?> GetWithStages(ProjectId id,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Projects

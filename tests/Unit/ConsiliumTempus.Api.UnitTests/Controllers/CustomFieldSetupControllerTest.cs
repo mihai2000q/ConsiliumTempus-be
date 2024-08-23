@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestData;
@@ -12,6 +13,7 @@ using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
@@ -411,6 +413,53 @@ public class CustomFieldSetupControllerTest
             .Received(1)
             .Send(Arg.Is<DeleteCustomFieldSetupCommand>(c =>
                 Utils.CustomFieldSetup.AssertDeleteCustomFieldSetupCommand(c, request)));
+
+        outcome.ValidateError(error);
+    }
+    
+    [Fact]
+    public async Task RemoveFromProject_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest();
+
+        var result = CustomFieldSetupResultFactory.CreateRemoveCustomFieldSetupFromProjectResult();
+        _mediator
+            .Send(Arg.Any<RemoveCustomFieldSetupFromProjectCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.RemoveFromProject(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<RemoveCustomFieldSetupFromProjectCommand>(c =>
+                Utils.CustomFieldSetup.AssertRemoveCustomFieldSetupFromProjectCommand(c, request)));
+
+        var response = outcome.ToResponse<RemoveCustomFieldSetupFromProjectResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task RemoveFromProject_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest();
+
+        var error = Errors.CustomFieldSetup.NotFound;
+        _mediator
+            .Send(Arg.Any<RemoveCustomFieldSetupFromProjectCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.RemoveFromProject(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<RemoveCustomFieldSetupFromProjectCommand>(c =>
+                Utils.CustomFieldSetup.AssertRemoveCustomFieldSetupFromProjectCommand(c, request)));
 
         outcome.ValidateError(error);
     }

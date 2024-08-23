@@ -19,7 +19,7 @@ public interface IProjectRepository
     Task<ProjectAggregate?> GetWithCollaboratorsAndAllowedMembers(ProjectId projectId,
         CancellationToken cancellationToken = default);
 
-    Task<ProjectAggregate?> GetWithStagesAndWorkspace(ProjectId id, CancellationToken cancellationToken = default);
+    Task<ProjectAggregate?> GetWithStages(ProjectId id, CancellationToken cancellationToken = default);
 
     Task<List<ProjectAggregate>> GetListByUser(
         UserId userId,

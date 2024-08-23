@@ -5,11 +5,13 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.User;
@@ -20,6 +22,20 @@ internal static partial class Utils
 {
     internal static class CustomFieldSetup
     {
+        public static void AssertAddToProject(
+            AddCustomFieldSetupToProjectRequest request,
+            CustomFieldSetupAggregate customFieldSetup,
+            UserAggregate user)
+        {
+            customFieldSetup.Projects.Should().ContainSingle(p => p.Id.Value == request.ProjectId);
+            customFieldSetup.Audit.ShouldBeUpdated(user);
+
+            customFieldSetup.Workspace!.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            var project = customFieldSetup.Projects.Single(p => p.Id.Value == request.ProjectId);
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
         internal static void AssertCreation(
             CreateCustomFieldSetupRequest request,
             CustomFieldSetupAggregate customFieldSetup,
@@ -44,7 +60,8 @@ internal static partial class Utils
                     customFieldSetup.Projects.Should().HaveCount(1);
                     customFieldSetup.Projects[0].Id.Value.Should().Be(projectRequest.ProjectId);
                     customFieldSetup.Projects[0].LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-                    customFieldSetup.Projects[0].Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+                    customFieldSetup.Projects[0].Workspace.LastActivity.Should()
+                        .BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
                     break;
             }
 
@@ -95,14 +112,19 @@ internal static partial class Utils
                 }
             });
         }
-        
-        public static void AssertAddToProject(
-            AddCustomFieldSetupToProjectRequest request,
+
+        public static void AssertRemoveFromProject(
+            RemoveCustomFieldSetupFromProjectRequest request,
             CustomFieldSetupAggregate customFieldSetup,
+            ProjectAggregate project,
             UserAggregate user)
         {
-            customFieldSetup.Projects.Should().ContainSingle(p => p.Id.Value == request.ProjectId);
+            customFieldSetup.Projects.Should().NotContain(p => p.Id.Value == request.ProjectId);
             customFieldSetup.Audit.ShouldBeUpdated(user);
+
+            customFieldSetup.Workspace!.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         public static void AssertUpdateWorkspace(

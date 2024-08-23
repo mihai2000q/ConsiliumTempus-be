@@ -459,7 +459,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
     ])
   })
 
-  test('should update workspace', async ({ request }) => {
+  test('should update workspace on custom field setup', async ({ request }) => {
     const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
       projectId: PROJECT_ID,
       name: "New Text Custom Field",
@@ -510,6 +510,41 @@ test.describe('should allow operations on the custom field setup entity', () => 
     })
 
     const response = await request.delete(`/api/customFieldSetups/${textCustomField.id}`, useToken())
+
+    expect(response.ok()).toBeTruthy()
+
+    expect(await response.json()).toStrictEqual({
+      message: expect.any(String)
+    })
+
+    const customFieldSetups = await getCustomFieldSetupsFromProject(request, PROJECT_ID)
+    expect(customFieldSetups).toHaveLength(0)
+    expect(customFieldSetups).toStrictEqual(expect.not.arrayContaining([
+      {
+        id: textCustomField.id,
+        name: textCustomField.name,
+        description: textCustomField.description,
+        type: 'Text'
+      }
+    ]))
+  })
+
+  test('should remove custom field setup from project', async ({ request }) => {
+    const createCustomFieldSetupOnWorkspaceRequest: CreateCustomFieldSetupOnWorkspaceRequest = {
+      workspaceId: WORKSPACE_ID,
+      name: "New Text Custom Field",
+      description: "Represents a custom field",
+      type: 'Text',
+      textCustomFieldSetup: {
+        defaultText: undefined
+      }
+    }
+    const textCustomField = await createCustomFieldSetupOnWorkspace(request, createCustomFieldSetupOnWorkspaceRequest)
+
+    const response = await request.post(
+      `/api/customFieldSetups/${textCustomField.id}/remove-project/${PROJECT_ID}`,
+      useToken()
+    )
 
     expect(response.ok()).toBeTruthy()
 

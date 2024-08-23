@@ -26,6 +26,7 @@ public sealed class AddCustomFieldSetupToProjectCommandHandler(
         if (customFieldSetup.Projects.Contains(project)) return Errors.CustomFieldSetup.ProjectAlreadyPresent;
 
         customFieldSetup.AddProject(project);
+        customFieldSetup.Workspace.RefreshActivity();
         project.RefreshActivity();
 
         return new AddCustomFieldSetupToProjectResult();

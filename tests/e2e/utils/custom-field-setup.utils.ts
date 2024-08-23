@@ -6,7 +6,7 @@ import CreateCustomFieldSetupOnWorkspaceRequest
   from "../types/requests/custom-field-setup/CreateCustomFieldSetupOnWorkspaceRequest";
 
 export async function getCustomFieldSetupsFromWorkspace(request: APIRequestContext, workspaceId: string) {
-  const response = await request.get(`/api/customFieldSetups/project/${workspaceId}`, useToken())
+  const response = await request.get(`/api/customFieldSetups/workspace/${workspaceId}`, useToken())
   expect(response.ok()).toBeTruthy()
   return (await response.json()).customFieldSetups
 }

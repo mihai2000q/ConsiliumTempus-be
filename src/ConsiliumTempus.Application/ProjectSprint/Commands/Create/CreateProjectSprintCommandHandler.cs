@@ -22,7 +22,7 @@ public sealed class CreateProjectSprintCommandHandler(
     public async Task<ErrorOr<CreateProjectSprintResult>> Handle(CreateProjectSprintCommand command,
         CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetWithStagesAndWorkspace(
+        var project = await projectRepository.GetWithStages(
             ProjectId.Create(command.ProjectId),
             cancellationToken);
         if (project is null) return Errors.Project.NotFound;

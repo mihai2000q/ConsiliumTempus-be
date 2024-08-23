@@ -33,8 +33,8 @@ public class CustomFieldSetupControllerAddToProjectValidationTest(WebAppFactory 
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
-            id: Guid.Empty, 
-            projectId: Guid.Empty);  
+            id: Guid.Empty,
+            projectId: Guid.Empty);
 
         // Act
         var outcome = await Client.Post("api/customFieldSetups/Add-Project", request);

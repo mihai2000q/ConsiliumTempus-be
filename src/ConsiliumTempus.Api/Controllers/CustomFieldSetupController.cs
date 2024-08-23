@@ -5,10 +5,12 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
@@ -96,7 +98,7 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            createResult => Ok(Mapper.Map<AddCustomFieldSetupToProjectResponse>(createResult)),
+            addProjectResult => Ok(Mapper.Map<AddCustomFieldSetupToProjectResponse>(addProjectResult)),
             Problem
         );
     }
@@ -122,6 +124,19 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
 
         return result.Match(
             deleteResult => Ok(Mapper.Map<DeleteCustomFieldSetupResponse>(deleteResult)),
+            Problem
+        );
+    }
+
+    [HttpDelete("{id:guid}/Remove-Project/{projectId:guid}")]
+    public async Task<IActionResult> RemoveFromProject(RemoveCustomFieldSetupFromProjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<RemoveCustomFieldSetupFromProjectCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            removeProjectResult => Ok(Mapper.Map<RemoveCustomFieldSetupFromProjectResponse>(removeProjectResult)),
             Problem
         );
     }

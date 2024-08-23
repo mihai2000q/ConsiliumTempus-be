@@ -10,33 +10,34 @@ using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.AddToProject;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.RemoveFromProject;
 
 [Collection(nameof(CustomFieldSetupControllerCollection))]
-public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
+public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new CustomFieldSetupData())
 {
     [Fact]
     public async Task
-        AddCustomFieldSetupToProject_WhenRequestHasNumberType_ShouldAddCustomFieldSetupToProjectAndReturnSuccessResponse()
+        RemoveCustomFieldSetupFromProject_WhenRequestHasNumberType_ShouldRemoveCustomFieldSetupFromProjectAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
         var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
-        var project = CustomFieldSetupData.Projects.First();
-        var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
+        var project = customFieldSetup.Projects[0];
+        var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest(
             customFieldSetup.Id.Value,
             project.Id.Value);
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Post("api/customFieldSetups/Add-Project", request);
+        var outcome = await Client.Delete("api/customFieldSetups/" +
+                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var response = await outcome.Content.ReadFromJsonAsync<UpdateWorkspaceCustomFieldSetupResponse>();
-        response!.Message.Should().Be("Custom Field Setup has been successfully added to project!");
+        response!.Message.Should().Be("Custom Field Setup has been successfully removed from project!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedCustomFieldSetup = await dbContext.CustomFieldSetups
@@ -45,38 +46,11 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
             .Include(cfs => cfs.Projects)
             .SingleAsync(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id));
 
-        Utils.CustomFieldSetup.AssertAddToProject(request, updatedCustomFieldSetup, user);
+        Utils.CustomFieldSetup.AssertRemoveFromProject(request, updatedCustomFieldSetup, project, user);
     }
 
     [Fact]
-    public async Task
-        AddCustomFieldSetupToProject_WhenProjectIsAlreadyPresent_ShouldReturnCustomFieldSetupProjectAlreadyPresentError()
-    {
-        // Arrange
-        var user = CustomFieldSetupData.Users.First();
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
-        var project = CustomFieldSetupData.Projects[2];
-        var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
-            customFieldSetup.Id.Value,
-            project.Id.Value);
-
-        // Act
-        Client.UseCustomToken(user);
-        var outcome = await Client.Post("api/customFieldSetups/Add-Project", request);
-
-        // Assert
-        await outcome.ValidateError(Errors.CustomFieldSetup.ProjectAlreadyPresent);
-
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.CustomFieldSetups.SingleOrDefault(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id))
-            .Should().NotBeNull();
-        dbContext.Projects.SingleOrDefault(p => p.Id == ProjectId.Create(request.ProjectId))
-            .Should().NotBeNull();
-        customFieldSetup.Projects.Should().Contain(project);
-    }
-
-    [Fact]
-    public async Task AddCustomFieldSetupToProject_WhenProjectIsNotFound_ShouldReturnProjectNotFoundError()
+    public async Task RemoveCustomFieldSetupFromProject_WhenProjectIsNotFound_ShouldReturnProjectNotFoundError()
     {
         // Arrange
         var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
@@ -85,7 +59,8 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
             Guid.NewGuid());
 
         // Act
-        var outcome = await Client.Post("api/customFieldSetups/Add-Project", request);
+        var outcome = await Client.Delete("api/customFieldSetups/" +
+                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
 
         // Assert
         await outcome.ValidateError(Errors.Project.NotFound);
@@ -108,8 +83,8 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(user);
-        var outcome = await Client.Post("api/customFieldSetups/Add-Project", request);
-
+        var outcome = await Client.Delete("api/customFieldSetups/" +
+                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
         // Assert
         await outcome.ValidateError(Errors.CustomFieldSetup.NotGlobal);
 
@@ -127,8 +102,8 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
             Guid.NewGuid());
 
         // Act
-        var outcome = await Client.Post("api/customFieldSetups/Add-Project", request);
-
+        var outcome = await Client.Delete("api/customFieldSetups/" +
+                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
         // Assert
         await outcome.ValidateError(Errors.CustomFieldSetup.NotFound);
 
