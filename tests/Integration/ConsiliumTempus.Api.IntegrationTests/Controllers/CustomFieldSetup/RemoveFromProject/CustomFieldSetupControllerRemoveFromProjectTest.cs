@@ -18,7 +18,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
 {
     [Fact]
     public async Task
-        RemoveCustomFieldSetupFromProject_WhenRequestHasNumberType_ShouldRemoveCustomFieldSetupFromProjectAndReturnSuccessResponse()
+        RemoveCustomFieldSetupFromProject_WhenIsSuccessful_ShouldRemoveCustomFieldSetupFromProjectAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
@@ -44,9 +44,17 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
             .AsNoTracking()
             .Include(cfs => cfs.Audit)
             .Include(cfs => cfs.Projects)
+            .Include(cfs => cfs.Workspace)
             .SingleAsync(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id));
 
-        Utils.CustomFieldSetup.AssertRemoveFromProject(request, updatedCustomFieldSetup, project, user);
+        var updatedProject = await dbContext.Projects
+            .Include(p => p.Sprints)
+            .ThenInclude(ps => ps.Stages)
+            .ThenInclude(ps => ps.Tasks)
+            .ThenInclude(pt => pt.CustomFields)
+            .SingleAsync(p => p.Id == ProjectId.Create(request.ProjectId));
+
+        Utils.CustomFieldSetup.AssertRemoveFromProject(request, updatedCustomFieldSetup, updatedProject, user);
     }
 
     [Fact]

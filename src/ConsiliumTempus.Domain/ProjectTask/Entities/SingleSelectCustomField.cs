@@ -23,7 +23,7 @@ public sealed class SingleSelectCustomField : CustomField
     }
 
     public SingleSelectOption? Option { get; private set; }
-    public SingleSelectCustomFieldSetupAggregate Setup { get; init; } = null!;
+    public override SingleSelectCustomFieldSetupAggregate Setup { get; } = null!;
 
     public static SingleSelectCustomField Create(
         SingleSelectOption? option,

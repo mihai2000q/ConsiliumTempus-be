@@ -17,8 +17,8 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new CustomFieldSetupData())
 {
     [Fact]
-    public async Task
-        AddCustomFieldSetupToProject_WhenRequestHasNumberType_ShouldAddCustomFieldSetupToProjectAndReturnSuccessResponse()
+    public async Task 
+        AddCustomFieldSetupToProject_WhenIsSuccessful_ShouldAddCustomFieldSetupToProjectAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
@@ -43,9 +43,17 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
             .AsNoTracking()
             .Include(cfs => cfs.Audit)
             .Include(cfs => cfs.Projects)
+            .Include(cfs => cfs.Workspace)
             .SingleAsync(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id));
 
-        Utils.CustomFieldSetup.AssertAddToProject(request, updatedCustomFieldSetup, user);
+        var updatedProject = await dbContext.Projects
+            .Include(p => p.Sprints)
+            .ThenInclude(ps => ps.Stages)
+            .ThenInclude(ps => ps.Tasks)
+            .ThenInclude(pt => pt.CustomFields)
+            .SingleAsync(p => p.Id == ProjectId.Create(request.ProjectId));
+
+        Utils.CustomFieldSetup.AssertAddToProject(request, updatedCustomFieldSetup, updatedProject, user);
     }
 
     [Fact]

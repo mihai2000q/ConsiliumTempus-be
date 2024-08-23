@@ -2,7 +2,6 @@
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.CustomFieldSetup;
-using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
@@ -132,15 +131,8 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         ProjectAggregate project,
         CancellationToken cancellationToken = default)
     {
-        var mapSetupToCustomField = new Dictionary<Type, Type>
-        {
-            { typeof(NumberCustomFieldSetupAggregate), typeof(NumberCustomField) },
-            { typeof(SingleSelectCustomFieldSetupAggregate), typeof(SingleSelectCustomField) },
-            { typeof(TextCustomFieldSetupAggregate), typeof(TextCustomField) },
-        };
-
         var customFields = await dbContext.Set<CustomField>()
-            .Where(cf => cf.GetType() == mapSetupToCustomField[customFieldSetup.GetType()])
+            .OfCustomFieldType(customFieldSetup)
             .Where(cf => cf.ProjectTask.Stage.Sprint.Project == project)
             .ToListAsync(cancellationToken);
         dbContext.Set<CustomField>().RemoveRange(customFields);

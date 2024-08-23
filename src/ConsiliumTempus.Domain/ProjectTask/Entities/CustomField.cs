@@ -19,6 +19,7 @@ public abstract class CustomField : Entity<CustomFieldId>
     }
 
     public ProjectTaskAggregate ProjectTask { get; init; } = null!;
+    public abstract CustomFieldSetupAggregate Setup { get; }
 
     public static CustomField Create(CustomFieldSetupAggregate setup, ProjectTaskAggregate projectTask)
     {

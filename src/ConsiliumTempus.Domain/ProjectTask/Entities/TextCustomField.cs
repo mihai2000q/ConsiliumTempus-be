@@ -23,7 +23,7 @@ public sealed class TextCustomField : CustomField
     }
 
     public Text? Text { get; private set; }
-    public TextCustomFieldSetupAggregate Setup { get; init; } = null!;
+    public override TextCustomFieldSetupAggregate Setup { get; } = null!;
 
     public static TextCustomField Create(
         Text? text,

@@ -25,13 +25,50 @@ internal static partial class Utils
         public static void AssertAddToProject(
             AddCustomFieldSetupToProjectRequest request,
             CustomFieldSetupAggregate customFieldSetup,
+            ProjectAggregate project,
             UserAggregate user)
         {
-            customFieldSetup.Projects.Should().ContainSingle(p => p.Id.Value == request.ProjectId);
+            customFieldSetup.Id.Value.Should().Be(request.Id);
+            customFieldSetup.Projects.Should().Contain(project);
             customFieldSetup.Audit.ShouldBeUpdated(user);
 
+            project.Id.Value.Should().Be(request.ProjectId);
+            project.Sprints
+                .SelectMany(s => s.Stages)
+                .SelectMany(s => s.Tasks)
+                .Should().AllSatisfy(task =>
+                {
+                    var customField = task.CustomFields.SingleOrDefault(cf => cf.Setup == customFieldSetup);
+                    customField.Should().NotBeNull();
+                    customField!.ProjectTask.Should().Be(task);
+
+                    switch (customFieldSetup)
+                    {
+                        case NumberCustomFieldSetupAggregate numberSetup:
+                            customField.Should().BeOfType<NumberCustomField>();
+                            if (numberSetup.DefaultNumber is null)
+                                ((NumberCustomField)customField).Number.Should().BeNull();
+                            else
+                                ((NumberCustomField)customField).Number!.Value
+                                    .Should().Be(numberSetup.DefaultNumber.Value);
+                            break;
+
+                        case SingleSelectCustomFieldSetupAggregate singleSelectSetup:
+                            customField.Should().BeOfType<SingleSelectCustomField>();
+                            ((SingleSelectCustomField)customField).Option.Should().Be(singleSelectSetup.DefaultOption);
+                            break;
+
+                        case TextCustomFieldSetupAggregate textSetup:
+                            customField.Should().BeOfType<TextCustomField>();
+                            if (textSetup.DefaultText is null)
+                                ((TextCustomField)customField).Text.Should().BeNull();
+                            else
+                                ((TextCustomField)customField).Text!.Value.Should().Be(textSetup.DefaultText.Value);
+                            break;
+                    }
+                });
+
             customFieldSetup.Workspace!.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            var project = customFieldSetup.Projects.Single(p => p.Id.Value == request.ProjectId);
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
@@ -119,8 +156,16 @@ internal static partial class Utils
             ProjectAggregate project,
             UserAggregate user)
         {
+            customFieldSetup.Id.Value.Should().Be(request.Id);
             customFieldSetup.Projects.Should().NotContain(p => p.Id.Value == request.ProjectId);
             customFieldSetup.Audit.ShouldBeUpdated(user);
+
+            project.Id.Value.Should().Be(request.ProjectId);
+            project.Sprints
+                .SelectMany(s => s.Stages)
+                .SelectMany(s => s.Tasks)
+                .Should().AllSatisfy(t =>
+                    t.CustomFields.Should().NotContain(cf => cf.Setup == customFieldSetup));
 
             customFieldSetup.Workspace!.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

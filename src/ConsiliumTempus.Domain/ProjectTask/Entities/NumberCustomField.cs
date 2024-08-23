@@ -23,7 +23,7 @@ public sealed class NumberCustomField : CustomField
     }
 
     public DecimalNumber? Number { get; private set; }
-    public NumberCustomFieldSetupAggregate Setup { get; init; } = null!;
+    public override NumberCustomFieldSetupAggregate Setup { get; } = null!;
 
     public static NumberCustomField Create(
         DecimalNumber? decimalNumber,

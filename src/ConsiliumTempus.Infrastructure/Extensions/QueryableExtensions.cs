@@ -2,11 +2,27 @@
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 
 namespace ConsiliumTempus.Infrastructure.Extensions;
 
 public static class QueryableExtensions
 {
+    public static IQueryable<CustomField> OfCustomFieldType(
+        this IQueryable<CustomField> queryable,
+        CustomFieldSetupAggregate customFieldSetup)
+    {
+        return customFieldSetup switch
+        {
+            NumberCustomFieldSetupAggregate => queryable.OfType<NumberCustomField>(),
+            SingleSelectCustomFieldSetupAggregate => queryable.OfType<SingleSelectCustomField>(),
+            TextCustomFieldSetupAggregate => queryable.OfType<TextCustomField>(),
+            _ => throw new ArgumentOutOfRangeException(nameof(customFieldSetup), customFieldSetup, null)
+        };
+    }
+
     public static IQueryable<TSource> ApplyFilters<TSource>(
         this IQueryable<TSource> queryable,
         IEnumerable<IFilter<TSource>> filters)
