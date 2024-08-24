@@ -21,7 +21,12 @@ internal sealed class EntityBuilder<TEntity>
 
     public EntityBuilder<TEntity> WithProperty(string propertyName, object? newProperty)
     {
-        var propertyInfo = typeof(TEntity).GetProperty(propertyName)!;
+        var properties = typeof(TEntity).GetProperties();
+        var propertyInfo = properties.SingleOrDefault(p => 
+                               p.Name == propertyName &&
+                               p.DeclaringType == typeof(TEntity))
+                           ?? properties.FirstOrDefault(p => p.Name == propertyName && p.CanWrite)
+                           ?? properties.First(p => p.Name == propertyName);
         if (propertyInfo.CanWrite)
             propertyInfo.SetValue(Entity, newProperty);
         else
