@@ -132,8 +132,8 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         CancellationToken cancellationToken = default)
     {
         var customFields = await dbContext.Set<CustomField>()
-            .OfCustomFieldType(customFieldSetup)
             .Where(cf => cf.ProjectTask.Stage.Sprint.Project == project)
+            .Where(cf => cf.Setup == customFieldSetup)
             .ToListAsync(cancellationToken);
         dbContext.Set<CustomField>().RemoveRange(customFields);
     }
