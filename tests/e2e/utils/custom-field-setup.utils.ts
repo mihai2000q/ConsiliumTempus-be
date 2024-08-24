@@ -4,6 +4,8 @@ import CreateCustomFieldSetupOnProjectRequest
   from "../types/requests/custom-field-setup/CreateCustomFieldSetupOnProjectRequest";
 import CreateCustomFieldSetupOnWorkspaceRequest
   from "../types/requests/custom-field-setup/CreateCustomFieldSetupOnWorkspaceRequest";
+import AddCustomFieldSetupToProjectRequest
+  from "../types/requests/custom-field-setup/AddCustomFieldSetupToProjectRequest";
 
 export async function getCustomFieldSetupsFromWorkspace(request: APIRequestContext, workspaceId: string) {
   const response = await request.get(`/api/customFieldSetups/workspace/${workspaceId}`, useToken())
@@ -43,4 +45,15 @@ export async function createCustomFieldSetupOnProject(
 
   return (await getCustomFieldSetupsFromProject(request, body.projectId))
     .filter((cfs: { name: string }) => cfs.name === body.name)[0]
+}
+
+export async function addCustomFieldSetupToProject(
+  request: APIRequestContext,
+  body: AddCustomFieldSetupToProjectRequest,
+) {
+  const response = await request.post('/api/customFieldSetups/add-project', {
+    ...useToken(),
+    data: body
+  })
+  expect(response.ok()).toBeTruthy()
 }

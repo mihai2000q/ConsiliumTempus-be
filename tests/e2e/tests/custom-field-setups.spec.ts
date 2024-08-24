@@ -7,6 +7,7 @@ import { expect } from "../utils/matchers";
 import CreateCustomFieldSetupOnProjectRequest
   from "../types/requests/custom-field-setup/CreateCustomFieldSetupOnProjectRequest";
 import {
+  addCustomFieldSetupToProject,
   createCustomFieldSetupOnProject,
   createCustomFieldSetupOnWorkspace,
   getCustomFieldSetupsFromProject, getCustomFieldSetupsFromWorkspace
@@ -540,6 +541,11 @@ test.describe('should allow operations on the custom field setup entity', () => 
       }
     }
     const textCustomField = await createCustomFieldSetupOnWorkspace(request, createCustomFieldSetupOnWorkspaceRequest)
+
+    await addCustomFieldSetupToProject(request, {
+      id: textCustomField.id,
+      projectId: PROJECT_ID
+    })
 
     const response = await request.post(
       `/api/customFieldSetups/${textCustomField.id}/remove-project/${PROJECT_ID}`,
