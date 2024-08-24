@@ -37,8 +37,8 @@ internal static partial class Utils
             AssertProjectSprintResponse(response.Sprint, task.Stage.Sprint);
             AssertProjectResponse(response.Project, task.Stage.Sprint.Project);
             AssertWorkspaceResponse(response.Workspace, task.Stage.Sprint.Project.Workspace);
-            response.CustomFields.OrderBy(cf => cf.Id) // TODO: Remove Once ordered
-                .Zip(task.CustomFields.OrderBy(cf => cf.Id.Value))
+            response.CustomFields
+                .Zip(task.CustomFields.OrderBy(cf => cf.Setup.Audit.CreatedDateTime))
                 .Should().AllSatisfy(x => AssertCustomFieldResponse(x.First, x.Second));
         }
 
@@ -405,8 +405,8 @@ internal static partial class Utils
             response.Name.Should().Be(projectTask.Name.Value);
             response.IsCompleted.Should().Be(projectTask.IsCompleted.Value);
             AssertUserResponse(response.Assignee, projectTask.Assignee);
-            response.CustomFields.OrderBy(cf => cf.Id) // TODO: Remove Once ordered
-                .Zip(projectTask.CustomFields.OrderBy(cf => cf.Id.Value))
+            response.CustomFields
+                .Zip(projectTask.CustomFields.OrderBy(cf => cf.Setup.Audit.CreatedDateTime))
                 .Should().AllSatisfy(x => AssertCustomFieldResponse(x.First, x.Second));
         }
 
