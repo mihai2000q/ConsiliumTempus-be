@@ -105,12 +105,13 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
             .Where(t => t.Stage.Sprint.Project.Id == projectId)
             .ToListAsync(cancellationToken);
     }
-    
+
     public async Task DeleteCustomFieldsByWorkspace(
         WorkspaceAggregate workspace,
         CancellationToken cancellationToken = default)
     {
         var customFields = await dbContext.Set<CustomField>()
+            .IgnoreAutoIncludes()
             .Where(cf => cf.ProjectTask.Stage.Sprint.Project.Workspace == workspace)
             .ToListAsync(cancellationToken);
         dbContext.Set<CustomField>().RemoveRange(customFields);
@@ -121,6 +122,7 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         CancellationToken cancellationToken = default)
     {
         var customFields = await dbContext.Set<CustomField>()
+            .IgnoreAutoIncludes()
             .Where(cf => cf.ProjectTask.Stage.Sprint.Project == project)
             .ToListAsync(cancellationToken);
         dbContext.Set<CustomField>().RemoveRange(customFields);
@@ -132,15 +134,18 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         CancellationToken cancellationToken = default)
     {
         var customFields = await dbContext.Set<CustomField>()
+            .IgnoreAutoIncludes()
+            .OfCustomFieldType(customFieldSetup)
             .Where(cf => cf.ProjectTask.Stage.Sprint.Project == project)
             .Where(cf => cf.Setup == customFieldSetup)
             .ToListAsync(cancellationToken);
         dbContext.Set<CustomField>().RemoveRange(customFields);
     }
-    
+
     public async Task DeleteCustomFieldsByTask(ProjectTaskId id, CancellationToken cancellationToken = default)
     {
         var customFields = await dbContext.Set<CustomField>()
+            .IgnoreAutoIncludes()
             .Where(cf => cf.ProjectTask.Id == id)
             .ToListAsync(cancellationToken);
         dbContext.Set<CustomField>().RemoveRange(customFields);

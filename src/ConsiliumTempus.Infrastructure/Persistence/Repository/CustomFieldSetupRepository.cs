@@ -63,6 +63,7 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
     public async Task DeleteByProject(ProjectAggregate project, CancellationToken cancellationToken = default)
     {
         var setups = await dbContext.CustomFieldSetups
+            .IgnoreAutoIncludes()
             .Where(c => c.Workspace == null)
             .Where(cfs => cfs.Projects.Contains(project))
             .ToListAsync(cancellationToken);
@@ -75,6 +76,7 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
         CancellationToken cancellationToken = default)
     {
         var setups = await dbContext.CustomFieldSetups
+            .IgnoreAutoIncludes()
             .Where(cfs => cfs.Workspace == workspace || 
                           (cfs.Workspace == null && cfs.Projects.Any() && projects.Contains(cfs.Projects.First())))
             .ToListAsync(cancellationToken);
