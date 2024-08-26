@@ -3,6 +3,7 @@ using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using NSubstitute.ReturnsExtensions;
 
@@ -46,10 +47,19 @@ public class DeleteCustomFieldSetupCommandHandlerTest
         outcome.Value.Should().Be(new DeleteCustomFieldSetupResult());
 
         customFieldSetup.Workspace?.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+        customFieldSetup.DomainEvents
+            .Should()
+            .HaveSameCount(customFieldSetup.Projects)
+            .And
+            .AllBeOfType<RemovedCustomFieldSetupFromProject>();
         foreach (var project in customFieldSetup.Projects)
         {
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+            customFieldSetup.DomainEvents
+                .OfType<RemovedCustomFieldSetupFromProject>()
+                .Should()
+                .ContainSingle(d => d.CustomFieldSetup == customFieldSetup && d.Project == project);
         }
     }
 

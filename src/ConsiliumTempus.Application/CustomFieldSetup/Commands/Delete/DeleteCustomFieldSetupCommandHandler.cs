@@ -1,6 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ErrorOr;
 using MediatR;
@@ -20,7 +21,11 @@ public sealed class DeleteCustomFieldSetupCommandHandler(ICustomFieldSetupReposi
 
         customFieldSetupRepository.Remove(customFieldSetup);
         customFieldSetup.Workspace?.RefreshActivity();
-        customFieldSetup.Projects.ForEach(p => p.RefreshActivity());
+        customFieldSetup.Projects.ForEach(project =>
+        {
+            customFieldSetup.AddDomainEvent(new RemovedCustomFieldSetupFromProject(customFieldSetup, project));
+            project.RefreshActivity();
+        });
 
         return new DeleteCustomFieldSetupResult();
     }
