@@ -62,7 +62,7 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         CancellationToken cancellationToken = default)
     {
         return await dbContext.ProjectTasks
-            .Include(t => t.CustomFields.OrderBy(cf => cf.Setup.Audit.CreatedDateTime))
+            .Include(t => t.CustomFields)
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .Include(t => t.Stage.Sprint.Stages.OrderBy(s => s.CustomOrderPosition.Value))
             .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);

@@ -52,7 +52,10 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
     public DateOnly? DueDate { get; private set; }
     public TimeSpan? EstimatedDuration { get; private set; }
     public ProjectStage Stage { get; private set; } = default!;
-    public IReadOnlyList<CustomField> CustomFields => _customFields.AsReadOnly();
+    public IReadOnlyList<CustomField> CustomFields => _customFields
+        .OrderBy(cf => cf.Setup.Audit.CreatedDateTime)
+        .ToList()
+        .AsReadOnly();
     public IReadOnlyList<ProjectTaskComment> Comments => _comments.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
