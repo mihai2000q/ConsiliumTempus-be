@@ -72,26 +72,31 @@ public sealed class ProjectTaskMappingConfig : IRegister
             .Map(dest => dest.Name, src => src.Name.Value);
 
         config.NewConfig<NumberCustomField, GetProjectTaskResponse.NumberCustomFieldResponse>()
-            .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.Number)
-            .Map(dest => dest.Name, src => src.Setup.Name.Value)
-            .Map(dest => dest.Description, src => src.Setup.Description.Value)
-            .Map(dest => dest.Number, src => src.Number!.Value);
+            .ConstructUsing(src => new GetProjectTaskResponse.NumberCustomFieldResponse(
+                src.Id.Value,
+                src.Setup.Name.Value,
+                src.Setup.Description.Value,
+                CustomFieldType.Number,
+                src.Number == null ? null : src.Number.Value));
         config.NewConfig<SingleSelectCustomField, GetProjectTaskResponse.SingleSelectCustomFieldResponse>()
-            .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.SingleSelect)
-            .Map(dest => dest.Name, src => src.Setup.Name.Value)
-            .Map(dest => dest.Description, src => src.Setup.Description.Value)
-            .Map(dest => dest.AvailableOptions, src => src.Setup.Options);
+            .ConstructUsing(src => new GetProjectTaskResponse.SingleSelectCustomFieldResponse(
+                src.Id.Value,
+                src.Setup.Name.Value,
+                src.Setup.Description.Value,
+                CustomFieldType.SingleSelect,
+                src.Option == null
+                    ? null
+                    : src.Option.Adapt<GetProjectTaskResponse.SingleSelectCustomFieldResponse
+                        .SingleSelectOptionResponse>(),
+                src.Setup.Options.Adapt<List<GetProjectTaskResponse.SingleSelectCustomFieldResponse
+                    .SingleSelectOptionResponse>>()));
         config.NewConfig<TextCustomField, GetProjectTaskResponse.TextCustomFieldResponse>()
-            .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.Text)
-            .Map(dest => dest.Name, src => src.Setup.Name.Value)
-            .Map(dest => dest.Description, src => src.Setup.Description.Value)
-            .Map(dest => dest.Text, src => src.Text!.Value);
+            .ConstructUsing(src => new GetProjectTaskResponse.TextCustomFieldResponse(
+                src.Id.Value,
+                src.Setup.Name.Value,
+                src.Setup.Description.Value,
+                CustomFieldType.Text,
+                src.Text == null ? null : src.Text.Value));
 
         config.NewConfig<CustomField, GetProjectTaskResponse.CustomFieldResponse>()
             .MapWith(src => Convert(src));
@@ -130,25 +135,29 @@ public sealed class ProjectTaskMappingConfig : IRegister
             .Map(dest => dest.Email, src => src.Credentials.Email);
 
         config.NewConfig<NumberCustomField, GetCollectionProjectTaskResponse.NumberCustomFieldResponse>()
-            .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.Number)
-            .Map(dest => dest.Name, src => src.Setup.Name.Value)
-            .Map(dest => dest.Description, src => src.Setup.Description.Value)
-            .Map(dest => dest.Number, src => src.Number!.Value);
+            .ConstructUsing(src => new GetCollectionProjectTaskResponse.NumberCustomFieldResponse(
+                src.Id.Value,
+                src.Setup.Name.Value,
+                src.Setup.Description.Value,
+                CustomFieldType.Number,
+                src.Number == null ? null : src.Number.Value));
         config.NewConfig<SingleSelectCustomField, GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse>()
-            .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.SingleSelect)
-            .Map(dest => dest.Name, src => src.Setup.Name.Value)
-            .Map(dest => dest.Description, src => src.Setup.Description.Value);
+            .ConstructUsing(src => new GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse(
+                src.Id.Value,
+                src.Setup.Name.Value,
+                src.Setup.Description.Value,
+                CustomFieldType.SingleSelect,
+                src.Option == null
+                    ? null
+                    : src.Option.Adapt<GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse.
+                        SingleSelectOptionResponse>()));
         config.NewConfig<TextCustomField, GetCollectionProjectTaskResponse.TextCustomFieldResponse>()
-            .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.Text)
-            .Map(dest => dest.Name, src => src.Setup.Name.Value)
-            .Map(dest => dest.Description, src => src.Setup.Description.Value)
-            .Map(dest => dest.Text, src => src.Text!.Value);
+            .ConstructUsing(src => new GetCollectionProjectTaskResponse.TextCustomFieldResponse(
+                src.Id.Value,
+                src.Setup.Name.Value,
+                src.Setup.Description.Value,
+                CustomFieldType.Text,
+                src.Text == null ? null : src.Text.Value));
 
         config.NewConfig<CustomField, GetCollectionProjectTaskResponse.CustomFieldResponse>()
             .MapWith(src => ConvertCollection(src));
