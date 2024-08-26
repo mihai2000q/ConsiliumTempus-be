@@ -7,6 +7,8 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
+using ConsiliumTempus.Infrastructure.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.Delete;
 
@@ -36,6 +38,13 @@ public class CustomFieldSetupControllerDeleteTest(WebAppFactory factory)
         dbContext.CustomFieldSetups.Should().HaveCount(CustomFieldSetupData.CustomFieldSetups.Length - 1);
         (await dbContext.CustomFieldSetups.FindAsync(customFieldSetup.Id))
             .Should().BeNull();
+
+        dbContext.Set<CustomField>()
+            .OfCustomFieldType(customFieldSetup)
+            .Where(cf => cf.Setup == customFieldSetup)
+            .ToList()
+            .Should()
+            .BeEmpty();
     }
 
     [Fact]
