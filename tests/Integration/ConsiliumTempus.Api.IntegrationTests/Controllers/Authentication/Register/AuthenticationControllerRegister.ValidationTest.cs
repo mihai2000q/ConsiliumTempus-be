@@ -4,7 +4,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Authentication;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Register;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Authentication.Register;
 
 [Collection(nameof(AuthenticationControllerCollection))]
 public class AuthenticationControllerRegisterValidationTest(WebAppFactory factory)

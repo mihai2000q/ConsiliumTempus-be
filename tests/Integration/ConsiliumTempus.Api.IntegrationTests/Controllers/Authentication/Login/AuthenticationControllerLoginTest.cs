@@ -9,7 +9,7 @@ using ConsiliumTempus.Domain.Authentication;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Login;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Authentication.Login;
 
 [Collection(nameof(AuthenticationControllerCollection))]
 public class AuthenticationControllerLoginTest(WebAppFactory factory)

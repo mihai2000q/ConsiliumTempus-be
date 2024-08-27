@@ -4,7 +4,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Authentication;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Refresh;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Authentication.Refresh;
 
 [Collection(nameof(AuthenticationControllerCollection))]
 public class AuthenticationControllerRefreshValidationTest(WebAppFactory factory)

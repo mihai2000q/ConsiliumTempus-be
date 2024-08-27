@@ -10,7 +10,7 @@ using ConsiliumTempus.Domain.Authentication.ValueObjects;
 using ConsiliumTempus.Domain.Common.Errors;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Auth.Refresh;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Authentication.Refresh;
 
 [Collection(nameof(AuthenticationControllerCollection))]
 public class AuthenticationControllerRefreshTest(WebAppFactory factory)
