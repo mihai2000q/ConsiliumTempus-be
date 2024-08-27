@@ -107,7 +107,7 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             // stage is placed on upper position
             for (var pos = CustomOrderPosition + 1; pos <= overStage.CustomOrderPosition; pos++)
             {
-                Sprint.Stages[pos.Value].UpdateCustomOrderPosition(--pos);
+                Sprint.Stages[pos.Value].UpdateCustomOrderPosition(pos - 1);
             }
         }
         else
@@ -115,7 +115,7 @@ public sealed class ProjectStage : Entity<ProjectStageId>
             // stage is placed on lower position
             for (var pos = overStage.CustomOrderPosition; pos < CustomOrderPosition; pos++)
             {
-                Sprint.Stages[pos.Value].UpdateCustomOrderPosition(++pos);
+                Sprint.Stages[pos.Value].UpdateCustomOrderPosition(pos + 1);
             }
         }
 

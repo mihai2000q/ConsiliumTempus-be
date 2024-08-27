@@ -94,7 +94,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
             // option is placed on upper position
             for (var pos = option.CustomOrderPosition + 1; pos <= overOption.CustomOrderPosition; pos++)
             {
-                Options[pos.Value].UpdateCustomOrderPosition(--pos);
+                Options[pos.Value].UpdateCustomOrderPosition(pos - 1);
             }
         }
         else
@@ -102,7 +102,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
             // option is placed on lower position
             for (var pos = overOption.CustomOrderPosition; pos < option.CustomOrderPosition; pos++)
             {
-                Options[pos.Value].UpdateCustomOrderPosition(++pos);
+                Options[pos.Value].UpdateCustomOrderPosition(pos + 1);
             }
         }
 
