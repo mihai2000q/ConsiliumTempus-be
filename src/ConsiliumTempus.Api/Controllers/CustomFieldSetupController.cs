@@ -26,6 +26,8 @@ namespace ConsiliumTempus.Api.Controllers;
 
 public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator) : ApiController(mapper, mediator)
 {
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
+    [HasPermission(Permissions.ReadCustomFieldSetup)]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get(GetCustomFieldSetupRequest request, CancellationToken cancellationToken)
     {
@@ -38,6 +40,7 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HasPermission(Permissions.ReadCollectionCustomFieldSetupFromWorkspace)]
     [HttpGet("Workspace/{workspaceId:guid}")]
     public async Task<IActionResult> GetCollectionFromWorkspace(
         GetCollectionCustomFieldSetupFromWorkspaceRequest request,
@@ -53,6 +56,8 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
+    [HasPermission(Permissions.ReadCollectionCustomFieldSetupFromProject)]
     [HttpGet("Project/{projectId:guid}")]
     public async Task<IActionResult> GetCollectionFromProject(
         GetCollectionCustomFieldSetupFromProjectRequest request,
@@ -68,6 +73,7 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HasPermission(Permissions.CreateCustomFieldSetupOnWorkspace)]
     [HttpPost("Workspace")]
     public async Task<IActionResult> CreateOnWorkspace(CreateCustomFieldSetupOnWorkspaceRequest request,
         CancellationToken cancellationToken)
@@ -81,6 +87,8 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
+    [HasPermission(Permissions.CreateCustomFieldSetupOnProject)]
     [HttpPost("Project")]
     public async Task<IActionResult> CreateOnProject(CreateCustomFieldSetupOnProjectRequest request,
         CancellationToken cancellationToken)
@@ -94,6 +102,7 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HasPermission(Permissions.AddCustomFieldSetupToProject)]
     [HttpPost("Add-Project")]
     public async Task<IActionResult> AddToProject(AddCustomFieldSetupToProjectRequest request,
         CancellationToken cancellationToken)
@@ -107,6 +116,8 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
+    [HasPermission(Permissions.UpdateCustomFieldSetup)]
     [HttpPut]
     public async Task<IActionResult> Update(UpdateCustomFieldSetupRequest request, CancellationToken cancellationToken)
     {
@@ -118,6 +129,9 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
             Problem
         );
     }
+
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
+    [HasPermission(Permissions.UpdateWorkspaceCustomFieldSetup)]
     [HttpPut("Workspace")]
     public async Task<IActionResult> UpdateWorkspace(UpdateWorkspaceCustomFieldSetupRequest request,
         CancellationToken cancellationToken)
@@ -131,6 +145,8 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
+    [HasPermission(Permissions.DeleteCustomFieldSetup)]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(DeleteCustomFieldSetupRequest request, CancellationToken cancellationToken)
     {
@@ -143,6 +159,7 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HasPermission(Permissions.RemoveCustomFieldSetupFromProject)]
     [HttpDelete("{id:guid}/Remove-Project/{projectId:guid}")]
     public async Task<IActionResult> RemoveFromProject(RemoveCustomFieldSetupFromProjectRequest request,
         CancellationToken cancellationToken)
