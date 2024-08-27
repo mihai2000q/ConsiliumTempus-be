@@ -80,7 +80,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
     {
         for (var i = option.CustomOrderPosition.Value + 1; i < _options.Count; i++)
         {
-            _options[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
+            Options[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
         }
         _options.Remove(option);
     }
@@ -91,18 +91,18 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
 
         if (option.CustomOrderPosition < overOption.CustomOrderPosition)
         {
-            // stage is placed on upper position
-            for (var i = option.CustomOrderPosition.Value + 1; i <= overOption.CustomOrderPosition.Value; i++)
+            // option is placed on upper position
+            for (var pos = option.CustomOrderPosition + 1; pos <= overOption.CustomOrderPosition; pos++)
             {
-                _options[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
+                Options[pos.Value].UpdateCustomOrderPosition(--pos);
             }
         }
         else
         {
-            // stage is placed on lower position
-            for (var i = overOption.CustomOrderPosition.Value; i < option.CustomOrderPosition.Value; i++)
+            // option is placed on lower position
+            for (var pos = overOption.CustomOrderPosition; pos < option.CustomOrderPosition; pos++)
             {
-                _options[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
+                Options[pos.Value].UpdateCustomOrderPosition(++pos);
             }
         }
 

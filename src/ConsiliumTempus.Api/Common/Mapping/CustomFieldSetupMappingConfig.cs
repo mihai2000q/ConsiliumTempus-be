@@ -6,10 +6,12 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Update;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
@@ -30,6 +32,7 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
         GetCollectionFromWorkspaceMappings(config);
         CreateOnWorkspaceMappings(config);
         CreateOnProjectMappings(config);
+        UpdateMappings(config);
         UpdateWorkspaceMappings(config);
         DeleteMappings(config);
         RemoveFromProjectMappings(config);
@@ -136,6 +139,13 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
         config.NewConfig<CreateCustomFieldSetupOnProjectRequest, CreateCustomFieldSetupCommand>();
 
         config.NewConfig<CreateCustomFieldSetupResult, CreateCustomFieldSetupOnProjectResponse>();
+    }
+
+    private static void UpdateMappings(TypeAdapterConfig config)
+    {
+        config.NewConfig<UpdateCustomFieldSetupRequest, UpdateCustomFieldSetupCommand>();
+
+        config.NewConfig<UpdateCustomFieldSetupResult, UpdateCustomFieldSetupResponse>();
     }
 
     private static void UpdateWorkspaceMappings(TypeAdapterConfig config)

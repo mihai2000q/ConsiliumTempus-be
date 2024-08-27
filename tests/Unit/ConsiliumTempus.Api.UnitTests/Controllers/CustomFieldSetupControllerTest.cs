@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Update;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestData;
@@ -14,6 +15,7 @@ using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
@@ -319,6 +321,53 @@ public class CustomFieldSetupControllerTest
             .Received(1)
             .Send(Arg.Is<AddCustomFieldSetupToProjectCommand>(c =>
                 Utils.CustomFieldSetup.AssertAddCustomFieldSetupToProjectCommand(c, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task Update_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest();
+
+        var result = CustomFieldSetupResultFactory.CreateUpdateCustomFieldSetupResult();
+        _mediator
+            .Send(Arg.Any<UpdateCustomFieldSetupCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.Update(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateCustomFieldSetupCommand>(c =>
+                Utils.CustomFieldSetup.AssertUpdateCustomFieldSetupCommand(c, request)));
+
+        var response = outcome.ToResponse<UpdateCustomFieldSetupResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task Update_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest();
+
+        var error = Errors.CustomFieldSetup.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdateCustomFieldSetupCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.Update(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateCustomFieldSetupCommand>(c =>
+                Utils.CustomFieldSetup.AssertUpdateCustomFieldSetupCommand(c, request)));
 
         outcome.ValidateError(error);
     }

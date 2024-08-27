@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -25,6 +26,11 @@ public static class CustomFieldSetupResultFactory
     public static AddCustomFieldSetupToProjectResult CreateAddCustomFieldSetupToProjectResult()
     {
         return new AddCustomFieldSetupToProjectResult();
+    }
+
+    public static UpdateCustomFieldSetupResult CreateUpdateCustomFieldSetupResult()
+    {
+        return new UpdateCustomFieldSetupResult();
     }
 
     public static UpdateWorkspaceCustomFieldSetupResult CreateUpdateWorkspaceCustomFieldSetupResult()

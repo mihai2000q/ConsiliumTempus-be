@@ -103,6 +103,17 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HttpPut]
+    public async Task<IActionResult> Update(UpdateCustomFieldSetupRequest request, CancellationToken cancellationToken)
+    {
+        var command = Mapper.Map<UpdateCustomFieldSetupCommand>(request);
+        var result = await Mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            deleteResult => Ok(Mapper.Map<UpdateCustomFieldSetupResponse>(deleteResult)),
+            Problem
+        );
+    }
     [HttpPut("Workspace")]
     public async Task<IActionResult> UpdateWorkspace(UpdateWorkspaceCustomFieldSetupRequest request,
         CancellationToken cancellationToken)

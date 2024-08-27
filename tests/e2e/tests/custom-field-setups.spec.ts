@@ -9,7 +9,7 @@ import CreateCustomFieldSetupOnProjectRequest
 import {
   addCustomFieldSetupToProject,
   createCustomFieldSetupOnProject,
-  createCustomFieldSetupOnWorkspace,
+  createCustomFieldSetupOnWorkspace, getCustomFieldSetup,
   getCustomFieldSetupsFromProject, getCustomFieldSetupsFromWorkspace
 } from "../utils/custom-field-setup.utils";
 import UpdateWorkspaceCustomFieldSetupRequest
@@ -18,6 +18,7 @@ import AddCustomFieldSetupToProjectRequest
   from "../types/requests/custom-field-setup/AddCustomFieldSetupToProjectRequest";
 import CreateCustomFieldSetupOnWorkspaceRequest
   from "../types/requests/custom-field-setup/CreateCustomFieldSetupOnWorkspaceRequest";
+import UpdateCustomFieldSetupRequest from "../types/requests/custom-field-setup/UpdateCustomFieldSetupRequest";
 
 test.describe('should allow operations on the custom field setup entity', () => {
   let WORKSPACE_ID: string
@@ -458,6 +459,444 @@ test.describe('should allow operations on the custom field setup entity', () => 
         type: 'Text'
       }
     ])
+  })
+
+  test.describe('should allow update of custom field', () => {
+    test('should update number custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Budget",
+        description: "Represents a custom field",
+        type: 'Number',
+        numberCustomFieldSetup: {
+          settings: {
+            currencyCode: "USD",
+            decimals: 2,
+            rounding: true
+          },
+          defaultNumber: 0
+        }
+      }
+      const numberCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+
+      const body: UpdateCustomFieldSetupRequest = {
+        id: numberCustomField.id,
+        name: "New Budget",
+        description: "no description",
+        type: "Number",
+        numberCustomFieldSetup: {
+          settings: {
+            currencyCode: "EUR",
+            decimals: 3,
+            rounding: true
+          },
+          defaultNumber: undefined
+        }
+      }
+      const response = await request.put(`/api/customFieldSetups`, {
+        ...useToken(),
+        data: body
+      })
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetup = await getCustomFieldSetup(request, numberCustomField.id)
+      expect(customFieldSetup).toStrictEqual({
+        customFieldSetup: {
+          $type: expect.any(String),
+          id: numberCustomField.id,
+          name: body.name,
+          description: body.description,
+          type: "Number",
+          settings: {
+            currencyCode: body.numberCustomFieldSetup!.settings.currencyCode,
+            decimals: body.numberCustomFieldSetup!.settings.decimals,
+            rounding: body.numberCustomFieldSetup!.settings.rounding,
+          },
+          defaultNumber: body.numberCustomFieldSetup?.defaultNumber
+        }
+      })
+    })
+
+    test.describe('should allow update of single select custom field' , () => {
+      test('should update single select custom field', async ({ request }) => {
+        const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+          projectId: PROJECT_ID,
+          name: "Priority",
+          description: "Represents a custom field",
+          type: 'SingleSelect',
+          singleSelectCustomFieldSetup: {
+            options: [
+              {
+                id: "1",
+                value: "High",
+                color: "#FF1122"
+              },
+              {
+                id: "2",
+                value: "Low",
+                color: "#1122FF"
+              }
+            ],
+            defaultOptionId: "1"
+          }
+        }
+        const singleSelectCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+
+        const body: UpdateCustomFieldSetupRequest = {
+          id: singleSelectCustomField.id,
+          name: "New setup",
+          description: "no description",
+          type: "SingleSelect",
+          singleSelectCustomFieldSetup: {
+            defaultOptionId: singleSelectCustomField.options[1].id,
+          }
+        }
+        const response = await request.put(`/api/customFieldSetups`, {
+          ...useToken(),
+          data: body
+        })
+
+        expect(response.ok()).toBeTruthy()
+
+        expect(await response.json()).toStrictEqual({
+          message: expect.any(String)
+        })
+
+        const customFieldSetup = await getCustomFieldSetup(request, singleSelectCustomField.id)
+        expect(customFieldSetup).toStrictEqual({
+          customFieldSetup: {
+            $type: expect.any(String),
+            id: singleSelectCustomField.id,
+            name: body.name,
+            description: body.description,
+            type: "SingleSelect",
+            options: [
+              singleSelectCustomField.options[0],
+              singleSelectCustomField.options[1]
+            ],
+            defaultOption: {
+              id: body.singleSelectCustomFieldSetup?.defaultOptionId,
+              value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].value,
+              color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].color,
+            }
+          }
+        })
+      })
+
+      test('should update single select custom field with add operation', async ({ request }) => {
+        const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+          projectId: PROJECT_ID,
+          name: "Priority",
+          description: "Represents a custom field",
+          type: 'SingleSelect',
+          singleSelectCustomFieldSetup: {
+            options: [
+              {
+                id: "1",
+                value: "High",
+                color: "#FF1122"
+              },
+              {
+                id: "2",
+                value: "Low",
+                color: "#1122FF"
+              }
+            ],
+            defaultOptionId: "1"
+          }
+        }
+        const singleSelectCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+
+        const body: UpdateCustomFieldSetupRequest = {
+          id: singleSelectCustomField.id,
+          name: "New setup",
+          description: "no description",
+          type: "SingleSelect",
+          singleSelectCustomFieldSetup: {
+            operation: "Add",
+            newOption: {
+              color: "#214fc5",
+              value: "Medium"
+            }
+          }
+        }
+        const response = await request.put(`/api/customFieldSetups`, {
+          ...useToken(),
+          data: body
+        })
+
+        expect(response.ok()).toBeTruthy()
+
+        expect(await response.json()).toStrictEqual({
+          message: expect.any(String)
+        })
+
+        const customFieldSetup = await getCustomFieldSetup(request, singleSelectCustomField.id)
+        expect(customFieldSetup).toStrictEqual({
+          customFieldSetup: {
+            $type: expect.any(String),
+            id: singleSelectCustomField.id,
+            name: body.name,
+            description: body.description,
+            type: "SingleSelect",
+            options: [
+              singleSelectCustomField.options[0],
+              singleSelectCustomField.options[1],
+              {
+                id: expect.any(String),
+                value: body.singleSelectCustomFieldSetup?.newOption?.value,
+                color: body.singleSelectCustomFieldSetup?.newOption?.color,
+              }
+            ],
+            defaultOption: null
+          }
+        })
+      })
+
+      test('should update single select custom field with update operation', async ({ request }) => {
+        const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+          projectId: PROJECT_ID,
+          name: "Priority",
+          description: "Represents a custom field",
+          type: 'SingleSelect',
+          singleSelectCustomFieldSetup: {
+            options: [
+              {
+                id: "1",
+                value: "High",
+                color: "#FF1122"
+              },
+              {
+                id: "2",
+                value: "Low",
+                color: "#1122FF"
+              }
+            ],
+            defaultOptionId: "1"
+          }
+        }
+        const singleSelectCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+
+        const body: UpdateCustomFieldSetupRequest = {
+          id: singleSelectCustomField.id,
+          name: "New setup",
+          description: "no description",
+          type: "SingleSelect",
+          singleSelectCustomFieldSetup: {
+            operation: "Update",
+            newOption: {
+              color: "#214fc5",
+              value: "Medium"
+            },
+            optionId: singleSelectCustomField.options[1].id
+          }
+        }
+        const response = await request.put(`/api/customFieldSetups`, {
+          ...useToken(),
+          data: body
+        })
+
+        expect(response.ok()).toBeTruthy()
+
+        expect(await response.json()).toStrictEqual({
+          message: expect.any(String)
+        })
+
+        const customFieldSetup = await getCustomFieldSetup(request, singleSelectCustomField.id)
+        expect(customFieldSetup).toStrictEqual({
+          customFieldSetup: {
+            $type: expect.any(String),
+            id: singleSelectCustomField.id,
+            name: body.name,
+            description: body.description,
+            type: "SingleSelect",
+            options: [
+              singleSelectCustomField.options[0],
+              {
+                id: body.singleSelectCustomFieldSetup?.optionId,
+                value: body.singleSelectCustomFieldSetup?.newOption?.value,
+                color: body.singleSelectCustomFieldSetup?.newOption?.color,
+              },
+            ],
+            defaultOption: null
+          }
+        })
+      })
+
+      test('should update single select custom field with move operation', async ({ request }) => {
+        const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+          projectId: PROJECT_ID,
+          name: "Priority",
+          description: "Represents a custom field",
+          type: 'SingleSelect',
+          singleSelectCustomFieldSetup: {
+            options: [
+              {
+                id: "1",
+                value: "High",
+                color: "#FF1122"
+              },
+              {
+                id: "2",
+                value: "Low",
+                color: "#1122FF"
+              }
+            ],
+            defaultOptionId: "1"
+          }
+        }
+        const singleSelectCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+
+        const body: UpdateCustomFieldSetupRequest = {
+          id: singleSelectCustomField.id,
+          name: "New setup",
+          description: "no description",
+          type: "SingleSelect",
+          singleSelectCustomFieldSetup: {
+            operation: "Move",
+            optionId: singleSelectCustomField.options[0].id,
+            overOptionId: singleSelectCustomField.options[1].id,
+          }
+        }
+        const response = await request.put(`/api/customFieldSetups`, {
+          ...useToken(),
+          data: body
+        })
+
+        expect(response.ok()).toBeTruthy()
+
+        expect(await response.json()).toStrictEqual({
+          message: expect.any(String)
+        })
+
+        const customFieldSetup = await getCustomFieldSetup(request, singleSelectCustomField.id)
+        expect(customFieldSetup).toStrictEqual({
+          customFieldSetup: {
+            $type: expect.any(String),
+            id: singleSelectCustomField.id,
+            name: body.name,
+            description: body.description,
+            type: "SingleSelect",
+            options: [
+              singleSelectCustomField.options[1],
+              singleSelectCustomField.options[0],
+            ],
+            defaultOption: null
+          }
+        })
+      })
+
+      test('should update single select custom field with remove operation', async ({ request }) => {
+        const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+          projectId: PROJECT_ID,
+          name: "Priority",
+          description: "Represents a custom field",
+          type: 'SingleSelect',
+          singleSelectCustomFieldSetup: {
+            options: [
+              {
+                id: "1",
+                value: "High",
+                color: "#FF1122"
+              },
+              {
+                id: "2",
+                value: "Low",
+                color: "#1122FF"
+              }
+            ],
+            defaultOptionId: "1"
+          }
+        }
+        const singleSelectCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+
+        const body: UpdateCustomFieldSetupRequest = {
+          id: singleSelectCustomField.id,
+          name: "New setup",
+          description: "no description",
+          type: "SingleSelect",
+          singleSelectCustomFieldSetup: {
+            operation: "Remove",
+            optionId: singleSelectCustomField.options[1].id
+          }
+        }
+        const response = await request.put(`/api/customFieldSetups`, {
+          ...useToken(),
+          data: body
+        })
+
+        expect(response.ok()).toBeTruthy()
+
+        expect(await response.json()).toStrictEqual({
+          message: expect.any(String)
+        })
+
+        const customFieldSetup = await getCustomFieldSetup(request, singleSelectCustomField.id)
+        expect(customFieldSetup).toStrictEqual({
+          customFieldSetup: {
+            $type: expect.any(String),
+            id: singleSelectCustomField.id,
+            name: body.name,
+            description: body.description,
+            type: "SingleSelect",
+            options: [
+              singleSelectCustomField.options[0]
+            ],
+            defaultOption: null
+          }
+        })
+      })
+    })
+
+    test('should update text custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Priority",
+        description: "Represents a custom field",
+        type: 'Text',
+        textCustomFieldSetup: {
+          defaultText: "some default text"
+        }
+      }
+      const textCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+
+      const body: UpdateCustomFieldSetupRequest = {
+        id: textCustomField.id,
+        name: "New setup",
+        description: "no description",
+        type: "Text",
+        textCustomFieldSetup: {
+          defaultText: undefined
+        }
+      }
+      const response = await request.put(`/api/customFieldSetups`, {
+        ...useToken(),
+        data: body
+      })
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetup = await getCustomFieldSetup(request, textCustomField.id)
+      expect(customFieldSetup).toStrictEqual({
+        customFieldSetup: {
+          $type: expect.any(String),
+          id: textCustomField.id,
+          name: body.name,
+          description: body.description,
+          type: "Text",
+          defaultText: body.textCustomFieldSetup?.defaultText,
+        }
+      })
+    })
   })
 
   test('should update workspace on custom field setup', async ({ request }) => {

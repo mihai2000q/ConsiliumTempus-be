@@ -68,22 +68,10 @@ public static class CustomFieldSetupCommandFactory
             id ?? Guid.NewGuid(),
             name,
             description,
-            type.ToString(),
+            type,
             numberCustomFieldSetup,
             singleSelectCustomFieldSetup,
             textCustomFieldSetup);
-    }
-
-    public static UpdateCustomFieldSetupCommand CreateUpdateCustomFieldSetupCommandWithType(string type)
-    {
-        return new UpdateCustomFieldSetupCommand(
-            Guid.NewGuid(),
-            Constants.CustomFieldSetup.Name,
-            Constants.CustomFieldSetup.Description,
-            type,
-            null,
-            null,
-            new UpdateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
     }
 
     public static UpdateWorkspaceCustomFieldSetupCommand CreateUpdateWorkspaceCustomFieldSetupCommand(

@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Update;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -23,8 +24,9 @@ public static class CustomFieldSetupRequestFactory
         };
     }
 
-    public static GetCollectionCustomFieldSetupFromWorkspaceRequest CreateGetCollectionCustomFieldSetupFromWorkspaceRequest(
-        Guid? workspaceId = null)
+    public static GetCollectionCustomFieldSetupFromWorkspaceRequest
+        CreateGetCollectionCustomFieldSetupFromWorkspaceRequest(
+            Guid? workspaceId = null)
     {
         return new GetCollectionCustomFieldSetupFromWorkspaceRequest
         {
@@ -78,7 +80,7 @@ public static class CustomFieldSetupRequestFactory
             singleSelectCustomFieldSetup,
             textCustomFieldSetup);
     }
-    
+
     public static AddCustomFieldSetupToProjectRequest CreateAddCustomFieldSetupToProjectRequest(
         Guid? id = null,
         Guid? projectId = null)
@@ -87,7 +89,26 @@ public static class CustomFieldSetupRequestFactory
             id ?? Guid.NewGuid(),
             projectId ?? Guid.NewGuid());
     }
-    
+
+    public static UpdateCustomFieldSetupRequest CreateUpdateCustomFieldSetupRequest(
+        Guid? id = null,
+        string name = Constants.CustomFieldSetup.Name,
+        string description = Constants.CustomFieldSetup.Description,
+        CustomFieldType type = CustomFieldType.Text,
+        UpdateCustomFieldSetupRequest.NumberCustomFieldSetupRequest? numberCustomFieldSetup = null,
+        UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest? singleSelectCustomFieldSetup = null,
+        UpdateCustomFieldSetupRequest.TextCustomFieldSetupRequest? textCustomFieldSetup = null)
+    {
+        return new UpdateCustomFieldSetupRequest(
+            id ?? Guid.NewGuid(),
+            name,
+            description,
+            type,
+            numberCustomFieldSetup,
+            singleSelectCustomFieldSetup,
+            textCustomFieldSetup);
+    }
+
     public static UpdateWorkspaceCustomFieldSetupRequest CreateUpdateWorkspaceCustomFieldSetupRequest(
         Guid? id = null,
         Guid? workspaceId = null)

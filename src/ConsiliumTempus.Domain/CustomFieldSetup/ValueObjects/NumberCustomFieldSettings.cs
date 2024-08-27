@@ -11,7 +11,7 @@ public sealed class NumberCustomFieldSettings : ValueObject
     }
 
     private NumberCustomFieldSettings(
-        string currencyCode,
+        string? currencyCode,
         short decimals,
         bool rounding)
     {
@@ -25,7 +25,7 @@ public sealed class NumberCustomFieldSettings : ValueObject
     public bool Rounding { get; init; }
 
     public static NumberCustomFieldSettings Create(
-        string currencyCode,
+        string? currencyCode,
         short decimals,
         bool rounding)
     {

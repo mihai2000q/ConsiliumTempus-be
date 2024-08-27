@@ -7,11 +7,13 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Update;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
@@ -87,6 +89,21 @@ internal static partial class Utils
         {
             command.Id.Should().Be(request.Id);
             command.ProjectId.Should().Be(request.ProjectId);
+
+            return true;
+        }
+        
+        public static bool AssertUpdateCustomFieldSetupCommand(
+            UpdateCustomFieldSetupCommand command,
+            UpdateCustomFieldSetupRequest request)
+        {
+            command.Id.Should().Be(request.Id);
+            command.Name.Should().Be(request.Name);
+            command.Description.Should().Be(request.Description);
+            command.Type.Should().Be(request.Type);
+            AssertUpdateNumberCustomFieldSetupCommand(command.NumberCustomFieldSetup, request.NumberCustomFieldSetup);
+            AssertUpdateSingleSelectCustomFieldSetupCommand(command.SingleSelectCustomFieldSetup, request.SingleSelectCustomFieldSetup);
+            AssertUpdateTextCustomFieldSetupCommand(command.TextCustomFieldSetup, request.TextCustomFieldSetup);
 
             return true;
         }
@@ -258,6 +275,7 @@ internal static partial class Utils
                 return;
             }
 
+            command.Should().NotBeNull();
             command!.Settings.CurrencyCode.Should().Be(request.Settings.CurrencyCode);
             command.Settings.Decimals.Should().Be(request.Settings.Decimals);
             command.Settings.Rounding.Should().Be(request.Settings.Rounding);
@@ -274,9 +292,10 @@ internal static partial class Utils
                 return;
             }
 
+            command.Should().NotBeNull();
             command!.Options
                 .Zip(request.Options)
-                .Should().AllSatisfy(x => AssertSingleSelectOptionCommand(x.First, x.Second));
+                .Should().AllSatisfy(x => AssertCreateSingleSelectOptionCommand(x.First, x.Second));
             command.DefaultOptionId.Should().Be(request.DefaultOptionId);
         }
         
@@ -290,18 +309,81 @@ internal static partial class Utils
                 return;
             }
 
+            command.Should().NotBeNull();
             command!.DefaultText.Should().Be(request.DefaultText);
         }
 
-        private static void AssertSingleSelectOptionCommand(
-            CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand
-                singleSelectOptionCommand,
-            CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest
-                singleSelectOptionRequest)
+        private static void AssertCreateSingleSelectOptionCommand(
+            CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand command,
+            CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest request)
         {
-            singleSelectOptionCommand.Id.Should().Be(singleSelectOptionRequest.Id);
-            singleSelectOptionCommand.Value.Should().Be(singleSelectOptionRequest.Value);
-            singleSelectOptionCommand.Color.Should().Be(singleSelectOptionRequest.Color);
+            command.Id.Should().Be(request.Id);
+            command.Value.Should().Be(request.Value);
+            command.Color.Should().Be(request.Color);
+        }
+        
+        private static void AssertUpdateNumberCustomFieldSetupCommand(
+            UpdateCustomFieldSetupCommand.NumberCustomFieldSetupCommand? command,
+            UpdateCustomFieldSetupRequest.NumberCustomFieldSetupRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command.Should().NotBeNull();
+            command!.Settings.CurrencyCode.Should().Be(request.Settings.CurrencyCode);
+            command.Settings.Decimals.Should().Be(request.Settings.Decimals);
+            command.Settings.Rounding.Should().Be(request.Settings.Rounding);
+            command.DefaultNumber.Should().Be(request.DefaultNumber);
+        }
+        
+        private static void AssertUpdateSingleSelectCustomFieldSetupCommand(
+            UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand? command,
+            UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+            
+            command.Should().NotBeNull();
+            command!.DefaultOptionId.Should().Be(request.DefaultOptionId);
+            command.Operation.ToString().Should().Be(request.Operation?.ToString());
+            AssertUpdateSingleSelectOptionCommand(command.NewOption, request.NewOption);
+            command.OptionId.Should().Be(request.OptionId);
+            command.OverOptionId.Should().Be(request.OverOptionId);
+        }
+        
+        private static void AssertUpdateTextCustomFieldSetupCommand(
+            UpdateCustomFieldSetupCommand.TextCustomFieldSetupCommand? command,
+            UpdateCustomFieldSetupRequest.TextCustomFieldSetupRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command.Should().NotBeNull();
+            command!.DefaultText.Should().Be(request.DefaultText);
+        }
+
+        private static void AssertUpdateSingleSelectOptionCommand(
+            UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand? command,
+            UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command.Should().NotBeNull();
+            command!.Color.Should().Be(request.Color);
+            command.Value.Should().Be(request.Value);
         }
     }
 }
