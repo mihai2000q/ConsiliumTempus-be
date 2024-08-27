@@ -68,7 +68,8 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
         {
             "CustomFieldSetup" => request.RouteValues["action"] switch
             {
-                "Get" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.CustomFieldSetup),
+                "Get" or
+                "Delete" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.CustomFieldSetup),
 
                 "GetCollectionFromProject" => (
                     HttpRequestReader.GetStringIdFromRoute(request, typeof(ProjectAggregate).ToCamelId()),
@@ -79,8 +80,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
                     StringIdType.Project),
 
                 "Update" or
-                "UpdateWorkspace" or
-                "Delete" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.CustomFieldSetup),
+                "UpdateWorkspace" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.CustomFieldSetup),
 
                 _ => (null, StringIdType.Empty)
             },

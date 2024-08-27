@@ -42,13 +42,13 @@ public static class ProjectAuthorizationHandlerData
             var requestLocation = RequestLocation.Route;
             var stringIdType = StringIdType.CustomFieldSetup;
             Add(level, requestLocation, null, controller, "Get", stringIdType);
+            Add(level, requestLocation, null, controller, "Delete", stringIdType);
             Add(level, requestLocation, typeof(ProjectAggregate), controller, "GetCollectionFromProject", StringIdType.Project);
 
             requestLocation = RequestLocation.Body;
             Add(level, requestLocation, typeof(ProjectAggregate), controller, "CreateOnProject", StringIdType.Project);
             Add(level, requestLocation, null, controller, "Update", stringIdType);
             Add(level, requestLocation, null, controller, "UpdateWorkspace", stringIdType);
-            Add(level, requestLocation, null, controller, "Delete", stringIdType);
 
             // Project Controller
             controller = Controller.Project;
