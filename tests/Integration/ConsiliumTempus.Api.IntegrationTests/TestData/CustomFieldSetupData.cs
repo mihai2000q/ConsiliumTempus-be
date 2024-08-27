@@ -35,7 +35,8 @@ internal class CustomFieldSetupData : ITestData
             ProjectSprints,
             ProjectStages,
             ProjectTasks,
-            CustomFieldSetups
+            CustomFieldSetups,
+            CustomFields
         ];
     }
 
@@ -209,7 +210,7 @@ internal class CustomFieldSetupData : ITestData
             "A number field"),
         CustomFieldSetupFactory.CreateNumber(
             Workspaces[0],
-            [Projects[2]],
+            [Projects[2], Projects[^1]],
             AuditFactory.Create(Users[0]),
             name: "Budget",
             defaultNumber: 1000),
@@ -227,6 +228,27 @@ internal class CustomFieldSetupData : ITestData
             [Projects[0]],
             AuditFactory.Create(Users[0]),
             name: "Another text field setup"),
+        
+        CustomFieldSetupFactory.CreateNumber(
+            Workspaces[2],
+            [Projects[^1]],
+            AuditFactory.Create(Users[0]),
+            "Global on Private Project"),
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            [Projects[^3]],
+            AuditFactory.Create(Users[0]),
+            "On Not Private Project"),
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            [Projects[^2]],
+            AuditFactory.Create(Users[0]),
+            "On Private Project with access"),
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            [Projects[^1]],
+            AuditFactory.Create(Users[0]),
+            "On Private project without access"),
     ];
     
     public static readonly CustomField[] CustomFields =

@@ -27,7 +27,7 @@ public sealed class ProjectProvider(ConsiliumTempusDbContext dbContext) : IProje
             .ThenInclude(p => p.AllowedMembers)
             .SingleOrDefaultAsync(cfs => cfs.Id == id, cancellationToken);
 
-        return customFieldSetup?.Workspace is not null ? customFieldSetup?.Projects[0] : null;
+        return customFieldSetup?.Workspace is null ? customFieldSetup?.Projects[0] : null;
     }
 
     public async Task<ProjectAggregate?> GetByProjectSprint(ProjectSprintId id,

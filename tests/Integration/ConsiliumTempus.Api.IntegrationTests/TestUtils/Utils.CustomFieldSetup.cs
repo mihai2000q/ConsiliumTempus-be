@@ -120,8 +120,8 @@ internal static partial class Utils
 
             tasks.Should().AllSatisfy(task =>
             {
-                task.CustomFields.Should().HaveCount(1);
-                var customField = task.CustomFields[0];
+                task.CustomFields.Should().ContainSingle(cf => cf.Setup == customFieldSetup);
+                var customField = task.CustomFields.First(cf => cf.Setup == customFieldSetup);
                 switch (request.Type)
                 {
                     case CustomFieldType.Number:
