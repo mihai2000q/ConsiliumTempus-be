@@ -76,6 +76,7 @@ public class ProjectTaskControllerUpdateCustomFieldTest(WebAppFactory factory)
             textCustomField: new UpdateCustomFieldFromProjectTaskRequest.TextCustomFieldRequest(null));
 
         // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
         var outcome = await Client.Put("api/projects/tasks/custom-fields", request);
 
         // Assert

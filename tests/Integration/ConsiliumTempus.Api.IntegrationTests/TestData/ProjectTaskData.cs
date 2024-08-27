@@ -169,6 +169,19 @@ internal class ProjectTaskData : ITestData
             [Projects[0]],
             AuditFactory.Create(Users[0]),
             "Notes field"),
+        
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            [Projects[^3]],
+            AuditFactory.Create(Users[0])),
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            [Projects[^2]],
+            AuditFactory.Create(Users[0])),
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            [Projects[^1]],
+            AuditFactory.Create(Users[0])),
     ];
 
     public static readonly ProjectSprintAggregate[] ProjectSprints =
@@ -320,5 +333,15 @@ internal class ProjectTaskData : ITestData
         CustomFieldFactory.CreateText(
             ProjectTasks[1],
             (TextCustomFieldSetupAggregate)CustomFieldSetups[2]),
+        
+        CustomFieldFactory.CreateNumber(
+            ProjectTasks[^3],
+            (NumberCustomFieldSetupAggregate)CustomFieldSetups[^3]),
+        CustomFieldFactory.CreateNumber(
+            ProjectTasks[^2],
+            (NumberCustomFieldSetupAggregate)CustomFieldSetups[^2]),
+        CustomFieldFactory.CreateNumber(
+            ProjectTasks[^1],
+            (NumberCustomFieldSetupAggregate)CustomFieldSetups[^1]),
     ];
 }
