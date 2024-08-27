@@ -35,6 +35,8 @@ public sealed class CustomOrderPosition : ValueObject, IComparable<CustomOrderPo
             : Value.CompareTo(other.Value);
     }
 
+    public static CustomOrderPosition operator ++(CustomOrderPosition a) => Create(a.Value + 1);
+    public static CustomOrderPosition operator --(CustomOrderPosition a) => Create(a.Value - 1);
     public static CustomOrderPosition operator +(CustomOrderPosition a, int b) => Create(a.Value + b);
     public static CustomOrderPosition operator -(CustomOrderPosition a, int b) => Create(a.Value - b);
     public static bool operator <(CustomOrderPosition a, CustomOrderPosition b) => a.Value < b.Value;

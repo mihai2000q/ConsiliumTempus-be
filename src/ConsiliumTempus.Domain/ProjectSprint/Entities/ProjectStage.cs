@@ -105,17 +105,17 @@ public sealed class ProjectStage : Entity<ProjectStageId>
         if (CustomOrderPosition.Value < overStage.CustomOrderPosition.Value)
         {
             // stage is placed on upper position
-            for (var i = CustomOrderPosition.Value + 1; i <= overStage.CustomOrderPosition.Value; i++)
+            for (var pos = CustomOrderPosition + 1; pos <= overStage.CustomOrderPosition; pos++)
             {
-                Sprint.Stages[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
+                Sprint.Stages[pos.Value].UpdateCustomOrderPosition(--pos);
             }
         }
         else
         {
             // stage is placed on lower position
-            for (var i = overStage.CustomOrderPosition.Value; i < CustomOrderPosition.Value; i++)
+            for (var pos = overStage.CustomOrderPosition; pos < CustomOrderPosition; pos++)
             {
-                Sprint.Stages[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
+                Sprint.Stages[pos.Value].UpdateCustomOrderPosition(++pos);
             }
         }
 
