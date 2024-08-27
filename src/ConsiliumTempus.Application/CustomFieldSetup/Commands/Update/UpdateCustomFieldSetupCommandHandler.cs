@@ -48,7 +48,7 @@ public sealed class UpdateCustomFieldSetupCommandHandler(
         {
             return Errors.SingleSelectOption.NotFound;
         }
-        
+
         customFieldSetup.Workspace?.RefreshActivity();
         customFieldSetup.Projects.ForEach(p => p.RefreshActivity());
 
@@ -88,13 +88,10 @@ public sealed class UpdateCustomFieldSetupCommandHandler(
             user);
 
         if (command.SingleSelectCustomFieldSetup.Operation is null) return;
-
-        var operation = Enum.Parse<UpdateCustomFieldSetupCommand.SingleSelectOptionOperation>(
-            command.SingleSelectCustomFieldSetup.Operation);
+        
         UpdateSingleSelectCustomFieldSetupOptions(
             singleSelectCustomFieldSetup,
-            command.SingleSelectCustomFieldSetup!,
-            operation);
+            command.SingleSelectCustomFieldSetup!);
     }
 
     private static void UpdateTextCustomFieldSetup(
@@ -111,10 +108,9 @@ public sealed class UpdateCustomFieldSetupCommandHandler(
 
     private static void UpdateSingleSelectCustomFieldSetupOptions(
         SingleSelectCustomFieldSetupAggregate singleSelectCustomFieldSetup,
-        UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand command,
-        UpdateCustomFieldSetupCommand.SingleSelectOptionOperation operation)
+        UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand command)
     {
-        switch (operation)
+        switch (command.Operation)
         {
             case UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add:
                 singleSelectCustomFieldSetup.AddOption(SingleSelectOption.Create(

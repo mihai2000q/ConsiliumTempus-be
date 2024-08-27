@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using ConsiliumTempus.Domain.Common.Enums;
+using ErrorOr;
 using MediatR;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
@@ -7,7 +8,7 @@ public sealed record UpdateCustomFieldSetupCommand(
     Guid Id,
     string Name,
     string Description,
-    string Type,
+    CustomFieldType Type,
     UpdateCustomFieldSetupCommand.NumberCustomFieldSetupCommand? NumberCustomFieldSetup,
     UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand? SingleSelectCustomFieldSetup,
     UpdateCustomFieldSetupCommand.TextCustomFieldSetupCommand? TextCustomFieldSetup)
@@ -20,7 +21,7 @@ public sealed record UpdateCustomFieldSetupCommand(
         Move,
         Remove,
     }
-    
+
     public sealed record NumberCustomFieldSetupCommand(
         NumberCustomFieldSetupCommand.NumberSettingsCommand Settings,
         decimal? DefaultNumber)
@@ -33,7 +34,7 @@ public sealed record UpdateCustomFieldSetupCommand(
 
     public sealed record SingleSelectCustomFieldSetupCommand(
         Guid? DefaultOptionId,
-        string? Operation,
+        SingleSelectOptionOperation? Operation,
         SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand? NewOption,
         Guid? OptionId,
         Guid? OverOptionId)

@@ -251,9 +251,7 @@ internal static partial class Utils
 
             if (command.SingleSelectCustomFieldSetup!.Operation is null) return;
 
-            var operation = Enum.Parse<UpdateCustomFieldSetupCommand.SingleSelectOptionOperation>(
-                command.SingleSelectCustomFieldSetup!.Operation);
-            switch (operation)
+            switch (command.SingleSelectCustomFieldSetup.Operation)
             {
                 case UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add:
                     setup.Options.ShouldBeOrdered();
@@ -282,7 +280,7 @@ internal static partial class Utils
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
+                    throw new ArgumentOutOfRangeException(nameof(command), command, null);
             }
         }
 

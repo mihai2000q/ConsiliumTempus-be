@@ -69,7 +69,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     singleSelectCustomFieldSetup.Options[1].Id,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "#FF2233",
                         "High"),
@@ -83,7 +83,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     singleSelectCustomFieldSetup.Options[0].Id,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "#FF2233",
                         "High"),
@@ -105,7 +105,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     singleSelectCustomFieldSetup.Options[0].Id,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move,
                     null,
                     singleSelectCustomFieldSetup.Options[1].Id,
                     singleSelectCustomFieldSetup.Options[3].Id));
@@ -125,7 +125,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     singleSelectCustomFieldSetup.Options[0].Id,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move,
                     null,
                     singleSelectCustomFieldSetup.Options[3].Id,
                     singleSelectCustomFieldSetup.Options[1].Id));
@@ -145,7 +145,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     singleSelectCustomFieldSetup.Options[0].Id,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Remove.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Remove,
                     null,
                     singleSelectCustomFieldSetup.Options[2].Id,
                     null));
@@ -190,7 +190,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     singleSelectCustomFieldSetup.Options[0].Id,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "#FF2233",
                         "High"),
@@ -203,7 +203,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     singleSelectCustomFieldSetup.Options[0].Id,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move,
                     null,
                     Guid.NewGuid(),
                     singleSelectCustomFieldSetup.Options[1].Id));
@@ -215,7 +215,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     singleSelectCustomFieldSetup.Options[0].Id,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move,
                     null,
                     singleSelectCustomFieldSetup.Options[1].Id,
                     Guid.NewGuid()));
@@ -227,7 +227,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     singleSelectCustomFieldSetup.Options[0].Id,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Remove.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Remove,
                     null,
                     Guid.NewGuid(),
                     null));

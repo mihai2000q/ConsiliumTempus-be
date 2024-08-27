@@ -38,7 +38,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "#2233FF",
                         "Low"),
@@ -50,7 +50,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "#2233FF",
                         "Low"),
@@ -62,7 +62,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move,
                     null,
                     Guid.NewGuid(),
                     Guid.NewGuid()));
@@ -72,7 +72,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Remove.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Remove,
                     null,
                     Guid.NewGuid(),
                     null));
@@ -87,7 +87,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 Guid.NewGuid(),
                 "New CustomFieldSetup",
                 "This field will represent some notes",
-                CustomFieldType.Text.ToString(),
+                CustomFieldType.Text,
                 null,
                 null,
                 new UpdateCustomFieldSetupCommand.TextCustomFieldSetupCommand("Default Text"));
@@ -119,18 +119,6 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 name: new string('a', PropertiesValidation.CustomFieldSetup.NameMaximumLength + 1),
                 textCustomFieldSetup: new UpdateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
             Add(command, nameof(command.Name));
-        }
-    }
-
-    internal class GetInvalidTypeCommands : TheoryData<UpdateCustomFieldSetupCommand, string>
-    {
-        public GetInvalidTypeCommands()
-        {
-            var command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommandWithType("");
-            Add(command, nameof(command.Type));
-
-            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommandWithType("NotAType");
-            Add(command, nameof(command.Type));
         }
     }
 
@@ -258,7 +246,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add,
                     null,
                     null,
                     null));
@@ -269,7 +257,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update,
                     null,
                     Guid.NewGuid(),
                     null));
@@ -280,7 +268,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "#FF1122",
                         "Something"),
@@ -293,7 +281,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move,
                     null,
                     Guid.NewGuid(), 
                     null));
@@ -304,7 +292,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move,
                     null,
                     null, 
                     Guid.NewGuid()));
@@ -315,7 +303,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Remove.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Remove,
                     null,
                     null,
                     null));
@@ -327,7 +315,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "#FF1122",
                         ""),
@@ -341,7 +329,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "#FF1122",
                         new string('a', PropertiesValidation.SingleSelectOption.ValueMaximumLength + 1)),
@@ -356,7 +344,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "",
                         "Low"),
@@ -370,7 +358,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "not a color",
                         "Low"),
@@ -384,7 +372,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "FF2233",
                         "Low"),
@@ -398,7 +386,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "#F2233",
                         "Low"),
@@ -412,7 +400,7 @@ internal static class UpdateCustomFieldSetupCommandValidatorData
                 type: CustomFieldType.SingleSelect,
                 singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
                     null,
-                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add.ToString(),
+                    UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add,
                     new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand(
                         "#GG2233",
                         "Low"),

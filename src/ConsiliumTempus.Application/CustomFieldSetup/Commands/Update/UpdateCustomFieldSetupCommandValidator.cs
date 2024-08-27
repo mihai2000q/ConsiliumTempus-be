@@ -16,11 +16,8 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
             .NotEmpty()
             .MaximumLength(PropertiesValidation.CustomFieldSetup.NameMaximumLength);
 
-        RuleFor(c => c.Type)
-            .IsEnumName(typeof(CustomFieldType));
-
         // Number Custom Field Setup
-        When(c => c.Type == CustomFieldType.Number.ToString(),
+        When(c => c.Type == CustomFieldType.Number,
             () =>
             {
                 RuleFor(c => c.NumberCustomFieldSetup)
@@ -38,7 +35,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
             });
 
         // Single Select Custom Field Setup
-        When(c => c.Type == CustomFieldType.SingleSelect.ToString(),
+        When(c => c.Type == CustomFieldType.SingleSelect,
             () =>
             {
                 RuleFor(c => c.SingleSelectCustomFieldSetup)
@@ -46,10 +43,6 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
 
                 When(c => c.SingleSelectCustomFieldSetup != null, () =>
                 {
-                    RuleFor(c => c.SingleSelectCustomFieldSetup!.Operation)
-                        .IsEnumName(typeof(UpdateCustomFieldSetupCommand.SingleSelectOptionOperation))
-                        .When(c => c.SingleSelectCustomFieldSetup!.Operation is not null);
-                    
                     // Update or Add
                     RuleFor(c => c.SingleSelectCustomFieldSetup!.NewOption!.Value)
                         .NotEmpty()
@@ -63,7 +56,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
                     // Add
                     When(
                         c => c.SingleSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
-                            .SingleSelectOptionOperation.Add.ToString(),
+                            .SingleSelectOptionOperation.Add,
                         () =>
                         {
                             RuleFor(c => c.SingleSelectCustomFieldSetup!.NewOption)
@@ -73,7 +66,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
                     // Update
                     When(
                         c => c.SingleSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
-                            .SingleSelectOptionOperation.Update.ToString(),
+                            .SingleSelectOptionOperation.Update,
                         () =>
                         {
                             RuleFor(c => c.SingleSelectCustomFieldSetup!.NewOption)
@@ -86,7 +79,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
                     // Move
                     When(
                         c => c.SingleSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
-                            .SingleSelectOptionOperation.Move.ToString(),
+                            .SingleSelectOptionOperation.Move,
                         () =>
                         {
                             RuleFor(c => c.SingleSelectCustomFieldSetup!.OptionId)
@@ -99,7 +92,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
                     // Remove
                     When(
                         c => c.SingleSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
-                            .SingleSelectOptionOperation.Remove.ToString(),
+                            .SingleSelectOptionOperation.Remove,
                         () =>
                         {
                             RuleFor(c => c.SingleSelectCustomFieldSetup!.OptionId)
@@ -109,7 +102,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
             });
 
         // Text Custom Field Setup
-        When(c => c.Type == CustomFieldType.Text.ToString(),
+        When(c => c.Type == CustomFieldType.Text,
             () =>
             {
                 RuleFor(c => c.TextCustomFieldSetup)

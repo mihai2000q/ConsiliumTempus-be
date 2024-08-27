@@ -28,7 +28,6 @@ public class UpdateCustomFieldSetupCommandValidatorTest
     [Theory]
     [ClassData(typeof(UpdateCustomFieldSetupCommandValidatorData.GetInvalidIdCommands))]
     [ClassData(typeof(UpdateCustomFieldSetupCommandValidatorData.GetInvalidNameCommands))]
-    [ClassData(typeof(UpdateCustomFieldSetupCommandValidatorData.GetInvalidTypeCommands))]
     [ClassData(typeof(UpdateCustomFieldSetupCommandValidatorData.GetInvalidNumberCustomFieldSetupCommands))]
     [ClassData(typeof(UpdateCustomFieldSetupCommandValidatorData.GetInvalidSingleSelectCustomFieldSetupCommands))]
     [ClassData(typeof(UpdateCustomFieldSetupCommandValidatorData.GetInvalidTextCustomFieldSetupCommands))]
