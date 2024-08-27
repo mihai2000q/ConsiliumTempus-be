@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Project;
+﻿using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
@@ -15,6 +16,18 @@ public sealed class ProjectProvider(ConsiliumTempusDbContext dbContext) : IProje
         return dbContext.Projects
             .Include(p => p.AllowedMembers)
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+    }
+
+    public async Task<ProjectAggregate?> GetByCustomFieldSetup(CustomFieldSetupId id,
+        CancellationToken cancellationToken = default)
+    {
+        var customFieldSetup = await dbContext.CustomFieldSetups
+            .Include(cfs => cfs.Workspace)
+            .Include(cfs => cfs.Projects)
+            .ThenInclude(p => p.AllowedMembers)
+            .SingleOrDefaultAsync(cfs => cfs.Id == id, cancellationToken);
+
+        return customFieldSetup?.Workspace is not null ? customFieldSetup?.Projects[0] : null;
     }
 
     public async Task<ProjectAggregate?> GetByProjectSprint(ProjectSprintId id,

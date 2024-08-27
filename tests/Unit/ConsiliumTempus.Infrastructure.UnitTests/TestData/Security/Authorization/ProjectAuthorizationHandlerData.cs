@@ -15,6 +15,7 @@ public static class ProjectAuthorizationHandlerData
 
     public enum Controller
     {
+        CustomFieldSetup,
         Project,
         ProjectSprint,
         ProjectTask
@@ -22,6 +23,7 @@ public static class ProjectAuthorizationHandlerData
 
     public enum StringIdType
     {
+        CustomFieldSetup,
         Project,
         ProjectSprint,
         ProjectStage,
@@ -35,10 +37,23 @@ public static class ProjectAuthorizationHandlerData
         {
             const ProjectAuthorizationLevel level = ProjectAuthorizationLevel.IsAllowed;
 
-            // Project Controller
-            var controller = Controller.Project;
+            // Custom Field Setup Controller
+            var controller = Controller.CustomFieldSetup;
             var requestLocation = RequestLocation.Route;
-            var stringIdType = StringIdType.Project;
+            var stringIdType = StringIdType.CustomFieldSetup;
+            Add(level, requestLocation, null, controller, "Get", stringIdType);
+            Add(level, requestLocation, typeof(ProjectAggregate), controller, "GetCollectionFromProject", StringIdType.Project);
+
+            requestLocation = RequestLocation.Body;
+            Add(level, requestLocation, typeof(ProjectAggregate), controller, "CreateOnProject", StringIdType.Project);
+            Add(level, requestLocation, null, controller, "Update", stringIdType);
+            Add(level, requestLocation, null, controller, "UpdateWorkspace", stringIdType);
+            Add(level, requestLocation, null, controller, "Delete", stringIdType);
+
+            // Project Controller
+            controller = Controller.Project;
+            requestLocation = RequestLocation.Route;
+            stringIdType = StringIdType.Project;
             Add(level, requestLocation, null, controller, "Get", stringIdType);
             Add(level, requestLocation, null, controller, "GetOverview", stringIdType);
             Add(level, requestLocation, null, controller, "GetAllowedMembers", stringIdType);
@@ -87,6 +102,7 @@ public static class ProjectAuthorizationHandlerData
             Add(level, requestLocation, typeof(ProjectStage), controller, "Create", StringIdType.ProjectStage);
             Add(level, requestLocation, null, controller, "Move", stringIdType);
             Add(level, requestLocation, null, controller, "Update", stringIdType);
+            Add(level, requestLocation, null, controller, "UpdateCustomField", stringIdType);
             Add(level, requestLocation, null, controller, "UpdateIsCompleted", stringIdType);
             Add(level, requestLocation, null, controller, "UpdateOverview", stringIdType);
         }

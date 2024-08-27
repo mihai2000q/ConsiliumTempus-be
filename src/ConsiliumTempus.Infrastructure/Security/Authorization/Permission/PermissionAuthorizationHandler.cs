@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
@@ -66,11 +67,12 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
 
         var workspace = idType switch
         {
-            StringIdType.Workspace => await workspaceProvider.Get(WorkspaceId.Create(guidId)),
+            StringIdType.CustomFieldSetup => await workspaceProvider.GetByCustomFieldSetup(CustomFieldSetupId.Create(guidId)),
             StringIdType.Project => await workspaceProvider.GetByProject(ProjectId.Create(guidId)),
             StringIdType.ProjectSprint => await workspaceProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
             StringIdType.ProjectStage => await workspaceProvider.GetByProjectStage(ProjectStageId.Create(guidId)),
             StringIdType.ProjectTask => await workspaceProvider.GetByProjectTask(ProjectTaskId.Create(guidId)),
+            StringIdType.Workspace => await workspaceProvider.Get(WorkspaceId.Create(guidId)),
             _ => throw new ArgumentOutOfRangeException(nameof(permission))
         };
 
@@ -87,34 +89,33 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
     {
         return permission switch
         {
-            // Workspace
-            Permissions.UpdateWorkspace or
-            Permissions.UpdateFavoritesWorkspace or
-            Permissions.UpdateOverviewWorkspace => (
+            // Custom Field Setup
+            Permissions.CreateCustomFieldSetupOnWorkspace => (
+                await HttpRequestReader.GetStringIdFromBody(request, typeof(WorkspaceAggregate).ToCamelId()),
+                StringIdType.Workspace),
+            Permissions.CreateCustomFieldSetupOnProject => (
+                await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()),
+                StringIdType.Project),
+
+            Permissions.AddCustomFieldSetupToProject or
+            Permissions.UpdateCustomFieldSetup or
+            Permissions.UpdateWorkspaceCustomFieldSetup => (
                 await HttpRequestReader.GetStringIdFromBody(request),
-                StringIdType.Workspace),
+                StringIdType.CustomFieldSetup),
 
-            Permissions.DeleteWorkspace or
-            Permissions.ReadWorkspace or
-            Permissions.ReadOverviewWorkspace => (
-                HttpRequestReader.GetStringIdFromRoute(request), 
+            Permissions.ReadCollectionCustomFieldSetupFromWorkspace => (
+                HttpRequestReader.GetStringIdFromRoute(request, typeof(WorkspaceAggregate).ToCamelId()),
                 StringIdType.Workspace),
+            Permissions.ReadCollectionCustomFieldSetupFromProject => (
+                HttpRequestReader.GetStringIdFromRoute(request, typeof(ProjectAggregate).ToCamelId()),
+                StringIdType.Project),
 
-            Permissions.ReadInvitationsFromWorkspace => (
-                HttpRequestReader.GetStringIdFromQuery(request, typeof(WorkspaceAggregate).ToCamelId()),
-                StringIdType.Workspace),
-
-            // Workspace - Collaborators
-            Permissions.InviteCollaboratorToWorkspace or
-            Permissions.UpdateCollaboratorFromWorkspace => (
-                await HttpRequestReader.GetStringIdFromBody(request),
-                StringIdType.Workspace),
-
-            Permissions.KickCollaboratorFromWorkspace or
-            Permissions.ReadCollaboratorsFromWorkspace => (
+            Permissions.ReadCustomFieldSetup or
+            Permissions.DeleteCustomFieldSetup or
+            Permissions.RemoveCustomFieldSetupFromProject => (
                 HttpRequestReader.GetStringIdFromRoute(request),
-                StringIdType.Workspace),
-
+                StringIdType.CustomFieldSetup),
+            
             // Project
             Permissions.CreateProject => (
                 await HttpRequestReader.GetStringIdFromBody(request, typeof(WorkspaceAggregate).ToCamelId()),
@@ -131,10 +132,15 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.ReadOverviewProject => (
                 HttpRequestReader.GetStringIdFromRoute(request),
                 StringIdType.Project),
-            
+
             Permissions.ReadCollectionProject => (
                 HttpRequestReader.GetStringIdFromQuery(request, typeof(WorkspaceAggregate).ToCamelId()),
                 StringIdType.Workspace),
+
+            // Project - Allowed Members
+            Permissions.ReadAllowedMembersFromProject => (
+                HttpRequestReader.GetStringIdFromRoute(request),
+                StringIdType.Project),
 
             // Project - Project Status
             Permissions.AddStatusToProject or
@@ -144,11 +150,6 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
 
             Permissions.RemoveStatusFromProject or
             Permissions.ReadStatusesFromProject => (
-                HttpRequestReader.GetStringIdFromRoute(request),
-                StringIdType.Project),
-
-            // Project - Allowed Members
-            Permissions.ReadAllowedMembersFromProject => (
                 HttpRequestReader.GetStringIdFromRoute(request),
                 StringIdType.Project),
 
@@ -189,6 +190,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
 
             Permissions.MoveProjectTask or
             Permissions.UpdateProjectTask or
+            Permissions.UpdateCustomFieldFromProjectTask or
             Permissions.UpdateIsCompletedProjectTask or
             Permissions.UpdateOverviewProjectTask => (
                 await HttpRequestReader.GetStringIdFromBody(request),
@@ -202,6 +204,34 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
             Permissions.ReadCollectionProjectTask => (
                 HttpRequestReader.GetStringIdFromQuery(request, typeof(ProjectStage).ToCamelId()),
                 StringIdType.ProjectStage),
+            
+            // Workspace
+            Permissions.UpdateWorkspace or
+            Permissions.UpdateFavoritesWorkspace or
+            Permissions.UpdateOverviewWorkspace => (
+                await HttpRequestReader.GetStringIdFromBody(request),
+                StringIdType.Workspace),
+
+            Permissions.DeleteWorkspace or
+            Permissions.ReadWorkspace or
+            Permissions.ReadOverviewWorkspace => (
+                HttpRequestReader.GetStringIdFromRoute(request), 
+                StringIdType.Workspace),
+
+            Permissions.ReadInvitationsFromWorkspace => (
+                HttpRequestReader.GetStringIdFromQuery(request, typeof(WorkspaceAggregate).ToCamelId()),
+                StringIdType.Workspace),
+
+            // Workspace - Collaborators
+            Permissions.InviteCollaboratorToWorkspace or
+            Permissions.UpdateCollaboratorFromWorkspace => (
+                await HttpRequestReader.GetStringIdFromBody(request),
+                StringIdType.Workspace),
+
+            Permissions.KickCollaboratorFromWorkspace or
+            Permissions.ReadCollaboratorsFromWorkspace => (
+                HttpRequestReader.GetStringIdFromRoute(request),
+                StringIdType.Workspace),
 
             _ => throw new ArgumentOutOfRangeException(nameof(permission))
         };
@@ -209,10 +239,11 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
     
     private enum StringIdType
     {
-        Workspace,
+        CustomFieldSetup,
         Project,
         ProjectSprint,
         ProjectStage,
-        ProjectTask
+        ProjectTask,
+        Workspace,
     }
 }
