@@ -2,21 +2,18 @@
 
 public enum Permissions
 {
-    // Workspace
-    ReadWorkspace,
-    ReadOverviewWorkspace,
-    ReadInvitationsFromWorkspace,
-    UpdateWorkspace,
-    UpdateFavoritesWorkspace,
-    UpdateOverviewWorkspace,
-    DeleteWorkspace,
-
-    // Workspace - Collaborators
-    InviteCollaboratorToWorkspace,
-    ReadCollaboratorsFromWorkspace,
-    UpdateCollaboratorFromWorkspace,
-    KickCollaboratorFromWorkspace,
-
+    // Custom Field Setup
+    CreateCustomFieldSetupOnProject,
+    CreateCustomFieldSetupOnWorkspace,
+    AddCustomFieldSetupToProject,
+    ReadCustomFieldSetup,
+    ReadCollectionCustomFieldSetupFromProject,
+    ReadCollectionCustomFieldSetupFromWorkspace,
+    UpdateCustomFieldSetup,
+    UpdateWorkspaceCustomFieldSetup,
+    DeleteCustomFieldSetup,
+    RemoveCustomFieldSetupFromProject,
+    
     // Project
     CreateProject,
     ReadProject,
@@ -27,14 +24,14 @@ public enum Permissions
     UpdateOverviewProject,
     DeleteProject,
 
+    // Project - Allowed Members
+    ReadAllowedMembersFromProject,
+    
     // Project - Project Status
     AddStatusToProject,
     ReadStatusesFromProject,
     UpdateStatusFromProject,
     RemoveStatusFromProject,
-
-    // Project - Allowed Members
-    ReadAllowedMembersFromProject,
 
     // Project Sprint
     CreateProjectSprint,
@@ -56,7 +53,23 @@ public enum Permissions
     ReadCollectionProjectTask,
     MoveProjectTask,
     UpdateProjectTask,
+    UpdateCustomFieldFromProjectTask,
     UpdateIsCompletedProjectTask,
     UpdateOverviewProjectTask,
-    DeleteProjectTask
+    DeleteProjectTask,
+    
+    // Workspace
+    ReadWorkspace,
+    ReadOverviewWorkspace,
+    ReadInvitationsFromWorkspace,
+    UpdateWorkspace,
+    UpdateFavoritesWorkspace,
+    UpdateOverviewWorkspace,
+    DeleteWorkspace,
+
+    // Workspace - Collaborators
+    InviteCollaboratorToWorkspace,
+    ReadCollaboratorsFromWorkspace,
+    UpdateCollaboratorFromWorkspace,
+    KickCollaboratorFromWorkspace,
 }
