@@ -93,8 +93,9 @@ public sealed class ProjectTaskController(IMapper mapper, ISender mediator) : Ap
             Problem
         );
     }
-    
-    [HttpPut("custom-fields")]
+
+    [HasPermission(Permissions.UpdateCustomFieldFromProjectTask)]
+    [HttpPut("Custom-Fields")]
     public async Task<IActionResult> UpdateCustomField(UpdateCustomFieldFromProjectTaskRequest request,
         CancellationToken cancellationToken)
     {
