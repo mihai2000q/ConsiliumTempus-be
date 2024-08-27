@@ -67,6 +67,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
             Guid.NewGuid());
 
         // Act
+        Client.UseCustomToken(CustomFieldSetupData.Users.First());
         var outcome = await Client.Delete("api/customFieldSetups/" +
                                           $"{request.Id}/Remove-Project/{request.ProjectId}");
 

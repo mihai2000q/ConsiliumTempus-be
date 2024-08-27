@@ -93,6 +93,7 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
             Guid.NewGuid());
 
         // Act
+        Client.UseCustomToken(CustomFieldSetupData.Users.First());
         var outcome = await Client.Post("api/customFieldSetups/Add-Project", request);
 
         // Assert

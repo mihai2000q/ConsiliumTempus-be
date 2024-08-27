@@ -58,6 +58,7 @@ public class CustomFieldSetupControllerUpdateWorkspaceTest(WebAppFactory factory
             Guid.NewGuid());
 
         // Act
+        Client.UseCustomToken(CustomFieldSetupData.Users.First());
         var outcome = await Client.Put("api/customFieldSetups/Workspace", request);
 
         // Assert

@@ -48,7 +48,7 @@ public class CustomFieldSetupControllerDeleteTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task CreateCustomFieldSetupOnProject_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task DeleteCustomFieldSetup_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateDeleteCustomFieldSetupRequest();
