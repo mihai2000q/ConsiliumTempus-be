@@ -22,7 +22,7 @@ export async function getCustomFieldSetupsFromProject(request: APIRequestContext
 export async function getCustomFieldSetup(request: APIRequestContext, id: string) {
   const response = await request.get(`/api/customFieldSetups/${id}`, useToken())
   expect(response.ok()).toBeTruthy()
-  return await response.json()
+  return (await response.json()).customFieldSetup
 }
 
 export async function createCustomFieldSetupOnWorkspace(

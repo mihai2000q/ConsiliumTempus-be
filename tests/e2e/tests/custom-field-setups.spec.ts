@@ -55,15 +55,15 @@ test.describe('should allow operations on the custom field setup entity', () => 
           defaultNumber: 0
         }
       }
-      const numberCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
-      const response = await request.get(`/api/customFieldSetups/${numberCustomField.id}`, useToken())
+      const numberCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+      const response = await request.get(`/api/customFieldSetups/${numberCustomFieldSetup.id}`, useToken())
 
       expect(response.ok()).toBeTruthy()
 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
           $type: expect.any(String),
-          id: numberCustomField.id,
+          id: numberCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
           type: "Number",
@@ -99,15 +99,15 @@ test.describe('should allow operations on the custom field setup entity', () => 
           defaultOptionId: "1"
         }
       }
-      const singleSelectCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
-      const response = await request.get(`/api/customFieldSetups/${singleSelectCustomField.id}`, useToken())
+      const singleSelectCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+      const response = await request.get(`/api/customFieldSetups/${singleSelectCustomFieldSetup.id}`, useToken())
 
       expect(response.ok()).toBeTruthy()
 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
           $type: expect.any(String),
-          id: singleSelectCustomField.id,
+          id: singleSelectCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
           type: "SingleSelect",
@@ -142,15 +142,15 @@ test.describe('should allow operations on the custom field setup entity', () => 
           defaultText: "some default text"
         }
       }
-      const textCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
-      const response = await request.get(`/api/customFieldSetups/${textCustomField.id}`, useToken())
+      const textCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+      const response = await request.get(`/api/customFieldSetups/${textCustomFieldSetup.id}`, useToken())
 
       expect(response.ok()).toBeTruthy()
 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
           $type: expect.any(String),
-          id: textCustomField.id,
+          id: textCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
           type: "Text",
@@ -161,7 +161,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
   })
 
   test('should get custom field setups from workspace', async ({ request }) => {
-    const numberCustomField = await createCustomFieldSetupOnWorkspace(request, {
+    const numberCustomFieldSetup = await createCustomFieldSetupOnWorkspace(request, {
       workspaceId: WORKSPACE_ID,
       name: "Budget",
       description: "Represents a custom field",
@@ -174,7 +174,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         }
       }
     })
-    const singleSelectCustomField = await createCustomFieldSetupOnWorkspace(request, {
+    const singleSelectCustomFieldSetup = await createCustomFieldSetupOnWorkspace(request, {
       workspaceId: WORKSPACE_ID,
       name: "Priority",
       description: "Represents a custom field",
@@ -194,7 +194,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         ]
       }
     })
-    const textCustomField = await createCustomFieldSetupOnWorkspace(request, {
+    const textCustomFieldSetup = await createCustomFieldSetupOnWorkspace(request, {
       workspaceId: WORKSPACE_ID,
       name: "New Text Custom Field",
       description: "Represents a custom field",
@@ -212,28 +212,28 @@ test.describe('should allow operations on the custom field setup entity', () => 
     expect(json.customFieldSetups).toHaveLength(3)
     expect(json.customFieldSetups).toStrictEqual([
       {
-        id: numberCustomField.id,
-        name: numberCustomField.name,
-        description: numberCustomField.description,
+        id: numberCustomFieldSetup.id,
+        name: numberCustomFieldSetup.name,
+        description: numberCustomFieldSetup.description,
         type: 'Number'
       },
       {
-        id: singleSelectCustomField.id,
-        name: singleSelectCustomField.name,
-        description: singleSelectCustomField.description,
+        id: singleSelectCustomFieldSetup.id,
+        name: singleSelectCustomFieldSetup.name,
+        description: singleSelectCustomFieldSetup.description,
         type: 'SingleSelect'
       },
       {
-        id: textCustomField.id,
-        name: textCustomField.name,
-        description: textCustomField.description,
+        id: textCustomFieldSetup.id,
+        name: textCustomFieldSetup.name,
+        description: textCustomFieldSetup.description,
         type: 'Text'
       }
     ])
   })
 
   test('should get custom field setups from project', async ({ request }) => {
-    const numberCustomField = await createCustomFieldSetupOnProject(request, {
+    const numberCustomFieldSetup = await createCustomFieldSetupOnProject(request, {
       projectId: PROJECT_ID,
       name: "Budget",
       description: "Represents a custom field",
@@ -246,7 +246,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         }
       }
     })
-    const singleSelectCustomField = await createCustomFieldSetupOnProject(request, {
+    const singleSelectCustomFieldSetup = await createCustomFieldSetupOnProject(request, {
       projectId: PROJECT_ID,
       name: "Priority",
       description: "Represents a custom field",
@@ -266,7 +266,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         ]
       }
     })
-    const textCustomField = await createCustomFieldSetupOnProject(request, {
+    const textCustomFieldSetup = await createCustomFieldSetupOnProject(request, {
       projectId: PROJECT_ID,
       name: "New Text Custom Field",
       description: "Represents a custom field",
@@ -284,21 +284,21 @@ test.describe('should allow operations on the custom field setup entity', () => 
     expect(json.customFieldSetups).toHaveLength(3)
     expect(json.customFieldSetups).toStrictEqual([
       {
-        id: numberCustomField.id,
-        name: numberCustomField.name,
-        description: numberCustomField.description,
+        id: numberCustomFieldSetup.id,
+        name: numberCustomFieldSetup.name,
+        description: numberCustomFieldSetup.description,
         type: 'Number'
       },
       {
-        id: singleSelectCustomField.id,
-        name: singleSelectCustomField.name,
-        description: singleSelectCustomField.description,
+        id: singleSelectCustomFieldSetup.id,
+        name: singleSelectCustomFieldSetup.name,
+        description: singleSelectCustomFieldSetup.description,
         type: 'SingleSelect'
       },
       {
-        id: textCustomField.id,
-        name: textCustomField.name,
-        description: textCustomField.description,
+        id: textCustomFieldSetup.id,
+        name: textCustomFieldSetup.name,
+        description: textCustomFieldSetup.description,
         type: 'Text'
       }
     ])
@@ -432,10 +432,10 @@ test.describe('should allow operations on the custom field setup entity', () => 
         defaultText: undefined
       }
     }
-    const textCustomField = await createCustomFieldSetupOnWorkspace(request, createCustomFieldSetupOnWorkspaceRequest)
+    const textCustomFieldSetup = await createCustomFieldSetupOnWorkspace(request, createCustomFieldSetupOnWorkspaceRequest)
 
     const body: AddCustomFieldSetupToProjectRequest = {
-      id: textCustomField.id,
+      id: textCustomFieldSetup.id,
       projectId: PROJECT_ID,
     }
     const response = await request.post(`/api/customFieldSetups/add-project`, {
@@ -453,9 +453,9 @@ test.describe('should allow operations on the custom field setup entity', () => 
     expect(customFieldSetups).toHaveLength(1)
     expect(customFieldSetups).toStrictEqual([
       {
-        id: textCustomField.id,
-        name: textCustomField.name,
-        description: textCustomField.description,
+        id: textCustomFieldSetup.id,
+        name: textCustomFieldSetup.name,
+        description: textCustomFieldSetup.description,
         type: 'Text'
       }
     ])
@@ -477,10 +477,10 @@ test.describe('should allow operations on the custom field setup entity', () => 
           defaultNumber: 0
         }
       }
-      const numberCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+      const numberCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
 
       const body: UpdateCustomFieldSetupRequest = {
-        id: numberCustomField.id,
+        id: numberCustomFieldSetup.id,
         name: "New Budget",
         description: "no description",
         type: "Number",
@@ -504,21 +504,19 @@ test.describe('should allow operations on the custom field setup entity', () => 
         message: expect.any(String)
       })
 
-      const customFieldSetup = await getCustomFieldSetup(request, numberCustomField.id)
+      const customFieldSetup = await getCustomFieldSetup(request, numberCustomFieldSetup.id)
       expect(customFieldSetup).toStrictEqual({
-        customFieldSetup: {
-          $type: expect.any(String),
-          id: numberCustomField.id,
-          name: body.name,
-          description: body.description,
-          type: "Number",
-          settings: {
-            currencyCode: body.numberCustomFieldSetup!.settings.currencyCode,
-            decimals: body.numberCustomFieldSetup!.settings.decimals,
-            rounding: body.numberCustomFieldSetup!.settings.rounding,
-          },
-          defaultNumber: body.numberCustomFieldSetup?.defaultNumber
-        }
+        $type: expect.any(String),
+        id: numberCustomFieldSetup.id,
+        name: body.name,
+        description: body.description,
+        type: "Number",
+        settings: {
+          currencyCode: body.numberCustomFieldSetup!.settings.currencyCode,
+          decimals: body.numberCustomFieldSetup!.settings.decimals,
+          rounding: body.numberCustomFieldSetup!.settings.rounding,
+        },
+        defaultNumber: null
       })
     })
 
@@ -545,15 +543,18 @@ test.describe('should allow operations on the custom field setup entity', () => 
             defaultOptionId: "1"
           }
         }
-        const singleSelectCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        const singleSelectCustomFieldSetupId = (
+          await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        ).id
+        const singleSelectCustomFieldSetup = await getCustomFieldSetup(request, singleSelectCustomFieldSetupId)
 
         const body: UpdateCustomFieldSetupRequest = {
-          id: singleSelectCustomField.id,
+          id: singleSelectCustomFieldSetupId,
           name: "New setup",
           description: "no description",
           type: "SingleSelect",
           singleSelectCustomFieldSetup: {
-            defaultOptionId: singleSelectCustomField.options[1].id,
+            defaultOptionId: singleSelectCustomFieldSetup.options[1].id,
           }
         }
         const response = await request.put(`/api/customFieldSetups`, {
@@ -567,23 +568,21 @@ test.describe('should allow operations on the custom field setup entity', () => 
           message: expect.any(String)
         })
 
-        const customFieldSetup = await getCustomFieldSetup(request, singleSelectCustomField.id)
+        const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
-          customFieldSetup: {
-            $type: expect.any(String),
-            id: singleSelectCustomField.id,
-            name: body.name,
-            description: body.description,
-            type: "SingleSelect",
-            options: [
-              singleSelectCustomField.options[0],
-              singleSelectCustomField.options[1]
-            ],
-            defaultOption: {
-              id: body.singleSelectCustomFieldSetup?.defaultOptionId,
-              value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].value,
-              color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].color,
-            }
+          $type: expect.any(String),
+          id: body.id,
+          name: body.name,
+          description: body.description,
+          type: "SingleSelect",
+          options: [
+            singleSelectCustomFieldSetup.options[0],
+            singleSelectCustomFieldSetup.options[1]
+          ],
+          defaultOption: {
+            id: body.singleSelectCustomFieldSetup?.defaultOptionId,
+            value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].value,
+            color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].color,
           }
         })
       })
@@ -610,10 +609,13 @@ test.describe('should allow operations on the custom field setup entity', () => 
             defaultOptionId: "1"
           }
         }
-        const singleSelectCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        const singleSelectCustomFieldSetupId = (
+          await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        ).id
+        const singleSelectCustomFieldSetup = await getCustomFieldSetup(request, singleSelectCustomFieldSetupId)
 
         const body: UpdateCustomFieldSetupRequest = {
-          id: singleSelectCustomField.id,
+          id: singleSelectCustomFieldSetupId,
           name: "New setup",
           description: "no description",
           type: "SingleSelect",
@@ -636,25 +638,23 @@ test.describe('should allow operations on the custom field setup entity', () => 
           message: expect.any(String)
         })
 
-        const customFieldSetup = await getCustomFieldSetup(request, singleSelectCustomField.id)
+        const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
-          customFieldSetup: {
-            $type: expect.any(String),
-            id: singleSelectCustomField.id,
-            name: body.name,
-            description: body.description,
-            type: "SingleSelect",
-            options: [
-              singleSelectCustomField.options[0],
-              singleSelectCustomField.options[1],
-              {
-                id: expect.any(String),
-                value: body.singleSelectCustomFieldSetup?.newOption?.value,
-                color: body.singleSelectCustomFieldSetup?.newOption?.color,
-              }
-            ],
-            defaultOption: null
-          }
+          $type: expect.any(String),
+          id: body.id,
+          name: body.name,
+          description: body.description,
+          type: "SingleSelect",
+          options: [
+            singleSelectCustomFieldSetup.options[0],
+            singleSelectCustomFieldSetup.options[1],
+            {
+              id: expect.any(String),
+              value: body.singleSelectCustomFieldSetup?.newOption?.value,
+              color: body.singleSelectCustomFieldSetup?.newOption?.color,
+            }
+          ],
+          defaultOption: null
         })
       })
 
@@ -680,10 +680,13 @@ test.describe('should allow operations on the custom field setup entity', () => 
             defaultOptionId: "1"
           }
         }
-        const singleSelectCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        const singleSelectCustomFieldSetupId = (
+          await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        ).id
+        const singleSelectCustomFieldSetup = await getCustomFieldSetup(request, singleSelectCustomFieldSetupId)
 
         const body: UpdateCustomFieldSetupRequest = {
-          id: singleSelectCustomField.id,
+          id: singleSelectCustomFieldSetupId,
           name: "New setup",
           description: "no description",
           type: "SingleSelect",
@@ -693,7 +696,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
               color: "#214fc5",
               value: "Medium"
             },
-            optionId: singleSelectCustomField.options[1].id
+            optionId: singleSelectCustomFieldSetup.options[1].id
           }
         }
         const response = await request.put(`/api/customFieldSetups`, {
@@ -707,24 +710,22 @@ test.describe('should allow operations on the custom field setup entity', () => 
           message: expect.any(String)
         })
 
-        const customFieldSetup = await getCustomFieldSetup(request, singleSelectCustomField.id)
+        const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
-          customFieldSetup: {
-            $type: expect.any(String),
-            id: singleSelectCustomField.id,
-            name: body.name,
-            description: body.description,
-            type: "SingleSelect",
-            options: [
-              singleSelectCustomField.options[0],
-              {
-                id: body.singleSelectCustomFieldSetup?.optionId,
-                value: body.singleSelectCustomFieldSetup?.newOption?.value,
-                color: body.singleSelectCustomFieldSetup?.newOption?.color,
-              },
-            ],
-            defaultOption: null
-          }
+          $type: expect.any(String),
+          id: body.id,
+          name: body.name,
+          description: body.description,
+          type: "SingleSelect",
+          options: [
+            singleSelectCustomFieldSetup.options[0],
+            {
+              id: body.singleSelectCustomFieldSetup?.optionId,
+              value: body.singleSelectCustomFieldSetup?.newOption?.value,
+              color: body.singleSelectCustomFieldSetup?.newOption?.color,
+            },
+          ],
+          defaultOption: null
         })
       })
 
@@ -750,17 +751,20 @@ test.describe('should allow operations on the custom field setup entity', () => 
             defaultOptionId: "1"
           }
         }
-        const singleSelectCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        const singleSelectCustomFieldSetupId = (
+          await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        ).id
+        const singleSelectCustomFieldSetup = await getCustomFieldSetup(request, singleSelectCustomFieldSetupId)
 
         const body: UpdateCustomFieldSetupRequest = {
-          id: singleSelectCustomField.id,
+          id: singleSelectCustomFieldSetupId,
           name: "New setup",
           description: "no description",
           type: "SingleSelect",
           singleSelectCustomFieldSetup: {
             operation: "Move",
-            optionId: singleSelectCustomField.options[0].id,
-            overOptionId: singleSelectCustomField.options[1].id,
+            optionId: singleSelectCustomFieldSetup.options[0].id,
+            overOptionId: singleSelectCustomFieldSetup.options[1].id,
           }
         }
         const response = await request.put(`/api/customFieldSetups`, {
@@ -774,20 +778,18 @@ test.describe('should allow operations on the custom field setup entity', () => 
           message: expect.any(String)
         })
 
-        const customFieldSetup = await getCustomFieldSetup(request, singleSelectCustomField.id)
+        const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
-          customFieldSetup: {
-            $type: expect.any(String),
-            id: singleSelectCustomField.id,
-            name: body.name,
-            description: body.description,
-            type: "SingleSelect",
-            options: [
-              singleSelectCustomField.options[1],
-              singleSelectCustomField.options[0],
-            ],
-            defaultOption: null
-          }
+          $type: expect.any(String),
+          id: body.id,
+          name: body.name,
+          description: body.description,
+          type: "SingleSelect",
+          options: [
+            singleSelectCustomFieldSetup.options[1],
+            singleSelectCustomFieldSetup.options[0],
+          ],
+          defaultOption: null
         })
       })
 
@@ -813,16 +815,19 @@ test.describe('should allow operations on the custom field setup entity', () => 
             defaultOptionId: "1"
           }
         }
-        const singleSelectCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        const singleSelectCustomFieldSetupId = (
+          await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        ).id
+        const singleSelectCustomFieldSetup = await getCustomFieldSetup(request, singleSelectCustomFieldSetupId)
 
         const body: UpdateCustomFieldSetupRequest = {
-          id: singleSelectCustomField.id,
+          id: singleSelectCustomFieldSetupId,
           name: "New setup",
           description: "no description",
           type: "SingleSelect",
           singleSelectCustomFieldSetup: {
             operation: "Remove",
-            optionId: singleSelectCustomField.options[1].id
+            optionId: singleSelectCustomFieldSetup.options[1].id
           }
         }
         const response = await request.put(`/api/customFieldSetups`, {
@@ -836,19 +841,17 @@ test.describe('should allow operations on the custom field setup entity', () => 
           message: expect.any(String)
         })
 
-        const customFieldSetup = await getCustomFieldSetup(request, singleSelectCustomField.id)
+        const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
-          customFieldSetup: {
-            $type: expect.any(String),
-            id: singleSelectCustomField.id,
-            name: body.name,
-            description: body.description,
-            type: "SingleSelect",
-            options: [
-              singleSelectCustomField.options[0]
-            ],
-            defaultOption: null
-          }
+          $type: expect.any(String),
+          id: body.id,
+          name: body.name,
+          description: body.description,
+          type: "SingleSelect",
+          options: [
+            singleSelectCustomFieldSetup.options[0]
+          ],
+          defaultOption: null
         })
       })
     })
@@ -863,10 +866,10 @@ test.describe('should allow operations on the custom field setup entity', () => 
           defaultText: "some default text"
         }
       }
-      const textCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+      const textCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
 
       const body: UpdateCustomFieldSetupRequest = {
-        id: textCustomField.id,
+        id: textCustomFieldSetup.id,
         name: "New setup",
         description: "no description",
         type: "Text",
@@ -885,16 +888,14 @@ test.describe('should allow operations on the custom field setup entity', () => 
         message: expect.any(String)
       })
 
-      const customFieldSetup = await getCustomFieldSetup(request, textCustomField.id)
+      const customFieldSetup = await getCustomFieldSetup(request, textCustomFieldSetup.id)
       expect(customFieldSetup).toStrictEqual({
-        customFieldSetup: {
-          $type: expect.any(String),
-          id: textCustomField.id,
-          name: body.name,
-          description: body.description,
-          type: "Text",
-          defaultText: body.textCustomFieldSetup?.defaultText,
-        }
+        $type: expect.any(String),
+        id: textCustomFieldSetup.id,
+        name: body.name,
+        description: body.description,
+        type: "Text",
+        defaultText: null,
       })
     })
   })
@@ -909,10 +910,10 @@ test.describe('should allow operations on the custom field setup entity', () => 
         defaultText: undefined
       }
     }
-    const textCustomField = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+    const textCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
 
     const body: UpdateWorkspaceCustomFieldSetupRequest = {
-      id: textCustomField.id,
+      id: textCustomFieldSetup.id,
       workspaceId: WORKSPACE_ID,
     }
     const response = await request.put(`/api/customFieldSetups/workspace`, {
@@ -930,16 +931,16 @@ test.describe('should allow operations on the custom field setup entity', () => 
     expect(customFieldSetups).toHaveLength(1)
     expect(customFieldSetups).toStrictEqual([
       {
-        id: textCustomField.id,
-        name: textCustomField.name,
-        description: textCustomField.description,
+        id: textCustomFieldSetup.id,
+        name: textCustomFieldSetup.name,
+        description: textCustomFieldSetup.description,
         type: 'Text'
       }
     ])
   })
 
   test('should delete custom field setup', async ({ request }) => {
-    const textCustomField = await createCustomFieldSetupOnProject(request, {
+    const textCustomFieldSetup = await createCustomFieldSetupOnProject(request, {
       projectId: PROJECT_ID,
       name: "New Text Custom Field",
       description: "Represents a custom field",
@@ -949,7 +950,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       }
     })
 
-    const response = await request.delete(`/api/customFieldSetups/${textCustomField.id}`, useToken())
+    const response = await request.delete(`/api/customFieldSetups/${textCustomFieldSetup.id}`, useToken())
 
     expect(response.ok()).toBeTruthy()
 
@@ -961,9 +962,9 @@ test.describe('should allow operations on the custom field setup entity', () => 
     expect(customFieldSetups).toHaveLength(0)
     expect(customFieldSetups).toStrictEqual(expect.not.arrayContaining([
       {
-        id: textCustomField.id,
-        name: textCustomField.name,
-        description: textCustomField.description,
+        id: textCustomFieldSetup.id,
+        name: textCustomFieldSetup.name,
+        description: textCustomFieldSetup.description,
         type: 'Text'
       }
     ]))
@@ -979,15 +980,15 @@ test.describe('should allow operations on the custom field setup entity', () => 
         defaultText: undefined
       }
     }
-    const textCustomField = await createCustomFieldSetupOnWorkspace(request, createCustomFieldSetupOnWorkspaceRequest)
+    const textCustomFieldSetup = await createCustomFieldSetupOnWorkspace(request, createCustomFieldSetupOnWorkspaceRequest)
 
     await addCustomFieldSetupToProject(request, {
-      id: textCustomField.id,
+      id: textCustomFieldSetup.id,
       projectId: PROJECT_ID
     })
 
     const response = await request.delete(
-      `/api/customFieldSetups/${textCustomField.id}/remove-project/${PROJECT_ID}`,
+      `/api/customFieldSetups/${textCustomFieldSetup.id}/remove-project/${PROJECT_ID}`,
       useToken()
     )
 
@@ -1001,9 +1002,9 @@ test.describe('should allow operations on the custom field setup entity', () => 
     expect(customFieldSetups).toHaveLength(0)
     expect(customFieldSetups).toStrictEqual(expect.not.arrayContaining([
       {
-        id: textCustomField.id,
-        name: textCustomField.name,
-        description: textCustomField.description,
+        id: textCustomFieldSetup.id,
+        name: textCustomFieldSetup.name,
+        description: textCustomFieldSetup.description,
         type: 'Text'
       }
     ]))
