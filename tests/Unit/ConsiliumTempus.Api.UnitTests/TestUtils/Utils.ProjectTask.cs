@@ -144,6 +144,9 @@ internal static partial class Utils
             AssertProjectSprintResponse(response.Sprint, task.Stage.Sprint);
             AssertProjectResponse(response.Project, task.Stage.Sprint.Project);
             AssertWorkspaceResponse(response.Workspace, task.Stage.Sprint.Project.Workspace);
+            response.CustomFields
+                .Zip(task.CustomFields.OrderBy(cf => cf.Setup.Audit.CreatedDateTime))
+                .Should().AllSatisfy(x => AssertCustomFieldResponse(x.First, x.Second));
         }
 
         internal static void AssertGetCollectionResponse(
@@ -153,6 +156,173 @@ internal static partial class Utils
             response.Tasks.Zip(result.Tasks)
                 .Should().AllSatisfy(p => AssertProjectTaskResponse(p.First, p.Second));
             response.TotalCount.Should().Be(result.TotalCount);
+        }
+
+        private static void AssertCustomFieldResponse(
+            GetProjectTaskResponse.CustomFieldResponse response,
+            CustomField customField)
+        {
+            response.Id.Should().Be(customField.Id.Value);
+            response.Name.Should().Be(customField.Setup.Name.Value);
+            response.Description.Should().Be(customField.Setup.Description.Value);
+
+            switch (response)
+            {
+                case GetProjectTaskResponse.DateCustomFieldResponse dateResponse:
+                    customField.Should().BeOfType<DateCustomField>();
+                    AssertDateCustomFieldResponse(dateResponse, (DateCustomField)customField);
+                    break;
+
+                case GetProjectTaskResponse.DateTimeCustomFieldResponse dateTimeResponse:
+                    customField.Should().BeOfType<DateTimeCustomField>();
+                    AssertDateTimeCustomFieldResponse(dateTimeResponse, (DateTimeCustomField)customField);
+                    break;
+
+                case GetProjectTaskResponse.DurationCustomFieldResponse durationResponse:
+                    customField.Should().BeOfType<DurationCustomField>();
+                    AssertDurationCustomFieldResponse(durationResponse, (DurationCustomField)customField);
+                    break;
+
+                case GetProjectTaskResponse.MultiSelectCustomFieldResponse multiSelectResponse:
+                    customField.Should().BeOfType<MultiSelectCustomField>();
+                    AssertMultiSelectCustomFieldResponse(multiSelectResponse, (MultiSelectCustomField)customField);
+                    break;
+
+                case GetProjectTaskResponse.NumberCustomFieldResponse numberResponse:
+                    customField.Should().BeOfType<NumberCustomField>();
+                    AssertNumberCustomFieldResponse(numberResponse, (NumberCustomField)customField);
+                    break;
+
+                case GetProjectTaskResponse.PeopleCustomFieldResponse peopleResponse:
+                    customField.Should().BeOfType<PeopleCustomField>();
+                    AssertPeopleCustomFieldResponse(peopleResponse, (PeopleCustomField)customField);
+                    break;
+
+                case GetProjectTaskResponse.SingleSelectCustomFieldResponse singleSelectResponse:
+                    customField.Should().BeOfType<SingleSelectCustomField>();
+                    AssertSingleSelectCustomFieldResponse(singleSelectResponse, (SingleSelectCustomField)customField);
+                    break;
+
+                case GetProjectTaskResponse.TextCustomFieldResponse textResponse:
+                    customField.Should().BeOfType<TextCustomField>();
+                    AssertTextCustomFieldResponse(textResponse, (TextCustomField)customField);
+                    break;
+
+                case GetProjectTaskResponse.TimeCustomFieldResponse timeResponse:
+                    customField.Should().BeOfType<TimeCustomField>();
+                    AssertTimeCustomFieldResponse(timeResponse, (TimeCustomField)customField);
+                    break;
+            }
+        }
+
+        private static void AssertDateCustomFieldResponse(
+            GetProjectTaskResponse.DateCustomFieldResponse response,
+            DateCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.Date);
+            response.Date.Should().Be(customField.Date);
+        }
+
+        private static void AssertDateTimeCustomFieldResponse(
+            GetProjectTaskResponse.DateTimeCustomFieldResponse response,
+            DateTimeCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.DateTime);
+            response.DateTime.Should().Be(customField.DateTime);
+        }
+
+        private static void AssertDurationCustomFieldResponse(
+            GetProjectTaskResponse.DurationCustomFieldResponse response,
+            DurationCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.Duration);
+            response.Duration.Should().Be(customField.Duration);
+        }
+
+        private static void AssertMultiSelectCustomFieldResponse(
+            GetProjectTaskResponse.MultiSelectCustomFieldResponse response,
+            MultiSelectCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.MultiSelect);
+            response.Options
+                .Zip(customField.Options)
+                .Should().AllSatisfy(x => AssertMultiSelectOptionResponse(x.First, x.Second));
+            response.AvailableOptions
+                .Zip(customField.Setup.Options)
+                .Should().AllSatisfy(x => AssertMultiSelectOptionResponse(x.First, x.Second));
+        }
+
+        private static void AssertNumberCustomFieldResponse(
+            GetProjectTaskResponse.NumberCustomFieldResponse response,
+            NumberCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.Number);
+            if (customField.Number is null)
+                response.Number.Should().BeNull();
+            else
+                response.Number.Should().Be(customField.Number.Value);
+        }
+
+        private static void AssertPeopleCustomFieldResponse(
+            GetProjectTaskResponse.PeopleCustomFieldResponse response,
+            PeopleCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.People);
+            AssertUserResponse(response.Person, customField.Person);
+        }
+
+        private static void AssertSingleSelectCustomFieldResponse(
+            GetProjectTaskResponse.SingleSelectCustomFieldResponse response,
+            SingleSelectCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.SingleSelect);
+            AssertSingleSelectOptionResponse(response.Option, customField.Option);
+            response.AvailableOptions
+                .Zip(customField.Setup.Options)
+                .Should().AllSatisfy(x => AssertSingleSelectOptionResponse(x.First, x.Second));
+        }
+
+        private static void AssertTextCustomFieldResponse(
+            GetProjectTaskResponse.TextCustomFieldResponse response,
+            TextCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.Text);
+            if (customField.Text is null)
+                response.Text.Should().BeNull();
+            else
+                response.Text.Should().Be(customField.Text.Value);
+        }
+
+        private static void AssertTimeCustomFieldResponse(
+            GetProjectTaskResponse.TimeCustomFieldResponse response,
+            TimeCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.Time);
+            response.Time.Should().Be(customField.Time);
+        }
+
+        private static void AssertMultiSelectOptionResponse(
+            GetProjectTaskResponse.MultiSelectCustomFieldResponse.MultiSelectOptionResponse response,
+            MultiSelectOption multiSelectOption)
+        {
+            response.Id.Should().Be(multiSelectOption.Id);
+            response.Value.Should().Be(multiSelectOption.Value);
+            response.Color.Should().Be(multiSelectOption.Color);
+        }
+
+        private static void AssertSingleSelectOptionResponse(
+            GetProjectTaskResponse.SingleSelectCustomFieldResponse.SingleSelectOptionResponse? response,
+            SingleSelectOption? singleSelectOption)
+        {
+            if (singleSelectOption is null)
+            {
+                response.Should().BeNull();
+                return;
+            }
+
+            response!.Id.Should().Be(singleSelectOption.Id);
+            response.Value.Should().Be(singleSelectOption.Value);
+            response.Color.Should().Be(singleSelectOption.Color);
         }
 
         private static void AssertNumberCustomFieldRequest(
@@ -167,7 +337,7 @@ internal static partial class Utils
 
             command!.Number.Should().Be(request.Number);
         }
-        
+
         private static void AssertSingleSelectCustomFieldRequest(
             UpdateCustomFieldFromProjectTaskRequest.SingleSelectCustomFieldRequest? request,
             UpdateCustomFieldFromProjectTaskCommand.SingleSelectCustomFieldCommand? command)
@@ -180,7 +350,7 @@ internal static partial class Utils
 
             command!.OptionId.Should().Be(request.OptionId);
         }
-        
+
         private static void AssertTextCustomFieldRequest(
             UpdateCustomFieldFromProjectTaskRequest.TextCustomFieldRequest? request,
             UpdateCustomFieldFromProjectTaskCommand.TextCustomFieldCommand? command)
@@ -277,63 +447,145 @@ internal static partial class Utils
             CustomField customField)
         {
             response.Id.Should().Be(customField.Id.Value);
+            response.Name.Should().Be(customField.Setup.Name.Value);
+            response.Description.Should().Be(customField.Setup.Description.Value);
 
             switch (response)
             {
+                case GetCollectionProjectTaskResponse.DateCustomFieldResponse dateResponse:
+                    customField.Should().BeOfType<DateCustomField>();
+                    AssertDateCustomFieldResponse(dateResponse, (DateCustomField)customField);
+                    break;
+
+                case GetCollectionProjectTaskResponse.DateTimeCustomFieldResponse dateTimeResponse:
+                    customField.Should().BeOfType<DateTimeCustomField>();
+                    AssertDateTimeCustomFieldResponse(dateTimeResponse, (DateTimeCustomField)customField);
+                    break;
+
+                case GetCollectionProjectTaskResponse.DurationCustomFieldResponse durationResponse:
+                    customField.Should().BeOfType<DurationCustomField>();
+                    AssertDurationCustomFieldResponse(durationResponse, (DurationCustomField)customField);
+                    break;
+
+                case GetCollectionProjectTaskResponse.MultiSelectCustomFieldResponse multiSelectResponse:
+                    customField.Should().BeOfType<MultiSelectCustomField>();
+                    AssertMultiSelectCustomFieldResponse(multiSelectResponse, (MultiSelectCustomField)customField);
+                    break;
+
                 case GetCollectionProjectTaskResponse.NumberCustomFieldResponse numberResponse:
-                    AssertNumberCustomFieldResponse(numberResponse, customField);
+                    customField.Should().BeOfType<NumberCustomField>();
+                    AssertNumberCustomFieldResponse(numberResponse, (NumberCustomField)customField);
+                    break;
+
+                case GetCollectionProjectTaskResponse.PeopleCustomFieldResponse peopleResponse:
+                    customField.Should().BeOfType<PeopleCustomField>();
+                    AssertPeopleCustomFieldResponse(peopleResponse, (PeopleCustomField)customField);
                     break;
 
                 case GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse singleSelectResponse:
-                    AssertSingleSelectCustomFieldResponse(singleSelectResponse, customField);
+                    customField.Should().BeOfType<SingleSelectCustomField>();
+                    AssertSingleSelectCustomFieldResponse(singleSelectResponse, (SingleSelectCustomField)customField);
                     break;
 
                 case GetCollectionProjectTaskResponse.TextCustomFieldResponse textResponse:
-                    AssertTextCustomFieldResponse(textResponse, customField);
+                    customField.Should().BeOfType<TextCustomField>();
+                    AssertTextCustomFieldResponse(textResponse, (TextCustomField)customField);
+                    break;
+
+                case GetCollectionProjectTaskResponse.TimeCustomFieldResponse timeResponse:
+                    customField.Should().BeOfType<TimeCustomField>();
+                    AssertTimeCustomFieldResponse(timeResponse, (TimeCustomField)customField);
                     break;
             }
         }
 
+        private static void AssertDateCustomFieldResponse(
+            GetCollectionProjectTaskResponse.DateCustomFieldResponse response,
+            DateCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.Date);
+            response.Date.Should().Be(customField.Date);
+        }
+
+        private static void AssertDateTimeCustomFieldResponse(
+            GetCollectionProjectTaskResponse.DateTimeCustomFieldResponse response,
+            DateTimeCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.DateTime);
+            response.DateTime.Should().Be(customField.DateTime);
+        }
+
+        private static void AssertDurationCustomFieldResponse(
+            GetCollectionProjectTaskResponse.DurationCustomFieldResponse response,
+            DurationCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.Duration);
+            response.Duration.Should().Be(customField.Duration);
+        }
+
+        private static void AssertMultiSelectCustomFieldResponse(
+            GetCollectionProjectTaskResponse.MultiSelectCustomFieldResponse response,
+            MultiSelectCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.MultiSelect);
+            response.Options
+                .Zip(customField.Options)
+                .Should().AllSatisfy(x => AssertMultiSelectOptionResponse(x.First, x.Second));
+        }
+
         private static void AssertNumberCustomFieldResponse(
             GetCollectionProjectTaskResponse.NumberCustomFieldResponse response,
-            CustomField customField)
+            NumberCustomField customField)
         {
-            customField.Should().BeOfType<NumberCustomField>();
-            var numberCustomField = (NumberCustomField)customField;
             response.Type.Should().Be(CustomFieldType.Number);
-            response.Name.Should().Be(numberCustomField.Setup.Name.Value);
-            response.Description.Should().Be(numberCustomField.Setup.Description.Value);
-            if (numberCustomField.Number is null)
+            if (customField.Number is null)
                 response.Number.Should().BeNull();
             else
-                response.Number.Should().Be(numberCustomField.Number.Value);
+                response.Number.Should().Be(customField.Number.Value);
+        }
+
+        private static void AssertPeopleCustomFieldResponse(
+            GetCollectionProjectTaskResponse.PeopleCustomFieldResponse response,
+            PeopleCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.People);
+            AssertUserResponse(response.Person, customField.Person);
         }
 
         private static void AssertSingleSelectCustomFieldResponse(
             GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse response,
-            CustomField customField)
+            SingleSelectCustomField customField)
         {
-            customField.Should().BeOfType<SingleSelectCustomField>();
-            var singleSelectCustomField = (SingleSelectCustomField)customField;
             response.Type.Should().Be(CustomFieldType.SingleSelect);
-            response.Name.Should().Be(singleSelectCustomField.Setup.Name.Value);
-            response.Description.Should().Be(singleSelectCustomField.Setup.Description.Value);
-            AssertSingleSelectOptionResponse(response.Option, singleSelectCustomField.Option);
+            AssertSingleSelectOptionResponse(response.Option, customField.Option);
         }
 
         private static void AssertTextCustomFieldResponse(
             GetCollectionProjectTaskResponse.TextCustomFieldResponse response,
-            CustomField customField)
+            TextCustomField customField)
         {
-            customField.Should().BeOfType<TextCustomField>();
-            var textCustomField = (TextCustomField)customField;
             response.Type.Should().Be(CustomFieldType.Text);
-            response.Name.Should().Be(textCustomField.Setup.Name.Value);
-            response.Description.Should().Be(textCustomField.Setup.Description.Value);
-            if (textCustomField.Text is null)
+            if (customField.Text is null)
                 response.Text.Should().BeNull();
             else
-                response.Text.Should().Be(textCustomField.Text.Value);
+                response.Text.Should().Be(customField.Text.Value);
+        }
+
+        private static void AssertTimeCustomFieldResponse(
+            GetCollectionProjectTaskResponse.TimeCustomFieldResponse response,
+            TimeCustomField customField)
+        {
+            response.Type.Should().Be(CustomFieldType.Time);
+            response.Time.Should().Be(customField.Time);
+        }
+
+        private static void AssertMultiSelectOptionResponse(
+            GetCollectionProjectTaskResponse.MultiSelectCustomFieldResponse.MultiSelectOptionResponse response,
+            MultiSelectOption multiSelectOption)
+        {
+            response.Id.Should().Be(multiSelectOption.Id);
+            response.Value.Should().Be(multiSelectOption.Value);
+            response.Color.Should().Be(multiSelectOption.Color);
         }
 
         private static void AssertSingleSelectOptionResponse(

@@ -15,6 +15,97 @@ namespace ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 
 public static class CustomFieldSetupFactory
 {
+    public static DateCustomFieldSetupAggregate CreateDate(
+        string name = Constants.CustomFieldSetup.Name,
+        string description = Constants.CustomFieldSetup.Description,
+        DateOnly? defaultDate = null,
+        WorkspaceAggregate? workspace = null,
+        ProjectAggregate? project = null,
+        UserAggregate? createdBy = null)
+    {
+        var setup = DateCustomFieldSetupAggregate.Create(
+            defaultDate,
+            Name.Create(name),
+            Description.Create(description),
+            workspace,
+            project,
+            createdBy ?? UserFactory.Create());
+
+        setup.ClearDomainEvents();
+
+        return setup;
+    }
+
+    public static DateTimeCustomFieldSetupAggregate CreateDateTime(
+        string name = Constants.CustomFieldSetup.Name,
+        string description = Constants.CustomFieldSetup.Description,
+        DateTime? defaultDateTime = null,
+        WorkspaceAggregate? workspace = null,
+        ProjectAggregate? project = null,
+        UserAggregate? createdBy = null)
+    {
+        var setup = DateTimeCustomFieldSetupAggregate.Create(
+            defaultDateTime,
+            Name.Create(name),
+            Description.Create(description),
+            workspace,
+            project,
+            createdBy ?? UserFactory.Create());
+
+        setup.ClearDomainEvents();
+
+        return setup;
+    }
+
+    public static DurationCustomFieldSetupAggregate CreateDuration(
+        string name = Constants.CustomFieldSetup.Name,
+        string description = Constants.CustomFieldSetup.Description,
+        TimeSpan? defaultDuration = null,
+        WorkspaceAggregate? workspace = null,
+        ProjectAggregate? project = null,
+        UserAggregate? createdBy = null)
+    {
+        var setup = DurationCustomFieldSetupAggregate.Create(
+            defaultDuration,
+            Name.Create(name),
+            Description.Create(description),
+            workspace,
+            project,
+            createdBy ?? UserFactory.Create());
+
+        setup.ClearDomainEvents();
+
+        return setup;
+    }
+
+    public static MultiSelectCustomFieldSetupAggregate CreateMultiSelect(
+        string name = Constants.CustomFieldSetup.Name,
+        string description = Constants.CustomFieldSetup.Description,
+        List<MultiSelectOption>? options = null,
+        WorkspaceAggregate? workspace = null,
+        ProjectAggregate? project = null,
+        UserAggregate? createdBy = null)
+    {
+        var setup = MultiSelectCustomFieldSetupAggregate.Create(
+            options ??
+            [
+                MultiSelectOptionFactory.Create(),
+                MultiSelectOptionFactory.Create(
+                    Constants.SingleSelectOption.Value2,
+                    Constants.SingleSelectOption.Color,
+                    1)
+            ],
+            Name.Create(name),
+            Description.Create(description),
+            workspace,
+            project,
+            createdBy ?? UserFactory.Create());
+
+        setup.ClearDomainEvents();
+
+        return setup;
+    }
+
     public static NumberCustomFieldSetupAggregate CreateNumber(
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
@@ -35,7 +126,26 @@ public static class CustomFieldSetupFactory
             workspace,
             project,
             createdBy ?? UserFactory.Create());
-        
+
+        setup.ClearDomainEvents();
+
+        return setup;
+    }
+
+    public static PeopleCustomFieldSetupAggregate CreatePeople(
+        string name = Constants.CustomFieldSetup.Name,
+        string description = Constants.CustomFieldSetup.Description,
+        WorkspaceAggregate? workspace = null,
+        ProjectAggregate? project = null,
+        UserAggregate? createdBy = null)
+    {
+        var setup = PeopleCustomFieldSetupAggregate.Create(
+            Name.Create(name),
+            Description.Create(description),
+            workspace,
+            project,
+            createdBy ?? UserFactory.Create());
+
         setup.ClearDomainEvents();
 
         return setup;
@@ -54,10 +164,10 @@ public static class CustomFieldSetupFactory
             options ??
             [
                 SingleSelectOptionFactory.Create(),
-                SingleSelectOption.Create(
+                SingleSelectOptionFactory.Create(
                     Constants.SingleSelectOption.Value2,
                     Constants.SingleSelectOption.Color,
-                    CustomOrderPosition.Create(1))
+                    1)
             ],
             defaultOptionId,
             Name.Create(name),
@@ -65,7 +175,7 @@ public static class CustomFieldSetupFactory
             workspace,
             project,
             createdBy ?? UserFactory.Create());
-        
+
         setup.ClearDomainEvents();
 
         return setup;
@@ -92,13 +202,40 @@ public static class CustomFieldSetupFactory
         return setup;
     }
 
+    public static TimeCustomFieldSetupAggregate CreateTime(
+        string name = Constants.CustomFieldSetup.Name,
+        string description = Constants.CustomFieldSetup.Description,
+        TimeOnly? defaultTime = null,
+        WorkspaceAggregate? workspace = null,
+        ProjectAggregate? project = null,
+        UserAggregate? createdBy = null)
+    {
+        var setup = TimeCustomFieldSetupAggregate.Create(
+            defaultTime,
+            Name.Create(name),
+            Description.Create(description),
+            workspace,
+            project,
+            createdBy ?? UserFactory.Create());
+
+        setup.ClearDomainEvents();
+
+        return setup;
+    }
+
     public static List<CustomFieldSetupAggregate> CreateList()
     {
-        return 
+        return
         [
+            CreateDate(),
+            CreateDateTime(),
+            CreateDuration(),
+            CreateMultiSelect(),
             CreateNumber(),
+            CreatePeople(),
             CreateSingleSelect(),
-            CreateText()
+            CreateText(),
+            CreateTime()
         ];
     }
 }
