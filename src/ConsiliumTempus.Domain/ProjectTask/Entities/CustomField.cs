@@ -25,21 +25,59 @@ public abstract class CustomField : Entity<CustomFieldId>
     {
         return setup switch
         {
+            DateCustomFieldSetupAggregate dateSetup =>
+                DateCustomField.Create(
+                    dateSetup.DefaultDate,
+                    dateSetup,
+                    projectTask),
+
+            DateTimeCustomFieldSetupAggregate dateTimeSetup =>
+                DateTimeCustomField.Create(
+                    dateTimeSetup.DefaultDateTime,
+                    dateTimeSetup,
+                    projectTask),
+
+            DurationCustomFieldSetupAggregate durationSetup =>
+                DurationCustomField.Create(
+                    durationSetup.DefaultDuration,
+                    durationSetup,
+                    projectTask),
+
+            MultiSelectCustomFieldSetupAggregate multiSelectSetup =>
+                MultiSelectCustomField.Create(
+                    multiSelectSetup,
+                    projectTask),
+
             NumberCustomFieldSetupAggregate numberSetup =>
                 NumberCustomField.Create(
-                    numberSetup.DefaultNumber?.Copy(), 
+                    numberSetup.DefaultNumber?.Copy(),
                     numberSetup,
                     projectTask),
+
+            PeopleCustomFieldSetupAggregate peopleSetup =>
+                PeopleCustomField.Create(
+                    null,
+                    peopleSetup,
+                    projectTask),
+
             SingleSelectCustomFieldSetupAggregate singleSelectSetup =>
                 SingleSelectCustomField.Create(
                     singleSelectSetup.DefaultOption,
                     singleSelectSetup,
                     projectTask),
+
             TextCustomFieldSetupAggregate textSetup =>
                 TextCustomField.Create(
-                    textSetup.DefaultText?.Copy(), 
+                    textSetup.DefaultText?.Copy(),
                     textSetup,
                     projectTask),
+
+            TimeCustomFieldSetupAggregate timeSetup =>
+                TimeCustomField.Create(
+                    timeSetup.DefaultTime,
+                    timeSetup,
+                    projectTask),
+
             _ => throw new ArgumentOutOfRangeException(nameof(setup), setup, "Type Not Supported")
         };
     }
