@@ -12,8 +12,8 @@ import {
   createCustomFieldSetupOnWorkspace, getCustomFieldSetup,
   getCustomFieldSetupsFromProject, getCustomFieldSetupsFromWorkspace
 } from "../utils/custom-field-setup.utils";
-import UpdateWorkspaceCustomFieldSetupRequest
-  from "../types/requests/custom-field-setup/UpdateWorkspaceCustomFieldSetupRequest";
+import MakeCustomFieldSetupGlobalRequest
+  from "../types/requests/custom-field-setup/MakeCustomFieldSetupGlobalRequest";
 import AddCustomFieldSetupToProjectRequest
   from "../types/requests/custom-field-setup/AddCustomFieldSetupToProjectRequest";
 import CreateCustomFieldSetupOnWorkspaceRequest
@@ -900,7 +900,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
     })
   })
 
-  test('should update workspace on custom field setup', async ({ request }) => {
+  test('should make custom field setup global', async ({ request }) => {
     const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
       projectId: PROJECT_ID,
       name: "New Text Custom Field",
@@ -912,11 +912,10 @@ test.describe('should allow operations on the custom field setup entity', () => 
     }
     const textCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
 
-    const body: UpdateWorkspaceCustomFieldSetupRequest = {
-      id: textCustomFieldSetup.id,
-      workspaceId: WORKSPACE_ID,
+    const body: MakeCustomFieldSetupGlobalRequest = {
+      id: textCustomFieldSetup.id
     }
-    const response = await request.put(`/api/customFieldSetups/workspace`, {
+    const response = await request.put(`/api/customFieldSetups/global`, {
       ...useToken(),
       data: body
     })

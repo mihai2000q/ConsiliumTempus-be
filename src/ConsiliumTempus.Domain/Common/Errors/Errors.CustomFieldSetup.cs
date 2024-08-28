@@ -14,6 +14,10 @@ public static partial class Errors
             "CustomFieldSetup.NotGlobal",
             "Custom Field Setup is not globally available in the workspace");
 
+        public static Error AlreadyGlobal => Error.Conflict(
+            "CustomFieldSetup.AlreadyGlobal",
+            "This Custom Field Setup is already globally available in the workspace");
+
         public static Error ProjectAlreadyPresent => Error.Conflict(
             "CustomFieldSetup.ProjectAlreadyPresent",
             "Custom Field Setup already has the project");

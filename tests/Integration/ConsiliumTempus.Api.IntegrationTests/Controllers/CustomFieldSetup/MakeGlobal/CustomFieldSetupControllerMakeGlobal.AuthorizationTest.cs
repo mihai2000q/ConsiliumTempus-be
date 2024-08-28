@@ -5,52 +5,52 @@ using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.UpdateWorkspace;
+namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.MakeGlobal;
 
 [Collection(nameof(CustomFieldSetupControllerCollection))]
-public class CustomFieldSetupControllerUpdateWorkspaceAuthorizationTest(WebAppFactory factory)
+public class CustomFieldSetupControllerMakeGlobalAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new CustomFieldSetupData())
 {
     // Permission Authorization
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenWithAdminRole_ShouldReturnSuccessResponse()
+    public async Task MakeCustomFieldSetupGlobal_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(CustomFieldSetupData.Users[0]);
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenWithMemberRole_ShouldReturnForbiddenResponse()
+    public async Task MakeCustomFieldSetupGlobal_WhenWithMemberRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(CustomFieldSetupData.Users[3]);
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenWithViewRole_ShouldReturnForbiddenResponse()
+    public async Task MakeCustomFieldSetupGlobal_WhenWithViewRole_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(CustomFieldSetupData.Users[4]);
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task MakeCustomFieldSetupGlobal_WhenWithoutMembership_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(CustomFieldSetupData.Users[1]);
     }
 
     // Project Authorization
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenProjectIsNotPrivate_ShouldReturnSuccessResponse()
+    public async Task MakeCustomFieldSetupGlobal_WhenProjectIsNotPrivate_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(CustomFieldSetupData.Users[4], CustomFieldSetupData.CustomFieldSetups[^3]);
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenProjectIsPrivateAndIsAllowedMember_ShouldReturnSuccessResponse()
+    public async Task MakeCustomFieldSetupGlobal_WhenProjectIsPrivateAndIsAllowedMember_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(CustomFieldSetupData.Users[0], CustomFieldSetupData.CustomFieldSetups[^2]);
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
+    public async Task MakeCustomFieldSetupGlobal_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(CustomFieldSetupData.Users[0], CustomFieldSetupData.CustomFieldSetups[^1]);
     }
@@ -77,13 +77,10 @@ public class CustomFieldSetupControllerUpdateWorkspaceAuthorizationTest(WebAppFa
     {
         // Arrange
         customFieldSetup ??= CustomFieldSetupData.CustomFieldSetups.First();
-        var workspace = CustomFieldSetupData.Workspaces[0];
-        var request = CustomFieldSetupRequestFactory.CreateUpdateWorkspaceCustomFieldSetupRequest(
-            customFieldSetup.Id.Value,
-            workspace.Id.Value);
+        var request = CustomFieldSetupRequestFactory.CreateMakeCustomFieldSetupGlobalRequest(customFieldSetup.Id.Value);
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Put("api/customFieldSetups/Workspace", request);
+        return await Client.Put("api/customFieldSetups/Global", request);
     }
 }

@@ -6,15 +6,15 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.MakeGlobal;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Update;
-using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.MakeGlobal;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
-using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -131,16 +131,16 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
     }
 
     [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
-    [HasPermission(Permissions.UpdateWorkspaceCustomFieldSetup)]
-    [HttpPut("Workspace")]
-    public async Task<IActionResult> UpdateWorkspace(UpdateWorkspaceCustomFieldSetupRequest request,
+    [HasPermission(Permissions.MakeCustomFieldSetupGlobal)]
+    [HttpPut("Global")]
+    public async Task<IActionResult> MakeGlobal(MakeCustomFieldSetupGlobalRequest request,
         CancellationToken cancellationToken)
     {
-        var command = Mapper.Map<UpdateWorkspaceCustomFieldSetupCommand>(request);
+        var command = Mapper.Map<MakeCustomFieldSetupGlobalCommand>(request);
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            updateWorkspaceResult => Ok(Mapper.Map<UpdateWorkspaceCustomFieldSetupResponse>(updateWorkspaceResult)),
+            makeGlobalResult => Ok(Mapper.Map<MakeCustomFieldGlobalResponse>(makeGlobalResult)),
             Problem
         );
     }

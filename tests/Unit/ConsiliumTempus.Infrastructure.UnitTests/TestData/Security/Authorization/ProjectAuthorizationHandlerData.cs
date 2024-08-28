@@ -48,7 +48,7 @@ public static class ProjectAuthorizationHandlerData
             requestLocation = RequestLocation.Body;
             Add(level, requestLocation, typeof(ProjectAggregate), controller, "CreateOnProject", StringIdType.Project);
             Add(level, requestLocation, null, controller, "Update", stringIdType);
-            Add(level, requestLocation, null, controller, "UpdateWorkspace", stringIdType);
+            Add(level, requestLocation, null, controller, "MakeGlobal", stringIdType);
 
             // Project Controller
             controller = Controller.Project;

@@ -5,14 +5,14 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.MakeGlobal;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Update;
-using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.MakeGlobal;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
-using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -33,7 +33,7 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
         CreateOnWorkspaceMappings(config);
         CreateOnProjectMappings(config);
         UpdateMappings(config);
-        UpdateWorkspaceMappings(config);
+        MakeGlobalMappings(config);
         DeleteMappings(config);
         RemoveFromProjectMappings(config);
     }
@@ -148,11 +148,11 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
         config.NewConfig<UpdateCustomFieldSetupResult, UpdateCustomFieldSetupResponse>();
     }
 
-    private static void UpdateWorkspaceMappings(TypeAdapterConfig config)
+    private static void MakeGlobalMappings(TypeAdapterConfig config)
     {
-        config.NewConfig<UpdateWorkspaceCustomFieldSetupRequest, UpdateWorkspaceCustomFieldSetupCommand>();
+        config.NewConfig<MakeCustomFieldSetupGlobalRequest, MakeCustomFieldSetupGlobalCommand>();
 
-        config.NewConfig<UpdateWorkspaceCustomFieldSetupResult, UpdateWorkspaceCustomFieldSetupResponse>();
+        config.NewConfig<MakeCustomFieldSetupGlobalResult, MakeCustomFieldGlobalResponse>();
     }
 
     private static void DeleteMappings(TypeAdapterConfig config)

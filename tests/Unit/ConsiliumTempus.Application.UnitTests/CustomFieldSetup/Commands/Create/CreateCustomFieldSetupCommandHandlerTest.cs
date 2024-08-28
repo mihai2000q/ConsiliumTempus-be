@@ -71,7 +71,7 @@ public class CreateCustomFieldSetupCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         if (command.WorkspaceId is not null)
             await _workspaceRepository
                 .Received(1)
@@ -120,7 +120,7 @@ public class CreateCustomFieldSetupCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         _workspaceRepository.DidNotReceive();
         await _projectRepository
             .Received(1)
@@ -145,7 +145,7 @@ public class CreateCustomFieldSetupCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));

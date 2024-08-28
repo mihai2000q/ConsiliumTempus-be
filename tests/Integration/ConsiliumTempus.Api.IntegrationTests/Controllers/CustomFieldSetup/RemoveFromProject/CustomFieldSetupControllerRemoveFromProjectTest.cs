@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.MakeGlobal;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
@@ -36,7 +36,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var response = await outcome.Content.ReadFromJsonAsync<UpdateWorkspaceCustomFieldSetupResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<MakeCustomFieldGlobalResponse>();
         response!.Message.Should().Be("Custom Field Setup has been successfully removed from project!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();

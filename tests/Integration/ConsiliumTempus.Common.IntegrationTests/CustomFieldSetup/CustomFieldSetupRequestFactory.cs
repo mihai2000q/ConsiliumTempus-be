@@ -6,9 +6,9 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.MakeGlobal;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Update;
-using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Enums;
 
@@ -128,12 +128,8 @@ public static class CustomFieldSetupRequestFactory
             textCustomFieldSetup);
     }
 
-    public static UpdateWorkspaceCustomFieldSetupRequest CreateUpdateWorkspaceCustomFieldSetupRequest(
-        Guid? id = null,
-        Guid? workspaceId = null)
+    public static MakeCustomFieldSetupGlobalRequest CreateMakeCustomFieldSetupGlobalRequest(Guid? id = null)
     {
-        return new UpdateWorkspaceCustomFieldSetupRequest(
-            id ?? Guid.NewGuid(),
-            workspaceId ?? Guid.NewGuid());
+        return new MakeCustomFieldSetupGlobalRequest(id ?? Guid.NewGuid());
     }
 }

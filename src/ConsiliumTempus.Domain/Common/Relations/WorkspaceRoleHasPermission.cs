@@ -80,7 +80,7 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
         Permissions.AddCustomFieldSetupToProject,
         Permissions.ReadCustomFieldSetup,
         Permissions.ReadCollectionCustomFieldSetupFromWorkspace, Permissions.ReadCollectionCustomFieldSetupFromProject,
-        Permissions.UpdateCustomFieldSetup, Permissions.UpdateWorkspaceCustomFieldSetup,
+        Permissions.UpdateCustomFieldSetup, Permissions.MakeCustomFieldSetupGlobal,
         Permissions.DeleteCustomFieldSetup, Permissions.RemoveCustomFieldSetupFromProject,
         // Project
         Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadOverviewProject,

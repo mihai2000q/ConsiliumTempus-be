@@ -10,10 +10,6 @@ namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 public interface ICustomFieldSetupRepository
 {
     Task<CustomFieldSetupAggregate?> Get(CustomFieldSetupId id, CancellationToken cancellationToken = default);
-
-    Task<CustomFieldSetupAggregate?> GetWithWorkspace(
-        CustomFieldSetupId id,
-        CancellationToken cancellationToken = default);
     
     Task<CustomFieldSetupAggregate?> GetWithWorkspaceAndProjects(
         CustomFieldSetupId id,

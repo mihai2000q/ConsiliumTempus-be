@@ -5,9 +5,9 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.CreateOnWorkspace;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.MakeGlobal;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Update;
-using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -204,13 +204,14 @@ internal static partial class Utils
             }
         }
 
-        public static void AssertUpdateWorkspace(
-            UpdateWorkspaceCustomFieldSetupRequest request,
+        public static void AssertMakeGlobal(
+            MakeCustomFieldSetupGlobalRequest request,
             CustomFieldSetupAggregate customFieldSetup,
             UserAggregate user)
         {
+            customFieldSetup.Id.Value.Should().Be(request.Id);
             customFieldSetup.Workspace.Should().NotBeNull();
-            customFieldSetup.Workspace!.Id.Value.Should().Be(request.WorkspaceId);
+            customFieldSetup.Workspace.Should().Be(customFieldSetup.Projects.Single().Workspace);
             customFieldSetup.Audit.ShouldBeUpdated(user);
         }
 

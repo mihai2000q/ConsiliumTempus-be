@@ -34,7 +34,7 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.CreateCustomFieldSetupOnProject, RequestLocation.Body, typeof(ProjectAggregate).ToCamelId(), StringIdType.Project);
             Add(Permissions.AddCustomFieldSetupToProject, RequestLocation.Body, null, StringIdType.CustomFieldSetup);
             Add(Permissions.UpdateCustomFieldSetup, RequestLocation.Body, null, StringIdType.CustomFieldSetup);
-            Add(Permissions.UpdateWorkspaceCustomFieldSetup, RequestLocation.Body, null, StringIdType.CustomFieldSetup);
+            Add(Permissions.MakeCustomFieldSetupGlobal, RequestLocation.Body, null, StringIdType.CustomFieldSetup);
             Add(Permissions.ReadCollectionCustomFieldSetupFromWorkspace, RequestLocation.Route, typeof(WorkspaceAggregate).ToCamelId(), StringIdType.Workspace);
             Add(Permissions.ReadCollectionCustomFieldSetupFromProject, RequestLocation.Route, typeof(ProjectAggregate).ToCamelId(), StringIdType.Project);
             Add(Permissions.ReadCustomFieldSetup, RequestLocation.Route, null, StringIdType.CustomFieldSetup);

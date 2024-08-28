@@ -1,9 +1,9 @@
 ﻿using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.MakeGlobal;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
-using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 
@@ -33,9 +33,9 @@ public static class CustomFieldSetupResultFactory
         return new UpdateCustomFieldSetupResult();
     }
 
-    public static UpdateWorkspaceCustomFieldSetupResult CreateUpdateWorkspaceCustomFieldSetupResult()
+    public static MakeCustomFieldSetupGlobalResult CreateMakeCustomFieldSetupGlobalResult()
     {
-        return new UpdateWorkspaceCustomFieldSetupResult();
+        return new MakeCustomFieldSetupGlobalResult();
     }
 
     public static DeleteCustomFieldSetupResult CreateDeleteCustomFieldSetupResult()

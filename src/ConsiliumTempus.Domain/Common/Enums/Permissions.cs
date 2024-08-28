@@ -10,7 +10,7 @@ public enum Permissions
     ReadCollectionCustomFieldSetupFromProject,
     ReadCollectionCustomFieldSetupFromWorkspace,
     UpdateCustomFieldSetup,
-    UpdateWorkspaceCustomFieldSetup,
+    MakeCustomFieldSetupGlobal,
     DeleteCustomFieldSetup,
     RemoveCustomFieldSetupFromProject,
     

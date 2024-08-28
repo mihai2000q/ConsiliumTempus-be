@@ -99,7 +99,7 @@ public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceS
 
             Permissions.AddCustomFieldSetupToProject or
             Permissions.UpdateCustomFieldSetup or
-            Permissions.UpdateWorkspaceCustomFieldSetup => (
+            Permissions.MakeCustomFieldSetupGlobal => (
                 await HttpRequestReader.GetStringIdFromBody(request),
                 StringIdType.CustomFieldSetup),
 

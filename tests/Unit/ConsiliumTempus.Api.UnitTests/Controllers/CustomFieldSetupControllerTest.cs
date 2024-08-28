@@ -6,18 +6,18 @@ using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
+using ConsiliumTempus.Api.Contracts.CustomFieldSetup.MakeGlobal;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.RemoveFromProject;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Update;
-using ConsiliumTempus.Api.Contracts.CustomFieldSetup.UpdateWorkspace;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Api.UnitTests.TestData;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.MakeGlobal;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
-using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
@@ -377,23 +377,23 @@ public class CustomFieldSetupControllerTest
     public async Task UpdateWorkspace_WhenIsSuccessful_ShouldReturnResponse()
     {
         // Arrange
-        var request = CustomFieldSetupRequestFactory.CreateUpdateWorkspaceCustomFieldSetupRequest();
+        var request = CustomFieldSetupRequestFactory.CreateMakeCustomFieldSetupGlobalRequest();
 
-        var result = CustomFieldSetupResultFactory.CreateUpdateWorkspaceCustomFieldSetupResult();
+        var result = CustomFieldSetupResultFactory.CreateMakeCustomFieldSetupGlobalResult();
         _mediator
-            .Send(Arg.Any<UpdateWorkspaceCustomFieldSetupCommand>())
+            .Send(Arg.Any<MakeCustomFieldSetupGlobalCommand>())
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateWorkspace(request, default);
+        var outcome = await _uut.MakeGlobal(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<UpdateWorkspaceCustomFieldSetupCommand>(c =>
-                Utils.CustomFieldSetup.AssertUpdateWorkspaceCustomFieldSetupCommand(c, request)));
+            .Send(Arg.Is<MakeCustomFieldSetupGlobalCommand>(c =>
+                Utils.CustomFieldSetup.AssertMakeCustomFieldSetupGlobalCommand(c, request)));
 
-        var response = outcome.ToResponse<UpdateWorkspaceCustomFieldSetupResponse>();
+        var response = outcome.ToResponse<MakeCustomFieldGlobalResponse>();
         response.Message.Should().Be(result.Message);
     }
 
@@ -401,21 +401,21 @@ public class CustomFieldSetupControllerTest
     public async Task UpdateWorkspace_WhenItFails_ShouldReturnProblem()
     {
         // Arrange
-        var request = CustomFieldSetupRequestFactory.CreateUpdateWorkspaceCustomFieldSetupRequest();
+        var request = CustomFieldSetupRequestFactory.CreateMakeCustomFieldSetupGlobalRequest();
 
         var error = Errors.CustomFieldSetup.NotFound;
         _mediator
-            .Send(Arg.Any<UpdateWorkspaceCustomFieldSetupCommand>())
+            .Send(Arg.Any<MakeCustomFieldSetupGlobalCommand>())
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateWorkspace(request, default);
+        var outcome = await _uut.MakeGlobal(request, default);
 
         // Assert
         await _mediator
             .Received(1)
-            .Send(Arg.Is<UpdateWorkspaceCustomFieldSetupCommand>(c =>
-                Utils.CustomFieldSetup.AssertUpdateWorkspaceCustomFieldSetupCommand(c, request)));
+            .Send(Arg.Is<MakeCustomFieldSetupGlobalCommand>(c =>
+                Utils.CustomFieldSetup.AssertMakeCustomFieldSetupGlobalCommand(c, request)));
 
         outcome.ValidateError(error);
     }

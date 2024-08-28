@@ -80,7 +80,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
                     StringIdType.Project),
 
                 "Update" or
-                "UpdateWorkspace" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.CustomFieldSetup),
+                "MakeGlobal" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.CustomFieldSetup),
 
                 _ => (null, StringIdType.Empty)
             },

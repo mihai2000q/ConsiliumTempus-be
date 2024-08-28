@@ -1,9 +1,9 @@
 ﻿using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.MakeGlobal;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
-using ConsiliumTempus.Application.CustomFieldSetup.Commands.UpdateWorkspace;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Enums;
 
@@ -74,12 +74,8 @@ public static class CustomFieldSetupCommandFactory
             textCustomFieldSetup);
     }
 
-    public static UpdateWorkspaceCustomFieldSetupCommand CreateUpdateWorkspaceCustomFieldSetupCommand(
-        Guid? id = null,
-        Guid? workspaceId = null)
+    public static MakeCustomFieldSetupGlobalCommand CreateMakeCustomFieldSetupGlobalCommand(Guid? id = null)
     {
-        return new UpdateWorkspaceCustomFieldSetupCommand(
-            id ?? Guid.NewGuid(),
-            workspaceId ?? Guid.NewGuid());
+        return new MakeCustomFieldSetupGlobalCommand(id ?? Guid.NewGuid());
     }
 }
