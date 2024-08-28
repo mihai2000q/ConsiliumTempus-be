@@ -74,63 +74,63 @@ internal static partial class Utils
                         (DateCustomFieldSetupAggregate)customFieldSetup,
                         command);
                     break;
-                
+
                 case CustomFieldType.DateTime:
                     customFieldSetup.Should().BeOfType<DateTimeCustomFieldSetupAggregate>();
                     AssertCreateDateTimeCustomFieldSetup(
                         (DateTimeCustomFieldSetupAggregate)customFieldSetup,
                         command);
                     break;
-                
+
                 case CustomFieldType.Duration:
                     customFieldSetup.Should().BeOfType<DurationCustomFieldSetupAggregate>();
                     AssertCreateDurationCustomFieldSetup(
                         (DurationCustomFieldSetupAggregate)customFieldSetup,
                         command);
                     break;
-                
+
                 case CustomFieldType.MultiSelect:
                     customFieldSetup.Should().BeOfType<MultiSelectCustomFieldSetupAggregate>();
                     AssertCreateMultiSelectCustomFieldSetup(
                         (MultiSelectCustomFieldSetupAggregate)customFieldSetup,
                         command);
                     break;
-                
+
                 case CustomFieldType.Number:
                     customFieldSetup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
                     AssertCreateNumberCustomFieldSetup(
                         (NumberCustomFieldSetupAggregate)customFieldSetup,
                         command);
                     break;
-                
+
                 case CustomFieldType.People:
                     customFieldSetup.Should().BeOfType<PeopleCustomFieldSetupAggregate>();
                     AssertCreatePeopleCustomFieldSetup(
                         (PeopleCustomFieldSetupAggregate)customFieldSetup,
                         command);
                     break;
-                
+
                 case CustomFieldType.SingleSelect:
                     customFieldSetup.Should().BeOfType<SingleSelectCustomFieldSetupAggregate>();
                     AssertCreateSingleSelectCustomFieldSetup(
-                        (SingleSelectCustomFieldSetupAggregate)customFieldSetup, 
+                        (SingleSelectCustomFieldSetupAggregate)customFieldSetup,
                         command);
                     break;
-                
+
                 case CustomFieldType.Text:
                     customFieldSetup.Should().BeOfType<TextCustomFieldSetupAggregate>();
                     AssertCreateTextCustomFieldSetup(
                         (TextCustomFieldSetupAggregate)customFieldSetup,
                         command);
                     break;
-                
+
                 case CustomFieldType.Time:
                     customFieldSetup.Should().BeOfType<TimeCustomFieldSetupAggregate>();
                     AssertCreateTimeCustomFieldSetup(
                         (TimeCustomFieldSetupAggregate)customFieldSetup,
                         command);
                     break;
-                
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(command));
             }
@@ -204,46 +204,84 @@ internal static partial class Utils
                 customField.ProjectTask.Should().Be(task);
                 switch (setup)
                 {
+                    case DateCustomFieldSetupAggregate dateSetup:
+                        customField.Should().BeOfType<DateCustomField>();
+                        ((DateCustomField)customField).Date.Should().Be(dateSetup.DefaultDate);
+                        ((DateCustomField)customField).Setup.Should().Be(setup);
+                        break;
+
+                    case DateTimeCustomFieldSetupAggregate dateTimeSetup:
+                        customField.Should().BeOfType<DateTimeCustomField>();
+                        ((DateTimeCustomField)customField).DateTime.Should().Be(dateTimeSetup.DefaultDateTime);
+                        ((DateTimeCustomField)customField).Setup.Should().Be(setup);
+                        break;
+
+                    case DurationCustomFieldSetupAggregate durationSetup:
+                        customField.Should().BeOfType<DurationCustomField>();
+                        ((DurationCustomField)customField).Duration.Should().Be(durationSetup.DefaultDuration);
+                        ((DurationCustomField)customField).Setup.Should().Be(setup);
+                        break;
+
+                    case MultiSelectCustomFieldSetupAggregate:
+                        customField.Should().BeOfType<MultiSelectCustomField>();
+                        ((MultiSelectCustomField)customField).Options.Should().BeEmpty();
+                        ((MultiSelectCustomField)customField).Setup.Should().Be(setup);
+                        break;
+
                     case NumberCustomFieldSetupAggregate numberSetup:
                         customField.Should().BeOfType<NumberCustomField>();
                         ((NumberCustomField)customField).Number.Should().Be(numberSetup.DefaultNumber);
                         ((NumberCustomField)customField).Setup.Should().Be(setup);
                         break;
+
+                    case PeopleCustomFieldSetupAggregate:
+                        customField.Should().BeOfType<PeopleCustomField>();
+                        ((PeopleCustomField)customField).Person.Should().BeNull();
+                        ((PeopleCustomField)customField).Setup.Should().Be(setup);
+                        break;
+
                     case SingleSelectCustomFieldSetupAggregate singleSelectSetup:
                         customField.Should().BeOfType<SingleSelectCustomField>();
                         ((SingleSelectCustomField)customField).Option.Should().Be(singleSelectSetup.DefaultOption);
                         ((SingleSelectCustomField)customField).Setup.Should().Be(setup);
                         break;
+
                     case TextCustomFieldSetupAggregate textSetup:
                         customField.Should().BeOfType<TextCustomField>();
                         ((TextCustomField)customField).Text.Should().Be(textSetup.DefaultText);
                         ((TextCustomField)customField).Setup.Should().Be(setup);
                         break;
+
+                    case TimeCustomFieldSetupAggregate timeSetup:
+                        customField.Should().BeOfType<TimeCustomField>();
+                        ((TimeCustomField)customField).Time.Should().Be(timeSetup.DefaultTime);
+                        ((TimeCustomField)customField).Setup.Should().Be(setup);
+                        break;
                 }
             });
         }
-        
+
         private static void AssertCreateDateCustomFieldSetup(
             DateCustomFieldSetupAggregate setup,
             CreateCustomFieldSetupCommand command)
         {
             setup.DefaultDate.Should().Be(command.DateCustomFieldSetup!.DefaultDate);
         }
-        
+
         private static void AssertCreateDateTimeCustomFieldSetup(
             DateTimeCustomFieldSetupAggregate setup,
             CreateCustomFieldSetupCommand command)
         {
             setup.DefaultDateTime.Should().Be(command.DateTimeCustomFieldSetup!.DefaultDateTime);
         }
-        
+
         private static void AssertCreateDurationCustomFieldSetup(
             DurationCustomFieldSetupAggregate setup,
             CreateCustomFieldSetupCommand command)
         {
             setup.DefaultDuration.Should().Be(command.DurationCustomFieldSetup!.DefaultDuration);
         }
-        
+
         private static void AssertCreateMultiSelectCustomFieldSetup(
             MultiSelectCustomFieldSetupAggregate setup,
             CreateCustomFieldSetupCommand command)
@@ -266,7 +304,7 @@ internal static partial class Utils
             else
                 setup.DefaultNumber!.Value.Should().Be(command.NumberCustomFieldSetup.DefaultNumber);
         }
-        
+
         private static void AssertCreatePeopleCustomFieldSetup(
             PeopleCustomFieldSetupAggregate setup,
             CreateCustomFieldSetupCommand command)
@@ -303,14 +341,14 @@ internal static partial class Utils
             else
                 setup.DefaultText!.Value.Should().Be(command.TextCustomFieldSetup.DefaultText);
         }
-        
+
         private static void AssertCreateTimeCustomFieldSetup(
             TimeCustomFieldSetupAggregate setup,
             CreateCustomFieldSetupCommand command)
         {
             setup.DefaultTime.Should().Be(command.TimeCustomFieldSetup!.DefaultTime);
         }
-        
+
         private static void AssertCreateMultiSelectOption(
             MultiSelectOption multiSelectOption,
             CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand.MultiSelectOptionCommand command,

@@ -21,6 +21,80 @@ public class CustomFieldSetupControllerCreateOnWorkspaceTest(WebAppFactory facto
 {
     [Fact]
     public async Task
+        CreateCustomFieldSetupOnWorkspace_WhenRequestHasDateType_ShouldCreateDateCustomFieldSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var workspace = CustomFieldSetupData.Workspaces.First();
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest(
+            workspace.Id.Value,
+            type: CustomFieldType.Date,
+            dateCustomFieldSetup: new CreateCustomFieldSetupRequest.DateCustomFieldSetupRequest(
+                new DateOnly(2021, 12, 1)));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task
+        CreateCustomFieldSetupOnWorkspace_WhenRequestHasDateTimeType_ShouldCreateDateTimeCustomFieldSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var workspace = CustomFieldSetupData.Workspaces.First();
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest(
+            workspace.Id.Value,
+            type: CustomFieldType.DateTime,
+            dateTimeCustomFieldSetup: new CreateCustomFieldSetupRequest.DateTimeCustomFieldSetupRequest(
+                new DateTime(2022, 12, 1, 10, 55, 30)));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task
+        CreateCustomFieldSetupOnWorkspace_WhenRequestHasDurationType_ShouldCreateDurationCustomFieldSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var workspace = CustomFieldSetupData.Workspaces.First();
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest(
+            workspace.Id.Value,
+            type: CustomFieldType.Duration,
+            durationCustomFieldSetup: new CreateCustomFieldSetupRequest.DurationCustomFieldSetupRequest(
+                new TimeSpan(5, 10, 5)));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task
+        CreateCustomFieldSetupOnWorkspace_WhenRequestHasMultiSelectType_ShouldCreateMultiSelectCustomFieldSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var workspace = CustomFieldSetupData.Workspaces.First();
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest(
+            workspace.Id.Value,
+            type: CustomFieldType.MultiSelect,
+            multiSelectCustomFieldSetup: new
+                CreateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest(
+                [
+                    new CreateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest.
+                        MultiSelectOptionRequest(
+                            "Higher",
+                            "#FF2233"),
+                    new CreateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest.
+                        MultiSelectOptionRequest(
+                            "Lower",
+                            "#7788AA")
+                ]));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task
         CreateCustomFieldSetupOnWorkspace_WhenRequestHasNumberType_ShouldCreateNumberCustomFieldSetupAndReturnSuccessResponse()
     {
         // Arrange
@@ -35,6 +109,20 @@ public class CustomFieldSetupControllerCreateOnWorkspaceTest(WebAppFactory facto
                     2,
                     false),
                 12));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task
+        CreateCustomFieldSetupOnWorkspace_WhenRequestHasPeopleType_ShouldCreatePeopleCustomFieldSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var workspace = CustomFieldSetupData.Workspaces.First();
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest(
+            workspace.Id.Value,
+            type: CustomFieldType.People);
 
         await ActAndAssert(request, user);
     }
@@ -78,6 +166,22 @@ public class CustomFieldSetupControllerCreateOnWorkspaceTest(WebAppFactory facto
         var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest(
             workspace.Id.Value,
             textCustomFieldSetup: new CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest("Default"));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task
+        CreateCustomFieldSetupOnWorkspace_WhenRequestHasTimeType_ShouldCreateTimeCustomFieldSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var workspace = CustomFieldSetupData.Workspaces.First();
+        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest(
+            workspace.Id.Value,
+            type: CustomFieldType.Time,
+            timeCustomFieldSetup: new CreateCustomFieldSetupRequest.TimeCustomFieldSetupRequest(
+                new TimeOnly(10, 55)));
 
         await ActAndAssert(request, user);
     }

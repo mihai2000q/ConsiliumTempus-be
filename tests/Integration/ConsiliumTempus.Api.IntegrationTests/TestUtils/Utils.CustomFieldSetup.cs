@@ -23,6 +23,19 @@ internal static partial class Utils
 {
     internal static class CustomFieldSetup
     {
+        private static readonly Dictionary<Type, CustomFieldType> SetupTypeToCustomFieldType = new()
+        {
+            { typeof(DateCustomFieldSetupAggregate), CustomFieldType.Date },
+            { typeof(DateTimeCustomFieldSetupAggregate), CustomFieldType.DateTime },
+            { typeof(DurationCustomFieldSetupAggregate), CustomFieldType.Duration },
+            { typeof(MultiSelectCustomFieldSetupAggregate), CustomFieldType.MultiSelect },
+            { typeof(NumberCustomFieldSetupAggregate), CustomFieldType.Number },
+            { typeof(PeopleCustomFieldSetupAggregate), CustomFieldType.People },
+            { typeof(SingleSelectCustomFieldSetupAggregate), CustomFieldType.SingleSelect },
+            { typeof(TextCustomFieldSetupAggregate), CustomFieldType.Text },
+            { typeof(TimeCustomFieldSetupAggregate), CustomFieldType.Time },
+        };
+
         public static void AssertAddToProject(
             AddCustomFieldSetupToProjectRequest request,
             CustomFieldSetupAggregate customFieldSetup,
@@ -105,14 +118,67 @@ internal static partial class Utils
 
             switch (request.Type)
             {
+                case CustomFieldType.Date:
+                    customFieldSetup.Should().BeOfType<DateCustomFieldSetupAggregate>();
+                    AssertCreateDateCustomFieldSetup(
+                        (DateCustomFieldSetupAggregate)customFieldSetup,
+                        request);
+                    break;
+
+                case CustomFieldType.DateTime:
+                    customFieldSetup.Should().BeOfType<DateTimeCustomFieldSetupAggregate>();
+                    AssertCreateDateTimeCustomFieldSetup(
+                        (DateTimeCustomFieldSetupAggregate)customFieldSetup,
+                        request);
+                    break;
+
+                case CustomFieldType.Duration:
+                    customFieldSetup.Should().BeOfType<DurationCustomFieldSetupAggregate>();
+                    AssertCreateDurationCustomFieldSetup(
+                        (DurationCustomFieldSetupAggregate)customFieldSetup,
+                        request);
+                    break;
+
+                case CustomFieldType.MultiSelect:
+                    customFieldSetup.Should().BeOfType<MultiSelectCustomFieldSetupAggregate>();
+                    AssertCreateMultiSelectCustomFieldSetup(
+                        (MultiSelectCustomFieldSetupAggregate)customFieldSetup,
+                        request);
+                    break;
+
                 case CustomFieldType.Number:
-                    AssertCreateNumberCustomFieldSetup(customFieldSetup, request);
+                    customFieldSetup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
+                    AssertCreateNumberCustomFieldSetup(
+                        (NumberCustomFieldSetupAggregate)customFieldSetup,
+                        request);
                     break;
+
+                case CustomFieldType.People:
+                    customFieldSetup.Should().BeOfType<PeopleCustomFieldSetupAggregate>();
+                    AssertCreatePeopleCustomFieldSetup(
+                        (PeopleCustomFieldSetupAggregate)customFieldSetup,
+                        request);
+                    break;
+
                 case CustomFieldType.SingleSelect:
-                    AssertCreateSingleSelectCustomFieldSetup(customFieldSetup, request);
+                    customFieldSetup.Should().BeOfType<SingleSelectCustomFieldSetupAggregate>();
+                    AssertCreateSingleSelectCustomFieldSetup(
+                        (SingleSelectCustomFieldSetupAggregate)customFieldSetup,
+                        request);
                     break;
+
                 case CustomFieldType.Text:
-                    AssertCreateTextCustomFieldSetup(customFieldSetup, request);
+                    customFieldSetup.Should().BeOfType<TextCustomFieldSetupAggregate>();
+                    AssertCreateTextCustomFieldSetup(
+                        (TextCustomFieldSetupAggregate)customFieldSetup,
+                        request);
+                    break;
+
+                case CustomFieldType.Time:
+                    customFieldSetup.Should().BeOfType<TimeCustomFieldSetupAggregate>();
+                    AssertCreateTimeCustomFieldSetup(
+                        (TimeCustomFieldSetupAggregate)customFieldSetup,
+                        request);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(request));
@@ -124,6 +190,37 @@ internal static partial class Utils
                 var customField = task.CustomFields.First(cf => cf.Setup == customFieldSetup);
                 switch (request.Type)
                 {
+                    case CustomFieldType.Date:
+                        customField.Should().BeOfType<DateCustomField>();
+                        customFieldSetup.Should().BeOfType<DateCustomFieldSetupAggregate>();
+                        ((DateCustomField)customField).Setup.Should().Be(customFieldSetup);
+                        ((DateCustomField)customField).Date
+                            .Should().Be(((DateCustomFieldSetupAggregate)customFieldSetup).DefaultDate);
+                        break;
+
+                    case CustomFieldType.DateTime:
+                        customField.Should().BeOfType<DateTimeCustomField>();
+                        customFieldSetup.Should().BeOfType<DateTimeCustomFieldSetupAggregate>();
+                        ((DateTimeCustomField)customField).Setup.Should().Be(customFieldSetup);
+                        ((DateTimeCustomField)customField).DateTime
+                            .Should().Be(((DateTimeCustomFieldSetupAggregate)customFieldSetup).DefaultDateTime);
+                        break;
+
+                    case CustomFieldType.Duration:
+                        customField.Should().BeOfType<DurationCustomField>();
+                        customFieldSetup.Should().BeOfType<DurationCustomFieldSetupAggregate>();
+                        ((DurationCustomField)customField).Setup.Should().Be(customFieldSetup);
+                        ((DurationCustomField)customField).Duration
+                            .Should().Be(((DurationCustomFieldSetupAggregate)customFieldSetup).DefaultDuration);
+                        break;
+
+                    case CustomFieldType.MultiSelect:
+                        customField.Should().BeOfType<MultiSelectCustomField>();
+                        customFieldSetup.Should().BeOfType<MultiSelectCustomFieldSetupAggregate>();
+                        ((MultiSelectCustomField)customField).Setup.Should().Be(customFieldSetup);
+                        ((MultiSelectCustomField)customField).Options.Should().BeEmpty();
+                        break;
+
                     case CustomFieldType.Number:
                         customField.Should().BeOfType<NumberCustomField>();
                         customFieldSetup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
@@ -131,6 +228,14 @@ internal static partial class Utils
                         ((NumberCustomField)customField).Number
                             .Should().Be(((NumberCustomFieldSetupAggregate)customFieldSetup).DefaultNumber);
                         break;
+
+                    case CustomFieldType.People:
+                        customField.Should().BeOfType<PeopleCustomField>();
+                        customFieldSetup.Should().BeOfType<PeopleCustomFieldSetupAggregate>();
+                        ((PeopleCustomField)customField).Setup.Should().Be(customFieldSetup);
+                        ((PeopleCustomField)customField).Person.Should().BeNull();
+                        break;
+
                     case CustomFieldType.SingleSelect:
                         customField.Should().BeOfType<SingleSelectCustomField>();
                         customFieldSetup.Should().BeOfType<SingleSelectCustomFieldSetupAggregate>();
@@ -138,6 +243,7 @@ internal static partial class Utils
                         ((SingleSelectCustomField)customField).Option
                             .Should().Be(((SingleSelectCustomFieldSetupAggregate)customFieldSetup).DefaultOption);
                         break;
+
                     case CustomFieldType.Text:
                         customField.Should().BeOfType<TextCustomField>();
                         customFieldSetup.Should().BeOfType<TextCustomFieldSetupAggregate>();
@@ -145,6 +251,15 @@ internal static partial class Utils
                         ((TextCustomField)customField).Text
                             .Should().Be(((TextCustomFieldSetupAggregate)customFieldSetup).DefaultText);
                         break;
+
+                    case CustomFieldType.Time:
+                        customField.Should().BeOfType<TimeCustomField>();
+                        customFieldSetup.Should().BeOfType<TimeCustomFieldSetupAggregate>();
+                        ((TimeCustomField)customField).Setup.Should().Be(customFieldSetup);
+                        ((TimeCustomField)customField).Time
+                            .Should().Be(((TimeCustomFieldSetupAggregate)customFieldSetup).DefaultTime);
+                        break;
+
                     default:
                         throw new ArgumentOutOfRangeException(nameof(request));
                 }
@@ -172,7 +287,7 @@ internal static partial class Utils
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertUpdate(
             UpdateCustomFieldSetupRequest request,
             CustomFieldSetupAggregate customFieldSetup,
@@ -314,15 +429,7 @@ internal static partial class Utils
             response.Id.Should().Be(customFieldSetup.Id.Value);
             response.Name.Should().Be(customFieldSetup.Name.Value);
             response.Description.Should().Be(customFieldSetup.Description.Value);
-
-            var mapSetupTypeToEnumType = new Dictionary<Type, CustomFieldType>
-            {
-                { typeof(NumberCustomFieldSetupAggregate), CustomFieldType.Number },
-                { typeof(SingleSelectCustomFieldSetupAggregate), CustomFieldType.SingleSelect },
-                { typeof(TextCustomFieldSetupAggregate), CustomFieldType.Text },
-            };
-
-            response.Type.Should().Be(mapSetupTypeToEnumType[customFieldSetup.GetType()]);
+            response.Type.Should().Be(SetupTypeToCustomFieldType[customFieldSetup.GetType()]);
         }
 
         private static void AssertCustomFieldSetup(
@@ -332,34 +439,65 @@ internal static partial class Utils
             response.Id.Should().Be(customFieldSetup.Id.Value);
             response.Name.Should().Be(customFieldSetup.Name.Value);
             response.Description.Should().Be(customFieldSetup.Description.Value);
+            response.Type.Should().Be(SetupTypeToCustomFieldType[customFieldSetup.GetType()]);
+        }
 
-            var mapSetupTypeToEnumType = new Dictionary<Type, CustomFieldType>
-            {
-                { typeof(NumberCustomFieldSetupAggregate), CustomFieldType.Number },
-                { typeof(SingleSelectCustomFieldSetupAggregate), CustomFieldType.SingleSelect },
-                { typeof(TextCustomFieldSetupAggregate), CustomFieldType.Text },
-            };
+        private static void AssertCreateDateCustomFieldSetup(
+            DateCustomFieldSetupAggregate setup,
+            CreateCustomFieldSetupRequest request)
+        {
+            setup.DefaultDate.Should().Be(request.DateCustomFieldSetup!.DefaultDate);
+        }
 
-            response.Type.Should().Be(mapSetupTypeToEnumType[customFieldSetup.GetType()]);
+        private static void AssertCreateDateTimeCustomFieldSetup(
+            DateTimeCustomFieldSetupAggregate setup,
+            CreateCustomFieldSetupRequest request)
+        {
+            setup.DefaultDateTime.Should().Be(request.DateTimeCustomFieldSetup!.DefaultDateTime);
+        }
+
+        private static void AssertCreateDurationCustomFieldSetup(
+            DurationCustomFieldSetupAggregate setup,
+            CreateCustomFieldSetupRequest request)
+        {
+            setup.DefaultDuration.Should().Be(request.DurationCustomFieldSetup!.DefaultDuration);
+        }
+
+        private static void AssertCreateMultiSelectCustomFieldSetup(
+            MultiSelectCustomFieldSetupAggregate setup,
+            CreateCustomFieldSetupRequest request)
+        {
+            var index = 0;
+            setup.Options
+                .Zip(request.MultiSelectCustomFieldSetup!.Options)
+                .Should().AllSatisfy(x => AssertCreateMultiSelectOption(x.First, x.Second, index++));
         }
 
         private static void AssertCreateNumberCustomFieldSetup(
-            CustomFieldSetupAggregate customFieldSetup,
+            NumberCustomFieldSetupAggregate setup,
             CreateCustomFieldSetupRequest request)
         {
-            customFieldSetup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
-            var setup = (NumberCustomFieldSetupAggregate)customFieldSetup;
             setup.Settings.CurrencyCode.Should().Be(request.NumberCustomFieldSetup!.Settings.CurrencyCode);
-            setup.Settings.Decimals.Should().Be((short)request.NumberCustomFieldSetup.Settings.Decimals);
-            setup.Settings.Rounding.Should().Be(request.NumberCustomFieldSetup.Settings.Rounding);
+            setup.Settings.Decimals.Should().Be((short)request.NumberCustomFieldSetup!.Settings.Decimals);
+            setup.Settings.Rounding.Should().Be(request.NumberCustomFieldSetup!.Settings.Rounding);
+            if (request.NumberCustomFieldSetup.DefaultNumber is null)
+                setup.DefaultNumber.Should().BeNull();
+            else
+                setup.DefaultNumber!.Value.Should().Be(request.NumberCustomFieldSetup.DefaultNumber);
+        }
+
+        private static void AssertCreatePeopleCustomFieldSetup(
+            PeopleCustomFieldSetupAggregate setup,
+            CreateCustomFieldSetupRequest request)
+        {
+            setup.Should().NotBeNull(); // obv true
+            request.Should().NotBeNull();
         }
 
         private static void AssertCreateSingleSelectCustomFieldSetup(
-            CustomFieldSetupAggregate customFieldSetup,
+            SingleSelectCustomFieldSetupAggregate setup,
             CreateCustomFieldSetupRequest request)
         {
-            customFieldSetup.Should().BeOfType<SingleSelectCustomFieldSetupAggregate>();
-            var setup = (SingleSelectCustomFieldSetupAggregate)customFieldSetup;
             var index = 0;
             setup.Options
                 .Zip(request.SingleSelectCustomFieldSetup!.Options)
@@ -376,28 +514,43 @@ internal static partial class Utils
         }
 
         private static void AssertCreateTextCustomFieldSetup(
-            CustomFieldSetupAggregate customFieldSetup,
+            TextCustomFieldSetupAggregate setup,
             CreateCustomFieldSetupRequest request)
         {
-            customFieldSetup.Should().BeOfType<TextCustomFieldSetupAggregate>();
-            var setup = (TextCustomFieldSetupAggregate)customFieldSetup;
             if (request.TextCustomFieldSetup!.DefaultText is null)
                 setup.DefaultText.Should().BeNull();
             else
                 setup.DefaultText!.Value.Should().Be(request.TextCustomFieldSetup.DefaultText);
         }
 
-        private static void AssertCreateSingleSelectOption(
-            SingleSelectOption singleSelectOption,
-            CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest
-                singleSelectOptionRequest,
+        private static void AssertCreateTimeCustomFieldSetup(
+            TimeCustomFieldSetupAggregate setup,
+            CreateCustomFieldSetupRequest request)
+        {
+            setup.DefaultTime.Should().Be(request.TimeCustomFieldSetup!.DefaultTime);
+        }
+
+        private static void AssertCreateMultiSelectOption(
+            MultiSelectOption multiSelectOption,
+            CreateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest.MultiSelectOptionRequest request,
             int customOrderPosition)
         {
-            singleSelectOption.Value.Should().Be(singleSelectOptionRequest.Value);
-            singleSelectOption.Color.Should().Be(singleSelectOptionRequest.Color);
+            multiSelectOption.Value.Should().Be(request.Value);
+            multiSelectOption.Color.Should().Be(request.Color);
+            multiSelectOption.CustomOrderPosition.Value.Should().Be(customOrderPosition);
+        }
+
+        private static void AssertCreateSingleSelectOption(
+            SingleSelectOption singleSelectOption,
+            CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest request,
+            int customOrderPosition)
+        {
+            singleSelectOption.Id.ToString().Should().NotBe(request.Id);
+            singleSelectOption.Value.Should().Be(request.Value);
+            singleSelectOption.Color.Should().Be(request.Color);
             singleSelectOption.CustomOrderPosition.Value.Should().Be(customOrderPosition);
         }
-        
+
         private static void AssertUpdateNumberCustomFieldSetup(
             NumberCustomFieldSetupAggregate setup,
             UpdateCustomFieldSetupRequest request)

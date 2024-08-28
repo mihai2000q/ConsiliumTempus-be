@@ -93,9 +93,9 @@ internal static partial class Utils
             command.Id.Should().Be(request.Id);
             command.CustomFieldId.Should().Be(request.CustomFieldId);
             command.Type.Should().Be(request.Type);
-            AssertNumberCustomFieldRequest(request.NumberCustomField, command.NumberCustomField);
-            AssertSingleSelectCustomFieldRequest(request.SingleSelectCustomField, command.SingleSelectCustomField);
-            AssertTextCustomFieldRequest(request.TextCustomField, command.TextCustomField);
+            AssertUpdateNumberCustomFieldRequest(request.NumberCustomField, command.NumberCustomField);
+            AssertUpdateSingleSelectCustomFieldRequest(request.SingleSelectCustomField, command.SingleSelectCustomField);
+            AssertUpdateTextCustomFieldRequest(request.TextCustomField, command.TextCustomField);
 
             return true;
         }
@@ -156,6 +156,45 @@ internal static partial class Utils
             response.Tasks.Zip(result.Tasks)
                 .Should().AllSatisfy(p => AssertProjectTaskResponse(p.First, p.Second));
             response.TotalCount.Should().Be(result.TotalCount);
+        }
+        
+        private static void AssertUpdateNumberCustomFieldRequest(
+            UpdateCustomFieldFromProjectTaskRequest.NumberCustomFieldRequest? request,
+            UpdateCustomFieldFromProjectTaskCommand.NumberCustomFieldCommand? command)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.Number.Should().Be(request.Number);
+        }
+
+        private static void AssertUpdateSingleSelectCustomFieldRequest(
+            UpdateCustomFieldFromProjectTaskRequest.SingleSelectCustomFieldRequest? request,
+            UpdateCustomFieldFromProjectTaskCommand.SingleSelectCustomFieldCommand? command)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.OptionId.Should().Be(request.OptionId);
+        }
+
+        private static void AssertUpdateTextCustomFieldRequest(
+            UpdateCustomFieldFromProjectTaskRequest.TextCustomFieldRequest? request,
+            UpdateCustomFieldFromProjectTaskCommand.TextCustomFieldCommand? command)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.Text.Should().Be(request.Text);
         }
 
         private static void AssertCustomFieldResponse(
@@ -323,45 +362,6 @@ internal static partial class Utils
             response!.Id.Should().Be(singleSelectOption.Id);
             response.Value.Should().Be(singleSelectOption.Value);
             response.Color.Should().Be(singleSelectOption.Color);
-        }
-
-        private static void AssertNumberCustomFieldRequest(
-            UpdateCustomFieldFromProjectTaskRequest.NumberCustomFieldRequest? request,
-            UpdateCustomFieldFromProjectTaskCommand.NumberCustomFieldCommand? command)
-        {
-            if (request is null)
-            {
-                command.Should().BeNull();
-                return;
-            }
-
-            command!.Number.Should().Be(request.Number);
-        }
-
-        private static void AssertSingleSelectCustomFieldRequest(
-            UpdateCustomFieldFromProjectTaskRequest.SingleSelectCustomFieldRequest? request,
-            UpdateCustomFieldFromProjectTaskCommand.SingleSelectCustomFieldCommand? command)
-        {
-            if (request is null)
-            {
-                command.Should().BeNull();
-                return;
-            }
-
-            command!.OptionId.Should().Be(request.OptionId);
-        }
-
-        private static void AssertTextCustomFieldRequest(
-            UpdateCustomFieldFromProjectTaskRequest.TextCustomFieldRequest? request,
-            UpdateCustomFieldFromProjectTaskCommand.TextCustomFieldCommand? command)
-        {
-            if (request is null)
-            {
-                command.Should().BeNull();
-                return;
-            }
-
-            command!.Text.Should().Be(request.Text);
         }
 
         private static void AssertUserResponse(
