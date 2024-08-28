@@ -26,9 +26,14 @@ public static class CustomFieldSetupCommandFactory
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
         CustomFieldType type = CustomFieldType.Text,
+        CreateCustomFieldSetupCommand.DateCustomFieldSetupCommand? dateCustomFieldSetup = null,
+        CreateCustomFieldSetupCommand.DateTimeCustomFieldSetupCommand? dateTimeCustomFieldSetup = null,
+        CreateCustomFieldSetupCommand.DurationCustomFieldSetupCommand? durationCustomFieldSetup = null,
+        CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand? multiSelectCustomFieldSetup = null,
         CreateCustomFieldSetupCommand.NumberCustomFieldSetupCommand? numberCustomFieldSetup = null,
         CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand? singleSelectCustomFieldSetup = null,
-        CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand? textCustomFieldSetup = null)
+        CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand? textCustomFieldSetup = null,
+        CreateCustomFieldSetupCommand.TimeCustomFieldSetupCommand? timeCustomFieldSetup = null)
     {
         return new CreateCustomFieldSetupCommand(
             workspaceId,
@@ -36,9 +41,14 @@ public static class CustomFieldSetupCommandFactory
             name,
             description,
             type,
+            dateCustomFieldSetup,
+            dateTimeCustomFieldSetup,
+            durationCustomFieldSetup,
+            multiSelectCustomFieldSetup,
             numberCustomFieldSetup,
             singleSelectCustomFieldSetup,
-            textCustomFieldSetup);
+            textCustomFieldSetup,
+            timeCustomFieldSetup);
     }
 
     public static DeleteCustomFieldSetupCommand CreateDeleteCustomFieldSetupCommand(Guid? id = null)

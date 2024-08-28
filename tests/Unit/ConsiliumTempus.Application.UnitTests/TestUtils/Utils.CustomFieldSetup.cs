@@ -68,15 +68,69 @@ internal static partial class Utils
 
             switch (command.Type)
             {
+                case CustomFieldType.Date:
+                    customFieldSetup.Should().BeOfType<DateCustomFieldSetupAggregate>();
+                    AssertCreateDateCustomFieldSetup(
+                        (DateCustomFieldSetupAggregate)customFieldSetup,
+                        command);
+                    break;
+                
+                case CustomFieldType.DateTime:
+                    customFieldSetup.Should().BeOfType<DateTimeCustomFieldSetupAggregate>();
+                    AssertCreateDateTimeCustomFieldSetup(
+                        (DateTimeCustomFieldSetupAggregate)customFieldSetup,
+                        command);
+                    break;
+                
+                case CustomFieldType.Duration:
+                    customFieldSetup.Should().BeOfType<DurationCustomFieldSetupAggregate>();
+                    AssertCreateDurationCustomFieldSetup(
+                        (DurationCustomFieldSetupAggregate)customFieldSetup,
+                        command);
+                    break;
+                
+                case CustomFieldType.MultiSelect:
+                    customFieldSetup.Should().BeOfType<MultiSelectCustomFieldSetupAggregate>();
+                    AssertCreateMultiSelectCustomFieldSetup(
+                        (MultiSelectCustomFieldSetupAggregate)customFieldSetup,
+                        command);
+                    break;
+                
                 case CustomFieldType.Number:
-                    AssertCreateNumberCustomFieldSetup(customFieldSetup, command);
+                    customFieldSetup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
+                    AssertCreateNumberCustomFieldSetup(
+                        (NumberCustomFieldSetupAggregate)customFieldSetup,
+                        command);
                     break;
+                
+                case CustomFieldType.People:
+                    customFieldSetup.Should().BeOfType<PeopleCustomFieldSetupAggregate>();
+                    AssertCreatePeopleCustomFieldSetup(
+                        (PeopleCustomFieldSetupAggregate)customFieldSetup,
+                        command);
+                    break;
+                
                 case CustomFieldType.SingleSelect:
-                    AssertCreateSingleSelectCustomFieldSetup(customFieldSetup, command);
+                    customFieldSetup.Should().BeOfType<SingleSelectCustomFieldSetupAggregate>();
+                    AssertCreateSingleSelectCustomFieldSetup(
+                        (SingleSelectCustomFieldSetupAggregate)customFieldSetup, 
+                        command);
                     break;
+                
                 case CustomFieldType.Text:
-                    AssertCreateTextCustomFieldSetup(customFieldSetup, command);
+                    customFieldSetup.Should().BeOfType<TextCustomFieldSetupAggregate>();
+                    AssertCreateTextCustomFieldSetup(
+                        (TextCustomFieldSetupAggregate)customFieldSetup,
+                        command);
                     break;
+                
+                case CustomFieldType.Time:
+                    customFieldSetup.Should().BeOfType<TimeCustomFieldSetupAggregate>();
+                    AssertCreateTimeCustomFieldSetup(
+                        (TimeCustomFieldSetupAggregate)customFieldSetup,
+                        command);
+                    break;
+                
                 default:
                     throw new ArgumentOutOfRangeException(nameof(command));
             }
@@ -168,13 +222,42 @@ internal static partial class Utils
                 }
             });
         }
-
-        private static void AssertCreateNumberCustomFieldSetup(
-            CustomFieldSetupAggregate customFieldSetup,
+        
+        private static void AssertCreateDateCustomFieldSetup(
+            DateCustomFieldSetupAggregate setup,
             CreateCustomFieldSetupCommand command)
         {
-            customFieldSetup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
-            var setup = (NumberCustomFieldSetupAggregate)customFieldSetup;
+            setup.DefaultDate.Should().Be(command.DateCustomFieldSetup!.DefaultDate);
+        }
+        
+        private static void AssertCreateDateTimeCustomFieldSetup(
+            DateTimeCustomFieldSetupAggregate setup,
+            CreateCustomFieldSetupCommand command)
+        {
+            setup.DefaultDateTime.Should().Be(command.DateTimeCustomFieldSetup!.DefaultDateTime);
+        }
+        
+        private static void AssertCreateDurationCustomFieldSetup(
+            DurationCustomFieldSetupAggregate setup,
+            CreateCustomFieldSetupCommand command)
+        {
+            setup.DefaultDuration.Should().Be(command.DurationCustomFieldSetup!.DefaultDuration);
+        }
+        
+        private static void AssertCreateMultiSelectCustomFieldSetup(
+            MultiSelectCustomFieldSetupAggregate setup,
+            CreateCustomFieldSetupCommand command)
+        {
+            var index = 0;
+            setup.Options
+                .Zip(command.MultiSelectCustomFieldSetup!.Options)
+                .Should().AllSatisfy(x => AssertCreateMultiSelectOption(x.First, x.Second, index++));
+        }
+
+        private static void AssertCreateNumberCustomFieldSetup(
+            NumberCustomFieldSetupAggregate setup,
+            CreateCustomFieldSetupCommand command)
+        {
             setup.Settings.CurrencyCode.Should().Be(command.NumberCustomFieldSetup!.Settings.CurrencyCode);
             setup.Settings.Decimals.Should().Be((short)command.NumberCustomFieldSetup!.Settings.Decimals);
             setup.Settings.Rounding.Should().Be(command.NumberCustomFieldSetup!.Settings.Rounding);
@@ -183,17 +266,23 @@ internal static partial class Utils
             else
                 setup.DefaultNumber!.Value.Should().Be(command.NumberCustomFieldSetup.DefaultNumber);
         }
-
-        private static void AssertCreateSingleSelectCustomFieldSetup(
-            CustomFieldSetupAggregate customFieldSetup,
+        
+        private static void AssertCreatePeopleCustomFieldSetup(
+            PeopleCustomFieldSetupAggregate setup,
             CreateCustomFieldSetupCommand command)
         {
-            customFieldSetup.Should().BeOfType<SingleSelectCustomFieldSetupAggregate>();
-            var setup = (SingleSelectCustomFieldSetupAggregate)customFieldSetup;
+            setup.Should().NotBeNull(); // obv true
+            command.Should().NotBeNull();
+        }
+
+        private static void AssertCreateSingleSelectCustomFieldSetup(
+            SingleSelectCustomFieldSetupAggregate setup,
+            CreateCustomFieldSetupCommand command)
+        {
             var index = 0;
             setup.Options
                 .Zip(command.SingleSelectCustomFieldSetup!.Options)
-                .Should().AllSatisfy(x => AssertSingleSelectOption(x.First, x.Second, index++));
+                .Should().AllSatisfy(x => AssertCreateSingleSelectOption(x.First, x.Second, index++));
             if (command.SingleSelectCustomFieldSetup.DefaultOptionId is null)
                 setup.DefaultOption.Should().BeNull();
             else
@@ -206,25 +295,40 @@ internal static partial class Utils
         }
 
         private static void AssertCreateTextCustomFieldSetup(
-            CustomFieldSetupAggregate customFieldSetup,
+            TextCustomFieldSetupAggregate setup,
             CreateCustomFieldSetupCommand command)
         {
-            customFieldSetup.Should().BeOfType<TextCustomFieldSetupAggregate>();
-            var setup = (TextCustomFieldSetupAggregate)customFieldSetup;
             if (command.TextCustomFieldSetup!.DefaultText is null)
                 setup.DefaultText.Should().BeNull();
             else
                 setup.DefaultText!.Value.Should().Be(command.TextCustomFieldSetup.DefaultText);
         }
-
-        private static void AssertSingleSelectOption(
-            SingleSelectOption singleSelectOption,
-            CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand
-                singleSelectOptionCommand,
+        
+        private static void AssertCreateTimeCustomFieldSetup(
+            TimeCustomFieldSetupAggregate setup,
+            CreateCustomFieldSetupCommand command)
+        {
+            setup.DefaultTime.Should().Be(command.TimeCustomFieldSetup!.DefaultTime);
+        }
+        
+        private static void AssertCreateMultiSelectOption(
+            MultiSelectOption multiSelectOption,
+            CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand.MultiSelectOptionCommand command,
             int customOrderPosition)
         {
-            singleSelectOption.Value.Should().Be(singleSelectOptionCommand.Value);
-            singleSelectOption.Color.Should().Be(singleSelectOptionCommand.Color);
+            multiSelectOption.Value.Should().Be(command.Value);
+            multiSelectOption.Color.Should().Be(command.Color);
+            multiSelectOption.CustomOrderPosition.Value.Should().Be(customOrderPosition);
+        }
+
+        private static void AssertCreateSingleSelectOption(
+            SingleSelectOption singleSelectOption,
+            CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand command,
+            int customOrderPosition)
+        {
+            singleSelectOption.Id.ToString().Should().NotBe(command.Id);
+            singleSelectOption.Value.Should().Be(command.Value);
+            singleSelectOption.Color.Should().Be(command.Color);
             singleSelectOption.CustomOrderPosition.Value.Should().Be(customOrderPosition);
         }
 

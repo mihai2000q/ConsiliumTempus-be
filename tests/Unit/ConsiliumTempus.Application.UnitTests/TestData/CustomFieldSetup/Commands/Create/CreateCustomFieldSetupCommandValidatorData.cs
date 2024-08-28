@@ -20,12 +20,17 @@ internal static class CreateCustomFieldSetupCommandValidatorData
             command = new CreateCustomFieldSetupCommand(
                 Guid.NewGuid(),
                 null,
-                "New CustomFieldSetup",
+                "New TextCustomFieldSetup",
                 "This field will represent some notes",
                 CustomFieldType.Text,
                 null,
                 null,
-                new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand("Default Text"));
+                null,
+                null,
+                null,
+                null,
+                new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand("Default Text"),
+                null);
             Add(command);
         }
     }
@@ -61,6 +66,196 @@ internal static class CreateCustomFieldSetupCommandValidatorData
                 name: new string('a', PropertiesValidation.CustomFieldSetup.NameMaximumLength + 1),
                 textCustomFieldSetup: new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
             Add(command, nameof(command.Name));
+        }
+    }
+    
+    internal class GetInvalidDateCustomFieldSetupCommands : TheoryData<CreateCustomFieldSetupCommand, string>
+    {
+        public GetInvalidDateCustomFieldSetupCommands()
+        {
+            var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.Date,
+                dateCustomFieldSetup: null);
+            Add(command, nameof(command.DateCustomFieldSetup));
+        }
+    }
+    
+    internal class GetInvalidDateTimeCustomFieldSetupCommands : TheoryData<CreateCustomFieldSetupCommand, string>
+    {
+        public GetInvalidDateTimeCustomFieldSetupCommands()
+        {
+            var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.DateTime,
+                dateTimeCustomFieldSetup: null);
+            Add(command, nameof(command.DateTimeCustomFieldSetup));
+        }
+    }
+    
+    internal class GetInvalidDurationCustomFieldSetupCommands : TheoryData<CreateCustomFieldSetupCommand, string>
+    {
+        public GetInvalidDurationCustomFieldSetupCommands()
+        {
+            var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.Duration,
+                durationCustomFieldSetup: null);
+            Add(command, nameof(command.DurationCustomFieldSetup));
+        }
+    }
+    
+    internal class GetInvalidMultiSelectCustomFieldSetupCommands : TheoryData<CreateCustomFieldSetupCommand, string>
+    {
+        public GetInvalidMultiSelectCustomFieldSetupCommands()
+        {
+            var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: null);
+            Add(command, nameof(command.MultiSelectCustomFieldSetup));
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand([]));
+            Add(command, nameof(command.MultiSelectCustomFieldSetup)
+                .Dot(nameof(command.MultiSelectCustomFieldSetup.Options)));
+
+            // Value
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                        [
+                            new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                                .MultiSelectOptionCommand(
+                                    "",
+                                    "#22FF22")
+                        ]));
+            Add(command, nameof(command.MultiSelectCustomFieldSetup)
+                .Dot(nameof(command.MultiSelectCustomFieldSetup.Options)) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                    .MultiSelectOptionCommand.Value)));
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                    [
+                        new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                            .MultiSelectOptionCommand(
+                                new string('a', PropertiesValidation.MultiSelectOption.ValueMaximumLength + 1),
+                                "#22FF22")
+                    ]));
+            Add(command, nameof(command.MultiSelectCustomFieldSetup)
+                .Dot(nameof(command.MultiSelectCustomFieldSetup.Options)) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                    .MultiSelectOptionCommand.Value)));
+
+            // Color
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                    [
+                        new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                            .MultiSelectOptionCommand(
+                                "High",
+                                "")
+                    ]));
+            Add(command, nameof(command.MultiSelectCustomFieldSetup)
+                .Dot(nameof(command.MultiSelectCustomFieldSetup.Options)) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                    .MultiSelectOptionCommand.Color)));
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                    [
+                        new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                            .MultiSelectOptionCommand(
+                                "High",
+                                "not a color")
+                    ]));
+            Add(command, nameof(command.MultiSelectCustomFieldSetup)
+                .Dot(nameof(command.MultiSelectCustomFieldSetup.Options)) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                    .MultiSelectOptionCommand.Color)));
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                    [
+                        new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                            .MultiSelectOptionCommand(
+                                "High",
+                                "FF2233")
+                    ]));
+            Add(command, nameof(command.MultiSelectCustomFieldSetup)
+                .Dot(nameof(command.MultiSelectCustomFieldSetup.Options)) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                    .MultiSelectOptionCommand.Color)));
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                    [
+                        new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                            .MultiSelectOptionCommand(
+                                "High",
+                                "#FF223")
+                    ]));
+            Add(command, nameof(command.MultiSelectCustomFieldSetup)
+                .Dot(nameof(command.MultiSelectCustomFieldSetup.Options)) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                    .MultiSelectOptionCommand.Color)));
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                    [
+                        new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                            .MultiSelectOptionCommand(
+                                "High",
+                                "#GG2233")
+                    ]));
+            Add(command, nameof(command.MultiSelectCustomFieldSetup)
+                .Dot(nameof(command.MultiSelectCustomFieldSetup.Options)) + "[0]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                    .MultiSelectOptionCommand.Color)));
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new
+                    CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                    [
+                        new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                            .MultiSelectOptionCommand(
+                                "High",
+                                "#FF2233"),
+                        new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                            .MultiSelectOptionCommand(
+                                "High",
+                                "#11EE333")
+                    ]));
+            Add(command, nameof(command.MultiSelectCustomFieldSetup)
+                .Dot(nameof(command.MultiSelectCustomFieldSetup.Options)) + "[1]"
+                .Dot(nameof(CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand
+                    .MultiSelectOptionCommand.Color)));
         }
     }
 
@@ -372,6 +567,7 @@ internal static class CreateCustomFieldSetupCommandValidatorData
                 .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand
                     .SingleSelectOptionCommand.Value)));
             
+            // ID Repetition
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.SingleSelect,
@@ -423,8 +619,21 @@ internal static class CreateCustomFieldSetupCommandValidatorData
         {
             var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 projectId: Guid.NewGuid(),
+                type: CustomFieldType.Text,
                 textCustomFieldSetup: null);
             Add(command, nameof(command.TextCustomFieldSetup));
+        }
+    }
+    
+    internal class GetInvalidTimeCustomFieldSetupCommands : TheoryData<CreateCustomFieldSetupCommand, string>
+    {
+        public GetInvalidTimeCustomFieldSetupCommands()
+        {
+            var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.Time,
+                timeCustomFieldSetup: null);
+            Add(command, nameof(command.TimeCustomFieldSetup));
         }
     }
 }

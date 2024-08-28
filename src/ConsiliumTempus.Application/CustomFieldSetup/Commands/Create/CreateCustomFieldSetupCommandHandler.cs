@@ -51,9 +51,15 @@ public sealed class CreateCustomFieldSetupCommandHandler(
 
         CustomFieldSetupAggregate customFieldSetup = command.Type switch
         {
+            CustomFieldType.Date => GetDateCustomFieldSetup(command, user),
+            CustomFieldType.DateTime => GetDateTimeCustomFieldSetup(command, user),
+            CustomFieldType.Duration => GetDurationCustomFieldSetup(command, user),
+            CustomFieldType.MultiSelect => GetMultiSelectCustomFieldSetup(command, user),
             CustomFieldType.Number => GetNumberCustomFieldSetup(command, user),
+            CustomFieldType.People => GetPeopleCustomFieldSetup(command, user),
             CustomFieldType.SingleSelect => GetSingleSelectCustomFieldSetup(command, user),
             CustomFieldType.Text => GetTextCustomFieldSetup(command, user),
+            CustomFieldType.Time => GetTimeCustomFieldSetup(command, user),
             _ => throw new ArgumentOutOfRangeException(nameof(command))
         };
         await customFieldSetupRepository.Add(customFieldSetup, cancellationToken);
@@ -61,6 +67,65 @@ public sealed class CreateCustomFieldSetupCommandHandler(
         _project?.RefreshActivity();
 
         return new CreateCustomFieldSetupResult();
+    }
+
+    private DateCustomFieldSetupAggregate GetDateCustomFieldSetup(
+        CreateCustomFieldSetupCommand command,
+        UserAggregate user)
+    {
+        return DateCustomFieldSetupAggregate.Create(
+            command.DateCustomFieldSetup!.DefaultDate,
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            _workspace,
+            _project,
+            user);
+    }
+
+    private DateTimeCustomFieldSetupAggregate GetDateTimeCustomFieldSetup(
+        CreateCustomFieldSetupCommand command,
+        UserAggregate user)
+    {
+        return DateTimeCustomFieldSetupAggregate.Create(
+            command.DateTimeCustomFieldSetup!.DefaultDateTime,
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            _workspace,
+            _project,
+            user);
+    }
+
+    private DurationCustomFieldSetupAggregate GetDurationCustomFieldSetup(
+        CreateCustomFieldSetupCommand command,
+        UserAggregate user)
+    {
+        return DurationCustomFieldSetupAggregate.Create(
+            command.DurationCustomFieldSetup!.DefaultDuration,
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            _workspace,
+            _project,
+            user);
+    }
+
+    private MultiSelectCustomFieldSetupAggregate GetMultiSelectCustomFieldSetup(
+        CreateCustomFieldSetupCommand command,
+        UserAggregate user)
+    {
+        var options = command.MultiSelectCustomFieldSetup!.Options.Select((o, index) =>
+                MultiSelectOption.Create(
+                    o.Value,
+                    o.Color,
+                    CustomOrderPosition.Create(index)))
+            .ToList();
+
+        return MultiSelectCustomFieldSetupAggregate.Create(
+            options,
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            _workspace,
+            _project,
+            user);
     }
 
     private NumberCustomFieldSetupAggregate GetNumberCustomFieldSetup(
@@ -73,6 +138,18 @@ public sealed class CreateCustomFieldSetupCommandHandler(
                 (short)command.NumberCustomFieldSetup!.Settings.Decimals,
                 command.NumberCustomFieldSetup!.Settings.Rounding),
             command.NumberCustomFieldSetup!.DefaultNumber.IfNotNull(DecimalNumber.Create),
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            _workspace,
+            _project,
+            user);
+    }
+
+    private PeopleCustomFieldSetupAggregate GetPeopleCustomFieldSetup(
+        CreateCustomFieldSetupCommand command,
+        UserAggregate user)
+    {
+        return PeopleCustomFieldSetupAggregate.Create(
             Name.Create(command.Name),
             Description.Create(command.Description),
             _workspace,
@@ -114,6 +191,19 @@ public sealed class CreateCustomFieldSetupCommandHandler(
     {
         return TextCustomFieldSetupAggregate.Create(
             command.TextCustomFieldSetup!.DefaultText.IfNotNull(Text.Create),
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            _workspace,
+            _project,
+            user);
+    }
+
+    private TimeCustomFieldSetupAggregate GetTimeCustomFieldSetup(
+        CreateCustomFieldSetupCommand command,
+        UserAggregate user)
+    {
+        return TimeCustomFieldSetupAggregate.Create(
+            command.TimeCustomFieldSetup!.DefaultTime,
             Name.Create(command.Name),
             Description.Create(command.Description),
             _workspace,

@@ -15,17 +15,77 @@ internal static class CreateCustomFieldSetupCommandHandlerData
                 Guid.NewGuid(),
                 textCustomFieldSetup: new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
             Add(command);
-            
+
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 null,
                 Guid.NewGuid(),
                 textCustomFieldSetup: new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
             Add(command);
-            
+
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 textCustomFieldSetup: new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
+            Add(command);
+
+            // Date
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.Date,
+                dateCustomFieldSetup: new CreateCustomFieldSetupCommand.DateCustomFieldSetupCommand(null));
+            Add(command);
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.Date,
+                dateCustomFieldSetup: new CreateCustomFieldSetupCommand.DateCustomFieldSetupCommand(
+                    new DateOnly(2022, 10, 10)));
+            Add(command);
+
+            // Date Time
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.DateTime,
+                dateTimeCustomFieldSetup: new CreateCustomFieldSetupCommand.DateTimeCustomFieldSetupCommand(null));
+            Add(command);
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.DateTime,
+                dateTimeCustomFieldSetup: new CreateCustomFieldSetupCommand.DateTimeCustomFieldSetupCommand(
+                    new DateTime(2022, 10, 10, 15, 30, 30)));
+            Add(command);
+
+            // Duration
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.Duration,
+                durationCustomFieldSetup: new CreateCustomFieldSetupCommand.DurationCustomFieldSetupCommand(null));
+            Add(command);
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.Duration,
+                durationCustomFieldSetup: new CreateCustomFieldSetupCommand.DurationCustomFieldSetupCommand(
+                    new TimeSpan(10, 3, 55)));
+            Add(command);
+
+            // Multi Select
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                [
+                    new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand.MultiSelectOptionCommand(
+                        "High",
+                        "#3322FF"),
+                    new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand.MultiSelectOptionCommand(
+                        "Medium",
+                        "#7722EF"),
+                    new CreateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand.MultiSelectOptionCommand(
+                        "Low",
+                        "#99G244")
+                ]));
             Add(command);
 
             // Number
@@ -34,9 +94,9 @@ internal static class CreateCustomFieldSetupCommandHandlerData
                 type: CustomFieldType.Number,
                 numberCustomFieldSetup: new CreateCustomFieldSetupCommand.NumberCustomFieldSetupCommand(
                     new CreateCustomFieldSetupCommand.NumberCustomFieldSetupCommand.NumberSettingsCommand(
-                    "USD",
-                    2,
-                    true),
+                        "USD",
+                        2,
+                        true),
                     null));
             Add(command);
 
@@ -49,6 +109,12 @@ internal static class CreateCustomFieldSetupCommandHandlerData
                         3,
                         false),
                     12));
+            Add(command);
+
+            // People
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.People);
             Add(command);
 
             // Single Select
@@ -70,8 +136,7 @@ internal static class CreateCustomFieldSetupCommandHandlerData
                             "Low",
                             "#99G244")
                     ],
-                    null
-                    ));
+                    null));
             Add(command);
 
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
@@ -107,6 +172,20 @@ internal static class CreateCustomFieldSetupCommandHandlerData
                 projectId: Guid.NewGuid(),
                 type: CustomFieldType.Text,
                 textCustomFieldSetup: new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand("Default Text"));
+            Add(command);
+
+            // Time
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.Time,
+                timeCustomFieldSetup: new CreateCustomFieldSetupCommand.TimeCustomFieldSetupCommand(null));
+            Add(command);
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                type: CustomFieldType.Time,
+                timeCustomFieldSetup: new CreateCustomFieldSetupCommand.TimeCustomFieldSetupCommand(
+                    new TimeOnly(10, 25, 55)));
             Add(command);
         }
     }

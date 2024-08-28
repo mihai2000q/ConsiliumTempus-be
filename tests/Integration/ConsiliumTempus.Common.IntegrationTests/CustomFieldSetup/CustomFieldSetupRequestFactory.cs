@@ -16,42 +16,62 @@ namespace ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 
 public static class CustomFieldSetupRequestFactory
 {
-    public static CreateCustomFieldSetupOnProjectRequest CreateCreateCustomFieldSetupOnProjectRequest(
-        Guid? projectId = null,
-        string name = Constants.CustomFieldSetup.Name,
-        string description = Constants.CustomFieldSetup.Description,
-        CustomFieldType type = CustomFieldType.Text,
-        CreateCustomFieldSetupRequest.NumberCustomFieldSetupRequest? numberCustomFieldSetup = null,
-        CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest? singleSelectCustomFieldSetup = null,
-        CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest? textCustomFieldSetup = null)
-    {
-        return new CreateCustomFieldSetupOnProjectRequest(
-            projectId ?? Guid.NewGuid(),
-            name,
-            description,
-            type,
-            numberCustomFieldSetup,
-            singleSelectCustomFieldSetup,
-            textCustomFieldSetup);
-    }
-
     public static CreateCustomFieldSetupOnWorkspaceRequest CreateCreateCustomFieldSetupOnWorkspaceRequest(
         Guid? workspaceId = null,
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
         CustomFieldType type = CustomFieldType.Text,
+        CreateCustomFieldSetupRequest.DateCustomFieldSetupRequest? dateCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.DateTimeCustomFieldSetupRequest? dateTimeCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.DurationCustomFieldSetupRequest? durationCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest? multiSelectCustomFieldSetup = null,
         CreateCustomFieldSetupRequest.NumberCustomFieldSetupRequest? numberCustomFieldSetup = null,
         CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest? singleSelectCustomFieldSetup = null,
-        CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest? textCustomFieldSetup = null)
+        CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest? textCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.TimeCustomFieldSetupRequest? timeCustomFieldSetup = null)
     {
         return new CreateCustomFieldSetupOnWorkspaceRequest(
             workspaceId ?? Guid.NewGuid(),
             name,
             description,
             type,
-            numberCustomFieldSetup,
-            singleSelectCustomFieldSetup,
-            textCustomFieldSetup);
+            dateCustomFieldSetup, 
+            dateTimeCustomFieldSetup, 
+            durationCustomFieldSetup,
+            multiSelectCustomFieldSetup, 
+            numberCustomFieldSetup, 
+            singleSelectCustomFieldSetup, 
+            textCustomFieldSetup,
+            timeCustomFieldSetup);
+    }
+
+    public static CreateCustomFieldSetupOnProjectRequest CreateCreateCustomFieldSetupOnProjectRequest(
+        Guid? projectId = null,
+        string name = Constants.CustomFieldSetup.Name,
+        string description = Constants.CustomFieldSetup.Description,
+        CustomFieldType type = CustomFieldType.Text,
+        CreateCustomFieldSetupRequest.DateCustomFieldSetupRequest? dateCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.DateTimeCustomFieldSetupRequest? dateTimeCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.DurationCustomFieldSetupRequest? durationCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest? multiSelectCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.NumberCustomFieldSetupRequest? numberCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest? singleSelectCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest? textCustomFieldSetup = null,
+        CreateCustomFieldSetupRequest.TimeCustomFieldSetupRequest? timeCustomFieldSetup = null)
+    {
+        return new CreateCustomFieldSetupOnProjectRequest(
+            projectId ?? Guid.NewGuid(),
+            name,
+            description,
+            type,
+            dateCustomFieldSetup, 
+            dateTimeCustomFieldSetup, 
+            durationCustomFieldSetup,
+            multiSelectCustomFieldSetup, 
+            numberCustomFieldSetup, 
+            singleSelectCustomFieldSetup, 
+            textCustomFieldSetup,
+            timeCustomFieldSetup);
     }
 
     public static AddCustomFieldSetupToProjectRequest CreateAddCustomFieldSetupToProjectRequest(

@@ -21,6 +21,54 @@ public sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<C
             .NotEmpty()
             .MaximumLength(PropertiesValidation.CustomFieldSetup.NameMaximumLength);
 
+        // Date Custom Field Setup
+        When(c => c.Type == CustomFieldType.Date,
+            () =>
+            {
+                RuleFor(c => c.DateCustomFieldSetup)
+                    .NotNull();
+            });
+
+        // Date Time Custom Field Setup
+        When(c => c.Type == CustomFieldType.DateTime,
+            () =>
+            {
+                RuleFor(c => c.DateTimeCustomFieldSetup)
+                    .NotNull();
+            });
+
+        // Duration Custom Field Setup
+        When(c => c.Type == CustomFieldType.Duration,
+            () =>
+            {
+                RuleFor(c => c.DurationCustomFieldSetup)
+                    .NotNull();
+            });
+
+        // Multi Select Custom Field Setup
+        When(c => c.Type == CustomFieldType.MultiSelect,
+            () =>
+            {
+                RuleFor(c => c.MultiSelectCustomFieldSetup)
+                    .NotNull();
+
+                When(c => c.MultiSelectCustomFieldSetup is not null, () =>
+                {
+                    RuleForEach(c => c.MultiSelectCustomFieldSetup!.Options).ChildRules(option =>
+                    {
+                        option.RuleFor(o => o.Value)
+                            .NotEmpty()
+                            .MaximumLength(PropertiesValidation.MultiSelectOption.ValueMaximumLength);
+
+                        option.RuleFor(o => o.Color)
+                            .IsColor();
+                    });
+
+                    RuleFor(c => c.MultiSelectCustomFieldSetup!.Options)
+                        .NotEmpty();
+                });
+            });
+
         // Number Custom Field Setup
         When(c => c.Type == CustomFieldType.Number,
             () =>
@@ -63,7 +111,7 @@ public sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<C
 
                     RuleFor(c => c.SingleSelectCustomFieldSetup!.Options)
                         .NotEmpty()
-                        .Must(options => 
+                        .Must(options =>
                             options.DistinctBy(o => o.Id).Count() == options.Count)
                         .WithMessage("{PropertyName} cannot have duplicate ids");
 
@@ -74,7 +122,8 @@ public sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<C
                                 .FirstOrDefault(o => o.Id == c.DefaultOptionId) is not null)
                             .WithMessage("{PropertyName} could not be found within the provided options")
                             .OverridePropertyName(nameof(CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetup)
-                                .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetup.DefaultOptionId)));
+                                .Dot(nameof(CreateCustomFieldSetupCommand.SingleSelectCustomFieldSetup
+                                    .DefaultOptionId)));
                     });
                 });
             });
@@ -84,6 +133,14 @@ public sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<C
             () =>
             {
                 RuleFor(c => c.TextCustomFieldSetup)
+                    .NotNull();
+            });
+
+        // Time Custom Field Setup
+        When(c => c.Type == CustomFieldType.Time,
+            () =>
+            {
+                RuleFor(c => c.TimeCustomFieldSetup)
                     .NotNull();
             });
     }

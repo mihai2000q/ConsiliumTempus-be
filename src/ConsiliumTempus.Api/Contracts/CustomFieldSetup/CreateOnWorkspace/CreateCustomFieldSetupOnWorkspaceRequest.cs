@@ -8,13 +8,23 @@ public sealed record CreateCustomFieldSetupOnWorkspaceRequest(
     string Name,
     string Description,
     CustomFieldType Type,
+    CreateCustomFieldSetupRequest.DateCustomFieldSetupRequest? DateCustomFieldSetup,
+    CreateCustomFieldSetupRequest.DateTimeCustomFieldSetupRequest? DateTimeCustomFieldSetup,
+    CreateCustomFieldSetupRequest.DurationCustomFieldSetupRequest? DurationCustomFieldSetup,
+    CreateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest? MultiSelectCustomFieldSetup,
     CreateCustomFieldSetupRequest.NumberCustomFieldSetupRequest? NumberCustomFieldSetup,
     CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest? SingleSelectCustomFieldSetup,
-    CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest? TextCustomFieldSetup)
+    CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest? TextCustomFieldSetup,
+    CreateCustomFieldSetupRequest.TimeCustomFieldSetupRequest? TimeCustomFieldSetup)
     : CreateCustomFieldSetupRequest(
         Name,
         Description,
         Type,
-        NumberCustomFieldSetup,
+        DateCustomFieldSetup,
+        DateTimeCustomFieldSetup, 
+        DurationCustomFieldSetup, 
+        MultiSelectCustomFieldSetup,
+        NumberCustomFieldSetup, 
         SingleSelectCustomFieldSetup, 
-        TextCustomFieldSetup);
+        TextCustomFieldSetup, 
+        TimeCustomFieldSetup);

@@ -6,10 +6,32 @@ public abstract record CreateCustomFieldSetupRequest(
     string Name,
     string Description,
     CustomFieldType Type,
+    CreateCustomFieldSetupRequest.DateCustomFieldSetupRequest? DateCustomFieldSetup,
+    CreateCustomFieldSetupRequest.DateTimeCustomFieldSetupRequest? DateTimeCustomFieldSetup,
+    CreateCustomFieldSetupRequest.DurationCustomFieldSetupRequest? DurationCustomFieldSetup,
+    CreateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest? MultiSelectCustomFieldSetup,
     CreateCustomFieldSetupRequest.NumberCustomFieldSetupRequest? NumberCustomFieldSetup,
     CreateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest? SingleSelectCustomFieldSetup,
-    CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest? TextCustomFieldSetup)
+    CreateCustomFieldSetupRequest.TextCustomFieldSetupRequest? TextCustomFieldSetup,
+    CreateCustomFieldSetupRequest.TimeCustomFieldSetupRequest? TimeCustomFieldSetup)
 {
+    public sealed record DateCustomFieldSetupRequest(
+        DateOnly? DefaultDate);
+
+    public sealed record DateTimeCustomFieldSetupRequest(
+        DateTime? DefaultDateTime);
+    
+    public sealed record DurationCustomFieldSetupRequest(
+        TimeSpan? DefaultDuration);
+    
+    public sealed record MultiSelectCustomFieldSetupRequest(
+        List<MultiSelectCustomFieldSetupRequest.MultiSelectOptionRequest> Options)
+    {
+        public sealed record MultiSelectOptionRequest(
+            string Value,
+            string Color);
+    }
+    
     public sealed record NumberCustomFieldSetupRequest(
         NumberCustomFieldSetupRequest.NumberSettingsRequest Settings,
         decimal? DefaultNumber)
@@ -32,4 +54,7 @@ public abstract record CreateCustomFieldSetupRequest(
 
     public sealed record TextCustomFieldSetupRequest(
         string? DefaultText);
+    
+    public sealed record TimeCustomFieldSetupRequest(
+        TimeOnly? DefaultTime);
 }
