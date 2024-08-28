@@ -52,6 +52,60 @@ public sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<Cus
     }
 }
 
+public sealed class DateCustomFieldSetupConfiguration : IEntityTypeConfiguration<DateCustomFieldSetupAggregate>
+{
+    public void Configure(EntityTypeBuilder<DateCustomFieldSetupAggregate> builder)
+    {
+        builder.ToTable(nameof(CustomFieldSetupAggregate)
+            .TruncateAggregate()
+            .Dot(CustomFieldType.Date.ToString()));
+
+        builder.Property(d => d.DefaultDate);
+    }
+}
+
+public sealed class DateTimeCustomFieldSetupConfiguration : IEntityTypeConfiguration<DateTimeCustomFieldSetupAggregate>
+{
+    public void Configure(EntityTypeBuilder<DateTimeCustomFieldSetupAggregate> builder)
+    {
+        builder.ToTable(nameof(CustomFieldSetupAggregate)
+            .TruncateAggregate()
+            .Dot(CustomFieldType.DateTime.ToString()));
+
+        builder.Property(d => d.DefaultDateTime);
+    }
+}
+
+public sealed class DurationCustomFieldSetupConfiguration : IEntityTypeConfiguration<DurationCustomFieldSetupAggregate>
+{
+    public void Configure(EntityTypeBuilder<DurationCustomFieldSetupAggregate> builder)
+    {
+        builder.ToTable(nameof(CustomFieldSetupAggregate)
+            .TruncateAggregate()
+            .Dot(CustomFieldType.Duration.ToString()));
+
+        builder.Property(d => d.DefaultDuration);
+    }
+}
+
+public sealed class
+    MultiSelectCustomFieldSetupConfiguration : IEntityTypeConfiguration<MultiSelectCustomFieldSetupAggregate>
+{
+    public void Configure(EntityTypeBuilder<MultiSelectCustomFieldSetupAggregate> builder)
+    {
+        var tableName = nameof(CustomFieldSetupAggregate)
+            .TruncateAggregate()
+            .Dot(CustomFieldType.MultiSelect.ToString());
+        builder.ToTable(tableName);
+
+        builder.HasMany(m => m.Options)
+            .WithOne()
+            .HasForeignKey("SetupId")
+            .IsRequired();
+        builder.Navigation(m => m.Options).AutoInclude();
+    }
+}
+
 public sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfiguration<NumberCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<NumberCustomFieldSetupAggregate> builder)
@@ -76,6 +130,16 @@ public sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfigurati
             .Property(dn => dn.Value)
             .HasPrecision(38, PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum)
             .HasColumnName(nameof(NumberCustomFieldSetupAggregate.DefaultNumber));
+    }
+}
+
+public sealed class PeopleCustomFieldSetupConfiguration : IEntityTypeConfiguration<PeopleCustomFieldSetupAggregate>
+{
+    public void Configure(EntityTypeBuilder<PeopleCustomFieldSetupAggregate> builder)
+    {
+        builder.ToTable(nameof(CustomFieldSetupAggregate)
+            .TruncateAggregate()
+            .Dot(CustomFieldType.People.ToString()));
     }
 }
 
@@ -112,5 +176,17 @@ public sealed class TextCustomFieldSetupConfiguration : IEntityTypeConfiguration
         builder.OwnsOne(n => n.DefaultText)
             .Property(dt => dt.Value)
             .HasColumnName(nameof(TextCustomFieldSetupAggregate.DefaultText));
+    }
+}
+
+public sealed class TimeCustomFieldSetupConfiguration : IEntityTypeConfiguration<TimeCustomFieldSetupAggregate>
+{
+    public void Configure(EntityTypeBuilder<TimeCustomFieldSetupAggregate> builder)
+    {
+        builder.ToTable(nameof(CustomFieldSetupAggregate)
+            .TruncateAggregate()
+            .Dot(CustomFieldType.Time.ToString()));
+
+        builder.Property(t => t.DefaultTime);
     }
 }

@@ -171,6 +171,109 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CustomFieldSetup.Date",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DefaultDate = table.Column<DateOnly>(type: "date", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomFieldSetup.Date", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.Date_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.Date_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomFieldSetup.DateTime",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DefaultDateTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomFieldSetup.DateTime", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.DateTime_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.DateTime_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomFieldSetup.Duration",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DefaultDuration = table.Column<TimeSpan>(type: "time", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomFieldSetup.Duration", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.Duration_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.Duration_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomFieldSetup.MultiSelect",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomFieldSetup.MultiSelect", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.MultiSelect_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.MultiSelect_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CustomFieldSetup.Number",
                 columns: table => new
                 {
@@ -194,6 +297,31 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CustomFieldSetup.Number_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomFieldSetup.People",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomFieldSetup.People", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.People_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.People_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,
                         principalTable: "Workspace",
                         principalColumn: "Id");
@@ -246,6 +374,32 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CustomFieldSetup.Text_Workspace_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspace",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomFieldSetup.Time",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DefaultTime = table.Column<TimeOnly>(type: "time", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomFieldSetup.Time", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.Time_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup.Time_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,
                         principalTable: "Workspace",
                         principalColumn: "Id");
@@ -366,6 +520,27 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_WorkspaceInvitation_Workspace_WorkspaceId",
                         column: x => x.WorkspaceId,
                         principalTable: "Workspace",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MultiSelectOption",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomOrderPosition = table.Column<int>(type: "int", nullable: false),
+                    SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MultiSelectOption", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MultiSelectOption_CustomFieldSetup.MultiSelect_SetupId",
+                        column: x => x.SetupId,
+                        principalTable: "CustomFieldSetup.MultiSelect",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -585,6 +760,105 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CustomField.Date",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: true),
+                    SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomField.Date", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomField.Date_CustomFieldSetup.Date_SetupId",
+                        column: x => x.SetupId,
+                        principalTable: "CustomFieldSetup.Date",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomField.Date_ProjectTask_ProjectTaskId",
+                        column: x => x.ProjectTaskId,
+                        principalTable: "ProjectTask",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomField.DateTime",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomField.DateTime", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomField.DateTime_CustomFieldSetup.DateTime_SetupId",
+                        column: x => x.SetupId,
+                        principalTable: "CustomFieldSetup.DateTime",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomField.DateTime_ProjectTask_ProjectTaskId",
+                        column: x => x.ProjectTaskId,
+                        principalTable: "ProjectTask",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomField.Duration",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Duration = table.Column<TimeSpan>(type: "time", nullable: true),
+                    SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomField.Duration", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomField.Duration_CustomFieldSetup.Duration_SetupId",
+                        column: x => x.SetupId,
+                        principalTable: "CustomFieldSetup.Duration",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomField.Duration_ProjectTask_ProjectTaskId",
+                        column: x => x.ProjectTaskId,
+                        principalTable: "ProjectTask",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomField.MultiSelect",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomField.MultiSelect", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomField.MultiSelect_CustomFieldSetup.MultiSelect_SetupId",
+                        column: x => x.SetupId,
+                        principalTable: "CustomFieldSetup.MultiSelect",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomField.MultiSelect_ProjectTask_ProjectTaskId",
+                        column: x => x.ProjectTaskId,
+                        principalTable: "ProjectTask",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CustomField.Number",
                 columns: table => new
                 {
@@ -606,6 +880,36 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField.Number_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomField.People",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomField.People", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomField.People_CustomFieldSetup.People_SetupId",
+                        column: x => x.SetupId,
+                        principalTable: "CustomFieldSetup.People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomField.People_ProjectTask_ProjectTaskId",
+                        column: x => x.ProjectTaskId,
+                        principalTable: "ProjectTask",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomField.People_User_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "User",
                         principalColumn: "Id");
                 });
 
@@ -665,6 +969,31 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CustomField.Time",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Time = table.Column<TimeOnly>(type: "time", nullable: true),
+                    SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomField.Time", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomField.Time_CustomFieldSetup.Time_SetupId",
+                        column: x => x.SetupId,
+                        principalTable: "CustomFieldSetup.Time",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomField.Time_ProjectTask_ProjectTaskId",
+                        column: x => x.ProjectTaskId,
+                        principalTable: "ProjectTask",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectTaskComment",
                 columns: table => new
                 {
@@ -691,6 +1020,30 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         column: x => x.CreatedById,
                         principalTable: "User",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MultiSelectCustomFieldHasOption",
+                columns: table => new
+                {
+                    MultiSelectCustomFieldId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OptionsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MultiSelectCustomFieldHasOption", x => new { x.MultiSelectCustomFieldId, x.OptionsId });
+                    table.ForeignKey(
+                        name: "FK_MultiSelectCustomFieldHasOption_CustomField.MultiSelect_MultiSelectCustomFieldId",
+                        column: x => x.MultiSelectCustomFieldId,
+                        principalTable: "CustomField.MultiSelect",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MultiSelectCustomFieldHasOption_MultiSelectOption_OptionsId",
+                        column: x => x.OptionsId,
+                        principalTable: "MultiSelectOption",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -880,6 +1233,46 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CustomField.Date_ProjectTaskId",
+                table: "CustomField.Date",
+                column: "ProjectTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomField.Date_SetupId",
+                table: "CustomField.Date",
+                column: "SetupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomField.DateTime_ProjectTaskId",
+                table: "CustomField.DateTime",
+                column: "ProjectTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomField.DateTime_SetupId",
+                table: "CustomField.DateTime",
+                column: "SetupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomField.Duration_ProjectTaskId",
+                table: "CustomField.Duration",
+                column: "ProjectTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomField.Duration_SetupId",
+                table: "CustomField.Duration",
+                column: "SetupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomField.MultiSelect_ProjectTaskId",
+                table: "CustomField.MultiSelect",
+                column: "ProjectTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomField.MultiSelect_SetupId",
+                table: "CustomField.MultiSelect",
+                column: "SetupId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CustomField.Number_ProjectTaskId",
                 table: "CustomField.Number",
                 column: "ProjectTaskId");
@@ -887,6 +1280,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CustomField.Number_SetupId",
                 table: "CustomField.Number",
+                column: "SetupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomField.People_PersonId",
+                table: "CustomField.People",
+                column: "PersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomField.People_ProjectTaskId",
+                table: "CustomField.People",
+                column: "ProjectTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomField.People_SetupId",
+                table: "CustomField.People",
                 column: "SetupId");
 
             migrationBuilder.CreateIndex(
@@ -915,6 +1323,60 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "SetupId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CustomField.Time_ProjectTaskId",
+                table: "CustomField.Time",
+                column: "ProjectTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomField.Time_SetupId",
+                table: "CustomField.Time",
+                column: "SetupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.Date_AuditId",
+                table: "CustomFieldSetup.Date",
+                column: "AuditId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.Date_WorkspaceId",
+                table: "CustomFieldSetup.Date",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.DateTime_AuditId",
+                table: "CustomFieldSetup.DateTime",
+                column: "AuditId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.DateTime_WorkspaceId",
+                table: "CustomFieldSetup.DateTime",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.Duration_AuditId",
+                table: "CustomFieldSetup.Duration",
+                column: "AuditId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.Duration_WorkspaceId",
+                table: "CustomFieldSetup.Duration",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.MultiSelect_AuditId",
+                table: "CustomFieldSetup.MultiSelect",
+                column: "AuditId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.MultiSelect_WorkspaceId",
+                table: "CustomFieldSetup.MultiSelect",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CustomFieldSetup.Number_AuditId",
                 table: "CustomFieldSetup.Number",
                 column: "AuditId",
@@ -923,6 +1385,17 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CustomFieldSetup.Number_WorkspaceId",
                 table: "CustomFieldSetup.Number",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.People_AuditId",
+                table: "CustomFieldSetup.People",
+                column: "AuditId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.People_WorkspaceId",
+                table: "CustomFieldSetup.People",
                 column: "WorkspaceId");
 
             migrationBuilder.CreateIndex(
@@ -948,6 +1421,17 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "WorkspaceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.Time_AuditId",
+                table: "CustomFieldSetup.Time",
+                column: "AuditId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup.Time_WorkspaceId",
+                table: "CustomFieldSetup.Time",
+                column: "WorkspaceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Membership_WorkspaceId",
                 table: "Membership",
                 column: "WorkspaceId");
@@ -956,6 +1440,16 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "IX_Membership_WorkspaceRoleId",
                 table: "Membership",
                 column: "WorkspaceRoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MultiSelectCustomFieldHasOption_OptionsId",
+                table: "MultiSelectCustomFieldHasOption",
+                column: "OptionsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MultiSelectOption_SetupId",
+                table: "MultiSelectOption",
+                column: "SetupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Project_OwnerId",
@@ -1100,7 +1594,19 @@ namespace ConsiliumTempus.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CustomField.Date");
+
+            migrationBuilder.DropTable(
+                name: "CustomField.DateTime");
+
+            migrationBuilder.DropTable(
+                name: "CustomField.Duration");
+
+            migrationBuilder.DropTable(
                 name: "CustomField.Number");
+
+            migrationBuilder.DropTable(
+                name: "CustomField.People");
 
             migrationBuilder.DropTable(
                 name: "CustomField.SingleSelect");
@@ -1109,7 +1615,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "CustomField.Text");
 
             migrationBuilder.DropTable(
+                name: "CustomField.Time");
+
+            migrationBuilder.DropTable(
                 name: "Membership");
+
+            migrationBuilder.DropTable(
+                name: "MultiSelectCustomFieldHasOption");
 
             migrationBuilder.DropTable(
                 name: "ProjectHasAllowedMember");
@@ -1139,7 +1651,19 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "WorkspaceRoleHasPermission");
 
             migrationBuilder.DropTable(
+                name: "CustomFieldSetup.Date");
+
+            migrationBuilder.DropTable(
+                name: "CustomFieldSetup.DateTime");
+
+            migrationBuilder.DropTable(
+                name: "CustomFieldSetup.Duration");
+
+            migrationBuilder.DropTable(
                 name: "CustomFieldSetup.Number");
+
+            migrationBuilder.DropTable(
+                name: "CustomFieldSetup.People");
 
             migrationBuilder.DropTable(
                 name: "SingleSelectOption");
@@ -1148,7 +1672,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "CustomFieldSetup.Text");
 
             migrationBuilder.DropTable(
-                name: "ProjectTask");
+                name: "CustomFieldSetup.Time");
+
+            migrationBuilder.DropTable(
+                name: "CustomField.MultiSelect");
+
+            migrationBuilder.DropTable(
+                name: "MultiSelectOption");
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");
@@ -1161,6 +1691,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "CustomFieldSetup.SingleSelect");
+
+            migrationBuilder.DropTable(
+                name: "ProjectTask");
+
+            migrationBuilder.DropTable(
+                name: "CustomFieldSetup.MultiSelect");
 
             migrationBuilder.DropTable(
                 name: "ProjectStage");

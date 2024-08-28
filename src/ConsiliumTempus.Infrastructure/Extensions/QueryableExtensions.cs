@@ -16,10 +16,16 @@ public static class QueryableExtensions
     {
         return customFieldSetup switch
         {
+            DateCustomFieldSetupAggregate => queryable.OfType<DateCustomField>(),
+            DateTimeCustomFieldSetupAggregate => queryable.OfType<DateTimeCustomField>(),
+            DurationCustomFieldSetupAggregate => queryable.OfType<DurationCustomField>(),
+            MultiSelectCustomFieldSetupAggregate => queryable.OfType<MultiSelectCustomField>(),
             NumberCustomFieldSetupAggregate => queryable.OfType<NumberCustomField>(),
+            PeopleCustomFieldSetupAggregate => queryable.OfType<PeopleCustomField>(),
             SingleSelectCustomFieldSetupAggregate => queryable.OfType<SingleSelectCustomField>(),
             TextCustomFieldSetupAggregate => queryable.OfType<TextCustomField>(),
-            _ => throw new ArgumentOutOfRangeException(nameof(customFieldSetup), customFieldSetup, null)
+            TimeCustomFieldSetupAggregate => queryable.OfType<TimeCustomField>(),
+            _ => throw new ArgumentOutOfRangeException(nameof(customFieldSetup), customFieldSetup, "Type Not Supported")
         };
     }
 

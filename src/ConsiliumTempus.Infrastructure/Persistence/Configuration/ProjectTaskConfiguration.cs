@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Validation;
+﻿using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
@@ -105,21 +106,101 @@ public sealed class CustomFieldConfiguration : IEntityTypeConfiguration<CustomFi
     }
 }
 
+public sealed class DateCustomFieldConfiguration : IEntityTypeConfiguration<DateCustomField>
+{
+    public void Configure(EntityTypeBuilder<DateCustomField> builder)
+    {
+        builder.ToTable(nameof(CustomField)
+            .Dot(CustomFieldType.Date.ToString()));
+
+        builder.Property(d => d.Date);
+
+        builder.HasOne(d => d.Setup)
+            .WithMany();
+        builder.Navigation(d => d.Setup).AutoInclude();
+    }
+}
+
+public sealed class DateTimeCustomFieldConfiguration : IEntityTypeConfiguration<DateTimeCustomField>
+{
+    public void Configure(EntityTypeBuilder<DateTimeCustomField> builder)
+    {
+        builder.ToTable(nameof(CustomField)
+            .Dot(CustomFieldType.DateTime.ToString()));
+
+        builder.Property(d => d.DateTime);
+
+        builder.HasOne(d => d.Setup)
+            .WithMany();
+        builder.Navigation(d => d.Setup).AutoInclude();
+    }
+}
+
+public sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguration<DurationCustomField>
+{
+    public void Configure(EntityTypeBuilder<DurationCustomField> builder)
+    {
+        builder.ToTable(nameof(CustomField)
+            .Dot(CustomFieldType.Duration.ToString()));
+
+        builder.Property(d => d.Duration);
+
+        builder.HasOne(d => d.Setup)
+            .WithMany();
+        builder.Navigation(d => d.Setup).AutoInclude();
+    }
+}
+
+public sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfiguration<MultiSelectCustomField>
+{
+    public void Configure(EntityTypeBuilder<MultiSelectCustomField> builder)
+    {
+        builder.ToTable(nameof(CustomField)
+            .Dot(CustomFieldType.MultiSelect.ToString()));
+
+        builder.HasMany(m => m.Options)
+            .WithMany()
+            .UsingEntity("MultiSelectCustomFieldHasOption");
+        builder.Navigation(m => m.Options).AutoInclude();
+
+        builder.HasOne(m => m.Setup)
+            .WithMany();
+        builder.Navigation(m => m.Setup).AutoInclude();
+    }
+}
+
 public sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<NumberCustomField>
 {
     public void Configure(EntityTypeBuilder<NumberCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dot(nameof(NumberCustomField).Replace(nameof(CustomField), "")));
+            .Dot(CustomFieldType.Number.ToString()));
 
-        builder.OwnsOne(ncf => ncf.Number)
+        builder.OwnsOne(n => n.Number)
             .Property(n => n.Value)
             .HasColumnName(nameof(NumberCustomField.Number))
             .HasPrecision(38, PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum);
 
-        builder.HasOne(ncf => ncf.Setup)
+        builder.HasOne(n => n.Setup)
             .WithMany();
-        builder.Navigation(ncf => ncf.Setup).AutoInclude();
+        builder.Navigation(n => n.Setup).AutoInclude();
+    }
+}
+
+public sealed class PeopleCustomFieldConfiguration : IEntityTypeConfiguration<PeopleCustomField>
+{
+    public void Configure(EntityTypeBuilder<PeopleCustomField> builder)
+    {
+        builder.ToTable(nameof(CustomField)
+            .Dot(CustomFieldType.People.ToString()));
+
+        builder.HasOne(p => p.Person)
+            .WithMany();
+        builder.Navigation(p => p.Person).AutoInclude();
+
+        builder.HasOne(p => p.Setup)
+            .WithMany();
+        builder.Navigation(p => p.Setup).AutoInclude();
     }
 }
 
@@ -128,7 +209,7 @@ public sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfigurat
     public void Configure(EntityTypeBuilder<SingleSelectCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dot(nameof(SingleSelectCustomField).Replace(nameof(CustomField), "")));
+            .Dot(CustomFieldType.SingleSelect.ToString()));
 
         builder.HasOne(s => s.Option)
             .WithMany();
@@ -145,14 +226,29 @@ public sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<Text
     public void Configure(EntityTypeBuilder<TextCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dot(nameof(TextCustomField).Replace(nameof(CustomField), "")));
+            .Dot(CustomFieldType.Text.ToString()));
 
-        builder.OwnsOne(tcf => tcf.Text)
+        builder.OwnsOne(t => t.Text)
             .Property(n => n.Value)
             .HasColumnName(nameof(TextCustomField.Text));
 
         builder.HasOne(t => t.Setup)
             .WithMany();
-        builder.Navigation(tcf => tcf.Setup).AutoInclude();
+        builder.Navigation(t => t.Setup).AutoInclude();
+    }
+}
+
+public sealed class TimeCustomFieldConfiguration : IEntityTypeConfiguration<TimeCustomField>
+{
+    public void Configure(EntityTypeBuilder<TimeCustomField> builder)
+    {
+        builder.ToTable(nameof(CustomField)
+            .Dot(CustomFieldType.Time.ToString()));
+
+        builder.Property(t => t.Time);
+
+        builder.HasOne(t => t.Setup)
+            .WithMany();
+        builder.Navigation(t => t.Setup).AutoInclude();
     }
 }
