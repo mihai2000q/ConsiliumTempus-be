@@ -148,7 +148,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             Id = 8,
-                            Name = "UpdateWorkspaceCustomFieldSetup"
+                            Name = "MakeCustomFieldSetupGlobal"
                         },
                         new
                         {

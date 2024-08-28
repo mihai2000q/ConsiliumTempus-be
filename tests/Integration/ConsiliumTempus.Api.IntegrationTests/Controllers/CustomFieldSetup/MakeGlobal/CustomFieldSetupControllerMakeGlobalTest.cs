@@ -7,7 +7,6 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
-using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.MakeGlobal;
@@ -18,7 +17,7 @@ public class CustomFieldSetupControllerMakeGlobalTest(WebAppFactory factory)
 {
     [Fact]
     public async Task
-        UpdateWorkspaceCustomFieldSetup_WhenRequestHasNumberType_ShouldUpdateWorkspaceOnCustomFieldSetupAndReturnSuccessResponse()
+        MakeCustomFieldSetupGlobal_WhenSuccessful_ShouldUpdateWorkspaceOnCustomFieldSetupAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
@@ -40,13 +39,14 @@ public class CustomFieldSetupControllerMakeGlobalTest(WebAppFactory factory)
             .AsNoTracking()
             .Include(cfs => cfs.Audit)
             .Include(cfs => cfs.Workspace)
+            .Include(cfs => cfs.Projects)
             .SingleAsync(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id));
 
         Utils.CustomFieldSetup.AssertMakeGlobal(request, updatedCustomFieldSetup, user);
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenItHasWorkspace_ShouldReturnAlreadyGlobalError()
+    public async Task MakeCustomFieldSetupGlobal_WhenItHasWorkspace_ShouldReturnAlreadyGlobalError()
     {
         // Arrange
         var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
@@ -66,7 +66,7 @@ public class CustomFieldSetupControllerMakeGlobalTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task MakeCustomFieldSetupGlobal_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateMakeCustomFieldSetupGlobalRequest(

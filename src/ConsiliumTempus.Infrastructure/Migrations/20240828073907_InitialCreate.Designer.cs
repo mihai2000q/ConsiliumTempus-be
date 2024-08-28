@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240827125220_InitialCreate")]
+    [Migration("20240828073907_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -151,7 +151,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         new
                         {
                             Id = 8,
-                            Name = "UpdateWorkspaceCustomFieldSetup"
+                            Name = "MakeCustomFieldSetupGlobal"
                         },
                         new
                         {

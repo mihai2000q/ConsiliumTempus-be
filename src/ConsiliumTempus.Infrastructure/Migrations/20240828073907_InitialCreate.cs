@@ -705,7 +705,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     { 5, "ReadCollectionCustomFieldSetupFromProject" },
                     { 6, "ReadCollectionCustomFieldSetupFromWorkspace" },
                     { 7, "UpdateCustomFieldSetup" },
-                    { 8, "UpdateWorkspaceCustomFieldSetup" },
+                    { 8, "MakeCustomFieldSetupGlobal" },
                     { 9, "DeleteCustomFieldSetup" },
                     { 10, "RemoveCustomFieldSetupFromProject" },
                     { 11, "CreateProject" },

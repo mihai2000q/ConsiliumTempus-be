@@ -1,4 +1,3 @@
-using ConsiliumTempus.Api;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.ArchitectureTests.Core;
 using ConsiliumTempus.ArchitectureTests.TestUtils;

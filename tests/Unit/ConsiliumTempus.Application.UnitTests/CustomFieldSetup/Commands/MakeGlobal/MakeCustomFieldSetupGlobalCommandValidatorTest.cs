@@ -27,7 +27,7 @@ public class MakeCustomFieldSetupGlobalCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(MakeCustomFieldSetupGlobalCommandValidatorData.GetInvalidIdCommands))]
-    public async Task ValidateMakeFromCustomFieldSetupGlobalCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
+    public async Task ValidateMakeCustomFieldSetupGlobalCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         MakeCustomFieldSetupGlobalCommand command,
         string property)
     {
