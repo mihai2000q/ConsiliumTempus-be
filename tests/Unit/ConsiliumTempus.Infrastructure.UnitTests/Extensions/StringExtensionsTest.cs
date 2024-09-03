@@ -5,13 +5,13 @@ namespace ConsiliumTempus.Infrastructure.UnitTests.Extensions;
 public class StringExtensionsTest
 {
     [Theory]
-    [InlineData("first", "second", "first.second")]
-    public void Dot_ShouldConcatenate2StringsWithDotSymbol(string input1, string input2, string expected)
+    [InlineData("first", "second", "first_second")]
+    public void Dash_ShouldConcatenate2StringsWithDashSymbol(string input1, string input2, string expected)
     {
         // Arrange - parameterized
 
         // Act
-        var outcome = input1.Dot(input2);
+        var outcome = input1.Dash(input2);
 
         // Assert
         outcome.Should().Be(expected);

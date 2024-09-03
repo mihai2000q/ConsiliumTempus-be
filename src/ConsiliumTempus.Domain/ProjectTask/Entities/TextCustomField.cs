@@ -36,7 +36,7 @@ public sealed class TextCustomField : CustomField
             CustomFieldId.CreateUnique(),
             projectTask);
     }
-    
+
     public void Update(Text? text)
     {
         Text = text;

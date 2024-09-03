@@ -35,7 +35,7 @@ public sealed class DateCustomField : CustomField
             CustomFieldId.CreateUnique(),
             projectTask);
     }
-    
+
     public void Update(DateOnly? date)
     {
         Date = date;

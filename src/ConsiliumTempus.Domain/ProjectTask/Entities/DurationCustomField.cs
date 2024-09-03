@@ -35,7 +35,7 @@ public sealed class DurationCustomField : CustomField
             CustomFieldId.CreateUnique(),
             projectTask);
     }
-    
+
     public void Update(TimeSpan? duration)
     {
         Duration = duration;

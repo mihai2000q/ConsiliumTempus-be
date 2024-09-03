@@ -35,7 +35,7 @@ public sealed class TimeCustomField : CustomField
             CustomFieldId.CreateUnique(),
             projectTask);
     }
-    
+
     public void Update(TimeOnly? time)
     {
         Time = time;

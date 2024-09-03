@@ -111,7 +111,7 @@ public sealed class DateCustomFieldConfiguration : IEntityTypeConfiguration<Date
     public void Configure(EntityTypeBuilder<DateCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dot(CustomFieldType.Date.ToString()));
+            .Dash(CustomFieldType.Date.ToString()));
 
         builder.Property(d => d.Date);
 
@@ -126,7 +126,7 @@ public sealed class DateTimeCustomFieldConfiguration : IEntityTypeConfiguration<
     public void Configure(EntityTypeBuilder<DateTimeCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dot(CustomFieldType.DateTime.ToString()));
+            .Dash(CustomFieldType.DateTime.ToString()));
 
         builder.Property(d => d.DateTime);
 
@@ -141,7 +141,7 @@ public sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguration<
     public void Configure(EntityTypeBuilder<DurationCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dot(CustomFieldType.Duration.ToString()));
+            .Dash(CustomFieldType.Duration.ToString()));
 
         builder.Property(d => d.Duration);
 
@@ -156,7 +156,7 @@ public sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfigurati
     public void Configure(EntityTypeBuilder<MultiSelectCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dot(CustomFieldType.MultiSelect.ToString()));
+            .Dash(CustomFieldType.MultiSelect.ToString()));
 
         builder.HasMany(m => m.Options)
             .WithMany()
@@ -174,7 +174,7 @@ public sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<Nu
     public void Configure(EntityTypeBuilder<NumberCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dot(CustomFieldType.Number.ToString()));
+            .Dash(CustomFieldType.Number.ToString()));
 
         builder.OwnsOne(n => n.Number)
             .Property(n => n.Value)
@@ -192,7 +192,7 @@ public sealed class PeopleCustomFieldConfiguration : IEntityTypeConfiguration<Pe
     public void Configure(EntityTypeBuilder<PeopleCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dot(CustomFieldType.People.ToString()));
+            .Dash(CustomFieldType.People.ToString()));
 
         builder.HasOne(p => p.Person)
             .WithMany();
@@ -209,7 +209,7 @@ public sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfigurat
     public void Configure(EntityTypeBuilder<SingleSelectCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dot(CustomFieldType.SingleSelect.ToString()));
+            .Dash(CustomFieldType.SingleSelect.ToString()));
 
         builder.HasOne(s => s.Option)
             .WithMany();
@@ -226,7 +226,7 @@ public sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<Text
     public void Configure(EntityTypeBuilder<TextCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dot(CustomFieldType.Text.ToString()));
+            .Dash(CustomFieldType.Text.ToString()));
 
         builder.OwnsOne(t => t.Text)
             .Property(n => n.Value)
@@ -243,7 +243,7 @@ public sealed class TimeCustomFieldConfiguration : IEntityTypeConfiguration<Time
     public void Configure(EntityTypeBuilder<TimeCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dot(CustomFieldType.Time.ToString()));
+            .Dash(CustomFieldType.Time.ToString()));
 
         builder.Property(t => t.Time);
 

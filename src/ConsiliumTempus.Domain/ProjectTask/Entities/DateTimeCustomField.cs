@@ -35,8 +35,8 @@ public sealed class DateTimeCustomField : CustomField
             CustomFieldId.CreateUnique(),
             projectTask);
     }
-    
-    public void UpDateTime(DateTime? dateTime)
+
+    public void Update(DateTime? dateTime)
     {
         DateTime = dateTime;
     }
