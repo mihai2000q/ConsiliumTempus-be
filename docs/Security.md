@@ -73,18 +73,17 @@ The workspace roles are:
 
 The permissions will be classified on their respective component:
 
-- Workspace
+- Custom Field Setup
+  - Create On Project
+  - Create On Workspace
+  - Add To Project
   - Read
-  - Read Overview
-  - Read Invitations
+  - Read Collection From Workspace
+  - Read Collection From Project
   - Update
-  - Update Favorites
-  - Update Overview
+  - Make Global
   - Delete
-  - Invite Collaborator
-  - Read Collaborators
-  - Update Collaborator
-  - Kick Collaborator
+  - Remove From Project
 - Project
   - Create
   - Read
@@ -94,11 +93,11 @@ The permissions will be classified on their respective component:
   - Update Favorites
   - Update Overview
   - Delete
+  - Read Allowed Members
   - Add Status
   - Read Statuses
   - Update Status
   - Remove Status
-  - Read Allowed Members
 - Project Sprint
   - Create
   - Read
@@ -116,55 +115,79 @@ The permissions will be classified on their respective component:
   - Read Collection
   - Move
   - Update
+  - Update Custom Field
   - Update Is Completed
   - Update Overview
   - Delete
+- Workspace
+  - Read
+  - Read Overview
+  - Read Invitations
+  - Update
+  - Update Favorites
+  - Update Overview
+  - Delete
+  - Invite Collaborator
+  - Read Collaborators
+  - Update Collaborator
+  - Kick Collaborator
 
 ## Workspace Roles to Permissions
 
 The Access Control List of the system is the following:
 
-|                                    | View | Member | Admin |
-|------------------------------------|:----:|:------:|:-----:|
-| Read Workspace                     |  X   |   X    |   X   |
-| Read Overview Workspace            |  X   |   X    |   X   |
-| Read Invitations From Workspace    |      |        |   X   |
-| Update Workspace                   |      |   X    |   X   |
-| Update Favorites Workspace         |  X   |   X    |   X   |
-| Update Overview Workspace          |      |   X    |   X   |
-| Delete Workspace                   |      |        |   X   |
-| Invite Collaborator To Workspace   |      |        |   X   |
-| Read Collaborators From Workspace  |  X   |   X    |   X   |
-| Update Collaborator From Workspace |      |        |   X   |
-| Kick Collaborator From Workspace   |      |        |   X   |
-| Create Project                     |      |        |   X   |
-| Read Project                       |  X   |   X    |   X   |
-| Read Overview Project              |  X   |   X    |   X   |
-| Read Collection Project            |  X   |   X    |   X   |
-| Update Project                     |      |   X    |   X   |
-| Update Favorites Project           |  X   |   X    |   X   |
-| Update Overview Project            |      |   X    |   X   |
-| Delete Project                     |      |        |   X   |
-| Add Status To Project              |      |        |   X   |
-| Read Statuses From Project         |      |   X    |   X   |
-| Update Status From Project         |      |   X    |   X   |
-| Remove Status From Project         |      |        |   X   |
-| Read Allowed Members From Project  |      |   X    |   X   |
-| Create Project Sprint              |      |        |   X   |
-| Read Project Sprint                |  X   |   X    |   X   |
-| Read Collection Project Sprint     |  X   |   X    |   X   |
-| Update Project Sprint              |      |   X    |   X   |
-| Delete Project Sprint              |      |        |   X   |
-| Add Stage To Project Sprint        |      |        |   X   |
-| Read Stages From Project Sprint    |  X   |   X    |   X   |
-| Move Stage From Project Sprint     |      |        |   X   |
-| Update Stage From Project Sprint   |      |   X    |   X   |
-| Remove Stage From Project Sprint   |      |        |   X   |
-| Create Project Task                |      |   X    |   X   |
-| Read Project Task                  |  X   |   X    |   X   |
-| Read Collection Project Task       |  X   |   X    |   X   |
-| Move Project Task                  |      |   X    |   X   |
-| Update Project Task                |      |   X    |   X   |
-| Update Is Completed Project Task   |      |   X    |   X   |
-| Update Overview Project Task       |      |   X    |   X   |
-| Delete Project Task                |      |   X    |   X   |
+|                                                   | View | Member | Admin |
+|---------------------------------------------------|:----:|:------:|:-----:|
+| Create Custom Field Setup On Project              |      |        |   X   |
+| Create Custom Field Setup On Workspace            |      |        |   X   |
+| Add Custom Field Setup To Project                 |      |        |   X   |
+| Read Custom Field Setup                           |      |   X    |   X   |
+| Read Collection Custom Field Setup From Project   |      |   X    |   X   |
+| Read Collection Custom Field Setup From Workspace |      |   X    |   X   |
+| Update Custom Field Setup                         |      |        |   X   |
+| Make Custom Field Setup Global                    |      |        |   X   |
+| Delete Custom Field Setup                         |      |        |   X   |
+| Remove Custom Field Setup From Project            |      |        |   X   |
+| Create Project                                    |      |        |   X   |
+| Read Project                                      |  X   |   X    |   X   |
+| Read Overview Project                             |  X   |   X    |   X   |
+| Read Collection Project                           |  X   |   X    |   X   |
+| Update Project                                    |      |   X    |   X   |
+| Update Favorites Project                          |  X   |   X    |   X   |
+| Update Overview Project                           |      |   X    |   X   |
+| Delete Project                                    |      |        |   X   |
+| Read Allowed Members From Project                 |      |   X    |   X   |
+| Add Status To Project                             |      |        |   X   |
+| Read Statuses From Project                        |      |   X    |   X   |
+| Update Status From Project                        |      |   X    |   X   |
+| Remove Status From Project                        |      |        |   X   |
+| Create Project Sprint                             |      |        |   X   |
+| Read Project Sprint                               |  X   |   X    |   X   |
+| Read Collection Project Sprint                    |  X   |   X    |   X   |
+| Update Project Sprint                             |      |   X    |   X   |
+| Delete Project Sprint                             |      |        |   X   |
+| Add Stage To Project Sprint                       |      |        |   X   |
+| Read Stages From Project Sprint                   |  X   |   X    |   X   |
+| Move Stage From Project Sprint                    |      |        |   X   |
+| Update Stage From Project Sprint                  |      |   X    |   X   |
+| Remove Stage From Project Sprint                  |      |        |   X   |
+| Create Project Task                               |      |   X    |   X   |
+| Read Project Task                                 |  X   |   X    |   X   |
+| Read Collection Project Task                      |  X   |   X    |   X   |
+| Move Project Task                                 |      |   X    |   X   |
+| Update Project Task                               |      |   X    |   X   |
+| Update Custom Field From Project Task             |      |   X    |   X   |
+| Update Is Completed Project Task                  |      |   X    |   X   |
+| Update Overview Project Task                      |      |   X    |   X   |
+| Delete Project Task                               |      |   X    |   X   |
+| Read Workspace                                    |  X   |   X    |   X   |
+| Read Overview Workspace                           |  X   |   X    |   X   |
+| Read Invitations From Workspace                   |      |        |   X   |
+| Update Workspace                                  |      |   X    |   X   |
+| Update Favorites Workspace                        |  X   |   X    |   X   |
+| Update Overview Workspace                         |      |   X    |   X   |
+| Delete Workspace                                  |      |        |   X   |
+| Invite Collaborator To Workspace                  |      |        |   X   |
+| Read Collaborators From Workspace                 |  X   |   X    |   X   |
+| Update Collaborator From Workspace                |      |        |   X   |
+| Kick Collaborator From Workspace                  |      |        |   X   |
