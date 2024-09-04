@@ -60,6 +60,8 @@ For database design checkout the [Workspace Diagram](../../database-diagrams/agg
 - **Collaborator Removed From Workspace** when a collaborator gets removed from the workspace.
 This event makes sure that the user does not keep the workspace or any project on favorites,
 and also removes them from the allowed members of a project and chooses another owner if it's the case.
+- **Workspace Deleted** when the workspace is deleted, it will also delete all local custom field setups from projects
+and all custom fields
 
 ### Value Objects
 

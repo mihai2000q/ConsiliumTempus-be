@@ -1,4 +1,4 @@
-# Domain Entities
+# Domain Aggregates
 
 ## Project Sprint
 

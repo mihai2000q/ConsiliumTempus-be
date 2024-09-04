@@ -17,7 +17,7 @@
 
 #### Project Status
 
-- **Many-to-one** relationship with the [Audit](../../domain/entities/Entity.Audit.md) entity.
+- **One-to-one** relationship with the [Audit](../../domain/entities/Entity.Audit.md) entity.
 
 ### Diagram
 
