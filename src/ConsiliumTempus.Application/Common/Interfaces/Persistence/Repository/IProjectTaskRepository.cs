@@ -1,10 +1,12 @@
 ﻿using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -13,10 +15,6 @@ namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 public interface IProjectTaskRepository
 {
     Task<ProjectTaskAggregate?> GetWithWorkspace(
-        ProjectTaskId id,
-        CancellationToken cancellationToken = default);
-
-    Task<ProjectTaskAggregate?> GetWithStagesAndWorkspace(
         ProjectTaskId id,
         CancellationToken cancellationToken = default);
 
@@ -46,6 +44,10 @@ public interface IProjectTaskRepository
 
     Task<List<ProjectTaskAggregate>> GetListByProject(
         ProjectId projectId,
+        CancellationToken cancellationToken = default);
+    
+    Task<List<MultiSelectCustomField>> GetMultiSelectCustomFieldsBySetup(
+        MultiSelectCustomFieldSetupAggregate customFieldSetup,
         CancellationToken cancellationToken = default);
 
     Task DeleteCustomFieldsByWorkspace(

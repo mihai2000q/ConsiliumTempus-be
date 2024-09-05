@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
@@ -23,16 +24,6 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
     {
         return await dbContext.ProjectTasks
             .Include(t => t.Stage.Sprint.Project.Workspace)
-            .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
-    }
-
-    public Task<ProjectTaskAggregate?> GetWithStagesAndWorkspace(
-        ProjectTaskId id,
-        CancellationToken cancellationToken = default)
-    {
-        return dbContext.ProjectTasks
-            .Include(t => t.Stage.Sprint.Project.Workspace)
-            .Include(t => t.Stage.Sprint.Stages.OrderBy(s => s.CustomOrderPosition.Value))
             .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
@@ -103,6 +94,16 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         return dbContext.ProjectTasks
             .IgnoreAutoIncludes()
             .Where(t => t.Stage.Sprint.Project.Id == projectId)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<MultiSelectCustomField>> GetMultiSelectCustomFieldsBySetup(
+        MultiSelectCustomFieldSetupAggregate customFieldSetup,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Set<CustomField>()
+            .OfType<MultiSelectCustomField>()
+            .Where(cf => cf.Setup == customFieldSetup)
             .ToListAsync(cancellationToken);
     }
 

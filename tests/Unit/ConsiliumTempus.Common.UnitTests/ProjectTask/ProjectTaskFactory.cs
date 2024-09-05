@@ -45,13 +45,19 @@ public static class ProjectTaskFactory
             createdBy ?? UserFactory.Create(),
             stage ?? ProjectStageFactory.Create());
 
+        task.AddCustomField(CustomFieldFactory.CreateDate(new DateOnly(2022, 10, 10), task: task));
+        task.AddCustomField(CustomFieldFactory.CreateDateTime(new DateTime(2022, 10, 10, 10, 55, 30), task: task));
+        task.AddCustomField(CustomFieldFactory.CreateDuration(new TimeSpan(10, 15, 30, 45), task: task));
+        task.AddCustomField(CustomFieldFactory.CreateMultiSelect(task: task));
         task.AddCustomField(CustomFieldFactory.CreateNumber(12, task: task));
+        task.AddCustomField(CustomFieldFactory.CreatePeople(task: task));
         var singleSelectSetup = CustomFieldSetupFactory.CreateSingleSelect();
         task.AddCustomField(CustomFieldFactory.CreateSingleSelect(
             singleSelectSetup.Options[0].Id,
             setup: singleSelectSetup,
             task: task));
         task.AddCustomField(CustomFieldFactory.CreateText("Some text", task: task));
+        task.AddCustomField(CustomFieldFactory.CreateTime(new TimeOnly(10, 55), task: task));
 
         task.ClearDomainEvents();
 
