@@ -45,9 +45,9 @@ public sealed class Audit : Entity<Guid>
         UpdatedDateTime = DateTime.UtcNow;
     }
 
-    public void Nullify()
+    public void Nullify(UserAggregate user)
     {
-        CreatedBy = null;
-        UpdatedBy = null;
+        if (CreatedBy == user) CreatedBy = null;
+        if (UpdatedBy == user) UpdatedBy = null;
     }
 }

@@ -39,7 +39,7 @@ public sealed class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRe
             .Where(a => a.UpdatedBy == user || a.CreatedBy == user)
             .ToListAsync(cancellationToken);
 
-        audits.ForEach(a => a.Nullify());
+        audits.ForEach(a => a.Nullify(user));
     }
 
     public async Task RemoveWorkspaceInvitationsByUser(UserAggregate user,
