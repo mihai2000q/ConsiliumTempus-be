@@ -84,7 +84,8 @@ public sealed class DurationCustomFieldSetupConfiguration : IEntityTypeConfigura
             .TruncateAggregate()
             .Dash(CustomFieldType.Duration.ToString()));
 
-        builder.Property(d => d.DefaultDuration);
+        builder.Property(d => d.DefaultDuration)
+            .HasConversion<long>();
     }
 }
 

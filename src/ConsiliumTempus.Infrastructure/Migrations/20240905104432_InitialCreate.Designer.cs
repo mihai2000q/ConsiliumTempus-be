@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20240905080341_InitialCreate")]
+    [Migration("20240905104432_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -1356,8 +1356,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     b.HasBaseType("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate");
 
-                    b.Property<TimeSpan?>("DefaultDuration")
-                        .HasColumnType("time");
+                    b.Property<long?>("DefaultDuration")
+                        .HasColumnType("bigint");
 
                     b.ToTable("CustomFieldSetup_Duration", (string)null);
                 });
@@ -1444,8 +1444,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     b.HasBaseType("ConsiliumTempus.Domain.ProjectTask.Entities.CustomField");
 
-                    b.Property<TimeSpan?>("Duration")
-                        .HasColumnType("time");
+                    b.Property<long?>("Duration")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid>("SetupId")
                         .HasColumnType("uniqueidentifier");

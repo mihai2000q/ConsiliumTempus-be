@@ -144,7 +144,8 @@ public sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguration<
         builder.ToTable(nameof(CustomField)
             .Dash(CustomFieldType.Duration.ToString()));
 
-        builder.Property(d => d.Duration);
+        builder.Property(d => d.Duration)
+            .HasConversion<long>();
 
         builder.HasOne(d => d.Setup)
             .WithMany();

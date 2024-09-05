@@ -231,7 +231,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DefaultDuration = table.Column<TimeSpan>(type: "time", nullable: true)
+                    DefaultDuration = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -815,7 +815,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProjectTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: true),
+                    Duration = table.Column<long>(type: "bigint", nullable: true),
                     SetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
