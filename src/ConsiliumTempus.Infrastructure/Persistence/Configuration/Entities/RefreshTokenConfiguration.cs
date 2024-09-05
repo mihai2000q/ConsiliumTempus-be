@@ -3,7 +3,7 @@ using ConsiliumTempus.Domain.Authentication.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
+namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Entities;
 
 public sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 {

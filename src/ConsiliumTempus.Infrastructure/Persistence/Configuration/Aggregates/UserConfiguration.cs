@@ -5,7 +5,7 @@ using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
+namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
 public sealed class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
 {

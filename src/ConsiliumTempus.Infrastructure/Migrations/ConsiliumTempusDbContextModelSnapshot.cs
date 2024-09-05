@@ -103,7 +103,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
 
                     b.Property<Guid>("SetupId")
                         .HasColumnType("uniqueidentifier");
@@ -408,7 +409,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
 
                     b.Property<Guid>("SetupId")
                         .HasColumnType("uniqueidentifier");
@@ -463,6 +465,74 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             Description = "This role can do everything",
                             Name = "Admin"
                         });
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.CustomFieldMultiSelectHasOption", b =>
+                {
+                    b.Property<Guid>("MultiSelectCustomFieldId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CustomFieldId");
+
+                    b.Property<Guid>("OptionsId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("OptionId");
+
+                    b.HasKey("MultiSelectCustomFieldId", "OptionsId");
+
+                    b.HasIndex("OptionsId");
+
+                    b.ToTable("CustomField_MultiSelectHasOption", (string)null);
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.ProjectHasAllowedMember", b =>
+                {
+                    b.Property<Guid>("ProjectAggregateId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ProjectId");
+
+                    b.Property<Guid>("AllowedMembersId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("UserId");
+
+                    b.HasKey("ProjectAggregateId", "AllowedMembersId");
+
+                    b.HasIndex("AllowedMembersId");
+
+                    b.ToTable("ProjectHasAllowedMember", (string)null);
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.UserHasFavoriteProject", b =>
+                {
+                    b.Property<Guid>("ProjectAggregateId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ProjectId");
+
+                    b.Property<Guid>("FavoritesId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("UserId");
+
+                    b.HasKey("ProjectAggregateId", "FavoritesId");
+
+                    b.HasIndex("FavoritesId");
+
+                    b.ToTable("UserHasFavoriteProject", (string)null);
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.UserHasFavoriteWorkspace", b =>
+                {
+                    b.Property<Guid>("WorkspaceAggregateId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("WorkspaceId");
+
+                    b.Property<Guid>("FavoritesId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("UserId");
+
+                    b.HasKey("WorkspaceAggregateId", "FavoritesId");
+
+                    b.HasIndex("FavoritesId");
+
+                    b.ToTable("UserHasFavoriteWorkspace", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.WorkspaceRoleHasPermission", b =>
@@ -1244,53 +1314,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.ToTable("Workspace", (string)null);
                 });
 
-            modelBuilder.Entity("MultiSelectCustomFieldHasOption", b =>
-                {
-                    b.Property<Guid>("MultiSelectCustomFieldId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("OptionsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("MultiSelectCustomFieldId", "OptionsId");
-
-                    b.HasIndex("OptionsId");
-
-                    b.ToTable("MultiSelectCustomFieldHasOption");
-                });
-
-            modelBuilder.Entity("ProjectAggregateUserAggregate", b =>
-                {
-                    b.Property<Guid>("FavoritesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProjectAggregateId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("ProjectId");
-
-                    b.HasKey("FavoritesId", "ProjectAggregateId");
-
-                    b.HasIndex("ProjectAggregateId");
-
-                    b.ToTable("UserHasFavoriteProject", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectAggregateUserAggregate1", b =>
-                {
-                    b.Property<Guid>("AllowedMembersId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProjectAggregate1Id")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("ProjectId");
-
-                    b.HasKey("AllowedMembersId", "ProjectAggregate1Id");
-
-                    b.HasIndex("ProjectAggregate1Id");
-
-                    b.ToTable("ProjectHasAllowedMember", (string)null);
-                });
-
             modelBuilder.Entity("ProjectHasCustomFieldSetup", b =>
                 {
                     b.Property<Guid>("CustomFieldSetupsId")
@@ -1306,22 +1329,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.ToTable("ProjectHasCustomFieldSetup");
                 });
 
-            modelBuilder.Entity("UserAggregateWorkspaceAggregate", b =>
-                {
-                    b.Property<Guid>("FavoritesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("WorkspaceAggregateId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("WorkspaceId");
-
-                    b.HasKey("FavoritesId", "WorkspaceAggregateId");
-
-                    b.HasIndex("WorkspaceAggregateId");
-
-                    b.ToTable("UserHasFavoriteWorkspace", (string)null);
-                });
-
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.DateCustomFieldSetupAggregate", b =>
                 {
                     b.HasBaseType("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate");
@@ -1329,7 +1336,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<DateOnly?>("DefaultDate")
                         .HasColumnType("date");
 
-                    b.ToTable("CustomFieldSetup.Date", (string)null);
+                    b.ToTable("CustomFieldSetup_Date", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.DateTimeCustomFieldSetupAggregate", b =>
@@ -1339,7 +1346,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<DateTime?>("DefaultDateTime")
                         .HasColumnType("datetime2");
 
-                    b.ToTable("CustomFieldSetup.DateTime", (string)null);
+                    b.ToTable("CustomFieldSetup_DateTime", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.DurationCustomFieldSetupAggregate", b =>
@@ -1349,28 +1356,28 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<TimeSpan?>("DefaultDuration")
                         .HasColumnType("time");
 
-                    b.ToTable("CustomFieldSetup.Duration", (string)null);
+                    b.ToTable("CustomFieldSetup_Duration", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.MultiSelectCustomFieldSetupAggregate", b =>
                 {
                     b.HasBaseType("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate");
 
-                    b.ToTable("CustomFieldSetup.MultiSelect", (string)null);
+                    b.ToTable("CustomFieldSetup_MultiSelect", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.NumberCustomFieldSetupAggregate", b =>
                 {
                     b.HasBaseType("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate");
 
-                    b.ToTable("CustomFieldSetup.Number", (string)null);
+                    b.ToTable("CustomFieldSetup_Number", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.PeopleCustomFieldSetupAggregate", b =>
                 {
                     b.HasBaseType("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate");
 
-                    b.ToTable("CustomFieldSetup.People", (string)null);
+                    b.ToTable("CustomFieldSetup_People", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.SingleSelectCustomFieldSetupAggregate", b =>
@@ -1380,14 +1387,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<Guid?>("DefaultOptionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.ToTable("CustomFieldSetup.SingleSelect", (string)null);
+                    b.ToTable("CustomFieldSetup_SingleSelect", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.TextCustomFieldSetupAggregate", b =>
                 {
                     b.HasBaseType("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate");
 
-                    b.ToTable("CustomFieldSetup.Text", (string)null);
+                    b.ToTable("CustomFieldSetup_Text", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.TimeCustomFieldSetupAggregate", b =>
@@ -1397,7 +1404,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<TimeOnly?>("DefaultTime")
                         .HasColumnType("time");
 
-                    b.ToTable("CustomFieldSetup.Time", (string)null);
+                    b.ToTable("CustomFieldSetup_Time", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.DateCustomField", b =>
@@ -1412,7 +1419,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("SetupId");
 
-                    b.ToTable("CustomField.Date", (string)null);
+                    b.ToTable("CustomField_Date", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.DateTimeCustomField", b =>
@@ -1427,7 +1434,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("SetupId");
 
-                    b.ToTable("CustomField.DateTime", (string)null);
+                    b.ToTable("CustomField_DateTime", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.DurationCustomField", b =>
@@ -1442,7 +1449,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("SetupId");
 
-                    b.ToTable("CustomField.Duration", (string)null);
+                    b.ToTable("CustomField_Duration", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.MultiSelectCustomField", b =>
@@ -1454,7 +1461,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("SetupId");
 
-                    b.ToTable("CustomField.MultiSelect", (string)null);
+                    b.ToTable("CustomField_MultiSelect", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.NumberCustomField", b =>
@@ -1466,7 +1473,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("SetupId");
 
-                    b.ToTable("CustomField.Number", (string)null);
+                    b.ToTable("CustomField_Number", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.PeopleCustomField", b =>
@@ -1483,7 +1490,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("SetupId");
 
-                    b.ToTable("CustomField.People", (string)null);
+                    b.ToTable("CustomField_People", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.SingleSelectCustomField", b =>
@@ -1500,7 +1507,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("SetupId");
 
-                    b.ToTable("CustomField.SingleSelect", (string)null);
+                    b.ToTable("CustomField_SingleSelect", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.TextCustomField", b =>
@@ -1512,7 +1519,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("SetupId");
 
-                    b.ToTable("CustomField.Text", (string)null);
+                    b.ToTable("CustomField_Text", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.TimeCustomField", b =>
@@ -1527,7 +1534,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("SetupId");
 
-                    b.ToTable("CustomField.Time", (string)null);
+                    b.ToTable("CustomField_Time", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Authentication.RefreshToken", b =>
@@ -1705,6 +1712,66 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         });
 
                     b.Navigation("CustomOrderPosition")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.CustomFieldMultiSelectHasOption", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.ProjectTask.Entities.MultiSelectCustomField", null)
+                        .WithMany()
+                        .HasForeignKey("MultiSelectCustomFieldId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.MultiSelectOption", null)
+                        .WithMany()
+                        .HasForeignKey("OptionsId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.ProjectHasAllowedMember", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", null)
+                        .WithMany()
+                        .HasForeignKey("AllowedMembersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectAggregateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.UserHasFavoriteProject", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", null)
+                        .WithMany()
+                        .HasForeignKey("FavoritesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectAggregateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.UserHasFavoriteWorkspace", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", null)
+                        .WithMany()
+                        .HasForeignKey("FavoritesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", null)
+                        .WithMany()
+                        .HasForeignKey("WorkspaceAggregateId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -2384,51 +2451,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("MultiSelectCustomFieldHasOption", b =>
-                {
-                    b.HasOne("ConsiliumTempus.Domain.ProjectTask.Entities.MultiSelectCustomField", null)
-                        .WithMany()
-                        .HasForeignKey("MultiSelectCustomFieldId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.MultiSelectOption", null)
-                        .WithMany()
-                        .HasForeignKey("OptionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ProjectAggregateUserAggregate", b =>
-                {
-                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", null)
-                        .WithMany()
-                        .HasForeignKey("FavoritesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectAggregateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ProjectAggregateUserAggregate1", b =>
-                {
-                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", null)
-                        .WithMany()
-                        .HasForeignKey("AllowedMembersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectAggregate1Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ProjectHasCustomFieldSetup", b =>
                 {
                     b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
@@ -2444,21 +2466,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("UserAggregateWorkspaceAggregate", b =>
-                {
-                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", null)
-                        .WithMany()
-                        .HasForeignKey("FavoritesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", null)
-                        .WithMany()
-                        .HasForeignKey("WorkspaceAggregateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.NumberCustomFieldSetupAggregate", b =>
                 {
                     b.OwnsOne("ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects.NumberCustomFieldSettings", "Settings", b1 =>
@@ -2467,10 +2474,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("CurrencyCode")
-                                .HasColumnType("nvarchar(max)")
+                                .HasMaxLength(3)
+                                .HasColumnType("nvarchar(3)")
                                 .HasColumnName("CurrencyCode");
 
                             b1.Property<short>("Decimals")
+                                .HasMaxLength(9)
                                 .HasColumnType("smallint")
                                 .HasColumnName("Decimals");
 
@@ -2480,7 +2489,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.HasKey("NumberCustomFieldSetupAggregateId");
 
-                            b1.ToTable("CustomFieldSetup.Number");
+                            b1.ToTable("CustomFieldSetup_Number");
 
                             b1.WithOwner()
                                 .HasForeignKey("NumberCustomFieldSetupAggregateId");
@@ -2498,7 +2507,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.HasKey("NumberCustomFieldSetupAggregateId");
 
-                            b1.ToTable("CustomFieldSetup.Number");
+                            b1.ToTable("CustomFieldSetup_Number");
 
                             b1.WithOwner()
                                 .HasForeignKey("NumberCustomFieldSetupAggregateId");
@@ -2524,7 +2533,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.HasKey("TextCustomFieldSetupAggregateId");
 
-                            b1.ToTable("CustomFieldSetup.Text");
+                            b1.ToTable("CustomFieldSetup_Text");
 
                             b1.WithOwner()
                                 .HasForeignKey("TextCustomFieldSetupAggregateId");
@@ -2597,7 +2606,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.HasKey("NumberCustomFieldId");
 
-                            b1.ToTable("CustomField.Number");
+                            b1.ToTable("CustomField_Number");
 
                             b1.WithOwner()
                                 .HasForeignKey("NumberCustomFieldId");
@@ -2662,7 +2671,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                             b1.HasKey("TextCustomFieldId");
 
-                            b1.ToTable("CustomField.Text");
+                            b1.ToTable("CustomField_Text");
 
                             b1.WithOwner()
                                 .HasForeignKey("TextCustomFieldId");

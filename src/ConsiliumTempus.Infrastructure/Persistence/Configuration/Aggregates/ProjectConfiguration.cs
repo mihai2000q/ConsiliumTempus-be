@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Validation;
+﻿using ConsiliumTempus.Domain.Common.Relations;
+using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
@@ -7,7 +8,7 @@ using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
+namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
 public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggregate>
 {
@@ -48,23 +49,11 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
 
         builder.HasMany(p => p.Favorites)
             .WithMany()
-            .UsingEntity(b =>
-            {
-                b.ToTable("UserHasFavoriteProject");
-
-                b.Property(nameof(ProjectAggregate).ToId())
-                    .HasColumnName(nameof(ProjectId));
-            });
+            .UsingEntity<UserHasFavoriteProject>();
 
         builder.HasMany(p => p.AllowedMembers)
             .WithMany()
-            .UsingEntity(b =>
-            {
-                b.ToTable("ProjectHasAllowedMember");
-
-                b.Property(nameof(ProjectAggregate) + "1".ToId())
-                    .HasColumnName(nameof(ProjectId));
-            });
+            .UsingEntity<ProjectHasAllowedMember>();
     }
 }
 

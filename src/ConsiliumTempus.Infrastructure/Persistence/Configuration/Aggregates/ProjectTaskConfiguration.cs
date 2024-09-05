@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.Common.Relations;
 using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -8,7 +9,7 @@ using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
+namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
 public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTaskAggregate>
 {
@@ -151,6 +152,7 @@ public sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguration<
     }
 }
 
+
 public sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfiguration<MultiSelectCustomField>
 {
     public void Configure(EntityTypeBuilder<MultiSelectCustomField> builder)
@@ -160,7 +162,7 @@ public sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfigurati
 
         builder.HasMany(m => m.Options)
             .WithMany()
-            .UsingEntity("MultiSelectCustomFieldHasOption");
+            .UsingEntity<CustomFieldMultiSelectHasOption>();
         builder.Navigation(m => m.Options).AutoInclude();
 
         builder.HasOne(m => m.Setup)

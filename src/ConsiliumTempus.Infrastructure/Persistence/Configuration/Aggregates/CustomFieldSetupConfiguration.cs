@@ -8,7 +8,7 @@ using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
+namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
 public sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<CustomFieldSetupAggregate>
 {
@@ -93,10 +93,9 @@ public sealed class
 {
     public void Configure(EntityTypeBuilder<MultiSelectCustomFieldSetupAggregate> builder)
     {
-        var tableName = nameof(CustomFieldSetupAggregate)
+        builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.MultiSelect.ToString());
-        builder.ToTable(tableName);
+            .Dash(CustomFieldType.MultiSelect.ToString()));
 
         builder.HasMany(m => m.Options)
             .WithOne()
@@ -117,10 +116,12 @@ public sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfigurati
         builder.OwnsOne(n => n.Settings, nb =>
         {
             nb.Property(n => n.CurrencyCode)
-                .HasColumnName(nameof(NumberCustomFieldSettings.CurrencyCode));
+                .HasColumnName(nameof(NumberCustomFieldSettings.CurrencyCode))
+                .HasMaxLength(3);
 
             nb.Property(n => n.Decimals)
-                .HasColumnName(nameof(NumberCustomFieldSettings.Decimals));
+                .HasColumnName(nameof(NumberCustomFieldSettings.Decimals))
+                .HasMaxLength(PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum);
 
             nb.Property(n => n.Rounding)
                 .HasColumnName(nameof(NumberCustomFieldSettings.Rounding));

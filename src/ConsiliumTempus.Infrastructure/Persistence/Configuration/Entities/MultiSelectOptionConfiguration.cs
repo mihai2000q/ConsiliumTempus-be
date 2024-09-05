@@ -4,7 +4,7 @@ using ConsiliumTempus.Domain.Common.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
+namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Entities;
 
 public sealed class MultiSelectOptionConfiguration : IEntityTypeConfiguration<MultiSelectOption>
 {
@@ -17,7 +17,8 @@ public sealed class MultiSelectOptionConfiguration : IEntityTypeConfiguration<Mu
         builder.Property(o => o.Value)
             .HasMaxLength(PropertiesValidation.MultiSelectOption.ValueMaximumLength);
 
-        builder.Property(o => o.Color);
+        builder.Property(o => o.Color)
+            .HasMaxLength(7);
 
         builder.OwnsOne(o => o.CustomOrderPosition)
             .Property(c => c.Value)

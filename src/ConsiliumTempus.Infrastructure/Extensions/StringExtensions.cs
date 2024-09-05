@@ -2,7 +2,7 @@
 
 public static class StringExtensions
 {
-    public static string Dash(this string str, string str2) => str + "." + str2;
+    public static string Dash(this string str, string str2) => str + "_" + str2;
 
     public static string FromPascalToCamelCase(this string str) => 
         str.Length switch

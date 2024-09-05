@@ -3,7 +3,7 @@ using ConsiliumTempus.Domain.Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
+namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Entities;
 
 public sealed class PermissionConfiguration : IEntityTypeConfiguration<Permission>
 {

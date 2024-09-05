@@ -4,7 +4,7 @@ using ConsiliumTempus.Domain.Common.Relations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
+namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Relations;
 
 public sealed class WorkspaceRoleHasPermissionConfiguration : IEntityTypeConfiguration<WorkspaceRoleHasPermission>
 {

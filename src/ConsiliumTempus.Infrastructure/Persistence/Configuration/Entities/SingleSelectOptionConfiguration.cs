@@ -4,7 +4,7 @@ using ConsiliumTempus.Domain.Common.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
+namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Entities;
 
 public sealed class SingleSelectOptionConfiguration : IEntityTypeConfiguration<SingleSelectOption>
 {
@@ -17,7 +17,8 @@ public sealed class SingleSelectOptionConfiguration : IEntityTypeConfiguration<S
         builder.Property(o => o.Value)
             .HasMaxLength(PropertiesValidation.SingleSelectOption.ValueMaximumLength);
 
-        builder.Property(o => o.Color);
+        builder.Property(o => o.Color)
+            .HasMaxLength(7);
 
         builder.OwnsOne(o => o.CustomOrderPosition)
             .Property(c => c.Value)

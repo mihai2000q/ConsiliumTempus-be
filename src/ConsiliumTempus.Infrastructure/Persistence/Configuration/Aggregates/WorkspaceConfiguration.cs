@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Common.Validation;
+﻿using ConsiliumTempus.Domain.Common.Relations;
+using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.Entities;
@@ -7,7 +8,7 @@ using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ConsiliumTempus.Infrastructure.Persistence.Configuration;
+namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
 public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceAggregate>
 {
@@ -41,13 +42,7 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
 
         builder.HasMany(w => w.Favorites)
             .WithMany()
-            .UsingEntity(b =>
-            {
-                b.ToTable("UserHasFavoriteWorkspace");
-
-                b.Property(nameof(WorkspaceAggregate).ToId())
-                    .HasColumnName(nameof(WorkspaceId));
-            });
+            .UsingEntity<UserHasFavoriteWorkspace>();
 
         builder.HasMany(w => w.Invitations)
             .WithOne(i => i.Workspace);
