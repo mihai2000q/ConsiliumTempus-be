@@ -47,6 +47,8 @@ For database design checkout the [Custom Field Setup Diagram](../../database-dia
 it will initialize all the project tasks in the project with the corresponding custom field and default value
 - **Removed Custom Field Setup From Project** when the custom field setup is removed from a project,
 then delete all the corresponding custom fields from the tasks in the project
+- **Removed Option From Multi Select Custom Field Setup** when an option is removed from a custom field setup,
+then clean up the corresponding multi select custom fields of the option
 
 ### Value Objects
 
