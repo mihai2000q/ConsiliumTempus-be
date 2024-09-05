@@ -32,7 +32,7 @@ public sealed class Membership : Entity<(UserId UserId, WorkspaceId WorkspaceId)
     private int _workspaceRoleId; // used to persist in the database
     private readonly WorkspaceRole? _workspaceRole; // used to retrieve from database
 
-    public override (UserId UserId, WorkspaceId WorkspaceId) Id => new(User.Id, Workspace.Id);
+    public new (UserId UserId, WorkspaceId WorkspaceId) Id => new(User.Id, Workspace.Id);
     public UserAggregate User { get; init; } = null!;
     public WorkspaceAggregate Workspace { get; init; } = null!;
     public WorkspaceRole WorkspaceRole

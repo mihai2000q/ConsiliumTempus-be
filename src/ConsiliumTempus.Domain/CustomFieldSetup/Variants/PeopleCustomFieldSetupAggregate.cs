@@ -42,4 +42,12 @@ public sealed class PeopleCustomFieldSetupAggregate : CustomFieldSetupAggregate
 
         return setup;
     }
+
+    public new void Update(
+        Name name,
+        Description description,
+        UserAggregate updatedBy)
+    {
+        base.Update(name, description, updatedBy);
+    }
 }

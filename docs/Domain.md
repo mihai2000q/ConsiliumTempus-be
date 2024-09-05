@@ -107,6 +107,10 @@ The classes inside the Relations package contain the entities used to create the
 <br>
 Those include:
 
+- **CustomFieldMultiSelectHasOption**
+- **ProjectHasAllowedMember**
+- **UserHasFavoriteProject**
+- **UserHasFavoriteWorkspace**
 - **WorkspaceRoleHasPermission**
 
 ## Database Diagrams

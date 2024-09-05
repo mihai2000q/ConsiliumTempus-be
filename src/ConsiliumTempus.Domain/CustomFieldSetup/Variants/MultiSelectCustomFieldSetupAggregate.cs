@@ -54,6 +54,14 @@ public sealed class MultiSelectCustomFieldSetupAggregate : CustomFieldSetupAggre
         return setup;
     }
 
+    public new void Update(
+        Name name,
+        Description description,
+        UserAggregate updatedBy)
+    {
+        base.Update(name, description, updatedBy);
+    }
+
     public void AddOption(MultiSelectOption option)
     {
         _options.Add(option);
