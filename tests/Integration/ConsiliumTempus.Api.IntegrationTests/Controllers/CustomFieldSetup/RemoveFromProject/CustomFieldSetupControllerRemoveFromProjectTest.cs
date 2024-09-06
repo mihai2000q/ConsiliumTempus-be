@@ -22,7 +22,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
         var project = customFieldSetup.Projects[0];
         var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest(
             customFieldSetup.Id.Value,
@@ -61,7 +61,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
     public async Task RemoveCustomFieldSetupFromProject_WhenProjectIsNotFound_ShouldReturnProjectNotFoundError()
     {
         // Arrange
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
             customFieldSetup.Id.Value,
             Guid.NewGuid());
@@ -86,7 +86,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
             customFieldSetup.Id.Value);
 

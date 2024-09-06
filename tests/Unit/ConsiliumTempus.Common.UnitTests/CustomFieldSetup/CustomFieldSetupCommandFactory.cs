@@ -64,24 +64,34 @@ public static class CustomFieldSetupCommandFactory
             id ?? Guid.NewGuid(),
             projectId ?? Guid.NewGuid());
     }
-    
+
     public static UpdateCustomFieldSetupCommand CreateUpdateCustomFieldSetupCommand(
         Guid? id = null,
         string name = Constants.CustomFieldSetup.Name,
         string description = Constants.CustomFieldSetup.Description,
         CustomFieldType type = CustomFieldType.Text,
+        UpdateCustomFieldSetupCommand.DateCustomFieldSetupCommand? dateCustomFieldSetup = null,
+        UpdateCustomFieldSetupCommand.DateTimeCustomFieldSetupCommand? dateTimeCustomFieldSetup = null,
+        UpdateCustomFieldSetupCommand.DurationCustomFieldSetupCommand? durationCustomFieldSetup = null,
+        UpdateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand? multiSelectCustomFieldSetup = null,
         UpdateCustomFieldSetupCommand.NumberCustomFieldSetupCommand? numberCustomFieldSetup = null,
         UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand? singleSelectCustomFieldSetup = null,
-        UpdateCustomFieldSetupCommand.TextCustomFieldSetupCommand? textCustomFieldSetup = null)
+        UpdateCustomFieldSetupCommand.TextCustomFieldSetupCommand? textCustomFieldSetup = null,
+        UpdateCustomFieldSetupCommand.TimeCustomFieldSetupCommand? timeCustomFieldSetup = null)
     {
         return new UpdateCustomFieldSetupCommand(
             id ?? Guid.NewGuid(),
             name,
             description,
             type,
+            dateCustomFieldSetup,
+            dateTimeCustomFieldSetup,
+            durationCustomFieldSetup,
+            multiSelectCustomFieldSetup,
             numberCustomFieldSetup,
             singleSelectCustomFieldSetup,
-            textCustomFieldSetup);
+            textCustomFieldSetup,
+            timeCustomFieldSetup);
     }
 
     public static MakeCustomFieldSetupGlobalCommand CreateMakeCustomFieldSetupGlobalCommand(Guid? id = null)

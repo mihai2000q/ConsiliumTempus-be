@@ -300,14 +300,40 @@ internal static partial class Utils
 
             switch (customFieldSetup)
             {
+                case DateCustomFieldSetupAggregate dateSetup:
+                    AssertUpdateDateCustomFieldSetup(dateSetup, request);
+                    break;
+
+                case DateTimeCustomFieldSetupAggregate dateTimeSetup:
+                    AssertUpdateDateTimeCustomFieldSetup(dateTimeSetup, request);
+                    break;
+
+                case DurationCustomFieldSetupAggregate durationSetup:
+                    AssertUpdateDurationCustomFieldSetup(durationSetup, request);
+                    break;
+
+                case MultiSelectCustomFieldSetupAggregate multiSelectSetup:
+                    AssertUpdateMultiSelectCustomFieldSetup(multiSelectSetup, request);
+                    break;
+
                 case NumberCustomFieldSetupAggregate numberSetup:
                     AssertUpdateNumberCustomFieldSetup(numberSetup, request);
                     break;
+
+                case PeopleCustomFieldSetupAggregate peopleSetup:
+                    AssertUpdatePeopleCustomFieldSetup(peopleSetup, request);
+                    break;
+
                 case SingleSelectCustomFieldSetupAggregate singleSelectSetup:
                     AssertUpdateSingleSelectCustomFieldSetup(singleSelectSetup, request);
                     break;
+
                 case TextCustomFieldSetupAggregate textSetup:
                     AssertUpdateTextCustomFieldSetup(textSetup, request);
+                    break;
+
+                case TimeCustomFieldSetupAggregate timeSetup:
+                    AssertUpdateTimeCustomFieldSetup(timeSetup, request);
                     break;
             }
 
@@ -551,6 +577,66 @@ internal static partial class Utils
             singleSelectOption.CustomOrderPosition.Value.Should().Be(customOrderPosition);
         }
 
+        private static void AssertUpdateDateCustomFieldSetup(
+            DateCustomFieldSetupAggregate setup,
+            UpdateCustomFieldSetupRequest request)
+        {
+            setup.DefaultDate.Should().Be(request.DateCustomFieldSetup!.DefaultDate);
+        }
+
+        private static void AssertUpdateDateTimeCustomFieldSetup(
+            DateTimeCustomFieldSetupAggregate setup,
+            UpdateCustomFieldSetupRequest request)
+        {
+            setup.DefaultDateTime.Should().Be(request.DateTimeCustomFieldSetup!.DefaultDateTime);
+        }
+
+        private static void AssertUpdateDurationCustomFieldSetup(
+            DurationCustomFieldSetupAggregate setup,
+            UpdateCustomFieldSetupRequest request)
+        {
+            setup.DefaultDuration.Should().Be(request.DurationCustomFieldSetup!.DefaultDuration);
+        }
+
+        private static void AssertUpdateMultiSelectCustomFieldSetup(
+            MultiSelectCustomFieldSetupAggregate setup,
+            UpdateCustomFieldSetupRequest request)
+        {
+            if (request.MultiSelectCustomFieldSetup!.Operation is null) return;
+
+            switch (request.MultiSelectCustomFieldSetup.Operation)
+            {
+                case UpdateCustomFieldSetupRequest.OptionOperation.Add:
+                    setup.Options.ShouldBeOrdered();
+                    setup.Options[^1].Value.Should().Be(request.MultiSelectCustomFieldSetup.NewOption!.Value);
+                    setup.Options[^1].Color.Should().Be(request.MultiSelectCustomFieldSetup.NewOption!.Color);
+                    setup.Options[^1].CustomOrderPosition.Value.Should().Be(setup.Options.Count - 1);
+                    break;
+
+                case UpdateCustomFieldSetupRequest.OptionOperation.Update:
+                    var option = setup.Options
+                        .SingleOrDefault(o => o.Id == request.MultiSelectCustomFieldSetup!.OptionId);
+                    option.Should().NotBeNull();
+                    option!.Value.Should().Be(request.MultiSelectCustomFieldSetup.NewOption!.Value);
+                    option.Color.Should().Be(request.MultiSelectCustomFieldSetup.NewOption!.Color);
+                    break;
+
+                case UpdateCustomFieldSetupRequest.OptionOperation.Move:
+                    setup.Options.ShouldBeOrdered();
+                    setup.Options.Should().Contain(o => o.Id == request.MultiSelectCustomFieldSetup!.OptionId);
+                    setup.Options.Should().Contain(o => o.Id == request.MultiSelectCustomFieldSetup!.OverOptionId);
+                    break;
+
+                case UpdateCustomFieldSetupRequest.OptionOperation.Remove:
+                    setup.Options.ShouldBeOrdered();
+                    setup.Options.Should().NotContain(o => o.Id == request.MultiSelectCustomFieldSetup!.OptionId);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(request), request, null);
+            }
+        }
+
         private static void AssertUpdateNumberCustomFieldSetup(
             NumberCustomFieldSetupAggregate setup,
             UpdateCustomFieldSetupRequest request)
@@ -562,6 +648,15 @@ internal static partial class Utils
                 setup.DefaultNumber.Should().BeNull();
             else
                 setup.DefaultNumber!.Value.Should().Be(request.NumberCustomFieldSetup.DefaultNumber);
+        }
+
+        private static void AssertUpdatePeopleCustomFieldSetup(
+            PeopleCustomFieldSetupAggregate setup,
+            UpdateCustomFieldSetupRequest request)
+        {
+            // obv true...
+            setup.Should().NotBeNull();
+            request.Should().NotBeNull();
         }
 
         private static void AssertUpdateSingleSelectCustomFieldSetup(
@@ -576,14 +671,14 @@ internal static partial class Utils
 
             switch (request.SingleSelectCustomFieldSetup.Operation)
             {
-                case UpdateCustomFieldSetupRequest.SingleSelectOptionOperation.Add:
+                case UpdateCustomFieldSetupRequest.OptionOperation.Add:
                     setup.Options.ShouldBeOrdered();
                     setup.Options[^1].Value.Should().Be(request.SingleSelectCustomFieldSetup.NewOption!.Value);
                     setup.Options[^1].Color.Should().Be(request.SingleSelectCustomFieldSetup.NewOption!.Color);
                     setup.Options[^1].CustomOrderPosition.Value.Should().Be(setup.Options.Count - 1);
                     break;
 
-                case UpdateCustomFieldSetupRequest.SingleSelectOptionOperation.Update:
+                case UpdateCustomFieldSetupRequest.OptionOperation.Update:
                     var option = setup.Options
                         .SingleOrDefault(o => o.Id == request.SingleSelectCustomFieldSetup!.OptionId);
                     option.Should().NotBeNull();
@@ -591,13 +686,13 @@ internal static partial class Utils
                     option.Color.Should().Be(request.SingleSelectCustomFieldSetup.NewOption!.Color);
                     break;
 
-                case UpdateCustomFieldSetupRequest.SingleSelectOptionOperation.Move:
+                case UpdateCustomFieldSetupRequest.OptionOperation.Move:
                     setup.Options.ShouldBeOrdered();
                     setup.Options.Should().Contain(o => o.Id == request.SingleSelectCustomFieldSetup!.OptionId);
                     setup.Options.Should().Contain(o => o.Id == request.SingleSelectCustomFieldSetup!.OverOptionId);
                     break;
 
-                case UpdateCustomFieldSetupRequest.SingleSelectOptionOperation.Remove:
+                case UpdateCustomFieldSetupRequest.OptionOperation.Remove:
                     setup.Options.ShouldBeOrdered();
                     setup.Options.Should().NotContain(o => o.Id == request.SingleSelectCustomFieldSetup!.OptionId);
                     break;
@@ -615,6 +710,13 @@ internal static partial class Utils
                 setup.DefaultText.Should().BeNull();
             else
                 setup.DefaultText!.Value.Should().Be(request.TextCustomFieldSetup.DefaultText);
+        }
+
+        private static void AssertUpdateTimeCustomFieldSetup(
+            TimeCustomFieldSetupAggregate setup,
+            UpdateCustomFieldSetupRequest request)
+        {
+            setup.DefaultTime.Should().Be(request.TimeCustomFieldSetup!.DefaultTime);
         }
     }
 }

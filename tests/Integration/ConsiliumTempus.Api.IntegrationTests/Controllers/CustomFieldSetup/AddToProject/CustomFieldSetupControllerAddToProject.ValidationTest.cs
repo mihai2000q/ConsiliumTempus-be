@@ -14,7 +14,7 @@ public class CustomFieldSetupControllerAddToProjectValidationTest(WebAppFactory 
     public async Task AddCustomFieldSetupToProject_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
         var project = CustomFieldSetupData.Projects.First();
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
             customFieldSetup.Id.Value,

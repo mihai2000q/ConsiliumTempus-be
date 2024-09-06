@@ -14,7 +14,7 @@ public class CustomFieldSetupControllerGetValidationTest(WebAppFactory factory)
     public async Task GetCustomFieldSetup_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var setup = CustomFieldSetupData.CustomFieldSetups.First();
+        var setup = CustomFieldSetupData.CustomFieldSetups[1];
         var request = CustomFieldSetupRequestFactory.CreateGetCustomFieldSetupRequest(setup.Id.Value);
 
         // Act

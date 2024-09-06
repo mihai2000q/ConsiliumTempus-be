@@ -53,7 +53,7 @@ public class CustomFieldSetupControllerRemoveFromProjectAuthorizationTest(WebApp
     private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
     {
         // Arrange
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
         var project = customFieldSetup.Projects[0];
         var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest(
             customFieldSetup.Id.Value,

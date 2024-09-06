@@ -16,6 +16,97 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
             .NotEmpty()
             .MaximumLength(PropertiesValidation.CustomFieldSetup.NameMaximumLength);
 
+        // Date Custom Field Setup
+        When(c => c.Type == CustomFieldType.Date,
+            () =>
+            {
+                RuleFor(c => c.DateCustomFieldSetup)
+                    .NotNull();
+            });
+
+        // Date Time Custom Field Setup
+        When(c => c.Type == CustomFieldType.DateTime,
+            () =>
+            {
+                RuleFor(c => c.DateTimeCustomFieldSetup)
+                    .NotNull();
+            });
+
+        // Duration Custom Field Setup
+        When(c => c.Type == CustomFieldType.Duration,
+            () =>
+            {
+                RuleFor(c => c.DurationCustomFieldSetup)
+                    .NotNull();
+            });
+
+        // Multi Select Custom Field Setup
+        When(c => c.Type == CustomFieldType.MultiSelect,
+            () =>
+            {
+                RuleFor(c => c.MultiSelectCustomFieldSetup)
+                    .NotNull();
+
+                When(c => c.MultiSelectCustomFieldSetup != null, () =>
+                {
+                    // Update or Add
+                    RuleFor(c => c.MultiSelectCustomFieldSetup!.NewOption!.Value)
+                        .NotEmpty()
+                        .MaximumLength(PropertiesValidation.SingleSelectOption.ValueMaximumLength)
+                        .When(c => c.MultiSelectCustomFieldSetup!.NewOption != null);
+
+                    RuleFor(c => c.MultiSelectCustomFieldSetup!.NewOption!.Color)
+                        .IsColor()
+                        .When(c => c.MultiSelectCustomFieldSetup!.NewOption != null);
+
+                    // Add
+                    When(
+                        c => c.MultiSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
+                            .OptionOperation.Add,
+                        () =>
+                        {
+                            RuleFor(c => c.MultiSelectCustomFieldSetup!.NewOption)
+                                .NotNull();
+                        });
+
+                    // Update
+                    When(
+                        c => c.MultiSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
+                            .OptionOperation.Update,
+                        () =>
+                        {
+                            RuleFor(c => c.MultiSelectCustomFieldSetup!.NewOption)
+                                .NotNull();
+
+                            RuleFor(c => c.MultiSelectCustomFieldSetup!.OptionId)
+                                .NotEmpty();
+                        });
+
+                    // Move
+                    When(
+                        c => c.MultiSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
+                            .OptionOperation.Move,
+                        () =>
+                        {
+                            RuleFor(c => c.MultiSelectCustomFieldSetup!.OptionId)
+                                .NotEmpty();
+
+                            RuleFor(c => c.MultiSelectCustomFieldSetup!.OverOptionId)
+                                .NotEmpty();
+                        });
+
+                    // Remove
+                    When(
+                        c => c.MultiSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
+                            .OptionOperation.Remove,
+                        () =>
+                        {
+                            RuleFor(c => c.MultiSelectCustomFieldSetup!.OptionId)
+                                .NotEmpty();
+                        });
+                });
+            });
+
         // Number Custom Field Setup
         When(c => c.Type == CustomFieldType.Number,
             () =>
@@ -56,7 +147,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
                     // Add
                     When(
                         c => c.SingleSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
-                            .SingleSelectOptionOperation.Add,
+                            .OptionOperation.Add,
                         () =>
                         {
                             RuleFor(c => c.SingleSelectCustomFieldSetup!.NewOption)
@@ -66,7 +157,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
                     // Update
                     When(
                         c => c.SingleSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
-                            .SingleSelectOptionOperation.Update,
+                            .OptionOperation.Update,
                         () =>
                         {
                             RuleFor(c => c.SingleSelectCustomFieldSetup!.NewOption)
@@ -79,7 +170,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
                     // Move
                     When(
                         c => c.SingleSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
-                            .SingleSelectOptionOperation.Move,
+                            .OptionOperation.Move,
                         () =>
                         {
                             RuleFor(c => c.SingleSelectCustomFieldSetup!.OptionId)
@@ -92,7 +183,7 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
                     // Remove
                     When(
                         c => c.SingleSelectCustomFieldSetup!.Operation == UpdateCustomFieldSetupCommand
-                            .SingleSelectOptionOperation.Remove,
+                            .OptionOperation.Remove,
                         () =>
                         {
                             RuleFor(c => c.SingleSelectCustomFieldSetup!.OptionId)
@@ -106,6 +197,14 @@ public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<U
             () =>
             {
                 RuleFor(c => c.TextCustomFieldSetup)
+                    .NotNull();
+            });
+
+        // Time Custom Field Setup
+        When(c => c.Type == CustomFieldType.Time,
+            () =>
+            {
+                RuleFor(c => c.TimeCustomFieldSetup)
                     .NotNull();
             });
     }

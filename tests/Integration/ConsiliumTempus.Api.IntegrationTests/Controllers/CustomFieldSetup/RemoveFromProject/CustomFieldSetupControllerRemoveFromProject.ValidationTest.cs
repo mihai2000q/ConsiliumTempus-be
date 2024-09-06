@@ -14,7 +14,7 @@ public class CustomFieldSetupControllerRemoveFromProjectValidationTest(WebAppFac
     public async Task RemoveCustomFieldSetupFromProject_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
         var project = customFieldSetup.Projects[0];
         var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest(
             customFieldSetup.Id.Value,

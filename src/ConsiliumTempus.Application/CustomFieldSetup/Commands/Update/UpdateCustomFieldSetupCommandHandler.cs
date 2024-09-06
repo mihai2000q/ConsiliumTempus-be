@@ -19,6 +19,8 @@ public sealed class UpdateCustomFieldSetupCommandHandler(
 {
     private sealed class SingleSelectOptionNotFoundException : Exception;
 
+    private sealed class MultiSelectOptionNotFoundException : Exception;
+
     public async Task<ErrorOr<UpdateCustomFieldSetupResult>> Handle(UpdateCustomFieldSetupCommand command,
         CancellationToken cancellationToken)
     {
@@ -33,20 +35,50 @@ public sealed class UpdateCustomFieldSetupCommandHandler(
         {
             switch (customFieldSetup)
             {
+                case DateCustomFieldSetupAggregate dateSetup:
+                    UpdateDateCustomFieldSetup(command, dateSetup, user);
+                    break;
+
+                case DateTimeCustomFieldSetupAggregate dateTimeSetup:
+                    UpdateDateTimeCustomFieldSetup(command, dateTimeSetup, user);
+                    break;
+
+                case DurationCustomFieldSetupAggregate durationSetup:
+                    UpdateDurationCustomFieldSetup(command, durationSetup, user);
+                    break;
+
+                case MultiSelectCustomFieldSetupAggregate multiSelectSetup:
+                    UpdateMultiSelectCustomFieldSetup(command, multiSelectSetup, user);
+                    break;
+
                 case NumberCustomFieldSetupAggregate numberSetup:
                     UpdateNumberCustomFieldSetup(command, numberSetup, user);
                     break;
+
+                case PeopleCustomFieldSetupAggregate peopleSetup:
+                    UpdatePeopleCustomFieldSetup(command, peopleSetup, user);
+                    break;
+
                 case SingleSelectCustomFieldSetupAggregate singleSelectSetup:
                     UpdateSingleSelectCustomFieldSetup(command, singleSelectSetup, user);
                     break;
+
                 case TextCustomFieldSetupAggregate textSetup:
                     UpdateTextCustomFieldSetup(command, textSetup, user);
+                    break;
+
+                case TimeCustomFieldSetupAggregate timeSetup:
+                    UpdateTimeCustomFieldSetup(command, timeSetup, user);
                     break;
             }
         }
         catch (SingleSelectOptionNotFoundException)
         {
             return Errors.SingleSelectOption.NotFound;
+        }
+        catch (MultiSelectOptionNotFoundException)
+        {
+            return Errors.MultiSelectOption.NotFound;
         }
 
         customFieldSetup.Workspace?.RefreshActivity();
@@ -55,12 +87,63 @@ public sealed class UpdateCustomFieldSetupCommandHandler(
         return new UpdateCustomFieldSetupResult();
     }
 
-    private static void UpdateNumberCustomFieldSetup(
+    private static void UpdateDateCustomFieldSetup(
         UpdateCustomFieldSetupCommand command,
-        NumberCustomFieldSetupAggregate numberCustomField,
+        DateCustomFieldSetupAggregate setup,
         UserAggregate user)
     {
-        numberCustomField.Update(
+        setup.Update(
+            command.DateCustomFieldSetup!.DefaultDate,
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            user);
+    }
+
+    private static void UpdateDateTimeCustomFieldSetup(
+        UpdateCustomFieldSetupCommand command,
+        DateTimeCustomFieldSetupAggregate setup,
+        UserAggregate user)
+    {
+        setup.Update(
+            command.DateTimeCustomFieldSetup!.DefaultDateTime,
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            user);
+    }
+
+    private static void UpdateDurationCustomFieldSetup(
+        UpdateCustomFieldSetupCommand command,
+        DurationCustomFieldSetupAggregate setup,
+        UserAggregate user)
+    {
+        setup.Update(
+            command.DurationCustomFieldSetup!.DefaultDuration,
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            user);
+    }
+
+    private static void UpdateMultiSelectCustomFieldSetup(
+        UpdateCustomFieldSetupCommand command,
+        MultiSelectCustomFieldSetupAggregate setup,
+        UserAggregate user)
+    {
+        setup.Update(
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            user);
+
+        if (command.MultiSelectCustomFieldSetup!.Operation is null) return;
+
+        UpdateMultiSelectCustomFieldSetupOptions(setup, command.MultiSelectCustomFieldSetup!);
+    }
+
+    private static void UpdateNumberCustomFieldSetup(
+        UpdateCustomFieldSetupCommand command,
+        NumberCustomFieldSetupAggregate setup,
+        UserAggregate user)
+    {
+        setup.Update(
             NumberCustomFieldSettings.Create(
                 command.NumberCustomFieldSetup!.Settings.CurrencyCode,
                 (short)command.NumberCustomFieldSetup!.Settings.Decimals,
@@ -71,78 +154,143 @@ public sealed class UpdateCustomFieldSetupCommandHandler(
             user);
     }
 
-    private static void UpdateSingleSelectCustomFieldSetup(
+    private static void UpdatePeopleCustomFieldSetup(
         UpdateCustomFieldSetupCommand command,
-        SingleSelectCustomFieldSetupAggregate singleSelectCustomFieldSetup,
+        PeopleCustomFieldSetupAggregate setup,
         UserAggregate user)
     {
-        var defaultOption = singleSelectCustomFieldSetup.Options.SingleOrDefault(o =>
+        setup.Update(
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            user);
+    }
+
+    private static void UpdateSingleSelectCustomFieldSetup(
+        UpdateCustomFieldSetupCommand command,
+        SingleSelectCustomFieldSetupAggregate setup,
+        UserAggregate user)
+    {
+        var defaultOption = setup.Options.SingleOrDefault(o =>
             o.Id == command.SingleSelectCustomFieldSetup!.DefaultOptionId);
         if (command.SingleSelectCustomFieldSetup!.DefaultOptionId is not null && defaultOption is null)
             throw new SingleSelectOptionNotFoundException();
 
-        singleSelectCustomFieldSetup.Update(
+        setup.Update(
             defaultOption?.Id,
             Name.Create(command.Name),
             Description.Create(command.Description),
             user);
 
         if (command.SingleSelectCustomFieldSetup.Operation is null) return;
-        
-        UpdateSingleSelectCustomFieldSetupOptions(
-            singleSelectCustomFieldSetup,
-            command.SingleSelectCustomFieldSetup!);
+
+        UpdateSingleSelectCustomFieldSetupOptions(setup, command.SingleSelectCustomFieldSetup!);
     }
 
     private static void UpdateTextCustomFieldSetup(
         UpdateCustomFieldSetupCommand command,
-        TextCustomFieldSetupAggregate textCustomFieldSetup,
+        TextCustomFieldSetupAggregate setup,
         UserAggregate user)
     {
-        textCustomFieldSetup.Update(
+        setup.Update(
             command.TextCustomFieldSetup!.DefaultText.IfNotNull(Text.Create),
             Name.Create(command.Name),
             Description.Create(command.Description),
             user);
     }
 
+    private static void UpdateTimeCustomFieldSetup(
+        UpdateCustomFieldSetupCommand command,
+        TimeCustomFieldSetupAggregate setup,
+        UserAggregate user)
+    {
+        setup.Update(
+            command.TimeCustomFieldSetup!.DefaultTime,
+            Name.Create(command.Name),
+            Description.Create(command.Description),
+            user);
+    }
+
+    private static void UpdateMultiSelectCustomFieldSetupOptions(
+        MultiSelectCustomFieldSetupAggregate setup,
+        UpdateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand command)
+    {
+        switch (command.Operation)
+        {
+            case UpdateCustomFieldSetupCommand.OptionOperation.Add:
+                setup.AddOption(MultiSelectOption.Create(
+                    command.NewOption!.Value,
+                    command.NewOption!.Color,
+                    CustomOrderPosition.Create(setup.Options.Count)));
+                break;
+
+            case UpdateCustomFieldSetupCommand.OptionOperation.Update:
+                var optionToUpdate = setup.Options
+                    .SingleOrDefault(o => o.Id == command.OptionId);
+                if (optionToUpdate is null) throw new MultiSelectOptionNotFoundException();
+                optionToUpdate.Update(command.NewOption!.Value, command.NewOption!.Color);
+                break;
+
+            case UpdateCustomFieldSetupCommand.OptionOperation.Move:
+                var optionToMove = setup.Options
+                    .SingleOrDefault(o => o.Id == command.OptionId);
+                if (optionToMove is null) throw new MultiSelectOptionNotFoundException();
+
+                var overOption = setup.Options
+                    .SingleOrDefault(o => o.Id == command.OverOptionId);
+                if (overOption is null) throw new MultiSelectOptionNotFoundException();
+
+                setup.MoveOption(optionToMove, overOption);
+                break;
+
+            case UpdateCustomFieldSetupCommand.OptionOperation.Remove:
+                var optionToRemove = setup.Options
+                    .SingleOrDefault(o => o.Id == command.OptionId);
+                if (optionToRemove is null) throw new MultiSelectOptionNotFoundException();
+                setup.RemoveOption(optionToRemove);
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(command));
+        }
+    }
+
     private static void UpdateSingleSelectCustomFieldSetupOptions(
-        SingleSelectCustomFieldSetupAggregate singleSelectCustomFieldSetup,
+        SingleSelectCustomFieldSetupAggregate setup,
         UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand command)
     {
         switch (command.Operation)
         {
-            case UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Add:
-                singleSelectCustomFieldSetup.AddOption(SingleSelectOption.Create(
+            case UpdateCustomFieldSetupCommand.OptionOperation.Add:
+                setup.AddOption(SingleSelectOption.Create(
                     command.NewOption!.Value,
                     command.NewOption!.Color,
-                    CustomOrderPosition.Create(singleSelectCustomFieldSetup.Options.Count)));
+                    CustomOrderPosition.Create(setup.Options.Count)));
                 break;
 
-            case UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Update:
-                var optionToUpdate = singleSelectCustomFieldSetup.Options
+            case UpdateCustomFieldSetupCommand.OptionOperation.Update:
+                var optionToUpdate = setup.Options
                     .SingleOrDefault(o => o.Id == command.OptionId);
                 if (optionToUpdate is null) throw new SingleSelectOptionNotFoundException();
                 optionToUpdate.Update(command.NewOption!.Value, command.NewOption!.Color);
                 break;
 
-            case UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Move:
-                var optionToMove = singleSelectCustomFieldSetup.Options
+            case UpdateCustomFieldSetupCommand.OptionOperation.Move:
+                var optionToMove = setup.Options
                     .SingleOrDefault(o => o.Id == command.OptionId);
                 if (optionToMove is null) throw new SingleSelectOptionNotFoundException();
 
-                var overOption = singleSelectCustomFieldSetup.Options
+                var overOption = setup.Options
                     .SingleOrDefault(o => o.Id == command.OverOptionId);
                 if (overOption is null) throw new SingleSelectOptionNotFoundException();
 
-                singleSelectCustomFieldSetup.MoveOption(optionToMove, overOption);
+                setup.MoveOption(optionToMove, overOption);
                 break;
 
-            case UpdateCustomFieldSetupCommand.SingleSelectOptionOperation.Remove:
-                var optionToRemove = singleSelectCustomFieldSetup.Options
+            case UpdateCustomFieldSetupCommand.OptionOperation.Remove:
+                var optionToRemove = setup.Options
                     .SingleOrDefault(o => o.Id == command.OptionId);
                 if (optionToRemove is null) throw new SingleSelectOptionNotFoundException();
-                singleSelectCustomFieldSetup.RemoveOption(optionToRemove);
+                setup.RemoveOption(optionToRemove);
                 break;
 
             default:

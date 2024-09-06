@@ -7,16 +7,41 @@ public sealed record UpdateCustomFieldSetupRequest(
     string Name,
     string Description,
     CustomFieldType Type,
+    UpdateCustomFieldSetupRequest.DateCustomFieldSetupRequest? DateCustomFieldSetup,
+    UpdateCustomFieldSetupRequest.DateTimeCustomFieldSetupRequest? DateTimeCustomFieldSetup,
+    UpdateCustomFieldSetupRequest.DurationCustomFieldSetupRequest? DurationCustomFieldSetup,
+    UpdateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest? MultiSelectCustomFieldSetup,
     UpdateCustomFieldSetupRequest.NumberCustomFieldSetupRequest? NumberCustomFieldSetup,
     UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest? SingleSelectCustomFieldSetup,
-    UpdateCustomFieldSetupRequest.TextCustomFieldSetupRequest? TextCustomFieldSetup)
+    UpdateCustomFieldSetupRequest.TextCustomFieldSetupRequest? TextCustomFieldSetup,
+    UpdateCustomFieldSetupRequest.TimeCustomFieldSetupRequest? TimeCustomFieldSetup)
 {
-    public enum SingleSelectOptionOperation
+    public enum OptionOperation
     {
         Add,
         Update,
         Move,
         Remove,
+    }
+
+    public sealed record DateCustomFieldSetupRequest(
+        DateOnly? DefaultDate);
+
+    public sealed record DateTimeCustomFieldSetupRequest(
+        DateTime? DefaultDateTime);
+
+    public sealed record DurationCustomFieldSetupRequest(
+        TimeSpan? DefaultDuration);
+
+    public sealed record MultiSelectCustomFieldSetupRequest(
+        OptionOperation? Operation,
+        MultiSelectCustomFieldSetupRequest.MultiSelectOptionRequest? NewOption,
+        Guid? OptionId,
+        Guid? OverOptionId)
+    {
+        public sealed record MultiSelectOptionRequest(
+            string Color,
+            string Value);
     }
 
     public sealed record NumberCustomFieldSetupRequest(
@@ -31,7 +56,7 @@ public sealed record UpdateCustomFieldSetupRequest(
 
     public sealed record SingleSelectCustomFieldSetupRequest(
         Guid? DefaultOptionId,
-        SingleSelectOptionOperation? Operation,
+        OptionOperation? Operation,
         SingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest? NewOption,
         Guid? OptionId,
         Guid? OverOptionId)
@@ -43,4 +68,7 @@ public sealed record UpdateCustomFieldSetupRequest(
 
     public sealed record TextCustomFieldSetupRequest(
         string? DefaultText);
+
+    public sealed record TimeCustomFieldSetupRequest(
+        TimeOnly? DefaultTime);
 }

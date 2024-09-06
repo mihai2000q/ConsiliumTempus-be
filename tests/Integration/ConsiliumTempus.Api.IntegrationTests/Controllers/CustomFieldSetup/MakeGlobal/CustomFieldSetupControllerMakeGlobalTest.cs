@@ -21,7 +21,7 @@ public class CustomFieldSetupControllerMakeGlobalTest(WebAppFactory factory)
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
         var request = CustomFieldSetupRequestFactory.CreateMakeCustomFieldSetupGlobalRequest(customFieldSetup.Id.Value);
 
         // Act
@@ -49,7 +49,7 @@ public class CustomFieldSetupControllerMakeGlobalTest(WebAppFactory factory)
     public async Task MakeCustomFieldSetupGlobal_WhenItHasWorkspace_ShouldReturnAlreadyGlobalError()
     {
         // Arrange
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
         var request = CustomFieldSetupRequestFactory.CreateMakeCustomFieldSetupGlobalRequest(customFieldSetup.Id.Value);
 
         // Act

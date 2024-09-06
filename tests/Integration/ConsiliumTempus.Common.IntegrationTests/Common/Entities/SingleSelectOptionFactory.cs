@@ -2,13 +2,13 @@
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 
-namespace ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup.Entities;
+namespace ConsiliumTempus.Common.IntegrationTests.Common.Entities;
 
 public static class SingleSelectOptionFactory
 {
     public static SingleSelectOption Create(
         string color = Constants.SingleSelectOption.Color,
-        string value = Constants.SingleSelectOption.Value1,
+        string value = Constants.SingleSelectOption.Value,
         int customOrderPosition = 0)
     {
         return EntityBuilder<SingleSelectOption>.Empty()

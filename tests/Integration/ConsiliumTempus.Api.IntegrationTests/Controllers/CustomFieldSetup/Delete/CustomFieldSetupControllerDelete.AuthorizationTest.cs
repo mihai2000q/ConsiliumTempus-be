@@ -82,7 +82,7 @@ public class CustomFieldSetupControllerDeleteAuthorizationTest(WebAppFactory fac
         CustomFieldSetupAggregate? customFieldSetup = null)
     {
         // Arrange
-        customFieldSetup ??= CustomFieldSetupData.CustomFieldSetups.First();
+        customFieldSetup ??= CustomFieldSetupData.CustomFieldSetups[1];
         var request = CustomFieldSetupRequestFactory.CreateDeleteCustomFieldSetupRequest(customFieldSetup.Id.Value);
 
         // Act

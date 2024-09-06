@@ -53,7 +53,7 @@ public class CustomFieldSetupControllerAddToProjectAuthorizationTest(WebAppFacto
     private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
     {
         // Arrange
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
         var project = CustomFieldSetupData.Projects.First();
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
             customFieldSetup.Id.Value,

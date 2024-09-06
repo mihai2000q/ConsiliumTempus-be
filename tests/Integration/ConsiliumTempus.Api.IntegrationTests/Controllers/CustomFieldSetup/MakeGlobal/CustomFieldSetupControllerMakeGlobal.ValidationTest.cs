@@ -14,7 +14,7 @@ public class CustomFieldSetupControllerUpdateWorkspaceValidationTest(WebAppFacto
     public async Task MakeCustomFieldSetupGlobal_WhenRequestIsValid_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
         var request = CustomFieldSetupRequestFactory.CreateMakeCustomFieldSetupGlobalRequest(customFieldSetup.Id.Value);
 
         // Act

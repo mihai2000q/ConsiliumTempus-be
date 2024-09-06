@@ -153,7 +153,6 @@ public sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguration<
     }
 }
 
-
 public sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfiguration<MultiSelectCustomField>
 {
     public void Configure(EntityTypeBuilder<MultiSelectCustomField> builder)

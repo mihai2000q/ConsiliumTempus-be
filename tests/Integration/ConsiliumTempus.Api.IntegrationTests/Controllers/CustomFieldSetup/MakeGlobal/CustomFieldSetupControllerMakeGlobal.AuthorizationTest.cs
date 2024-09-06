@@ -76,7 +76,7 @@ public class CustomFieldSetupControllerMakeGlobalAuthorizationTest(WebAppFactory
         CustomFieldSetupAggregate? customFieldSetup = null)
     {
         // Arrange
-        customFieldSetup ??= CustomFieldSetupData.CustomFieldSetups.First();
+        customFieldSetup ??= CustomFieldSetupData.CustomFieldSetups[1];
         var request = CustomFieldSetupRequestFactory.CreateMakeCustomFieldSetupGlobalRequest(customFieldSetup.Id.Value);
 
         // Act

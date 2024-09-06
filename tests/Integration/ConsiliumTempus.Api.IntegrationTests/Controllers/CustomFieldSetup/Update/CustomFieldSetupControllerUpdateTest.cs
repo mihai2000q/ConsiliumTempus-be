@@ -19,11 +19,155 @@ public class CustomFieldSetupControllerUpdateTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new CustomFieldSetupData())
 {
     [Fact]
-    public async Task UpdateCustomFieldSetup_WhenRequestHasNumberType_ShouldReturnUpdateSetupAndReturnSuccessResponse()
+    public async Task UpdateCustomFieldSetup_WhenRequestHasDateType_ShouldUpdateSetupAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var setup = CustomFieldSetupData.CustomFieldSetups[0];
+        var setup = CustomFieldSetupData.CustomFieldSetups[1];
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
+            setup.Id.Value,
+            type: CustomFieldType.Date,
+            dateCustomFieldSetup: new UpdateCustomFieldSetupRequest.DateCustomFieldSetupRequest(
+                new DateOnly(2022, 10, 10)));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task UpdateCustomFieldSetup_WhenRequestHasDateTimeType_ShouldUpdateSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var setup = CustomFieldSetupData.CustomFieldSetups[2];
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
+            setup.Id.Value,
+            type: CustomFieldType.DateTime,
+            dateTimeCustomFieldSetup: new UpdateCustomFieldSetupRequest.DateTimeCustomFieldSetupRequest(
+                new DateTime(2022, 10, 10, 10, 55, 30)));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task UpdateCustomFieldSetup_WhenRequestHasDurationType_ShouldUpdateSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var setup = CustomFieldSetupData.CustomFieldSetups[3];
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
+            setup.Id.Value,
+            type: CustomFieldType.Duration,
+            durationCustomFieldSetup: new UpdateCustomFieldSetupRequest.DurationCustomFieldSetupRequest(
+                new TimeSpan(24, 55, 30)));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomFieldSetup_WhenRequestHasMultiSelectType_ShouldUpdateSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var setup = CustomFieldSetupData.CustomFieldSetups[4];
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
+            setup.Id.Value,
+            type: CustomFieldType.MultiSelect,
+            multiSelectCustomFieldSetup: new UpdateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest(
+                null,
+                null,
+                null,
+                null));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomFieldSetup_WhenRequestHasMultiSelectTypeAndAddOperation_ShouldUpdateSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var setup = CustomFieldSetupData.CustomFieldSetups[4];
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
+            setup.Id.Value,
+            type: CustomFieldType.MultiSelect,
+            multiSelectCustomFieldSetup: new UpdateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest(
+                UpdateCustomFieldSetupRequest.OptionOperation.Add,
+                new UpdateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest.MultiSelectOptionRequest(
+                    "#2233FF",
+                    "Medium"),
+                null,
+                null));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomFieldSetup_WhenRequestHasMultiSelectTypeAndUpdateOperation_ShouldUpdateSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var setup = CustomFieldSetupData.CustomFieldSetups[4];
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
+            setup.Id.Value,
+            type: CustomFieldType.MultiSelect,
+            multiSelectCustomFieldSetup: new UpdateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest(
+                UpdateCustomFieldSetupRequest.OptionOperation.Update,
+                new UpdateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest.MultiSelectOptionRequest(
+                    "#FF0000",
+                    "High-Priority"),
+                ((MultiSelectCustomFieldSetupAggregate)setup).Options[0].Id,
+                null));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomFieldSetup_WhenRequestHasMultiSelectTypeAndMoveOperation_ShouldUpdateSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var setup = CustomFieldSetupData.CustomFieldSetups[4];
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
+            setup.Id.Value,
+            type: CustomFieldType.MultiSelect,
+            multiSelectCustomFieldSetup: new UpdateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest(
+                UpdateCustomFieldSetupRequest.OptionOperation.Move,
+                null,
+                ((MultiSelectCustomFieldSetupAggregate)setup).Options[1].Id,
+                ((MultiSelectCustomFieldSetupAggregate)setup).Options[0].Id));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomFieldSetup_WhenRequestHasMultiSelectTypeAndRemoveOperation_ShouldUpdateSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var setup = CustomFieldSetupData.CustomFieldSetups[4];
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
+            setup.Id.Value,
+            type: CustomFieldType.MultiSelect,
+            multiSelectCustomFieldSetup: new UpdateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest(
+                UpdateCustomFieldSetupRequest.OptionOperation.Remove,
+                null,
+                ((MultiSelectCustomFieldSetupAggregate)setup).Options[1].Id,
+                null));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task UpdateCustomFieldSetup_WhenRequestHasNumberType_ShouldUpdateSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var setup = CustomFieldSetupData.CustomFieldSetups[5];
         var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
             setup.Id.Value,
             type: CustomFieldType.Number,
@@ -38,12 +182,25 @@ public class CustomFieldSetupControllerUpdateTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task
-        UpdateCustomFieldSetup_WhenRequestHasSingleSelectType_ShouldReturnUpdateSetupAndReturnSuccessResponse()
+    public async Task UpdateCustomFieldSetup_WhenRequestHasPeopleType_ShouldUpdateSetupAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var setup = CustomFieldSetupData.CustomFieldSetups[2];
+        var setup = CustomFieldSetupData.CustomFieldSetups[6];
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
+            setup.Id.Value,
+            type: CustomFieldType.People);
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomFieldSetup_WhenRequestHasSingleSelectType_ShouldUpdateSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var setup = CustomFieldSetupData.CustomFieldSetups[7];
         var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
             setup.Id.Value,
             type: CustomFieldType.SingleSelect,
@@ -59,17 +216,17 @@ public class CustomFieldSetupControllerUpdateTest(WebAppFactory factory)
 
     [Fact]
     public async Task
-        UpdateCustomFieldSetup_WhenRequestHasSingleSelectTypeAndAddOperation_ShouldReturnUpdateSetupAndReturnSuccessResponse()
+        UpdateCustomFieldSetup_WhenRequestHasSingleSelectTypeAndAddOperation_ShouldUpdateSetupAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var setup = CustomFieldSetupData.CustomFieldSetups[2];
+        var setup = CustomFieldSetupData.CustomFieldSetups[7];
         var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
             setup.Id.Value,
             type: CustomFieldType.SingleSelect,
             singleSelectCustomFieldSetup: new UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest(
                 null,
-                UpdateCustomFieldSetupRequest.SingleSelectOptionOperation.Add,
+                UpdateCustomFieldSetupRequest.OptionOperation.Add,
                 new UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest(
                     "#2233FF",
                     "Medium"),
@@ -81,17 +238,17 @@ public class CustomFieldSetupControllerUpdateTest(WebAppFactory factory)
 
     [Fact]
     public async Task
-        UpdateCustomFieldSetup_WhenRequestHasSingleSelectTypeAndUpdateOperation_ShouldReturnUpdateSetupAndReturnSuccessResponse()
+        UpdateCustomFieldSetup_WhenRequestHasSingleSelectTypeAndUpdateOperation_ShouldUpdateSetupAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var setup = CustomFieldSetupData.CustomFieldSetups[2];
+        var setup = CustomFieldSetupData.CustomFieldSetups[7];
         var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
             setup.Id.Value,
             type: CustomFieldType.SingleSelect,
             singleSelectCustomFieldSetup: new UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest(
                 ((SingleSelectCustomFieldSetupAggregate)setup).Options[0].Id,
-                UpdateCustomFieldSetupRequest.SingleSelectOptionOperation.Update,
+                UpdateCustomFieldSetupRequest.OptionOperation.Update,
                 new UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest(
                     "#FF0000",
                     "High-Priority"),
@@ -103,17 +260,17 @@ public class CustomFieldSetupControllerUpdateTest(WebAppFactory factory)
 
     [Fact]
     public async Task
-        UpdateCustomFieldSetup_WhenRequestHasSingleSelectTypeAndMoveOperation_ShouldReturnUpdateSetupAndReturnSuccessResponse()
+        UpdateCustomFieldSetup_WhenRequestHasSingleSelectTypeAndMoveOperation_ShouldUpdateSetupAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var setup = CustomFieldSetupData.CustomFieldSetups[2];
+        var setup = CustomFieldSetupData.CustomFieldSetups[7];
         var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
             setup.Id.Value,
             type: CustomFieldType.SingleSelect,
             singleSelectCustomFieldSetup: new UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest(
                 null,
-                UpdateCustomFieldSetupRequest.SingleSelectOptionOperation.Move,
+                UpdateCustomFieldSetupRequest.OptionOperation.Move,
                 null,
                 ((SingleSelectCustomFieldSetupAggregate)setup).Options[1].Id,
                 ((SingleSelectCustomFieldSetupAggregate)setup).Options[0].Id));
@@ -123,17 +280,17 @@ public class CustomFieldSetupControllerUpdateTest(WebAppFactory factory)
 
     [Fact]
     public async Task
-        UpdateCustomFieldSetup_WhenRequestHasSingleSelectTypeAndRemoveOperation_ShouldReturnUpdateSetupAndReturnSuccessResponse()
+        UpdateCustomFieldSetup_WhenRequestHasSingleSelectTypeAndRemoveOperation_ShouldUpdateSetupAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var setup = CustomFieldSetupData.CustomFieldSetups[2];
+        var setup = CustomFieldSetupData.CustomFieldSetups[7];
         var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
             setup.Id.Value,
             type: CustomFieldType.SingleSelect,
             singleSelectCustomFieldSetup: new UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest(
                 null,
-                UpdateCustomFieldSetupRequest.SingleSelectOptionOperation.Remove,
+                UpdateCustomFieldSetupRequest.OptionOperation.Remove,
                 null,
                 ((SingleSelectCustomFieldSetupAggregate)setup).Options[1].Id,
                 null));
@@ -142,15 +299,30 @@ public class CustomFieldSetupControllerUpdateTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task UpdateCustomFieldSetup_WhenRequestHasTextType_ShouldReturnUpdateSetupAndReturnSuccessResponse()
+    public async Task UpdateCustomFieldSetup_WhenRequestHasTextType_ShouldUpdateSetupAndReturnSuccessResponse()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var setup = CustomFieldSetupData.CustomFieldSetups[3];
+        var setup = CustomFieldSetupData.CustomFieldSetups[8];
         var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
             setup.Id.Value,
             type: CustomFieldType.Text,
             textCustomFieldSetup: new UpdateCustomFieldSetupRequest.TextCustomFieldSetupRequest("Default"));
+
+        await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task UpdateCustomFieldSetup_WhenRequestHasTimeType_ShouldUpdateSetupAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var setup = CustomFieldSetupData.CustomFieldSetups[9];
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
+            setup.Id.Value,
+            type: CustomFieldType.Time,
+            timeCustomFieldSetup: new UpdateCustomFieldSetupRequest.TimeCustomFieldSetupRequest(
+                new TimeOnly(20, 50)));
 
         await ActAndAssert(request, user);
     }

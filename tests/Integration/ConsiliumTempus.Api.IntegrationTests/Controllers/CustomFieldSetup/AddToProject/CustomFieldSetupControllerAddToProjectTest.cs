@@ -22,7 +22,7 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
         var project = CustomFieldSetupData.Projects.First();
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
             customFieldSetup.Id.Value,
@@ -62,7 +62,7 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
         var project = CustomFieldSetupData.Projects[2];
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
             customFieldSetup.Id.Value,
@@ -87,7 +87,7 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
     public async Task AddCustomFieldSetupToProject_WhenProjectIsNotFound_ShouldReturnProjectNotFoundError()
     {
         // Arrange
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
             customFieldSetup.Id.Value,
             Guid.NewGuid());
@@ -111,7 +111,7 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
             customFieldSetup.Id.Value);
 
