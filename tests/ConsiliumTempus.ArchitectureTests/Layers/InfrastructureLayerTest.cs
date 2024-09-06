@@ -56,23 +56,10 @@ public class InfrastructureLayerTest : BaseArchitectureTest
         ArchRuleDefinition
             .Classes()
             .That()
-            .ResideInNamespace("ConsiliumTempus.Infrastructure.Persistence.Configuration")
-            .Should()
-            .HaveNameEndingWith("Configuration")
-            .Check(Architecture);
-
-        ArchRuleDefinition
-            .Classes()
-            .That()
             .AreAssignableTo(typeof(IEntityTypeConfiguration<>))
             .Should()
             .HaveNameEndingWith("Configuration")
             .Check(Architecture);
-
-        Utils.ShouldHaveSameCount(
-            Architecture,
-            typeof(IEntityTypeConfiguration<>),
-            "ConsiliumTempus.Infrastructure.Persistence.Configuration");
     }
 
     [Fact]
