@@ -39,8 +39,8 @@ test.describe('should allow operations on the custom field setup entity', () => 
     await deleteUser(request)
   })
 
-  test.describe('should allow retrieval of custom field', () => {
-    test('should get date custom field', async ({ request }) => {
+  test.describe('should allow retrieval of custom field setup', () => {
+    test('should get date custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Date",
@@ -66,7 +66,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should get date time custom field', async ({ request }) => {
+    test('should get date time custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Date And Time",
@@ -92,7 +92,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should get duration custom field', async ({ request }) => {
+    test('should get duration custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Duration",
@@ -118,7 +118,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should get multi select custom field', async ({ request }) => {
+    test('should get multi select custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Priorities",
@@ -164,7 +164,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should get number custom field', async ({ request }) => {
+    test('should get number custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Budget",
@@ -200,7 +200,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should get people custom field', async ({ request }) => {
+    test('should get people custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "People",
@@ -222,7 +222,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should get single select custom field', async ({ request }) => {
+    test('should get single select custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Priority",
@@ -276,7 +276,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should get text custom field', async ({ request }) => {
+    test('should get text custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Priority",
@@ -302,14 +302,14 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should get time custom field', async ({ request }) => {
+    test('should get time custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Time",
         description: "Represents a custom field",
         type: 'Time',
         timeCustomFieldSetup: {
-          defaultTime: "10:30"
+          defaultTime: "10:30:00"
         }
       }
       const timeCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
@@ -768,7 +768,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         description: "Represents a time custom field",
         type: 'Time',
         timeCustomFieldSetup: {
-          defaultTime: "10:30"
+          defaultTime: "10:30:00"
         }
       }
       const response = await request.post('/api/customFieldSetups/project', {
@@ -869,7 +869,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         description: "Represents a duration custom field",
         type: 'Duration',
         durationCustomFieldSetup: {
-          defaultDuration: "10:30"
+          defaultDuration: "10:30:00"
         }
       }
       const response = await request.post('/api/customFieldSetups/workspace', {
@@ -1090,7 +1090,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         description: "Represents a time custom field",
         type: 'Time',
         timeCustomFieldSetup: {
-          defaultTime: "10:30"
+          defaultTime: "10:30:00"
         }
       }
       const response = await request.post('/api/customFieldSetups/workspace', {
@@ -1156,8 +1156,8 @@ test.describe('should allow operations on the custom field setup entity', () => 
     ])
   })
 
-  test.describe('should allow update of custom field', () => {
-    test('should update date custom field', async ({ request }) => {
+  test.describe('should allow update of custom field setup', () => {
+    test('should update date custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "CustomField",
@@ -1192,7 +1192,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       const customFieldSetup = await getCustomFieldSetup(request, dateCustomFieldSetup.id)
       expect(customFieldSetup).toStrictEqual({
         $type: expect.any(String),
-        id: dateCustomFieldSetup.id,
         name: body.name,
         description: body.description,
         type: body.type,
@@ -1200,7 +1199,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should update date time custom field', async ({ request }) => {
+    test('should update date time custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Date and Time",
@@ -1235,7 +1234,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       const customFieldSetup = await getCustomFieldSetup(request, dateTimeCustomFieldSetup.id)
       expect(customFieldSetup).toStrictEqual({
         $type: expect.any(String),
-        id: dateTimeCustomFieldSetup.id,
         name: body.name,
         description: body.description,
         type: body.type,
@@ -1243,7 +1241,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should update duration custom field', async ({ request }) => {
+    test('should update duration custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Custom Field",
@@ -1278,7 +1276,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       const customFieldSetup = await getCustomFieldSetup(request, durationCustomFieldSetup.id)
       expect(customFieldSetup).toStrictEqual({
         $type: expect.any(String),
-        id: durationCustomFieldSetup.id,
         name: body.name,
         description: body.description,
         type: body.type,
@@ -1286,7 +1283,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test.describe('should allow update of multi select custom field' , () => {
+    test.describe('should allow update of multi select custom field setup' , () => {
       test('should update multi select custom field with add operation', async ({ request }) => {
         const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
           projectId: PROJECT_ID,
@@ -1338,7 +1335,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
         const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
           $type: expect.any(String),
-          id: body.id,
           name: body.name,
           description: body.description,
           type: body.type,
@@ -1406,7 +1402,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
         const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
           $type: expect.any(String),
-          id: body.id,
           name: body.name,
           description: body.description,
           type: body.type,
@@ -1417,8 +1412,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
               value: body.multiSelectCustomFieldSetup?.newOption?.value,
               color: body.multiSelectCustomFieldSetup?.newOption?.color,
             },
-          ],
-          defaultOption: null
+          ]
         })
       })
 
@@ -1471,7 +1465,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
         const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
           $type: expect.any(String),
-          id: body.id,
           name: body.name,
           description: body.description,
           type: body.type,
@@ -1530,19 +1523,17 @@ test.describe('should allow operations on the custom field setup entity', () => 
         const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
           $type: expect.any(String),
-          id: body.id,
           name: body.name,
           description: body.description,
           type: body.type,
           options: [
             multiSelectCustomFieldSetup.options[0]
-          ],
-          defaultOption: null
+          ]
         })
       })
     })
 
-    test('should update number custom field', async ({ request }) => {
+    test('should update number custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Budget",
@@ -1587,7 +1578,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       const customFieldSetup = await getCustomFieldSetup(request, numberCustomFieldSetup.id)
       expect(customFieldSetup).toStrictEqual({
         $type: expect.any(String),
-        id: numberCustomFieldSetup.id,
         name: body.name,
         description: body.description,
         type: body.type,
@@ -1600,7 +1590,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should update people custom field', async ({ request }) => {
+    test('should update people custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Custom Field",
@@ -1629,14 +1619,13 @@ test.describe('should allow operations on the custom field setup entity', () => 
       const customFieldSetup = await getCustomFieldSetup(request, peopleCustomFieldSetup.id)
       expect(customFieldSetup).toStrictEqual({
         $type: expect.any(String),
-        id: peopleCustomFieldSetup.id,
         name: body.name,
         description: body.description,
         type: body.type
       })
     })
 
-    test.describe('should allow update of single select custom field' , () => {
+    test.describe('should allow update of single select custom field setup' , () => {
       test('should update single select custom field', async ({ request }) => {
         const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
           projectId: PROJECT_ID,
@@ -1687,7 +1676,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
         const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
           $type: expect.any(String),
-          id: body.id,
           name: body.name,
           description: body.description,
           type: body.type,
@@ -1757,7 +1745,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
         const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
           $type: expect.any(String),
-          id: body.id,
           name: body.name,
           description: body.description,
           type: body.type,
@@ -1829,7 +1816,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
         const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
           $type: expect.any(String),
-          id: body.id,
           name: body.name,
           description: body.description,
           type: body.type,
@@ -1897,7 +1883,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
         const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
           $type: expect.any(String),
-          id: body.id,
           name: body.name,
           description: body.description,
           type: body.type,
@@ -1960,7 +1945,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
         const customFieldSetup = await getCustomFieldSetup(request, body.id)
         expect(customFieldSetup).toStrictEqual({
           $type: expect.any(String),
-          id: body.id,
           name: body.name,
           description: body.description,
           type: body.type,
@@ -1972,7 +1956,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should update text custom field', async ({ request }) => {
+    test('should update text custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Priority",
@@ -2007,7 +1991,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       const customFieldSetup = await getCustomFieldSetup(request, textCustomFieldSetup.id)
       expect(customFieldSetup).toStrictEqual({
         $type: expect.any(String),
-        id: textCustomFieldSetup.id,
         name: body.name,
         description: body.description,
         type: body.type,
@@ -2015,7 +1998,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
       })
     })
 
-    test('should update time custom field', async ({ request }) => {
+    test('should update time custom field setup', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
         name: "Custom Field",
@@ -2050,7 +2033,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       const customFieldSetup = await getCustomFieldSetup(request, timeCustomFieldSetup.id)
       expect(customFieldSetup).toStrictEqual({
         $type: expect.any(String),
-        id: timeCustomFieldSetup.id,
         name: body.name,
         description: body.description,
         type: body.type,
