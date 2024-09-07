@@ -3,9 +3,33 @@ export default interface UpdateCustomFieldSetupRequest {
   name: string,
   description: string,
   type: string,
+  dateCustomFieldSetup?: DateCustomFieldSetup,
+  dateTimeCustomFieldSetup?: DateTimeCustomFieldSetup,
+  durationCustomFieldSetup?: DurationCustomFieldSetup,
+  multiSelectCustomFieldSetup?: MultiSelectCustomFieldSetup,
   numberCustomFieldSetup?: NumberCustomFieldSetup,
   singleSelectCustomFieldSetup?: SingleSelectCustomFieldSetup,
-  textCustomFieldSetup?: TextCustomFieldSetup
+  textCustomFieldSetup?: TextCustomFieldSetup,
+  timeCustomFieldSetup?: TimeCustomFieldSetup
+}
+
+interface DateCustomFieldSetup {
+  defaultDate?: string
+}
+
+interface DateTimeCustomFieldSetup {
+  defaultDateTime?: string
+}
+
+interface DurationCustomFieldSetup {
+  defaultDuration?: string
+}
+
+interface MultiSelectCustomFieldSetup {
+  operation?: string,
+  newOption?: MultiSelectOption,
+  optionId?: string,
+  overOptionId?: string,
 }
 
 interface NumberCustomFieldSetup {
@@ -23,6 +47,15 @@ interface SingleSelectCustomFieldSetup {
 
 interface TextCustomFieldSetup {
   defaultText?: string
+}
+
+interface TimeCustomFieldSetup {
+  defaultTime?: string
+}
+
+interface MultiSelectOption {
+  value: string,
+  color: string
 }
 
 interface NumberSettings {

@@ -40,6 +40,134 @@ test.describe('should allow operations on the custom field setup entity', () => 
   })
 
   test.describe('should allow retrieval of custom field', () => {
+    test('should get date custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Date",
+        description: "Represents a custom field",
+        type: 'Date',
+        dateCustomFieldSetup: {
+          defaultDate: '2022-12-12'
+        }
+      }
+      const dateCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+      const response = await request.get(`/api/customFieldSetups/${dateCustomFieldSetup.id}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        customFieldSetup: {
+          $type: expect.any(String),
+          id: dateCustomFieldSetup.id,
+          name: createCustomFieldSetupOnProjectRequest.name,
+          description: createCustomFieldSetupOnProjectRequest.description,
+          type: createCustomFieldSetupOnProjectRequest.type,
+          defaultDate: createCustomFieldSetupOnProjectRequest.dateCustomFieldSetup?.defaultDate
+        }
+      })
+    })
+
+    test('should get date time custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Date And Time",
+        description: "Represents a custom field",
+        type: 'DateTime',
+        dateTimeCustomFieldSetup: {
+          defaultDateTime: '2022-12-12T10:30:00'
+        }
+      }
+      const dateTimeCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+      const response = await request.get(`/api/customFieldSetups/${dateTimeCustomFieldSetup.id}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        customFieldSetup: {
+          $type: expect.any(String),
+          id: dateTimeCustomFieldSetup.id,
+          name: createCustomFieldSetupOnProjectRequest.name,
+          description: createCustomFieldSetupOnProjectRequest.description,
+          type: createCustomFieldSetupOnProjectRequest.type,
+          defaultDateTime: createCustomFieldSetupOnProjectRequest.dateTimeCustomFieldSetup?.defaultDateTime
+        }
+      })
+    })
+
+    test('should get duration custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Duration",
+        description: "Represents a custom field",
+        type: 'Duration',
+        durationCustomFieldSetup: {
+          defaultDuration: '10:30:00'
+        }
+      }
+      const durationCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+      const response = await request.get(`/api/customFieldSetups/${durationCustomFieldSetup.id}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        customFieldSetup: {
+          $type: expect.any(String),
+          id: durationCustomFieldSetup.id,
+          name: createCustomFieldSetupOnProjectRequest.name,
+          description: createCustomFieldSetupOnProjectRequest.description,
+          type: createCustomFieldSetupOnProjectRequest.type,
+          defaultDuration: createCustomFieldSetupOnProjectRequest.durationCustomFieldSetup?.defaultDuration
+        }
+      })
+    })
+
+    test('should get multi select custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Priorities",
+        description: "Represents a custom field",
+        type: 'MultiSelect',
+        multiSelectCustomFieldSetup: {
+          options: [
+            {
+              value: "High",
+              color: "#FF0000"
+            },
+            {
+              value: "Low",
+              color: "#0000FF"
+            }
+          ]
+        }
+      }
+      const multiSelectCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+      const response = await request.get(`/api/customFieldSetups/${multiSelectCustomFieldSetup.id}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        customFieldSetup: {
+          $type: expect.any(String),
+          id: multiSelectCustomFieldSetup.id,
+          name: createCustomFieldSetupOnProjectRequest.name,
+          description: createCustomFieldSetupOnProjectRequest.description,
+          type: createCustomFieldSetupOnProjectRequest.type,
+          options: [
+            {
+              id: expect.any(String),
+              value: createCustomFieldSetupOnProjectRequest.multiSelectCustomFieldSetup?.options[0].value,
+              color: createCustomFieldSetupOnProjectRequest.multiSelectCustomFieldSetup?.options[0].color,
+            },
+            {
+              id: expect.any(String),
+              value: createCustomFieldSetupOnProjectRequest.multiSelectCustomFieldSetup?.options[1].value,
+              color: createCustomFieldSetupOnProjectRequest.multiSelectCustomFieldSetup?.options[1].color,
+            }
+          ]
+        }
+      })
+    })
+
     test('should get number custom field', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
@@ -66,13 +194,36 @@ test.describe('should allow operations on the custom field setup entity', () => 
           id: numberCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
-          type: "Number",
+          type: createCustomFieldSetupOnProjectRequest.type,
           settings: {
             currencyCode: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.currencyCode,
             decimals: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.decimals,
             rounding: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.rounding,
           },
           defaultNumber: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup?.defaultNumber
+        }
+      })
+    })
+
+    test('should get people custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "People",
+        description: "Represents a custom field",
+        type: 'People'
+      }
+      const peopleCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+      const response = await request.get(`/api/customFieldSetups/${peopleCustomFieldSetup.id}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        customFieldSetup: {
+          $type: expect.any(String),
+          id: peopleCustomFieldSetup.id,
+          name: createCustomFieldSetupOnProjectRequest.name,
+          description: createCustomFieldSetupOnProjectRequest.description,
+          type: createCustomFieldSetupOnProjectRequest.type
         }
       })
     })
@@ -110,7 +261,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
           id: singleSelectCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
-          type: "SingleSelect",
+          type: createCustomFieldSetupOnProjectRequest.type,
           options: [
             {
               id: expect.any(String),
@@ -153,8 +304,35 @@ test.describe('should allow operations on the custom field setup entity', () => 
           id: textCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
-          type: "Text",
+          type: createCustomFieldSetupOnProjectRequest.type,
           defaultText: createCustomFieldSetupOnProjectRequest.textCustomFieldSetup?.defaultText,
+        }
+      })
+    })
+
+    test('should get time custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Time",
+        description: "Represents a custom field",
+        type: 'Time',
+        timeCustomFieldSetup: {
+          defaultTime: "10:30"
+        }
+      }
+      const timeCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+      const response = await request.get(`/api/customFieldSetups/${timeCustomFieldSetup.id}`, useToken())
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        customFieldSetup: {
+          $type: expect.any(String),
+          id: timeCustomFieldSetup.id,
+          name: createCustomFieldSetupOnProjectRequest.name,
+          description: createCustomFieldSetupOnProjectRequest.description,
+          type: createCustomFieldSetupOnProjectRequest.type,
+          defaultTime: createCustomFieldSetupOnProjectRequest.timeCustomFieldSetup?.defaultTime,
         }
       })
     })
@@ -305,6 +483,147 @@ test.describe('should allow operations on the custom field setup entity', () => 
   })
 
   test.describe(`should allow creation of custom field setup on project`, () => {
+    test('should create date custom field setup on project', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Date",
+        description: "Represents a custom field",
+        type: 'Date',
+        dateCustomFieldSetup: {
+          defaultDate: "2022-10-10"
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/project', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromProject(request, PROJECT_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create date time custom field setup on project', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Date Time",
+        description: "Represents a date time custom field",
+        type: 'DateTime',
+        dateTimeCustomFieldSetup: {
+          defaultDateTime: "2022-10-10T10:30:00"
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/project', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromProject(request, PROJECT_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create duration custom field setup on project', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Duration",
+        description: "Represents a duration custom field",
+        type: 'Duration',
+        durationCustomFieldSetup: {
+          defaultDuration: "10:30"
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/project', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromProject(request, PROJECT_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create multi select custom field setup on project', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Priorities",
+        description: "Represents a custom field",
+        type: 'MultiSelect',
+        multiSelectCustomFieldSetup: {
+          options: [
+            {
+              value: "High",
+              color: "#FF1122"
+            },
+            {
+              value: "Low",
+              color: "#1122FF"
+            }
+          ]
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/project', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromProject(request, PROJECT_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+
     test('should create number custom field setup on project', async ({ request }) => {
       const body: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
@@ -338,7 +657,37 @@ test.describe('should allow operations on the custom field setup entity', () => 
           id: expect.any(String),
           name: body.name,
           description: body.description,
-          type: 'Number'
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create people custom field setup on project', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "User",
+        description: "Represents a custom field",
+        type: 'People'
+      }
+      const response = await request.post('/api/customFieldSetups/project', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromProject(request, PROJECT_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
         }
       ])
     })
@@ -383,7 +732,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
           id: expect.any(String),
           name: body.name,
           description: body.description,
-          type: 'SingleSelect'
+          type: body.type
         }
       ])
     })
@@ -416,7 +765,362 @@ test.describe('should allow operations on the custom field setup entity', () => 
           id: expect.any(String),
           name: body.name,
           description: body.description,
-          type: 'Text'
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create time custom field setup on project', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Time",
+        description: "Represents a time custom field",
+        type: 'Time',
+        timeCustomFieldSetup: {
+          defaultTime: "10:30"
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/project', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromProject(request, PROJECT_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+  })
+
+  test.describe(`should allow creation of custom field setup on workspace`, () => {
+    test('should create date custom field setup on workspace', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnWorkspaceRequest = {
+        workspaceId: WORKSPACE_ID,
+        name: "Date",
+        description: "Represents a custom field",
+        type: 'Date',
+        dateCustomFieldSetup: {
+          defaultDate: "2022-10-10"
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/workspace', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromWorkspace(request, WORKSPACE_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create date time custom field setup on workspace', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnWorkspaceRequest = {
+        workspaceId: WORKSPACE_ID,
+        name: "Date Time",
+        description: "Represents a date time custom field",
+        type: 'DateTime',
+        dateTimeCustomFieldSetup: {
+          defaultDateTime: "2022-10-10T10:30:00"
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/workspace', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromWorkspace(request, WORKSPACE_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create duration custom field setup on workspace', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnWorkspaceRequest = {
+        workspaceId: WORKSPACE_ID,
+        name: "Duration",
+        description: "Represents a duration custom field",
+        type: 'Duration',
+        durationCustomFieldSetup: {
+          defaultDuration: "10:30"
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/workspace', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromWorkspace(request, WORKSPACE_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create multi select custom field setup on workspace', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnWorkspaceRequest = {
+        workspaceId: WORKSPACE_ID,
+        name: "Priorities",
+        description: "Represents a custom field",
+        type: 'MultiSelect',
+        multiSelectCustomFieldSetup: {
+          options: [
+            {
+              value: "High",
+              color: "#FF1122"
+            },
+            {
+              value: "Low",
+              color: "#1122FF"
+            }
+          ]
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/workspace', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromWorkspace(request, WORKSPACE_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create number custom field setup on workspace', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnWorkspaceRequest = {
+        workspaceId: WORKSPACE_ID,
+        name: "Budget",
+        description: "Represents a custom field",
+        type: 'Number',
+        numberCustomFieldSetup: {
+          settings: {
+            currencyCode: "USD",
+            decimals: 2,
+            rounding: true
+          },
+          defaultNumber: 1
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/workspace', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromWorkspace(request, WORKSPACE_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create people custom field setup on workspace', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnWorkspaceRequest = {
+        workspaceId: WORKSPACE_ID,
+        name: "User",
+        description: "Represents a custom field",
+        type: 'People'
+      }
+      const response = await request.post('/api/customFieldSetups/workspace', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromWorkspace(request, WORKSPACE_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create single select custom field setup on workspace', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnWorkspaceRequest = {
+        workspaceId: WORKSPACE_ID,
+        name: "Priority",
+        description: "Represents a custom field",
+        type: 'SingleSelect',
+        singleSelectCustomFieldSetup: {
+          options: [
+            {
+              id: '1',
+              value: "High",
+              color: "#FF1122"
+            },
+            {
+              id: '2',
+              value: "Low",
+              color: "#1122FF"
+            }
+          ],
+          defaultOptionId: '2'
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/workspace', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromWorkspace(request, WORKSPACE_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create text custom field setup on workspace', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnWorkspaceRequest = {
+        workspaceId: WORKSPACE_ID,
+        name: "New Text Custom Field",
+        description: "Represents a custom field",
+        type: 'Text',
+        textCustomFieldSetup: {
+          defaultText: "default"
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/workspace', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromWorkspace(request, WORKSPACE_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
+        }
+      ])
+    })
+
+    test('should create time custom field setup on workspace', async ({ request }) => {
+      const body: CreateCustomFieldSetupOnWorkspaceRequest = {
+        workspaceId: WORKSPACE_ID,
+        name: "Time",
+        description: "Represents a time custom field",
+        type: 'Time',
+        timeCustomFieldSetup: {
+          defaultTime: "10:30"
+        }
+      }
+      const response = await request.post('/api/customFieldSetups/workspace', {
+        ...useToken(),
+        data: body
+      });
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetups = await getCustomFieldSetupsFromWorkspace(request, WORKSPACE_ID)
+      expect(customFieldSetups).toHaveLength(1)
+      expect(customFieldSetups).toStrictEqual([
+        {
+          id: expect.any(String),
+          name: body.name,
+          description: body.description,
+          type: body.type
         }
       ])
     })
@@ -462,6 +1166,391 @@ test.describe('should allow operations on the custom field setup entity', () => 
   })
 
   test.describe('should allow update of custom field', () => {
+    test('should update date custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "CustomField",
+        description: "Represents a custom field",
+        type: 'Date',
+        dateCustomFieldSetup: {
+          defaultDate: "2022-12-15"
+        }
+      }
+      const dateCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+
+      const body: UpdateCustomFieldSetupRequest = {
+        id: dateCustomFieldSetup.id,
+        name: "Date",
+        description: "no description",
+        type: "Date",
+        dateCustomFieldSetup: {
+          defaultDate: undefined
+        }
+      }
+      const response = await request.put(`/api/customFieldSetups`, {
+        ...useToken(),
+        data: body
+      })
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetup = await getCustomFieldSetup(request, dateCustomFieldSetup.id)
+      expect(customFieldSetup).toStrictEqual({
+        $type: expect.any(String),
+        id: dateCustomFieldSetup.id,
+        name: body.name,
+        description: body.description,
+        type: body.type,
+        defaultDate: null
+      })
+    })
+
+    test('should update date time custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Date and Time",
+        description: "Represents a custom field",
+        type: 'DateTime',
+        dateTimeCustomFieldSetup: {
+          defaultDateTime: "2022-10-10T10:30:00"
+        }
+      }
+      const dateTimeCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+
+      const body: UpdateCustomFieldSetupRequest = {
+        id: dateTimeCustomFieldSetup.id,
+        name: "Custom Field",
+        description: "no description",
+        type: "DateTime",
+        dateTimeCustomFieldSetup: {
+          defaultDateTime: undefined
+        }
+      }
+      const response = await request.put(`/api/customFieldSetups`, {
+        ...useToken(),
+        data: body
+      })
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetup = await getCustomFieldSetup(request, dateTimeCustomFieldSetup.id)
+      expect(customFieldSetup).toStrictEqual({
+        $type: expect.any(String),
+        id: dateTimeCustomFieldSetup.id,
+        name: body.name,
+        description: body.description,
+        type: body.type,
+        defaultDateTime: null
+      })
+    })
+
+    test('should update duration custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Custom Field",
+        description: "Represents a custom field",
+        type: 'Duration',
+        durationCustomFieldSetup: {
+          defaultDuration: "10:30:00"
+        }
+      }
+      const durationCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+
+      const body: UpdateCustomFieldSetupRequest = {
+        id: durationCustomFieldSetup.id,
+        name: "Duration",
+        description: "no description",
+        type: "Duration",
+        durationCustomFieldSetup: {
+          defaultDuration: undefined
+        }
+      }
+      const response = await request.put(`/api/customFieldSetups`, {
+        ...useToken(),
+        data: body
+      })
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetup = await getCustomFieldSetup(request, durationCustomFieldSetup.id)
+      expect(customFieldSetup).toStrictEqual({
+        $type: expect.any(String),
+        id: durationCustomFieldSetup.id,
+        name: body.name,
+        description: body.description,
+        type: body.type,
+        defaultDuration: null
+      })
+    })
+
+    test.describe('should allow update of multi select custom field' , () => {
+      test('should update multi select custom field with add operation', async ({ request }) => {
+        const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+          projectId: PROJECT_ID,
+          name: "Priorities",
+          description: "Represents a custom field",
+          type: 'MultiSelect',
+          multiSelectCustomFieldSetup: {
+            options: [
+              {
+                value: "High",
+                color: "#FF1122"
+              },
+              {
+                value: "Low",
+                color: "#1122FF"
+              }
+            ]
+          }
+        }
+        const multiSelectCustomFieldSetupId = (
+          await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        ).id
+        const multiSelectCustomFieldSetup = await getCustomFieldSetup(request, multiSelectCustomFieldSetupId)
+
+        const body: UpdateCustomFieldSetupRequest = {
+          id: multiSelectCustomFieldSetupId,
+          name: "New setup",
+          description: "no description",
+          type: "MultiSelect",
+          multiSelectCustomFieldSetup: {
+            operation: "Add",
+            newOption: {
+              color: "#214fc5",
+              value: "Medium"
+            }
+          }
+        }
+        const response = await request.put(`/api/customFieldSetups`, {
+          ...useToken(),
+          data: body
+        })
+
+        expect(response.ok()).toBeTruthy()
+
+        expect(await response.json()).toStrictEqual({
+          message: expect.any(String)
+        })
+
+        const customFieldSetup = await getCustomFieldSetup(request, body.id)
+        expect(customFieldSetup).toStrictEqual({
+          $type: expect.any(String),
+          id: body.id,
+          name: body.name,
+          description: body.description,
+          type: body.type,
+          options: [
+            multiSelectCustomFieldSetup.options[0],
+            multiSelectCustomFieldSetup.options[1],
+            {
+              id: expect.any(String),
+              value: body.multiSelectCustomFieldSetup?.newOption?.value,
+              color: body.multiSelectCustomFieldSetup?.newOption?.color,
+            }
+          ]
+        })
+      })
+
+      test('should update multi select custom field with update operation', async ({ request }) => {
+        const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+          projectId: PROJECT_ID,
+          name: "Priorities",
+          description: "Represents a custom field",
+          type: 'MultiSelect',
+          multiSelectCustomFieldSetup: {
+            options: [
+              {
+                value: "High",
+                color: "#FF1122"
+              },
+              {
+                value: "Low",
+                color: "#1122FF"
+              }
+            ]
+          }
+        }
+        const multiSelectCustomFieldSetupId = (
+          await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        ).id
+        const multiSelectCustomFieldSetup = await getCustomFieldSetup(request, multiSelectCustomFieldSetupId)
+
+        const body: UpdateCustomFieldSetupRequest = {
+          id: multiSelectCustomFieldSetupId,
+          name: "New setup",
+          description: "no description",
+          type: "MultiSelect",
+          multiSelectCustomFieldSetup: {
+            operation: "Update",
+            newOption: {
+              color: "#214fc5",
+              value: "Medium"
+            },
+            optionId: multiSelectCustomFieldSetup.options[1].id
+          }
+        }
+        const response = await request.put(`/api/customFieldSetups`, {
+          ...useToken(),
+          data: body
+        })
+
+        expect(response.ok()).toBeTruthy()
+
+        expect(await response.json()).toStrictEqual({
+          message: expect.any(String)
+        })
+
+        const customFieldSetup = await getCustomFieldSetup(request, body.id)
+        expect(customFieldSetup).toStrictEqual({
+          $type: expect.any(String),
+          id: body.id,
+          name: body.name,
+          description: body.description,
+          type: body.type,
+          options: [
+            multiSelectCustomFieldSetup.options[0],
+            {
+              id: body.multiSelectCustomFieldSetup?.optionId,
+              value: body.multiSelectCustomFieldSetup?.newOption?.value,
+              color: body.multiSelectCustomFieldSetup?.newOption?.color,
+            },
+          ],
+          defaultOption: null
+        })
+      })
+
+      test('should update multi select custom field with move operation', async ({ request }) => {
+        const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+          projectId: PROJECT_ID,
+          name: "Priorities",
+          description: "Represents a custom field",
+          type: 'MultiSelect',
+          multiSelectCustomFieldSetup: {
+            options: [
+              {
+                value: "High",
+                color: "#FF1122"
+              },
+              {
+                value: "Low",
+                color: "#1122FF"
+              }
+            ]
+          }
+        }
+        const multiSelectCustomFieldSetupId = (
+          await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        ).id
+        const multiSelectCustomFieldSetup = await getCustomFieldSetup(request, multiSelectCustomFieldSetupId)
+
+        const body: UpdateCustomFieldSetupRequest = {
+          id: multiSelectCustomFieldSetupId,
+          name: "New setup",
+          description: "no description",
+          type: "MultiSelect",
+          multiSelectCustomFieldSetup: {
+            operation: "Move",
+            optionId: multiSelectCustomFieldSetup.options[0].id,
+            overOptionId: multiSelectCustomFieldSetup.options[1].id,
+          }
+        }
+        const response = await request.put(`/api/customFieldSetups`, {
+          ...useToken(),
+          data: body
+        })
+
+        expect(response.ok()).toBeTruthy()
+
+        expect(await response.json()).toStrictEqual({
+          message: expect.any(String)
+        })
+
+        const customFieldSetup = await getCustomFieldSetup(request, body.id)
+        expect(customFieldSetup).toStrictEqual({
+          $type: expect.any(String),
+          id: body.id,
+          name: body.name,
+          description: body.description,
+          type: body.type,
+          options: [
+            multiSelectCustomFieldSetup.options[1],
+            multiSelectCustomFieldSetup.options[0],
+          ],
+        })
+      })
+
+      test('should update multi select custom field with remove operation', async ({ request }) => {
+        const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+          projectId: PROJECT_ID,
+          name: "Priorities",
+          description: "Represents a custom field",
+          type: 'MultiSelect',
+          multiSelectCustomFieldSetup: {
+            options: [
+              {
+                value: "High",
+                color: "#FF1122"
+              },
+              {
+                value: "Low",
+                color: "#1122FF"
+              }
+            ]
+          }
+        }
+        const multiSelectCustomFieldSetupId = (
+          await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+        ).id
+        const multiSelectCustomFieldSetup = await getCustomFieldSetup(request, multiSelectCustomFieldSetupId)
+
+        const body: UpdateCustomFieldSetupRequest = {
+          id: multiSelectCustomFieldSetupId,
+          name: "New setup",
+          description: "no description",
+          type: "MultiSelect",
+          multiSelectCustomFieldSetup: {
+            operation: "Remove",
+            optionId: multiSelectCustomFieldSetup.options[1].id
+          }
+        }
+        const response = await request.put(`/api/customFieldSetups`, {
+          ...useToken(),
+          data: body
+        })
+
+        expect(response.ok()).toBeTruthy()
+
+        expect(await response.json()).toStrictEqual({
+          message: expect.any(String)
+        })
+
+        const customFieldSetup = await getCustomFieldSetup(request, body.id)
+        expect(customFieldSetup).toStrictEqual({
+          $type: expect.any(String),
+          id: body.id,
+          name: body.name,
+          description: body.description,
+          type: body.type,
+          options: [
+            multiSelectCustomFieldSetup.options[0]
+          ],
+          defaultOption: null
+        })
+      })
+    })
+
     test('should update number custom field', async ({ request }) => {
       const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
         projectId: PROJECT_ID,
@@ -510,13 +1599,49 @@ test.describe('should allow operations on the custom field setup entity', () => 
         id: numberCustomFieldSetup.id,
         name: body.name,
         description: body.description,
-        type: "Number",
+        type: body.type,
         settings: {
           currencyCode: body.numberCustomFieldSetup!.settings.currencyCode,
           decimals: body.numberCustomFieldSetup!.settings.decimals,
           rounding: body.numberCustomFieldSetup!.settings.rounding,
         },
         defaultNumber: null
+      })
+    })
+
+    test('should update people custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Custom Field",
+        description: "Represents a custom field",
+        type: 'People'
+      }
+      const peopleCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+
+      const body: UpdateCustomFieldSetupRequest = {
+        id: peopleCustomFieldSetup.id,
+        name: "Some People",
+        description: "no description",
+        type: "People"
+      }
+      const response = await request.put(`/api/customFieldSetups`, {
+        ...useToken(),
+        data: body
+      })
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetup = await getCustomFieldSetup(request, peopleCustomFieldSetup.id)
+      expect(customFieldSetup).toStrictEqual({
+        $type: expect.any(String),
+        id: peopleCustomFieldSetup.id,
+        name: body.name,
+        description: body.description,
+        type: body.type
       })
     })
 
@@ -574,7 +1699,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
           id: body.id,
           name: body.name,
           description: body.description,
-          type: "SingleSelect",
+          type: body.type,
           options: [
             singleSelectCustomFieldSetup.options[0],
             singleSelectCustomFieldSetup.options[1]
@@ -644,7 +1769,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
           id: body.id,
           name: body.name,
           description: body.description,
-          type: "SingleSelect",
+          type: body.type,
           options: [
             singleSelectCustomFieldSetup.options[0],
             singleSelectCustomFieldSetup.options[1],
@@ -716,7 +1841,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
           id: body.id,
           name: body.name,
           description: body.description,
-          type: "SingleSelect",
+          type: body.type,
           options: [
             singleSelectCustomFieldSetup.options[0],
             {
@@ -784,7 +1909,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
           id: body.id,
           name: body.name,
           description: body.description,
-          type: "SingleSelect",
+          type: body.type,
           options: [
             singleSelectCustomFieldSetup.options[1],
             singleSelectCustomFieldSetup.options[0],
@@ -847,7 +1972,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
           id: body.id,
           name: body.name,
           description: body.description,
-          type: "SingleSelect",
+          type: body.type,
           options: [
             singleSelectCustomFieldSetup.options[0]
           ],
@@ -894,8 +2019,51 @@ test.describe('should allow operations on the custom field setup entity', () => 
         id: textCustomFieldSetup.id,
         name: body.name,
         description: body.description,
-        type: "Text",
+        type: body.type,
         defaultText: null,
+      })
+    })
+
+    test('should update time custom field', async ({ request }) => {
+      const createCustomFieldSetupOnProjectRequest: CreateCustomFieldSetupOnProjectRequest = {
+        projectId: PROJECT_ID,
+        name: "Custom Field",
+        description: "Represents a custom field",
+        type: 'Time',
+        timeCustomFieldSetup: {
+          defaultTime: "10:30:00"
+        }
+      }
+      const timeCustomFieldSetup = await createCustomFieldSetupOnProject(request, createCustomFieldSetupOnProjectRequest)
+
+      const body: UpdateCustomFieldSetupRequest = {
+        id: timeCustomFieldSetup.id,
+        name: "Time",
+        description: "no description",
+        type: "Time",
+        timeCustomFieldSetup: {
+          defaultTime: undefined
+        }
+      }
+      const response = await request.put(`/api/customFieldSetups`, {
+        ...useToken(),
+        data: body
+      })
+
+      expect(response.ok()).toBeTruthy()
+
+      expect(await response.json()).toStrictEqual({
+        message: expect.any(String)
+      })
+
+      const customFieldSetup = await getCustomFieldSetup(request, timeCustomFieldSetup.id)
+      expect(customFieldSetup).toStrictEqual({
+        $type: expect.any(String),
+        id: timeCustomFieldSetup.id,
+        name: body.name,
+        description: body.description,
+        type: body.type,
+        defaultTime: null
       })
     })
   })
