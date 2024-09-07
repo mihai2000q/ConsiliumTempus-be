@@ -35,6 +35,7 @@ public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContex
         CancellationToken cancellationToken = default)
     {
         return dbContext.CustomFieldSetups
+            .AsSplitQuery()
             .WhereIf(workspaceId is not null, cfs => cfs.Workspace != null && cfs.Workspace.Id == workspaceId)
             .WhereIf(projectId is not null, cfs => cfs.Projects.Any(p => p.Id == projectId))
             .OrderBy(cfs => cfs.Audit.CreatedDateTime)

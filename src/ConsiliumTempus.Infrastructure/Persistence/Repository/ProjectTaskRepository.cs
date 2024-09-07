@@ -43,6 +43,7 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         CancellationToken cancellationToken = default)
     {
         return await dbContext.ProjectTasks
+            .AsSplitQuery()
             .Include(t => t.CustomFields)
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
@@ -53,6 +54,7 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         CancellationToken cancellationToken = default)
     {
         return await dbContext.ProjectTasks
+            .AsSplitQuery()
             .Include(t => t.CustomFields)
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .Include(t => t.Stage.Sprint.Stages.OrderBy(s => s.CustomOrderPosition.Value))
@@ -67,6 +69,7 @@ public sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) : 
         CancellationToken cancellationToken = default)
     {
         return dbContext.ProjectTasks
+            .AsSplitQuery()
             .Include(t => t.CustomFields)
             .Where(t => t.Stage.Id == stageId)
             .ApplyFilters(filters)

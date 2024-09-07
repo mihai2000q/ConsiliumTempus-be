@@ -73,6 +73,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
         CancellationToken cancellationToken = default)
     {
         return dbContext.Projects
+            .AsSplitQuery()
             .Include(p => p.Favorites)
             .Include(p => p.Statuses.OrderByDescending(s => s.Audit.CreatedDateTime))
             .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))

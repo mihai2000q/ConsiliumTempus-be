@@ -547,7 +547,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
         description: "Represents a duration custom field",
         type: 'Duration',
         durationCustomFieldSetup: {
-          defaultDuration: "10:30"
+          defaultDuration: "10:30:00"
         }
       }
       const response = await request.post('/api/customFieldSetups/project', {
