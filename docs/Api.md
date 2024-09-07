@@ -7,7 +7,6 @@ to be authenticated and get authorization.
 * [Authentication](#authentication)
 * [Authorization](#authorization)
 * [Controllers](#controllers)
-* [Dto](#dto)
 
 ## Api Controller
 
@@ -61,6 +60,7 @@ have a route similar to its name and have the methods in the following order:
 
 Below, you will find complete documentation on each Controller of the Api Layer:
 - [Authentication](api/Api.Auth.md)
+- [Custom Field Setup](api/Api.CustomFieldSetup.md)
 - [Project](api/Api.Project.md)
 - [Project Sprint](api/Api.ProjectSprint.md)
 - [User](api/Api.User.md)
