@@ -163,7 +163,6 @@ internal static partial class Utils
             GetCustomFieldSetupResponse response,
             GetCustomFieldSetupResult result)
         {
-            response.CustomFieldSetup.Id.Should().Be(result.CustomFieldSetup.Id.Value);
             response.CustomFieldSetup.Name.Should().Be(result.CustomFieldSetup.Name.Value);
             response.CustomFieldSetup.Description.Should().Be(result.CustomFieldSetup.Description.Value);
             switch (response.CustomFieldSetup)

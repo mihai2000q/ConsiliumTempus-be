@@ -58,7 +58,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
           $type: expect.any(String),
-          id: dateCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
           type: createCustomFieldSetupOnProjectRequest.type,
@@ -85,7 +84,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
           $type: expect.any(String),
-          id: dateTimeCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
           type: createCustomFieldSetupOnProjectRequest.type,
@@ -112,7 +110,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
           $type: expect.any(String),
-          id: durationCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
           type: createCustomFieldSetupOnProjectRequest.type,
@@ -148,7 +145,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
           $type: expect.any(String),
-          id: multiSelectCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
           type: createCustomFieldSetupOnProjectRequest.type,
@@ -191,7 +187,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
           $type: expect.any(String),
-          id: numberCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
           type: createCustomFieldSetupOnProjectRequest.type,
@@ -220,7 +215,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
           $type: expect.any(String),
-          id: peopleCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
           type: createCustomFieldSetupOnProjectRequest.type
@@ -258,7 +252,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
           $type: expect.any(String),
-          id: singleSelectCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
           type: createCustomFieldSetupOnProjectRequest.type,
@@ -301,7 +294,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
           $type: expect.any(String),
-          id: textCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
           type: createCustomFieldSetupOnProjectRequest.type,
@@ -328,7 +320,6 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(await response.json()).toStrictEqual({
         customFieldSetup: {
           $type: expect.any(String),
-          id: timeCustomFieldSetup.id,
           name: createCustomFieldSetupOnProjectRequest.name,
           description: createCustomFieldSetupOnProjectRequest.description,
           type: createCustomFieldSetupOnProjectRequest.type,

@@ -360,7 +360,6 @@ internal static partial class Utils
             GetCustomFieldSetupResponse response,
             CustomFieldSetupAggregate customFieldSetup)
         {
-            response.CustomFieldSetup.Id.Should().Be(customFieldSetup.Id.Value);
             response.CustomFieldSetup.Name.Should().Be(customFieldSetup.Name.Value);
             response.CustomFieldSetup.Description.Should().Be(customFieldSetup.Description.Value);
             switch (response.CustomFieldSetup)

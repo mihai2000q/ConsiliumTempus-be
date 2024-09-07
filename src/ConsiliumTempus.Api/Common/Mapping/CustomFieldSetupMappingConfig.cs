@@ -58,36 +58,30 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
         config.NewConfig<GetCustomFieldSetupResult, GetCustomFieldSetupResponse>();
         config.NewConfig<DateCustomFieldSetupAggregate, GetCustomFieldSetupResponse.DateCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.Type, src => CustomFieldType.Date);
         config.NewConfig<DateTimeCustomFieldSetupAggregate, GetCustomFieldSetupResponse.DateTimeCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.Type, src => CustomFieldType.DateTime);
         config.NewConfig<DurationCustomFieldSetupAggregate, GetCustomFieldSetupResponse.DurationCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.Type, src => CustomFieldType.Duration);
         config.NewConfig<MultiSelectCustomFieldSetupAggregate, GetCustomFieldSetupResponse.MultiSelectCustomFieldSetupResponse>()
-            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.Type, src => CustomFieldType.MultiSelect);
         config.NewConfig<NumberCustomFieldSetupAggregate, GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.DefaultNumber, src => src.DefaultNumber!.Value)
             .Map(dest => dest.Type, src => CustomFieldType.Number);
         config.NewConfig<PeopleCustomFieldSetupAggregate, GetCustomFieldSetupResponse.PeopleCustomFieldSetupResponse>()
-            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.Type, src => CustomFieldType.People);
@@ -95,20 +89,17 @@ public sealed class CustomFieldSetupMappingConfig : IRegister
             .NewConfig<SingleSelectCustomFieldSetupAggregate, 
                 GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.Type, src => CustomFieldType.SingleSelect);
         config.NewConfig<TextCustomFieldSetupAggregate, GetCustomFieldSetupResponse.TextCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.DefaultText, src => src.DefaultText!.Value)
             .Map(dest => dest.Type, src => CustomFieldType.Text);
         config.NewConfig<TimeCustomFieldSetupAggregate, GetCustomFieldSetupResponse.TimeCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
-            .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
             .Map(dest => dest.Type, src => CustomFieldType.Time);
