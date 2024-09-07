@@ -19,6 +19,97 @@ public class ProjectTaskControllerUpdateCustomFieldTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectTaskData())
 {
     [Fact]
+    public async Task UpdateCustomFieldFromProjectTask_WhenIsDateCustomField_ShouldUpdateAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = ProjectTaskData.Users.First();
+        var task = ProjectTaskData.ProjectTasks.First();
+        var customField = task.CustomFields.First(cf => cf is DateCustomField);
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.Date,
+            dateCustomField: new UpdateCustomFieldFromProjectTaskRequest.DateCustomFieldRequest(
+                new DateOnly(2022, 10, 10)));
+
+        await ActAndAssertSuccess(user, request);
+    }
+
+    [Fact]
+    public async Task UpdateCustomFieldFromProjectTask_WhenIsDateTimeCustomField_ShouldUpdateAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = ProjectTaskData.Users.First();
+        var task = ProjectTaskData.ProjectTasks.First();
+        var customField = task.CustomFields.First(cf => cf is DateTimeCustomField);
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.DateTime,
+            dateTimeCustomField: new UpdateCustomFieldFromProjectTaskRequest.DateTimeCustomFieldRequest(
+                new DateTime(2022, 10, 10, 10, 50, 30)));
+
+        await ActAndAssertSuccess(user, request);
+    }
+
+    [Fact]
+    public async Task UpdateCustomFieldFromProjectTask_WhenIsDurationCustomField_ShouldUpdateAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = ProjectTaskData.Users.First();
+        var task = ProjectTaskData.ProjectTasks.First();
+        var customField = task.CustomFields.First(cf => cf is DurationCustomField);
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.Duration,
+            durationCustomField: new UpdateCustomFieldFromProjectTaskRequest.DurationCustomFieldRequest(
+                new TimeSpan(10, 55, 30)));
+
+        await ActAndAssertSuccess(user, request);
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomFieldFromProjectTask_WhenIsMultiSelectCustomFieldAndRemoveIsFalse_ShouldUpdateAddOptionAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = ProjectTaskData.Users.First();
+        var task = ProjectTaskData.ProjectTasks.First();
+        var customField = task.CustomFields.OfType<MultiSelectCustomField>().First();
+        var option = customField.Setup.Options.First(o => !customField.Options.Contains(o));
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.MultiSelect,
+            multiSelectCustomField: new UpdateCustomFieldFromProjectTaskRequest.MultiSelectCustomFieldRequest(
+                option.Id,
+                false));
+
+        await ActAndAssertSuccess(user, request);
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomFieldFromProjectTask_WhenIsMultiSelectCustomFieldAndRemoveIsTrue_ShouldUpdateRemoveOptionAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = ProjectTaskData.Users.First();
+        var task = ProjectTaskData.ProjectTasks.First();
+        var customField = task.CustomFields.OfType<MultiSelectCustomField>().First();
+        var option = customField.Options[0];
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.MultiSelect,
+            multiSelectCustomField: new UpdateCustomFieldFromProjectTaskRequest.MultiSelectCustomFieldRequest(
+                option.Id,
+                true));
+
+        await ActAndAssertSuccess(user, request);
+    }
+
+    [Fact]
     public async Task UpdateCustomFieldFromProjectTask_WhenIsNumberCustomField_ShouldUpdateAndReturnSuccessResponse()
     {
         // Arrange
@@ -35,7 +126,26 @@ public class ProjectTaskControllerUpdateCustomFieldTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task UpdateCustomFieldFromProjectTask_WhenIsSingleSelectCustomField_ShouldUpdateAndReturnSuccessResponse()
+    public async Task UpdateCustomFieldFromProjectTask_WhenIsPeopleCustomField_ShouldUpdateAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = ProjectTaskData.Users.First();
+        var task = ProjectTaskData.ProjectTasks.First();
+        var customField = task.CustomFields.First(cf => cf is PeopleCustomField);
+        var person = ProjectTaskData.Users[3];
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.People,
+            peopleCustomField: new UpdateCustomFieldFromProjectTaskRequest.PeopleCustomFieldRequest(
+                person.Id.Value));
+
+        await ActAndAssertSuccess(user, request, person);
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomFieldFromProjectTask_WhenIsSingleSelectCustomField_ShouldUpdateAndReturnSuccessResponse()
     {
         // Arrange
         var user = ProjectTaskData.Users.First();
@@ -62,6 +172,23 @@ public class ProjectTaskControllerUpdateCustomFieldTest(WebAppFactory factory)
             task.Id.Value,
             customField.Id.Value,
             textCustomField: new UpdateCustomFieldFromProjectTaskRequest.TextCustomFieldRequest("New Note"));
+
+        await ActAndAssertSuccess(user, request);
+    }
+
+    [Fact]
+    public async Task UpdateCustomFieldFromProjectTask_WhenIsTimeCustomField_ShouldUpdateAndReturnSuccessResponse()
+    {
+        // Arrange
+        var user = ProjectTaskData.Users.First();
+        var task = ProjectTaskData.ProjectTasks.First();
+        var customField = task.CustomFields.First(cf => cf is TimeCustomField);
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest(
+            task.Id.Value,
+            customField.Id.Value,
+            type: CustomFieldType.Time,
+            timeCustomField: new UpdateCustomFieldFromProjectTaskRequest.TimeCustomFieldRequest(
+                new TimeOnly(10, 50)));
 
         await ActAndAssertSuccess(user, request);
     }
@@ -110,7 +237,8 @@ public class ProjectTaskControllerUpdateCustomFieldTest(WebAppFactory factory)
 
     private async Task ActAndAssertSuccess(
         UserAggregate user,
-        UpdateCustomFieldFromProjectTaskRequest request)
+        UpdateCustomFieldFromProjectTaskRequest request,
+        UserAggregate? person = null)
     {
         // Act
         Client.UseCustomToken(user);
@@ -128,6 +256,6 @@ public class ProjectTaskControllerUpdateCustomFieldTest(WebAppFactory factory)
             .Include(t => t.CustomFields)
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .SingleAsync(t => t.Id == ProjectTaskId.Create(request.Id));
-        Utils.ProjectTask.AssertUpdateCustomField(task, request);
+        Utils.ProjectTask.AssertUpdateCustomField(task, request, person);
     }
 }

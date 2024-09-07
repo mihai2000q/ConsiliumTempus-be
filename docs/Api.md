@@ -63,5 +63,6 @@ Below, you will find complete documentation on each Controller of the Api Layer:
 - [Custom Field Setup](api/Api.CustomFieldSetup.md)
 - [Project](api/Api.Project.md)
 - [Project Sprint](api/Api.ProjectSprint.md)
+- [Project Task](api/Api.ProjectTask.md)
 - [User](api/Api.User.md)
 - [Workspace](api/Api.Workspace.md)

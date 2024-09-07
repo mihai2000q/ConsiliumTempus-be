@@ -75,17 +75,29 @@ public static class ProjectTaskRequestFactory
         Guid? id = null,
         Guid? customFieldId = null,
         CustomFieldType type = CustomFieldType.Text,
+        UpdateCustomFieldFromProjectTaskRequest.DateCustomFieldRequest? dateCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.DateTimeCustomFieldRequest? dateTimeCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.DurationCustomFieldRequest? durationCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.MultiSelectCustomFieldRequest? multiSelectCustomField = null,
         UpdateCustomFieldFromProjectTaskRequest.NumberCustomFieldRequest? numberCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.PeopleCustomFieldRequest? peopleCustomField = null,
         UpdateCustomFieldFromProjectTaskRequest.SingleSelectCustomFieldRequest? singleSelectCustomField = null,
-        UpdateCustomFieldFromProjectTaskRequest.TextCustomFieldRequest? textCustomField = null)
+        UpdateCustomFieldFromProjectTaskRequest.TextCustomFieldRequest? textCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.TimeCustomFieldRequest? timeCustomField = null)
     {
         return new UpdateCustomFieldFromProjectTaskRequest(
             id ?? Guid.NewGuid(),
             customFieldId ?? Guid.NewGuid(),
             type,
+            dateCustomField,
+            dateTimeCustomField,
+            durationCustomField,
+            multiSelectCustomField,
             numberCustomField,
+            peopleCustomField,
             singleSelectCustomField,
-            textCustomField);
+            textCustomField,
+            timeCustomField);
     }
 
     public static UpdateIsCompletedProjectTaskRequest CreateUpdateIsCompletedProjectTaskRequest(

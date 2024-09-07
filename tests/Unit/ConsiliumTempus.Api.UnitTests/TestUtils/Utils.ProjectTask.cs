@@ -93,9 +93,16 @@ internal static partial class Utils
             command.Id.Should().Be(request.Id);
             command.CustomFieldId.Should().Be(request.CustomFieldId);
             command.Type.Should().Be(request.Type);
+            AssertUpdateDateCustomFieldRequest(request.DateCustomField, command.DateCustomField);
+            AssertUpdateDateTimeCustomFieldRequest(request.DateTimeCustomField, command.DateTimeCustomField);
+            AssertUpdateDurationCustomFieldRequest(request.DurationCustomField, command.DurationCustomField);
+            AssertUpdateMultiSelectCustomFieldRequest(request.MultiSelectCustomField, command.MultiSelectCustomField);
             AssertUpdateNumberCustomFieldRequest(request.NumberCustomField, command.NumberCustomField);
-            AssertUpdateSingleSelectCustomFieldRequest(request.SingleSelectCustomField, command.SingleSelectCustomField);
+            AssertUpdatePeopleCustomFieldRequest(request.PeopleCustomField, command.PeopleCustomField);
+            AssertUpdateSingleSelectCustomFieldRequest(request.SingleSelectCustomField,
+                command.SingleSelectCustomField);
             AssertUpdateTextCustomFieldRequest(request.TextCustomField, command.TextCustomField);
+            AssertUpdateTimeCustomFieldRequest(request.TimeCustomField, command.TimeCustomField);
 
             return true;
         }
@@ -157,7 +164,60 @@ internal static partial class Utils
                 .Should().AllSatisfy(p => AssertProjectTaskResponse(p.First, p.Second));
             response.TotalCount.Should().Be(result.TotalCount);
         }
-        
+
+        private static void AssertUpdateDateCustomFieldRequest(
+            UpdateCustomFieldFromProjectTaskRequest.DateCustomFieldRequest? request,
+            UpdateCustomFieldFromProjectTaskCommand.DateCustomFieldCommand? command)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.Date.Should().Be(request.Date);
+        }
+
+        private static void AssertUpdateDateTimeCustomFieldRequest(
+            UpdateCustomFieldFromProjectTaskRequest.DateTimeCustomFieldRequest? request,
+            UpdateCustomFieldFromProjectTaskCommand.DateTimeCustomFieldCommand? command)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.DateTime.Should().Be(request.DateTime);
+        }
+
+        private static void AssertUpdateDurationCustomFieldRequest(
+            UpdateCustomFieldFromProjectTaskRequest.DurationCustomFieldRequest? request,
+            UpdateCustomFieldFromProjectTaskCommand.DurationCustomFieldCommand? command)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.Duration.Should().Be(request.Duration);
+        }
+
+        private static void AssertUpdateMultiSelectCustomFieldRequest(
+            UpdateCustomFieldFromProjectTaskRequest.MultiSelectCustomFieldRequest? request,
+            UpdateCustomFieldFromProjectTaskCommand.MultiSelectCustomFieldCommand? command)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.OptionId.Should().Be(request.OptionId);
+            command.Remove.Should().Be(request.Remove);
+        }
+
         private static void AssertUpdateNumberCustomFieldRequest(
             UpdateCustomFieldFromProjectTaskRequest.NumberCustomFieldRequest? request,
             UpdateCustomFieldFromProjectTaskCommand.NumberCustomFieldCommand? command)
@@ -169,6 +229,19 @@ internal static partial class Utils
             }
 
             command!.Number.Should().Be(request.Number);
+        }
+
+        private static void AssertUpdatePeopleCustomFieldRequest(
+            UpdateCustomFieldFromProjectTaskRequest.PeopleCustomFieldRequest? request,
+            UpdateCustomFieldFromProjectTaskCommand.PeopleCustomFieldCommand? command)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.PersonId.Should().Be(request.PersonId);
         }
 
         private static void AssertUpdateSingleSelectCustomFieldRequest(
@@ -195,6 +268,19 @@ internal static partial class Utils
             }
 
             command!.Text.Should().Be(request.Text);
+        }
+
+        private static void AssertUpdateTimeCustomFieldRequest(
+            UpdateCustomFieldFromProjectTaskRequest.TimeCustomFieldRequest? request,
+            UpdateCustomFieldFromProjectTaskCommand.TimeCustomFieldCommand? command)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command!.Time.Should().Be(request.Time);
         }
 
         private static void AssertCustomFieldResponse(

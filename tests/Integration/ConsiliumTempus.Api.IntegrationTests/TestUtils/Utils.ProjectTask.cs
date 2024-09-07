@@ -192,13 +192,35 @@ internal static partial class Utils
 
         internal static void AssertUpdateCustomField(
             ProjectTaskAggregate task,
-            UpdateCustomFieldFromProjectTaskRequest request)
+            UpdateCustomFieldFromProjectTaskRequest request,
+            UserAggregate? user = null)
         {
             task.Id.Value.Should().Be(request.Id);
             var customField = task.CustomFields.Single(cf => cf.Id.Value == request.CustomFieldId);
 
             switch (customField)
             {
+                case DateCustomField dateCustomField:
+                    dateCustomField.Date.Should().Be(request.DateCustomField!.Date);
+                    break;
+
+                case DateTimeCustomField dateTimeCustomField:
+                    dateTimeCustomField.DateTime.Should().Be(request.DateTimeCustomField!.DateTime);
+                    break;
+
+                case DurationCustomField durationCustomField:
+                    durationCustomField.Duration.Should().Be(request.DurationCustomField!.Duration);
+                    break;
+                
+                case MultiSelectCustomField multiSelectCustomField:
+                    var option = multiSelectCustomField.Setup.Options
+                        .Single(o => o.Id == request.MultiSelectCustomField!.OptionId);
+                    if (request.MultiSelectCustomField!.Remove)
+                        multiSelectCustomField.Options.Should().NotContain(option);
+                    else 
+                        multiSelectCustomField.Options.Should().Contain(option);
+                    break;
+
                 case NumberCustomField numberCustomField:
                     if (request.NumberCustomField!.Number is null)
                         numberCustomField.Number.Should().BeNull();
@@ -207,11 +229,16 @@ internal static partial class Utils
                     break;
 
                 case SingleSelectCustomField singleSelectCustomField:
-                    if (request.SingleSelectCustomField!.OptionId is null)
-                        singleSelectCustomField.Option.Should().BeNull();
-                    else
-                        singleSelectCustomField.Option!.Should().Be(singleSelectCustomField.Setup.Options
-                            .Single(o => o.Id == request.SingleSelectCustomField.OptionId.Value));
+                    var singleOption = singleSelectCustomField.Setup.Options
+                        .SingleOrDefault(o => o.Id == request.SingleSelectCustomField!.OptionId);
+                    singleSelectCustomField.Option.Should().Be(singleOption);
+                    break;
+                
+                case PeopleCustomField peopleCustomField:
+                    if (request.PeopleCustomField!.PersonId is null)
+                        peopleCustomField.Person.Should().BeNull();
+                    else 
+                        peopleCustomField.Person.Should().Be(user);
                     break;
 
                 case TextCustomField textCustomField:
@@ -219,6 +246,10 @@ internal static partial class Utils
                         textCustomField.Text.Should().BeNull();
                     else
                         textCustomField.Text!.Value.Should().Be(request.TextCustomField.Text);
+                    break;
+
+                case TimeCustomField timeCustomField:
+                    timeCustomField.Time.Should().Be(request.TimeCustomField!.Time);
                     break;
             }
         }
