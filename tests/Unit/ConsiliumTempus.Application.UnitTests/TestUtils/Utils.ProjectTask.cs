@@ -143,10 +143,11 @@ internal static partial class Utils
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertFromUpdateCustomFieldCommand(
             ProjectTaskAggregate task,
-            UpdateCustomFieldFromProjectTaskCommand command)
+            UpdateCustomFieldFromProjectTaskCommand command,
+            UserAggregate user)
         {
             task.Id.Value.Should().Be(command.Id);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -155,22 +156,56 @@ internal static partial class Utils
 
             switch (customField)
             {
+                case DateCustomField dateCustomField:
+                    dateCustomField.Date.Should().Be(command.DateCustomField!.Date);
+                    break;
+
+                case DateTimeCustomField dateTimeCustomField:
+                    dateTimeCustomField.DateTime.Should().Be(command.DateTimeCustomField!.DateTime);
+                    break;
+
+                case DurationCustomField durationCustomField:
+                    durationCustomField.Duration.Should().Be(command.DurationCustomField!.Duration);
+                    break;
+                
+                case MultiSelectCustomField multiSelectCustomField:
+                    var option = multiSelectCustomField.Setup.Options
+                        .Single(o => o.Id == command.MultiSelectCustomField!.OptionId);
+                    if (command.MultiSelectCustomField!.Remove)
+                        multiSelectCustomField.Options.Should().NotContain(option);
+                    else 
+                        multiSelectCustomField.Options.Should().Contain(option);
+                    break;
+
                 case NumberCustomField numberCustomField:
                     if (command.NumberCustomField!.Number is null)
                         numberCustomField.Number.Should().BeNull();
                     else
                         numberCustomField.Number!.Value.Should().Be(command.NumberCustomField.Number);
                     break;
+
                 case SingleSelectCustomField singleSelectCustomField:
-                    var option = singleSelectCustomField.Setup.Options
+                    var singleOption = singleSelectCustomField.Setup.Options
                         .SingleOrDefault(o => o.Id == command.SingleSelectCustomField!.OptionId);
-                    singleSelectCustomField.Option.Should().Be(option);
+                    singleSelectCustomField.Option.Should().Be(singleOption);
                     break;
+                
+                case PeopleCustomField peopleCustomField:
+                    if (command.PeopleCustomField!.PersonId is null)
+                        peopleCustomField.Person.Should().BeNull();
+                    else 
+                        peopleCustomField.Person.Should().Be(user);
+                    break;
+
                 case TextCustomField textCustomField:
                     if (command.TextCustomField!.Text is null)
                         textCustomField.Text.Should().BeNull();
                     else
                         textCustomField.Text!.Value.Should().Be(command.TextCustomField.Text);
+                    break;
+
+                case TimeCustomField timeCustomField:
+                    timeCustomField.Time.Should().Be(command.TimeCustomField!.Time);
                     break;
             }
 

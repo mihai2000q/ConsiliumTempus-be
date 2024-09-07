@@ -28,9 +28,15 @@ public class UpdateCustomFieldFromProjectTaskCommandValidatorTest
     [Theory]
     [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidIdCommands))]
     [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidCustomFieldIdCommands))]
+    [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidDateCustomFieldCommands))]
+    [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidDateTimeCustomFieldCommands))]
+    [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidDurationCustomFieldCommands))]
+    [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidMultiSelectCustomFieldCommands))]
     [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidNumberCustomFieldCommands))]
+    [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidPeopleCustomFieldCommands))]
     [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidSingleSelectCustomFieldCommands))]
     [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidTextCustomFieldCommands))]
+    [ClassData(typeof(UpdateCustomFieldFromProjectTaskCommandValidatorData.GetInvalidTimeCustomFieldCommands))]
     public async Task ValidateUpdateCustomFieldFromProjectTaskCommand_WhenSingleFieldIsInvalid_ShouldReturnFalse(
         UpdateCustomFieldFromProjectTaskCommand command,
         string property)

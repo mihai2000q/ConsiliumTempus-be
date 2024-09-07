@@ -18,7 +18,6 @@ public sealed class UpdateCustomFieldSetupCommandHandler(
     : IRequestHandler<UpdateCustomFieldSetupCommand, ErrorOr<UpdateCustomFieldSetupResult>>
 {
     private sealed class SingleSelectOptionNotFoundException : Exception;
-
     private sealed class MultiSelectOptionNotFoundException : Exception;
 
     public async Task<ErrorOr<UpdateCustomFieldSetupResult>> Handle(UpdateCustomFieldSetupCommand command,
