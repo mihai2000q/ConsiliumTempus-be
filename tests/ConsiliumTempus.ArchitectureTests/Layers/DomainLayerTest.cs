@@ -97,7 +97,9 @@ public class DomainLayerTest : BaseArchitectureTest
             .That()
             .AreAssignableTo(typeof(Entity<>))
             .And()
-            .AreNot(typeof(Entity<>), typeof(AggregateRoot<,>))
+            .AreNot(typeof(Entity<>), typeof(AggregateRoot<>))
+            .And()
+            .AreNotAbstract()
             .GetObjects(Architecture)
             .ShouldHavePrivateParameterlessConstructor();
     }
@@ -108,9 +110,11 @@ public class DomainLayerTest : BaseArchitectureTest
         ArchRuleDefinition
             .Classes()
             .That()
-            .AreAssignableTo(typeof(AggregateRoot<,>))
+            .AreAssignableTo(typeof(AggregateRoot<>))
             .And()
-            .AreNot(typeof(AggregateRoot<,>))
+            .AreNot(typeof(AggregateRoot<>))
+            .And()
+            .AreNotAbstract()
             .GetObjects(Architecture)
             .ShouldHavePrivateParameterlessConstructor();
     }
@@ -121,9 +125,9 @@ public class DomainLayerTest : BaseArchitectureTest
         ArchRuleDefinition
             .Classes()
             .That()
-            .AreAssignableTo(typeof(AggregateRoot<,>))
+            .AreAssignableTo(typeof(AggregateRoot<>))
             .And()
-            .AreNot(typeof(AggregateRoot<,>))
+            .AreNot(typeof(AggregateRoot<>))
             .Should()
             .HaveNameEndingWith("Aggregate")
             .Check(Architecture);

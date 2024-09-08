@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Infrastructure.Persistence.Database;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +17,7 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
     protected readonly AppHttpClient Client;
     protected readonly IDbContextFactory<ConsiliumTempusDbContext> DbContextFactory;
     protected readonly JwtSettings JwtSettings = new();
+    protected readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     protected BaseIntegrationTest(
         WebAppFactory factory,
@@ -27,6 +30,7 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
         Client = factory.CreateAppClient();
         DbContextFactory = factory.Services.GetRequiredService<IDbContextFactory<ConsiliumTempusDbContext>>();
         factory.Services.GetRequiredService<IConfiguration>().Bind(JwtSettings.SectionName, JwtSettings);
+        JsonOptions.Converters.Add(new JsonStringEnumConverter());
     }
 
     public async Task InitializeAsync()

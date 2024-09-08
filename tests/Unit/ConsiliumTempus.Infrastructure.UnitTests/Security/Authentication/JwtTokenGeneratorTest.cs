@@ -44,7 +44,7 @@ public class JwtTokenGeneratorTest
         // Assert
         Utils.AssertToken(outcome, user, _jwtSettings);
     }
-    
+
     [Fact]
     public void WhenGenerateTokenWithJti_ShouldReturnNewTokenWithJti()
     {
@@ -53,7 +53,7 @@ public class JwtTokenGeneratorTest
         var jti = Guid.NewGuid();
 
         // Act
-        var outcome = _uut.GenerateToken(user, jti: jti);
+        var outcome = _uut.GenerateToken(user, jti);
 
         // Assert
         Utils.AssertToken(outcome, user, _jwtSettings, jti);

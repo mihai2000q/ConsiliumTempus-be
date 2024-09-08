@@ -22,12 +22,13 @@ public sealed class IsCompleted : ValueObject
     public static IsCompleted Create(bool value, DateTime? completedOn = null)
     {
         return new IsCompleted(
-            value, 
+            value,
             completedOn);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
+        if (CompletedOn is not null) yield return CompletedOn;
     }
 }

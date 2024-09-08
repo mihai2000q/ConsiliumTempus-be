@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Project.ValueObjects;
+﻿using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
@@ -11,6 +12,8 @@ public interface IWorkspaceProvider
     Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default);
 
     Task<WorkspaceAggregate?> GetWithMemberships(WorkspaceId id, CancellationToken cancellationToken = default);
+    
+    Task<WorkspaceAggregate?> GetByCustomFieldSetup(CustomFieldSetupId id, CancellationToken cancellationToken = default);
 
     Task<WorkspaceAggregate?> GetByProject(ProjectId id, CancellationToken cancellationToken = default);
 

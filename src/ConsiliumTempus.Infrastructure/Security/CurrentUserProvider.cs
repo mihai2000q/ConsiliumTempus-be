@@ -21,7 +21,7 @@ public sealed class CurrentUserProvider(
         var user = await userRepository.Get(userId, cancellationToken);
         return user;
     }
-    
+
     public async Task<UserAggregate> GetCurrentUserAfterPermissionCheck(CancellationToken cancellationToken = default)
     {
         var subUserId = httpContextAccessor.HttpContext!.User.Claims

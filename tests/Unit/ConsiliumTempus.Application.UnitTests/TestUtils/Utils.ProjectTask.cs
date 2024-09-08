@@ -2,10 +2,15 @@
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
+using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
+using ConsiliumTempus.Domain.ProjectTask.Events;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
@@ -35,7 +40,10 @@ internal static partial class Utils
             task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Comments.Should().BeEmpty();
-            task.DomainEvents.Should().BeEmpty();
+            task.DomainEvents.Should().HaveCount(1);
+            var domainEvent = task.DomainEvents[0];
+            domainEvent.Should().BeOfType<ProjectTaskCreated>();
+            ((ProjectTaskCreated)domainEvent).ProjectTask.Should().Be(task);
 
             stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -49,6 +57,10 @@ internal static partial class Utils
             DeleteProjectTaskCommand command)
         {
             task.Id.Value.Should().Be(command.Id);
+            task.DomainEvents.Should().HaveCount(1);
+            var domainEvent = task.DomainEvents[0];
+            domainEvent.Should().BeOfType<ProjectTaskDeleted>();
+            ((ProjectTaskDeleted)domainEvent).ProjectTask.Should().Be(task);
 
             var stage = task.Stage;
 
@@ -118,7 +130,7 @@ internal static partial class Utils
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertFromUpdateCommand(
             ProjectTaskAggregate task,
             UpdateProjectTaskCommand command,
@@ -131,7 +143,76 @@ internal static partial class Utils
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
+        internal static void AssertFromUpdateCustomFieldCommand(
+            ProjectTaskAggregate task,
+            UpdateCustomFieldFromProjectTaskCommand command,
+            UserAggregate user)
+        {
+            task.Id.Value.Should().Be(command.Id);
+            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            var customField = task.CustomFields.SingleOrDefault(cf => cf.Id.Value == command.CustomFieldId);
+            customField.Should().NotBeNull();
+
+            switch (customField)
+            {
+                case DateCustomField dateCustomField:
+                    dateCustomField.Date.Should().Be(command.DateCustomField!.Date);
+                    break;
+
+                case DateTimeCustomField dateTimeCustomField:
+                    dateTimeCustomField.DateTime.Should().Be(command.DateTimeCustomField!.DateTime);
+                    break;
+
+                case DurationCustomField durationCustomField:
+                    durationCustomField.Duration.Should().Be(command.DurationCustomField!.Duration);
+                    break;
+                
+                case MultiSelectCustomField multiSelectCustomField:
+                    var option = multiSelectCustomField.Setup.Options
+                        .Single(o => o.Id == command.MultiSelectCustomField!.OptionId);
+                    if (command.MultiSelectCustomField!.Remove)
+                        multiSelectCustomField.Options.Should().NotContain(option);
+                    else 
+                        multiSelectCustomField.Options.Should().Contain(option);
+                    break;
+
+                case NumberCustomField numberCustomField:
+                    if (command.NumberCustomField!.Number is null)
+                        numberCustomField.Number.Should().BeNull();
+                    else
+                        numberCustomField.Number!.Value.Should().Be(command.NumberCustomField.Number);
+                    break;
+
+                case SingleSelectCustomField singleSelectCustomField:
+                    var singleOption = singleSelectCustomField.Setup.Options
+                        .SingleOrDefault(o => o.Id == command.SingleSelectCustomField!.OptionId);
+                    singleSelectCustomField.Option.Should().Be(singleOption);
+                    break;
+                
+                case PeopleCustomField peopleCustomField:
+                    if (command.PeopleCustomField!.PersonId is null)
+                        peopleCustomField.Person.Should().BeNull();
+                    else 
+                        peopleCustomField.Person.Should().Be(user);
+                    break;
+
+                case TextCustomField textCustomField:
+                    if (command.TextCustomField!.Text is null)
+                        textCustomField.Text.Should().BeNull();
+                    else
+                        textCustomField.Text!.Value.Should().Be(command.TextCustomField.Text);
+                    break;
+
+                case TimeCustomField timeCustomField:
+                    timeCustomField.Time.Should().Be(command.TimeCustomField!.Time);
+                    break;
+            }
+
+            task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
         internal static void AssertFromUpdateIsCompletedCommand(
             ProjectTaskAggregate task,
             UpdateIsCompletedProjectTaskCommand command)
@@ -159,6 +240,42 @@ internal static partial class Utils
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal static void AssertFromProjectTaskCreated(
+            ProjectTaskCreated domainEvent,
+            List<CustomFieldSetupAggregate> setups)
+        {
+            domainEvent.ProjectTask.CustomFields.Should().HaveSameCount(setups);
+            domainEvent.ProjectTask.CustomFields
+                .Zip(setups)
+                .Should().AllSatisfy(x =>
+                {
+                    var (customField, setup) = x;
+                    customField.Id.Value.Should().NotBeEmpty();
+                    customField.ProjectTask.Should().Be(domainEvent.ProjectTask);
+
+                    switch (customField)
+                    {
+                        case NumberCustomField numberCustomField:
+                            setup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
+                            numberCustomField.Number
+                                .Should().Be(((NumberCustomFieldSetupAggregate)setup).DefaultNumber);
+                            numberCustomField.Setup.Should().Be(setup);
+                            break;
+                        case SingleSelectCustomField singleSelectCustomField:
+                            setup.Should().BeOfType<SingleSelectCustomFieldSetupAggregate>();
+                            singleSelectCustomField.Option
+                                .Should().Be(((SingleSelectCustomFieldSetupAggregate)setup).DefaultOption);
+                            singleSelectCustomField.Setup.Should().Be(setup);
+                            break;
+                        case TextCustomField textCustomField:
+                            setup.Should().BeOfType<TextCustomFieldSetupAggregate>();
+                            textCustomField.Text.Should().Be(((TextCustomFieldSetupAggregate)setup).DefaultText);
+                            textCustomField.Setup.Should().Be(setup);
+                            break;
+                    }
+                });
         }
 
         internal static void AssertProjectTask(

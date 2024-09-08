@@ -16,12 +16,12 @@ internal static class JwtTokenValidatorData
         {
             var refreshToken = RefreshTokenFactory.Create(invalidated: true);
             Add(refreshToken);
-            
+
             refreshToken = RefreshTokenFactory.Create(expiryDate: DateTime.UtcNow.AddMilliseconds(-1));
             Add(refreshToken);
         }
     }
-    
+
     internal class GetInvalidTokensByJwtSettings : TheoryData<string>
     {
         private readonly JwtSettings _jwtSettings = new()

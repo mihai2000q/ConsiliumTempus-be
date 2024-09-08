@@ -4,9 +4,11 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateCustomField;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
+using ConsiliumTempus.Domain.Common.Enums;
 
 namespace ConsiliumTempus.Common.UnitTests.ProjectTask;
 
@@ -23,16 +25,16 @@ public static class ProjectTaskRequestFactory
 
     public static GetCollectionProjectTaskRequest CreateGetCollectionProjectTaskRequest(
         Guid? projectStageId = null,
-        string[]? search = null,
-        string[]? orderBy = null,
+        List<string>? search = null,
+        List<string>? orderBy = null,
         int? currentPage = null,
         int? pageSize = null)
     {
         return new GetCollectionProjectTaskRequest
         {
             ProjectStageId = projectStageId ?? Guid.NewGuid(),
-            Search = search,
-            OrderBy = orderBy,
+            Search = search ?? [],
+            OrderBy = orderBy ?? [],
             CurrentPage = currentPage,
             PageSize = pageSize
         };
@@ -67,6 +69,35 @@ public static class ProjectTaskRequestFactory
             id ?? Guid.NewGuid(),
             name,
             assigneeId);
+    }
+
+    public static UpdateCustomFieldFromProjectTaskRequest CreateUpdateCustomFieldFromProjectTaskRequest(
+        Guid? id = null,
+        Guid? customFieldId = null,
+        CustomFieldType type = CustomFieldType.Text,
+        UpdateCustomFieldFromProjectTaskRequest.DateCustomFieldRequest? dateCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.DateTimeCustomFieldRequest? dateTimeCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.DurationCustomFieldRequest? durationCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.MultiSelectCustomFieldRequest? multiSelectCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.NumberCustomFieldRequest? numberCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.PeopleCustomFieldRequest? peopleCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.SingleSelectCustomFieldRequest? singleSelectCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.TextCustomFieldRequest? textCustomField = null,
+        UpdateCustomFieldFromProjectTaskRequest.TimeCustomFieldRequest? timeCustomField = null)
+    {
+        return new UpdateCustomFieldFromProjectTaskRequest(
+            id ?? Guid.NewGuid(),
+            customFieldId ?? Guid.NewGuid(),
+            type,
+            dateCustomField,
+            dateTimeCustomField,
+            durationCustomField,
+            multiSelectCustomField,
+            numberCustomField,
+            peopleCustomField,
+            singleSelectCustomField,
+            textCustomField,
+            timeCustomField);
     }
 
     public static UpdateIsCompletedProjectTaskRequest CreateUpdateIsCompletedProjectTaskRequest(

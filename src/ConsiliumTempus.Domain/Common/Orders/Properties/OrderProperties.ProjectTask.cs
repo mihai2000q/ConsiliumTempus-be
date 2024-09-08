@@ -16,11 +16,11 @@ internal static partial class OrderProperties
             p => p.IsCompleted.Value);
 
         internal sealed record CreatedDateTimeProperty() : OrderProperty<ProjectTaskAggregate>(
-                nameof(ProjectTaskAggregate.CreatedDateTime), 
-                p => p.CreatedDateTime);
+            nameof(ProjectTaskAggregate.CreatedDateTime),
+            p => p.CreatedDateTime);
 
         internal sealed record UpdatedDateTimeProperty() : OrderProperty<ProjectTaskAggregate>(
-            nameof(ProjectTaskAggregate.UpdatedDateTime), 
+            nameof(ProjectTaskAggregate.UpdatedDateTime),
             p => p.UpdatedDateTime);
     }
 }

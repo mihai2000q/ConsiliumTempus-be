@@ -35,10 +35,10 @@ public class WorkspaceControllerLeaveTest(WebAppFactory factory)
         response!.Message.Should().Be("Workspace has been left successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        
+
         dbContext.Projects.SingleOrDefault(p => p.Id == projectToBeRemoved.Id)
             .Should().BeNull();
-        
+
         var updatedWorkspace = await dbContext.Workspaces
             .Include(w => w.Projects)
             .ThenInclude(p => p.AllowedMembers)
@@ -67,7 +67,7 @@ public class WorkspaceControllerLeaveTest(WebAppFactory factory)
 
         workspace.Owner.Should().Be(user);
     }
-    
+
     [Fact]
     public async Task LeaveWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
     {

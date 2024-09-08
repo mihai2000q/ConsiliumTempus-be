@@ -30,7 +30,7 @@ public static class ProjectSprintFactory
             endDate);
 
         project.AddSprint(sprint);
-        
+
         ProjectStageFactory.CreateList(sprint, createdBy, stagesCount)
             .ForEach(stage => sprint.AddStage(stage));
 

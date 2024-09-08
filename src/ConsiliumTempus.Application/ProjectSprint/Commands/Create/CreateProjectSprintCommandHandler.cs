@@ -5,7 +5,6 @@ using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.Entities;
-using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
@@ -23,7 +22,7 @@ public sealed class CreateProjectSprintCommandHandler(
     public async Task<ErrorOr<CreateProjectSprintResult>> Handle(CreateProjectSprintCommand command,
         CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetWithStagesAndWorkspace(
+        var project = await projectRepository.GetWithStages(
             ProjectId.Create(command.ProjectId),
             cancellationToken);
         if (project is null) return Errors.Project.NotFound;
@@ -67,7 +66,7 @@ public sealed class CreateProjectSprintCommandHandler(
         {
             project.AddStatus(ProjectStatus.Create(
                 Title.Create(command.ProjectStatus.Title),
-                Enum.Parse<ProjectStatusType>(command.ProjectStatus.Status),
+                command.ProjectStatus.Status,
                 Description.Create(command.ProjectStatus.Description),
                 project,
                 user));

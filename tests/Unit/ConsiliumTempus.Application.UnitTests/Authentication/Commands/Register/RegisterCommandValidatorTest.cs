@@ -16,14 +16,14 @@ public class RegisterCommandValidatorTest
     public async Task ValidateRegisterCommand_WhenValid_ShouldReturnTrue(RegisterCommand command)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAsync(command);
 
         // Assert
         outcome.IsValid.Should().BeTrue();
     }
-    
+
     [Theory]
     [ClassData(typeof(RegisterCommandValidatorData.GetInvalidFirstNameCommands))]
     [ClassData(typeof(RegisterCommandValidatorData.GetInvalidLastNameCommands))]
@@ -37,7 +37,7 @@ public class RegisterCommandValidatorTest
         int expectedErrors)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAsync(command);
 

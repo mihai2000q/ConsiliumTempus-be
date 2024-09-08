@@ -204,7 +204,9 @@ internal static partial class Utils
                     p.DomainEvents[0].Should().BeOfType<AllowedMemberRemovedFromProject>();
                 }
                 else
+                {
                     p.DomainEvents.Should().BeEmpty();
+                }
             });
         }
 
@@ -251,10 +253,7 @@ internal static partial class Utils
             UserAggregate currentUser)
         {
             result.Workspaces.Should().BeEquivalentTo(workspaces);
-            if (query.IsPersonalWorkspaceFirst)
-            {
-                result.Workspaces.Should().HaveElementAt(0, personalWorkspace);
-            }
+            if (query.IsPersonalWorkspaceFirst) result.Workspaces.Should().HaveElementAt(0, personalWorkspace);
 
             result.TotalCount.Should().Be(workspacesCount);
             result.CurrentUser.Should().Be(currentUser);

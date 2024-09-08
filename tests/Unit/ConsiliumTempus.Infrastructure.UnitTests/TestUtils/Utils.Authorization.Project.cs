@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
@@ -63,7 +64,6 @@ internal static partial class Utils
                     .Returns(dictionary);
             }
 
-
             internal static void MockHttpRequest(
                 IHttpContextAccessor httpContextAccessor,
                 ProjectAuthorizationHandlerData.RequestLocation requestLocation,
@@ -123,6 +123,10 @@ internal static partial class Utils
                     .Returns(project);
 
                 projectProvider
+                    .GetByCustomFieldSetup(Arg.Any<CustomFieldSetupId>())
+                    .Returns(project);
+
+                projectProvider
                     .GetByProjectSprint(Arg.Any<ProjectSprintId>())
                     .Returns(project);
 
@@ -142,6 +146,12 @@ internal static partial class Utils
             {
                 switch (provider)
                 {
+                    case ProjectAuthorizationHandlerData.StringIdType.CustomFieldSetup:
+                        await projectProvider
+                            .Received(1)
+                            .GetByCustomFieldSetup(Arg.Is<CustomFieldSetupId>(cfsId => cfsId.Value.ToString() == stringId));
+                        break;
+
                     case ProjectAuthorizationHandlerData.StringIdType.Project:
                         await projectProvider
                             .Received(1)

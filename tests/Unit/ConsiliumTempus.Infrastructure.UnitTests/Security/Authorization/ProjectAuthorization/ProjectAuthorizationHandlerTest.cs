@@ -200,7 +200,8 @@ public class ProjectAuthorizationHandlerTest
         ]));
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
-        Utils.Authorization.Project.MockEmptyHttpRequest(_httpContextAccessor, requestLocation, controller, requestAction);
+        Utils.Authorization.Project.MockEmptyHttpRequest(_httpContextAccessor, requestLocation, controller,
+            requestAction);
 
         // Act
         await _uut.HandleAsync(context);

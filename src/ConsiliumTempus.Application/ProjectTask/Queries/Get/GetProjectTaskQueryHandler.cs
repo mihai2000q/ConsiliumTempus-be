@@ -13,7 +13,7 @@ public sealed class GetProjectTaskQueryHandler(IProjectTaskRepository projectTas
     public async Task<ErrorOr<ProjectTaskAggregate>> Handle(GetProjectTaskQuery query,
         CancellationToken cancellationToken)
     {
-        var task = await projectTaskRepository.GetWithStagesAndWorkspace(
+        var task = await projectTaskRepository.GetWithCustomFieldsStagesAndWorkspace(
             ProjectTaskId.Create(query.Id),
             cancellationToken);
         return task is not null ? task : Errors.ProjectTask.NotFound;

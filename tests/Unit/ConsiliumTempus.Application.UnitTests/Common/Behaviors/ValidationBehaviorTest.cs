@@ -19,7 +19,7 @@ public class ValidationBehaviorTest
     {
         _validator = Substitute.For<IValidator<CreateProjectCommand>>();
         _nextBehavior = Substitute.For<RequestHandlerDelegate<ErrorOr<CreateProjectResult>>>();
-        _uut = new(_validator);
+        _uut = new ValidationBehavior<CreateProjectCommand, ErrorOr<CreateProjectResult>>(_validator);
     }
 
     #endregion

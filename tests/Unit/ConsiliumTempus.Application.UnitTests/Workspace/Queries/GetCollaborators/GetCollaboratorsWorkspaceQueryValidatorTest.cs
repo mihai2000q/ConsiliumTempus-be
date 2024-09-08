@@ -10,10 +10,11 @@ public class GetCollaboratorsFromWorkspaceQueryValidatorTest
     private readonly GetCollaboratorsFromWorkspaceQueryValidator _uut = new();
 
     #endregion
-    
+
     [Theory]
     [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetValidQueries))]
-    public async Task ValidateGetCollaboratorsFromWorkspaceQuery_WhenIsValid_ShouldReturnTrue(GetCollaboratorsFromWorkspaceQuery query)
+    public async Task ValidateGetCollaboratorsFromWorkspaceQuery_WhenIsValid_ShouldReturnTrue(
+        GetCollaboratorsFromWorkspaceQuery query)
     {
         // Arrange - parameterized
 
@@ -24,7 +25,7 @@ public class GetCollaboratorsFromWorkspaceQueryValidatorTest
         outcome.IsValid.Should().BeTrue();
         outcome.Errors.Should().BeEmpty();
     }
-    
+
     [Theory]
     [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidIdQueries))]
     [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryValidatorData.GetInvalidPageSizeAndCurrentPageQueries))]

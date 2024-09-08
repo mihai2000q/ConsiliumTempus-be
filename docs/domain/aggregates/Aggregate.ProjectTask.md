@@ -54,6 +54,13 @@ For database design checkout the [Project Task Diagram](../../database-diagrams/
 - **Not Found** when the project task cannot be found
 - **Over Not Found** when the project stage or the project task that the task should be placed over cannot be found
 
+### Domain Events
+
+- **Project Task Created**, when the task is created, 
+it should also initialize all the custom fields with their default values, 
+based on the setups from the project
+- **Project Task Deleted**, when the task is deleted, it should also delete all the custom fields
+
 ### Value Objects
 
 - **IsCompleted**, which encapsulates a boolean *Value*

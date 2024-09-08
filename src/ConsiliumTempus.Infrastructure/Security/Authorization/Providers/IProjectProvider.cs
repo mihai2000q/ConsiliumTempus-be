@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Project.ValueObjects;
+﻿using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.Project;
@@ -8,6 +9,8 @@ namespace ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 public interface IProjectProvider
 {
     Task<ProjectAggregate?> Get(ProjectId id, CancellationToken cancellationToken = default);
+
+    Task<ProjectAggregate?> GetByCustomFieldSetup(CustomFieldSetupId id, CancellationToken cancellationToken = default);
 
     Task<ProjectAggregate?> GetByProjectSprint(ProjectSprintId id, CancellationToken cancellationToken = default);
 

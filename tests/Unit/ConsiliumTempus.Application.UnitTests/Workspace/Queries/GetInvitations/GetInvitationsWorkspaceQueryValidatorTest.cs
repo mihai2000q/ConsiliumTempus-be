@@ -13,7 +13,8 @@ public class GetInvitationsWorkspaceQueryValidatorTest
 
     [Theory]
     [ClassData(typeof(GetInvitationsWorkspaceQueryValidatorData.GetValidQueries))]
-    public async Task ValidateGetInvitationsWorkspaceQuery_WhenIsValid_ShouldReturnTrue(GetInvitationsWorkspaceQuery query)
+    public async Task ValidateGetInvitationsWorkspaceQuery_WhenIsValid_ShouldReturnTrue(
+        GetInvitationsWorkspaceQuery query)
     {
         // Arrange - parameterized
 

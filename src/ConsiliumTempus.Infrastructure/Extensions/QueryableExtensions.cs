@@ -2,14 +2,36 @@
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 
 namespace ConsiliumTempus.Infrastructure.Extensions;
 
 public static class QueryableExtensions
 {
+    public static IQueryable<CustomField> OfCustomFieldType(
+        this IQueryable<CustomField> queryable,
+        CustomFieldSetupAggregate customFieldSetup)
+    {
+        return customFieldSetup switch
+        {
+            DateCustomFieldSetupAggregate => queryable.OfType<DateCustomField>(),
+            DateTimeCustomFieldSetupAggregate => queryable.OfType<DateTimeCustomField>(),
+            DurationCustomFieldSetupAggregate => queryable.OfType<DurationCustomField>(),
+            MultiSelectCustomFieldSetupAggregate => queryable.OfType<MultiSelectCustomField>(),
+            NumberCustomFieldSetupAggregate => queryable.OfType<NumberCustomField>(),
+            PeopleCustomFieldSetupAggregate => queryable.OfType<PeopleCustomField>(),
+            SingleSelectCustomFieldSetupAggregate => queryable.OfType<SingleSelectCustomField>(),
+            TextCustomFieldSetupAggregate => queryable.OfType<TextCustomField>(),
+            TimeCustomFieldSetupAggregate => queryable.OfType<TimeCustomField>(),
+            _ => throw new ArgumentOutOfRangeException(nameof(customFieldSetup), customFieldSetup, "Type Not Supported")
+        };
+    }
+
     public static IQueryable<TSource> ApplyFilters<TSource>(
         this IQueryable<TSource> queryable,
-        IEnumerable<IFilter<TSource>> filters) 
+        IEnumerable<IFilter<TSource>> filters)
     {
         return filters.Aggregate(queryable, (query, filter) => query.Where(filter.Predicate));
     }

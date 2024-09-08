@@ -9,7 +9,7 @@ public static class UserResultFactory
     {
         return new UpdateCurrentUserResult();
     }
-    
+
     public static DeleteCurrentUserResult CreateDeleteCurrentUserResult()
     {
         return new DeleteCurrentUserResult();

@@ -41,7 +41,7 @@ public class ProjectControllerLeavePrivateTest(WebAppFactory factory)
             .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
         Utils.Project.AssertLeavePrivate(updatedProject, request, user);
     }
-    
+
     [Fact]
     public async Task LeavePrivateProject_WhenIsOwner_ShouldReturnLeaveOwnedError()
     {
@@ -56,7 +56,7 @@ public class ProjectControllerLeavePrivateTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Project.LeaveOwned);
     }
-    
+
     [Fact]
     public async Task LeavePrivateProject_WhenIsNotPrivate_ShouldReturnNotPrivateError()
     {

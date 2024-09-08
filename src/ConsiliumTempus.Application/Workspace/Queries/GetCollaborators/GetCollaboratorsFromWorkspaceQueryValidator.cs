@@ -16,7 +16,7 @@ public sealed class GetCollaboratorsFromWorkspaceQueryValidator : AbstractValida
             .Must(q => q.PageSize is not null ? q.CurrentPage is not null : q.CurrentPage is null)
             .WithMessage("Both the 'PageSize' and the 'CurrentPage' have to either be set or unset.")
             .WithName(nameof(GetCollaboratorsFromWorkspaceQuery.PageSize)
-                .And(nameof(GetCollaboratorsFromWorkspaceQuery.CurrentPage)));
+                .Dot(nameof(GetCollaboratorsFromWorkspaceQuery.CurrentPage)));
 
         RuleFor(q => q.PageSize)
             .GreaterThan(0);

@@ -18,7 +18,7 @@ public class WorkspaceControllerGetCollectionValidationTest(WebAppFactory factor
 
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
-        var outcome = await Client.Get($"api/workspaces?{request.OrderBy?.ToOrderByQueryParam()}");
+        var outcome = await Client.Get($"api/workspaces?{request.OrderBy.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -36,7 +36,7 @@ public class WorkspaceControllerGetCollectionValidationTest(WebAppFactory factor
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
         var outcome = await Client.Get($"api/workspaces" +
-                                       $"?{request.OrderBy?.ToOrderByQueryParam()}" +
+                                       $"?{request.OrderBy.ToOrderByQueryParam()}" +
                                        $"&pageSize={request.PageSize}" +
                                        $"&currentPage={request.CurrentPage}");
 

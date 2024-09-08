@@ -124,7 +124,7 @@ public class MoveStageFromProjectSprintCommandHandlerTest
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);
-        
+
         var command = ProjectSprintCommandFactory.CreateMoveStageFromProjectSprintCommand(
             stageId: sprint.Stages[0].Id.Value);
 

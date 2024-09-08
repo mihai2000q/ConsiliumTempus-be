@@ -23,7 +23,7 @@ public class ProjectSprintControllerUpdateTest(WebAppFactory factory)
         var user = sprint.Project.Workspace.Memberships[0].User;
         var request = ProjectSprintRequestFactory.CreateUpdateProjectSprintRequest(
             sprint.Id.Value);
-        
+
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Put("api/projects/sprints", request);
@@ -37,7 +37,7 @@ public class ProjectSprintControllerUpdateTest(WebAppFactory factory)
         var newSprint = dbContext.ProjectSprints
             .Include(ps => ps.Project.Workspace)
             .Single(ps => ps.Id == ProjectSprintId.Create(request.Id));
-        
+
         Utils.ProjectSprint.AssertUpdated(
             sprint,
             newSprint,

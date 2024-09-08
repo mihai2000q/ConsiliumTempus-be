@@ -72,12 +72,14 @@ The value objects are:
 - Authentication
   - **IsInvalidated**, which encapsulates a boolean *Value*
   - **JwtId**, which encapsulates a Guid *Value*
-- **CustomOrderPosition**, which encapsulates an int *Value,* and it's used to achieve custom ordering
+- **CustomOrderPosition**, which encapsulates an integer *Value,* and it's used to achieve custom ordering
+- **DecimalNumber**, which encapsulates a decimal number *Value*
 - **Description**, which encapsulates a string *Value*
 - **IsPrivate**, which encapsulates a boolean *Value*
 - **Message**, which encapsulates a string *Value*
 - **Name**, which encapsulates a string *Value*
 - **Title**, which encapsulates a string *Value*
+- **Text**, which encapsulates a string *Value*
 
 ## Domain Errors
 
@@ -91,6 +93,7 @@ These errors are not tied to any aggregate, therefore notable and only used in t
 
 The enums defined in the Domain of the application are:
 
+- **CustomFieldType**, which is used to represent the type of the custom field or the its setup
 - **FilterOperator**, which is used to represent the different numerous operators that can be used for filtering 
 (i.e., equal or less than)
 - **OrderType**, which is used to determine whether the order should be ascending or descending
@@ -104,6 +107,10 @@ The classes inside the Relations package contain the entities used to create the
 <br>
 Those include:
 
+- **CustomFieldMultiSelectHasOption**
+- **ProjectHasAllowedMember**
+- **UserHasFavoriteProject**
+- **UserHasFavoriteWorkspace**
 - **WorkspaceRoleHasPermission**
 
 ## Database Diagrams
@@ -115,6 +122,7 @@ For individual diagrams (they exclude additional info about external entities,
 except the primary key and direct relations), check below:
 
 - Aggregates
+  - [Custom Field Setup Diagram](database-diagrams/aggregates/Diagram.CustomFieldSetup.md)
   - [Project Diagram](database-diagrams/aggregates/Diagram.Project.md)
   - [Project Sprint Diagram](database-diagrams/aggregates/Diagram.ProjectSprint.md)
   - [Project Task Diagram](database-diagrams/aggregates/Diagram.ProjectTask.md)
@@ -123,12 +131,8 @@ except the primary key and direct relations), check below:
 - Entities
   - [Audit Diagram](database-diagrams/entities/Diagram.Audit.md)
   - [Membership Diagram](database-diagrams/entities/Diagram.Membership.md)
+  - [Multi Select Option Diagram](database-diagrams/entities/Diagram.MultiSelectOption.md)
   - [Permission Diagram](database-diagrams/entities/Diagram.Permission.md)
   - [Refresh Token Diagram](database-diagrams/entities/Diagram.RefreshToken.md)
+  - [Single Select Option Diagram](database-diagrams/entities/Diagram.SingleSelectOption.md)
   - [Workspace Role Diagram](database-diagrams/entities/Diagram.WorkspaceRole.md)
-  - Project Entities
-    - [Project Status Diagram](database-diagrams/entities/project/Diagram.ProjectStatus.md)
-  - Project Sprint Entities
-    - [Project Stage Diagram](database-diagrams/entities/project-sprint/Diagram.ProjectStage.md)
-  - Project Task Entities
-    - [Project Task Comment Diagram](database-diagrams/entities/project-task/Diagram.ProjectTaskComment.md)

@@ -9,7 +9,7 @@ using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Domain.ProjectSprint;
 
-public sealed class ProjectSprintAggregate : AggregateRoot<ProjectSprintId, Guid>
+public sealed class ProjectSprintAggregate : AggregateRoot<ProjectSprintId>
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectSprintAggregate()
@@ -67,7 +67,7 @@ public sealed class ProjectSprintAggregate : AggregateRoot<ProjectSprintId, Guid
         EndDate = endDate;
         Audit.Update(updatedBy);
     }
-    
+
     public void UpdateEndDate(DateOnly? endDate, UserAggregate updatedBy)
     {
         EndDate = endDate;

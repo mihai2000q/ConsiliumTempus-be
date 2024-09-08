@@ -1,0 +1,50 @@
+﻿using ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.MakeGlobal;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
+using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
+using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
+using ConsiliumTempus.Domain.CustomFieldSetup;
+
+namespace ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
+
+public static class CustomFieldSetupResultFactory
+{
+    public static GetCollectionCustomFieldSetupResult CreateGetCollectionCustomFieldSetupResult(
+        List<CustomFieldSetupAggregate>? customFieldSetups = null)
+    {
+        return new GetCollectionCustomFieldSetupResult(
+            customFieldSetups ?? CustomFieldSetupFactory.CreateList());
+    }
+
+    public static CreateCustomFieldSetupResult CreateCreateCustomFieldSetupResult()
+    {
+        return new CreateCustomFieldSetupResult();
+    }
+
+    public static AddCustomFieldSetupToProjectResult CreateAddCustomFieldSetupToProjectResult()
+    {
+        return new AddCustomFieldSetupToProjectResult();
+    }
+
+    public static UpdateCustomFieldSetupResult CreateUpdateCustomFieldSetupResult()
+    {
+        return new UpdateCustomFieldSetupResult();
+    }
+
+    public static MakeCustomFieldSetupGlobalResult CreateMakeCustomFieldSetupGlobalResult()
+    {
+        return new MakeCustomFieldSetupGlobalResult();
+    }
+
+    public static DeleteCustomFieldSetupResult CreateDeleteCustomFieldSetupResult()
+    {
+        return new DeleteCustomFieldSetupResult();
+    }
+
+    public static RemoveCustomFieldSetupFromProjectResult CreateRemoveCustomFieldSetupFromProjectResult()
+    {
+        return new RemoveCustomFieldSetupFromProjectResult();
+    }
+}

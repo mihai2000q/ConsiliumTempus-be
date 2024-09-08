@@ -33,7 +33,7 @@ public class ProjectTaskControllerUpdateOverviewOverviewTest(WebAppFactory facto
 
         await AssertSuccess(outcome, task, request);
     }
-    
+
     [Fact]
     public async Task UpdateOverviewProjectTask_WhenRequestHasAssignee_ShouldUpdateOverviewAndReturnSuccessResponse()
     {

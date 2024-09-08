@@ -40,8 +40,8 @@ public class AddStatusToProjectCommandHandlerTest
         _currentUserProvider
             .GetCurrentUserAfterPermissionCheck()
             .Returns(user);
-        
-        var command = ProjectCommandFactory.CreateAddStatusToProjectCommand(id: project.Id.Value);
+
+        var command = ProjectCommandFactory.CreateAddStatusToProjectCommand(project.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);

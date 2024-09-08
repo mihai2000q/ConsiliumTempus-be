@@ -19,7 +19,7 @@ public sealed class RemoveAllowedMemberFromProjectCommandHandler(
         var project = await projectRepository.GetWithAllowedMembers(ProjectId.Create(command.Id), cancellationToken);
         if (project is null) return Errors.Project.NotFound;
         if (!project.IsPrivate.Value) return Errors.Project.NotPrivate;
-        
+
         var allowedMember = project.AllowedMembers
             .SingleOrDefault(u => u.Id.Value == command.AllowedMemberId);
         if (allowedMember is null) return Errors.Project.AllowedMemberNotFound;

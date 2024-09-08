@@ -42,13 +42,13 @@ public class ProjectSprintControllerDeleteTest(WebAppFactory factory)
         project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
         project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
     }
-    
+
     [Fact]
     public async Task DeleteProjectSprint_WhenTheProjectHasOnlyOneSprint_ShouldReturnOnlyOneSprintError()
     {
         // Arrange
         var sprint = ProjectSprintData.ProjectSprints[3];
-        var request = ProjectSprintRequestFactory.CreateDeleteProjectSprintRequest(id: sprint.Id.Value);
+        var request = ProjectSprintRequestFactory.CreateDeleteProjectSprintRequest(sprint.Id.Value);
 
         // Act
         Client.UseCustomToken(ProjectSprintData.Users[1]);

@@ -68,7 +68,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
             .Where(p => p.Workspace.Memberships.Count == 1 || (p.IsPrivate.Value && p.AllowedMembers.Count == 1))
             .ToList();
         dbContext.Projects.Should().HaveCount(UserData.Projects.Length - emptyProjects.Count);
-        
+
         var preservedProjects = dbContext.Projects
             .Include(p => p.Workspace.Memberships)
             .Include(p => p.AllowedMembers)
@@ -89,7 +89,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
             p.Owner.Should().Be(newOwner);
             p.AllowedMembers.Should().Contain(newOwner);
         });
-        
+
         dbContext.Set<Audit>()
             .Where(a => a.CreatedBy == null || a.UpdatedBy == null)
             .Should().NotBeEmpty();

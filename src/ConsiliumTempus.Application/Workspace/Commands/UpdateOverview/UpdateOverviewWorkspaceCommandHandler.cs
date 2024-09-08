@@ -15,7 +15,7 @@ public sealed class UpdateOverviewWorkspaceCommandHandler(IWorkspaceRepository w
     {
         var workspace = await workspaceRepository.Get(WorkspaceId.Create(command.Id), cancellationToken);
         if (workspace is null) return Errors.Workspace.NotFound;
-        
+
         workspace.UpdateOverview(
             Description.Create(command.Description));
 

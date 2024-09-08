@@ -46,7 +46,7 @@ internal static partial class Utils
                 .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
             response.TotalCount.Should().Be(totalCount);
         }
-        
+
         internal static void AssertGetStagesResponse(
             GetStagesFromProjectSprintResponse response,
             IReadOnlyList<ProjectStage> stages)
@@ -72,15 +72,15 @@ internal static partial class Utils
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            
+
             if (request.KeepPreviousStages)
             {
                 if (project.Sprints.Count != 0)
                 {
                     sprint.Stages.Should().HaveSameCount(project.Sprints[0].Stages);
                     sprint.Stages
-                        .OrderBy(s => s.CustomOrderPosition.Value)
-                        .Zip(project.Sprints[0].Stages.OrderBy(s => s.CustomOrderPosition.Value))
+                        .OrderBy(s => s.CustomOrderPosition)
+                        .Zip(project.Sprints[0].Stages.OrderBy(s => s.CustomOrderPosition))
                         .Should().AllSatisfy((x) =>
                         {
                             var (newStage, stage) = x;
@@ -91,7 +91,9 @@ internal static partial class Utils
                         });
                 }
                 else
+                {
                     sprint.Stages.Should().BeEmpty();
+                }
             }
             else
             {
@@ -117,7 +119,7 @@ internal static partial class Utils
             {
                 sprint.Project.LatestStatus.Should().NotBeNull();
                 sprint.Project.LatestStatus!.Title.Value.Should().Be(request.ProjectStatus.Title);
-                sprint.Project.LatestStatus.Status.ToString().ToLower().Should().Be(request.ProjectStatus.Status.ToLower());
+                sprint.Project.LatestStatus.Status.Should().Be(request.ProjectStatus.Status);
                 sprint.Project.LatestStatus.Description.Value.Should().Be(request.ProjectStatus.Description);
             }
         }
@@ -168,13 +170,13 @@ internal static partial class Utils
             sprint.Id.Value.Should().Be(request.Id);
             var stage = sprint.Stages.Single(s => s.Id.Value == request.StageId);
             stage.Name.Value.Should().Be(request.Name);
-            
+
             stage.Audit.ShouldBeUpdated(updatedBy);
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertMovedStage(
             ProjectSprintAggregate sprint,
             MoveStageFromProjectSprintRequest request,
@@ -216,7 +218,7 @@ internal static partial class Utils
             response.EndDate.Should().Be(projectSprint.EndDate);
             response.CreatedDateTime.Should().Be(projectSprint.Audit.CreatedDateTime);
         }
-        
+
         private static void AssertStageResponse(
             GetStagesFromProjectSprintResponse.ProjectStageResponse response,
             ProjectStage projectStage)
@@ -224,7 +226,7 @@ internal static partial class Utils
             response.Id.Should().Be(projectStage.Id.Value);
             response.Name.Should().Be(projectStage.Name.Value);
         }
-        
+
         private static void AssertUserResponse(
             GetProjectSprintResponse.UserResponse? response,
             UserAggregate? user)
@@ -234,7 +236,7 @@ internal static partial class Utils
                 response.Should().BeNull();
                 return;
             }
-            
+
             response!.Id.Should().Be(user.Id.Value);
             response.Name.Should().Be(user.Name.Value);
             response.Email.Should().Be(user.Credentials.Email);

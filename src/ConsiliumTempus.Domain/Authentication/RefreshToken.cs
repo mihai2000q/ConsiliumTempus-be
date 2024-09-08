@@ -43,9 +43,9 @@ public sealed class RefreshToken : Entity<RefreshTokenId>
         JwtId jwtId)
     {
         return new RefreshToken(
-            RefreshTokenId.CreateUnique(), 
+            RefreshTokenId.CreateUnique(),
             DateTime.UtcNow.AddMonths(1),
-            IsInvalidated.Create(false), 
+            IsInvalidated.Create(false),
             user,
             DateTime.UtcNow,
             jwtId);

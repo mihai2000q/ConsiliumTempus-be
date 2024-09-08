@@ -13,7 +13,8 @@ public class UpdateIsCompletedProjectTaskCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(UpdateIsCompletedProjectTaskCommandValidatorData.GetValidCommands))]
-    public async Task ValidateUpdateIsCompletedProjectTaskCommand_WhenValid_ShouldReturnTrue(UpdateIsCompletedProjectTaskCommand command)
+    public async Task ValidateUpdateIsCompletedProjectTaskCommand_WhenValid_ShouldReturnTrue(
+        UpdateIsCompletedProjectTaskCommand command)
     {
         // Arrange - parameterized
 

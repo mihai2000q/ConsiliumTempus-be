@@ -25,13 +25,13 @@ public static class ProjectSprintRequestFactory
 
     public static GetCollectionProjectSprintRequest CreateGetCollectionProjectSprintRequest(
         Guid? id = null,
-        string[]? search = null,
+        List<string>? search = null,
         bool fromThisYear = false)
     {
         return new GetCollectionProjectSprintRequest
         {
             ProjectId = id ?? Guid.NewGuid(),
-            Search = search,
+            Search = search ?? [],
             FromThisYear = fromThisYear
         };
     }
@@ -63,12 +63,12 @@ public static class ProjectSprintRequestFactory
 
     public static CreateProjectSprintRequest.CreateProjectStatus CreateCreateProjectStatus(
         string title = Constants.ProjectStatus.Title,
-        string? status = null,
+        ProjectStatusType status = ProjectStatusType.AtRisk,
         string description = Constants.ProjectStatus.Description)
     {
         return new CreateProjectSprintRequest.CreateProjectStatus(
             title,
-            status ?? ProjectStatusType.AtRisk.ToString(),
+            status,
             description);
     }
 
@@ -106,7 +106,7 @@ public static class ProjectSprintRequestFactory
             stageId ?? Guid.NewGuid(),
             name);
     }
-    
+
     public static MoveStageFromProjectSprintRequest CreateMoveStageFromProjectSprintRequest(
         Guid? id = null,
         Guid? stageId = null,

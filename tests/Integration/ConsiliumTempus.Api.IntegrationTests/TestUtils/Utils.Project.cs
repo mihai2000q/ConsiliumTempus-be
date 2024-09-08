@@ -61,18 +61,14 @@ internal static partial class Utils
         {
             response.Projects.Should().HaveCount(projects.Count);
             if (isOrdered)
-            {
                 response.Projects
                     .Zip(projects)
                     .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second, user));
-            }
             else
-            {
                 response.Projects
                     .OrderBy(p => p.Id)
                     .Zip(projects.OrderBy(p => p.Id.Value))
                     .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second, user));
-            }
 
             response.TotalCount.Should().Be(totalCount);
         }
@@ -146,7 +142,7 @@ internal static partial class Utils
             var status = project.Statuses.Single(s => s.Title.Value == request.Title);
             status.Id.Value.Should().NotBeEmpty();
             status.Title.Value.Should().Be(request.Title);
-            status.Status.ToString().ToLower().Should().Be(request.Status.ToLower());
+            status.Status.Should().Be(request.Status);
             status.Description.Value.Should().Be(request.Description);
             status.Project.Should().Be(project);
             status.Audit.ShouldBeCreated(createdBy);
@@ -166,7 +162,7 @@ internal static partial class Utils
 
             // changed
             newProject.Name.Value.Should().Be(request.Name);
-            newProject.Lifecycle.ToString().ToLower().Should().Be(request.Lifecycle.ToLower());
+            newProject.Lifecycle.Should().Be(request.Lifecycle);
             newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
@@ -246,7 +242,7 @@ internal static partial class Utils
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
-        
+
         internal static void AssertLeavePrivate(
             ProjectAggregate project,
             LeavePrivateProjectRequest request,
@@ -385,7 +381,7 @@ internal static partial class Utils
                 .OrderByDescending(s => s.Audit.CreatedDateTime)
                 .First();
         }
-        
+
         private static void AssertUserResponse(
             GetAllowedMembersFromProjectResponse.UserResponse userResponse,
             UserAggregate user)

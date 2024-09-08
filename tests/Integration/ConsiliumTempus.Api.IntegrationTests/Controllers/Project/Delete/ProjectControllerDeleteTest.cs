@@ -7,6 +7,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.Delete;
 
@@ -35,6 +36,17 @@ public class ProjectControllerDeleteTest(WebAppFactory factory)
         dbContext.Projects.Should().HaveCount(ProjectData.Projects.Length - 1);
         var workspace = dbContext.Workspaces.Single(w => w == project.Workspace);
         workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
+
+        // All custom field setups depend on the deleted project
+        dbContext.CustomFieldSetups
+            .Should().HaveCount(project.CustomFieldSetups.Count(cfs => cfs.Workspace is not null));
+
+        var customFieldsDeletedCount = project.Sprints
+            .SelectMany(s => s.Stages)
+            .SelectMany(s => s.Tasks)
+            .SelectMany(t => t.CustomFields)
+            .Count();
+        dbContext.Set<CustomField>().Should().HaveCount(ProjectData.CustomFields.Length - customFieldsDeletedCount);
     }
 
     [Fact]

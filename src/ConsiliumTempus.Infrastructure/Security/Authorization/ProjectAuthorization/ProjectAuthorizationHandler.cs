@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
@@ -51,6 +52,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
         if (!Guid.TryParse(stringId, out var guidId)) return null;
         return idType switch
         {
+            StringIdType.CustomFieldSetup => await projectProvider.GetByCustomFieldSetup(CustomFieldSetupId.Create(guidId)),
             StringIdType.Project => await projectProvider.Get(ProjectId.Create(guidId)),
             StringIdType.ProjectSprint => await projectProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
             StringIdType.ProjectStage => await projectProvider.GetByProjectStage(ProjectStageId.Create(guidId)),
@@ -64,6 +66,24 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
     {
         return request.RouteValues["controller"] switch
         {
+            "CustomFieldSetup" => request.RouteValues["action"] switch
+            {
+                "Get" or
+                "Delete" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.CustomFieldSetup),
+
+                "GetCollectionFromProject" => (
+                    HttpRequestReader.GetStringIdFromRoute(request, typeof(ProjectAggregate).ToCamelId()),
+                    StringIdType.Project),
+
+                "CreateOnProject" => (
+                    await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()), 
+                    StringIdType.Project),
+
+                "Update" or
+                "MakeGlobal" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.CustomFieldSetup),
+
+                _ => (null, StringIdType.Empty)
+            },
             "Project" => request.RouteValues["action"] switch
             {
                 "Get" or
@@ -123,6 +143,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
 
                 "Move" or
                 "Update" or
+                "UpdateCustomField" or
                 "UpdateIsCompleted" or
                 "UpdateOverview" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.ProjectTask),
 
@@ -148,10 +169,11 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
 
     private enum StringIdType
     {
-        Empty,
+        CustomFieldSetup,
         Project,
         ProjectSprint,
         ProjectStage,
-        ProjectTask
+        ProjectTask,
+        Empty,
     }
 }

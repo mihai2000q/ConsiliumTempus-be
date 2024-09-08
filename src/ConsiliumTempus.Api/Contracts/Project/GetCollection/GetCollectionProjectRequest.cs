@@ -8,9 +8,9 @@ public sealed record GetCollectionProjectRequest
 
     [FromQuery] public int? CurrentPage { get; init; }
 
-    [FromQuery] public string[]? OrderBy { get; init; }
+    [FromQuery] public List<string> OrderBy { get; init; } = [];
 
-    [FromQuery] public string[]? Search { get; init; }
-    
+    [FromQuery] public List<string> Search { get; init; } = [];
+
     [FromQuery] public Guid? WorkspaceId { get; init; }
 }

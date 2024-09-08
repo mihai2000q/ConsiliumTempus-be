@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.Workspace.Commands.Delete;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Events;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using NSubstitute.ReturnsExtensions;
 
@@ -48,6 +49,11 @@ public class DeleteWorkspaceCommandHandlerTest
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteWorkspaceResult());
+
+        workspace.DomainEvents.Should().HaveCount(1);
+        var domainEvent = workspace.DomainEvents[0];
+        domainEvent.Should().BeOfType<WorkspaceDeleted>();
+        ((WorkspaceDeleted)domainEvent).Workspace.Should().Be(workspace);
     }
 
     [Fact]

@@ -10,10 +10,11 @@ public class GetStatusesFromProjectQueryValidatorTest
     private readonly GetStatusesFromProjectQueryValidator _uut = new();
 
     #endregion
-    
+
     [Theory]
     [ClassData(typeof(GetStatusesFromProjectQueryValidatorData.GetValidQueries))]
-    public async Task ValidateGetStatusesFromProjectQuery_WhenQueryIsValid_ShouldReturnTrue(GetStatusesFromProjectQuery query)
+    public async Task ValidateGetStatusesFromProjectQuery_WhenQueryIsValid_ShouldReturnTrue(
+        GetStatusesFromProjectQuery query)
     {
         // Arrange - parameterized
 
@@ -24,7 +25,7 @@ public class GetStatusesFromProjectQueryValidatorTest
         outcome.IsValid.Should().BeTrue();
         outcome.Errors.Should().BeEmpty();
     }
-    
+
     [Theory]
     [ClassData(typeof(GetStatusesFromProjectQueryValidatorData.GetInvalidIdQueries))]
     public async Task ValidateGetStatusesFromProjectQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(

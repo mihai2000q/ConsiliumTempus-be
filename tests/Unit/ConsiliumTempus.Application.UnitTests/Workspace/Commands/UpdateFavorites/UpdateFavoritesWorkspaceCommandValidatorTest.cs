@@ -13,7 +13,8 @@ public class UpdateFavoriteWorkspaceCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(UpdateFavoritesWorkspaceCommandValidatorData.GetValidCommands))]
-    public async Task ValidateUpdateFavoritesWorkspaceCommand_WhenValid_ShouldReturnTrue(UpdateFavoritesWorkspaceCommand command)
+    public async Task ValidateUpdateFavoritesWorkspaceCommand_WhenValid_ShouldReturnTrue(
+        UpdateFavoritesWorkspaceCommand command)
     {
         // Arrange - parameterized
 

@@ -1,4 +1,6 @@
-﻿namespace ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
+﻿using ConsiliumTempus.Domain.Project.Enums;
+
+namespace ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
 
 public sealed record CreateProjectSprintRequest(
     Guid ProjectId,
@@ -10,6 +12,6 @@ public sealed record CreateProjectSprintRequest(
 {
     public sealed record CreateProjectStatus(
         string Title,
-        string Status,
+        ProjectStatusType Status,
         string Description);
 }

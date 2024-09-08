@@ -27,7 +27,7 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>(JsonOptions);
         Utils.ProjectTask.AssertGetCollectionResponse(
             response!,
             stage.Tasks,
@@ -49,7 +49,7 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>(JsonOptions);
         Utils.ProjectTask.AssertGetCollectionResponse(
             response!,
             stage.Tasks,
@@ -72,11 +72,11 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
         Client.UseCustomToken(ProjectTaskData.Users.First());
         var outcome = await Client.Get($"api/projects/tasks" +
                                        $"?projectStageId={request.ProjectStageId}" +
-                                       $"&{request.OrderBy?.ToOrderByQueryParam()}");
+                                       $"&{request.OrderBy.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>(JsonOptions);
 
         var expectedTasks = stage.Tasks
             .OrderBy(t => t.Name.Value)
@@ -105,7 +105,7 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>(JsonOptions);
 
         var expectedTasks = stage.Tasks
             .Where(t => t.Name.Value.ToLower().Contains("should"))
@@ -134,7 +134,7 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>(JsonOptions);
 
         var expectedTasks = stage.Tasks
             .Where(t => t.IsCompleted.Value)
@@ -165,7 +165,7 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>();
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>(JsonOptions);
 
         var expectedTasks = stage.Tasks
             .Skip(request.PageSize!.Value * (request.CurrentPage!.Value - 1))

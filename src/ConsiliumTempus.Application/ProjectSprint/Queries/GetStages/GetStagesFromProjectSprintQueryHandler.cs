@@ -5,14 +5,14 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Queries.GetStages;
 
-public sealed class GetStagesFromProjectSprintQueryHandler(IProjectSprintRepository projectSprintRepository) 
+public sealed class GetStagesFromProjectSprintQueryHandler(IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<GetStagesFromProjectSprintQuery, ErrorOr<GetStagesFromProjectSprintResult>>
 {
-    public async Task<ErrorOr<GetStagesFromProjectSprintResult>> Handle(GetStagesFromProjectSprintQuery query, 
+    public async Task<ErrorOr<GetStagesFromProjectSprintResult>> Handle(GetStagesFromProjectSprintQuery query,
         CancellationToken cancellationToken)
     {
         var stages = await projectSprintRepository.GetStages(
-            ProjectSprintId.Create(query.Id), 
+            ProjectSprintId.Create(query.Id),
             cancellationToken);
         return new GetStagesFromProjectSprintResult(stages);
     }

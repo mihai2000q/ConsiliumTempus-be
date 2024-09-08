@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
@@ -102,6 +103,10 @@ internal static partial class Utils
                     .Returns(workspace);
 
                 workspaceProvider
+                    .GetByCustomFieldSetup(Arg.Any<CustomFieldSetupId>())
+                    .Returns(workspace);
+
+                workspaceProvider
                     .GetByProject(Arg.Any<ProjectId>())
                     .Returns(workspace);
 
@@ -125,10 +130,10 @@ internal static partial class Utils
             {
                 switch (provider)
                 {
-                    case PermissionAuthorizationHandlerData.StringIdType.Workspace:
+                    case PermissionAuthorizationHandlerData.StringIdType.CustomFieldSetup:
                         await workspaceProvider
                             .Received(1)
-                            .Get(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));
+                            .GetByCustomFieldSetup(Arg.Is<CustomFieldSetupId>(cfsId => cfsId.Value.ToString() == stringId));
                         break;
 
                     case PermissionAuthorizationHandlerData.StringIdType.Project:
@@ -155,6 +160,12 @@ internal static partial class Utils
                             .GetByProjectTask(Arg.Is<ProjectTaskId>(ptId => ptId.Value.ToString() == stringId));
                         break;
 
+                    case PermissionAuthorizationHandlerData.StringIdType.Workspace:
+                        await workspaceProvider
+                            .Received(1)
+                            .Get(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));
+                        break;
+                    
                     default:
                         throw new ArgumentOutOfRangeException(nameof(provider), provider, null);
                 }

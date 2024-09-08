@@ -22,7 +22,8 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<ProjectAggregate?> GetWithAllowedMembers(ProjectId id, CancellationToken cancellationToken = default)
+    public async Task<ProjectAggregate?> GetWithAllowedMembers(ProjectId id,
+        CancellationToken cancellationToken = default)
     {
         return await dbContext.Projects
             .Include(p => p.Favorites)
@@ -33,14 +34,16 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<ProjectAggregate?> GetWithCollaborators(ProjectId id, CancellationToken cancellationToken = default)
+    public async Task<ProjectAggregate?> GetWithCollaborators(ProjectId id,
+        CancellationToken cancellationToken = default)
     {
         return await dbContext.Projects
             .Include(p => p.Workspace.Memberships)
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<ProjectAggregate?> GetWithCollaboratorsAndAllowedMembers(ProjectId id, CancellationToken cancellationToken = default)
+    public async Task<ProjectAggregate?> GetWithCollaboratorsAndAllowedMembers(ProjectId id,
+        CancellationToken cancellationToken = default)
     {
         return await dbContext.Projects
             .Include(p => p.AllowedMembers)
@@ -48,7 +51,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<ProjectAggregate?> GetWithStagesAndWorkspace(ProjectId id,
+    public async Task<ProjectAggregate?> GetWithStages(ProjectId id,
         CancellationToken cancellationToken = default)
     {
         return await dbContext.Projects
@@ -70,6 +73,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
         CancellationToken cancellationToken = default)
     {
         return dbContext.Projects
+            .AsSplitQuery()
             .Include(p => p.Favorites)
             .Include(p => p.Statuses.OrderByDescending(s => s.Audit.CreatedDateTime))
             .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
@@ -105,7 +109,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
             .Include(p => p.Favorites)
             .Include(p => p.AllowedMembers)
             .Where(p => p.Workspace.Id == workspaceId)
-            .Where(p => 
+            .Where(p =>
                 !p.IsPrivate.Value || p.AllowedMembers.Any(u => u.Id == userId) ||
                 p.Owner.Id == userId ||
                 p.Favorites.Any(f => f.Id == userId))
@@ -115,9 +119,18 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
     public Task<List<ProjectAggregate>> GetListByOwner(UserId userId, CancellationToken cancellationToken = default)
     {
         return dbContext.Projects
+            .AsSplitQuery()
             .Include(p => p.AllowedMembers)
             .Include(p => p.Workspace.Memberships)
             .Where(p => p.Owner.Id == userId)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<ProjectAggregate>> GetListByWorkspace(WorkspaceId workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.Projects
+            .Where(p => p.Workspace.Id == workspaceId)
             .ToListAsync(cancellationToken);
     }
 

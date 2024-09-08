@@ -18,7 +18,7 @@ public sealed class UpdateOverviewProjectCommandHandler(IProjectRepository proje
 
         project.UpdateOverview(
             Description.Create(command.Description));
-        
+
         return new UpdateOverviewProjectResult();
     }
 }

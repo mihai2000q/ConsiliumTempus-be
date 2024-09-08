@@ -15,7 +15,7 @@ public static class AuthenticationResultFactory
             token,
             refreshToken ?? Guid.NewGuid());
     }
-    
+
     public static LoginResult CreateLoginResult(
         string token = Constants.Auth.Token,
         Guid? refreshToken = null)
@@ -24,7 +24,7 @@ public static class AuthenticationResultFactory
             token,
             refreshToken ?? Guid.NewGuid());
     }
-    
+
     public static RefreshResult CreateRefreshResult(string token = Constants.Auth.Token)
     {
         return new RefreshResult(token);

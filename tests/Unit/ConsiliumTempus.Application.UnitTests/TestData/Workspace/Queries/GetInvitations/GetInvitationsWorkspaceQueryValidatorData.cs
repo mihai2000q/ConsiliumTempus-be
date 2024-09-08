@@ -27,12 +27,12 @@ public static class GetInvitationsWorkspaceQueryValidatorData
         public GetInvalidIsSenderAndWorkspaceIdQueries()
         {
             var query = WorkspaceQueryFactory.CreateGetInvitationsWorkspaceQuery();
-            Add(query, nameof(query.IsSender).And(nameof(query.WorkspaceId)));
+            Add(query, nameof(query.IsSender).Dot(nameof(query.WorkspaceId)));
             
             query = WorkspaceQueryFactory.CreateGetInvitationsWorkspaceQuery(
                 isSender: true,
                 workspaceId: Guid.NewGuid());
-            Add(query, nameof(query.IsSender).And(nameof(query.WorkspaceId)));
+            Add(query, nameof(query.IsSender).Dot(nameof(query.WorkspaceId)));
         }
     }
 
@@ -43,12 +43,12 @@ public static class GetInvitationsWorkspaceQueryValidatorData
             var query = WorkspaceQueryFactory.CreateGetInvitationsWorkspaceQuery(
                 isSender: true,
                 pageSize: 1);
-            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)));
+            Add(query, nameof(query.PageSize).Dot(nameof(query.CurrentPage)));
 
             query = WorkspaceQueryFactory.CreateGetInvitationsWorkspaceQuery(
                 isSender: true,
                 currentPage: 1);
-            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)));
+            Add(query, nameof(query.PageSize).Dot(nameof(query.CurrentPage)));
         }
     }
 

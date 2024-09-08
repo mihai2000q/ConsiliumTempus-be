@@ -33,8 +33,8 @@ public class RemoveStatusFromProjectCommandHandlerTest
             .Returns(project);
 
         var command = ProjectCommandFactory.CreateRemoveStatusFromProjectCommand(
-            id: project.Id.Value,
-            statusId: project.Statuses[0].Id.Value);
+            project.Id.Value,
+            project.Statuses[0].Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -59,7 +59,7 @@ public class RemoveStatusFromProjectCommandHandlerTest
             .Get(Arg.Any<ProjectId>())
             .Returns(project);
 
-        var command = ProjectCommandFactory.CreateRemoveStatusFromProjectCommand(id: project.Id.Value);
+        var command = ProjectCommandFactory.CreateRemoveStatusFromProjectCommand(project.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);

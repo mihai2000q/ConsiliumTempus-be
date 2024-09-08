@@ -79,11 +79,11 @@ public static class GetCollaboratorsFromWorkspaceQueryValidatorData
         {
             var query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery(
                 pageSize: 1);
-            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)), 1);
+            Add(query, nameof(query.PageSize).Dot(nameof(query.CurrentPage)), 1);
 
             query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery(
                 currentPage: 1);
-            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)), 1);
+            Add(query, nameof(query.PageSize).Dot(nameof(query.CurrentPage)), 1);
         }
     }
 

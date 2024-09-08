@@ -23,7 +23,7 @@ public static class FluentValidationExtensions
 
     public static IRuleBuilderOptions<T, string> IsEmail<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
-        return ruleBuilder.Must(e => Regex.RegexStore.EmailRegex().IsMatch(e))
+        return ruleBuilder.Matches(Regex.RegexStore.EmailRegex())
             .WithMessage("'{PropertyName}' must be valid email");
     }
 
@@ -38,21 +38,35 @@ public static class FluentValidationExtensions
             .WithMessage("'{PropertyName}' must be valid workspace role");
     }
 
-    public static IRuleBuilderOptions<T, string[]?> HasOrderByFormat<T, TEntity>(
-        this IRuleBuilder<T, string[]?> ruleBuilder,
+    public static IRuleBuilderOptions<T, string?> IsCurrencyCode<T>(this IRuleBuilder<T, string?> ruleBuilder)
+    {
+        return ruleBuilder
+            .Matches("^[A-Z]{3}$")
+            .WithMessage("'{PropertyName}' must be valid Currency Code")
+            .When(s => s is not null);
+    }
+
+    public static IRuleBuilderOptions<T, string> IsColor<T>(this IRuleBuilder<T, string> ruleBuilder)
+    {
+        return ruleBuilder.Matches(Regex.RegexStore.ColorRegex())
+            .WithMessage("'{PropertyName}' must be valid color");
+    }
+
+    public static IRuleBuilderOptions<T, List<string>> HasOrderByFormat<T, TEntity>(
+        this IRuleBuilder<T, List<string>> ruleBuilder,
         IReadOnlyList<OrderProperty<TEntity>> orderProperties)
     {
         return ruleBuilder
-            .Must(orders => orders.ForAll(OrderByValidation.SeparatorValidation))
+            .Must(orders => orders.All(OrderByValidation.SeparatorValidation))
             .WithMessage("The elements of '{PropertyName}' must have the following format: {Property}.{OrderType} " +
                          "(separated by a '.')")
-            .Must(orders => orders.ForAll(OrderByValidation.OrderTypeValidation))
+            .Must(orders => orders.All(OrderByValidation.OrderTypeValidation))
             .WithMessage("The elements of '{PropertyName}' must have the following format: {Property}.{OrderType}, " +
                          "where 'OrderType' must be either 'desc' or 'asc'")
-            .Must(orders => orders.ForAll(OrderByValidation.SnakeCaseValidation))
+            .Must(orders => orders.All(OrderByValidation.SnakeCaseValidation))
             .WithMessage("The elements of '{PropertyName}' must have the following format: {Property}.{OrderType}, " +
                          "where 'Property' must be in snake_case")
-            .Must(orders => orders.ForAll(order => OrderByValidation.PropertyValidation(order, orderProperties)))
+            .Must(orders => orders.All(order => OrderByValidation.PropertyValidation(order, orderProperties)))
             .WithMessage("The elements of '{PropertyName}' must have the following format: {Property}.{OrderType}, " +
                          $"where 'Property' must be a property of the entity: {typeof(TEntity).Name} " +
                          "(available properties: " +
@@ -61,38 +75,36 @@ public static class FluentValidationExtensions
             .WithMessage("The elements of '{PropertyName}' must not repeat themselves");
     }
 
-    public static IRuleBuilderOptions<T, string[]?> HasSearchFormat<T, TEntity>(
-        this IRuleBuilder<T, string[]?> ruleBuilder,
+    public static IRuleBuilderOptions<T, List<string>> HasSearchFormat<T, TEntity>(
+        this IRuleBuilder<T, List<string>> ruleBuilder,
         IReadOnlyList<FilterProperty<TEntity>> filterProperties)
     {
         return ruleBuilder
-            .Must(search => search.ForAll(SearchValidation.SeparatorValidation))
+            .Must(search => search.All(SearchValidation.SeparatorValidation))
             .WithMessage(
                 "The elements of '{PropertyName}' must have the following format: {Property} {Operator} {Value} " +
                 "(separated by whitespaces)")
-            .Must(search => search.ForAll(SearchValidation.SnakeCaseValidation))
+            .Must(search => search.All(SearchValidation.SnakeCaseValidation))
             .WithMessage(
                 "The elements of '{PropertyName}' must have the following format: {Property} {Operator} {Value}, " +
                 "where 'Property' must be in snake case")
-            .Must(search => search.ForAll(f => SearchValidation.PropertyValidation(f, filterProperties)))
+            .Must(search => search.All(f => SearchValidation.PropertyValidation(f, filterProperties)))
             .WithMessage(
                 "The elements of '{PropertyName}' must have the following format: {Property} {Operator} {Value}, " +
                 $"where 'Property' must be a property of the entity: {typeof(TEntity).Name} " +
                 "(available properties: " +
                 $"{string.Join(", ", filterProperties.Select(x => x.Identifier))})")
-            .Must(search => search.ForAll(SearchValidation.OperatorValidation))
+            .Must(search => search.All(SearchValidation.OperatorValidation))
             .WithMessage(
                 "The elements of '{PropertyName}' must have the following format: {Property} {Operator} {Value}, " +
                 "where 'Operator' must be one of the following: " +
                 $"{string.Join(", ", Filter.OperatorToFilterOperator.Keys)}")
-            .Must(search => search.ForAll(f => SearchValidation.OperatorAndValueTypeValidation(f, filterProperties)))
+            .Must(search => search.All(f => SearchValidation.OperatorAndValueTypeValidation(f, filterProperties)))
             .WithMessage("The '{PropertyName}' must have a supported combination of Type and Operator")
-            .Must(search => search.ForAll(f => SearchValidation.ValueParsingValidation(f, filterProperties)))
+            .Must(search => search.All(f => SearchValidation.ValueParsingValidation(f, filterProperties)))
             .WithMessage(
                 "The Value from the '{PropertyName}', given the type of the filter proposed, cannot be parsed");
     }
-
-    private static bool ForAll(this string[]? str, Func<string, bool> validator) => str is null || str.All(validator);
 
     private static class OrderByValidation
     {
@@ -131,10 +143,8 @@ public static class FluentValidationExtensions
                    orderProperties.Any(op => op.Identifier == property);
         }
 
-        internal static bool OrdersRepetitionValidation(string[]? orders)
+        internal static bool OrdersRepetitionValidation(List<string> orders)
         {
-            if (orders is null) return true;
-
             var propertyIdentifiers = new List<string>();
             foreach (var order in orders)
             {
@@ -216,9 +226,9 @@ public static class FluentValidationExtensions
                 not null when type == typeof(DateTime) => DateTime.TryParse(parsedFilter.Value.Value, out _),
                 not null when type == typeof(decimal) => decimal.TryParse(parsedFilter.Value.Value, out _),
                 not null when type == typeof(int) => int.TryParse(parsedFilter.Value.Value, out _),
-                not null when type == typeof(ProjectLifecycle) => 
+                not null when type == typeof(ProjectLifecycle) =>
                     Enum.TryParse<ProjectLifecycle>(parsedFilter.Value.Value, true, out _),
-                not null when type == typeof(ProjectStatusType) => 
+                not null when type == typeof(ProjectStatusType) =>
                     Enum.TryParse<ProjectStatusType>(parsedFilter.Value.Value, true, out _),
                 _ => true
             };

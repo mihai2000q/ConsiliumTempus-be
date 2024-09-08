@@ -35,7 +35,8 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleInviteCollaboratorToWorkspaceCommand_WhenIsSuccessful_ShouldSendInvitationAndReturnResponse()
+    public async Task
+        HandleInviteCollaboratorToWorkspaceCommand_WhenIsSuccessful_ShouldSendInvitationAndReturnResponse()
     {
         // Arrange
         var workspace = WorkspaceFactory.Create();
@@ -75,14 +76,15 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         outcome.Value.Should().Be(new InviteCollaboratorToWorkspaceResult());
 
         Utils.Workspace.AssertFromInviteCollaboratorCommand(
-            command, 
+            command,
             workspace,
             user,
             collaborator);
     }
 
     [Fact]
-    public async Task HandleInviteCollaboratorToWorkspaceCommand_WhenWorkspaceAlreadyHasCollaborator_ShouldReturnAlreadyCollaboratorError()
+    public async Task
+        HandleInviteCollaboratorToWorkspaceCommand_WhenWorkspaceAlreadyHasCollaborator_ShouldReturnAlreadyCollaboratorError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateInviteCollaboratorToWorkspaceCommand();
@@ -97,7 +99,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
             .GetByEmail(Arg.Any<string>())
             .Returns(collaborator);
 
-        workspace.AddUserMembership(MembershipFactory.Create(user: collaborator));
+        workspace.AddUserMembership(MembershipFactory.Create(collaborator));
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -115,7 +117,8 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleInviteCollaboratorToWorkspaceCommand_WhenWorkspaceHasCollaboratorInvited_ShouldReturnAlreadyInvitedError()
+    public async Task
+        HandleInviteCollaboratorToWorkspaceCommand_WhenWorkspaceHasCollaboratorInvited_ShouldReturnAlreadyInvitedError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateInviteCollaboratorToWorkspaceCommand();

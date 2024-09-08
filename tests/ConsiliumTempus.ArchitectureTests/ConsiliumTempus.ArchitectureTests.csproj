@@ -11,9 +11,9 @@
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.0"/>
-        <PackageReference Include="FluentAssertions" Version="7.0.0-alpha.4" />
+        <PackageReference Include="FluentAssertions" Version="7.0.0-alpha.4"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
-        <PackageReference Include="TngTech.ArchUnitNET.xUnit" Version="0.10.6" />
+        <PackageReference Include="TngTech.ArchUnitNET.xUnit" Version="0.10.6"/>
         <PackageReference Include="xunit" Version="2.5.3"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
     </ItemGroup>
@@ -23,10 +23,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\ConsiliumTempus.Api\ConsiliumTempus.Api.csproj" />
-      <ProjectReference Include="..\..\src\ConsiliumTempus.Application\ConsiliumTempus.Application.csproj" />
-      <ProjectReference Include="..\..\src\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj" />
-      <ProjectReference Include="..\..\src\ConsiliumTempus.Infrastructure\ConsiliumTempus.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\src\ConsiliumTempus.Api\ConsiliumTempus.Api.csproj"/>
+        <ProjectReference Include="..\..\src\ConsiliumTempus.Application\ConsiliumTempus.Application.csproj"/>
+        <ProjectReference Include="..\..\src\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj"/>
+        <ProjectReference Include="..\..\src\ConsiliumTempus.Infrastructure\ConsiliumTempus.Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>

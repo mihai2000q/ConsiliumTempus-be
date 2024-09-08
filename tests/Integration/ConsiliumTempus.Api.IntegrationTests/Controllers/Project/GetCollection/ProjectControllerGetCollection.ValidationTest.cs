@@ -18,7 +18,7 @@ public class ProjectControllerGetCollectionValidationTest(WebAppFactory factory)
 
         // Act
         Client.UseCustomToken(ProjectData.Users.First());
-        var outcome = await Client.Get($"api/projects?{request.OrderBy?.ToOrderByQueryParam()}");
+        var outcome = await Client.Get($"api/projects?{request.OrderBy.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);

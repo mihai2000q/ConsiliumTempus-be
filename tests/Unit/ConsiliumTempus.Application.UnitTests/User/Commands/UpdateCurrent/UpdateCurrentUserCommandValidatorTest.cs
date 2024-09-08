@@ -10,20 +10,20 @@ public class UpdateCurrentUserCommandValidatorTest
     private readonly UpdateCurrentUserCommandValidator _uut = new();
 
     #endregion
-    
+
     [Theory]
     [ClassData(typeof(UpdateCurrentUserCommandValidatorData.GetValidCommands))]
     public async Task ValidateUpdateCurrentUserCommand_WhenValid_ShouldReturnTrue(UpdateCurrentUserCommand command)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAsync(command);
 
         // Assert
         outcome.IsValid.Should().BeTrue();
     }
-    
+
     [Theory]
     [ClassData(typeof(UpdateCurrentUserCommandValidatorData.GetInvalidFirstNameCommands))]
     [ClassData(typeof(UpdateCurrentUserCommandValidatorData.GetInvalidLastNameCommands))]
@@ -34,7 +34,7 @@ public class UpdateCurrentUserCommandValidatorTest
         string property)
     {
         // Arrange - parameterized
-        
+
         // Act
         var outcome = await _uut.ValidateAsync(command);
 

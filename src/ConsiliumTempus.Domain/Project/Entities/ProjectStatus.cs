@@ -44,7 +44,7 @@ public sealed class ProjectStatus : Entity<ProjectStatusId>
         UserAggregate createdBy)
     {
         return new ProjectStatus(
-            ProjectStatusId.CreateUnique(), 
+            ProjectStatusId.CreateUnique(),
             title,
             status,
             description,

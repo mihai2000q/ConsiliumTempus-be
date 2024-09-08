@@ -13,7 +13,8 @@ public class UpdateStageFromProjectSprintCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(UpdateStageFromProjectSprintCommandValidatorData.GetValidCommands))]
-    public async Task ValidateUpdateStageFromProjectSprintCommand_WhenValid_ShouldReturnTrue(UpdateStageFromProjectSprintCommand command)
+    public async Task ValidateUpdateStageFromProjectSprintCommand_WhenValid_ShouldReturnTrue(
+        UpdateStageFromProjectSprintCommand command)
     {
         // Arrange - parameterized
 

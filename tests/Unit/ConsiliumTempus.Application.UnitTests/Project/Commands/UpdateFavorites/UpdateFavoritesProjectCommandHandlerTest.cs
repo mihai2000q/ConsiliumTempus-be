@@ -28,7 +28,8 @@ public class UpdateFavoritesProjectCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleUpdateFavoritesProjectCommand_WhenIsSuccessful_ShouldUpdateFavoritesProjectAndReturnSuccess()
+    public async Task
+        HandleUpdateFavoritesProjectCommand_WhenIsSuccessful_ShouldUpdateFavoritesProjectAndReturnSuccess()
     {
         // Arrange
         var project = ProjectFactory.CreateWithSprints();
@@ -41,7 +42,7 @@ public class UpdateFavoritesProjectCommandHandlerTest
             .GetCurrentUserAfterPermissionCheck()
             .Returns(currentUser);
 
-        var command = ProjectCommandFactory.CreateUpdateFavoritesProjectCommand(id: project.Id.Value);
+        var command = ProjectCommandFactory.CreateUpdateFavoritesProjectCommand(project.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);

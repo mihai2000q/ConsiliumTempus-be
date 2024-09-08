@@ -59,7 +59,7 @@ public class WorkspaceControllerUpdateOwnerOwnerTest(WebAppFactory factory)
         // Assert
         await outcome.ValidateError(Errors.Workspace.CollaboratorNotFound);
     }
-    
+
     [Fact]
     public async Task UpdateOwnerWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
     {

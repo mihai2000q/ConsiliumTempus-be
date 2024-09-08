@@ -34,7 +34,8 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddAppAuthentication(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddAppAuthentication(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var jwtSettings = new JwtSettings();
         configuration.Bind(JwtSettings.SectionName, jwtSettings);
@@ -112,6 +113,7 @@ public static class DependencyInjection
 
     private static void AddRepositories(this IServiceCollection services)
     {
+        services.AddScoped<ICustomFieldSetupRepository, CustomFieldSetupRepository>();
         services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<IProjectSprintRepository, ProjectSprintRepository>();
         services.AddScoped<IProjectTaskRepository, ProjectTaskRepository>();

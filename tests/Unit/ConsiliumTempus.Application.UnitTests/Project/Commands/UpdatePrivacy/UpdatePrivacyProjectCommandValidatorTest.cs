@@ -13,7 +13,8 @@ public class UpdatePrivacyProjectCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(UpdatePrivacyProjectCommandValidatorData.GetValidCommands))]
-    public async Task ValidateUpdatePrivacyProjectCommand_WhenValid_ShouldReturnTrue(UpdatePrivacyProjectCommand command)
+    public async Task ValidateUpdatePrivacyProjectCommand_WhenValid_ShouldReturnTrue(
+        UpdatePrivacyProjectCommand command)
     {
         // Arrange - parameterized
 

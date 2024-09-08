@@ -29,7 +29,8 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleKickCollaboratorFromWorkspaceCommand_WhenIsSuccessful_ShouldRemoveCollaboratorAndReturnSuccess()
+    public async Task
+        HandleKickCollaboratorFromWorkspaceCommand_WhenIsSuccessful_ShouldRemoveCollaboratorAndReturnSuccess()
     {
         // Arrange
         var workspace = WorkspaceFactory.CreateWithCollaborators();
@@ -44,7 +45,7 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
 
         var command = WorkspaceCommandFactory.CreateKickCollaboratorFromWorkspaceCommand(
             workspace.Id.Value,
-            collaboratorId: collaborator.Id.Value);
+            collaborator.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -120,7 +121,8 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleKickCollaboratorFromWorkspaceCommand_WhenCollaboratorsIsNull_ShouldReturnCollaboratorNotFoundError()
+    public async Task
+        HandleKickCollaboratorFromWorkspaceCommand_WhenCollaboratorsIsNull_ShouldReturnCollaboratorNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateKickCollaboratorFromWorkspaceCommand();

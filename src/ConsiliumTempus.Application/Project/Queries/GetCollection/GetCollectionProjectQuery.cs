@@ -6,7 +6,7 @@ namespace ConsiliumTempus.Application.Project.Queries.GetCollection;
 public sealed record GetCollectionProjectQuery(
     int? PageSize,
     int? CurrentPage,
-    string[]? OrderBy,
-    string[]? Search,
+    List<string> OrderBy,
+    List<string> Search,
     Guid? WorkspaceId)
     : IRequest<ErrorOr<GetCollectionProjectResult>>;

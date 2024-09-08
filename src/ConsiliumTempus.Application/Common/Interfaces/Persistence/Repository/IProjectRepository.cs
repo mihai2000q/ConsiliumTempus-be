@@ -16,9 +16,10 @@ public interface IProjectRepository
 
     Task<ProjectAggregate?> GetWithCollaborators(ProjectId projectId, CancellationToken cancellationToken = default);
 
-    Task<ProjectAggregate?> GetWithCollaboratorsAndAllowedMembers(ProjectId projectId, CancellationToken cancellationToken = default);
+    Task<ProjectAggregate?> GetWithCollaboratorsAndAllowedMembers(ProjectId projectId,
+        CancellationToken cancellationToken = default);
 
-    Task<ProjectAggregate?> GetWithStagesAndWorkspace(ProjectId id, CancellationToken cancellationToken = default);
+    Task<ProjectAggregate?> GetWithStages(ProjectId id, CancellationToken cancellationToken = default);
 
     Task<List<ProjectAggregate>> GetListByUser(
         UserId userId,
@@ -40,6 +41,8 @@ public interface IProjectRepository
         CancellationToken cancellationToken = default);
 
     Task<List<ProjectAggregate>> GetListByOwner(UserId userId, CancellationToken cancellationToken = default);
+
+    Task<List<ProjectAggregate>> GetListByWorkspace(WorkspaceId workspaceId, CancellationToken cancellationToken = default);
 
     Task<List<ProjectStatus>> GetStatuses(ProjectId id, CancellationToken cancellationToken = default);
 

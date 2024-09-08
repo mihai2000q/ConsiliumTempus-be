@@ -35,7 +35,7 @@ internal static class CreateProjectSprintCommandValidatorData
                 true,
                 new CreateProjectSprintCommand.CreateProjectStatus(
                     "Status Update",
-                    ProjectStatusType.Completed.ToString(),
+                    ProjectStatusType.Completed,
                     "This is the new description of the new sprint that has just ended"));
             Add(command);
         }
@@ -70,12 +70,12 @@ internal static class CreateProjectSprintCommandValidatorData
             var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
                 startDate: new DateOnly(2022, 10, 10),
                 endDate: new DateOnly(2022, 10, 10));
-            Add(command, nameof(command.StartDate).And(nameof(command.EndDate)), 1);
+            Add(command, nameof(command.StartDate).Dot(nameof(command.EndDate)), 1);
 
             command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
                 startDate: new DateOnly(2022, 10, 10),
                 endDate: new DateOnly(2022, 10, 9));
-            Add(command, nameof(command.StartDate).And(nameof(command.EndDate)), 1);
+            Add(command, nameof(command.StartDate).Dot(nameof(command.EndDate)), 1);
         }
     }
     
@@ -92,22 +92,6 @@ internal static class CreateProjectSprintCommandValidatorData
                 projectStatus: ProjectSprintCommandFactory.CreateCreateProjectStatus(
                     title: new string('a', PropertiesValidation.ProjectStatus.TitleMaximumLength + 1)));
             Add(command, nameof(command.ProjectStatus).Dot(nameof(command.ProjectStatus.Title)), 1);
-        }
-    }
-    
-    internal class GetInvalidProjectStatusStatusCommands : TheoryData<CreateProjectSprintCommand, string, short>
-    {
-        public GetInvalidProjectStatusStatusCommands()
-        {
-            var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
-                projectStatus: ProjectSprintCommandFactory.CreateCreateProjectStatus(
-                    status: ""));
-            Add(command, nameof(command.ProjectStatus).Dot(nameof(command.ProjectStatus.Status)), 2);
-            
-            command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
-                projectStatus: ProjectSprintCommandFactory.CreateCreateProjectStatus(
-                    status: "something"));
-            Add(command, nameof(command.ProjectStatus).Dot(nameof(command.ProjectStatus.Status)), 1);
         }
     }
     

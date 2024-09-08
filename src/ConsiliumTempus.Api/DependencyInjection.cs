@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text.Json.Serialization;
 using ConsiliumTempus.Api.Common.Cors;
 using ConsiliumTempus.Api.Common.Errors;
 using Mapster;
@@ -16,7 +17,8 @@ public static class DependencyInjection
             .AddMappings()
             .AddSingleton<ProblemDetailsFactory, ConsiliumTempusProblemDetailsFactory>()
             .AddCorsPolicies()
-            .AddControllers();
+            .AddControllers()
+            .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
     }
 
     public static void AddLogger(this ILoggingBuilder logging, IConfiguration configuration)
@@ -35,7 +37,6 @@ public static class DependencyInjection
     {
         var config = TypeAdapterConfig.GlobalSettings;
         config.Scan(Assembly.GetExecutingAssembly());
-
         services.AddSingleton(config);
         services.AddScoped<IMapper, ServiceMapper>();
         return services;

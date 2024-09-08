@@ -16,13 +16,13 @@ public abstract class ProjectTaskOrder : Order<ProjectTaskAggregate>
         new OrderProperties.ProjectTask.CreatedDateTimeProperty(),
         new OrderProperties.ProjectTask.UpdatedDateTimeProperty()
     ];
-    
+
     private ProjectTaskOrder(Expression<Func<ProjectTaskAggregate, object?>> propertySelector, OrderType orderType)
         : base(propertySelector, orderType)
     {
     }
 
-    public static IReadOnlyList<IOrder<ProjectTaskAggregate>> Parse(string[]? orders)
+    public static IReadOnlyList<IOrder<ProjectTaskAggregate>> Parse(List<string> orders)
     {
         return Parse(orders, OrderProperties);
     }

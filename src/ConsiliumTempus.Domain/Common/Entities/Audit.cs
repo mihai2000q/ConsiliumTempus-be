@@ -12,7 +12,7 @@ public sealed class Audit : Entity<Guid>
     }
 
     private Audit(
-        Guid id, 
+        Guid id,
         UserAggregate? createdBy,
         DateTime createdDateTime,
         UserAggregate? updatedBy,
@@ -44,10 +44,10 @@ public sealed class Audit : Entity<Guid>
         UpdatedBy = updatedBy;
         UpdatedDateTime = DateTime.UtcNow;
     }
-    
-    public void Nullify()
+
+    public void Nullify(UserAggregate user)
     {
-        CreatedBy = null;
-        UpdatedBy = null;
+        if (CreatedBy == user) CreatedBy = null;
+        if (UpdatedBy == user) UpdatedBy = null;
     }
 }

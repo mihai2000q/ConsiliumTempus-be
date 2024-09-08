@@ -49,7 +49,7 @@ public class ProjectSprintControllerMoveStageTest(WebAppFactory factory)
             .SingleAsync(ps => ps.Id == sprint.Id);
         Utils.ProjectSprint.AssertMovedStage(newSprint, request, user, expectedCustomOrderPosition);
     }
-    
+
     [Fact]
     public async Task MoveStageFromProjectSprint_WhenOverStageIsNotFound_ShouldReturnStageNotFoundError()
     {

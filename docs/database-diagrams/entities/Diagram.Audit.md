@@ -9,4 +9,4 @@
 
 ### Diagram
 
-<img src="../../images/database-diagrams/entities/diagram.audit.png" alt="Membership Diagram" width="75%"/>
+<img src="../../images/database-diagrams/entities/diagram.audit.png" alt="Audit Diagram" width="75%"/>

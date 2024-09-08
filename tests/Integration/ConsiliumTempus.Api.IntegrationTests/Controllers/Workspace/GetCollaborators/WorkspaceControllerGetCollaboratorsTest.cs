@@ -46,7 +46,7 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
         // Act
         Client.UseCustomToken(WorkspaceData.Users.First());
         var outcome = await Client.Get($"api/workspaces/{request.Id}/collaborators" +
-                                       $"?{request.OrderBy!.ToOrderByQueryParam()}");
+                                       $"?{request.OrderBy.ToOrderByQueryParam()}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -63,9 +63,10 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
             expectedCollaborators.Count,
             true);
     }
-    
+
     [Fact]
-    public async Task GetCollaboratorsFromWorkspace_WhenRequestHasOrderByAndPagination_ShouldReturnOrderedAndPaginatedCollaborators()
+    public async Task
+        GetCollaboratorsFromWorkspace_WhenRequestHasOrderByAndPagination_ShouldReturnOrderedAndPaginatedCollaborators()
     {
         // Arrange
         var workspace = WorkspaceData.Workspaces.First();

@@ -10,7 +10,7 @@ public class GetOverviewProjectQueryValidatorTest
     private readonly GetOverviewProjectQueryValidator _uut = new();
 
     #endregion
-    
+
     [Theory]
     [ClassData(typeof(GetOverviewProjectQueryValidatorData.GetValidQueries))]
     public async Task ValidateGetOverviewProjectQuery_WhenQueryIsValid_ShouldReturnTrue(GetOverviewProjectQuery query)
@@ -24,7 +24,7 @@ public class GetOverviewProjectQueryValidatorTest
         outcome.IsValid.Should().BeTrue();
         outcome.Errors.Should().BeEmpty();
     }
-    
+
     [Theory]
     [ClassData(typeof(GetOverviewProjectQueryValidatorData.GetInvalidIdQueries))]
     public async Task ValidateGetOverviewProjectQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(

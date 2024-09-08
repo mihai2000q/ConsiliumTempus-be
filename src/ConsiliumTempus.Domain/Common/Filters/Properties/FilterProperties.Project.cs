@@ -18,19 +18,19 @@ internal static partial class FilterProperties
         internal sealed class IsPrivateProperty() : FilterProperty<ProjectAggregate>(
             nameof(ProjectAggregate.IsPrivate),
             p => p.IsPrivate.Value);
-        
+
         internal sealed class LatestStatusProperty() : FilterProperty<ProjectAggregate>(
             nameof(ProjectAggregate.LatestStatus),
             p => p.Statuses.OrderByDescending(s => s.Audit.CreatedDateTime).First().Status);
-        
+
         internal sealed class LastActivityProperty() : FilterProperty<ProjectAggregate>(
             nameof(ProjectAggregate.LastActivity),
             p => p.LastActivity.Date);
-        
+
         internal sealed class CreatedDateTimeProperty() : FilterProperty<ProjectAggregate>(
             nameof(ProjectAggregate.CreatedDateTime),
             p => p.CreatedDateTime.Date);
-        
+
         internal sealed class UpdatedDateTimeProperty() : FilterProperty<ProjectAggregate>(
             nameof(ProjectAggregate.UpdatedDateTime),
             p => p.UpdatedDateTime.Date);

@@ -62,11 +62,11 @@ internal static class GetCollectionProjectTaskQueryValidatorData
         {
             var query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery(
                 pageSize: 1);
-            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)), 1);
+            Add(query, nameof(query.PageSize).Dot(nameof(query.CurrentPage)), 1);
 
             query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery(
                 currentPage: 1);
-            Add(query, nameof(query.PageSize).And(nameof(query.CurrentPage)), 1);
+            Add(query, nameof(query.PageSize).Dot(nameof(query.CurrentPage)), 1);
         }
     }
 

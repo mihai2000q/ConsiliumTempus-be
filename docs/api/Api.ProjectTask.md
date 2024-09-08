@@ -16,6 +16,9 @@
   * [Update](#update)
     * [Update Project Task Request](#update-project-task-request)
     * [Update Project Task Response](#update-project-task-response)
+  * [Update Custom Field](#update-custom-field)
+    * [Update Custom Field From Project Task Request](#update-custom-field-from-project-task-request)
+    * [Update Custom Field From Project Task Response](#update-custom-field-from-project-task-response)
   * [Update Is Completed](#update-is-completed)
     * [Update Is Completed Project Task Request](#update-is-completed-project-task-request)
     * [Update Is Completed Project Task Response](#update-is-completed-project-task-response)
@@ -91,7 +94,23 @@ Returns a project task.
   "workspace": {
     "id": "10000000-0000-0000-0000-000000000000",
     "name": "Some Workspace"
-  }
+  },
+  "customFields": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "name": "Budget",
+      "description": "this is the budget custom field",
+      "type": "Number",
+      "number": 1000
+    },
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "name": "Date",
+      "description": "this is the date custom field",
+      "type": "Date",
+      "date": "2022-10-10"
+    }
+  ]
 }
 ```
 
@@ -99,7 +118,6 @@ Returns a project task.
 
 Anyone that is part of the workspace can read the project tasks
 ([Read Collection Project Task Permission](../Security.md/#permissions)),
-in case the workspace Id is mentioned, otherwise any logged-in user will get their projects.
 
 When the project is private, only allowed members can read the project tasks
 ([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
@@ -133,13 +151,45 @@ Returns the project tasks and their total count.
         "id": "10000000-0000-0000-0000-000000000000",
         "name": "Michael Jordan",
         "email": "michael@jordan.com"
-      }
+      },
+      "customFields": [
+        {
+          "id": "10000000-0000-0000-0000-000000000000",
+          "name": "Budget",
+          "description": "this is the budget custom field",
+          "type": "Number",
+          "number": 1000
+        },
+        {
+          "id": "10000000-0000-0000-0000-000000000000",
+          "name": "Date",
+          "description": "this is the date custom field",
+          "type": "Date",
+          "date": "2022-10-10"
+        }
+      ]
     },
     {
       "id": "20000000-0000-0000-0000-000000000000",
       "name": "Project Task Name 2",
       "isCompleted": false,
-      "assignee": null
+      "assignee": null,
+      "customFields": [
+        {
+          "id": "10000000-0000-0000-0000-000000000000",
+          "name": "Budget",
+          "description": "this is the budget custom field",
+          "type": "Number",
+          "number": 2000
+        },
+        {
+          "id": "10000000-0000-0000-0000-000000000000",
+          "name": "Date",
+          "description": "this is the date custom field",
+          "type": "Date",
+          "date": "2022-05-06"
+        }
+      ]
     }
   ],
   "totalCount": 2
@@ -228,6 +278,43 @@ Sends body data that the project task needs to be updated.
 #### Update Project Task Response
 
 Returns a confirmation message that the project task has been updated successfully.
+
+### Update Custom Field
+
+All members that are part of the workspace can update a task's completion status
+([Update Custom Field From Project Task Permission](../Security.md/#permissions)).
+
+When the project is private, only allowed members can update a task's completion status
+([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+
+```js
+PUT {{host}}/api/projects/tasks/custom-field
+```
+
+#### Update Custom Field Project Task Request
+
+Sends body data that the project task needs to update the custom field.
+
+```json
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "customFieldId": "20000000-0000-0000-0000-000000000000",
+  "type": "Date",
+  "dateCustomField": "2022-10-12",
+  "dateTimeCustomField": null,
+  "durationCustomField": null,
+  "multiSelectCustomField": null,
+  "numberCustomField": null,
+  "peopleCustomField": null,
+  "singleSelectCustomField": null,
+  "textCustomField": null,
+  "timeCustomField": null
+}
+```
+
+#### Update Custom Field From Project Task Response
+
+Returns a confirmation message that the project task's custom field has been updated successfully.
 
 ### Update Is Completed
 

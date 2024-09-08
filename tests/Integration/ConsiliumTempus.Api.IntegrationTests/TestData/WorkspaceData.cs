@@ -1,10 +1,12 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
+using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Common.IntegrationTests.Workspace.Entities;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.User;
@@ -23,11 +25,12 @@ internal class WorkspaceData : ITestData
             Workspaces,
             Memberships,
             WorkspaceInvitations,
-            Projects
+            Projects,
+            CustomFieldSetups
         ];
     }
 
-    public static UserAggregate[] Users { get; } =
+    public static readonly UserAggregate[] Users =
     [
         UserFactory.Create(
             "michaelj@gmail.com",
@@ -73,7 +76,7 @@ internal class WorkspaceData : ITestData
             "Franklin")
     ];
 
-    public static WorkspaceAggregate[] Workspaces { get; } =
+    public static readonly WorkspaceAggregate[] Workspaces =
     [
         WorkspaceFactory.Create(
             Users[0],
@@ -103,7 +106,7 @@ internal class WorkspaceData : ITestData
             "Hi There")
     ];
 
-    public static Membership[] Memberships { get; } =
+    public static readonly Membership[] Memberships =
     [
         MembershipFactory.Create(
             Users[0],
@@ -151,7 +154,7 @@ internal class WorkspaceData : ITestData
             WorkspaceRole.Admin),
     ];
 
-    public static WorkspaceInvitation[] WorkspaceInvitations { get; } =
+    public static readonly WorkspaceInvitation[] WorkspaceInvitations =
     [
         WorkspaceInvitationFactory.Create(
             Users[0],
@@ -175,7 +178,7 @@ internal class WorkspaceData : ITestData
             Workspaces[2]),
     ];
 
-    public static ProjectAggregate[] Projects { get; } =
+    public static readonly ProjectAggregate[] Projects =
     [
         ProjectFactory.Create(
             Workspaces[0],
@@ -243,5 +246,25 @@ internal class WorkspaceData : ITestData
             "Something More Private",
             isPrivate: true,
             allowedMembers: [Users[3]]),
+    ];
+    
+    public static readonly CustomFieldSetupAggregate[] CustomFieldSetups =
+    [
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            [Projects[0]],
+            AuditFactory.Create(Users[0])),
+        CustomFieldSetupFactory.CreateText(
+            null,
+            [Projects[2]],
+            AuditFactory.Create(Users[0])),
+        CustomFieldSetupFactory.CreateNumber(
+            Workspaces[0],
+            [Projects[0]],
+            AuditFactory.Create(Users[0])),
+        CustomFieldSetupFactory.CreateNumber(
+            Workspaces[0],
+            [],
+            AuditFactory.Create(Users[0])),
     ];
 }

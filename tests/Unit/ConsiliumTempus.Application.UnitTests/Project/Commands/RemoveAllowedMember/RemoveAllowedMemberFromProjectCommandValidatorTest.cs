@@ -13,7 +13,8 @@ public class RemoveAllowedMemberFromProjectCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(RemoveAllowedMemberFromProjectCommandValidatorData.GetValidCommands))]
-    public async Task ValidateRemoveAllowedMemberFromProjectCommand_WhenValid_ShouldReturnTrue(RemoveAllowedMemberFromProjectCommand command)
+    public async Task ValidateRemoveAllowedMemberFromProjectCommand_WhenValid_ShouldReturnTrue(
+        RemoveAllowedMemberFromProjectCommand command)
     {
         // Arrange - parameterized
 

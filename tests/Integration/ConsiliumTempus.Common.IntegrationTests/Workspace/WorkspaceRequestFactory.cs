@@ -42,16 +42,16 @@ public static class WorkspaceRequestFactory
         bool isPersonalWorkspaceFirst = false,
         int? pageSize = null,
         int? currentPage = null,
-        string[]? orderBy = null,
-        string[]? search = null)
+        List<string>? orderBy = null,
+        List<string>? search = null)
     {
         return new GetCollectionWorkspaceRequest
         {
             IsPersonalWorkspaceFirst = isPersonalWorkspaceFirst,
             PageSize = pageSize,
             CurrentPage = currentPage,
-            OrderBy = orderBy,
-            Search = search
+            OrderBy = orderBy ?? [],
+            Search = search ?? []
         };
     }
 
@@ -59,8 +59,8 @@ public static class WorkspaceRequestFactory
         Guid? id = null,
         int? pageSize = null,
         int? currentPage = null,
-        string[]? orderBy = null,
-        string[]? search = null,
+        List<string>? orderBy = null,
+        List<string>? search = null,
         string searchValue = "")
     {
         return new GetCollaboratorsFromWorkspaceRequest
@@ -68,8 +68,8 @@ public static class WorkspaceRequestFactory
             Id = id ?? Guid.NewGuid(),
             PageSize = pageSize,
             CurrentPage = currentPage,
-            OrderBy = orderBy,
-            Search = search,
+            OrderBy = orderBy ?? [],
+            Search = search ?? [],
             SearchValue = searchValue
         };
     }
@@ -185,7 +185,7 @@ public static class WorkspaceRequestFactory
         return new KickCollaboratorFromWorkspaceRequest
         {
             Id = id ?? Guid.NewGuid(),
-            CollaboratorId = collaboratorId ?? Guid.NewGuid(),
+            CollaboratorId = collaboratorId ?? Guid.NewGuid()
         };
     }
 

@@ -17,7 +17,7 @@ internal class AuthData : ITestData
         ];
     }
 
-    public static UserAggregate[] Users { get; } =
+    public static readonly UserAggregate[] Users =
     [
         UserFactory.Create(
             "michaelj@gmail.com",
@@ -27,14 +27,15 @@ internal class AuthData : ITestData
             "Pro Basketball Player")
     ];
 
-    public static RefreshToken[] RefreshTokens { get; } =
+    public static readonly RefreshToken[] RefreshTokens =
     [
         RefreshTokenFactory.Create(
             Users[0],
             history: [RefreshTokenHistoryFactory.Create(Guid.Parse("90000000-9000-0000-0000-900000000000"))]),
         RefreshTokenFactory.Create(
             Users[0],
-            history: [
+            history:
+            [
                 RefreshTokenHistoryFactory.Create(Guid.Parse("90000000-9000-0000-0000-900000000000")),
                 RefreshTokenHistoryFactory.Create(Guid.Parse("90000000-9000-0000-0000-900000000001"))
             ]),

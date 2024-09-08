@@ -1,0 +1,21 @@
+﻿using ConsiliumTempus.Common.IntegrationTests.TestConstants;
+using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.ValueObjects;
+
+namespace ConsiliumTempus.Common.IntegrationTests.Common.Entities;
+
+public static class SingleSelectOptionFactory
+{
+    public static SingleSelectOption Create(
+        string color = Constants.SingleSelectOption.Color,
+        string value = Constants.SingleSelectOption.Value,
+        int customOrderPosition = 0)
+    {
+        return EntityBuilder<SingleSelectOption>.Empty()
+            .WithProperty(nameof(SingleSelectOption.Id), Guid.NewGuid())
+            .WithProperty(nameof(SingleSelectOption.Color), color)
+            .WithProperty(nameof(SingleSelectOption.Value), value)
+            .WithProperty(nameof(SingleSelectOption.CustomOrderPosition), CustomOrderPosition.Create(customOrderPosition))
+            .Build();
+    }
+}

@@ -24,11 +24,9 @@ public class Order<TEntity> : IOrder<TEntity>
     }
 
     protected static IReadOnlyList<IOrder<TEntity>> Parse(
-        string[]? orders,
+        List<string> orders,
         IReadOnlyList<OrderProperty<TEntity>> orderProperties)
     {
-        if (orders is null) return [];
-
         return orders
             .SelectMany(stringOrder => ParseOrder(stringOrder, orderProperties))
             .ToList();

@@ -104,7 +104,7 @@ public class RefreshCommandHandlerTest
 
         Utils.RefreshToken.AssertRefresh(refreshToken, newJwtId);
     }
-    
+
     [Fact]
     public async Task HandleRefreshCommand_WhenItHasBeenRefreshedAlready_ShouldReturnAccessToken()
     {
@@ -170,7 +170,7 @@ public class RefreshCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Token.Should().Be(token);
     }
-    
+
     [Fact]
     public async Task HandleRefreshCommand_WhenJwtIdIsUnknown_ShouldReturnInvalidTokensError()
     {
@@ -276,7 +276,7 @@ public class RefreshCommandHandlerTest
 
         outcome.ValidateError(Errors.Authentication.InvalidTokens);
     }
-    
+
     [Fact]
     public async Task HandleRefreshCommand_WhenRefreshTokenIsNull_ShouldReturnInvalidTokensError()
     {
@@ -286,7 +286,7 @@ public class RefreshCommandHandlerTest
         _jwtTokenValidator
             .ValidateAccessToken(Arg.Any<string>())
             .Returns(true);
-        
+
         _refreshTokenRepository
             .Get(Arg.Any<RefreshTokenId>())
             .ReturnsNull();
@@ -298,7 +298,7 @@ public class RefreshCommandHandlerTest
         await _jwtTokenValidator
             .Received(1)
             .ValidateAccessToken(Arg.Is<string>(t => t == command.Token));
-        
+
         await _refreshTokenRepository
             .Received(1)
             .Get(Arg.Is<RefreshTokenId>(id => id.Value == command.RefreshToken));

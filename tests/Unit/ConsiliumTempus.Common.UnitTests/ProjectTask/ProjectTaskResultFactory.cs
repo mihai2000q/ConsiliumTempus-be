@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
@@ -16,7 +17,7 @@ public static class ProjectTaskResultFactory
         int totalCount = 25)
     {
         return new GetCollectionProjectTaskResult(
-            tasks ?? ProjectTaskFactory.CreateList(),
+            tasks ?? ProjectTaskFactory.CreateListWithCustomFields(),
             totalCount);
     }
 
@@ -33,6 +34,11 @@ public static class ProjectTaskResultFactory
     public static UpdateProjectTaskResult CreateUpdateProjectTaskResult()
     {
         return new UpdateProjectTaskResult();
+    }
+
+    public static UpdateCustomFieldFromProjectTaskResult CreateUpdateCustomFieldFromProjectTaskResult()
+    {
+        return new UpdateCustomFieldFromProjectTaskResult();
     }
 
     public static UpdateIsCompletedProjectTaskResult CreateUpdateIsCompletedProjectTaskResult()

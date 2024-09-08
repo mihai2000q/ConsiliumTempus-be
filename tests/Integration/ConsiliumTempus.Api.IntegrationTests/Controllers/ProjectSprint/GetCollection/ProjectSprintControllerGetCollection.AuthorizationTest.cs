@@ -50,7 +50,8 @@ public class ProjectSprintControllerGetCollectionAuthorizationTest(WebAppFactory
     }
 
     [Fact]
-    public async Task GetCollectionProjectSprint_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
+    public async Task
+        GetCollectionProjectSprint_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectSprintData.Users[0], ProjectSprintData.Projects[^1]);
     }

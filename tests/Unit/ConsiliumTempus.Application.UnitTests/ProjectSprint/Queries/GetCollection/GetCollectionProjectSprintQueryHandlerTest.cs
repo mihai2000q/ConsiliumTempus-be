@@ -35,7 +35,7 @@ public class GetCollectionProjectSprintQueryHandlerTest
         // Arrange
         _projectSprintRepository
             .GetListByProject(
-                Arg.Any<ProjectId>(), 
+                Arg.Any<ProjectId>(),
                 Arg.Any<IReadOnlyList<IFilter<ProjectSprintAggregate>>>(),
                 Arg.Any<bool>())
             .Returns(sprints);
@@ -43,7 +43,7 @@ public class GetCollectionProjectSprintQueryHandlerTest
         const int totalCount = 25;
         _projectSprintRepository
             .GetListByProjectCount(
-                Arg.Any<ProjectId>(), 
+                Arg.Any<ProjectId>(),
                 Arg.Any<IReadOnlyList<IFilter<ProjectSprintAggregate>>>(),
                 Arg.Any<bool>())
             .Returns(totalCount);
@@ -63,17 +63,17 @@ public class GetCollectionProjectSprintQueryHandlerTest
             .Received(1)
             .GetListByProject(
                 Arg.Is<ProjectId>(pId => pId.Value == query.ProjectId),
-                Arg.Is<IReadOnlyList<IFilter<ProjectSprintAggregate>>>(filters => 
+                Arg.Is<IReadOnlyList<IFilter<ProjectSprintAggregate>>>(filters =>
                     filters.AssertFilters(query.Search, ProjectSprintFilter.FilterProperties)),
                 Arg.Is<bool>(f => f == query.FromThisYear));
         await _projectSprintRepository
             .Received(1)
             .GetListByProjectCount(
                 Arg.Is<ProjectId>(pId => pId.Value == query.ProjectId),
-                Arg.Is<IReadOnlyList<IFilter<ProjectSprintAggregate>>>(filters => 
+                Arg.Is<IReadOnlyList<IFilter<ProjectSprintAggregate>>>(filters =>
                     filters.AssertFilters(query.Search, ProjectSprintFilter.FilterProperties)),
                 Arg.Is<bool>(f => f == query.FromThisYear));
-        
+
         outcome.IsError.Should().BeFalse();
         if (sprints.IsEmpty() && query.FromThisYear)
         {
@@ -83,11 +83,11 @@ public class GetCollectionProjectSprintQueryHandlerTest
                 .Received(1)
                 .GetFirstByProject(
                     Arg.Is<ProjectId>(pId => pId.Value == query.ProjectId),
-                    Arg.Is<IReadOnlyList<IFilter<ProjectSprintAggregate>>>(filters => 
+                    Arg.Is<IReadOnlyList<IFilter<ProjectSprintAggregate>>>(filters =>
                         filters.AssertFilters(query.Search, ProjectSprintFilter.FilterProperties)));
         }
         else
-        { 
+        {
             outcome.Value.Sprints.Should().BeEquivalentTo(sprints);
             await _projectSprintRepository
                 .DidNotReceive()
@@ -95,6 +95,7 @@ public class GetCollectionProjectSprintQueryHandlerTest
                     Arg.Any<ProjectId>(),
                     Arg.Any<IReadOnlyList<IFilter<ProjectSprintAggregate>>>());
         }
+
         outcome.Value.TotalCount.Should().Be(totalCount);
     }
 }

@@ -35,7 +35,7 @@ public class GetCollaboratorsFromWorkspaceQueryHandlerTest
 
         var collaborators = MembershipFactory.CreateList();
         _workspaceRepository
-            .GetCollaborators(Arg.Any<WorkspaceId>(), 
+            .GetCollaborators(Arg.Any<WorkspaceId>(),
                 Arg.Any<string>(),
                 Arg.Any<IReadOnlyList<IFilter<Membership>>>(),
                 Arg.Any<IReadOnlyList<IOrder<Membership>>>(),
@@ -44,7 +44,7 @@ public class GetCollaboratorsFromWorkspaceQueryHandlerTest
 
         const int totalCount = 25;
         _workspaceRepository
-            .GetCollaboratorsCount(Arg.Any<WorkspaceId>(), 
+            .GetCollaboratorsCount(Arg.Any<WorkspaceId>(),
                 Arg.Any<string>(),
                 Arg.Any<IReadOnlyList<IFilter<Membership>>>())
             .Returns(totalCount);
@@ -58,18 +58,18 @@ public class GetCollaboratorsFromWorkspaceQueryHandlerTest
             .GetCollaborators(
                 Arg.Is<WorkspaceId>(id => query.Id == id.Value),
                 Arg.Is<string>(s => s == query.SearchValue),
-                Arg.Is<IReadOnlyList<IFilter<Membership>>>(filters => 
+                Arg.Is<IReadOnlyList<IFilter<Membership>>>(filters =>
                     filters.AssertFilters(query.Search, MembershipFilter.FilterProperties)),
-                Arg.Is<IReadOnlyList<IOrder<Membership>>>(orders => 
+                Arg.Is<IReadOnlyList<IOrder<Membership>>>(orders =>
                     orders.AssertOrders(query.OrderBy, MembershipOrder.OrderProperties)),
-                Arg.Is<PaginationInfo?>(p => 
+                Arg.Is<PaginationInfo?>(p =>
                     p.AssertPagination(query.PageSize, query.CurrentPage)));
         await _workspaceRepository
             .Received(1)
             .GetCollaboratorsCount(
                 Arg.Is<WorkspaceId>(id => query.Id == id.Value),
                 Arg.Is<string>(s => s == query.SearchValue),
-                Arg.Is<IReadOnlyList<IFilter<Membership>>>(filters => 
+                Arg.Is<IReadOnlyList<IFilter<Membership>>>(filters =>
                     filters.AssertFilters(query.Search, MembershipFilter.FilterProperties)));
 
         outcome.IsError.Should().BeFalse();

@@ -7,7 +7,7 @@ public sealed record GetCollaboratorsFromWorkspaceQuery(
     Guid Id,
     int? CurrentPage,
     int? PageSize,
-    string[]? OrderBy,
-    string[]? Search,
+    List<string> OrderBy,
+    List<string> Search,
     string? SearchValue)
     : IRequest<ErrorOr<GetCollaboratorsFromWorkspaceResult>>;

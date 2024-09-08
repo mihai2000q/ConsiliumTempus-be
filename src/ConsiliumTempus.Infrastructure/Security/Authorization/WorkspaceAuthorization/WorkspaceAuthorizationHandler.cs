@@ -83,7 +83,7 @@ public sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory serviceSc
     {
         Empty,
         Workspace,
-        Project,
+        Project
     }
 
     private static bool IsAuthorized(

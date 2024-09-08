@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Workspace.Events;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ErrorOr;
 using MediatR;
@@ -19,6 +20,7 @@ public sealed class DeleteWorkspaceCommandHandler(IWorkspaceRepository workspace
         if (workspace.IsPersonal.Value) return Errors.Workspace.DeletePersonalWorkspace;
 
         workspaceRepository.Remove(workspace);
+        workspace.AddDomainEvent(new WorkspaceDeleted(workspace));
 
         return new DeleteWorkspaceResult();
     }

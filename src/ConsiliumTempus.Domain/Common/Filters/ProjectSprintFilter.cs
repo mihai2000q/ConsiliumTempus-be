@@ -10,14 +10,14 @@ public abstract class ProjectSprintFilter : Filter<ProjectSprintAggregate>
 {
     public static readonly IReadOnlyList<FilterProperty<ProjectSprintAggregate>> FilterProperties =
     [
-        new FilterProperties.ProjectSprint.NameFilterProperty(),
+        new FilterProperties.ProjectSprint.NameFilterProperty()
     ];
 
     private ProjectSprintFilter(Expression<Func<ProjectSprintAggregate, bool>> predicate) : base(predicate)
     {
     }
 
-    public static IReadOnlyList<IFilter<ProjectSprintAggregate>> Parse(string[]? search)
+    public static IReadOnlyList<IFilter<ProjectSprintAggregate>> Parse(List<string> search)
     {
         return Parse(search, FilterProperties);
     }

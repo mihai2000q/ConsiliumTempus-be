@@ -193,7 +193,7 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
             Problem
         );
     }
-    
+
     [HasWorkspaceAuthorization(WorkspaceAuthorizationLevel.IsCollaborator)]
     [HasProjectAuthorization(ProjectAuthorizationLevel.IsProjectOwner)]
     [HttpPut("Privacy")]
@@ -293,7 +293,8 @@ public sealed class ProjectController(IMapper mapper, ISender mediator) : ApiCon
         var result = await Mediator.Send(command, cancellationToken);
 
         return result.Match(
-            removeAllowedMemberResult => Ok(Mapper.Map<RemoveAllowedMemberFromProjectResponse>(removeAllowedMemberResult)),
+            removeAllowedMemberResult =>
+                Ok(Mapper.Map<RemoveAllowedMemberFromProjectResponse>(removeAllowedMemberResult)),
             Problem
         );
     }

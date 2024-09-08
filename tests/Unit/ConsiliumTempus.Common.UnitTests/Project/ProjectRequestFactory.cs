@@ -42,16 +42,16 @@ public static class ProjectRequestFactory
     public static GetCollectionProjectRequest CreateGetCollectionProjectRequest(
         int? pageSize = null,
         int? currentPage = null,
-        string[]? orderBy = null,
-        string[]? search = null,
+        List<string>? orderBy = null,
+        List<string>? search = null,
         Guid? workspaceId = null)
     {
         return new GetCollectionProjectRequest
         {
             PageSize = pageSize,
             CurrentPage = currentPage,
-            OrderBy = orderBy,
-            Search = search,
+            OrderBy = orderBy ?? [],
+            Search = search ?? [],
             WorkspaceId = workspaceId
         };
     }
@@ -101,7 +101,7 @@ public static class ProjectRequestFactory
         return new AddStatusToProjectRequest(
             id ?? Guid.NewGuid(),
             title,
-            status.ToString(),
+            status,
             description);
     }
 
@@ -113,7 +113,7 @@ public static class ProjectRequestFactory
         return new UpdateProjectRequest(
             id ?? Guid.NewGuid(),
             name,
-            lifecycle.ToString());
+            lifecycle);
     }
 
     public static UpdateFavoritesProjectRequest CreateUpdateFavoritesProjectRequest(
@@ -190,7 +190,7 @@ public static class ProjectRequestFactory
         return new RemoveAllowedMemberFromProjectRequest
         {
             Id = id ?? Guid.NewGuid(),
-            AllowedMemberId = allowedMemberId ?? Guid.NewGuid(),
+            AllowedMemberId = allowedMemberId ?? Guid.NewGuid()
         };
     }
 
@@ -201,7 +201,7 @@ public static class ProjectRequestFactory
         return new RemoveStatusFromProjectRequest
         {
             Id = id ?? Guid.NewGuid(),
-            StatusId = statusId ?? Guid.NewGuid(),
+            StatusId = statusId ?? Guid.NewGuid()
         };
     }
 }

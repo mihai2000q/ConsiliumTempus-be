@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.Get;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Move;
 using ConsiliumTempus.Api.Contracts.ProjectTask.Update;
+using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateCustomField;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Api.Controllers;
@@ -13,6 +14,7 @@ using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
@@ -270,6 +272,53 @@ public class ProjectTaskControllerTest
             .Received(1)
             .Send(Arg.Is<UpdateProjectTaskCommand>(command =>
                 Utils.ProjectTask.AssertUpdateCommand(command, request)));
+
+        outcome.ValidateError(error);
+    }
+
+    [Fact]
+    public async Task UpdateCustomField_WhenIsSuccessful_ShouldReturnResponse()
+    {
+        // Arrange
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest();
+
+        var result = ProjectTaskResultFactory.CreateUpdateCustomFieldFromProjectTaskResult();
+        _mediator
+            .Send(Arg.Any<UpdateCustomFieldFromProjectTaskCommand>())
+            .Returns(result);
+
+        // Act
+        var outcome = await _uut.UpdateCustomField(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateCustomFieldFromProjectTaskCommand>(command =>
+                Utils.ProjectTask.AssertUpdateCustomFieldCommand(command, request)));
+
+        var response = outcome.ToResponse<UpdateCustomFieldFromProjectTaskResponse>();
+        response.Message.Should().Be(result.Message);
+    }
+
+    [Fact]
+    public async Task UpdateCustomField_WhenItFails_ShouldReturnProblem()
+    {
+        // Arrange
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest();
+
+        var error = Errors.ProjectTask.NotFound;
+        _mediator
+            .Send(Arg.Any<UpdateCustomFieldFromProjectTaskCommand>())
+            .Returns(error);
+
+        // Act
+        var outcome = await _uut.UpdateCustomField(request, default);
+
+        // Assert
+        await _mediator
+            .Received(1)
+            .Send(Arg.Is<UpdateCustomFieldFromProjectTaskCommand>(command =>
+                Utils.ProjectTask.AssertUpdateCustomFieldCommand(command, request)));
 
         outcome.ValidateError(error);
     }

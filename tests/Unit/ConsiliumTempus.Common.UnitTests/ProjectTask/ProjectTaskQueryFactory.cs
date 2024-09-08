@@ -9,18 +9,18 @@ public static class ProjectTaskQueryFactory
     {
         return new GetProjectTaskQuery(id ?? Guid.NewGuid());
     }
-    
+
     public static GetCollectionProjectTaskQuery CreateGetCollectionProjectTaskQuery(
         Guid? projectStageId = null,
-        string[]? search = null,
-        string[]? orderBy = null,
+        List<string>? search = null,
+        List<string>? orderBy = null,
         int? currentPage = null,
         int? pageSize = null)
     {
         return new GetCollectionProjectTaskQuery(
             projectStageId ?? Guid.NewGuid(),
-            search,
-            orderBy,
+            search ?? [],
+            orderBy ?? [],
             currentPage,
             pageSize);
     }

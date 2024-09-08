@@ -28,7 +28,8 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleRemoveAllowedMemberFromProjectCommand_WhenIsSuccessful_ShouldRemoveAllowedMemberFromProject()
+    public async Task
+        HandleRemoveAllowedMemberFromProjectCommand_WhenIsSuccessful_ShouldRemoveAllowedMemberFromProject()
     {
         // Arrange
         var project = ProjectFactory.CreateWithAllowedMembers(isPrivate: true);
@@ -63,7 +64,7 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task 
+    public async Task
         HandleRemoveAllowedMemberFromProjectCommand_WhenCurrentUserIsRemoved_ShouldReturnRemoveYourselfError()
     {
         // Arrange
@@ -96,7 +97,7 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task 
+    public async Task
         HandleRemoveAllowedMemberFromProjectCommand_WhenOwnerIsRemoved_ShouldReturnRemoveOwnerError()
     {
         // Arrange
@@ -123,7 +124,8 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleRemoveAllowedMemberFromProjectCommand_WhenAllowedMemberIsNull_ShouldReturnAllowedMemberNotFoundError()
+    public async Task
+        HandleRemoveAllowedMemberFromProjectCommand_WhenAllowedMemberIsNull_ShouldReturnAllowedMemberNotFoundError()
     {
         // Arrange
         var project = ProjectFactory.Create(isPrivate: true);
@@ -131,7 +133,7 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
             .GetWithAllowedMembers(Arg.Any<ProjectId>())
             .Returns(project);
 
-        var command = ProjectCommandFactory.CreateRemoveAllowedMemberFromProjectCommand(id: project.Id.Value);
+        var command = ProjectCommandFactory.CreateRemoveAllowedMemberFromProjectCommand(project.Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, default);
@@ -144,7 +146,7 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
 
         outcome.ValidateError(Errors.Project.AllowedMemberNotFound);
     }
-    
+
     [Fact]
     public async Task HandleRemoveAllowedMemberFromProjectCommand_WhenProjectIsNotPrivate_ShouldReturnNotPrivateError()
     {

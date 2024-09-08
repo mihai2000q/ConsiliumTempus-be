@@ -3,6 +3,7 @@ using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace.Entities;
@@ -11,7 +12,7 @@ using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Workspace;
 
-public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITimestamps
+public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private WorkspaceAggregate()
@@ -41,6 +42,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     private readonly List<ProjectAggregate> _projects = [];
     private readonly List<UserAggregate> _favorites = [];
     private readonly List<WorkspaceInvitation> _invitations = [];
+    private readonly List<CustomFieldSetupAggregate> _customFieldSetups = [];
 
     public Name Name { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
@@ -53,6 +55,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
     public IReadOnlyList<ProjectAggregate> Projects => _projects.AsReadOnly();
     public IReadOnlyList<UserAggregate> Favorites => _favorites.AsReadOnly();
     public IReadOnlyList<WorkspaceInvitation> Invitations => _invitations.AsReadOnly();
+    public IReadOnlyList<CustomFieldSetupAggregate> CustomFieldSetups => _customFieldSetups.AsReadOnly();
 
     public static WorkspaceAggregate Create(
         Name name,
@@ -63,7 +66,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
         var workspace = new WorkspaceAggregate(
             WorkspaceId.CreateUnique(),
             name,
-            description, 
+            description,
             owner,
             isPersonal,
             DateTime.UtcNow,
@@ -75,7 +78,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId, Guid>, ITime
 
         return workspace;
     }
-    
+
     public bool IsFavorite(UserAggregate user)
     {
         return _favorites.Contains(user);

@@ -21,7 +21,7 @@ public class ProjectControllerUpdatePrivacyTest(WebAppFactory factory)
         // Arrange
         var project = ProjectData.Projects.First();
         var request = ProjectRequestFactory.CreateUpdatePrivacyProjectRequest(
-            project.Id.Value, 
+            project.Id.Value,
             true);
 
         // Act

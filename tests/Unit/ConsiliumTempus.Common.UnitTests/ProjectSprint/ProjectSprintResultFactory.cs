@@ -23,44 +23,44 @@ public static class ProjectSprintResultFactory
             sprints ?? ProjectSprintFactory.CreateList(),
             totalCount);
     }
-    
+
     public static GetStagesFromProjectSprintResult CreateGetStagesFromProjectSprintResult(
         List<ProjectStage>? stages = null)
     {
         return new GetStagesFromProjectSprintResult(
             stages ?? ProjectStageFactory.CreateList());
     }
-    
+
     public static CreateProjectSprintResult CreateCreateProjectSprintResult()
     {
         return new CreateProjectSprintResult();
     }
-    
+
     public static AddStageToProjectSprintResult CreateAddStageToProjectSprintResult()
     {
         return new AddStageToProjectSprintResult();
     }
-    
+
     public static UpdateProjectSprintResult CreateUpdateProjectSprintResult()
     {
         return new UpdateProjectSprintResult();
     }
-    
+
     public static UpdateStageFromProjectSprintResult CreateUpdateStageFromProjectSprintResult()
     {
         return new UpdateStageFromProjectSprintResult();
     }
-    
+
     public static MoveStageFromProjectSprintResult CreateMoveStageFromProjectSprintResult()
     {
         return new MoveStageFromProjectSprintResult();
     }
-    
+
     public static DeleteProjectSprintResult CreateDeleteProjectSprintResult()
     {
         return new DeleteProjectSprintResult();
     }
-    
+
     public static RemoveStageFromProjectSprintResult CreateRemoveStageFromProjectSprintResult()
     {
         return new RemoveStageFromProjectSprintResult();

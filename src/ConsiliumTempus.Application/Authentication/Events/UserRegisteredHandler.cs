@@ -8,7 +8,7 @@ using Constants = ConsiliumTempus.Domain.Common.Constants.Constants;
 
 namespace ConsiliumTempus.Application.Authentication.Events;
 
-public sealed class UserRegisteredHandler(IWorkspaceRepository workspaceRepository) 
+public sealed class UserRegisteredHandler(IWorkspaceRepository workspaceRepository)
     : INotificationHandler<UserRegistered>
 {
     public async Task Handle(UserRegistered notification, CancellationToken cancellationToken)

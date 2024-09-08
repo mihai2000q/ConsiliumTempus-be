@@ -13,7 +13,8 @@ public class AddAllowedMemberToProjectCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(AddAllowedMemberToProjectCommandValidatorData.GetValidCommands))]
-    public async Task ValidateAddAllowedMemberToProjectCommand_WhenValid_ShouldReturnTrue(AddAllowedMemberToProjectCommand command)
+    public async Task ValidateAddAllowedMemberToProjectCommand_WhenValid_ShouldReturnTrue(
+        AddAllowedMemberToProjectCommand command)
     {
         // Arrange - parameterized
 

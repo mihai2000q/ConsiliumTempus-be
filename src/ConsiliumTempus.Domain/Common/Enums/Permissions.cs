@@ -2,19 +2,18 @@
 
 public enum Permissions
 {
-    // Workspace
-    ReadWorkspace,
-    ReadOverviewWorkspace,
-    ReadInvitationsFromWorkspace,
-    UpdateWorkspace,
-    UpdateFavoritesWorkspace,
-    UpdateOverviewWorkspace,
-    DeleteWorkspace,
-    // Workspace - Collaborators
-    InviteCollaboratorToWorkspace,
-    ReadCollaboratorsFromWorkspace,
-    UpdateCollaboratorFromWorkspace,
-    KickCollaboratorFromWorkspace,
+    // Custom Field Setup
+    CreateCustomFieldSetupOnProject,
+    CreateCustomFieldSetupOnWorkspace,
+    AddCustomFieldSetupToProject,
+    ReadCustomFieldSetup,
+    ReadCollectionCustomFieldSetupFromProject,
+    ReadCollectionCustomFieldSetupFromWorkspace,
+    UpdateCustomFieldSetup,
+    MakeCustomFieldSetupGlobal,
+    DeleteCustomFieldSetup,
+    RemoveCustomFieldSetupFromProject,
+    
     // Project
     CreateProject,
     ReadProject,
@@ -24,32 +23,53 @@ public enum Permissions
     UpdateFavoritesProject,
     UpdateOverviewProject,
     DeleteProject,
+
+    // Project - Allowed Members
+    ReadAllowedMembersFromProject,
+    
     // Project - Project Status
     AddStatusToProject,
     ReadStatusesFromProject,
     UpdateStatusFromProject,
     RemoveStatusFromProject,
-    // Project - Allowed Members
-    ReadAllowedMembersFromProject,
+
     // Project Sprint
     CreateProjectSprint,
     ReadProjectSprint,
     ReadCollectionProjectSprint,
     UpdateProjectSprint,
     DeleteProjectSprint,
+
     // Project Sprint - Project Stage
     ReadStagesFromProjectSprint,
     AddStageToProjectSprint,
     MoveStageFromProjectSprint,
     UpdateStageFromProjectSprint,
     RemoveStageFromProjectSprint,
+
     // Project Task
     CreateProjectTask,
     ReadProjectTask,
     ReadCollectionProjectTask,
     MoveProjectTask,
     UpdateProjectTask,
+    UpdateCustomFieldFromProjectTask,
     UpdateIsCompletedProjectTask,
     UpdateOverviewProjectTask,
-    DeleteProjectTask
+    DeleteProjectTask,
+    
+    // Workspace
+    ReadWorkspace,
+    ReadOverviewWorkspace,
+    ReadInvitationsFromWorkspace,
+    UpdateWorkspace,
+    UpdateFavoritesWorkspace,
+    UpdateOverviewWorkspace,
+    DeleteWorkspace,
+
+    // Workspace - Collaborators
+    InviteCollaboratorToWorkspace,
+    ReadCollaboratorsFromWorkspace,
+    UpdateCollaboratorFromWorkspace,
+    KickCollaboratorFromWorkspace,
 }

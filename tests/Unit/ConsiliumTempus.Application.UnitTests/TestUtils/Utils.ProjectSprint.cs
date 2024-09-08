@@ -64,8 +64,8 @@ internal static partial class Utils
                 {
                     projectSprint.Stages.Should().HaveSameCount(project.Sprints[0].Stages);
                     projectSprint.Stages
-                        .OrderBy(s => s.CustomOrderPosition.Value)
-                        .Zip(project.Sprints[0].Stages.OrderBy(s => s.CustomOrderPosition.Value))
+                        .OrderBy(s => s.CustomOrderPosition)
+                        .Zip(project.Sprints[0].Stages.OrderBy(s => s.CustomOrderPosition))
                         .Should().AllSatisfy((x) =>
                         {
                             var (newStage, stage) = x;
@@ -76,7 +76,9 @@ internal static partial class Utils
                         });
                 }
                 else
+                {
                     projectSprint.Stages.Should().BeEmpty();
+                }
             }
             else
             {
@@ -100,7 +102,7 @@ internal static partial class Utils
             {
                 project.LatestStatus.Should().NotBeNull();
                 project.LatestStatus!.Title.Value.Should().Be(command.ProjectStatus.Title);
-                project.LatestStatus!.Status.ToString().ToLower().Should().Be(command.ProjectStatus.Status.ToLower());
+                project.LatestStatus!.Status.Should().Be(command.ProjectStatus.Status);
                 project.LatestStatus!.Description.Value.Should().Be(command.ProjectStatus.Description);
             }
 
@@ -121,7 +123,7 @@ internal static partial class Utils
 
             return true;
         }
-        
+
         internal static void AssertFromMoveStageCommand(
             Domain.ProjectSprint.Entities.ProjectStage stage,
             MoveStageFromProjectSprintCommand command,
@@ -135,7 +137,7 @@ internal static partial class Utils
             var sprint = stage.Sprint;
 
             sprint.Stages.ShouldBeOrdered();
-            
+
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }

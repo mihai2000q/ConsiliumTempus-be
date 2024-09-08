@@ -10,7 +10,7 @@ public class GetProjectTaskQueryValidatorTest
     private readonly GetProjectTaskQueryValidator _uut = new();
 
     #endregion
-    
+
     [Theory]
     [ClassData(typeof(GetProjectTaskQueryValidatorData.GetValidQueries))]
     public async Task HandleGetProjectTaskQuery_WhenQueryIsValid_ShouldReturnTrue(GetProjectTaskQuery query)
@@ -24,7 +24,7 @@ public class GetProjectTaskQueryValidatorTest
         outcome.IsValid.Should().BeTrue();
         outcome.Errors.Should().BeEmpty();
     }
-    
+
     [Theory]
     [ClassData(typeof(GetProjectTaskQueryValidatorData.GetInvalidIdQueries))]
     public async Task HandleGetProjectTaskQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(

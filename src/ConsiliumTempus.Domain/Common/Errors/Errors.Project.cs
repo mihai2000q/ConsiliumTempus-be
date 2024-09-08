@@ -34,7 +34,7 @@ public static partial class Errors
             "Project.RemoveOwner",
             "You cannot remove the owner from allowed members");
     }
-    
+
     public static class ProjectStatus
     {
         public static Error NotFound => Error.NotFound(

@@ -16,7 +16,7 @@ public sealed class GetInvitationsWorkspaceQueryHandler(
     public async Task<ErrorOr<GetInvitationsWorkspaceResult>> Handle(GetInvitationsWorkspaceQuery query,
         CancellationToken cancellationToken)
     {
-        var user = query.IsSender is not null 
+        var user = query.IsSender is not null
             ? await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken)
             : null;
 

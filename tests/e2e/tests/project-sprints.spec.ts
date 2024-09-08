@@ -26,7 +26,7 @@ test.describe('should allow operations on the project sprint entity', () => {
     PROJECT_ID = (await createProject(request, {
       workspaceId: workspace.id,
       name: "Project name",
-      isPrivate: true
+      isPrivate: false
     })).id
   })
 

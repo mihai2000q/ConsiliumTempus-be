@@ -33,7 +33,7 @@ public class DeleteProjectTaskCommandHandlerTest
         _projectSprintRepository
             .GetStageWithTasksAndWorkspace(Arg.Any<ProjectStageId>())
             .Returns(stage);
-        
+
         var command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand(
             task.Id.Value,
             stage.Id.Value);

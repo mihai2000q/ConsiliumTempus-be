@@ -25,7 +25,8 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
     #endregion
 
     [Fact]
-    public async Task HandleRejectInvitationToWorkspaceCommand_WhenIsSuccessful_ShouldRemoveInvitationAndReturnSuccessResponse()
+    public async Task
+        HandleRejectInvitationToWorkspaceCommand_WhenIsSuccessful_ShouldRemoveInvitationAndReturnSuccessResponse()
     {
         // Arrange
         var workspace = WorkspaceFactory.Create();
@@ -54,7 +55,8 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleRejectInvitationToWorkspaceCommand_WhenInvitationIsNull_ShouldReturnInvitationNotFoundError()
+    public async Task
+        HandleRejectInvitationToWorkspaceCommand_WhenInvitationIsNull_ShouldReturnInvitationNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateRejectInvitationToWorkspaceCommand();
@@ -74,7 +76,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
 
         outcome.ValidateError(Errors.WorkspaceInvitation.NotFound);
     }
-    
+
     [Fact]
     public async Task HandleRejectInvitationToWorkspaceCommand_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {

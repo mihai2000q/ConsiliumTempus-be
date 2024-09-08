@@ -14,14 +14,14 @@ public abstract class WorkspaceFilter : Filter<WorkspaceAggregate>
         new FilterProperties.Workspace.IsPersonalFilterProperty(),
         new FilterProperties.Workspace.LastActivityProperty(),
         new FilterProperties.Workspace.CreatedDateTimeProperty(),
-        new FilterProperties.Workspace.UpdatedDateTimeProperty(),
+        new FilterProperties.Workspace.UpdatedDateTimeProperty()
     ];
 
     private WorkspaceFilter(Expression<Func<WorkspaceAggregate, bool>> predicate) : base(predicate)
     {
     }
 
-    public static IReadOnlyList<IFilter<WorkspaceAggregate>> Parse(string[]? search)
+    public static IReadOnlyList<IFilter<WorkspaceAggregate>> Parse(List<string> search)
     {
         return Parse(search, FilterProperties);
     }

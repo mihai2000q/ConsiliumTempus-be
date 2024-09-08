@@ -5,8 +5,6 @@ public static class StringExtensions
     private static readonly char[] Numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     private static readonly char[] Separators = [' ', '-'];
 
-    public static string And(this string str, string str2) => str + "&" + str2;
-
     public static string Dot(this string str, string str2) => str + "." + str2;
 
     public static bool ContainsUppercase(this string str) =>

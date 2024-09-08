@@ -18,7 +18,7 @@ public class AddStageToProjectSprintCommandHandlerTest
     private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IProjectSprintRepository _projectSprintRepository;
     private readonly AddStageToProjectSprintCommandHandler _uut;
-    
+
     public AddStageToProjectSprintCommandHandlerTest()
     {
         _currentUserProvider = Substitute.For<ICurrentUserProvider>();
@@ -44,7 +44,7 @@ public class AddStageToProjectSprintCommandHandlerTest
         _currentUserProvider
             .GetCurrentUserAfterPermissionCheck()
             .Returns(createdBy);
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 
@@ -58,7 +58,7 @@ public class AddStageToProjectSprintCommandHandlerTest
 
         Utils.ProjectSprint.AssertFromAddStageCommand(sprint, command, createdBy, sprintCreatedBy);
     }
-    
+
     [Fact]
     public async Task HandleAddStageToProjectSprintCommand_WhenSprintIsNotFound_ShouldReturnSprintNotFoundError()
     {
@@ -68,7 +68,7 @@ public class AddStageToProjectSprintCommandHandlerTest
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .ReturnsNull();
-        
+
         // Act
         var outcome = await _uut.Handle(command, default);
 

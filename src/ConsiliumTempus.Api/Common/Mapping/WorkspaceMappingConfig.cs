@@ -82,7 +82,7 @@ public sealed class WorkspaceMappingConfig : IRegister
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Email, src => src.Credentials.Email);
     }
-    
+
     private static void GetOverviewMappings(TypeAdapterConfig config)
     {
         config.NewConfig<GetOverviewWorkspaceRequest, GetOverviewWorkspaceQuery>();
@@ -186,7 +186,7 @@ public sealed class WorkspaceMappingConfig : IRegister
 
         config.NewConfig<UpdateFavoritesWorkspaceResult, UpdateFavoritesWorkspaceResponse>();
     }
-    
+
     private static void UpdateOverviewMappings(TypeAdapterConfig config)
     {
         config.NewConfig<UpdateOverviewWorkspaceRequest, UpdateOverviewWorkspaceCommand>();
@@ -207,7 +207,7 @@ public sealed class WorkspaceMappingConfig : IRegister
 
         config.NewConfig<DeleteWorkspaceResult, DeleteWorkspaceResponse>();
     }
-    
+
     private static void LeaveMappings(TypeAdapterConfig config)
     {
         config.NewConfig<LeaveWorkspaceRequest, LeaveWorkspaceCommand>();

@@ -5,12 +5,13 @@ using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
+using ConsiliumTempus.Domain.ProjectTask.Events;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Domain.ProjectTask;
 
-public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, ITimestamps
+public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimestamps
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectTaskAggregate()
@@ -38,6 +39,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         UpdatedDateTime = updatedDateTime;
     }
 
+    private readonly List<CustomField> _customFields = [];
     private readonly List<ProjectTaskComment> _comments = [];
 
     public Name Name { get; private set; } = default!;
@@ -50,6 +52,10 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public DateOnly? DueDate { get; private set; }
     public TimeSpan? EstimatedDuration { get; private set; }
     public ProjectStage Stage { get; private set; } = default!;
+    public IReadOnlyList<CustomField> CustomFields => _customFields
+        .OrderBy(cf => cf.Setup.Audit.CreatedDateTime)
+        .ToList()
+        .AsReadOnly();
     public IReadOnlyList<ProjectTaskComment> Comments => _comments.AsReadOnly();
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
@@ -61,7 +67,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         UserAggregate createdBy,
         ProjectStage stage)
     {
-        return new ProjectTaskAggregate(
+        var task = new ProjectTaskAggregate(
             ProjectTaskId.CreateUnique(),
             name,
             description,
@@ -71,6 +77,10 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             stage,
             DateTime.UtcNow,
             DateTime.UtcNow);
+
+        task.AddDomainEvent(new ProjectTaskCreated(task));
+
+        return task;
     }
 
     public void Update(
@@ -92,6 +102,11 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
         Assignee = assignee;
         UpdatedDateTime = DateTime.UtcNow;
     }
+    
+    public void RefreshUpdatedDateTime()
+    {
+        UpdatedDateTime = DateTime.UtcNow;
+    }
 
     public void UpdateIsCompleted(IsCompleted isCompleted)
     {
@@ -102,6 +117,11 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     public void UpdateCustomOrderPosition(CustomOrderPosition customOrderPosition)
     {
         CustomOrderPosition = customOrderPosition;
+    }
+
+    public void AddCustomField(CustomField customField)
+    {
+        _customFields.Add(customField);
     }
 
     public void AddComment(ProjectTaskComment comment)
@@ -156,7 +176,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
             : (overTask.CustomOrderPosition.Value, CustomOrderPosition.Value, 1);
 
         Stage.Tasks
-            .OrderBy(t => t.CustomOrderPosition.Value)
+            .OrderBy(t => t.CustomOrderPosition)
             .Skip(start)
             .Take(end - start)
             .ForEach(t => t.UpdateCustomOrderPosition(t.CustomOrderPosition + sign));
@@ -200,7 +220,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId, Guid>, I
     private void ReorderStage()
     {
         Stage.Tasks
-            .OrderBy(t => t.CustomOrderPosition.Value)
+            .OrderBy(t => t.CustomOrderPosition)
             .Skip(CustomOrderPosition.Value + 1)
             .ForEach(t => t.UpdateCustomOrderPosition(t.CustomOrderPosition - 1));
     }

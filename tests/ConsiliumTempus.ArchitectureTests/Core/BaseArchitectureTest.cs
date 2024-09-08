@@ -27,14 +27,17 @@ public class BaseArchitectureTest
         .Types()
         .That()
         .ResideInAssembly(ApiAssembly);
+
     protected static readonly IObjectProvider<IType> ApplicationLayer = ArchRuleDefinition
         .Types()
         .That()
         .ResideInAssembly(ApplicationAssembly);
+
     protected static readonly IObjectProvider<IType> DomainLayer = ArchRuleDefinition
         .Types()
         .That()
         .ResideInAssembly(DomainAssembly);
+
     protected static readonly IObjectProvider<IType> InfrastructureLayer = ArchRuleDefinition
         .Types()
         .That()

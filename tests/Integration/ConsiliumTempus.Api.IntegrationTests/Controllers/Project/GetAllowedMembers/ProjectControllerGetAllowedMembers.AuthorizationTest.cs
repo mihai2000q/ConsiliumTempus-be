@@ -50,7 +50,8 @@ public class ProjectControllerGetAllowedMembersAuthorizationTest(WebAppFactory f
     }
 
     [Fact]
-    public async Task GetAllowedMembersFromProject_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
+    public async Task
+        GetAllowedMembersFromProject_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectData.Users[0], ProjectData.Projects[^1]);
     }

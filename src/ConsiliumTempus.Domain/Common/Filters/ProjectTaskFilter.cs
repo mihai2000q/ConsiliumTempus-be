@@ -11,14 +11,14 @@ public abstract class ProjectTaskFilter : Filter<ProjectTaskAggregate>
     public static readonly IReadOnlyList<FilterProperty<ProjectTaskAggregate>> FilterProperties =
     [
         new FilterProperties.ProjectTask.NameFilterProperty(),
-        new FilterProperties.ProjectTask.IsCompletedFilterProperty(),
+        new FilterProperties.ProjectTask.IsCompletedFilterProperty()
     ];
 
     private ProjectTaskFilter(Expression<Func<ProjectTaskAggregate, bool>> predicate) : base(predicate)
     {
     }
 
-    public static IReadOnlyList<IFilter<ProjectTaskAggregate>> Parse(string[]? search)
+    public static IReadOnlyList<IFilter<ProjectTaskAggregate>> Parse(List<string> search)
     {
         return Parse(search, FilterProperties);
     }

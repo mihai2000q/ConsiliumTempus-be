@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Domain.Project.ValueObjects;
+﻿using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
@@ -25,6 +26,19 @@ public sealed class WorkspaceProvider(ConsiliumTempusDbContext dbContext) : IWor
             .SingleOrDefaultAsync(w => w.Id == id, cancellationToken);
     }
 
+    public async Task<WorkspaceAggregate?> GetByCustomFieldSetup(CustomFieldSetupId id,
+        CancellationToken cancellationToken = default)
+    {
+        var customFieldSetup = await dbContext.CustomFieldSetups
+            .Include(cfs => cfs.Workspace)
+            .Include(cfs => cfs.Projects)
+            .SingleOrDefaultAsync(cfs => cfs.Id == id, cancellationToken);
+
+        if (customFieldSetup is null) return null;
+
+        return customFieldSetup.Workspace ?? customFieldSetup.Projects[0].Workspace;
+    }
+
     public async Task<WorkspaceAggregate?> GetByProject(ProjectId id, CancellationToken cancellationToken = default)
     {
         var project = await dbContext.Projects
@@ -34,7 +48,7 @@ public sealed class WorkspaceProvider(ConsiliumTempusDbContext dbContext) : IWor
         return project?.Workspace;
     }
 
-    public async Task<WorkspaceAggregate?> GetByProjectWithMemberships(ProjectId id, 
+    public async Task<WorkspaceAggregate?> GetByProjectWithMemberships(ProjectId id,
         CancellationToken cancellationToken = default)
     {
         var project = await dbContext.Projects

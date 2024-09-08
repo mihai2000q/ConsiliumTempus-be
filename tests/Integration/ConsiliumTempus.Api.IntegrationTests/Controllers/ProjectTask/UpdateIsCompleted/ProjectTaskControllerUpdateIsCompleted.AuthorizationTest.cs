@@ -50,7 +50,8 @@ public class ProjectTaskControllerUpdateIsCompletedAuthorizationTest(WebAppFacto
     }
 
     [Fact]
-    public async Task UpdateIsCompletedProjectTask_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
+    public async Task
+        UpdateIsCompletedProjectTask_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectTaskData.Users[0], ProjectTaskData.ProjectTasks[^1]);
     }

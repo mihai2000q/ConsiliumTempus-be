@@ -42,11 +42,9 @@ public class Filter<TEntity>(Expression<Func<TEntity, bool>> predicate) : IFilte
     public Expression<Func<TEntity, bool>> Predicate { get; } = predicate;
 
     protected static IReadOnlyList<IFilter<TEntity>> Parse(
-        string[]? filters,
+        List<string> filters,
         IReadOnlyList<FilterProperty<TEntity>> filterProperties)
     {
-        if (filters is null) return [];
-
         return filters
             .Select(s => ParseFilter(s, filterProperties))
             .ToList();

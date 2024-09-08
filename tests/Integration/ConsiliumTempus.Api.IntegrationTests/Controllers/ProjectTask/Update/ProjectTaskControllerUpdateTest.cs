@@ -33,7 +33,7 @@ public class ProjectTaskControllerUpdateTest(WebAppFactory factory)
 
         await AssertSuccess(outcome, task, request);
     }
-    
+
     [Fact]
     public async Task UpdateProjectTask_WhenRequestHasAssignee_ShouldUpdateAndReturnSuccessResponse()
     {

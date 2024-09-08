@@ -46,7 +46,7 @@ public class CreateProjectSprintCommandHandlerTest
         var previousSprintEndDate = project.Sprints.IfNotEmpty(sprints => sprints[0].EndDate);
 
         _projectRepository
-            .GetWithStagesAndWorkspace(Arg.Any<ProjectId>())
+            .GetWithStages(Arg.Any<ProjectId>())
             .Returns(project);
 
         var user = UserFactory.Create();
@@ -60,7 +60,7 @@ public class CreateProjectSprintCommandHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithStagesAndWorkspace(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
+            .GetWithStages(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
         await _currentUserProvider
             .Received(1)
             .GetCurrentUserAfterPermissionCheck();
@@ -80,7 +80,7 @@ public class CreateProjectSprintCommandHandlerTest
         var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand();
 
         _projectRepository
-            .GetWithStagesAndWorkspace(Arg.Any<ProjectId>())
+            .GetWithStages(Arg.Any<ProjectId>())
             .ReturnsNull();
 
         // Act
@@ -89,7 +89,7 @@ public class CreateProjectSprintCommandHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithStagesAndWorkspace(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
+            .GetWithStages(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
         _currentUserProvider.DidNotReceive();
         _projectSprintRepository.DidNotReceive();
 

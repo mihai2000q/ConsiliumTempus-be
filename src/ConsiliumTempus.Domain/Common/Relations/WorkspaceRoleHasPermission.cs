@@ -28,10 +28,6 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
 
     private static readonly List<Permissions> ViewPermissions =
     [
-        // Workspace
-        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace, Permissions.UpdateFavoritesWorkspace,
-        // Workspace - Collaborators
-        Permissions.ReadCollaboratorsFromWorkspace,
         // Project
         Permissions.ReadProject, Permissions.ReadOverviewProject, Permissions.ReadCollectionProject,
         Permissions.UpdateFavoritesProject,
@@ -42,71 +38,86 @@ public sealed class WorkspaceRoleHasPermission : Entity<(int, int)>
         // Project Sprint - Project Stage
         Permissions.ReadStagesFromProjectSprint,
         // Project Task
-        Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask
+        Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask,
+        // Workspace
+        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace, Permissions.UpdateFavoritesWorkspace,
+        // Workspace - Collaborators
+        Permissions.ReadCollaboratorsFromWorkspace,
     ];
 
     private static readonly List<Permissions> MemberPermissions =
     [
-        // Workspace
-        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace,
-        Permissions.UpdateWorkspace, Permissions.UpdateFavoritesWorkspace, Permissions.UpdateOverviewWorkspace,
-        // Workspace - Collaborators
-        Permissions.ReadCollaboratorsFromWorkspace,
+        // Custom Field Setup
+        Permissions.ReadCustomFieldSetup,
+        Permissions.ReadCollectionCustomFieldSetupFromWorkspace, Permissions.ReadCollectionCustomFieldSetupFromProject,
         // Project
         Permissions.ReadProject, Permissions.ReadOverviewProject, Permissions.ReadCollectionProject,
         Permissions.UpdateProject, Permissions.UpdateFavoritesProject, Permissions.UpdateOverviewProject,
-        // Project - Project Status
-        Permissions.ReadStatusesFromProject, Permissions.UpdateStatusFromProject,
         // Project - Allowed Members
         Permissions.ReadAllowedMembersFromProject,
+        // Project - Project Status
+        Permissions.ReadStatusesFromProject, Permissions.UpdateStatusFromProject,
         // Project Sprint
         Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint, Permissions.UpdateProjectSprint,
         // Project Sprint - Project Stage
         Permissions.ReadStagesFromProjectSprint, Permissions.UpdateStageFromProjectSprint,
         // Project Task
         Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask,
-        Permissions.MoveProjectTask, 
-        Permissions.UpdateProjectTask, Permissions.UpdateIsCompletedProjectTask, Permissions.UpdateOverviewProjectTask,
+        Permissions.MoveProjectTask, Permissions.UpdateProjectTask, Permissions.UpdateCustomFieldFromProjectTask,
+        Permissions.UpdateIsCompletedProjectTask, Permissions.UpdateOverviewProjectTask,
         Permissions.DeleteProjectTask,
+        // Workspace
+        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace,
+        Permissions.UpdateWorkspace, Permissions.UpdateFavoritesWorkspace, Permissions.UpdateOverviewWorkspace,
+        // Workspace - Collaborators
+        Permissions.ReadCollaboratorsFromWorkspace,
     ];
 
     private static readonly List<Permissions> AdminPermissions =
     [
-        // Workspace
-        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace,
-        Permissions.ReadInvitationsFromWorkspace, 
-        Permissions.UpdateWorkspace, Permissions.UpdateFavoritesWorkspace, Permissions.UpdateOverviewWorkspace,
-        Permissions.DeleteWorkspace,
-        // Workspace - Collaborators
-        Permissions.InviteCollaboratorToWorkspace, Permissions.ReadCollaboratorsFromWorkspace, 
-        Permissions.UpdateCollaboratorFromWorkspace, Permissions.KickCollaboratorFromWorkspace,
+        // Custom Field Setup
+        Permissions.CreateCustomFieldSetupOnWorkspace, Permissions.CreateCustomFieldSetupOnProject,
+        Permissions.AddCustomFieldSetupToProject,
+        Permissions.ReadCustomFieldSetup,
+        Permissions.ReadCollectionCustomFieldSetupFromWorkspace, Permissions.ReadCollectionCustomFieldSetupFromProject,
+        Permissions.UpdateCustomFieldSetup, Permissions.MakeCustomFieldSetupGlobal,
+        Permissions.DeleteCustomFieldSetup, Permissions.RemoveCustomFieldSetupFromProject,
         // Project
-        Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadOverviewProject, Permissions.ReadCollectionProject,
-        Permissions.UpdateProject, Permissions.UpdateFavoritesProject, Permissions.UpdateOverviewProject, 
+        Permissions.CreateProject, Permissions.ReadProject, Permissions.ReadOverviewProject,
+        Permissions.ReadCollectionProject,
+        Permissions.UpdateProject, Permissions.UpdateFavoritesProject, Permissions.UpdateOverviewProject,
         Permissions.DeleteProject,
+        // Project - Allowed Members
+        Permissions.ReadAllowedMembersFromProject,
         // Project - Project Status
         Permissions.AddStatusToProject, Permissions.ReadStatusesFromProject, Permissions.RemoveStatusFromProject,
         Permissions.UpdateStatusFromProject,
-        // Project - Allowed Members
-        Permissions.ReadAllowedMembersFromProject,
         // Project Sprint
         Permissions.CreateProjectSprint, Permissions.ReadProjectSprint, Permissions.ReadCollectionProjectSprint,
         Permissions.UpdateProjectSprint, Permissions.DeleteProjectSprint,
         // Project Sprint - Project Stage
-        Permissions.AddStageToProjectSprint, Permissions.ReadStagesFromProjectSprint, 
+        Permissions.AddStageToProjectSprint, Permissions.ReadStagesFromProjectSprint,
         Permissions.MoveStageFromProjectSprint, Permissions.UpdateStageFromProjectSprint,
         Permissions.RemoveStageFromProjectSprint,
         // Project Task
         Permissions.CreateProjectTask, Permissions.ReadProjectTask, Permissions.ReadCollectionProjectTask,
-        Permissions.MoveProjectTask, 
-        Permissions.UpdateProjectTask, Permissions.UpdateIsCompletedProjectTask, Permissions.UpdateOverviewProjectTask,
+        Permissions.MoveProjectTask, Permissions.UpdateProjectTask, Permissions.UpdateCustomFieldFromProjectTask,
+        Permissions.UpdateIsCompletedProjectTask, Permissions.UpdateOverviewProjectTask,
         Permissions.DeleteProjectTask,
+        // Workspace
+        Permissions.ReadWorkspace, Permissions.ReadOverviewWorkspace,
+        Permissions.ReadInvitationsFromWorkspace,
+        Permissions.UpdateWorkspace, Permissions.UpdateFavoritesWorkspace, Permissions.UpdateOverviewWorkspace,
+        Permissions.DeleteWorkspace,
+        // Workspace - Collaborators
+        Permissions.InviteCollaboratorToWorkspace, Permissions.ReadCollaboratorsFromWorkspace,
+        Permissions.UpdateCollaboratorFromWorkspace, Permissions.KickCollaboratorFromWorkspace,
     ];
 
     public static readonly Dictionary<WorkspaceRole, List<Permissions>> DefaultData = new()
     {
         { WorkspaceRole.View, ViewPermissions },
         { WorkspaceRole.Member, MemberPermissions },
-        { WorkspaceRole.Admin, AdminPermissions },
+        { WorkspaceRole.Admin, AdminPermissions }
     };
 }

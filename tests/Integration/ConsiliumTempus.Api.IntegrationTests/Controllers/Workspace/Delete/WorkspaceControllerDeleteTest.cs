@@ -35,6 +35,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
         dbContext.Workspaces.Should().HaveCount(WorkspaceData.Workspaces.Length - 1);
         (await dbContext.Workspaces.FindAsync(workspace.Id))
             .Should().BeNull();
+        dbContext.CustomFieldSetups.Should().BeEmpty();
     }
 
     [Fact]

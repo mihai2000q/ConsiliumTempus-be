@@ -50,7 +50,7 @@ public class DeleteProjectSprintCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new DeleteProjectSprintResult());
     }
-    
+
     [Fact]
     public async Task HandleDeleteProjectSprintCommand_WhenThereIsOnlyOneSprint_ShouldReturnOnlyOneSprintError()
     {

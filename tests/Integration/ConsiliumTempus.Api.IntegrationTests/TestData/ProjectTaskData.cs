@@ -1,16 +1,21 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
+using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
+using ConsiliumTempus.Common.IntegrationTests.ProjectTask.Entities;
 using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -26,13 +31,15 @@ internal class ProjectTaskData : ITestData
             Workspaces,
             Memberships,
             Projects,
+            CustomFieldSetups,
             ProjectSprints,
             ProjectStages,
-            ProjectTasks
+            ProjectTasks,
+            CustomFields
         ];
     }
 
-    public static UserAggregate[] Users { get; } =
+    public static readonly UserAggregate[] Users =
     [
         UserFactory.Create(
             "michaelj@gmail.com",
@@ -63,7 +70,7 @@ internal class ProjectTaskData : ITestData
             "James"),
     ];
 
-    public static WorkspaceAggregate[] Workspaces { get; } =
+    public static readonly WorkspaceAggregate[] Workspaces =
     [
         WorkspaceFactory.Create(
             Users[0],
@@ -80,7 +87,7 @@ internal class ProjectTaskData : ITestData
             true),
     ];
 
-    public static Membership[] Memberships { get; } =
+    public static readonly Membership[] Memberships =
     [
         MembershipFactory.Create(
             Users[0],
@@ -112,7 +119,7 @@ internal class ProjectTaskData : ITestData
             WorkspaceRole.Admin)
     ];
 
-    public static ProjectAggregate[] Projects { get; } =
+    public static readonly ProjectAggregate[] Projects =
     [
         ProjectFactory.Create(
             Workspaces[0],
@@ -140,7 +147,77 @@ internal class ProjectTaskData : ITestData
             allowedMembers: [Users[3]]),
     ];
 
-    public static ProjectSprintAggregate[] ProjectSprints { get; } =
+    public static readonly CustomFieldSetupAggregate[] CustomFieldSetups =
+    [
+        CustomFieldSetupFactory.CreateDate(
+            null,
+            [Projects[0]],
+            AuditFactory.Create(Users[0]),
+            "A date field"),
+        CustomFieldSetupFactory.CreateDateTime(
+            null,
+            [Projects[0]],
+            AuditFactory.Create(Users[0]),
+            "A date time field"),
+        CustomFieldSetupFactory.CreateDuration(
+            null,
+            [Projects[0]],
+            AuditFactory.Create(Users[0]),
+            "A duration field"),
+        CustomFieldSetupFactory.CreateMultiSelect(
+            null,
+            [Projects[0]],
+            AuditFactory.Create(Users[0]),
+            [
+                MultiSelectOptionFactory.Create(),
+                MultiSelectOptionFactory.Create(customOrderPosition: 1),
+            ],
+            "Select multiple fields"),
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            [Projects[0]],
+            AuditFactory.Create(Users[0]),
+            "A number field"),
+        CustomFieldSetupFactory.CreatePeople(
+            null,
+            [Projects[0]],
+            AuditFactory.Create(Users[0]),
+            "A People field"),
+        CustomFieldSetupFactory.CreateSingleSelect(
+            null,
+            [Projects[0]],
+            AuditFactory.Create(Users[0]),
+            [
+                SingleSelectOptionFactory.Create(),
+                SingleSelectOptionFactory.Create(customOrderPosition: 1),
+            ],
+            "Select only one field"),
+        CustomFieldSetupFactory.CreateText(
+            null,
+            [Projects[0]],
+            AuditFactory.Create(Users[0]),
+            name: "A Text Field"),
+        CustomFieldSetupFactory.CreateTime(
+            null,
+            [Projects[0]],
+            AuditFactory.Create(Users[0]),
+            "A Time field"),
+        
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            [Projects[^3]],
+            AuditFactory.Create(Users[0])),
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            [Projects[^2]],
+            AuditFactory.Create(Users[0])),
+        CustomFieldSetupFactory.CreateNumber(
+            null,
+            [Projects[^1]],
+            AuditFactory.Create(Users[0])),
+    ];
+
+    public static readonly ProjectSprintAggregate[] ProjectSprints =
     [
         ProjectSprintFactory.Create(
             Projects[0],
@@ -163,7 +240,7 @@ internal class ProjectTaskData : ITestData
             "More Private Project Sprint"),
     ];
 
-    public static ProjectStage[] ProjectStages { get; } =
+    public static readonly ProjectStage[] ProjectStages =
     [
         ProjectStageFactory.Create(
             ProjectSprints[0],
@@ -194,7 +271,7 @@ internal class ProjectTaskData : ITestData
             "To do"),
     ];
 
-    public static ProjectTaskAggregate[] ProjectTasks { get; } =
+    public static readonly ProjectTaskAggregate[] ProjectTasks =
     [
         ProjectTaskFactory.Create(
             Users[0],
@@ -263,5 +340,85 @@ internal class ProjectTaskData : ITestData
             ProjectStages[^1],
             "More Private Task 2",
             customOrderPosition: 2),
+    ];
+
+    public static readonly CustomField[] CustomFields =
+    [
+        CustomFieldFactory.CreateDate(
+            ProjectTasks[0],
+            (DateCustomFieldSetupAggregate)CustomFieldSetups[0],
+            new DateOnly(2022, 10, 10)),
+        CustomFieldFactory.CreateDateTime(
+            ProjectTasks[0],
+            (DateTimeCustomFieldSetupAggregate)CustomFieldSetups[1],
+            new DateTime(2022, 10, 10, 10, 55, 30)),
+        CustomFieldFactory.CreateDuration(
+            ProjectTasks[0],
+            (DurationCustomFieldSetupAggregate)CustomFieldSetups[2],
+            new TimeSpan(10, 55, 30)),
+        CustomFieldFactory.CreateMultiSelect(
+            ProjectTasks[0],
+            (MultiSelectCustomFieldSetupAggregate)CustomFieldSetups[3],
+            [
+                ((MultiSelectCustomFieldSetupAggregate)CustomFieldSetups[3]).Options[0]
+            ]),
+        CustomFieldFactory.CreateNumber(
+            ProjectTasks[0],
+            (NumberCustomFieldSetupAggregate)CustomFieldSetups[4],
+            500),
+        CustomFieldFactory.CreatePeople(
+            ProjectTasks[0],
+            (PeopleCustomFieldSetupAggregate)CustomFieldSetups[5],
+            Users[3]),
+        CustomFieldFactory.CreateSingleSelect(
+            ProjectTasks[0],
+            (SingleSelectCustomFieldSetupAggregate)CustomFieldSetups[6],
+            ((SingleSelectCustomFieldSetupAggregate)CustomFieldSetups[6]).Options[0]),
+        CustomFieldFactory.CreateText(
+            ProjectTasks[0],
+            (TextCustomFieldSetupAggregate)CustomFieldSetups[7],
+            "Something"),
+        CustomFieldFactory.CreateTime(
+            ProjectTasks[0],
+            (TimeCustomFieldSetupAggregate)CustomFieldSetups[8],
+            new TimeOnly(10, 55)),
+
+        CustomFieldFactory.CreateDate(
+            ProjectTasks[1],
+            (DateCustomFieldSetupAggregate)CustomFieldSetups[0]),
+        CustomFieldFactory.CreateDateTime(
+            ProjectTasks[1],
+            (DateTimeCustomFieldSetupAggregate)CustomFieldSetups[1]),
+        CustomFieldFactory.CreateDuration(
+            ProjectTasks[1],
+            (DurationCustomFieldSetupAggregate)CustomFieldSetups[2]),
+        CustomFieldFactory.CreateMultiSelect(
+            ProjectTasks[1],
+            (MultiSelectCustomFieldSetupAggregate)CustomFieldSetups[3]),
+        CustomFieldFactory.CreateNumber(
+            ProjectTasks[1],
+            (NumberCustomFieldSetupAggregate)CustomFieldSetups[4]),
+        CustomFieldFactory.CreatePeople(
+            ProjectTasks[1],
+            (PeopleCustomFieldSetupAggregate)CustomFieldSetups[5]),
+        CustomFieldFactory.CreateSingleSelect(
+            ProjectTasks[1],
+            (SingleSelectCustomFieldSetupAggregate)CustomFieldSetups[6]),
+        CustomFieldFactory.CreateText(
+            ProjectTasks[1],
+            (TextCustomFieldSetupAggregate)CustomFieldSetups[7]),
+        CustomFieldFactory.CreateTime(
+            ProjectTasks[1],
+            (TimeCustomFieldSetupAggregate)CustomFieldSetups[8]),
+        
+        CustomFieldFactory.CreateNumber(
+            ProjectTasks[^3],
+            (NumberCustomFieldSetupAggregate)CustomFieldSetups[^3]),
+        CustomFieldFactory.CreateNumber(
+            ProjectTasks[^2],
+            (NumberCustomFieldSetupAggregate)CustomFieldSetups[^2]),
+        CustomFieldFactory.CreateNumber(
+            ProjectTasks[^1],
+            (NumberCustomFieldSetupAggregate)CustomFieldSetups[^1]),
     ];
 }

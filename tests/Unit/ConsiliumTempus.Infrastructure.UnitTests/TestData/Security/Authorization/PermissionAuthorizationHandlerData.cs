@@ -17,31 +17,29 @@ public static class PermissionAuthorizationHandlerData
 
     public enum StringIdType
     {
-        Workspace,
+        CustomFieldSetup,
         Project,
         ProjectSprint,
         ProjectStage,
-        ProjectTask
+        ProjectTask,
+        Workspace,
     }
 
     internal class GetPermissions : TheoryData<Permissions, RequestLocation, string?, StringIdType>
     {
         public GetPermissions()
         {
-            // Workspace
-            Add(Permissions.UpdateWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
-            Add(Permissions.UpdateFavoritesWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
-            Add(Permissions.UpdateOverviewWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
-            Add(Permissions.DeleteWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
-            Add(Permissions.ReadWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
-            Add(Permissions.ReadOverviewWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
-            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Query, typeof(WorkspaceAggregate).ToCamelId(), StringIdType.Workspace);
-
-            // Workspace - Collaborators
-            Add(Permissions.InviteCollaboratorToWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
-            Add(Permissions.UpdateCollaboratorFromWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
-            Add(Permissions.KickCollaboratorFromWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
-            Add(Permissions.ReadCollaboratorsFromWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
+            // Project
+            Add(Permissions.CreateCustomFieldSetupOnWorkspace, RequestLocation.Body, typeof(WorkspaceAggregate).ToCamelId(), StringIdType.Workspace);
+            Add(Permissions.CreateCustomFieldSetupOnProject, RequestLocation.Body, typeof(ProjectAggregate).ToCamelId(), StringIdType.Project);
+            Add(Permissions.AddCustomFieldSetupToProject, RequestLocation.Body, null, StringIdType.CustomFieldSetup);
+            Add(Permissions.UpdateCustomFieldSetup, RequestLocation.Body, null, StringIdType.CustomFieldSetup);
+            Add(Permissions.MakeCustomFieldSetupGlobal, RequestLocation.Body, null, StringIdType.CustomFieldSetup);
+            Add(Permissions.ReadCollectionCustomFieldSetupFromWorkspace, RequestLocation.Route, typeof(WorkspaceAggregate).ToCamelId(), StringIdType.Workspace);
+            Add(Permissions.ReadCollectionCustomFieldSetupFromProject, RequestLocation.Route, typeof(ProjectAggregate).ToCamelId(), StringIdType.Project);
+            Add(Permissions.ReadCustomFieldSetup, RequestLocation.Route, null, StringIdType.CustomFieldSetup);
+            Add(Permissions.DeleteCustomFieldSetup, RequestLocation.Route, null, StringIdType.CustomFieldSetup);
+            Add(Permissions.RemoveCustomFieldSetupFromProject, RequestLocation.Route, null, StringIdType.CustomFieldSetup);
 
             // Project
             Add(Permissions.CreateProject, RequestLocation.Body, typeof(WorkspaceAggregate).ToCamelId(), StringIdType.Workspace);
@@ -53,14 +51,14 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.ReadOverviewProject, RequestLocation.Route, null, StringIdType.Project);
             Add(Permissions.ReadCollectionProject, RequestLocation.Query, typeof(WorkspaceAggregate).ToCamelId(), StringIdType.Workspace);
 
+            // Project - Allowed Members
+            Add(Permissions.ReadAllowedMembersFromProject, RequestLocation.Route, null, StringIdType.Project);
+
             // Project - Project Status
             Add(Permissions.AddStatusToProject, RequestLocation.Body, null, StringIdType.Project);
             Add(Permissions.UpdateStatusFromProject, RequestLocation.Body, null, StringIdType.Project);
             Add(Permissions.RemoveStatusFromProject, RequestLocation.Route, null, StringIdType.Project);
             Add(Permissions.ReadStatusesFromProject, RequestLocation.Route, null, StringIdType.Project);
-
-            // Project - Allowed Members
-            Add(Permissions.ReadAllowedMembersFromProject, RequestLocation.Route, null, StringIdType.Project);
 
             // Project Sprint
             Add(Permissions.CreateProjectSprint, RequestLocation.Body, typeof(ProjectAggregate).ToCamelId(), StringIdType.Project);
@@ -80,11 +78,27 @@ public static class PermissionAuthorizationHandlerData
             Add(Permissions.CreateProjectTask, RequestLocation.Body, typeof(ProjectStage).ToCamelId(), StringIdType.ProjectStage);
             Add(Permissions.MoveProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
             Add(Permissions.UpdateProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
+            Add(Permissions.UpdateCustomFieldFromProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
             Add(Permissions.UpdateIsCompletedProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
             Add(Permissions.UpdateOverviewProjectTask, RequestLocation.Body, null, StringIdType.ProjectTask);
             Add(Permissions.DeleteProjectTask, RequestLocation.Route, null, StringIdType.ProjectTask);
             Add(Permissions.ReadProjectTask, RequestLocation.Route, null, StringIdType.ProjectTask);
             Add(Permissions.ReadCollectionProjectTask, RequestLocation.Query, typeof(ProjectStage).ToCamelId(), StringIdType.ProjectStage);
+
+            // Workspace
+            Add(Permissions.UpdateWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
+            Add(Permissions.UpdateFavoritesWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
+            Add(Permissions.UpdateOverviewWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
+            Add(Permissions.DeleteWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
+            Add(Permissions.ReadWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
+            Add(Permissions.ReadOverviewWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
+            Add(Permissions.ReadInvitationsFromWorkspace, RequestLocation.Query, typeof(WorkspaceAggregate).ToCamelId(), StringIdType.Workspace);
+
+            // Workspace - Collaborators
+            Add(Permissions.InviteCollaboratorToWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
+            Add(Permissions.UpdateCollaboratorFromWorkspace, RequestLocation.Body, null, StringIdType.Workspace);
+            Add(Permissions.KickCollaboratorFromWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
+            Add(Permissions.ReadCollaboratorsFromWorkspace, RequestLocation.Route, null, StringIdType.Workspace);
         }
     }
 }

@@ -13,7 +13,8 @@ public class RemoveStatusFromProjectCommandValidatorTest
 
     [Theory]
     [ClassData(typeof(RemoveStatusFromProjectCommandValidatorData.GetValidCommands))]
-    public async Task ValidateRemoveStatusFromProjectCommand_WhenValid_ShouldReturnTrue(RemoveStatusFromProjectCommand command)
+    public async Task ValidateRemoveStatusFromProjectCommand_WhenValid_ShouldReturnTrue(
+        RemoveStatusFromProjectCommand command)
     {
         // Arrange - parameterized
 

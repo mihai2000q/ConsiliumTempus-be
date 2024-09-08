@@ -1,5 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Domain.Common.Entities;
+﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
@@ -24,7 +23,7 @@ internal static partial class Utils
     internal static void ShouldBeOrdered(this IReadOnlyList<ProjectTaskAggregate> tasks)
     {
         var customOrderPosition = 0;
-        tasks.OrderBy(t => t.CustomOrderPosition.Value)
+        tasks.OrderBy(t => t.CustomOrderPosition)
             .Should().AllSatisfy(t =>
                 t.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
@@ -32,8 +31,22 @@ internal static partial class Utils
     internal static void ShouldBeOrdered(this IReadOnlyList<ProjectStage> stages)
     {
         var customOrderPosition = 0;
-        stages.OrderBy(s => s.CustomOrderPosition.Value)
+        stages.OrderBy(s => s.CustomOrderPosition)
             .Should().AllSatisfy(s => s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+    }
+
+    internal static void ShouldBeOrdered(this IReadOnlyList<SingleSelectOption> options)
+    {
+        var customOrderPosition = 0;
+        options.OrderBy(s => s.CustomOrderPosition)
+            .Should().AllSatisfy(o => o.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+    }
+
+    internal static void ShouldBeOrdered(this IReadOnlyList<MultiSelectOption> options)
+    {
+        var customOrderPosition = 0;
+        options.OrderBy(s => s.CustomOrderPosition)
+            .Should().AllSatisfy(o => o.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
 
     internal static void ShouldBeCreated(this Audit audit, UserAggregate createdBy)
@@ -60,10 +73,10 @@ internal static partial class Utils
 
     internal static bool AssertOrders<TEntity>(
         this IReadOnlyList<IOrder<TEntity>> orders,
-        string[]? orderBy,
+        List<string> orderBy,
         IEnumerable<OrderProperty<TEntity>> orderProperties)
     {
-        if (orderBy is null) return orders.IsEmpty();
+        orderBy.Should().HaveSameCount(orders);
         return orders
             .Zip(orderBy)
             .All(x => x.First.AssertOrder(x.Second, orderProperties));
@@ -71,10 +84,10 @@ internal static partial class Utils
 
     internal static bool AssertFilters<TEntity>(
         this IReadOnlyList<IFilter<TEntity>> filters,
-        string[]? search,
+        List<string> search,
         IEnumerable<FilterProperty<TEntity>> filterProperties)
     {
-        if (search is null) return filters.IsEmpty();
+        filters.Should().HaveSameCount(search);
         return filters
             .Zip(search)
             .All(x => x.First.AssertFilter(x.Second, filterProperties));

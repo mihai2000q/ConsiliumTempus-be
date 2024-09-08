@@ -42,7 +42,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
 
     public static bool operator !=(Entity<TId>? left, Entity<TId>? right)
     {
-        if (left is null && right is null) return true;
+        if (left is null && right is null) return false;
         return left is null || !left.Equals(right);
     }
 

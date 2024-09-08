@@ -10,7 +10,7 @@ public class GetOverviewWorkspaceQueryValidatorTest
     private readonly GetOverviewWorkspaceQueryValidator _uut = new();
 
     #endregion
-    
+
     [Theory]
     [ClassData(typeof(GetOverviewWorkspaceQueryValidatorData.GetOverviewValidQueries))]
     public async Task ValidateGetOverviewWorkspaceQuery_WhenIsValid_ShouldReturnTrue(GetOverviewWorkspaceQuery query)
@@ -24,7 +24,7 @@ public class GetOverviewWorkspaceQueryValidatorTest
         outcome.IsValid.Should().BeTrue();
         outcome.Errors.Should().BeEmpty();
     }
-    
+
     [Theory]
     [ClassData(typeof(GetOverviewWorkspaceQueryValidatorData.GetOverviewInvalidIdQueries))]
     public async Task ValidateGetOverviewWorkspaceQuery_WhenSingleFieldIsInvalid_ShouldReturnFalse(

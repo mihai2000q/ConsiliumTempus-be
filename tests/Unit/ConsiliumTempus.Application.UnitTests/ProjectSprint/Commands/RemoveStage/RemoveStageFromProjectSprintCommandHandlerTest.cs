@@ -50,7 +50,7 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
 
         Utils.ProjectSprint.AssertFromRemoveStageCommand(expectedStageToRemove, command);
     }
-    
+
     [Fact]
     public async Task HandleRemoveStageFromProjectSprintCommand_WhenThereIsOnlyOneStage_ShouldReturnOnlyOneStageError()
     {

@@ -2,9 +2,11 @@
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
 using ConsiliumTempus.Application.ProjectTask.Commands.Move;
 using ConsiliumTempus.Application.ProjectTask.Commands.Update;
+using ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
+using ConsiliumTempus.Domain.Common.Enums;
 
 namespace ConsiliumTempus.Common.UnitTests.ProjectTask;
 
@@ -20,7 +22,7 @@ public static class ProjectTaskCommandFactory
             name,
             onTop);
     }
-    
+
     public static MoveProjectTaskCommand CreateMoveProjectTaskCommand(
         Guid? id = null,
         Guid? overId = null)
@@ -29,7 +31,7 @@ public static class ProjectTaskCommandFactory
             id ?? Guid.NewGuid(),
             overId ?? Guid.NewGuid());
     }
-    
+
     public static DeleteProjectTaskCommand CreateDeleteProjectTaskCommand(
         Guid? id = null,
         Guid? stageId = null)
@@ -38,7 +40,7 @@ public static class ProjectTaskCommandFactory
             id ?? Guid.NewGuid(),
             stageId ?? Guid.NewGuid());
     }
-    
+
     public static UpdateProjectTaskCommand CreateUpdateProjectTaskCommand(
         Guid? id = null,
         string name = Constants.ProjectTask.Name,
@@ -50,6 +52,35 @@ public static class ProjectTaskCommandFactory
             assigneeId);
     }
 
+    public static UpdateCustomFieldFromProjectTaskCommand CreateUpdateCustomFieldFromProjectTaskCommand(
+        Guid? id = null,
+        Guid? customFieldId = null,
+        CustomFieldType type = CustomFieldType.Text,
+        UpdateCustomFieldFromProjectTaskCommand.DateCustomFieldCommand? dateCustomField = null,
+        UpdateCustomFieldFromProjectTaskCommand.DateTimeCustomFieldCommand? dateTimeCustomField = null,
+        UpdateCustomFieldFromProjectTaskCommand.DurationCustomFieldCommand? durationCustomField = null,
+        UpdateCustomFieldFromProjectTaskCommand.MultiSelectCustomFieldCommand? multiSelectCustomField = null,
+        UpdateCustomFieldFromProjectTaskCommand.NumberCustomFieldCommand? numberCustomField = null,
+        UpdateCustomFieldFromProjectTaskCommand.PeopleCustomFieldCommand? peopleCustomField = null,
+        UpdateCustomFieldFromProjectTaskCommand.SingleSelectCustomFieldCommand? singleSelectCustomField = null,
+        UpdateCustomFieldFromProjectTaskCommand.TextCustomFieldCommand? textCustomField = null,
+        UpdateCustomFieldFromProjectTaskCommand.TimeCustomFieldCommand? timeCustomField = null)
+    {
+        return new UpdateCustomFieldFromProjectTaskCommand(
+            id ?? Guid.NewGuid(),
+            customFieldId ?? Guid.NewGuid(),
+            type,
+            dateCustomField,
+            dateTimeCustomField,
+            durationCustomField,
+            multiSelectCustomField,
+            numberCustomField,
+            peopleCustomField,
+            singleSelectCustomField,
+            textCustomField,
+            timeCustomField);
+    }
+
     public static UpdateIsCompletedProjectTaskCommand CreateUpdateIsCompletedProjectTaskCommand(
         Guid? id = null,
         bool isCompleted = true)
@@ -58,7 +89,7 @@ public static class ProjectTaskCommandFactory
             id ?? Guid.NewGuid(),
             isCompleted);
     }
-    
+
     public static UpdateOverviewProjectTaskCommand CreateUpdateOverviewProjectTaskCommand(
         Guid? id = null,
         string name = Constants.ProjectTask.Name,

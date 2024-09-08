@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using ConsiliumTempus.Domain.Project.Enums;
+using ErrorOr;
 using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.AddStatus;
@@ -6,6 +7,6 @@ namespace ConsiliumTempus.Application.Project.Commands.AddStatus;
 public sealed record AddStatusToProjectCommand(
     Guid Id,
     string Title,
-    string Status,
+    ProjectStatusType Status,
     string Description)
     : IRequest<ErrorOr<AddStatusToProjectResult>>;

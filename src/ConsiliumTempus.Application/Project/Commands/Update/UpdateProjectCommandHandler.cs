@@ -1,7 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ErrorOr;
 using MediatR;
@@ -19,7 +18,7 @@ public sealed class UpdateProjectCommandHandler(IProjectRepository projectReposi
 
         project.Update(
             Name.Create(command.Name),
-            Enum.Parse<ProjectLifecycle>(command.Lifecycle));
+            command.Lifecycle);
 
         return new UpdateProjectResult();
     }

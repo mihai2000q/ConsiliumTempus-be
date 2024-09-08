@@ -21,7 +21,7 @@ internal static partial class Utils
         { ErrorType.Unauthorized, HttpStatusCode.Unauthorized },
         { ErrorType.NotFound, HttpStatusCode.NotFound },
         { ErrorType.Conflict, HttpStatusCode.Conflict },
-        { ErrorType.Forbidden, HttpStatusCode.Forbidden },
+        { ErrorType.Forbidden, HttpStatusCode.Forbidden }
     };
 
     private static readonly Dictionary<HttpStatusCode, int> StatusCodesMap = new()
@@ -69,6 +69,20 @@ internal static partial class Utils
             s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
 
+    internal static void ShouldBeOrdered(this IReadOnlyList<SingleSelectOption> options)
+    {
+        var customOrderPosition = 0;
+        options.OrderBy(s => s.CustomOrderPosition)
+            .Should().AllSatisfy(o => o.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+    }
+
+    internal static void ShouldBeOrdered(this IReadOnlyList<MultiSelectOption> options)
+    {
+        var customOrderPosition = 0;
+        options.OrderBy(s => s.CustomOrderPosition)
+            .Should().AllSatisfy(o => o.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+    }
+
     internal static void ShouldBeCreated(this Audit audit, UserAggregate createdBy)
     {
         audit.CreatedBy.Should().Be(createdBy);
@@ -83,12 +97,12 @@ internal static partial class Utils
         audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
     }
 
-    internal static string ToOrderByQueryParam(this string[] orderBy)
+    internal static string ToOrderByQueryParam(this List<string> orderBy)
     {
         return string.Join('&', orderBy.Select(o => $"orderBy={o}"));
     }
 
-    internal static string ToSearchQueryParam(this string[] search)
+    internal static string ToSearchQueryParam(this List<string> search)
     {
         return string.Join('&', search.Select(s => $"search={s}"));
     }

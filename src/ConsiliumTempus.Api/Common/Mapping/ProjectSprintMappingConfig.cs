@@ -68,7 +68,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.CreatedDateTime, src => src.Audit.CreatedDateTime);
     }
-    
+
     private static void GetStagesMappings(TypeAdapterConfig config)
     {
         config.NewConfig<GetStagesFromProjectSprintRequest, GetStagesFromProjectSprintQuery>();
@@ -85,7 +85,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
 
         config.NewConfig<CreateProjectSprintResult, CreateProjectSprintResponse>();
     }
-    
+
     private static void AddStageMappings(TypeAdapterConfig config)
     {
         config.NewConfig<AddStageToProjectSprintRequest, AddStageToProjectSprintCommand>();
@@ -99,7 +99,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
 
         config.NewConfig<UpdateProjectSprintResult, UpdateProjectSprintResponse>();
     }
-    
+
     private static void UpdateStageMappings(TypeAdapterConfig config)
     {
         config.NewConfig<UpdateStageFromProjectSprintRequest, UpdateStageFromProjectSprintCommand>();
@@ -113,7 +113,7 @@ public sealed class ProjectSprintMappingConfig : IRegister
 
         config.NewConfig<DeleteProjectSprintResult, DeleteProjectSprintResponse>();
     }
-    
+
     private static void RemoveStageMappings(TypeAdapterConfig config)
     {
         config.NewConfig<RemoveStageFromProjectSprintRequest, RemoveStageFromProjectSprintCommand>();

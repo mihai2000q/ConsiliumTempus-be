@@ -8,7 +8,7 @@ internal static partial class OrderProperties
     internal static class Workspace
     {
         public sealed record NameOrderProperty() : OrderProperty<WorkspaceAggregate>(
-            nameof(WorkspaceAggregate.Name), 
+            nameof(WorkspaceAggregate.Name),
             p => p.Name.Value);
 
         public sealed record LastActivityProperty() : OrderProperty<WorkspaceAggregate>(
@@ -16,7 +16,7 @@ internal static partial class OrderProperties
             p => p.LastActivity);
 
         public sealed record CreatedDateTimeProperty() : OrderProperty<WorkspaceAggregate>(
-            nameof(WorkspaceAggregate.CreatedDateTime), 
+            nameof(WorkspaceAggregate.CreatedDateTime),
             p => p.CreatedDateTime);
 
         public sealed record UpdatedDateTimeProperty() : OrderProperty<WorkspaceAggregate>(

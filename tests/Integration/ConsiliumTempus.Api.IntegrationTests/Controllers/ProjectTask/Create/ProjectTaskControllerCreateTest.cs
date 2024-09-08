@@ -33,7 +33,7 @@ public class ProjectTaskControllerCreateTest(WebAppFactory factory)
 
         await AssertSuccess(outcome, request, user);
     }
-    
+
     [Fact]
     public async Task CreateProjectTask_WhenRequestHasOnTop_ShouldCreateAndReturnSuccessResponse()
     {
@@ -87,9 +87,16 @@ public class ProjectTaskControllerCreateTest(WebAppFactory factory)
             .Include(s => s.Sprint.Project.Workspace)
             .Include(s => s.Tasks.OrderBy(tt => tt.CustomOrderPosition.Value))
             .ThenInclude(t => t.CreatedBy)
+            .Include(s => s.Tasks)
+            .ThenInclude(t => t.CustomFields)
             .Single(s => s.Tasks.Any(t => t.Name.Value == request.Name))
             .Tasks
             .Single(t => t.Name.Value == request.Name);
-        Utils.ProjectTask.AssertCreation(createdTask, request, user);
+
+        var customFieldSetups = await dbContext.CustomFieldSetups
+            .Where(cfs => cfs.Projects.Any(p => p == createdTask.Stage.Sprint.Project))
+            .ToListAsync();
+        
+        Utils.ProjectTask.AssertCreation(createdTask, request, user, customFieldSetups);
     }
 }

@@ -21,26 +21,28 @@ internal sealed class EntityBuilder<TEntity>
 
     public EntityBuilder<TEntity> WithProperty(string propertyName, object? newProperty)
     {
-        var propertyInfo = typeof(TEntity).GetProperty(propertyName)!;
+        var properties = typeof(TEntity).GetProperties();
+        var propertyInfo = properties.SingleOrDefault(p => 
+                               p.Name == propertyName &&
+                               p.DeclaringType == typeof(TEntity))
+                           ?? properties.FirstOrDefault(p => p.Name == propertyName && p.CanWrite)
+                           ?? properties.First(p => p.Name == propertyName);
         if (propertyInfo.CanWrite)
-        {
             propertyInfo.SetValue(Entity, newProperty);
-        }
         else
-        {
             propertyInfo.DeclaringType?.GetRuntimeFields()
                 .SingleOrDefault(f => f.Name == ToObjectBackingField(propertyName))
                 ?.SetValue(Entity, newProperty);
-        }
 
         return this;
     }
 
     public EntityBuilder<TEntity> WithField(string fieldName, object? newField)
     {
-        typeof(TEntity)
-            .GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
-            ?.SetValue(Entity, newField);
+        var field = typeof(TEntity).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+
+        if (field is not null) field.SetValue(Entity, newField);
+        else if (typeof(TEntity).BaseType is not null) SetParentField(fieldName, newField);
 
         return this;
     }
@@ -61,4 +63,11 @@ internal sealed class EntityBuilder<TEntity>
 
     private static string ToObjectBackingField(string propertyName) =>
         $"<{propertyName}>k__BackingField";
+
+    private void SetParentField(string fieldName, object? newField)
+    {
+        typeof(TEntity).BaseType
+            !.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
+            ?.SetValue(Entity, newField);
+    }
 }

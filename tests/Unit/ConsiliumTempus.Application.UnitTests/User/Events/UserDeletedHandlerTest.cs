@@ -3,10 +3,12 @@ using ConsiliumTempus.Application.UnitTests.TestData.User.Events;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Events;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.Events;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Events;
 
 namespace ConsiliumTempus.Application.UnitTests.User.Events;
 
@@ -72,7 +74,7 @@ public class UserDeletedHandlerTest
         await _workspaceRepository
             .Received(1)
             .GetListByOwner(Arg.Is<UserId>(uId => uId == user.Id));
-        
+
         var emptyWorkspaces = workspaces
             .Where(w => w.Memberships.Count == 1)
             .ToList();
@@ -80,7 +82,9 @@ public class UserDeletedHandlerTest
             .Received(emptyWorkspaces.Count)
             .Remove(Arg.Any<WorkspaceAggregate>());
         removedWorkspaces.Should().BeEquivalentTo(emptyWorkspaces);
-        
+        removedWorkspaces.Should().AllSatisfy(p =>
+            p.DomainEvents.Should().HaveCount(1).And.AllBeOfType<WorkspaceDeleted>());
+
         await _projectRepository
             .Received(1)
             .GetListByOwner(Arg.Is<UserId>(uId => uId == user.Id));
@@ -92,6 +96,8 @@ public class UserDeletedHandlerTest
             .Received(emptyProjects.Count)
             .Remove(Arg.Any<ProjectAggregate>());
         removedProjects.Should().BeEquivalentTo(emptyProjects);
+        removedProjects.Should().AllSatisfy(p =>
+            p.DomainEvents.Should().HaveCount(1).And.AllBeOfType<ProjectDeleted>());
 
         await _userRepository
             .Received(1)
@@ -99,7 +105,7 @@ public class UserDeletedHandlerTest
         await _userRepository
             .Received(1)
             .RemoveWorkspaceInvitationsByUser(user);
-        
+
         Utils.User.AssertFromUserDeleted(user, workspaces, projects, ownedWorkspaces, ownedProjects);
     }
 }
