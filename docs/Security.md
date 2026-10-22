@@ -158,7 +158,7 @@ The Access Control List of the system is the following:
 | Delete Project                                    |      |        |   X   |
 | Read Allowed Members From Project                 |      |   X    |   X   |
 | Add Status To Project                             |      |        |   X   |
-| Read Statuses From Project                        |      |   X    |   X   |
+| Read Statuses From Project                        |  X   |   X    |   X   |
 | Update Status From Project                        |      |   X    |   X   |
 | Remove Status From Project                        |      |        |   X   |
 | Create Project Sprint                             |      |        |   X   |
