@@ -82,7 +82,7 @@ jobs:
 
     - name: Install Playwright Browsers
       working-directory: ./tests/e2e
-      run: npx playwright install --with-deps
+      run: npx playwright install --with-deps chromium
 
     - name: Test
       working-directory: ./tests/e2e
