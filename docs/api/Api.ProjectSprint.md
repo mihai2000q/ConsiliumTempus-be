@@ -40,7 +40,7 @@ Additionally, Project Stages can be added through the project sprints.
 ### Get
 
 Anyone that is part of a workspace can read the sprint
-([Get Project Sprint Permission](../Security.md#permissions)).
+([Read Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can read the sprint
 ([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
@@ -82,7 +82,7 @@ Returns the project sprint.
 ### Get Collection
 
 Anyone that is part of a workspace can access the project sprints
-([Get Collection Project Sprint Permission](../Security.md#permissions)).
+([Read Collection Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can access the sprints
 ([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
@@ -233,7 +233,7 @@ Returns a confirmation message that the stage has been added successfully.
 
 ### Update
 
-Only admin and member users that are part of the workspace can create a project sprint
+Only admin and member users that are part of the workspace can update a project sprint
 ([Update Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update the sprint
@@ -262,7 +262,7 @@ Returns a confirmation message that the sprint has been updated successfully.
 
 ### Move Stage
 
-Only admin and member users that are part of the workspace can move a project stage
+Only admin users that are part of the workspace can move a project stage
 ([Move Stage From Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can move a stage

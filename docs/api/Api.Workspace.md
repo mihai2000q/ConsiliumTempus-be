@@ -118,10 +118,10 @@ Returns the workspace overview.
 Anyone logged in can request this data, but it will return only the workspaces that are linked to this user.
 
 ```js
-GET {{host}}/api/workspaces?pageSize=2&currentPage=1orderBy=name.asc&orderBy=updated_date_time.desc&search=name ct worksp
+GET {{host}}/api/workspaces?pageSize=2&currentPage=1&orderBy=name.asc&orderBy=updated_date_time.desc&search=name ct worksp
 ```
 
-### Get Collection Workspace Request
+#### Get Collection Workspace Request
 
 Sends optional query parameters for ordering, filtering, and page-based pagination.
 
@@ -173,7 +173,7 @@ Only users that are part of the workspace can retrieve it
 ([Read Collaborators From Workspace Permission](../Security.md#permissions)).
 
 ```js
-GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle&pageSize=2&currentPage=1orderBy=user_name.asc&orderBy=workspace_role_id.desc&search=workspace_role_id eq 1
+GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle&pageSize=2&currentPage=1&orderBy=user_name.asc&orderBy=workspace_role_id.desc&search=workspace_role_id eq 1
 ```
 
 - **id** is a 36 characters strings
@@ -207,7 +207,8 @@ Returns the collaborators.
       "email": "stephenc@gmail.com",
       "workspaceRole": "Member"
     }
-  ]
+  ],
+  "totalCount": 2
 }
 ```
 
@@ -409,7 +410,7 @@ Sends body data needed to update a collaborator.
 ```json
 {
   "id": "10000000-0000-0000-0000-000000000000",
-  "collaboratorId": "This is the new description of the workspace overview",
+  "collaboratorId": "20000000-0000-0000-0000-000000000000",
   "workspaceRole": "Member"
 }
 ```
@@ -469,7 +470,7 @@ Returns a confirmation message that the workspace overview has been updated succ
 ### Update Owner
 
 Only owners of the workspace can update the owner
-([Workspace Authorization Level: Is Workspace Owner](../Security.md#workspace-authorization-levels));
+([Workspace Authorization Level: Is Workspace Owner](../Security.md#workspace-authorization-levels)).
 
 ```js
 PUT {{host}}/api/workspaces/owner
@@ -512,7 +513,7 @@ Returns a confirmation message that the workspace has been deleted successfully.
 ### Kick Collaborator
 
 Only admin users that are part of the workspace can kick other collaborators
-([Kick Collaborator From Workspace](../Security.md#permissions))
+([Kick Collaborator From Workspace Permission](../Security.md#permissions)).
 
 ```js
 DELETE {{host}}/api/workspaces/{id}/kick-collaborator/{collaboratorId}
@@ -532,7 +533,7 @@ Returns a confirmation message that the collaborator has been kicked from the wo
 ### Leave
 
 Everyone can leave the workspace, as long as they are collaborators
-([Workspace Authorization Level: Is Collaborator](../Security.md#workspace-authorization-levels));
+([Workspace Authorization Level: Is Collaborator](../Security.md#workspace-authorization-levels)).
 
 ```js
 DELETE {{host}}/api/workspaces/{id}/leave

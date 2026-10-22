@@ -42,7 +42,7 @@ Sends data needed to create the user in body.
   "firstName": "Firsty",
   "lastName": "Lasty",
   "email": "FirstyLasty@example.com",
-  "password": "password123",
+  "password": "Password123",
   "role": "Software Developer",
   "dateOfBirth": "2000-12-21"
 }
@@ -73,8 +73,8 @@ Sends credentials of user in body.
 
 ```json
 {
-  "email": "FirstLasty@example.com",
-  "password": "password123"
+  "email": "FirstyLasty@example.com",
+  "password": "Password123"
 }
 ```
 
