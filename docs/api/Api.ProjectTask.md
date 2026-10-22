@@ -146,6 +146,7 @@ Returns the project tasks and their total count.
     {
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Project Task Name 1",
+      "description": "This task is gonna be awesome and I can't wait to work on it.",
       "isCompleted": true,
       "assignee": {
         "id": "10000000-0000-0000-0000-000000000000",
@@ -281,17 +282,17 @@ Returns a confirmation message that the project task has been updated successful
 
 ### Update Custom Field
 
-All members that are part of the workspace can update a task's completion status
+All members that are part of the workspace can update a task's custom field
 ([Update Custom Field From Project Task Permission](../Security.md/#permissions)).
 
-When the project is private, only allowed members can update a task's completion status
+When the project is private, only allowed members can update a task's custom field
 ([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
 
 ```js
-PUT {{host}}/api/projects/tasks/custom-field
+PUT {{host}}/api/projects/tasks/custom-fields
 ```
 
-#### Update Custom Field Project Task Request
+#### Update Custom Field From Project Task Request
 
 Sends body data that the project task needs to update the custom field.
 
@@ -374,7 +375,7 @@ Returns a confirmation message that the project task overview has been updated s
 
 ### Delete
 
-Only admin users that are part of the workspace can delete a project task
+Only admins and members that are part of the workspace can delete a project task
 ([Delete Project Task Permission](../Security.md/#permissions)).
 
 When the project is private, only allowed members can delete a project task

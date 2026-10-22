@@ -12,10 +12,10 @@
     * [Get Collection Response](#get-collection-response)
   * [Get Statuses](#get-statuses)
     * [Get Statuses From Project Request](#get-statuses-from-project-request)
-    * [Get Statuses From Project Request](#get-statuses-from-project-response)
+    * [Get Statuses From Project Response](#get-statuses-from-project-response)
   * [Get Allowed Members](#get-allowed-members)
     * [Get Allowed Members From Project Request](#get-allowed-members-from-project-request)
-    * [Get Allowed Members From Project Request](#get-allowed-members-from-project-response)
+    * [Get Allowed Members From Project Response](#get-allowed-members-from-project-response)
   * [Create](#create)
     * [Create Project Request](#create-project-request)
     * [Create Project Response](#create-project-response)
@@ -152,7 +152,7 @@ Anyone that is part of the workspace can read the projects
 in case the workspace Id is mentioned, otherwise any logged-in user will get their projects.
 
 ```js
-GET {{host}}/api/projects?pageSize=2&currentPage=1&orderBy=name.desc&orderBy=last_activity.asc&search=name sw project&search=is_favorite eq true&workspaceId=10000000-0000-0000-0000-000000000000
+GET {{host}}/api/projects?pageSize=2&currentPage=1&orderBy=name.desc&orderBy=last_activity.asc&search=name sw project&search=is_private eq false&workspaceId=10000000-0000-0000-0000-000000000000
 ```
 
 #### Get Collection Request
@@ -283,7 +283,7 @@ Returns the project statuses and their total count.
 
 ### Get Allowed Members
 
-Only Members of the workspace can read the allowed members of a project
+Only members and admins of the workspace can read the allowed members of a project
 ([Read Allowed Members From Project Permission](../Security.md/#permissions))
 
 When the project is private, only allowed members can read the allowed members
@@ -497,7 +497,7 @@ Sends body data that the project needs to update the owner.
 ```json
 {
   "id": "10000000-0000-0000-0000-000000000000",
-  "isFavorite": true
+  "ownerId": "20000000-0000-0000-0000-000000000000"
 }
 ```
 
@@ -507,7 +507,7 @@ Returns a confirmation message that the project owner has been updated successfu
 
 ### Update Privacy
 
-Only project owners can change the privacy (and he needs to be a collaborator)
+Only project owners can change the privacy (and they need to be a collaborator)
 ([Project Authorization Level: Is Project Owner](../Security.md/#project-authorization-levels)).
 
 ```js
@@ -532,7 +532,7 @@ Returns a confirmation message that the project privacy has been updated success
 ### Update Status
 
 Only members and admin users that are part of the workspace can update a status from the project
-([Update Status To Project Permission](../Security.md/#permissions)).
+([Update Status From Project Permission](../Security.md/#permissions)).
 
 When the project is private, only allowed members can update a status
 ([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
@@ -607,7 +607,7 @@ Can only remove allowed members from private projects, and only owners can remov
 ([Project Authorization Level: Is Project Owner](../Security.md/#project-authorization-levels)).
 
 ```js
-DELETE {{host}}/api/projects/{id}/remove-status/{allowedMemberId}
+DELETE {{host}}/api/projects/{id}/remove-allowed-member/{allowedMemberId}
 ```
 
 - **id** is a 36-character string
@@ -624,7 +624,7 @@ Returns a confirmation message that the allowed member has been removed from pro
 ### Remove Status
 
 Only admin users that are part of the workspace can remove a status from the project
-([Remove Status To Project Permission](../Security.md/#permissions)).
+([Remove Status From Project Permission](../Security.md/#permissions)).
 
 When the project is private, only allowed members can remove a status
 ([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
