@@ -15,9 +15,10 @@ This class implements basic functionality for all the controllers that are and w
 It is intended to be extended by all the controllers (Template Design Pattern).
 
 The template Api Controller resolves the following:
-- it sets the RESTful Api route to `{{controller}}s` to sub controllers, 
+- it sets the RESTful Api route to `[controller]s` to sub controllers, 
 where **controller** is the name of the controller 
-(i.e., for a User Controller the route would be `{{host}}/api/users` <<**Notice** the api prefix>>)
+(i.e., for a User Controller the route would be `{{host}}/api/users`, **notice** the api prefix,
+which is the path base set)
 - it seeks authentication via a token by default (see below for a valid token),
 otherwise the user should make use of the *Allow Anonymous* attribute
 - it injects the mapper and the mediator
@@ -32,7 +33,7 @@ One way to add one inside Postman is to go to the *Authorization* tab and under 
   - **sub**, the user id of an existing user
   - **email** of the user
   - **jti**, the id of the token
-  - **exp**, the expiration date in ms
+  - **exp**, the expiration date in seconds
   - **iss** (Issuer) of the application (can be found in the Jwt Settings inside the `appsettings.json`)
   - **aud** (Audience) of the application (can be found in the Jwt Settings inside the `appsettings.json`)
 
@@ -48,6 +49,8 @@ An example can be found below:
 
 To add authorization for each endpoint, 
 use the **Has Permission** Attribute in combination with the **Permissions** Enum from the [Domain](Domain.md#enums).
+Also, the **Has Project Authorization** and **Has Workspace Authorization** attributes can be used
+in combination with the authorization levels from the same chapter.
 
 ## Controllers
 
