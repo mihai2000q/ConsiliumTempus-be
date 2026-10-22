@@ -117,10 +117,10 @@ Returns a project task.
 ### Get Collection
 
 Anyone that is part of the workspace can read the project tasks
-([Read Collection Project Task Permission](../Security.md/#permissions)),
+([Read Collection Project Task Permission](../Security.md#permissions)),
 
 When the project is private, only allowed members can read the project tasks
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/projects/tasks?projectStageId=10000000-0000-0000-0000-000000000000&search=name ct task&orderBy=name.asc&currentPage=1&pageSize=20
@@ -228,10 +228,10 @@ Returns a confirmation message that the project task has been created successful
 ### Move
 
 All members that are part of the workspace can move a project task
-([Move Project Task Permission](../Security.md/#permissions)).
+([Move Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can move a project task
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 POST {{host}}/api/projects/tasks/move
@@ -255,10 +255,10 @@ Returns a confirmation message that the project task has been moved successfully
 ### Update
 
 All members that are part of the workspace can update a project task
-([Update Project Task Permission](../Security.md/#permissions)).
+([Update Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a task
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/tasks
@@ -283,10 +283,10 @@ Returns a confirmation message that the project task has been updated successful
 ### Update Custom Field
 
 All members that are part of the workspace can update a task's custom field
-([Update Custom Field From Project Task Permission](../Security.md/#permissions)).
+([Update Custom Field From Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a task's custom field
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/tasks/custom-fields
@@ -320,10 +320,10 @@ Returns a confirmation message that the project task's custom field has been upd
 ### Update Is Completed
 
 All members that are part of the workspace can update a task's completion status
-([Update Is Completed Project Task Permission](../Security.md/#permissions)).
+([Update Is Completed Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a task's completion status
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/tasks/is-completed
@@ -347,10 +347,10 @@ Returns a confirmation message that the project task's completion status has bee
 ### Update Overview
 
 All members that are part of the workspace can update a project task overview
-([Update Overview Project Task Permission](../Security.md/#permissions)).
+([Update Overview Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a task's overview
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/tasks/overview
@@ -376,10 +376,10 @@ Returns a confirmation message that the project task overview has been updated s
 ### Delete
 
 Only admins and members that are part of the workspace can delete a project task
-([Delete Project Task Permission](../Security.md/#permissions)).
+([Delete Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can delete a project task
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 DELETE {{host}}/api/projects/tasks/{id}/from/{stageId}
