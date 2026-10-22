@@ -3,7 +3,7 @@
 ## Membership
 
 This entity holds the relationship between the [User](../aggregates/Aggregate.User.md) 
-and the [Workspace]((../aggregates/Aggregate.Workspace.md)). 
+and the [Workspace](../aggregates/Aggregate.Workspace.md). 
 In addition, it also persists the timestamps and the role of the user inside the workspace.
 
 ```csharp
