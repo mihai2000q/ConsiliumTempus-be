@@ -2,7 +2,7 @@
 
 ## Project Sprint
 
-This is the project **sprint** entity.
+This is the project **sprint** aggregate.
 
 ```csharp
 class ProjectSprint
@@ -41,7 +41,7 @@ For database design checkout the [Project Sprint Diagram](../../database-diagram
 ### Domain Errors
 
 - **Not Found** when the project sprint cannot be found
-- **Only One Sprint** when the project does not have more than one sprint
+- **Only One Sprint** when the project has only one sprint, so it cannot be removed
 
 ### Filters
 

@@ -18,7 +18,7 @@ class WorkspaceRole
 {
   "id": 1,
   "name": "View",
-  "description": "This role can only view new tasks"
+  "description": "This role can only read data"
 }
 ```
 

@@ -21,7 +21,7 @@ class RefreshToken
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "user": {},
   "history": [{}],
-  "jwtId": "A5D45BD1-6FF0-4E53-8A77-8F567855E472",
+  "jwtId": { "value": "A5D45BD1-6FF0-4E53-8A77-8F567855E472" },
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
   "refreshTimes": 2
 }

@@ -16,9 +16,10 @@ class SingleSelectOption
 
 ```json
 {
+  "id": "00000000-0000-0000-0000-000000000000",
   "color": "#FF1122",
   "value": "High",
-  "customOrderPosition": 0
+  "customOrderPosition": { "value": 0 }
 }
 ```
 

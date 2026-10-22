@@ -39,6 +39,10 @@ For database design, check out the [User Diagram](../../database-diagrams/aggreg
 - **LastName**, which holds a string encapsulated *Value*
 - **Role**, which holds a string encapsulated *Value*
 
+### Entities
+
+- [Membership](../entities/Entity.Membership.md)
+
 ### Properties Validation
 
 - The **First Name** cannot be longer than 100 characters
@@ -55,5 +59,7 @@ For database design, check out the [User Diagram](../../database-diagrams/aggreg
 ### Domain Events
 
 - **User Registered** when the user registers, it will also create a user workspace with an admin membership
-- **User Deleted** when the user is deleted, it will also delete workspaces where he was alone, 
-or transfer ownership on workspaces and promote the new owner to Admin, if necessary 
+- **User Deleted** when the user is deleted, it will also delete the workspaces where they were alone,
+or transfer the ownership of the workspaces and promote the new owner to Admin, if necessary.
+The same goes for the projects that they own, and it also clears the user from the audit data
+and removes the workspace invitations related to them 

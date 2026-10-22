@@ -16,7 +16,7 @@ class Permission
 ```json
 {
   "id": 1,
-  "name": "ReadWorkspace"
+  "name": "CreateCustomFieldSetupOnProject"
 }
 ```
 

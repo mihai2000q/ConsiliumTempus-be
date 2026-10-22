@@ -19,7 +19,7 @@ class CustomFieldSetup
 ```json
 {
   "id": { "value": "00000000-0000-0000-0000-000000000000" },
-  "name": "First Custom Field Setup",
+  "name": { "value": "First Custom Field Setup" },
   "description": { "value": "This is the description of the setup" },
   "workspace": null,
   "projects": [{}],
@@ -139,7 +139,7 @@ class NumberCustomFieldSetup : CustomFieldSetup
 ```json
 {
   "settings": {},
-  "defaultNumber": 0
+  "defaultNumber": { "value": 0 }
 }
 ```
 
@@ -173,7 +173,7 @@ class SingleSelectCustomFieldSetup : CustomFieldSetup
 ```json
 {
   "options": [{}],
-  "defaultOption": {} 
+  "defaultOptionId": "00000000-0000-0000-0000-000000000000"
 }
 ```
 
@@ -189,7 +189,7 @@ class TextCustomFieldSetup : CustomFieldSetup
 
 ```json
 {
-  "defaultText": "default"
+  "defaultText": { "value": "default" }
 }
 ```
 

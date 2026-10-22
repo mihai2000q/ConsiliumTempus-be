@@ -13,6 +13,7 @@ class ProjectStage
     void AddTask()
     void RemoveTask()
     ProjectStage CopyToSprint()
+    void Move()
 }
 ```
 
