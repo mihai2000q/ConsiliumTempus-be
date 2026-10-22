@@ -17,4 +17,36 @@
 
 ### Diagram
 
-<img src="../../images/database-diagrams/aggregates/diagram.project-sprint.png" alt="Project Sprint Diagram" width="75%"/>
+```mermaid
+erDiagram
+    Audit ||--o| ProjectSprint : "AuditId"
+    Project ||--o{ ProjectSprint : "ProjectId"
+    Audit ||--o| ProjectStage : "AuditId"
+    ProjectSprint ||--o{ ProjectStage : "SprintId"
+    ProjectStage ||--o{ ProjectTask : "StageId"
+
+    ProjectSprint {
+        uniqueidentifier Id PK
+        nvarchar(50) Name
+        date StartDate "nullable"
+        date EndDate "nullable"
+        uniqueidentifier ProjectId FK
+        uniqueidentifier AuditId FK, UK
+    }
+    ProjectStage {
+        uniqueidentifier Id PK
+        nvarchar(50) Name
+        int CustomOrderPosition
+        uniqueidentifier SprintId FK
+        uniqueidentifier AuditId FK, UK
+    }
+    Audit {
+        uniqueidentifier Id PK
+    }
+    Project {
+        uniqueidentifier Id PK
+    }
+    ProjectTask {
+        uniqueidentifier Id PK
+    }
+```

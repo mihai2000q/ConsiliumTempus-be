@@ -9,4 +9,26 @@
 
 ### Diagram
 
-<img src="../../images/database-diagrams/entities/diagram.workspace-role.png" alt="Workspace Role Diagram" width="75%"/>
+```mermaid
+erDiagram
+    Permission ||--o{ WorkspaceRoleHasPermission : "PermissionId"
+    WorkspaceRole ||--o{ WorkspaceRoleHasPermission : "WorkspaceRoleId"
+    WorkspaceRole ||--o{ Membership : "WorkspaceRoleId"
+
+    WorkspaceRole {
+        int Id PK
+        nvarchar(max) Name
+        nvarchar(max) Description
+    }
+    WorkspaceRoleHasPermission {
+        int WorkspaceRoleId PK, FK
+        int PermissionId PK, FK
+    }
+    Permission {
+        int Id PK
+    }
+    Membership {
+        uniqueidentifier UserId PK, FK
+        uniqueidentifier WorkspaceId PK, FK
+    }
+```

@@ -8,4 +8,20 @@
 
 ### Diagram
 
-<img src="../../images/database-diagrams/entities/diagram.permission.png" alt="Permission Diagram" width="75%"/>
+```mermaid
+erDiagram
+    Permission ||--o{ WorkspaceRoleHasPermission : "PermissionId"
+    WorkspaceRole ||--o{ WorkspaceRoleHasPermission : "WorkspaceRoleId"
+
+    Permission {
+        int Id PK
+        nvarchar(max) Name
+    }
+    WorkspaceRoleHasPermission {
+        int WorkspaceRoleId PK, FK
+        int PermissionId PK, FK
+    }
+    WorkspaceRole {
+        int Id PK
+    }
+```
