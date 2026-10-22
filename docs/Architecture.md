@@ -1,12 +1,12 @@
 # Consilium Tempus Backend Architecture
 
-The Application Architecture thrives to be written in **Clean Architecture**,
+The Application Architecture strives to follow the **Clean Architecture**,
 which is a software design philosophy that separates the elements of a design into ring levels.
 An important goal of clean architecture is
 to provide developers with a way
 to organize code in such a way that it encapsulates the business logic
 but keeps it separate from the delivery mechanism.
-A primordial design implemented by the application would be the Domain Driven Design.
+A primordial design implemented by the application would be the Domain-Driven Design.
 
 **Domain-Driven Design (DDD)**
 is a collection of principles and patterns that help developers craft elegant object systems.
@@ -22,6 +22,8 @@ The four layers of this type of architecture feature the:
 - [Presentation Layer](#presentation-layerapi)
 
 <img src="./images/clean-architecture.png" alt="Clean Architecture" width="450"/>
+
+The dependencies between the layers are checked by the [Architecture Tests](Testing.md#architecture-testing).
 
 ## Domain Layer
 
@@ -59,7 +61,7 @@ when the data comes from the database inside the app.
 The database calls are managed by using the **Repository Pattern** which is revolving around the Domain Aggregates.
 
 Furthermore, inside the infrastructure the **Jwt Token** gets created
-based on the jwt settings parsed inside the Api Layer on the `apssettings.json`
+based on the jwt settings parsed inside the Api Layer on the `appsettings.json`
 whilst using the Secret Key for Symmetric Cryptography.
 
 Moreover, this layer is responsible for creating the passwords' hash as well.
@@ -102,7 +104,7 @@ The main operations that this layer performs after receiving a request are:
 - map the request to a command by using _Mapster_
 - send the command to the application layer through _MediatR_ and wait for a result
 - finally, the result is either mapped to a response and sent back with 200 status code to the user,
-- or an error is mapped appropriately to the corresponding status code and sent back in RFC Format.
+- or an error is mapped appropriately to the corresponding status code and sent back in the Problem Details format (RFC 7807).
 
 In conclusion, all **requests** have a mapping configuration to a specific application layer *command* or *query*,
 and all the application layer *results* map to an api layer **response**.
