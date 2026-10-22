@@ -19,7 +19,7 @@ The four layers of this type of architecture feature the:
 - [Domain Layer](#domain-layer)
 - [Infrastructure Layer](#infrastructure-layer)
 - [Application Layer](#application-layer)
-- [Presentation Layer](#presentation-layer---api)
+- [Presentation Layer](#presentation-layerapi)
 
 <img src="./images/clean-architecture.png" alt="Clean Architecture" width="450"/>
 
