@@ -33,7 +33,7 @@ thus restricting the power held by an individual.
 
 This security method is used to manage conflicts of interest and fraud or tampering with the application.
 
-However, these roles are exclusive to the [Workspace](domain/aggregates/Aggregate.Workspace) component.
+However, these roles are exclusive to the [Workspace](domain/aggregates/Aggregate.Workspace.md) component.
 For example, if the user is not in a workspace, he cannot create any project, portfolio or add any tasks.
 So he basically cannot use the application to its fullest
 (thankfully, all users must have a workspace, and one is created upon registration).
