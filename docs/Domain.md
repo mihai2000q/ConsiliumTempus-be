@@ -39,8 +39,9 @@ To allow a new order or filter for a property for an entity that already support
 
 The aggregates are:
 
+- [Custom Field Setup Aggregate](domain/aggregates/Aggregate.CustomFieldSetup.md)
 - [Project Aggregate](domain/aggregates/Aggregate.Project.md)
-- [Project Sprint Aggregate](domain/aggregates/Aggregate.Project.md)
+- [Project Sprint Aggregate](domain/aggregates/Aggregate.ProjectSprint.md)
 - [Project Task Aggregate](domain/aggregates/Aggregate.ProjectTask.md)
 - [User Aggregate](domain/aggregates/Aggregate.User.md)
 - [Workspace Aggregate](domain/aggregates/Aggregate.Workspace.md)
@@ -55,19 +56,28 @@ Typically, the entities will be persisted in the database on another table.
 The entities are:
 
 - [Audit](domain/entities/Entity.Audit.md)
+- [Custom Field](domain/entities/project-task/Entity.CustomField.md)
 - [Membership](domain/entities/Entity.Membership.md)
+- [Multi Select Option](domain/entities/Entity.MultiSelectOption.md)
 - [Permission](domain/entities/Entity.Permission.md)
+- [Project Stage](domain/entities/project-sprint/Entity.ProjectStage.md)
+- [Project Status](domain/entities/project/Entity.ProjectStatus.md)
+- [Project Task Comment](domain/entities/project-task/Entity.ProjectTaskComment.md)
 - [Refresh Token](domain/entities/Entity.RefreshToken.md)
+- [Refresh Token History](domain/entities/refresh-token/Entity.RefreshTokenHistory.md)
+- [Single Select Option](domain/entities/Entity.SingleSelectOption.md)
+- [Workspace Invitation](domain/entities/workspace/Entity.WorkspaceInvitation.md)
 - [Workspace Role](domain/entities/Entity.WorkspaceRole.md)
 
 ## Value Objects
 
 Essentially, a value object holds only values and, by definition,
-two value objets are equal only if all the values are equal with one another.
+two value objects are equal only if all the values are equal with one another.
 
 Typically, the value objects will be flattened on the object before persisting in the database.
 
-The value objects are:
+The shared value objects are the following (the ones that are specific to an aggregate or an entity,
+such as *IsCompleted* or *FirstName*, are described in their own documentation):
 
 - Authentication
   - **IsInvalidated**, which encapsulates a boolean *Value*
@@ -91,10 +101,11 @@ These errors are not tied to any aggregate, therefore notable and only used in t
 
 ## Enums
 
-The enums defined in the Domain of the application are:
+The shared enums defined in the Domain of the application are the following
+(the ones that are specific to an aggregate, such as the project lifecycle, are described in their own documentation):
 
-- **CustomFieldType**, which is used to represent the type of the custom field or the its setup
-- **FilterOperator**, which is used to represent the different numerous operators that can be used for filtering 
+- **CustomFieldType**, which is used to represent the type of the custom field or its setup
+- **FilterOperator**, which is used to represent the different operators that can be used for filtering 
 (i.e., equal or less than)
 - **OrderType**, which is used to determine whether the order should be ascending or descending
 - **Permissions**, which are used on the Presentation Layer for Authorization
