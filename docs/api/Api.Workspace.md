@@ -59,7 +59,7 @@ This is the controller that takes care of creating, reading, updating and deleti
 
 ### Get
 
-Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
+Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md#permissions)).
 
 ```js
 GET {{host}}/api/workspaces/{id}
@@ -91,7 +91,7 @@ Returns the workspace.
 ### Get Overview
 
 Only users that are part of the workspace can retrieve it 
-([Read Overview Workspace Permission](../Security.md/#permissions)).
+([Read Overview Workspace Permission](../Security.md#permissions)).
 
 ```js
 GET {{host}}/api/workspaces/overview/{id}
@@ -170,7 +170,7 @@ Returns the workspaces and their total count.
 ### Get Collaborators
 
 Only users that are part of the workspace can retrieve it 
-([Read Collaborators From Workspace Permission](../Security.md/#permissions)).
+([Read Collaborators From Workspace Permission](../Security.md#permissions)).
 
 ```js
 GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle&pageSize=2&currentPage=1orderBy=user_name.asc&orderBy=workspace_role_id.desc&search=workspace_role_id eq 1
@@ -214,7 +214,7 @@ Returns the collaborators.
 ### Get Invitations
 
 All users can see their invitations (sent or received), but only admins can see those from a workspace
-([Read Invitations From Workspace Permission](../Security.md/#permissions)).
+([Read Invitations From Workspace Permission](../Security.md#permissions)).
 
 ```js
 GET {{host}}/api/workspaces/invitations?isSender=false&pageSize=2&currentPage=1
@@ -302,7 +302,7 @@ Returns a confirmation message that the workspace has been created successfully.
 ### Invite Collaborator
 
 Only admins of the workspace can invite new collaborators
-([Invite Collaborator To Workspace Permission](../Security.md/#permissions)).
+([Invite Collaborator To Workspace Permission](../Security.md#permissions)).
 
 ```js
 POST {{host}}/api/workspaces/invite-collaborator
@@ -372,7 +372,7 @@ Returns a confirmation message that the invitation has been rejected successfull
 ### Update
 
 Only member or admin users that are part of the workspace can update it
-([Update Workspace Permission](../Security.md/#permissions)).
+([Update Workspace Permission](../Security.md#permissions)).
 
 ```js
 PUT {{host}}/api/workspaces
@@ -396,7 +396,7 @@ Returns a confirmation message that the workspace has been updated successfully.
 ### Update Collaborator
 
 Only admins that are part of the workspace can update a collaborator
-([Update Collaborator From Workspace Permission](../Security.md/#permissions)).
+([Update Collaborator From Workspace Permission](../Security.md#permissions)).
 
 ```js
 PUT {{host}}/api/workspaces/collaborators
@@ -421,7 +421,7 @@ Returns a confirmation message that the collaborator has been updated successful
 ### Update Favorites
 
 Anyone that is part of the workspace can add it to their favorites
-([Update Favorites Workspace Permission](../Security.md/#permissions)).
+([Update Favorites Workspace Permission](../Security.md#permissions)).
 
 ```js
 PUT {{host}}/api/workspaces/favorites
@@ -445,7 +445,7 @@ Returns a confirmation message that the workspace favorites have been updated su
 ### Update Overview
 
 Only member or admin users that are part of the workspace can update it
-([Update Overview Workspace Permission](../Security.md/#permissions)).
+([Update Overview Workspace Permission](../Security.md#permissions)).
 
 ```js
 PUT {{host}}/api/workspaces/overview
@@ -469,7 +469,7 @@ Returns a confirmation message that the workspace overview has been updated succ
 ### Update Owner
 
 Only owners of the workspace can update the owner
-([Workspace Authorization Level: Is Workspace Owner](../Security.md/#workspace-authorization-levels));
+([Workspace Authorization Level: Is Workspace Owner](../Security.md#workspace-authorization-levels));
 
 ```js
 PUT {{host}}/api/workspaces/owner
@@ -493,7 +493,7 @@ Returns a confirmation message that the workspace owner has been updated success
 ### Delete
 
 Only admin users that are part of the workspace can delete it
-([Delete Workspace Permission](../Security.md/#permissions)).
+([Delete Workspace Permission](../Security.md#permissions)).
 
 ```js
 DELETE {{host}}/api/workspaces/{id}
@@ -512,7 +512,7 @@ Returns a confirmation message that the workspace has been deleted successfully.
 ### Kick Collaborator
 
 Only admin users that are part of the workspace can kick other collaborators
-([Kick Collaborator From Workspace](../Security.md/#permissions))
+([Kick Collaborator From Workspace](../Security.md#permissions))
 
 ```js
 DELETE {{host}}/api/workspaces/{id}/kick-collaborator/{collaboratorId}
@@ -532,7 +532,7 @@ Returns a confirmation message that the collaborator has been kicked from the wo
 ### Leave
 
 Everyone can leave the workspace, as long as they are collaborators
-([Workspace Authorization Level: Is Collaborator](../Security.md/#workspace-authorization-levels));
+([Workspace Authorization Level: Is Collaborator](../Security.md#workspace-authorization-levels));
 
 ```js
 DELETE {{host}}/api/workspaces/{id}/leave

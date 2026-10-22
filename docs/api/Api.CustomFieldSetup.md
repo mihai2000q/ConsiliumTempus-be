@@ -29,8 +29,8 @@
     * [Delete Custom Field Setup Request](#delete-custom-field-setup-request)
     * [Delete Custom Field Setup Response](#delete-custom-field-setup-response)
   * [Remove From Project](#remove-from-project)
-    * [Delete Custom Field Setup Request](#delete-custom-field-setup-request-1)
-    * [Delete Custom Field Setup Response](#delete-custom-field-setup-response-1)
+    * [Remove Custom Field Setup From Project Request](#remove-custom-field-setup-from-project-request)
+    * [Remove Custom Field Setup From Project Response](#remove-custom-field-setup-from-project-response)
 
 ## Custom Field Setup
 
@@ -39,10 +39,10 @@ This is the controller that takes care of creating, updating, deleting and query
 ### Get
 
 Only members and admins of the workspace can read a custom field setup
-([Read Project Task Permission](../Security.md/#permissions)).
+([Read Custom Field Setup Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can read a custom field setup
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/customFieldSetups/{id}
@@ -191,10 +191,10 @@ Returns a custom field setup. However, the response will be different for each t
 ### Get Collection From Workspace
 
 Only members and admins of the workspace can read the custom field setups
-([Read Collection Custom Field Setup From Workspace Permission](../Security.md/#permissions)),
+([Read Collection Custom Field Setup From Workspace Permission](../Security.md#permissions)).
 
 ```js
-GET {{host}}/api/customFieldSetups/{workspaceId}
+GET {{host}}/api/customFieldSetups/workspace/{workspaceId}
 ```
 
 - **workspaceId** is a 36-character string
@@ -229,13 +229,13 @@ Returns the custom field setups from workspace.
 ### Get Collection From Project
 
 Only members and admins of the workspace can read the custom field setups
-([Read Collection Custom Field Setup From Project Permission](../Security.md/#permissions)),
+([Read Collection Custom Field Setup From Project Permission](../Security.md#permissions)),
 
 When the project is private, only allowed members can read custom field setups
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
-GET {{host}}/api/customFieldSetups/{projectId}
+GET {{host}}/api/customFieldSetups/project/{projectId}
 ```
 
 - **projectId** is a 36-character string
@@ -306,10 +306,10 @@ Returns a confirmation message that the custom field setup has been created succ
 ### Create On Project
 
 Only admins of the workspace can create a custom field setup
-([Create Custom Field Setup On Project Permission](../Security.md/#permissions)).
+([Create Custom Field Setup On Project Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can create a custom field setup
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 POST {{host}}/api/customFieldSetups/project
@@ -354,7 +354,7 @@ Returns a confirmation message that the custom field setup has been created succ
 ### Add To Project
 
 Only admins of the workspace can add the custom field setup to project
-([Add Custom Field Setup To Project Permission](../Security.md/#permissions)).
+([Add Custom Field Setup To Project Permission](../Security.md#permissions)).
 
 ```js
 POST {{host}}/api/customFieldSetups/add-project
@@ -377,11 +377,11 @@ Returns a confirmation message that the custom field setup has been added to the
 
 ### Update
 
-Only admins and members of the workspace can update a custom field setup
-([Create Custom Field Setup On Project Permission](../Security.md/#permissions)).
+Only admins of the workspace can update a custom field setup
+([Update Custom Field Setup Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a custom field setup
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/customFieldSetups
@@ -393,7 +393,7 @@ Sends body data that the custom field setup needs to be updated.
 
 ```json
 {
-  "projectId": "10000000-0000-0000-0000-000000000000",
+  "id": "10000000-0000-0000-0000-000000000000",
   "name": "Custom Field",
   "description": "its description",
   "type": "MultiSelect",
@@ -421,10 +421,10 @@ Returns a confirmation message that the custom field setup has been updated succ
 ### Make Global
 
 Only admins of the workspace can make the custom field setup global
-([Make Custom Field Setup Global Permission](../Security.md/#permissions)).
+([Make Custom Field Setup Global Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can make the custom field setup global
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/customFieldSetups/global
@@ -447,10 +447,10 @@ Returns a confirmation message that the custom field setup has been made global 
 ### Delete
 
 Only admins of the workspace can delete a custom field setup
-([Delete Custom Field Setup Permission](../Security.md/#permissions)).
+([Delete Custom Field Setup Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can delete a custom field setup
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 DELETE {{host}}/api/customFieldSetups/{id}
@@ -469,10 +469,7 @@ Returns a confirmation message that the custom field setup has been deleted succ
 ### Remove From Project
 
 Only admins of the workspace can remove a custom field setup from a project
-([Make Custom Field Setup Global Permission](../Security.md/#permissions)).
-
-When the project is private, only allowed members can remove a custom field setup from a project
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Remove Custom Field Setup From Project Permission](../Security.md#permissions)).
 
 ```js
 DELETE {{host}}/api/customFieldSetups/{id}/remove-project/{projectId}
@@ -481,10 +478,10 @@ DELETE {{host}}/api/customFieldSetups/{id}/remove-project/{projectId}
 - **id** is a 36 characters strings
 - **projectId** is a 36 characters strings
 
-#### Delete Custom Field Setup Request
+#### Remove Custom Field Setup From Project Request
 
 Send the id of the custom field setup and of the project on the route.
 
-#### Delete Custom Field Setup Response
+#### Remove Custom Field Setup From Project Response
 
 Returns a confirmation message that the custom field setup has been removed from the project successfully.

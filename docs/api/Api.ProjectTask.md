@@ -36,10 +36,10 @@ This is the controller that takes care of creating, updating, deleting and query
 ### Get
 
 Anyone that is part of the workspace can read a project task
-([Read Project Task Permission](../Security.md/#permissions)).
+([Read Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can read a project task
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/projects/tasks/{id}

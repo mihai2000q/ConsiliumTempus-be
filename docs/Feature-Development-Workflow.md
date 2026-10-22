@@ -221,7 +221,7 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
 ```
 
 Usually, after creating or updating a configuration, a migration should be created.
-More information about migrations can be found [here](Database.md/#migrations).
+More information about migrations can be found [here](Database.md#migrations).
 
 ## Creating a New Command
 

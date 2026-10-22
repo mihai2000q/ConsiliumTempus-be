@@ -40,10 +40,10 @@ Additionally, Project Stages can be added through the project sprints.
 ### Get
 
 Anyone that is part of a workspace can read the sprint
-([Get Project Sprint Permission](../Security.md/#permissions)).
+([Get Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can read the sprint
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/projects/sprints/{id}
@@ -82,10 +82,10 @@ Returns the project sprint.
 ### Get Collection
 
 Anyone that is part of a workspace can access the project sprints
-([Get Collection Project Sprint Permission](../Security.md/#permissions)).
+([Get Collection Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can access the sprints
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/projects/sprints?projectId=10000000-0000-0000-0000-000000000000&search=name ct something&fromThisYear=false
@@ -128,10 +128,10 @@ Returns the project sprints.
 ### Get Stages
 
 Anyone that is part of a workspace can access the project stages
-([Read Stages From Project Sprint Permission](../Security.md/#permissions)).
+([Read Stages From Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can access the stages
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/projects/sprints/{id}/stages
@@ -169,10 +169,10 @@ Returns the project stages.
 ### Create
 
 Only admin users that are part of the workspace can create a project sprint
-([Create Project Sprint Permission](../Security.md/#permissions)).
+([Create Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can create a sprint
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 POST {{host}}/api/projects/sprints
@@ -206,10 +206,10 @@ Returns a confirmation message that the sprint has been created successfully.
 ### Add Stage
 
 Only admin users that are part of the workspace can add a project stage
-([Add Stage To Project Sprint Permission](../Security.md/#permissions)).
+([Add Stage To Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can add a stage
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 POST {{host}}/api/projects/sprints/add-stage
@@ -234,10 +234,10 @@ Returns a confirmation message that the stage has been added successfully.
 ### Update
 
 Only admin and member users that are part of the workspace can create a project sprint
-([Update Project Sprint Permission](../Security.md/#permissions)).
+([Update Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update the sprint
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/sprints
@@ -263,10 +263,10 @@ Returns a confirmation message that the sprint has been updated successfully.
 ### Move Stage
 
 Only admin and member users that are part of the workspace can move a project stage
-([Move Stage From Project Sprint Permission](../Security.md/#permissions)).
+([Move Stage From Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can move a stage
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 POST {{host}}/api/projects/sprints/move-stage
@@ -291,10 +291,10 @@ Returns a confirmation message that the stage has been moved successfully.
 ### Update Stage
 
 Only admin and member users that are part of the workspace can update a project stage
-([Update Stage From Project Sprint Permission](../Security.md/#permissions)).
+([Update Stage From Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a stage
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/sprints/update-stage
@@ -319,10 +319,10 @@ Returns a confirmation message that the stage has been updated successfully.
 ### Delete
 
 Only admin users that are part of the workspace can delete a project sprint
-([Delete Project Sprint Permission](../Security.md/#permissions)).
+([Delete Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can delete a sprint
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 DELETE {{host}}/api/projects/sprints/{id}
@@ -341,10 +341,10 @@ Returns a confirmation message that the sprint has been deleted successfully.
 ### Remove Stage
 
 Only admin users that are part of the workspace can remove a project stage
-([Remove Stage From Project Sprint Permission](../Security.md/#permissions)).
+([Remove Stage From Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can remove a stage
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 DELETE {{host}}/api/projects/sprints/{id}/remove-stage/{stageId}

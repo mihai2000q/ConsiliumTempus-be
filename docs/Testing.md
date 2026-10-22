@@ -249,7 +249,7 @@ To make sure that the developer can write e2e tests,
 first they have to make sure their docker environment works accordingly.
 (alternatively, they can change the configuration inside `playwright.config.ts`).
 
-To do that, follow the instructions inside the [Readme](../README.md/#docker-containers) file.
+To do that, follow the instructions inside the [Readme](../README.md#docker-containers) file.
 
 For Recapitulation purposes:
 

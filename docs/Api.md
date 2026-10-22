@@ -27,7 +27,7 @@ otherwise the user should make use of the *Allow Anonymous* attribute
 
 The developer shall provide a token for endpoints that do not allow anonymous requests.
 One way to add one inside Postman is to go to the *Authorization* tab and under the type *JWT Bearer* add the following:
-- **Secret Key**, defined in the [Get Started](../README.md/#dotnet-user-secrets) chapter 
+- **Secret Key**, defined in the [Get Started](../README.md#dotnet-user-secrets) chapter 
 - and **Payload** which should include the following:
   - **sub**, the user id of an existing user
   - **email** of the user
@@ -40,14 +40,14 @@ One way to add one inside Postman is to go to the *Authorization* tab and under 
 (except for **sub** and **jti**).
 
 An example can be found below: 
-(for a better view of the payload check the Api Auth [documentation](api/Api.Auth.md/#auth))
+(for a better view of the payload check the Api Auth [documentation](api/Api.Auth.md#auth))
 
 ![Postman JWT Token](images/api/postman-jwt-token.png)
 
 ## Authorization
 
 To add authorization for each endpoint, 
-use the **Has Permission** Attribute in combination with the **Permissions** Enum from the [Domain](Domain.md/#enums).
+use the **Has Permission** Attribute in combination with the **Permissions** Enum from the [Domain](Domain.md#enums).
 
 ## Controllers
 
