@@ -34,7 +34,7 @@ Implementing a new feature in this application follows the clean architecture pr
 to put it in simple words:
 
 - the request comes through a **presentation** layer, in our case, a REST api,
-- it is, optionally, run through a security check inside the infrastructure
+- it is run through a security check inside the infrastructure (authentication and, optionally, authorization)
 - inside the endpoint,
   - it gets mapped to a query or a command
   - and sent through the mediator to get handled
@@ -193,7 +193,7 @@ public static partial class PropertiesValidation
 
 Now, in order for Entity Framework to be able to create this class upon query, it should be configured.
 
-Inside the **Infrastructure** layer, under the **Persistence/Configuration** package,
+Inside the **Infrastructure** layer, under the **Persistence/Configuration/Aggregates** package,
 each aggregate has its own configuration, as following:
 
 ```csharp
@@ -273,7 +273,9 @@ If the database set is not defined already, under the **Persistence/Database** p
 inside the **ConsiliumTempusDbContext**, one can define a new database set, likewise:
 
 ```csharp
-public sealed class ConsiliumTempusDbContext() {
+public sealed class ConsiliumTempusDbContext : DbContext
+{
+    ...
     public DbSet<UserAggregate> Users { get; init; } = null!;
     public DbSet<ProjectAggregate> Projects { get; init; } = null!;
 }
@@ -292,11 +294,11 @@ Inside the **Application** layer, we will create the following:
 #### Repository Interfaces
 
 If the repositories have just been created, get on with the following guidelines, otherwise, jump
-to [Command](#command);
+to [Command](#command).
 
 In order for the application to communicate with the database, it uses interfaces on the infrastructure layer.
 
-Under the package **Common/Interfaces/Repository**, we can create two interfaces for the repositories:
+Under the package **Common/Interfaces/Persistence/Repository**, we can create two interfaces for the repositories:
 
 ```csharp
 public interface IUserRepository
@@ -332,7 +334,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
 }
 ```
 
-Second, under the root folder, inside the **Dependency Injection** class, on the bottom,
+Second, under the root folder, inside the **DependencyInjection** class, on the bottom,
 there is already a method called **AddRepositories**.
 
 There, we can add our repositories:
@@ -484,20 +486,20 @@ Notice the following:
 #### Validator
 
 Usually, a query will need validation before it can be handled.
-This validator will be assigned to the command on runtime via the behavior pipeline.
+This validator will be assigned to the query on runtime via the behavior pipeline.
 
 ```csharp
 public sealed class GetUserQueryValidator : AbstractValidator<GetUserQuery>
 {
     public GetUserQueryValidator()
     {
-        RuleFor(c => c.UserId)
+        RuleFor(q => q.Id)
             .NotEmpty();
     }
 }
 ```
 
-The above validates that the id of the user cannot be empty
+The above validates that the id of the user cannot be empty.
 
 Notice the following:
 
@@ -515,7 +517,7 @@ public sealed class GetUserQueryHandler(IUserRepository userRepository)
 {
     public async Task<ErrorOr<UserAggregate>> Handle(GetUserQuery query, CancellationToken cancellationToken)
     {
-        var user = await userRepository.Get(UserId.Create(command.UserId), cancellationToken);
+        var user = await userRepository.Get(UserId.Create(query.Id), cancellationToken);
         return user is null ? Errors.User.NotFound : user;
     }
 }
@@ -557,7 +559,8 @@ that are injected.
 
 #### Contracts
 
-Next, we need two classes that will define the **request** and the **response** of the new endpoint.
+Next, we need two classes that will define the **request** and the **response** of the new endpoint,
+inside the **Contracts/Project/Create** package.
 
 ```csharp
 public sealed record CreateProjectRequest(
@@ -613,7 +616,7 @@ which requires the function **Register**, where we can create our functions for 
 As the naming and the types match for the request and command, there is no need for further mapping.
 
 For the result, we need to explicitly map a few fields.
-Also, notice that we can choose to omit a fields from being exposed outside the application (i.e., the created date
+Also, notice that we can choose to omit fields from being exposed outside the application (i.e., the created date
 time).
 
 #### Endpoint
