@@ -2,13 +2,14 @@
 
 * [Access Control](#access-control)
 * [Role-Based Access Control (RBAC)](#role-based-access-control-rbac)
-* [Workspace Authorization levels](#workspace-authorization-levels)
+* [Workspace Authorization Levels](#workspace-authorization-levels)
+* [Project Authorization Levels](#project-authorization-levels)
 * [Workspace Roles](#workspace-roles)
 * [Permissions](#permissions)
 * [Workspace Roles to Permissions](#workspace-roles-to-permissions)
 
 In a general context, the application implements different methods to keep the application secure.
-One of the practices used includes: RBAC, hashing and more.
+Some of the practices used include: RBAC, hashing and more.
 
 ## Access Control
 
@@ -34,8 +35,8 @@ thus restricting the power held by an individual.
 This security method is used to manage conflicts of interest and fraud or tampering with the application.
 
 However, these roles are exclusive to the [Workspace](domain/aggregates/Aggregate.Workspace.md) component.
-For example, if the user is not in a workspace, he cannot create any project, portfolio or add any tasks.
-So he basically cannot use the application to its fullest
+For example, if the user is not in a workspace, they cannot create any project or add any tasks.
+So they basically cannot use the application to its fullest
 (thankfully, all users must have a workspace, and one is created upon registration).
 
 Also, it should be mentioned that there are a few exceptions, such as:
@@ -67,7 +68,7 @@ The workspace roles are:
 
 - **View**, they can mostly just read information
 - **Member**, they can, in most of the cases, read, update and sometimes even add data
-- **Admin**, they can do everything
+- **Admin**, they can do everything (except for the actions that are exclusive to the owners)
 
 ## Permissions
 
