@@ -4,16 +4,16 @@
 
 Usually, whenever the code has to be modified, an issue will be created on **GitHub**. 
 The title of the issue will be the developer's choice 
-(for preference, it should resemble the git commits to a higher level overview without, of course, the issue tag), 
+(for preference, it should resemble the git commits as a higher level overview without, of course, the issue number), 
 however, the labels attached to it should be significant.
 The expected labels to use are:
-- **build** if the issue is supposed to update the dependencies
+- **build** if the issue is supposed to update the dependencies (or the build, docker and CI setup)
 - **bug** if the issue is supposed to solve a known problem
 - **documentation** if the source code is not the target, but its documentation
 - **feature** for new features that are added to the application
 - **improvement** when the proposed issue makes the code more performant (or in any way considered better)
 - **refactor** when the code is just being cleaned up
-- **test** if a unit or integration test for the source code is being written
+- **test** if a unit, integration, architecture or e2e test for the source code is being written
 
 ## Git Branches
 
@@ -33,7 +33,7 @@ Also, the main development branch is **develop**, and **master** is used for rel
 
 ## Git Commits
 
-The commits on branches should follow a structure (*#TAG LAYER - CHANGES*).
+The commits on branches should follow a structure (*#ISSUE LAYER - CHANGES*).
 First, there should be a hashtag followed by the number of the issue (e.g., #3)
 followed by the Layer's name that is the target of the commit
 (e.g., Infrastructure) 
