@@ -10,7 +10,7 @@ on:
 
 jobs:
   architecture-testing:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     name: Architecture Testing
     steps:
@@ -24,7 +24,7 @@ jobs:
       run: dotnet test --verbosity normal --filter "FullyQualifiedName~ArchitectureTests" --no-build
 
   unit-testing:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     name: Unit Testing
     steps:
@@ -45,7 +45,7 @@ jobs:
         timeout_minutes: 5
       
   integration-testing:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     name: Integration Testing
     steps:
@@ -59,7 +59,7 @@ jobs:
       run: dotnet test --verbosity normal --filter "FullyQualifiedName~IntegrationTests" --no-build
     
   end-to-end-testing:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     name: End To End Testing
     steps:
