@@ -7,6 +7,7 @@
 * [Workspace Roles](#workspace-roles)
 * [Permissions](#permissions)
 * [Workspace Roles to Permissions](#workspace-roles-to-permissions)
+* [Adding a New Permission](#adding-a-new-permission)
 
 In a general context, the application implements different methods to keep the application secure.
 Some of the practices used include: RBAC, hashing and more.
@@ -81,7 +82,7 @@ The workspace roles are:
 
 The permissions will be classified on their respective component:
 
-- Custom Field Setup
+- [Custom Field Setup](api/Api.CustomFieldSetup.md)
   - Create On Project
   - Create On Workspace
   - Add To Project
@@ -92,7 +93,7 @@ The permissions will be classified on their respective component:
   - Make Global
   - Delete
   - Remove From Project
-- Project
+- [Project](api/Api.Project.md)
   - Create
   - Read
   - Read Overview
@@ -106,7 +107,7 @@ The permissions will be classified on their respective component:
   - Read Statuses
   - Update Status
   - Remove Status
-- Project Sprint
+- [Project Sprint](api/Api.ProjectSprint.md)
   - Create
   - Read
   - Read Collection
@@ -117,7 +118,7 @@ The permissions will be classified on their respective component:
   - Move Stage
   - Update Stage
   - Remove Stage
-- Project Task
+- [Project Task](api/Api.ProjectTask.md)
   - Create
   - Read
   - Read Collection
@@ -127,7 +128,7 @@ The permissions will be classified on their respective component:
   - Update Is Completed
   - Update Overview
   - Delete
-- Workspace
+- [Workspace](api/Api.Workspace.md)
   - Read
   - Read Overview
   - Read Invitations
@@ -142,7 +143,8 @@ The permissions will be classified on their respective component:
 
 ## Workspace Roles to Permissions
 
-The Access Control List of the system is the following:
+The Access Control List of the system is the following
+(it comes from the `WorkspaceRoleHasPermission` class, inside the Domain, and it is saved in the database by the migrations):
 
 |                                                   | View | Member | Admin |
 |---------------------------------------------------|:----:|:------:|:-----:|
@@ -199,3 +201,17 @@ The Access Control List of the system is the following:
 | Read Collaborators From Workspace                 |  X   |   X    |   X   |
 | Update Collaborator From Workspace                |      |        |   X   |
 | Kick Collaborator From Workspace                  |      |        |   X   |
+
+## Adding a New Permission
+
+To add a new permission, the following steps are needed:
+
+1. Add it to the **Permissions** enum, inside the Domain
+   (the id of the permission in the database is its position in the enum, plus one).
+2. Grant it to the roles that should have it, inside the `WorkspaceRoleHasPermission` class.
+3. Tell the `PermissionAuthorizationHandler`, inside the Infrastructure, where to find the id that links the request
+   to its workspace (the body, the route or the query of the request).
+4. Create a [migration](Database.md#migrations), because both the permissions and the roles to permissions
+   relations are persisted by the migrations.
+5. Add the **Has Permission** attribute with the new permission to the endpoint (see [Authorization](Api.md#authorization)).
+6. Update the permission list and the table above, and the documentation of the endpoint.
