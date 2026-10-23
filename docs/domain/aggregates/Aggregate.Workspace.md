@@ -55,12 +55,12 @@ For database design checkout the [Workspace Diagram](../../database-diagrams/agg
 
 ### Domain Errors
 
-- **Not Found** when the workspace cannot be found
-- **Delete Personal Workspace** when the workspace is personal, it cannot be deleted (not even by their owner)
-- **Leave Owned** when the workspace cannot be left by their owner
-- **Collaborator Not Found** when the collaborator cannot be found within the workspace
-- **Kick Yourself** when the user tries to kick themselves from the workspace
-- **Kick Owner** when the user tries to kick the owner of the workspace
+- **Not Found** (`Workspace.NotFound`, 404) when the workspace cannot be found
+- **Delete Personal Workspace** (`Workspace.DeletePersonalWorkspace`, 409) when the workspace is personal, it cannot be deleted (not even by their owner)
+- **Leave Owned** (`Workspace.LeaveOwned`, 409) when the workspace cannot be left by their owner
+- **Collaborator Not Found** (`Workspace.CollaboratorNotFound`, 404) when the collaborator cannot be found within the workspace
+- **Kick Yourself** (`Project.KickYourself`, 409) when the user tries to kick themselves from the workspace
+- **Kick Owner** (`Project.KickOwner`, 403) when the user tries to kick the owner of the workspace
 
 ### Domain Events
 

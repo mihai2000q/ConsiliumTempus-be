@@ -32,13 +32,6 @@ class User
 
 For database design, check out the [User Diagram](../../database-diagrams/aggregates/Diagram.User.md).
 
-### Value Objects
-
-- **Credentials**, which holds the *Email* and *Password*
-- **FirstName**, which holds a string encapsulated *Value*
-- **LastName**, which holds a string encapsulated *Value*
-- **Role**, which holds a string encapsulated *Value*
-
 ### Entities
 
 - [Membership](../entities/Entity.Membership.md)
@@ -53,8 +46,8 @@ For database design, check out the [User Diagram](../../database-diagrams/aggreg
 
 ### Domain Errors
 
-- **Duplicate Email** when the email is already in use
-- **Not Found** when the user cannot be found
+- **Duplicate Email** (`User.DuplicateEmail`, 409) when the email is already in use
+- **Not Found** (`User.NotFound`, 404) when the user cannot be found
 
 ### Domain Events
 
@@ -63,3 +56,10 @@ For database design, check out the [User Diagram](../../database-diagrams/aggreg
 or transfer the ownership of the workspaces and promote the new owner to Admin, if necessary.
 The same goes for the projects that they own, and it also clears the user from the audit data
 and removes the workspace invitations related to them 
+
+### Value Objects
+
+- **Credentials**, which holds the *Email* and *Password*
+- **FirstName**, which holds a string encapsulated *Value*
+- **LastName**, which holds a string encapsulated *Value*
+- **Role**, which holds a string encapsulated *Value*

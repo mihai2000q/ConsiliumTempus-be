@@ -31,4 +31,4 @@ For database design checkout the [Project Diagram](../../../database-diagrams/ag
 
 ### Domain Errors
 
-- **Not Found** when the project status cannot be found
+- **Not Found** (`ProjectStatus.NotFound`, 404) when the project status cannot be found

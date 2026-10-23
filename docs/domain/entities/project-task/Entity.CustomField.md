@@ -23,7 +23,7 @@ For database design checkout the [Project Task Diagram](../../../database-diagra
 
 ### Domain Errors
 
-- **Not Found** when the custom field cannot be found
+- **Not Found** (`CustomField.NotFound`, 404) when the custom field cannot be found
 
 ### Variants
 

@@ -55,8 +55,8 @@ For database design checkout the [Project Task Diagram](../../database-diagrams/
 
 ### Domain Errors
 
-- **Not Found** when the project task cannot be found
-- **Over Not Found** when the project stage or the project task that the task should be placed over cannot be found
+- **Not Found** (`ProjectTask.NotFound`, 404) when the project task cannot be found
+- **Over Not Found** (`ProjectTask.OverNotFound`, 404) when the project stage or the project task that the task should be placed over cannot be found
 
 ### Domain Events
 

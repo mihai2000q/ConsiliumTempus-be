@@ -40,8 +40,8 @@ For database design checkout the [Project Sprint Diagram](../../database-diagram
 
 ### Domain Errors
 
-- **Not Found** when the project sprint cannot be found
-- **Only One Sprint** when the project has only one sprint, so it cannot be removed
+- **Not Found** (`ProjectSprint.NotFound`, 404) when the project sprint cannot be found
+- **Only One Sprint** (`ProjectSprint.OnlyOneSprint`, 409) when the project has only one sprint, so it cannot be removed
 
 ### Filters
 

@@ -31,4 +31,4 @@ For database design, check out the [Single Select Option Diagram](../../database
 
 ### Domain Errors
 
-- **Not Found** when the single select option is not found
+- **Not Found** (`SingleSelectOption.NotFound`, 404) when the single select option is not found

@@ -31,4 +31,4 @@ For database design, check out the [Multi Select Option Diagram](../../database-
 
 ### Domain Errors
 
-- **Not Found** when the multi select option is not found
+- **Not Found** (`MultiSelectOption.NotFound`, 404) when the multi select option is not found

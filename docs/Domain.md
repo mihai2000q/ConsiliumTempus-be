@@ -21,6 +21,13 @@ For a business-level summary of how these models relate, check out the [Overview
 Each aggregate, entity or value object has an empty private constructor
 so that the Entity Framework Core can initialize them.
 
+The JSON examples inside the documentation of each aggregate and entity show the domain model,
+i.e., a value object appears as `{ "value": ... }`. They are not the requests or the responses of the Api
+(for those, check out the [Api documentation](Api.md)).
+
+The domain errors mention their code, and the status code that the Api responds with
+(see [Errors](Api.md#errors)).
+
 ## Aggregates
 
 All Aggregates inherit from the **Aggregate Root** class, which requires a unique class to be the Id.
@@ -97,8 +104,8 @@ such as *IsCompleted* or *FirstName*, are described in their own documentation):
 These errors are not tied to any aggregate, therefore notable and only used in the Application Layer.
 
 - Authentication
-  - **Invalid Credentials** when, upon authentication, the credentials are invalid
-  - **Invalid Tokens** when, upon refreshing the token, either the access or refresh token is invalid
+  - **Invalid Credentials** (`Authentication.InvalidCredentials`, 401) when, upon authentication, the credentials are invalid
+  - **Invalid Tokens** (`Authentication.InvalidTokens`, 401) when, upon refreshing the token, either the access or refresh token is invalid
 
 ## Enums
 
