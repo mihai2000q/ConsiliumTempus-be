@@ -62,10 +62,12 @@ The complete matrix is described in the [Security](Security.md) documentation.
 | understand how the code is organized       | [Architecture](Architecture.md)                              |
 | look up the classes of the domain          | [Domain Models](Domain.md)                                   |
 | understand the database and its migrations | [Database](Database.md)                                      |
+| configure the application                  | [Configuration](Configuration.md)                            |
 | understand who can do what                 | [Security](Security.md)                                      |
 | implement a new feature                    | [Feature Development Workflow](Feature-Development-Workflow.md) |
 | write or run tests                         | [Testing](Testing.md)                                        |
 | know how branches and commits are named    | [Git](Git.md)                                                |
+| understand the workflows and the releases  | [Continuous Integration](CI.md)                              |
 
 ## Glossary
 

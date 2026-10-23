@@ -16,6 +16,8 @@
 - [Api](#api)
 - [Domain Models](#domain-models)
 - [Database](#database)
+- [Configuration](#configuration)
+- [Continuous Integration](#continuous-integration)
 - [Feature Development Workflow](#feature-development-workflow)
 - [License](#license)
 
@@ -223,6 +225,14 @@ More about the domain models can be found at [Domain Models](docs/Domain.md).
 The database chosen for this application infrastructure is a Microsoft SQL Server. 
 <br>
 For more information about the database, please check out the [documentation](docs/Database.md). 
+
+## Configuration
+
+The settings of the application, the environment file and the logging are described in the [Configuration documentation](docs/Configuration.md).
+
+## Continuous Integration
+
+The workflows that build and test the application, and how the releases are made, are described in the [CI documentation](docs/CI.md).
 
 ## Feature Development Workflow
 
