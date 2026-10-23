@@ -349,9 +349,10 @@ Returns a confirmation message that the project has been created successfully.
 
 ### Add Allowed Member
 
-Can only add allowed members to private projects, and only owners can add more members
-(they have to be collaborators though)
-([Project Authorization Level: Is Project Owner](../Security.md#project-authorization-levels)).
+Can only add allowed members to private projects, and only project owners can add more members
+(the new member has to be a collaborator of the workspace)
+([Project Authorization Level: Is Project Owner](../Security.md#project-authorization-levels)
+and [Workspace Authorization Level: Is Collaborator](../Security.md#workspace-authorization-levels)).
 
 ```js
 POST {{host}}/api/projects/add-allowed-member
@@ -485,8 +486,9 @@ Returns a confirmation message that the project overview has been updated succes
 
 ### Update Owner
 
-Only project owners can change the owner (and both the new and old owners have to be collaborators)
-([Project Authorization Level: Is Project Owner](../Security.md#project-authorization-levels)).
+Only project owners can change the owner (the new owner has to be a collaborator of the workspace)
+([Project Authorization Level: Is Project Owner](../Security.md#project-authorization-levels)
+and [Workspace Authorization Level: Is Collaborator](../Security.md#workspace-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/owner
@@ -509,8 +511,9 @@ Returns a confirmation message that the project owner has been updated successfu
 
 ### Update Privacy
 
-Only project owners can change the privacy (and they need to be a collaborator)
-([Project Authorization Level: Is Project Owner](../Security.md#project-authorization-levels)).
+Only project owners can change the privacy
+([Project Authorization Level: Is Project Owner](../Security.md#project-authorization-levels)
+and [Workspace Authorization Level: Is Collaborator](../Security.md#workspace-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/privacy
@@ -585,8 +588,9 @@ Returns a confirmation message that the project has been deleted successfully.
 
 ### Leave Private
 
-Only when the project is private, can the allowed members leave it (also, they have to be collaborators)
-([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
+Only when the project is private, can the allowed members leave it (except for the owner)
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)
+and [Workspace Authorization Level: Is Collaborator](../Security.md#workspace-authorization-levels)).
 
 ```js
 DELETE {{host}}/api/projects/{id}/leave
@@ -604,9 +608,10 @@ Returns a confirmation message that the project has been left successfully.
 
 ### Remove Allowed Member
 
-Can only remove allowed members from private projects, and only owners can remove members
-(they have to be collaborators though)
-([Project Authorization Level: Is Project Owner](../Security.md#project-authorization-levels)).
+Can only remove allowed members from private projects, and only project owners can remove members
+(except for the owner and themselves)
+([Project Authorization Level: Is Project Owner](../Security.md#project-authorization-levels)
+and [Workspace Authorization Level: Is Collaborator](../Security.md#workspace-authorization-levels)).
 
 ```js
 DELETE {{host}}/api/projects/{id}/remove-allowed-member/{allowedMemberId}

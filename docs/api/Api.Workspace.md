@@ -471,7 +471,7 @@ Returns a confirmation message that the workspace overview has been updated succ
 
 ### Update Owner
 
-Only owners of the workspace can update the owner
+Only workspace owners can update the owner
 ([Workspace Authorization Level: Is Workspace Owner](../Security.md#workspace-authorization-levels)).
 
 ```js
