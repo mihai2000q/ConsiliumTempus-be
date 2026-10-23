@@ -6,14 +6,19 @@ services:
       dockerfile: Dockerfile
     container_name: CT-Backend
     ports:
-      - "${API_PORT}:${HTTP_PORT}"
+      - "${API_PORT}:8080"
     depends_on:
       database:
         condition: service_healthy
     environment:
-      - ASPNETCORE_HTTP_PORTS=${HTTP_PORT}
       # should be defined in Development Environment to allow loading dotnet user-secrets locally
       - ASPNETCORE_ENVIRONMENT=Development
+      # override the DatabaseSettings of the appsettings files, so the .env is the single source in Docker
+      - DatabaseSettings__Server=database
+      - DatabaseSettings__Port=1433
+      - DatabaseSettings__Name=${DATABASE_NAME}
+      - DatabaseSettings__User=${DATABASE_USER}
+      - DatabaseSettings__Password=${DATABASE_PASSWORD}
     volumes:
       # map the dotnet user-secret folder (defaults to the Windows location, set USER_SECRETS_PATH on Linux/macOS)
       - ${USER_SECRETS_PATH:-${APPDATA}/Microsoft/UserSecrets}:/root/.microsoft/usersecrets:ro

@@ -177,7 +177,7 @@ internal static partial class Utils
         {
             var (workspace, collaborator) = domainEvent;
             workspace.IsFavorite(collaborator).Should().BeFalse();
-            projects.Should().AllSatisfy(p =>
+            projects.Should().AllSatisfyOrEmpty(p =>
             {
                 p.Owner.Should().NotBe(collaborator);
                 p.AllowedMembers.Should().NotContain(collaborator);
@@ -193,10 +193,10 @@ internal static partial class Utils
                 .ThenByDescending(m => m.WorkspaceRole.Id)
                 .First()
                 .User;
-            projects.Where(ownedProjects.Contains).Should().AllSatisfy(p =>
+            projects.Where(ownedProjects.Contains).Should().AllSatisfyOrEmpty(p =>
                 p.Owner.Should().Be(newOwner));
 
-            projects.Where(favoritesProjects.Contains).Should().AllSatisfy(p =>
+            projects.Where(favoritesProjects.Contains).Should().AllSatisfyOrEmpty(p =>
             {
                 if (p.IsFavorite(collaborator))
                 {

@@ -50,7 +50,7 @@ internal static partial class Utils
             project.Sprints
                 .SelectMany(s => s.Stages)
                 .SelectMany(s => s.Tasks)
-                .Should().AllSatisfy(task =>
+                .Should().AllSatisfyOrEmpty(task =>
                 {
                     var customField = task.CustomFields.SingleOrDefault(cf => cf.Setup == customFieldSetup);
                     customField.Should().NotBeNull();
@@ -184,7 +184,7 @@ internal static partial class Utils
                     throw new ArgumentOutOfRangeException(nameof(request));
             }
 
-            tasks.Should().AllSatisfy(task =>
+            tasks.Should().AllSatisfyOrEmpty(task =>
             {
                 task.CustomFields.Should().ContainSingle(cf => cf.Setup == customFieldSetup);
                 var customField = task.CustomFields.First(cf => cf.Setup == customFieldSetup);
@@ -280,7 +280,7 @@ internal static partial class Utils
             project.Sprints
                 .SelectMany(s => s.Stages)
                 .SelectMany(s => s.Tasks)
-                .Should().AllSatisfy(t =>
+                .Should().AllSatisfyOrEmpty(t =>
                     t.CustomFields.Should().NotContain(cf => cf.Setup == customFieldSetup));
 
             customFieldSetup.Workspace!.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -385,7 +385,7 @@ internal static partial class Utils
         {
             response.CustomFieldSetups
                 .Zip(customFieldSetups.OrderBy(c => c.Audit.CreatedDateTime))
-                .Should().AllSatisfy(x => AssertCustomFieldSetup(x.First, x.Second));
+                .Should().AllSatisfyOrEmpty(x => AssertCustomFieldSetup(x.First, x.Second));
         }
 
         public static void AssertGetCollectionFromProjectResponse(
@@ -394,7 +394,7 @@ internal static partial class Utils
         {
             response.CustomFieldSetups
                 .Zip(customFieldSetups.OrderBy(c => c.Audit.CreatedDateTime))
-                .Should().AllSatisfy(x => AssertCustomFieldSetup(x.First, x.Second));
+                .Should().AllSatisfyOrEmpty(x => AssertCustomFieldSetup(x.First, x.Second));
         }
 
         private static void AssertNumberCustomFieldSetupResponse(
@@ -418,7 +418,7 @@ internal static partial class Utils
             response.Type.Should().Be(CustomFieldType.SingleSelect);
             response.Options
                 .Zip(singleSelectCustomFieldSetup.Options)
-                .Should().AllSatisfy(x => AssertSingleSelectOptionResponse(x.First, x.Second));
+                .Should().AllSatisfyOrEmpty(x => AssertSingleSelectOptionResponse(x.First, x.Second));
 
             if (singleSelectCustomFieldSetup.DefaultOption is null)
                 response.DefaultOption.Should().BeNull();
@@ -495,7 +495,7 @@ internal static partial class Utils
             var index = 0;
             setup.Options
                 .Zip(request.MultiSelectCustomFieldSetup!.Options)
-                .Should().AllSatisfy(x => AssertCreateMultiSelectOption(x.First, x.Second, index++));
+                .Should().AllSatisfyOrEmpty(x => AssertCreateMultiSelectOption(x.First, x.Second, index++));
         }
 
         private static void AssertCreateNumberCustomFieldSetup(
@@ -526,7 +526,7 @@ internal static partial class Utils
             var index = 0;
             setup.Options
                 .Zip(request.SingleSelectCustomFieldSetup!.Options)
-                .Should().AllSatisfy(x => AssertCreateSingleSelectOption(x.First, x.Second, index++));
+                .Should().AllSatisfyOrEmpty(x => AssertCreateSingleSelectOption(x.First, x.Second, index++));
             if (request.SingleSelectCustomFieldSetup.DefaultOptionId is null)
                 setup.DefaultOption.Should().BeNull();
             else

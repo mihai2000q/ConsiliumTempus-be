@@ -316,7 +316,6 @@ For Recapitulation purposes:
 - create a `.env` file (the `API_PORT` from this file is used by `playwright.config.ts`)
 - start the database (`docker compose up -d database`)
 - apply the migration to the database
-- point the `appsettings.Development.json` to the database container
 - open the containers (`docker compose up -d`)
 
 #### Node Environment

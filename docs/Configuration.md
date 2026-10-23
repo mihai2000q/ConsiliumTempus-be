@@ -56,10 +56,13 @@ The refresh token is not configurable, as it always lasts one month.
 They are put together to create the connection string of the database.
 The default values depend on where the application runs:
 
-| File                           | Server                          | Port   |
-|--------------------------------|---------------------------------|--------|
-| `appsettings.Development.json` | `Localhost` (the local machine) | `7133` |
-| `appsettings.json`             | `CT-Database` (the container)   | `1433` |
+| Where                                                  | Source                         | Server                          | Port   |
+|--------------------------------------------------------|--------------------------------|---------------------------------|--------|
+| On the host, in Development                            | `appsettings.Development.json` | `Localhost` (the local machine) | `7133` |
+| In Docker (`docker-compose.yml`, `docker-compose-prod.yml`) | the `.env` file (see below) | `database` (the service)        | `1433` |
+
+The values inside `appsettings.json` are empty, so any other environment has to provide its own
+(i.e., through the `DatabaseSettings__*` environment variables).
 
 The integration tests do not use any of them, as they create their own database container.
 
@@ -85,11 +88,15 @@ It is created by copying `.env.dev` (see [Docker Containers](../README.md#docker
 | `DATABASE_NAME`     | the name of the database, used by the sample data script                                     |
 | `DATABASE_USER`     | the user of the database, used by the sample data script                                     |
 | `DATABASE_PASSWORD` | the password of the database user                                                            |
-| `HTTP_PORT`         | the port that the application listens to, inside its container                              |
-| `API_PORT`          | the port of the host that is mapped to the port of the application (also used by the e2e tests) |
+| `API_PORT`          | the port of the host that is mapped to the port `8080` of the application container (also used by the e2e tests) |
 | `USER_SECRETS_PATH` | optional, the folder of the dotnet user secrets, for Linux and macOS (see `.env.sample`)     |
 
-The database settings from the `appsettings` files must match the ones from the `.env` file.
+Docker Compose passes the database variables to the application container as the `DatabaseSettings__*` environment variables,
+which override the `appsettings` files (the server is the `database` service and the port is `1433`).
+So, in Docker, the `.env` file is the only source of the database settings.
+
+When running the application directly on the host, the `DatabaseSettings` from `appsettings.Development.json`
+must still match the `.env` file (the *Port* with `DATABASE_PORT`, and the *Name*, *User* and *Password*).
 
 ## Logging
 

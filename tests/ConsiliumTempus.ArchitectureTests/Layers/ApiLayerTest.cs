@@ -66,7 +66,9 @@ public class ApiLayerTest : BaseArchitectureTest
         ArchRuleDefinition
             .Classes()
             .That()
-            .ResideInNamespace("ConsiliumTempus.Api.Contracts")
+            .ResideInNamespaceMatching(@"^ConsiliumTempus\.Api\.Contracts(\..*)?$")
+            .And()
+            .AreNotNested()
             .Should()
             .HaveNameEndingWith("Request")
             .OrShould()

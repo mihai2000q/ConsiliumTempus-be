@@ -56,7 +56,7 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
             stage.Tasks.Count);
 
         var count = 0;
-        stage.Tasks.Should().AllSatisfy(t => t.CustomOrderPosition.Value.Should().Be(count++));
+        stage.Tasks.Should().AllSatisfyOrEmpty(t => t.CustomOrderPosition.Value.Should().Be(count++));
     }
 
     [Fact]

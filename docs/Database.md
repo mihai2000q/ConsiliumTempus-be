@@ -38,11 +38,12 @@ update or create any kind of migration, we will use the EF CLI provided by the d
 To install the dotnet **EF Core CLI**, please type the following in the terminal:
 
 ```sh
-dotnet tool install --global dotnet-ef --version 8.0.3
+dotnet tool install --global dotnet-ef --version 10.0.13
 ```
 
-The version has been mentioned just as a precaution, as the project is using .Net 8
+The version has been mentioned just as a precaution, as the project is using .Net 10
 (it is the same version that the `apply-migration-to-database.sh` script installs).
+If an older version is already installed, update it with `dotnet tool update --global dotnet-ef --version 10.0.13`.
 
 To make sure that it has been installed, you can type the following:
 

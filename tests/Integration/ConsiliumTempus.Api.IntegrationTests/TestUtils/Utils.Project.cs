@@ -63,12 +63,12 @@ internal static partial class Utils
             if (isOrdered)
                 response.Projects
                     .Zip(projects)
-                    .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second, user));
+                    .Should().AllSatisfyOrEmpty(p => AssertProjectResponse(p.First, p.Second, user));
             else
                 response.Projects
                     .OrderBy(p => p.Id)
                     .Zip(projects.OrderBy(p => p.Id.Value))
-                    .Should().AllSatisfy(p => AssertProjectResponse(p.First, p.Second, user));
+                    .Should().AllSatisfyOrEmpty(p => AssertProjectResponse(p.First, p.Second, user));
 
             response.TotalCount.Should().Be(totalCount);
         }
@@ -79,7 +79,7 @@ internal static partial class Utils
             int totalCount)
         {
             response.Statuses.Zip(statuses.OrderByDescending(s => s.Audit.UpdatedDateTime))
-                .Should().AllSatisfy(p => AssertProjectStatusResponse(p.First, p.Second));
+                .Should().AllSatisfyOrEmpty(p => AssertProjectStatusResponse(p.First, p.Second));
             response.TotalCount.Should().Be(totalCount);
         }
 
@@ -89,7 +89,7 @@ internal static partial class Utils
         {
             response.AllowedMembers
                 .Zip(allowedMembers.OrderBy(s => s.Name.Value))
-                .Should().AllSatisfy(p => AssertUserResponse(p.First, p.Second));
+                .Should().AllSatisfyOrEmpty(p => AssertUserResponse(p.First, p.Second));
         }
 
         internal static void AssertCreation(

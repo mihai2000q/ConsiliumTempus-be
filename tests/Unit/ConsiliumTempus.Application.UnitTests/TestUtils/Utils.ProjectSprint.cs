@@ -37,7 +37,7 @@ internal static partial class Utils
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             sprint.Stages.ShouldBeOrdered();
-            sprint.Stages.Should().AllSatisfy(stage =>
+            sprint.Stages.Should().AllSatisfyOrEmpty(stage =>
             {
                 stage.Audit.UpdatedBy.Should().Be(stage == projectStage ? createdBy : sprintCreatedBy);
             });
@@ -66,7 +66,7 @@ internal static partial class Utils
                     projectSprint.Stages
                         .OrderBy(s => s.CustomOrderPosition)
                         .Zip(project.Sprints[0].Stages.OrderBy(s => s.CustomOrderPosition))
-                        .Should().AllSatisfy((x) =>
+                        .Should().AllSatisfyOrEmpty((x) =>
                         {
                             var (newStage, stage) = x;
                             newStage.Name.Should().Be(stage.Name);

@@ -58,14 +58,14 @@ internal static partial class Utils
     internal static void ShouldBeOrdered(this IReadOnlyList<ProjectTaskAggregate> tasks)
     {
         var customOrderPosition = 0;
-        tasks.Should().AllSatisfy(t =>
+        tasks.Should().AllSatisfyOrEmpty(t =>
             t.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
 
     internal static void ShouldBeOrdered(this IReadOnlyList<ProjectStage> stages)
     {
         var customOrderPosition = 0;
-        stages.Should().AllSatisfy(s =>
+        stages.Should().AllSatisfyOrEmpty(s =>
             s.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
 
@@ -73,14 +73,14 @@ internal static partial class Utils
     {
         var customOrderPosition = 0;
         options.OrderBy(s => s.CustomOrderPosition)
-            .Should().AllSatisfy(o => o.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+            .Should().AllSatisfyOrEmpty(o => o.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
 
     internal static void ShouldBeOrdered(this IReadOnlyList<MultiSelectOption> options)
     {
         var customOrderPosition = 0;
         options.OrderBy(s => s.CustomOrderPosition)
-            .Should().AllSatisfy(o => o.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
+            .Should().AllSatisfyOrEmpty(o => o.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
 
     internal static void ShouldBeCreated(this Audit audit, UserAggregate createdBy)

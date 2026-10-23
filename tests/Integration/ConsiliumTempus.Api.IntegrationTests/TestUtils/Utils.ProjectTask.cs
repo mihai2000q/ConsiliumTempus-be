@@ -39,7 +39,7 @@ internal static partial class Utils
             AssertWorkspaceResponse(response.Workspace, task.Stage.Sprint.Project.Workspace);
             response.CustomFields
                 .Zip(task.CustomFields.OrderBy(cf => cf.Setup.Audit.CreatedDateTime))
-                .Should().AllSatisfy(x => AssertCustomFieldResponse(x.First, x.Second));
+                .Should().AllSatisfyOrEmpty(x => AssertCustomFieldResponse(x.First, x.Second));
         }
 
         internal static void AssertGetCollectionResponse(
@@ -51,7 +51,7 @@ internal static partial class Utils
             response.Tasks.Should().HaveCount(tasks.Count);
             response.Tasks
                 .Zip(tasks)
-                .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
+                .Should().AllSatisfyOrEmpty(p => AssertResponse(p.First, p.Second));
         }
 
         internal static void AssertCreation(
@@ -68,7 +68,7 @@ internal static partial class Utils
             task.Stage.Tasks.ShouldBeOrdered();
 
             task.CustomFields.Should().HaveSameCount(customFieldSetups);
-            task.CustomFields.Should().AllSatisfy(customField =>
+            task.CustomFields.Should().AllSatisfyOrEmpty(customField =>
             {
                 switch (customField)
                 {
@@ -141,7 +141,7 @@ internal static partial class Utils
             overStage.Tasks[0].Should().Be(task);
             overStage.Tasks.ShouldBeOrdered();
 
-            stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
+            stages.Should().AllSatisfyOrEmpty(s => s.Tasks.ShouldBeOrdered());
             stages.SelectMany(s => s.Tasks)
                 .Should().ContainSingle(t => t == task);
 
@@ -163,7 +163,7 @@ internal static partial class Utils
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             stages.Should().ContainSingle(s => s == overStage);
-            stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
+            stages.Should().AllSatisfyOrEmpty(s => s.Tasks.ShouldBeOrdered());
             stages.SelectMany(s => s.Tasks)
                 .Should().ContainSingle(t => t == task);
 
@@ -327,7 +327,7 @@ internal static partial class Utils
             response.Name.Should().Be(sprint.Name.Value);
             response.Stages
                 .Zip(sprint.Stages.OrderBy(s => s.CustomOrderPosition))
-                .Should().AllSatisfy(x => AssertProjectStageResponse(x.First, x.Second));
+                .Should().AllSatisfyOrEmpty(x => AssertProjectStageResponse(x.First, x.Second));
         }
 
         private static void AssertProjectResponse(
@@ -434,10 +434,10 @@ internal static partial class Utils
             response.Type.Should().Be(CustomFieldType.MultiSelect);
             response.Options
                 .Zip(customField.Options)
-                .Should().AllSatisfy(x => AssertMultiSelectOptionResponse(x.First, x.Second));
+                .Should().AllSatisfyOrEmpty(x => AssertMultiSelectOptionResponse(x.First, x.Second));
             response.AvailableOptions
                 .Zip(customField.Setup.Options)
-                .Should().AllSatisfy(x => AssertMultiSelectOptionResponse(x.First, x.Second));
+                .Should().AllSatisfyOrEmpty(x => AssertMultiSelectOptionResponse(x.First, x.Second));
         }
 
         private static void AssertNumberCustomFieldResponse(
@@ -467,7 +467,7 @@ internal static partial class Utils
             AssertSingleSelectOptionResponse(response.Option, customField.Option);
             response.AvailableOptions
                 .Zip(customField.Setup.Options)
-                .Should().AllSatisfy(x => AssertSingleSelectOptionResponse(x.First, x.Second));
+                .Should().AllSatisfyOrEmpty(x => AssertSingleSelectOptionResponse(x.First, x.Second));
         }
 
         private static void AssertTextCustomFieldResponse(
@@ -523,7 +523,7 @@ internal static partial class Utils
             AssertUserResponse(response.Assignee, projectTask.Assignee);
             response.CustomFields
                 .Zip(projectTask.CustomFields.OrderBy(cf => cf.Setup.Audit.CreatedDateTime))
-                .Should().AllSatisfy(x => AssertCustomFieldResponse(x.First, x.Second));
+                .Should().AllSatisfyOrEmpty(x => AssertCustomFieldResponse(x.First, x.Second));
         }
 
         private static void AssertUserResponse(
@@ -629,7 +629,7 @@ internal static partial class Utils
             response.Type.Should().Be(CustomFieldType.MultiSelect);
             response.Options
                 .Zip(customField.Options)
-                .Should().AllSatisfy(x => AssertMultiSelectOptionResponse(x.First, x.Second));
+                .Should().AllSatisfyOrEmpty(x => AssertMultiSelectOptionResponse(x.First, x.Second));
         }
 
         private static void AssertNumberCustomFieldResponse(

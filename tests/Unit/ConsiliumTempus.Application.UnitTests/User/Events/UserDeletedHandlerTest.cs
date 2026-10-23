@@ -82,7 +82,7 @@ public class UserDeletedHandlerTest
             .Received(emptyWorkspaces.Count)
             .Remove(Arg.Any<WorkspaceAggregate>());
         removedWorkspaces.Should().BeEquivalentTo(emptyWorkspaces);
-        removedWorkspaces.Should().AllSatisfy(p =>
+        removedWorkspaces.Should().AllSatisfyOrEmpty(p =>
             p.DomainEvents.Should().HaveCount(1).And.AllBeOfType<WorkspaceDeleted>());
 
         await _projectRepository
@@ -96,7 +96,7 @@ public class UserDeletedHandlerTest
             .Received(emptyProjects.Count)
             .Remove(Arg.Any<ProjectAggregate>());
         removedProjects.Should().BeEquivalentTo(emptyProjects);
-        removedProjects.Should().AllSatisfy(p =>
+        removedProjects.Should().AllSatisfyOrEmpty(p =>
             p.DomainEvents.Should().HaveCount(1).And.AllBeOfType<ProjectDeleted>());
 
         await _userRepository
