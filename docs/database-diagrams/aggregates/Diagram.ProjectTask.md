@@ -36,6 +36,8 @@
 
 ### Diagram
 
+For the notation used, check out the [Legend](../Database.Diagram.md#legend).
+
 ```mermaid
 erDiagram
     ProjectStage ||--o{ ProjectTask : "StageId"

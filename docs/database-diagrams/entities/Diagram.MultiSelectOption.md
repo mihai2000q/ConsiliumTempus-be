@@ -10,6 +10,8 @@
 
 ### Diagram
 
+For the notation used, check out the [Legend](../Database.Diagram.md#legend).
+
 ```mermaid
 erDiagram
     CustomFieldSetup_MultiSelect ||--o{ MultiSelectOption : "SetupId"

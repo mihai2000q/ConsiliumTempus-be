@@ -373,3 +373,18 @@ erDiagram
         uniqueidentifier CustomFieldId PK, FK
     }
 ```
+
+## Legend
+
+The diagrams are written in *Mermaid*, and they use the following notation:
+
+- **PK** for a primary key, **FK** for a foreign key and **UK** for a unique column
+- **nullable** means that the column accepts null values (otherwise the column is required)
+- the types are the ones from SQL Server (for decimals, the precision and the scale are mentioned in the comment)
+- the lines between the tables are named after the foreign key column, and they start from the referenced table:
+  - `||` means exactly one
+  - `|o` means zero or one
+  - `o{` means zero or many
+  - i.e., `User ||--o{ Workspace` reads: a user has zero or many workspaces, and a workspace has exactly one user
+- inside the diagrams of an aggregate or an entity, the tables that belong to others
+  are shown only with their primary key, just to show the relations
