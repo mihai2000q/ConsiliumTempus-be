@@ -2,8 +2,8 @@
 
 * [Custom Field Setup](#custom-field-setup)
   * [Get](#get)
-    * [Get Request](#get-request)
-    * [Get Response](#get-response)
+    * [Get Custom Field Setup Request](#get-custom-field-setup-request)
+    * [Get Custom Field Setup Response](#get-custom-field-setup-response)
   * [Get Collection From Workspace](#get-collection-from-workspace)
     * [Get Collection From Workspace Request](#get-collection-from-workspace-request)
     * [Get Collection From Workspace Response](#get-collection-from-workspace-response)
@@ -29,43 +29,49 @@
     * [Delete Custom Field Setup Request](#delete-custom-field-setup-request)
     * [Delete Custom Field Setup Response](#delete-custom-field-setup-response)
   * [Remove From Project](#remove-from-project)
-    * [Delete Custom Field Setup Request](#delete-custom-field-setup-request-1)
-    * [Delete Custom Field Setup Response](#delete-custom-field-setup-response-1)
+    * [Remove Custom Field Setup From Project Request](#remove-custom-field-setup-from-project-request)
+    * [Remove Custom Field Setup From Project Response](#remove-custom-field-setup-from-project-response)
 
 ## Custom Field Setup
 
 This is the controller that takes care of creating, updating, deleting and querying Custom Field Setups.
 
+The constraints of the properties (i.e., maximum lengths) are described in the documentation of the [Custom Field Setup](../domain/aggregates/Aggregate.CustomFieldSetup.md).
+
 ### Get
 
-Only members and admins of the workspace can read a custom field setup
-([Read Project Task Permission](../Security.md/#permissions)).
+Only **Member** and **Admin** users of the workspace can read a custom field setup
+([Read Custom Field Setup Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can read a custom field setup
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/customFieldSetups/{id}
 ```
 
-- **id** is a 36-character string
+- **id** is a GUID
 
-#### Get Request
+#### Get Custom Field Setup Request
 
 Sends the id of the custom Field Setup inside the route of the request.
 
-#### Get Response
+#### Get Custom Field Setup Response
 
-Returns a custom field setup. However, the response will be different for each type.
+Returns a custom field setup inside the `customFieldSetup` property. However, the response will be different for each type,
+which is identified by the `$type` discriminator (`<Type>CustomFieldSetupResponse`).
 
 ##### Date
 
 ```json
 {
-  "name": "the Date",
-  "description": "This is a custom field",
-  "type": "Date",
-  "defaultDate": "2022-10-10"
+  "customFieldSetup": {
+    "$type": "DateCustomFieldSetupResponse",
+    "name": "the Date",
+    "description": "This is a custom field",
+    "type": "Date",
+    "defaultDate": "2022-10-10"
+  }
 }
 ```
 
@@ -73,10 +79,13 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "Date and time",
-  "description": "This is a custom field",
-  "type": "DateTime",
-  "defaultDateTime": "2022-10-10T10:30:00"
+  "customFieldSetup": {
+    "$type": "DateTimeCustomFieldSetupResponse",
+    "name": "Date and time",
+    "description": "This is a custom field",
+    "type": "DateTime",
+    "defaultDateTime": "2022-10-10T10:30:00"
+  }
 }
 ```
 
@@ -84,10 +93,13 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "the Duration",
-  "description": "This is a custom field",
-  "type": "Duration",
-  "defaultDuration": "10:30:00"
+  "customFieldSetup": {
+    "$type": "DurationCustomFieldSetupResponse",
+    "name": "the Duration",
+    "description": "This is a custom field",
+    "type": "Duration",
+    "defaultDuration": "10:30:00"
+  }
 }
 ```
 
@@ -95,21 +107,24 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "Priorities",
-  "description": "This is a custom field",
-  "type": "Multi Select",
-  "options": [
-    {
-      "id": "10000000-0000-0000-0000-000000000000",
-      "color": "#FF0000",
-      "value": "High"
-    },
-    {
-      "id": "20000000-0000-0000-0000-000000000000",
-      "color": "#0000FF",
-      "value": "Low"
-    }
-  ]
+  "customFieldSetup": {
+    "$type": "MultiSelectCustomFieldSetupResponse",
+    "name": "Priorities",
+    "description": "This is a custom field",
+    "type": "MultiSelect",
+    "options": [
+      {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "color": "#FF0000",
+        "value": "High"
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000000",
+        "color": "#0000FF",
+        "value": "Low"
+      }
+    ]
+  }
 }
 ```
 
@@ -117,15 +132,18 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "Budget",
-  "description": "This is a custom field",
-  "type": "Number",
-  "settings": {
-    "currencyCode": "USD",
-    "decimals": 2,
-    "rounding": true
-  },
-  "defaultNumber": 12
+  "customFieldSetup": {
+    "$type": "NumberCustomFieldSetupResponse",
+    "name": "Budget",
+    "description": "This is a custom field",
+    "type": "Number",
+    "settings": {
+      "currencyCode": "USD",
+      "decimals": 2,
+      "rounding": true
+    },
+    "defaultNumber": 12
+  }
 }
 ```
 
@@ -133,9 +151,12 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "Guys",
-  "description": "This is a custom field",
-  "type": "People"
+  "customFieldSetup": {
+    "$type": "PeopleCustomFieldSetupResponse",
+    "name": "Guys",
+    "description": "This is a custom field",
+    "type": "People"
+  }
 }
 ```
 
@@ -143,25 +164,28 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "Priority",
-  "description": "This is a custom field",
-  "type": "Multi Select",
-  "options": [
-    {
-      "id": "10000000-0000-0000-0000-000000000000",
-      "color": "#FF0000",
-      "value": "High"
-    },
-    {
+  "customFieldSetup": {
+    "$type": "SingleSelectCustomFieldSetupResponse",
+    "name": "Priority",
+    "description": "This is a custom field",
+    "type": "SingleSelect",
+    "options": [
+      {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "color": "#FF0000",
+        "value": "High"
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000000",
+        "color": "#0000FF",
+        "value": "Low"
+      }
+    ],
+    "defaultOption": {
       "id": "20000000-0000-0000-0000-000000000000",
       "color": "#0000FF",
       "value": "Low"
     }
-  ],
-  "defaultOption": {
-    "id": "20000000-0000-0000-0000-000000000000",
-    "color": "#0000FF",
-    "value": "Low"
   }
 }
 ```
@@ -170,10 +194,13 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "Some Text",
-  "description": "This is a custom field",
-  "type": "Text",
-  "defaultText": "default"
+  "customFieldSetup": {
+    "$type": "TextCustomFieldSetupResponse",
+    "name": "Some Text",
+    "description": "This is a custom field",
+    "type": "Text",
+    "defaultText": "default"
+  }
 }
 ```
 
@@ -181,23 +208,26 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "the time",
-  "description": "This is a custom field",
-  "type": "Time",
-  "defaultTime": "10:30:00"
+  "customFieldSetup": {
+    "$type": "TimeCustomFieldSetupResponse",
+    "name": "the time",
+    "description": "This is a custom field",
+    "type": "Time",
+    "defaultTime": "10:30:00"
+  }
 }
 ```
 
 ### Get Collection From Workspace
 
-Only members and admins of the workspace can read the custom field setups
-([Read Collection Custom Field Setup From Workspace Permission](../Security.md/#permissions)),
+Only **Member** and **Admin** users of the workspace can read the custom field setups
+([Read Collection Custom Field Setup From Workspace Permission](../Security.md#permissions)).
 
 ```js
-GET {{host}}/api/customFieldSetups/{workspaceId}
+GET {{host}}/api/customFieldSetups/workspace/{workspaceId}
 ```
 
-- **workspaceId** is a 36-character string
+- **workspaceId** is a GUID
 
 #### Get Collection From Workspace Request
 
@@ -228,17 +258,17 @@ Returns the custom field setups from workspace.
 
 ### Get Collection From Project
 
-Only members and admins of the workspace can read the custom field setups
-([Read Collection Custom Field Setup From Project Permission](../Security.md/#permissions)),
+Only **Member** and **Admin** users of the workspace can read the custom field setups
+([Read Collection Custom Field Setup From Project Permission](../Security.md#permissions)),
 
 When the project is private, only allowed members can read custom field setups
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
-GET {{host}}/api/customFieldSetups/{projectId}
+GET {{host}}/api/customFieldSetups/project/{projectId}
 ```
 
-- **projectId** is a 36-character string
+- **projectId** is a GUID
 
 #### Get Collection From Project Request
 
@@ -269,8 +299,8 @@ Returns the custom field setups from a project.
 
 ### Create On Workspace
 
-Only admins of the workspace can create a custom field setup on workspace
-([Create Custom Field Setup On Workspace Permission](../Security.md/#permissions)).
+Only **Admin** users of the workspace can create a custom field setup on workspace
+([Create Custom Field Setup On Workspace Permission](../Security.md#permissions)).
 
 ```js
 POST {{host}}/api/customFieldSetups/workspace
@@ -305,11 +335,11 @@ Returns a confirmation message that the custom field setup has been created succ
 
 ### Create On Project
 
-Only admins of the workspace can create a custom field setup
-([Create Custom Field Setup On Project Permission](../Security.md/#permissions)).
+Only **Admin** users of the workspace can create a custom field setup
+([Create Custom Field Setup On Project Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can create a custom field setup
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 POST {{host}}/api/customFieldSetups/project
@@ -353,8 +383,8 @@ Returns a confirmation message that the custom field setup has been created succ
 
 ### Add To Project
 
-Only admins of the workspace can add the custom field setup to project
-([Add Custom Field Setup To Project Permission](../Security.md/#permissions)).
+Only **Admin** users of the workspace can add the custom field setup to project
+([Add Custom Field Setup To Project Permission](../Security.md#permissions)).
 
 ```js
 POST {{host}}/api/customFieldSetups/add-project
@@ -377,11 +407,11 @@ Returns a confirmation message that the custom field setup has been added to the
 
 ### Update
 
-Only admins and members of the workspace can update a custom field setup
-([Create Custom Field Setup On Project Permission](../Security.md/#permissions)).
+Only **Admin** users of the workspace can update a custom field setup
+([Update Custom Field Setup Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a custom field setup
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/customFieldSetups
@@ -393,7 +423,7 @@ Sends body data that the custom field setup needs to be updated.
 
 ```json
 {
-  "projectId": "10000000-0000-0000-0000-000000000000",
+  "id": "10000000-0000-0000-0000-000000000000",
   "name": "Custom Field",
   "description": "its description",
   "type": "MultiSelect",
@@ -420,11 +450,11 @@ Returns a confirmation message that the custom field setup has been updated succ
 
 ### Make Global
 
-Only admins of the workspace can make the custom field setup global
-([Make Custom Field Setup Global Permission](../Security.md/#permissions)).
+Only **Admin** users of the workspace can make the custom field setup global
+([Make Custom Field Setup Global Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can make the custom field setup global
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/customFieldSetups/global
@@ -446,17 +476,17 @@ Returns a confirmation message that the custom field setup has been made global 
 
 ### Delete
 
-Only admins of the workspace can delete a custom field setup
-([Delete Custom Field Setup Permission](../Security.md/#permissions)).
+Only **Admin** users of the workspace can delete a custom field setup
+([Delete Custom Field Setup Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can delete a custom field setup
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 DELETE {{host}}/api/customFieldSetups/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Delete Custom Field Setup Request
 
@@ -468,23 +498,20 @@ Returns a confirmation message that the custom field setup has been deleted succ
 
 ### Remove From Project
 
-Only admins of the workspace can remove a custom field setup from a project
-([Make Custom Field Setup Global Permission](../Security.md/#permissions)).
-
-When the project is private, only allowed members can remove a custom field setup from a project
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+Only **Admin** users of the workspace can remove a custom field setup from a project
+([Remove Custom Field Setup From Project Permission](../Security.md#permissions)).
 
 ```js
 DELETE {{host}}/api/customFieldSetups/{id}/remove-project/{projectId}
 ```
 
-- **id** is a 36 characters strings
-- **projectId** is a 36 characters strings
+- **id** is a GUID
+- **projectId** is a GUID
 
-#### Delete Custom Field Setup Request
+#### Remove Custom Field Setup From Project Request
 
 Send the id of the custom field setup and of the project on the route.
 
-#### Delete Custom Field Setup Response
+#### Remove Custom Field Setup From Project Response
 
 Returns a confirmation message that the custom field setup has been removed from the project successfully.

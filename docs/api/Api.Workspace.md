@@ -46,9 +46,9 @@
   * [Delete](#delete)
     * [Delete Workspace Request](#delete-workspace-request)
     * [Delete Workspace Response](#delete-workspace-response)
-  * [Kick Collaborator](#kick-collaboratora)
-    * [Kick Collaborator From Workspace Request](#kick-collaboratora-from-workspace-request)
-    * [Kick Collaborator From Workspace Response](#kick-collaboratora-from-workspace-response)
+  * [Kick Collaborator](#kick-collaborator)
+    * [Kick Collaborator From Workspace Request](#kick-collaborator-from-workspace-request)
+    * [Kick Collaborator From Workspace Response](#kick-collaborator-from-workspace-response)
   * [Leave](#leave)
     * [Leave Workspace Request](#leave-workspace-request)
     * [Leave Workspace Response](#leave-workspace-response)
@@ -57,15 +57,17 @@
 
 This is the controller that takes care of creating, reading, updating and deleting a Workspace.
 
+The constraints of the properties (i.e., maximum lengths) are described in the documentation of the [Workspace](../domain/aggregates/Aggregate.Workspace.md) and the [Membership](../domain/entities/Entity.Membership.md).
+
 ### Get
 
-Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md/#permissions)).
+Anyone that is part of the workspace can retrieve it ([Read Workspace Permission](../Security.md#permissions)).
 
 ```js
 GET {{host}}/api/workspaces/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Get Workspace Request
 
@@ -90,14 +92,14 @@ Returns the workspace.
 
 ### Get Overview
 
-Only users that are part of the workspace can retrieve it 
-([Read Overview Workspace Permission](../Security.md/#permissions)).
+Anyone that is part of the workspace can retrieve it 
+([Read Overview Workspace Permission](../Security.md#permissions)).
 
 ```js
 GET {{host}}/api/workspaces/overview/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Get Overview Workspace Request
 
@@ -118,10 +120,10 @@ Returns the workspace overview.
 Anyone logged in can request this data, but it will return only the workspaces that are linked to this user.
 
 ```js
-GET {{host}}/api/workspaces?pageSize=2&currentPage=1orderBy=name.asc&orderBy=updated_date_time.desc&search=name ct worksp
+GET {{host}}/api/workspaces?pageSize=2&currentPage=1&orderBy=name.asc&orderBy=updated_date_time.desc&search=name ct worksp
 ```
 
-### Get Collection Workspace Request
+#### Get Collection Workspace Request
 
 Sends optional query parameters for ordering, filtering, and page-based pagination.
 
@@ -169,14 +171,14 @@ Returns the workspaces and their total count.
 
 ### Get Collaborators
 
-Only users that are part of the workspace can retrieve it 
-([Read Collaborators From Workspace Permission](../Security.md/#permissions)).
+Anyone that is part of the workspace can retrieve it 
+([Read Collaborators From Workspace Permission](../Security.md#permissions)).
 
 ```js
-GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle&pageSize=2&currentPage=1orderBy=user_name.asc&orderBy=workspace_role_id.desc&search=workspace_role_id eq 1
+GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle&pageSize=2&currentPage=1&orderBy=user_name.asc&orderBy=workspace_role_id.desc&search=workspace_role_id eq 1
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Get Collaborators From Workspace Request
 
@@ -207,14 +209,15 @@ Returns the collaborators.
       "email": "stephenc@gmail.com",
       "workspaceRole": "Member"
     }
-  ]
+  ],
+  "totalCount": 2
 }
 ```
 
 ### Get Invitations
 
 All users can see their invitations (sent or received), but only admins can see those from a workspace
-([Read Invitations From Workspace Permission](../Security.md/#permissions)).
+([Read Invitations From Workspace Permission](../Security.md#permissions)).
 
 ```js
 GET {{host}}/api/workspaces/invitations?isSender=false&pageSize=2&currentPage=1
@@ -301,8 +304,8 @@ Returns a confirmation message that the workspace has been created successfully.
 
 ### Invite Collaborator
 
-Only admins of the workspace can invite new collaborators
-([Invite Collaborator To Workspace Permission](../Security.md/#permissions)).
+Only **Admin** users of the workspace can invite new collaborators
+([Invite Collaborator To Workspace Permission](../Security.md#permissions)).
 
 ```js
 POST {{host}}/api/workspaces/invite-collaborator
@@ -371,8 +374,8 @@ Returns a confirmation message that the invitation has been rejected successfull
 
 ### Update
 
-Only member or admin users that are part of the workspace can update it
-([Update Workspace Permission](../Security.md/#permissions)).
+Only **Member** and **Admin** users of the workspace can update it
+([Update Workspace Permission](../Security.md#permissions)).
 
 ```js
 PUT {{host}}/api/workspaces
@@ -395,8 +398,8 @@ Returns a confirmation message that the workspace has been updated successfully.
 
 ### Update Collaborator
 
-Only admins that are part of the workspace can update a collaborator
-([Update Collaborator From Workspace Permission](../Security.md/#permissions)).
+Only **Admin** users of the workspace can update a collaborator
+([Update Collaborator From Workspace Permission](../Security.md#permissions)).
 
 ```js
 PUT {{host}}/api/workspaces/collaborators
@@ -409,7 +412,7 @@ Sends body data needed to update a collaborator.
 ```json
 {
   "id": "10000000-0000-0000-0000-000000000000",
-  "collaboratorId": "This is the new description of the workspace overview",
+  "collaboratorId": "20000000-0000-0000-0000-000000000000",
   "workspaceRole": "Member"
 }
 ```
@@ -421,7 +424,7 @@ Returns a confirmation message that the collaborator has been updated successful
 ### Update Favorites
 
 Anyone that is part of the workspace can add it to their favorites
-([Update Favorites Workspace Permission](../Security.md/#permissions)).
+([Update Favorites Workspace Permission](../Security.md#permissions)).
 
 ```js
 PUT {{host}}/api/workspaces/favorites
@@ -444,8 +447,8 @@ Returns a confirmation message that the workspace favorites have been updated su
 
 ### Update Overview
 
-Only member or admin users that are part of the workspace can update it
-([Update Overview Workspace Permission](../Security.md/#permissions)).
+Only **Member** and **Admin** users of the workspace can update it
+([Update Overview Workspace Permission](../Security.md#permissions)).
 
 ```js
 PUT {{host}}/api/workspaces/overview
@@ -468,8 +471,8 @@ Returns a confirmation message that the workspace overview has been updated succ
 
 ### Update Owner
 
-Only owners of the workspace can update the owner
-([Workspace Authorization Level: Is Workspace Owner](../Security.md/#workspace-authorization-levels));
+Only workspace owners can update the owner
+([Workspace Authorization Level: Is Workspace Owner](../Security.md#workspace-authorization-levels)).
 
 ```js
 PUT {{host}}/api/workspaces/owner
@@ -492,14 +495,14 @@ Returns a confirmation message that the workspace owner has been updated success
 
 ### Delete
 
-Only admin users that are part of the workspace can delete it
-([Delete Workspace Permission](../Security.md/#permissions)).
+Only **Admin** users of the workspace can delete it
+([Delete Workspace Permission](../Security.md#permissions)).
 
 ```js
 DELETE {{host}}/api/workspaces/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Delete Workspace Request
 
@@ -511,15 +514,15 @@ Returns a confirmation message that the workspace has been deleted successfully.
 
 ### Kick Collaborator
 
-Only admin users that are part of the workspace can kick other collaborators
-([Kick Collaborator From Workspace](../Security.md/#permissions))
+Only **Admin** users of the workspace can kick other collaborators
+([Kick Collaborator From Workspace Permission](../Security.md#permissions)).
 
 ```js
 DELETE {{host}}/api/workspaces/{id}/kick-collaborator/{collaboratorId}
 ```
 
-- **id** is a 36 characters strings
-- **collaboratorId** is a 36 characters strings
+- **id** is a GUID
+- **collaboratorId** is a GUID
 
 #### Kick Collaborator From Workspace Request
 
@@ -532,13 +535,13 @@ Returns a confirmation message that the collaborator has been kicked from the wo
 ### Leave
 
 Everyone can leave the workspace, as long as they are collaborators
-([Workspace Authorization Level: Is Collaborator](../Security.md/#workspace-authorization-levels));
+([Workspace Authorization Level: Is Collaborator](../Security.md#workspace-authorization-levels)).
 
 ```js
 DELETE {{host}}/api/workspaces/{id}/leave
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Leave Workspace Request
 

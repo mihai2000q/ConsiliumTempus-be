@@ -2,7 +2,7 @@
 
 ## Project Task
 
-This is the project **task** entity.
+This is the project **task** aggregate.
 
 ```csharp
 class ProjectTask
@@ -11,9 +11,11 @@ class ProjectTask
     void Update()
     void UpdateOverview()
     void UpdateIsCompleted()
-    void UpdatetCustomOrderPosition()
+    void UpdateCustomOrderPosition()
+    void RefreshUpdatedDateTime()
+    void AddCustomField()
     void AddComment()
-    void Move()
+    bool Move()
 }
 ```
 
@@ -35,7 +37,8 @@ class ProjectTask
   "dueDate": "2020-01-01",
   "estimatedDuration": "08:30",
   "stage": {},
-  "comments": [{}]
+  "comments": [{}],
+  "customFields": [{}]
 }
 ```
 
@@ -44,6 +47,7 @@ For database design checkout the [Project Task Diagram](../../database-diagrams/
 ### Entities
 
 - [Project Task Comment](../entities/project-task/Entity.ProjectTaskComment.md)
+- [Custom Field](../entities/project-task/Entity.CustomField.md)
 
 ### Properties Validation
 
@@ -51,8 +55,8 @@ For database design checkout the [Project Task Diagram](../../database-diagrams/
 
 ### Domain Errors
 
-- **Not Found** when the project task cannot be found
-- **Over Not Found** when the project stage or the project task that the task should be placed over cannot be found
+- **Not Found** (`ProjectTask.NotFound`, 404) when the project task cannot be found
+- **Over Not Found** (`ProjectTask.OverNotFound`, 404) when the project stage or the project task that the task should be placed over cannot be found
 
 ### Domain Events
 
@@ -64,6 +68,7 @@ based on the setups from the project
 ### Value Objects
 
 - **IsCompleted**, which encapsulates a boolean *Value*
+- *CompletedOn**, which encapsulates a Date Time *Value*
 
 ### Filters
 

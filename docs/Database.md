@@ -1,9 +1,18 @@
 # Consilium Tempus Backend Database
 
+* [Naming Convention](#naming-convention)
+  * [Tables](#tables)
+* [Migrations](#migrations)
+  * [Dotnet tools](#dotnet-tools)
+  * [Create Migration](#create-migration)
+  * [Migration Naming Convention](#migration-naming-convention)
+  * [Apply Migration](#apply-migration)
+  * [Apply Migration—with the connection flag](#apply-migrationwith-the-connection-flag)
+
 The RDBMS chosen for this application infrastructure is a Microsoft SQL Server.
 <br>
-More about the Database Design choices can be read at [Database Diagrams](Domain.md/#database-diagrams), 
-and for a clear picture of the whole application check out the [Database Diagram](Database.Diagram.md). 
+More about the Database Design choices can be read at [Database Diagrams](Domain.md#database-diagrams), 
+and for a clear picture of the whole application check out the [Database Diagram](database-diagrams/Database.Diagram.md). 
 
 ## Naming Convention
 
@@ -29,10 +38,11 @@ update or create any kind of migration, we will use the EF CLI provided by the d
 To install the dotnet **EF Core CLI**, please type the following in the terminal:
 
 ```sh
-dotnet tool install --global dotnet-ef --version 8.0.1
+dotnet tool install --global dotnet-ef --version 8.0.3
 ```
 
-The version has been mentioned just as a precaution, as the project is using the .Net 8.0.1.
+The version has been mentioned just as a precaution, as the project is using .Net 8
+(it is the same version that the `apply-migration-to-database.sh` script installs).
 
 To make sure that it has been installed, you can type the following:
 
@@ -45,16 +55,19 @@ dotnet tool list --global
 To create a migration, you can use the following command:
 
 ```sh
-dotnet ef migrations add Update -p ./src/ConsiliumTempus.Infrastructure -s ./src/ConsiliumTempus.Api/
+dotnet ef migrations add Update_User_Email -p ./src/ConsiliumTempus.Infrastructure -s ./src/ConsiliumTempus.Api/
 ```
 
-That will create a migration named with a timestamp followed by the suffix *Update*.
+That will create a migration named with a timestamp followed by the suffix *Update_User_Email*.
+
+Also, the [Database Diagrams](database-diagrams/Database.Diagram.md) are written by hand, so whenever a migration changes the schema,
+the affected diagrams have to be updated as well.
 
 ### Migration Naming Convention
 
 The **Naming Convention** is *VERB\_TABLE\_COLUMN*, for example,
-if the user table has been modified by the _Email_ Column, the name would be `Update_Users_Email`,
-otherwise, if the table has been thoroughly modified `Update_Users` suffices.
+if the user table has been modified by the _Email_ Column, the name would be `Update_User_Email`,
+otherwise, if the table has been thoroughly modified `Update_User` suffices.
 
 ### Apply Migration
 
@@ -63,6 +76,12 @@ To apply the migration, you can type the following command:
 ```sh
 dotnet ef database update -p ./src/ConsiliumTempus.Infrastructure -s ./src/ConsiliumTempus.Api/
 ```
+
+The command uses the configuration of the Api project in the *Development* environment
+(`appsettings.Development.json` and the user secrets),
+so the database has to be reachable from the machine that runs it,
+i.e., `localhost` and the published port `7133` of the database container.
+If that file points to the name of the container (**CT-Database**), use the connection flag from below.
 
 Alternatively, the shell script `apply-migration-to-database.sh` can be used, as you did when you got setup.
 
@@ -83,6 +102,6 @@ Make sure that inside the double brackets you add the actual parameters, but by 
 - **database_user** is SA (by default from MsSql)
 - **database_password** is StrongPassword123 (Lead Choice)
 
-Check out the `.env` file, and the `.appsettings.json`, in case they have been changed.
+Check out the `.env` file, and the `appsettings.Development.json`, in case they have been changed.
 
 Alternatively, the shell script `apply-migration-to-database.sh` can be used, as you did when you got setup.

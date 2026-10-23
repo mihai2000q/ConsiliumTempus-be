@@ -16,9 +16,10 @@ class MultiSelectOption
 
 ```json
 {
+  "id": "00000000-0000-0000-0000-000000000000",
   "color": "#FF1122",
   "value": "High",
-  "customOrderPosition": 0
+  "customOrderPosition": { "value": 0 }
 }
 ```
 
@@ -30,4 +31,4 @@ For database design, check out the [Multi Select Option Diagram](../../database-
 
 ### Domain Errors
 
-- **Not Found** when the multi select option is not found
+- **Not Found** (`MultiSelectOption.NotFound`, 404) when the multi select option is not found

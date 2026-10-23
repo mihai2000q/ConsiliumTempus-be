@@ -19,7 +19,7 @@ class CustomFieldSetup
 ```json
 {
   "id": { "value": "00000000-0000-0000-0000-000000000000" },
-  "name": "First Custom Field Setup",
+  "name": { "value": "First Custom Field Setup" },
   "description": { "value": "This is the description of the setup" },
   "workspace": null,
   "projects": [{}],
@@ -35,11 +35,11 @@ For database design checkout the [Custom Field Setup Diagram](../../database-dia
 
 ### Domain Errors
 
-- **Not Found** when the custom field setup cannot be found
-- **Not Global** when the custom field setup is not globally available in the workspace 
+- **Not Found** (`CustomFieldSetup.NotFound`, 404) when the custom field setup cannot be found
+- **Not Global** (`CustomFieldSetup.NotGlobal`, 409) when the custom field setup is not globally available in the workspace 
 (i.e., it is available in just one project)
-- **Already Global** when the custom field setup is already global
-- **Project Already Present** when the custom field setup already has the project
+- **Already Global** (`CustomFieldSetup.AlreadyGlobal`, 409) when the custom field setup is already global
+- **Project Already Present** (`CustomFieldSetup.ProjectAlreadyPresent`, 409) when the custom field setup already has the project
 
 ### Domain Events
 
@@ -139,7 +139,7 @@ class NumberCustomFieldSetup : CustomFieldSetup
 ```json
 {
   "settings": {},
-  "defaultNumber": 0
+  "defaultNumber": { "value": 0 }
 }
 ```
 
@@ -173,7 +173,7 @@ class SingleSelectCustomFieldSetup : CustomFieldSetup
 ```json
 {
   "options": [{}],
-  "defaultOption": {} 
+  "defaultOptionId": "00000000-0000-0000-0000-000000000000"
 }
 ```
 
@@ -189,7 +189,7 @@ class TextCustomFieldSetup : CustomFieldSetup
 
 ```json
 {
-  "defaultText": "default"
+  "defaultText": { "value": "default" }
 }
 ```
 

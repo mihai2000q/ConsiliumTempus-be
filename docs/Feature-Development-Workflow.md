@@ -1,5 +1,8 @@
 # Consilium Tempus Feature Development Workflow
 
+* [Overview of the Steps](#overview-of-the-steps)
+* [A Real Feature to Follow](#a-real-feature-to-follow)
+* [What Differs in Real Code](#what-differs-in-real-code)
 * [Creating a New Aggregate](#creating-a-new-aggregate)
   * [Domain](#domain)
     * [Value Objects](#value-objects)
@@ -29,12 +32,16 @@
     * [Contracts](#contracts)
     * [Mapping](#mapping)
     * [Endpoint](#endpoint)
+* [Permissions](#permissions)
+* [Testing the Feature](#testing-the-feature)
+* [Documenting the Feature](#documenting-the-feature)
+* [Checklist](#checklist)
 
 Implementing a new feature in this application follows the clean architecture principles,
 to put it in simple words:
 
 - the request comes through a **presentation** layer, in our case, a REST api,
-- it is, optionally, run through a security check inside the infrastructure
+- it is run through a security check inside the infrastructure (authentication and, optionally, authorization)
 - inside the endpoint,
   - it gets mapped to a query or a command
   - and sent through the mediator to get handled
@@ -44,6 +51,62 @@ to put it in simple words:
   - optionally, it requests data from the database through a repository
   - and returns a result or an error
 - finally, it gets mapped again to a response and is sent to the user
+
+## Overview of the Steps
+
+Before starting, it helps to read the [Architecture](Architecture.md) document,
+especially [Life of a Request](Architecture.md#life-of-a-request), and the [Overview](Overview.md) of the application.
+
+A new feature usually goes through the following steps, from the inside out
+(each step can be skipped when it is already in place, i.e., the aggregate exists already):
+
+| Step | Layer          | What to do                                                                           | Where to read                                                      |
+|-----:|----------------|--------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+|    1 | Domain         | create or update the aggregate, its errors, its validation constants and its events  | [Creating a New Aggregate](#creating-a-new-aggregate)              |
+|    2 | Infrastructure | configure the aggregate for the database, add the repository and create the migration | [Creating a New Aggregate](#creating-a-new-aggregate), [Creating a New Command](#creating-a-new-command) |
+|    3 | Application    | create the command or the query, with its result, validator and handler             | [Creating a New Command](#creating-a-new-command), [Creating a New Query](#creating-a-new-query) |
+|    4 | Api            | create the contracts, the mapping and the endpoint, protected by a permission        | [Creating a New Endpoint](#creating-a-new-endpoint), [Permissions](#permissions) |
+|    5 | Tests          | cover the feature with unit, integration and, when needed, e2e tests                 | [Testing the Feature](#testing-the-feature)                        |
+|    6 | Documentation  | update the documentation of the endpoint and of the domain                          | [Documenting the Feature](#documenting-the-feature)                |
+
+At the end, go through the [Checklist](#checklist).
+
+## A Real Feature to Follow
+
+The examples from this document are simplified on purpose, to keep the focus on the structure
+(they create a project for a user, with just a name).
+When in doubt, take a look at a real feature, such as **Kick Collaborator From Workspace**,
+which is small, but it goes through all the layers:
+
+| Layer          | Files                                                                                                                                                                            |
+|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Domain         | `WorkspaceAggregate.RemoveUserMembership`, the errors from `Errors.Workspace`, the `CollaboratorRemovedFromWorkspace` event, the `KickCollaboratorFromWorkspace` permission        |
+| Application    | `Workspace/Commands/KickCollaborator`: the command, the result, the validator and the handler                                                                                    |
+| Api            | `Contracts/Workspace/KickCollaborator` (request and response), `WorkspaceMappingConfig` and the `KickCollaborator` endpoint from `WorkspaceController`                           |
+| Unit tests     | the handler and the validator tests, under `Application.UnitTests/Workspace/Commands/KickCollaborator`, and their data and factories                                              |
+| Integration    | the three test classes from `Api.IntegrationTests/Controllers/Workspace/KickCollaborator`                                                                                         |
+
+## What Differs in Real Code
+
+Because the examples are simplified, keep in mind the following about the real code:
+
+- **The current user** is never sent by the client.
+  The handlers get it through the `ICurrentUserProvider`
+  (`GetCurrentUserAfterPermissionCheck` for the endpoints that are protected by a permission or an authorization level).
+- **Saving** is not done by the handlers, nor by the repositories.
+  A pipeline behavior saves the changes of the requests whose name ends with *Command*, if the handler did not return an error,
+  and it also publishes the domain events (see [Life of a Request](Architecture.md#life-of-a-request)).
+  Therefore, the commands have to be named accordingly (the architecture tests check that).
+- **Results**: the commands return a result with just a confirmation message
+  (i.e., `new KickCollaboratorFromWorkspaceResult()`), which is mapped to the response `{ "message": "..." }`.
+  The queries return a result that wraps the aggregate, mapped to the data of the response.
+- **Requests** that get their data from the route or the query are records with properties marked by `[FromRoute]`
+  or `[FromQuery]` (see `KickCollaboratorFromWorkspaceRequest`), while the ones with a body are simple records.
+- **Endpoints** declare their route and the checks that protect them
+  (`HasPermission`, `HasProjectAuthorization`, `HasWorkspaceAuthorization`), because all the controllers require authentication.
+- **Shared value objects**, such as the `Name` or the `Description`, already exist inside `Domain/Common/ValueObjects`.
+- **Activity**: the handlers that change the data of a workspace or a project also refresh its last activity
+  (i.e., `workspace.RefreshActivity()`).
 
 ## Creating a New Aggregate
 
@@ -193,7 +256,7 @@ public static partial class PropertiesValidation
 
 Now, in order for Entity Framework to be able to create this class upon query, it should be configured.
 
-Inside the **Infrastructure** layer, under the **Persistence/Configuration** package,
+Inside the **Infrastructure** layer, under the **Persistence/Configuration/Aggregates** package,
 each aggregate has its own configuration, as following:
 
 ```csharp
@@ -221,7 +284,7 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
 ```
 
 Usually, after creating or updating a configuration, a migration should be created.
-More information about migrations can be found [here](Database.md/#migrations).
+More information about migrations can be found [here](Database.md#migrations).
 
 ## Creating a New Command
 
@@ -273,7 +336,9 @@ If the database set is not defined already, under the **Persistence/Database** p
 inside the **ConsiliumTempusDbContext**, one can define a new database set, likewise:
 
 ```csharp
-public sealed class ConsiliumTempusDbContext() {
+public sealed class ConsiliumTempusDbContext : DbContext
+{
+    ...
     public DbSet<UserAggregate> Users { get; init; } = null!;
     public DbSet<ProjectAggregate> Projects { get; init; } = null!;
 }
@@ -292,11 +357,11 @@ Inside the **Application** layer, we will create the following:
 #### Repository Interfaces
 
 If the repositories have just been created, get on with the following guidelines, otherwise, jump
-to [Command](#command);
+to [Command](#command).
 
 In order for the application to communicate with the database, it uses interfaces on the infrastructure layer.
 
-Under the package **Common/Interfaces/Repository**, we can create two interfaces for the repositories:
+Under the package **Common/Interfaces/Persistence/Repository**, we can create two interfaces for the repositories:
 
 ```csharp
 public interface IUserRepository
@@ -332,7 +397,7 @@ public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IPro
 }
 ```
 
-Second, under the root folder, inside the **Dependency Injection** class, on the bottom,
+Second, under the root folder, inside the **DependencyInjection** class, on the bottom,
 there is already a method called **AddRepositories**.
 
 There, we can add our repositories:
@@ -484,20 +549,20 @@ Notice the following:
 #### Validator
 
 Usually, a query will need validation before it can be handled.
-This validator will be assigned to the command on runtime via the behavior pipeline.
+This validator will be assigned to the query on runtime via the behavior pipeline.
 
 ```csharp
 public sealed class GetUserQueryValidator : AbstractValidator<GetUserQuery>
 {
     public GetUserQueryValidator()
     {
-        RuleFor(c => c.UserId)
+        RuleFor(q => q.Id)
             .NotEmpty();
     }
 }
 ```
 
-The above validates that the id of the user cannot be empty
+The above validates that the id of the user cannot be empty.
 
 Notice the following:
 
@@ -515,7 +580,7 @@ public sealed class GetUserQueryHandler(IUserRepository userRepository)
 {
     public async Task<ErrorOr<UserAggregate>> Handle(GetUserQuery query, CancellationToken cancellationToken)
     {
-        var user = await userRepository.Get(UserId.Create(command.UserId), cancellationToken);
+        var user = await userRepository.Get(UserId.Create(query.Id), cancellationToken);
         return user is null ? Errors.User.NotFound : user;
     }
 }
@@ -557,7 +622,8 @@ that are injected.
 
 #### Contracts
 
-Next, we need two classes that will define the **request** and the **response** of the new endpoint.
+Next, we need two classes that will define the **request** and the **response** of the new endpoint,
+inside the **Contracts/Project/Create** package.
 
 ```csharp
 public sealed record CreateProjectRequest(
@@ -613,7 +679,7 @@ which requires the function **Register**, where we can create our functions for 
 As the naming and the types match for the request and command, there is no need for further mapping.
 
 For the result, we need to explicitly map a few fields.
-Also, notice that we can choose to omit a fields from being exposed outside the application (i.e., the created date
+Also, notice that we can choose to omit fields from being exposed outside the application (i.e., the created date
 time).
 
 #### Endpoint
@@ -643,3 +709,47 @@ The endpoint from above does the following:
 - maps the request to a command
 - it sends the command and captures the result
 - then, whether it is a result or an error, it maps it to a response or a **Problem** response
+
+## Permissions
+
+Each endpoint should be protected, and the checks are described in the [Security](Security.md) document:
+
+- to protect it with a **permission**, follow [Adding a New Permission](Security.md#adding-a-new-permission)
+- to restrict it to the owners, the allowed members or the collaborators, use the authorization levels
+  (see [Authorization](Api.md#authorization))
+
+## Testing the Feature
+
+Every feature should come with tests, and the conventions are described in the [Testing](Testing.md) document.
+Following the structure of a real feature (see [A Real Feature to Follow](#a-real-feature-to-follow)):
+
+| Test                    | What to write                                                                              | Where                                                                    |
+|-------------------------|--------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| Unit - Application      | one test class for the handler and one for the validator (with its data)                   | `tests/Unit/ConsiliumTempus.Application.UnitTests/<Aggregate>/...`        |
+| Unit - Api              | the test of the endpoint inside the controller test class                                  | `tests/Unit/ConsiliumTempus.Api.UnitTests/Controllers`                   |
+| Unit - Factories        | the factories of the commands, requests and results used by the tests                      | `tests/Unit/ConsiliumTempus.Common.UnitTests/<Aggregate>`                |
+| Integration             | one test class for the endpoint, and, when needed, one for the authorization and one for the validation | `tests/Integration/ConsiliumTempus.Api.IntegrationTests/Controllers/<Controller>/<Action>` |
+| End-To-End              | the happy path of the endpoint                                                             | `tests/e2e/tests`                                                        |
+
+The architecture tests do not need new code, they just have to keep passing (they check the layers and the naming).
+
+## Documenting the Feature
+
+Besides the code, the documentation has to be kept up to date:
+
+- the [Api documentation](Api.md#controllers) of the controller: the new endpoint, its route, request, response and its checks
+- the [Domain Models](Domain.md) documentation of the aggregate or the entity: the methods, the errors, the events,
+  the filters and the orders
+- the [Database Diagrams](database-diagrams/Database.Diagram.md), when the schema changes (together with the migration,
+  see [Database](Database.md#migrations))
+- the [Security](Security.md) document, when there is a new permission
+
+## Checklist
+
+- [ ] **Domain**: the aggregate or entity, its errors, validation constants and events
+- [ ] **Infrastructure**: the configuration, the repository, the database set and the migration
+- [ ] **Application**: the command or query, its result, validator and handler
+- [ ] **Api**: the contracts, the mapping and the endpoint, protected by a permission or an authorization level
+- [ ] **Tests**: unit, integration (including authorization and validation) and e2e, when needed
+- [ ] **Documentation**: the Api, the Domain, the diagrams and the Security
+- [ ] the solution builds, and all the tests pass, including the architecture ones

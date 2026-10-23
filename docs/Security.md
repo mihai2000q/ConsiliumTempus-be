@@ -2,13 +2,15 @@
 
 * [Access Control](#access-control)
 * [Role-Based Access Control (RBAC)](#role-based-access-control-rbac)
-* [Workspace Authorization levels](#workspace-authorization-levels)
+* [Workspace Authorization Levels](#workspace-authorization-levels)
+* [Project Authorization Levels](#project-authorization-levels)
 * [Workspace Roles](#workspace-roles)
 * [Permissions](#permissions)
 * [Workspace Roles to Permissions](#workspace-roles-to-permissions)
+* [Adding a New Permission](#adding-a-new-permission)
 
 In a general context, the application implements different methods to keep the application secure.
-One of the practices used includes: RBAC, hashing and more.
+Some of the practices used include: RBAC, hashing and more.
 
 ## Access Control
 
@@ -33,9 +35,9 @@ thus restricting the power held by an individual.
 
 This security method is used to manage conflicts of interest and fraud or tampering with the application.
 
-However, these roles are exclusive to the [Workspace](domain/aggregates/Aggregate.Workspace) component.
-For example, if the user is not in a workspace, he cannot create any project, portfolio or add any tasks.
-So he basically cannot use the application to its fullest
+However, these roles are exclusive to the [Workspace](domain/aggregates/Aggregate.Workspace.md) component.
+For example, if the user is not in a workspace, they cannot create any project or add any tasks.
+So they basically cannot use the application to its fullest
 (thankfully, all users must have a workspace, and one is created upon registration).
 
 Also, it should be mentioned that there are a few exceptions, such as:
@@ -59,6 +61,13 @@ There are only a few levels in the project that differ from just having permissi
 - **Is Project Owner**, which requires the user that made the request to be the owner of the project
 - **Is Allowed**, which requires the user that made the request to be part of the allowed members of a project
 
+Some endpoints combine several checks, and all of them have to pass.
+For example, most of the project endpoints require both a permission and the **Is Allowed** level,
+while the ones that manage the allowed members, the owner or the privacy of a project (or leaving a private project)
+require a Project Authorization Level together with the Workspace Authorization Level **Is Collaborator**.
+The checks of each endpoint are listed in its [Api documentation](api/Api.Project.md),
+and they are applied through attributes (see [Authorization](Api.md#authorization)).
+
 ## Workspace Roles
 
 The owner will, most of the time, be able to delete the data that they have added.
@@ -67,13 +76,13 @@ The workspace roles are:
 
 - **View**, they can mostly just read information
 - **Member**, they can, in most of the cases, read, update and sometimes even add data
-- **Admin**, they can do everything
+- **Admin**, they can do everything (except for the actions that are exclusive to the owners)
 
 ## Permissions
 
 The permissions will be classified on their respective component:
 
-- Custom Field Setup
+- [Custom Field Setup](api/Api.CustomFieldSetup.md)
   - Create On Project
   - Create On Workspace
   - Add To Project
@@ -84,7 +93,7 @@ The permissions will be classified on their respective component:
   - Make Global
   - Delete
   - Remove From Project
-- Project
+- [Project](api/Api.Project.md)
   - Create
   - Read
   - Read Overview
@@ -98,7 +107,7 @@ The permissions will be classified on their respective component:
   - Read Statuses
   - Update Status
   - Remove Status
-- Project Sprint
+- [Project Sprint](api/Api.ProjectSprint.md)
   - Create
   - Read
   - Read Collection
@@ -109,7 +118,7 @@ The permissions will be classified on their respective component:
   - Move Stage
   - Update Stage
   - Remove Stage
-- Project Task
+- [Project Task](api/Api.ProjectTask.md)
   - Create
   - Read
   - Read Collection
@@ -119,7 +128,7 @@ The permissions will be classified on their respective component:
   - Update Is Completed
   - Update Overview
   - Delete
-- Workspace
+- [Workspace](api/Api.Workspace.md)
   - Read
   - Read Overview
   - Read Invitations
@@ -134,7 +143,8 @@ The permissions will be classified on their respective component:
 
 ## Workspace Roles to Permissions
 
-The Access Control List of the system is the following:
+The Access Control List of the system is the following
+(it comes from the `WorkspaceRoleHasPermission` class, inside the Domain, and it is saved in the database by the migrations):
 
 |                                                   | View | Member | Admin |
 |---------------------------------------------------|:----:|:------:|:-----:|
@@ -158,7 +168,7 @@ The Access Control List of the system is the following:
 | Delete Project                                    |      |        |   X   |
 | Read Allowed Members From Project                 |      |   X    |   X   |
 | Add Status To Project                             |      |        |   X   |
-| Read Statuses From Project                        |      |   X    |   X   |
+| Read Statuses From Project                        |  X   |   X    |   X   |
 | Update Status From Project                        |      |   X    |   X   |
 | Remove Status From Project                        |      |        |   X   |
 | Create Project Sprint                             |      |        |   X   |
@@ -191,3 +201,17 @@ The Access Control List of the system is the following:
 | Read Collaborators From Workspace                 |  X   |   X    |   X   |
 | Update Collaborator From Workspace                |      |        |   X   |
 | Kick Collaborator From Workspace                  |      |        |   X   |
+
+## Adding a New Permission
+
+To add a new permission, the following steps are needed:
+
+1. Add it to the **Permissions** enum, inside the Domain
+   (the id of the permission in the database is its position in the enum, plus one).
+2. Grant it to the roles that should have it, inside the `WorkspaceRoleHasPermission` class.
+3. Tell the `PermissionAuthorizationHandler`, inside the Infrastructure, where to find the id that links the request
+   to its workspace (the body, the route or the query of the request).
+4. Create a [migration](Database.md#migrations), because both the permissions and the roles to permissions
+   relations are persisted by the migrations.
+5. Add the **Has Permission** attribute with the new permission to the endpoint (see [Authorization](Api.md#authorization)).
+6. Update the permission list and the table above, and the documentation of the endpoint.

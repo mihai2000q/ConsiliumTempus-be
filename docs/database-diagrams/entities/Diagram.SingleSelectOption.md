@@ -4,9 +4,29 @@
 
 ### Relationships
 
-- **Many-to-One** relationship with the [Custom Field Single Select](../../domain/entities/project-task/Entity.CustomField.md) entity.
-- **One-to-Many** relationship with the [Custom Field Setup Single Select](../../domain/aggregates/Aggregate.CustomFieldSetup.md) aggregate.
+- **One-to-Many** relationship with the [Custom Field Single Select](../../domain/entities/project-task/Entity.CustomField.md) entity.
+- **Many-to-One** relationship with the [Custom Field Setup Single Select](../../domain/aggregates/Aggregate.CustomFieldSetup.md) aggregate.
 
 ### Diagram
 
-<img src="../../images/database-diagrams/entities/diagram.single-select-option.png" alt="Single Select Option Diagram" width="75%"/>
+For the notation used, check out the [Legend](../Database.Diagram.md#legend).
+
+```mermaid
+erDiagram
+    CustomFieldSetup_SingleSelect ||--o{ SingleSelectOption : "SetupId"
+    SingleSelectOption |o--o{ CustomField_SingleSelect : "OptionId"
+
+    SingleSelectOption {
+        uniqueidentifier Id PK
+        nvarchar(50) Value
+        nvarchar(7) Color
+        int CustomOrderPosition
+        uniqueidentifier SetupId FK
+    }
+    CustomFieldSetup_SingleSelect {
+        uniqueidentifier Id PK
+    }
+    CustomField_SingleSelect {
+        uniqueidentifier Id PK
+    }
+```

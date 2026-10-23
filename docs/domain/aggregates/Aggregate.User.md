@@ -32,12 +32,9 @@ class User
 
 For database design, check out the [User Diagram](../../database-diagrams/aggregates/Diagram.User.md).
 
-### Value Objects
+### Entities
 
-- **Credentials**, which holds the *Email* and *Password*
-- **FirstName**, which holds a string encapsulated *Value*
-- **LastName**, which holds a string encapsulated *Value*
-- **Role**, which holds a string encapsulated *Value*
+- [Membership](../entities/Entity.Membership.md)
 
 ### Properties Validation
 
@@ -49,11 +46,20 @@ For database design, check out the [User Diagram](../../database-diagrams/aggreg
 
 ### Domain Errors
 
-- **Duplicate Email** when the email is already in use
-- **Not Found** when the user cannot be found
+- **Duplicate Email** (`User.DuplicateEmail`, 409) when the email is already in use
+- **Not Found** (`User.NotFound`, 404) when the user cannot be found
 
 ### Domain Events
 
 - **User Registered** when the user registers, it will also create a user workspace with an admin membership
-- **User Deleted** when the user is deleted, it will also delete workspaces where he was alone, 
-or transfer ownership on workspaces and promote the new owner to Admin, if necessary 
+- **User Deleted** when the user is deleted, it will also delete the workspaces where they were alone,
+or transfer the ownership of the workspaces and promote the new owner to Admin, if necessary.
+The same goes for the projects that they own, and it also clears the user from the audit data
+and removes the workspace invitations related to them 
+
+### Value Objects
+
+- **Credentials**, which holds the *Email* and *Password*
+- **FirstName**, which holds a string encapsulated *Value*
+- **LastName**, which holds a string encapsulated *Value*
+- **Role**, which holds a string encapsulated *Value*

@@ -1,0 +1,110 @@
+# Consilium Tempus Backend Configuration
+
+* [Environments](#environments)
+* [Settings](#settings)
+  * [Jwt Settings](#jwt-settings)
+  * [Database Settings](#database-settings)
+  * [Other Settings](#other-settings)
+* [Environment File](#environment-file)
+* [Logging](#logging)
+
+The application is configured inside the `src/ConsiliumTempus.Api` project, through the `appsettings` files,
+the dotnet user secrets and, for Docker, the `.env` file.
+
+## Environments
+
+The application runs in one of the following environments:
+
+- **Development**, which is used for local development and by the Docker environment from the README
+- **Testing**, which is used by the [integration tests](Testing.md#integration-testing)
+- **Production**, which is the one that .NET uses when no environment is set
+
+For each of them, the settings are read from the following sources, from the weakest to the strongest
+(the next one overrides the previous):
+
+1. `appsettings.json`, with the settings that are common to all the environments
+2. `appsettings.{Environment}.json` (i.e., `appsettings.Development.json`)
+3. the dotnet user secrets (only for Development, see [Dotnet User Secrets](../README.md#dotnet-user-secrets))
+4. the environment variables
+
+## Settings
+
+### Jwt Settings
+
+| Setting         | Description                                                                          |
+|-----------------|--------------------------------------------------------------------------------------|
+| `SecretKey`     | the key that signs the tokens. It is empty on purpose and it must be provided        |
+| `ExpiryMinutes` | the lifetime of an access token, in minutes (5 by default)                           |
+| `Issuer`        | the issuer of the tokens, that is also validated on each request                     |
+| `Audience`      | the audience of the tokens, that is also validated on each request                   |
+
+Development provides the secret key through the user secrets, and the other environments through the `appsettings.json`
+(the CI injects it from a secret, see [Continuous Integration](CI.md)).
+
+The refresh token is not configurable, as it always lasts one month.
+
+### Database Settings
+
+| Setting    | Description                                  |
+|------------|----------------------------------------------|
+| `Server`   | the host name of the SQL Server              |
+| `Port`     | the port of the SQL Server                   |
+| `Name`     | the name of the database                     |
+| `User`     | the user that connects to the database       |
+| `Password` | the password of that user                    |
+
+They are put together to create the connection string of the database.
+The default values depend on where the application runs:
+
+| File                           | Server                          | Port   |
+|--------------------------------|---------------------------------|--------|
+| `appsettings.Development.json` | `Localhost` (the local machine) | `7133` |
+| `appsettings.json`             | `CT-Database` (the container)   | `1433` |
+
+The integration tests do not use any of them, as they create their own database container.
+
+### Other Settings
+
+- **Logging** and **Serilog** configure the logs (see [Logging](#logging))
+- **AllowedHosts** is the standard .NET setting, and it allows all the hosts
+
+Some values are not settings, as they are written in the code:
+
+- the CORS policy of the frontend allows the origin `http://localhost:8123`,
+  the methods *GET*, *POST*, *PUT* and *DELETE* and any header (see `CorsPolicies`)
+- the `api` prefix of all the routes
+
+## Environment File
+
+The `.env` file is read by Docker Compose, by the shell scripts and by the e2e tests.
+It is created by copying `.env.dev` (see [Docker Containers](../README.md#docker-containers)).
+
+| Variable            | Description                                                                                  |
+|---------------------|----------------------------------------------------------------------------------------------|
+| `DATABASE_PORT`     | the port of the host that is mapped to the port of the database container                     |
+| `DATABASE_NAME`     | the name of the database, used by the sample data script                                     |
+| `DATABASE_USER`     | the user of the database, used by the sample data script                                     |
+| `DATABASE_PASSWORD` | the password of the database user                                                            |
+| `HTTP_PORT`         | the port that the application listens to, inside its container                              |
+| `API_PORT`          | the port of the host that is mapped to the port of the application (also used by the e2e tests) |
+| `USER_SECRETS_PATH` | optional, the folder of the dotnet user secrets, for Linux and macOS (see `.env.sample`)     |
+
+The database settings from the `appsettings` files must match the ones from the `.env` file.
+
+## Logging
+
+The logs are written by **Serilog**, which is configured from the `Serilog` section of the `appsettings` files.
+Each log goes to the following places:
+
+- the console
+- a text file, `logs/backend-log.api-.log` in Development (`backend-log.webapi-.log` otherwise)
+- a JSON file with the same name, inside the same folder
+
+The files are created inside the `logs` folder, next to the running application, and a new one is created each day.
+The writing is asynchronous, and the folder is ignored by Git.
+
+The minimum level is *Information* in Development (with the MVC messages only from *Warning* up),
+and *Warning* in the other environments (except for a few hosting and routing messages, that are *Information*).
+
+The format of the text files mentions a `CorrelationId` and a `Username`,
+however, nothing populates them for now, so they should not be relied upon.

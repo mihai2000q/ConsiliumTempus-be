@@ -25,6 +25,8 @@ See the example below:
 Also, the token is short-lived; therefore, when it expires, it can be refreshed using the _Refresh Token_,
 which has a long lifetime.
 
+The constraints of the properties (i.e., maximum lengths) are described in the documentation of the [User](../domain/aggregates/Aggregate.User.md).
+
 ### Register
 
 Anyone can register.
@@ -42,7 +44,7 @@ Sends data needed to create the user in body.
   "firstName": "Firsty",
   "lastName": "Lasty",
   "email": "FirstyLasty@example.com",
-  "password": "password123",
+  "password": "Password123",
   "role": "Software Developer",
   "dateOfBirth": "2000-12-21"
 }
@@ -73,8 +75,8 @@ Sends credentials of user in body.
 
 ```json
 {
-  "email": "FirstLasty@example.com",
-  "password": "password123"
+  "email": "FirstyLasty@example.com",
+  "password": "Password123"
 }
 ```
 

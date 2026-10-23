@@ -10,4 +10,29 @@
 
 ### Diagram
 
-<img src="../../images/database-diagrams/entities/diagram.multi-select-option.png" alt="Multi Select Option Diagram" width="75%"/>
+For the notation used, check out the [Legend](../Database.Diagram.md#legend).
+
+```mermaid
+erDiagram
+    CustomFieldSetup_MultiSelect ||--o{ MultiSelectOption : "SetupId"
+    CustomField_MultiSelect ||--o{ CustomField_MultiSelectHasOption : "CustomFieldId"
+    MultiSelectOption ||--o{ CustomField_MultiSelectHasOption : "OptionId"
+
+    MultiSelectOption {
+        uniqueidentifier Id PK
+        nvarchar(50) Value
+        nvarchar(7) Color
+        int CustomOrderPosition
+        uniqueidentifier SetupId FK
+    }
+    CustomField_MultiSelectHasOption {
+        uniqueidentifier OptionId PK, FK
+        uniqueidentifier CustomFieldId PK, FK
+    }
+    CustomFieldSetup_MultiSelect {
+        uniqueidentifier Id PK
+    }
+    CustomField_MultiSelect {
+        uniqueidentifier Id PK
+    }
+```

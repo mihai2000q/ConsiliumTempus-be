@@ -1,17 +1,23 @@
 # Consilium Tempus - Backend
 
 - [Abstract](#abstract)
+- [Overview](#overview)
 - [Get Started](#get-started)
     - [Prerequisites](#prerequisites)
     - [Dotnet User Secrets](#dotnet-user-secrets)
     - [Docker Containers](#docker-containers)
     - [Local Development](#local-development)
+    - [Test Development Environment](#test-development-environment)
+    - [Sample Data](#sample-data)
 - [Testing](#testing)
 - [Git](#git)
 - [Architecture](#architecture)
+- [Security](#security)
 - [Api](#api)
 - [Domain Models](#domain-models)
 - [Database](#database)
+- [Configuration](#configuration)
+- [Continuous Integration](#continuous-integration)
 - [Feature Development Workflow](#feature-development-workflow)
 - [License](#license)
 
@@ -20,11 +26,25 @@
 This is the backend of the Consilium Tempus application. 
 It is written completely in C# using the ASP.Net Core framework.
 
+## Overview
+
+For a summary of what the application does and how its concepts relate (workspaces, projects, sprints, tasks, etc.),
+check out the [Overview](docs/Overview.md).
+
 ## Get Started
 
 To get started on contributing to the development of this backend application,
-you can do it locally or by using Docker, 
+you can do it locally or by using Docker,
 by following the next steps.
+
+At a glance, the first run looks like this:
+
+1. install the [prerequisites](#prerequisites)
+2. set the [secret key](#dotnet-user-secrets)
+3. create the `.env` file, start the database and apply the migration
+   (the first three steps from [Docker Containers](#docker-containers), which are the same for both ways)
+4. run the application, either [in Docker](#docker-containers) (the last two steps) or [locally](#local-development)
+5. [send a test request](#test-development-environment)
 
 ### Prerequisites
 
@@ -69,32 +89,44 @@ as the dotnet user-secrets feature is used only and only for development.
 
 ### Docker Containers
 
-If you decide to run the application in Docker, a `docker-compose.yml` file has been provided. 
-This file uses variables from the `.env` file, which is locally defined for each user. 
-Therefore, you can copy and paste the `.env.dev` file and rename it to `.env`. 
-It contains the parameters
-needed for the Database container initialization and appliance of the migrations shell script.
+If you decide to run the application in Docker, a `docker-compose.yml` file has been provided.
+Follow the steps below, in this order:
 
-Next, to sync up the Application with the Database, 
-go inside the `appsettings.Development.json` file (inside `src/ConsiliumTempus.Api`), 
-and change the *Server* parameter from **Localhost** to the container name, 
-which by default is **CT-Database**, and also the *Port* from **7133** to **1433**
-(similarly with `appsettings.json`).
+1. Create the `.env` file, which is locally defined for each user,
+   by copying the `.env.dev` file and renaming it to `.env`.
+   It contains the parameters needed for the Database container initialization
+   and the appliance of the migrations shell script (see [Configuration](docs/Configuration.md#environment-file)).
+   On Linux/macOS, also set `USER_SECRETS_PATH` in the `.env` file (see `.env.sample`),
+   as the user secrets folder defaults to the Windows location.
 
-Once you have the environment files setup, type in the following command:
+2. Start only the database:
 
-```sh
-docker compose up -d
-```
+   ```sh
+   docker compose up -d database
+   ```
 
-This command will open up two containers: one for the database and the other for the application,
-which is running by default in development mode.
+3. Apply the migration to the database, by running the `scripts/apply-migration-to-database.sh`.
+   <br>
+   This script will also install the necessary tools for that purpose.
+   It reads the `appsettings.Development.json` file (inside `src/ConsiliumTempus.Api`),
+   so, at this point, the file must have its default values: the *Server* **Localhost** and the *Port* **7133**.
 
-To finalize the database setup, run the `apply-migration-to-database.sh`. 
-<br>
-This script will also install the necessary tools for that purpose.
+4. Sync up the application with the database, so that the application container can find it:
+   inside the same `appsettings.Development.json` file, change the *Server* parameter from **Localhost**
+   to the container name, which by default is **CT-Database**, and also the *Port* from **7133** to **1433**
+   (`appsettings.json` already has these values).
 
-To enable the production mode in Docker, run the `docker-compose-prod.yml` should be changed.
+5. Start the application, by typing the following command:
+
+   ```sh
+   docker compose up -d
+   ```
+
+   This command will open up the two containers: the database one (already running) and the one for the application,
+   which is running by default in development mode.
+
+To go back to running the application locally, restore the default values from the 4th step
+(see [Local Development](#local-development)).
 
 ### Local Development
 
@@ -103,8 +135,9 @@ For local development, you will either install your own database instance or use
 <br>
 For recapitulation purposes:
 - create an `.env` file
-- start only the database container 
-- make sure the `appsettings.Development.json` still matches the `.env`
+- start only the database container
+- make sure the `appsettings.Development.json` has the local values (the *Server* **Localhost** and the *Port* from the `.env`,
+  which is **7133** by default), in case the Docker steps changed them
 - apply the migration
 
 To run only the docker database, run the following command:
@@ -138,19 +171,19 @@ dotnet run --project ./src/ConsiliumTempus.Api
 ```
 
 The application will run in https by default, 
-but that can be changed by inside the profile on the `launchsettings.json` file, 
-or specify the profile on run.
+but that can be changed inside the profiles of the `launchSettings.json` file,
+or by specifying the profile on run.
 
 ### Test Development Environment
 
 To send a request (via Postman) to test if everything works accordingly, see the example below.
-By default, the *host* is `http://localhost:7123/api` for http,
-and `https://localhost:7122/api` for https (you can use any of them in https mode).
+By default, the *host* is `http://localhost:7123` for http,
+and `https://localhost:7122` for https (you can use any of them in https mode).
 <br>
-To be noted that, in case docker is used, the default port is: `7123`;
+To be noted that, in case docker is used, the default port is: `7123`.
 
 ```js
-POST {{host}}/auth/login
+POST {{host}}/api/auth/login
 ```
 
 And the body of the request shall be:
@@ -169,12 +202,12 @@ now you know that you have a working connection to the API and to the database.
 
 Inside the `sample-data` directory there are `.sql` files intended to insert into the Database with sample data,
 that can be used for both backend and frontend development. 
-To insert it, run the `add-sample-data` script.
+To insert it, run the `scripts/add-sample-data.sh` script.
 
 ## Testing
 
 The backend of the application is tested using the **xUnit** framework. 
-The tests are divided into Unit, Integration and End-To-End Tests.
+The tests are divided into Unit, Integration, Architecture and End-To-End Tests.
 <br> 
 For more information, check out the documentation on [Testing](docs/Testing.md).
 
@@ -191,7 +224,7 @@ Clean Architecture, and Domain-Driven-Design.
 The four layers of this type of architecture feature the:
 - Domain Layer—the place where the domain models are defined
 - Infrastructure Layer—the data access layer for the database
-- Application Layer—intermediate between layers that validates and makes abstract calls to the infrastructure
+- Application Layer—intermediate between layers that validates, makes abstract calls to the infrastructure and makes business logic decisions
 - Presentation Layer—the endpoint where the application becomes exposed
 
 For more, go check out the [documentation](docs/Architecture.md).
@@ -216,6 +249,14 @@ The database chosen for this application infrastructure is a Microsoft SQL Serve
 <br>
 For more information about the database, please check out the [documentation](docs/Database.md). 
 
+## Configuration
+
+The settings of the application, the environment file and the logging are described in the [Configuration documentation](docs/Configuration.md).
+
+## Continuous Integration
+
+The workflows that build and test the application, and how the releases are made, are described in the [CI documentation](docs/CI.md).
+
 ## Feature Development Workflow
 
 For a summary on best practices and how to start implementing new features, 
@@ -227,4 +268,4 @@ The project is licensed under the [Apache](https://www.apache.org/licenses/LICEN
 
 ---
 
-**Consilium Tempus** 2023 - 2024
+**Consilium Tempus** 2023 - 2026

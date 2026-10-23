@@ -14,12 +14,16 @@ class CustomField
 ```json
 {
   "id": { "value": "00000000-0000-0000-0000-000000000000" },
-  "task": {},
+  "projectTask": {},
   "setup": {}
 }
 ```
 
 For database design checkout the [Project Task Diagram](../../../database-diagrams/aggregates/Diagram.ProjectTask.md).
+
+### Domain Errors
+
+- **Not Found** (`CustomField.NotFound`, 404) when the custom field cannot be found
 
 ### Variants
 
@@ -97,7 +101,7 @@ class NumberCustomField : CustomField
 
 ```json
 {
-  "number": 123
+  "number": { "value": 123 }
 }
 ```
 
@@ -142,7 +146,7 @@ class TextCustomField : CustomField
 
 ```json
 {
-  "text": "some text"
+  "text": { "value": "some text" }
 }
 ```
 

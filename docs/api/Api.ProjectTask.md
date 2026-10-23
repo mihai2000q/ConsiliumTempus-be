@@ -2,8 +2,8 @@
 
 * [Project Task](#project-task)
   * [Get](#get)
-    * [Get Request](#get-request)
-    * [Get Response](#get-response)
+    * [Get Project Task Request](#get-project-task-request)
+    * [Get Project Task Response](#get-project-task-response)
   * [Get Collection](#get-collection)
     * [Get Collection Request](#get-collection-request)
     * [Get Collection Response](#get-collection-response)
@@ -33,25 +33,27 @@
 
 This is the controller that takes care of creating, updating, deleting and querying Project Tasks.
 
+The constraints of the properties (i.e., maximum lengths) are described in the documentation of the [Project Task](../domain/aggregates/Aggregate.ProjectTask.md) and the [Custom Field](../domain/entities/project-task/Entity.CustomField.md).
+
 ### Get
 
 Anyone that is part of the workspace can read a project task
-([Read Project Task Permission](../Security.md/#permissions)).
+([Read Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can read a project task
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/projects/tasks/{id}
 ```
 
-- **id** is a 36-character string
+- **id** is a GUID
 
-#### Get Request
+#### Get Project Task Request
 
 Sends the id of the project task inside the route of the request.
 
-#### Get Response
+#### Get Project Task Response
 
 Returns a project task.
 
@@ -97,6 +99,7 @@ Returns a project task.
   },
   "customFields": [
     {
+      "$type": "NumberCustomFieldResponse",
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Budget",
       "description": "this is the budget custom field",
@@ -104,6 +107,7 @@ Returns a project task.
       "number": 1000
     },
     {
+      "$type": "DateCustomFieldResponse",
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Date",
       "description": "this is the date custom field",
@@ -117,10 +121,10 @@ Returns a project task.
 ### Get Collection
 
 Anyone that is part of the workspace can read the project tasks
-([Read Collection Project Task Permission](../Security.md/#permissions)),
+([Read Collection Project Task Permission](../Security.md#permissions)),
 
 When the project is private, only allowed members can read the project tasks
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 GET {{host}}/api/projects/tasks?projectStageId=10000000-0000-0000-0000-000000000000&search=name ct task&orderBy=name.asc&currentPage=1&pageSize=20
@@ -146,6 +150,7 @@ Returns the project tasks and their total count.
     {
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Project Task Name 1",
+      "description": "This task is gonna be awesome and I can't wait to work on it.",
       "isCompleted": true,
       "assignee": {
         "id": "10000000-0000-0000-0000-000000000000",
@@ -154,6 +159,7 @@ Returns the project tasks and their total count.
       },
       "customFields": [
         {
+          "$type": "NumberCustomFieldResponse",
           "id": "10000000-0000-0000-0000-000000000000",
           "name": "Budget",
           "description": "this is the budget custom field",
@@ -161,6 +167,7 @@ Returns the project tasks and their total count.
           "number": 1000
         },
         {
+          "$type": "DateCustomFieldResponse",
           "id": "10000000-0000-0000-0000-000000000000",
           "name": "Date",
           "description": "this is the date custom field",
@@ -172,10 +179,12 @@ Returns the project tasks and their total count.
     {
       "id": "20000000-0000-0000-0000-000000000000",
       "name": "Project Task Name 2",
+      "description": "This is the second task.",
       "isCompleted": false,
       "assignee": null,
       "customFields": [
         {
+          "$type": "NumberCustomFieldResponse",
           "id": "10000000-0000-0000-0000-000000000000",
           "name": "Budget",
           "description": "this is the budget custom field",
@@ -183,6 +192,7 @@ Returns the project tasks and their total count.
           "number": 2000
         },
         {
+          "$type": "DateCustomFieldResponse",
           "id": "10000000-0000-0000-0000-000000000000",
           "name": "Date",
           "description": "this is the date custom field",
@@ -198,11 +208,11 @@ Returns the project tasks and their total count.
 
 ### Create
 
-All members that are part of the workspace can create a project task
-([Create Project Task Permission](../Security.md/#permissions)).
+Only **Member** and **Admin** users of the workspace can create a project task
+([Create Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can create a project task
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 POST {{host}}/api/projects/tasks
@@ -226,11 +236,11 @@ Returns a confirmation message that the project task has been created successful
 
 ### Move
 
-All members that are part of the workspace can move a project task
-([Move Project Task Permission](../Security.md/#permissions)).
+Only **Member** and **Admin** users of the workspace can move a project task
+([Move Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can move a project task
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 POST {{host}}/api/projects/tasks/move
@@ -253,11 +263,11 @@ Returns a confirmation message that the project task has been moved successfully
 
 ### Update
 
-All members that are part of the workspace can update a project task
-([Update Project Task Permission](../Security.md/#permissions)).
+Only **Member** and **Admin** users of the workspace can update a project task
+([Update Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a task
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/tasks
@@ -281,17 +291,17 @@ Returns a confirmation message that the project task has been updated successful
 
 ### Update Custom Field
 
-All members that are part of the workspace can update a task's completion status
-([Update Custom Field From Project Task Permission](../Security.md/#permissions)).
+Only **Member** and **Admin** users of the workspace can update a task's custom field
+([Update Custom Field From Project Task Permission](../Security.md#permissions)).
 
-When the project is private, only allowed members can update a task's completion status
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+When the project is private, only allowed members can update a task's custom field
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
-PUT {{host}}/api/projects/tasks/custom-field
+PUT {{host}}/api/projects/tasks/custom-fields
 ```
 
-#### Update Custom Field Project Task Request
+#### Update Custom Field From Project Task Request
 
 Sends body data that the project task needs to update the custom field.
 
@@ -318,11 +328,11 @@ Returns a confirmation message that the project task's custom field has been upd
 
 ### Update Is Completed
 
-All members that are part of the workspace can update a task's completion status
-([Update Is Completed Project Task Permission](../Security.md/#permissions)).
+Only **Member** and **Admin** users of the workspace can update a task's completion status
+([Update Is Completed Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a task's completion status
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/tasks/is-completed
@@ -345,11 +355,11 @@ Returns a confirmation message that the project task's completion status has bee
 
 ### Update Overview
 
-All members that are part of the workspace can update a project task overview
-([Update Overview Project Task Permission](../Security.md/#permissions)).
+Only **Member** and **Admin** users of the workspace can update a project task overview
+([Update Overview Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a task's overview
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 PUT {{host}}/api/projects/tasks/overview
@@ -374,18 +384,18 @@ Returns a confirmation message that the project task overview has been updated s
 
 ### Delete
 
-Only admin users that are part of the workspace can delete a project task
-([Delete Project Task Permission](../Security.md/#permissions)).
+Only **Member** and **Admin** users of the workspace can delete a project task
+([Delete Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can delete a project task
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 DELETE {{host}}/api/projects/tasks/{id}/from/{stageId}
 ```
 
-- **id** is a 36 characters strings
-- **stageId** is a 36 characters strings
+- **id** is a GUID
+- **stageId** is a GUID
 
 #### Delete Project Task Request
 

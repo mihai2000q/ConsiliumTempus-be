@@ -8,9 +8,11 @@ This is the **project** aggregate.
 class Project
 {
     Project Create()
+    bool IsFavorite()
     void Update()
     void UpdateFavorites()
     void UpdatePrivacy()
+    void UpdateOwner()
     void UpdateOverview()
     void RefreshActivity()
     void AddSprint()
@@ -24,7 +26,7 @@ class Project
 ```json
 {
   "id": { "value": "00000000-0000-0000-0000-000000000000" },
-  "name": "Project 1",
+  "name": { "value": "Project 1" },
   "description": { "value": "This is the description of the project" },
   "isPrivate": { "value": true },
   "owner": {},
@@ -36,7 +38,8 @@ class Project
   "sprints": [{}],
   "statuses": [{}],
   "favorites": [{}],
-  "allowedMembers": [{}]
+  "allowedMembers": [{}],
+  "customFieldSetups": [{}]
 }
 ```
 
@@ -52,19 +55,20 @@ For database design checkout the [Project Diagram](../../database-diagrams/aggre
 
 ### Domain Errors
 
-- **Not Found** when the project cannot be found
-- **Allowed Member Not Found** when the allowed member cannot be found
-- **Not Private** when the project is not private
-- **Already Allowed Member** when the user is already an allowed member of the project
-- **Leave Owned** when the user is trying to leave from the allowed members of a project that they own
-- **Remove Yourself** when the user tries to remove himself from the allowed members of the project
-- **Remove Owner** when the user tries to remove the owner of the project from the allowed members
+- **Not Found** (`Project.NotFound`, 404) when the project cannot be found
+- **Allowed Member Not Found** (`Project.AllowedMemberNotFound`, 404) when the allowed member cannot be found
+- **Not Private** (`Project.NotPrivate`, 409) when the project is not private
+- **Already Allowed Member** (`Project.AlreadyAllowedMember`, 409) when the user is already an allowed member of the project
+- **Leave Owned** (`Project.LeaveOwned`, 409) when the user is trying to leave from the allowed members of a project that they own
+- **Remove Yourself** (`Project.RemoveYourself`, 409) when the user tries to remove themselves from the allowed members of the project
+- **Remove Owner** (`Project.RemoveOwner`, 403) when the user tries to remove the owner of the project from the allowed members
 
 ### Domain Events
 
 - **Allowed Member Removed From Project** when a user gets removed from allowed members of a project,
 it also makes sure that the user does not keep the project on favorites
-- **Project Created** when the project gets created, it will also create sprints, stages and tasks as examples for user. 
+- **Project Created** when the project gets created, 
+it will also create a sprint, with its stages and a few tasks, as an example for the user. 
 - **Project Deleted** when the project is deleted, it will also delete all local custom field setups and all custom fields
 
 ### Filters
@@ -86,5 +90,5 @@ it also makes sure that the user does not keep the project on favorites
 
 ### Enums
 
-- **ProjectLifecycle** to represent the current lifecycle of the project (i.e., active or archived)
-- **ProjectStatusType** to represent the current status of the project (i.e., off track or completed)
+- **ProjectLifecycle** to represent the current lifecycle of the project (e.g., active or archived)
+- **ProjectStatusType** to represent the current status of the project (e.g., off track or completed)

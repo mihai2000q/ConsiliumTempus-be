@@ -16,9 +16,10 @@ class SingleSelectOption
 
 ```json
 {
+  "id": "00000000-0000-0000-0000-000000000000",
   "color": "#FF1122",
   "value": "High",
-  "customOrderPosition": 0
+  "customOrderPosition": { "value": 0 }
 }
 ```
 
@@ -30,4 +31,4 @@ For database design, check out the [Single Select Option Diagram](../../database
 
 ### Domain Errors
 
-- **Not Found** when the single select option is not found
+- **Not Found** (`SingleSelectOption.NotFound`, 404) when the single select option is not found

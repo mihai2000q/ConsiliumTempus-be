@@ -6,15 +6,17 @@
     * [Get User Response](#get-user-response)
   * [Get Current](#get-current)
     * [Get Current Response](#get-current-response)
-  * [Update Current](#update)
-    * [Update Current User Request](#update-user-request)
-    * [Update Current User Response](#update-user-response)
+  * [Update Current](#update-current)
+    * [Update Current User Request](#update-current-user-request)
+    * [Update Current User Response](#update-current-user-response)
   * [Delete Current](#delete-current)
     * [Delete Current User Response](#delete-current-user-response)
 
 ## User
 
 This is the controller that takes care of reading, updating and deleting a User.
+
+The constraints of the properties (i.e., maximum lengths) are described in the documentation of the [User](../domain/aggregates/Aggregate.User.md).
 
 ### Get
 
@@ -24,7 +26,7 @@ Anyone logged in can read the data of another user.
 GET {{host}}/api/users/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Get User Request
 
@@ -36,7 +38,6 @@ Returns the user data.
 
 ```json
 {
-  "id": "10000000-0000-0000-0000-000000000000",
   "firstName": "Firsty",
   "lastName": "Lasty",
   "email": "firstylasty@gmail.com",
@@ -49,7 +50,7 @@ Returns the user data.
 Returns the current user based on the token provided.
 
 ```js
-GET {{host}}/api/users/id
+GET {{host}}/api/users/current
 ```
 
 #### Get Current Response
@@ -67,16 +68,16 @@ Returns the current user data.
 }
 ```
 
-### Update
+### Update Current
 
 Only the owner of this endpoint (the user in question) can update their data
 (which is implicit, because the id is not passed, but read from the token).
 
 ```js
-PUT {{host}}/api/users
+PUT {{host}}/api/users/current
 ```
 
-#### Update User Request
+#### Update Current User Request
 
 Sends body data that the new user needs to be updated.
 
@@ -89,7 +90,7 @@ Sends body data that the new user needs to be updated.
 }
 ```
 
-#### Update User Response
+#### Update Current User Response
 
 Returns a confirmation message that the user has been updated successfully.
 
@@ -98,7 +99,7 @@ Returns a confirmation message that the user has been updated successfully.
 Only the owner can delete their data (which is implicit, because the id is not passed, but read from the token).
 
 ```js
-DELETE {{host}}/api/users
+DELETE {{host}}/api/users/current
 ```
 
 #### Delete Current User Response

@@ -14,11 +14,19 @@ Below, you will find a complete list and documentation for each **Aggregate**, *
 <br>
 Additionally, on the bottom of the page there can be found [Database Diagrams](#database-diagrams) 
 representing the relationships of the aggregates with other aggregates and/or entities.
+For a business-level summary of how these models relate, check out the [Overview](Overview.md).
 
 ## General
 
 Each aggregate, entity or value object has an empty private constructor
 so that the Entity Framework Core can initialize them.
+
+The JSON examples inside the documentation of each aggregate and entity show the domain model,
+i.e., a value object appears as `{ "value": ... }`. They are not the requests or the responses of the Api
+(for those, check out the [Api documentation](Api.md)).
+
+The domain errors mention their code, and the status code that the Api responds with
+(see [Errors](Api.md#errors)).
 
 ## Aggregates
 
@@ -39,11 +47,12 @@ To allow a new order or filter for a property for an entity that already support
 
 The aggregates are:
 
+- [Custom Field Setup Aggregate](domain/aggregates/Aggregate.CustomFieldSetup.md)
 - [Project Aggregate](domain/aggregates/Aggregate.Project.md)
-- [Project Sprint Aggregate](domain/aggregates/Aggregate.Project.md)
+- [Project Sprint Aggregate](domain/aggregates/Aggregate.ProjectSprint.md)
 - [Project Task Aggregate](domain/aggregates/Aggregate.ProjectTask.md)
-- [User Aggregate](domain/aggregates/Aggregate.User)
-- [Workspace Aggregate](domain/aggregates/Aggregate.Workspace)
+- [User Aggregate](domain/aggregates/Aggregate.User.md)
+- [Workspace Aggregate](domain/aggregates/Aggregate.Workspace.md)
 
 ## Entities
 
@@ -55,19 +64,28 @@ Typically, the entities will be persisted in the database on another table.
 The entities are:
 
 - [Audit](domain/entities/Entity.Audit.md)
+- [Custom Field](domain/entities/project-task/Entity.CustomField.md)
 - [Membership](domain/entities/Entity.Membership.md)
+- [Multi Select Option](domain/entities/Entity.MultiSelectOption.md)
 - [Permission](domain/entities/Entity.Permission.md)
+- [Project Stage](domain/entities/project-sprint/Entity.ProjectStage.md)
+- [Project Status](domain/entities/project/Entity.ProjectStatus.md)
+- [Project Task Comment](domain/entities/project-task/Entity.ProjectTaskComment.md)
 - [Refresh Token](domain/entities/Entity.RefreshToken.md)
+- [Refresh Token History](domain/entities/refresh-token/Entity.RefreshTokenHistory.md)
+- [Single Select Option](domain/entities/Entity.SingleSelectOption.md)
+- [Workspace Invitation](domain/entities/workspace/Entity.WorkspaceInvitation.md)
 - [Workspace Role](domain/entities/Entity.WorkspaceRole.md)
 
 ## Value Objects
 
 Essentially, a value object holds only values and, by definition,
-two value objets are equal only if all the values are equal with one another.
+two value objects are equal only if all the values are equal with one another.
 
 Typically, the value objects will be flattened on the object before persisting in the database.
 
-The value objects are:
+The shared value objects are the following (the ones that are specific to an aggregate or an entity,
+such as *IsCompleted* or *FirstName*, are described in their own documentation):
 
 - Authentication
   - **IsInvalidated**, which encapsulates a boolean *Value*
@@ -86,15 +104,16 @@ The value objects are:
 These errors are not tied to any aggregate, therefore notable and only used in the Application Layer.
 
 - Authentication
-  - **Invalid Credentials** when, upon authentication, the credentials are invalid
-  - **Invalid Tokens** when, upon refreshing the token, either the access or refresh token is invalid
+  - **Invalid Credentials** (`Authentication.InvalidCredentials`, 401) when, upon authentication, the credentials are invalid
+  - **Invalid Tokens** (`Authentication.InvalidTokens`, 401) when, upon refreshing the token, either the access or refresh token is invalid
 
 ## Enums
 
-The enums defined in the Domain of the application are:
+The shared enums defined in the Domain of the application are the following
+(the ones that are specific to an aggregate, such as the project lifecycle, are described in their own documentation):
 
-- **CustomFieldType**, which is used to represent the type of the custom field or the its setup
-- **FilterOperator**, which is used to represent the different numerous operators that can be used for filtering 
+- **CustomFieldType**, which is used to represent the type of the custom field or its setup
+- **FilterOperator**, which is used to represent the different operators that can be used for filtering 
 (i.e., equal or less than)
 - **OrderType**, which is used to determine whether the order should be ascending or descending
 - **Permissions**, which are used on the Presentation Layer for Authorization

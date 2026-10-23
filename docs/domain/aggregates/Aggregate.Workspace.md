@@ -8,6 +8,7 @@ This is the **workspace** of the application. It holds basic data like its name 
 class Workspace
 {
     Workspace Create()
+    bool IsFavorite()
     void Update()
     void UpdateFavorites()
     void UpdateOverview()
@@ -34,32 +35,39 @@ class Workspace
   "createdDateTime": "2020-01-01T00:00:00.0000000Z",
   "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
   "memberships": [{}],
+  "projects": [{}],
   "favorites": [{}],
-  "invitations": [{}]
+  "invitations": [{}],
+  "customFieldSetups": [{}]
 }
 ```
 
 For database design checkout the [Workspace Diagram](../../database-diagrams/aggregates/Diagram.Workspace.md).
 
+### Entities
+
+- [Membership](../entities/Entity.Membership.md)
+- [Workspace Invitation](../entities/workspace/Entity.WorkspaceInvitation.md)
+
 ### Properties Validation
 
 - The **Name** cannot be longer than 100 characters
-- The **Description** cannot be longer than 1000 characters
 
 ### Domain Errors
 
-- **Not Found** when the workspace cannot be found
-- **Delete Personal Workspace** when the workspace is personal, it cannot be deleted (not even by their owner)
-- **Leave Owned** when the workspace cannot be left by their owner
-- **Collaborator Not Found** when the collaborator cannot be found within the workspace
-- **Kick Yourself** when the user tries to kick themselves from the workspace
-- **Kick Owner** when the user tries to kick the owner of the workspace
+- **Not Found** (`Workspace.NotFound`, 404) when the workspace cannot be found
+- **Delete Personal Workspace** (`Workspace.DeletePersonalWorkspace`, 409) when the workspace is personal, it cannot be deleted (not even by their owner)
+- **Leave Owned** (`Workspace.LeaveOwned`, 409) when the workspace cannot be left by their owner
+- **Collaborator Not Found** (`Workspace.CollaboratorNotFound`, 404) when the collaborator cannot be found within the workspace
+- **Kick Yourself** (`Project.KickYourself`, 409) when the user tries to kick themselves from the workspace
+- **Kick Owner** (`Project.KickOwner`, 403) when the user tries to kick the owner of the workspace
 
 ### Domain Events
 
 - **Collaborator Removed From Workspace** when a collaborator gets removed from the workspace.
 This event makes sure that the user does not keep the workspace or any project on favorites,
-and also removes them from the allowed members of a project and chooses another owner if it's the case.
+and also removes them from the allowed members of a project and chooses another owner if it's the case
+(the private projects where they were the last allowed member get deleted).
 - **Workspace Deleted** when the workspace is deleted, it will also delete all local custom field setups from projects
 and all custom fields
 
@@ -75,8 +83,8 @@ otherwise they can be part of other people's personal workspaces, but they can't
 - **Name** to filter by name
 - **IsPersonal** to filter by the *IsPersonal* Property
 - **LastActivity** to filter by activity
-- **CreatedDateTime** to filter by last modified date
-- **UpdatedDateTime** to filter by creation time
+- **CreatedDateTime** to filter by creation time
+- **UpdatedDateTime** to filter by last modified date
 
 ### Orders
 
