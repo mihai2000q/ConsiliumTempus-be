@@ -60,6 +60,9 @@ dotnet ef migrations add Update_User_Email -p ./src/ConsiliumTempus.Infrastructu
 
 That will create a migration named with a timestamp followed by the suffix *Update_User_Email*.
 
+Also, the [Database Diagrams](database-diagrams/Database.Diagram.md) are written by hand, so whenever a migration changes the schema,
+the affected diagrams have to be updated as well.
+
 ### Migration Naming Convention
 
 The **Naming Convention** is *VERB\_TABLE\_COLUMN*, for example,
@@ -73,6 +76,12 @@ To apply the migration, you can type the following command:
 ```sh
 dotnet ef database update -p ./src/ConsiliumTempus.Infrastructure -s ./src/ConsiliumTempus.Api/
 ```
+
+The command uses the configuration of the Api project in the *Development* environment
+(`appsettings.Development.json` and the user secrets),
+so the database has to be reachable from the machine that runs it,
+i.e., `localhost` and the published port `7133` of the database container.
+If that file points to the name of the container (**CT-Database**), use the connection flag from below.
 
 Alternatively, the shell script `apply-migration-to-database.sh` can be used, as you did when you got setup.
 
