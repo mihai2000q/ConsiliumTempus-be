@@ -24,6 +24,18 @@ The backend of the application is tested using the **xUnit** framework.
 The tests are divided into Unit, Integration and Architecture Tests,
 while the whole application is also covered by End-To-End Tests, which are written using **Playwright**.
 
+Which kind of test should be written depends on what needs to be checked:
+
+| Type         | What it checks                                                             | Where                                     | What it needs                         |
+|--------------|----------------------------------------------------------------------------|-------------------------------------------|---------------------------------------|
+| Unit         | a single class in isolation (i.e., a handler, a validator or a controller) | `tests/Unit`                              | nothing (the dependencies are mocked) |
+| Integration  | an endpoint, from the HTTP request to the database                         | `tests/Integration`                       | Docker (a database container)         |
+| Architecture | the rules of the layers and the naming conventions                         | `tests/ConsiliumTempus.ArchitectureTests` | nothing                               |
+| End-To-End   | the running application, through HTTP requests                             | `tests/e2e`                               | the Docker environment and Node.js    |
+
+The code examples from this document are simplified on purpose, to focus on the conventions.
+For real ones, check out `CreateWorkspaceCommandHandlerTest` (unit) or `UserControllerGetTest` (integration).
+
 ## Unit Testing
 
 The Unit tests are designed to test single units of code in isolation.
