@@ -60,6 +60,13 @@ There are only a few levels in the project that differ from just having permissi
 - **Is Project Owner**, which requires the user that made the request to be the owner of the project
 - **Is Allowed**, which requires the user that made the request to be part of the allowed members of a project
 
+Some endpoints combine several checks, and all of them have to pass.
+For example, most of the project endpoints require both a permission and the **Is Allowed** level,
+while the ones that manage the allowed members, the owner or the privacy of a project (or leaving a private project)
+require a Project Authorization Level together with the Workspace Authorization Level **Is Collaborator**.
+The checks of each endpoint are listed in its [Api documentation](api/Api.Project.md),
+and they are applied through attributes (see [Authorization](Api.md#authorization)).
+
 ## Workspace Roles
 
 The owner will, most of the time, be able to delete the data that they have added.
