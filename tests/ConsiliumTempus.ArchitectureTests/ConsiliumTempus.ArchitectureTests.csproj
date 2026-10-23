@@ -11,7 +11,8 @@
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.4"/>
-        <PackageReference Include="FluentAssertions" Version="7.0.0-alpha.4"/>
+        <!-- Pinned to 7.x on purpose: FluentAssertions 8+ moved to a commercial license. 7.2.2 is the last Apache-2.0 release, do not upgrade. -->
+        <PackageReference Include="FluentAssertions" Version="[7.2.2]"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1"/>
         <PackageReference Include="TngTech.ArchUnitNET.xUnit" Version="0.10.6"/>
         <PackageReference Include="xunit" Version="2.9.3"/>
