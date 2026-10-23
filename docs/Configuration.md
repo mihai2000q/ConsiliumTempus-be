@@ -56,10 +56,13 @@ The refresh token is not configurable, as it always lasts one month.
 They are put together to create the connection string of the database.
 The default values depend on where the application runs:
 
-| File                           | Server                          | Port   |
-|--------------------------------|---------------------------------|--------|
-| `appsettings.Development.json` | `Localhost` (the local machine) | `7133` |
-| `appsettings.json`             | `CT-Database` (the container)   | `1433` |
+| Where                                                  | Source                         | Server                          | Port   |
+|--------------------------------------------------------|--------------------------------|---------------------------------|--------|
+| On the host, in Development                            | `appsettings.Development.json` | `Localhost` (the local machine) | `7133` |
+| In Docker (`docker-compose.yml`, `docker-compose-prod.yml`) | the `.env` file (see below) | `database` (the service)        | `1433` |
+
+The values inside `appsettings.json` are empty, so any other environment has to provide its own
+(i.e., through the `DatabaseSettings__*` environment variables).
 
 The integration tests do not use any of them, as they create their own database container.
 

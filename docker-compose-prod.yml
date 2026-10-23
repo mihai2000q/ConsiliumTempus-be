@@ -10,6 +10,13 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    environment:
+      # override the DatabaseSettings of the appsettings files, so the .env is the single source in Docker
+      - DatabaseSettings__Server=database
+      - DatabaseSettings__Port=1433
+      - DatabaseSettings__Name=${DATABASE_NAME}
+      - DatabaseSettings__User=${DATABASE_USER}
+      - DatabaseSettings__Password=${DATABASE_PASSWORD}
 
   database:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
