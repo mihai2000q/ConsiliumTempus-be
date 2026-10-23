@@ -17,12 +17,15 @@ internal static partial class Utils
         { ErrorType.Conflict, StatusCodes.Status409Conflict }
     };
 
-    internal static IMapper GetMapper<TMappingConfig>()
+    // Scanning the global config is not thread safe once it has been used, so it is done only once for all tests
+    private static readonly Lazy<IMapper> SharedMapper = new(() =>
     {
         var config = TypeAdapterConfig.GlobalSettings;
-        config.Scan(typeof(TMappingConfig).Assembly);
+        config.Scan(typeof(ApiController).Assembly);
         return new Mapper(config);
-    }
+    });
+
+    internal static IMapper GetMapper<TMappingConfig>() => SharedMapper.Value;
 
     internal static void ResolveHttpContext(ApiController controller)
     {
