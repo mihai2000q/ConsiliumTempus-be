@@ -19,6 +19,7 @@
 - [Configuration](#configuration)
 - [Continuous Integration](#continuous-integration)
 - [Feature Development Workflow](#feature-development-workflow)
+- [Dependency Licensing](#dependency-licensing)
 - [License](#license)
 
 ## Abstract
@@ -256,6 +257,17 @@ The workflows that build and test the application, and how the releases are made
 
 For a summary on best practices and how to start implementing new features, 
 check out the [guidelines](docs/Feature-Development-Workflow.md).
+
+## Dependency Licensing
+
+Some libraries moved from an open source license to a commercial one, so these are pinned to their last open source release and must not be upgraded past it:
+
+| Package | Pinned to | Commercial from |
+|---|---|---|
+| MediatR (and MediatR.Contracts) | 12.5.0 (2.0.1) | 13.x |
+| FluentAssertions | 7.2.2 | 8.x |
+
+Check the license of a package before bumping its major version.
 
 ## License
 
