@@ -15,4 +15,7 @@ else
     echo "Dotnet Entity Framework Tool already installed!"
 fi
 
+# the EF tool does not restore the projects by itself, which breaks on a fresh checkout
+dotnet restore ${DIR_SCRIPT}/../src/ConsiliumTempus.Api
+
 dotnet ef database update -p ${DIR_SCRIPT}/../src/ConsiliumTempus.Infrastructure -s ${DIR_SCRIPT}/../src/ConsiliumTempus.Api/
