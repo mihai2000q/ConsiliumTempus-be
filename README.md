@@ -146,13 +146,13 @@ or by specifying the profile on run.
 ### Test Development Environment
 
 To send a request (via Postman) to test if everything works accordingly, see the example below.
-By default, the *host* is `http://localhost:7123/api` for http,
-and `https://localhost:7122/api` for https (you can use any of them in https mode).
+By default, the *host* is `http://localhost:7123` for http,
+and `https://localhost:7122` for https (you can use any of them in https mode).
 <br>
 To be noted that, in case docker is used, the default port is: `7123`.
 
 ```js
-POST {{host}}/auth/login
+POST {{host}}/api/auth/login
 ```
 
 And the body of the request shall be:
