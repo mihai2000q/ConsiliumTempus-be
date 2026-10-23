@@ -14,6 +14,7 @@ Below, you will find a complete list and documentation for each **Aggregate**, *
 <br>
 Additionally, on the bottom of the page there can be found [Database Diagrams](#database-diagrams) 
 representing the relationships of the aggregates with other aggregates and/or entities.
+For a business-level summary of how these models relate, check out the [Overview](Overview.md).
 
 ## General
 

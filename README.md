@@ -1,6 +1,7 @@
 # Consilium Tempus - Backend
 
 - [Abstract](#abstract)
+- [Overview](#overview)
 - [Get Started](#get-started)
     - [Prerequisites](#prerequisites)
     - [Dotnet User Secrets](#dotnet-user-secrets)
@@ -22,6 +23,11 @@
 
 This is the backend of the Consilium Tempus application. 
 It is written completely in C# using the ASP.Net Core framework.
+
+## Overview
+
+For a summary of what the application does and how its concepts relate (workspaces, projects, sprints, tasks, etc.),
+check out the [Overview](docs/Overview.md).
 
 ## Get Started
 
