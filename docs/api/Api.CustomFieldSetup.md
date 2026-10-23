@@ -58,16 +58,20 @@ Sends the id of the custom Field Setup inside the route of the request.
 
 #### Get Response
 
-Returns a custom field setup. However, the response will be different for each type.
+Returns a custom field setup inside the `customFieldSetup` property. However, the response will be different for each type,
+which is identified by the `$type` discriminator (`<Type>CustomFieldSetupResponse`).
 
 ##### Date
 
 ```json
 {
-  "name": "the Date",
-  "description": "This is a custom field",
-  "type": "Date",
-  "defaultDate": "2022-10-10"
+  "customFieldSetup": {
+    "$type": "DateCustomFieldSetupResponse",
+    "name": "the Date",
+    "description": "This is a custom field",
+    "type": "Date",
+    "defaultDate": "2022-10-10"
+  }
 }
 ```
 
@@ -75,10 +79,13 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "Date and time",
-  "description": "This is a custom field",
-  "type": "DateTime",
-  "defaultDateTime": "2022-10-10T10:30:00"
+  "customFieldSetup": {
+    "$type": "DateTimeCustomFieldSetupResponse",
+    "name": "Date and time",
+    "description": "This is a custom field",
+    "type": "DateTime",
+    "defaultDateTime": "2022-10-10T10:30:00"
+  }
 }
 ```
 
@@ -86,10 +93,13 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "the Duration",
-  "description": "This is a custom field",
-  "type": "Duration",
-  "defaultDuration": "10:30:00"
+  "customFieldSetup": {
+    "$type": "DurationCustomFieldSetupResponse",
+    "name": "the Duration",
+    "description": "This is a custom field",
+    "type": "Duration",
+    "defaultDuration": "10:30:00"
+  }
 }
 ```
 
@@ -97,21 +107,24 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "Priorities",
-  "description": "This is a custom field",
-  "type": "Multi Select",
-  "options": [
-    {
-      "id": "10000000-0000-0000-0000-000000000000",
-      "color": "#FF0000",
-      "value": "High"
-    },
-    {
-      "id": "20000000-0000-0000-0000-000000000000",
-      "color": "#0000FF",
-      "value": "Low"
-    }
-  ]
+  "customFieldSetup": {
+    "$type": "MultiSelectCustomFieldSetupResponse",
+    "name": "Priorities",
+    "description": "This is a custom field",
+    "type": "MultiSelect",
+    "options": [
+      {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "color": "#FF0000",
+        "value": "High"
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000000",
+        "color": "#0000FF",
+        "value": "Low"
+      }
+    ]
+  }
 }
 ```
 
@@ -119,15 +132,18 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "Budget",
-  "description": "This is a custom field",
-  "type": "Number",
-  "settings": {
-    "currencyCode": "USD",
-    "decimals": 2,
-    "rounding": true
-  },
-  "defaultNumber": 12
+  "customFieldSetup": {
+    "$type": "NumberCustomFieldSetupResponse",
+    "name": "Budget",
+    "description": "This is a custom field",
+    "type": "Number",
+    "settings": {
+      "currencyCode": "USD",
+      "decimals": 2,
+      "rounding": true
+    },
+    "defaultNumber": 12
+  }
 }
 ```
 
@@ -135,9 +151,12 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "Guys",
-  "description": "This is a custom field",
-  "type": "People"
+  "customFieldSetup": {
+    "$type": "PeopleCustomFieldSetupResponse",
+    "name": "Guys",
+    "description": "This is a custom field",
+    "type": "People"
+  }
 }
 ```
 
@@ -145,25 +164,28 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "Priority",
-  "description": "This is a custom field",
-  "type": "Multi Select",
-  "options": [
-    {
-      "id": "10000000-0000-0000-0000-000000000000",
-      "color": "#FF0000",
-      "value": "High"
-    },
-    {
+  "customFieldSetup": {
+    "$type": "SingleSelectCustomFieldSetupResponse",
+    "name": "Priority",
+    "description": "This is a custom field",
+    "type": "SingleSelect",
+    "options": [
+      {
+        "id": "10000000-0000-0000-0000-000000000000",
+        "color": "#FF0000",
+        "value": "High"
+      },
+      {
+        "id": "20000000-0000-0000-0000-000000000000",
+        "color": "#0000FF",
+        "value": "Low"
+      }
+    ],
+    "defaultOption": {
       "id": "20000000-0000-0000-0000-000000000000",
       "color": "#0000FF",
       "value": "Low"
     }
-  ],
-  "defaultOption": {
-    "id": "20000000-0000-0000-0000-000000000000",
-    "color": "#0000FF",
-    "value": "Low"
   }
 }
 ```
@@ -172,10 +194,13 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "Some Text",
-  "description": "This is a custom field",
-  "type": "Text",
-  "defaultText": "default"
+  "customFieldSetup": {
+    "$type": "TextCustomFieldSetupResponse",
+    "name": "Some Text",
+    "description": "This is a custom field",
+    "type": "Text",
+    "defaultText": "default"
+  }
 }
 ```
 
@@ -183,10 +208,13 @@ Returns a custom field setup. However, the response will be different for each t
 
 ```json
 {
-  "name": "the time",
-  "description": "This is a custom field",
-  "type": "Time",
-  "defaultTime": "10:30:00"
+  "customFieldSetup": {
+    "$type": "TimeCustomFieldSetupResponse",
+    "name": "the time",
+    "description": "This is a custom field",
+    "type": "Time",
+    "defaultTime": "10:30:00"
+  }
 }
 ```
 

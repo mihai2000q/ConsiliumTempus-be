@@ -99,6 +99,7 @@ Returns a project task.
   },
   "customFields": [
     {
+      "$type": "NumberCustomFieldResponse",
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Budget",
       "description": "this is the budget custom field",
@@ -106,6 +107,7 @@ Returns a project task.
       "number": 1000
     },
     {
+      "$type": "DateCustomFieldResponse",
       "id": "10000000-0000-0000-0000-000000000000",
       "name": "Date",
       "description": "this is the date custom field",
@@ -157,6 +159,7 @@ Returns the project tasks and their total count.
       },
       "customFields": [
         {
+          "$type": "NumberCustomFieldResponse",
           "id": "10000000-0000-0000-0000-000000000000",
           "name": "Budget",
           "description": "this is the budget custom field",
@@ -164,6 +167,7 @@ Returns the project tasks and their total count.
           "number": 1000
         },
         {
+          "$type": "DateCustomFieldResponse",
           "id": "10000000-0000-0000-0000-000000000000",
           "name": "Date",
           "description": "this is the date custom field",
@@ -175,10 +179,12 @@ Returns the project tasks and their total count.
     {
       "id": "20000000-0000-0000-0000-000000000000",
       "name": "Project Task Name 2",
+      "description": "This is the second task.",
       "isCompleted": false,
       "assignee": null,
       "customFields": [
         {
+          "$type": "NumberCustomFieldResponse",
           "id": "10000000-0000-0000-0000-000000000000",
           "name": "Budget",
           "description": "this is the budget custom field",
@@ -186,6 +192,7 @@ Returns the project tasks and their total count.
           "number": 2000
         },
         {
+          "$type": "DateCustomFieldResponse",
           "id": "10000000-0000-0000-0000-000000000000",
           "name": "Date",
           "description": "this is the date custom field",
