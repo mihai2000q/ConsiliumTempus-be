@@ -2,8 +2,8 @@
 
 * [Project Task](#project-task)
   * [Get](#get)
-    * [Get Request](#get-request)
-    * [Get Response](#get-response)
+    * [Get Project Task Request](#get-project-task-request)
+    * [Get Project Task Response](#get-project-task-response)
   * [Get Collection](#get-collection)
     * [Get Collection Request](#get-collection-request)
     * [Get Collection Response](#get-collection-response)
@@ -49,11 +49,11 @@ GET {{host}}/api/projects/tasks/{id}
 
 - **id** is a GUID
 
-#### Get Request
+#### Get Project Task Request
 
 Sends the id of the project task inside the route of the request.
 
-#### Get Response
+#### Get Project Task Response
 
 Returns a project task.
 

@@ -2,8 +2,8 @@
 
 * [Custom Field Setup](#custom-field-setup)
   * [Get](#get)
-    * [Get Request](#get-request)
-    * [Get Response](#get-response)
+    * [Get Custom Field Setup Request](#get-custom-field-setup-request)
+    * [Get Custom Field Setup Response](#get-custom-field-setup-response)
   * [Get Collection From Workspace](#get-collection-from-workspace)
     * [Get Collection From Workspace Request](#get-collection-from-workspace-request)
     * [Get Collection From Workspace Response](#get-collection-from-workspace-response)
@@ -52,11 +52,11 @@ GET {{host}}/api/customFieldSetups/{id}
 
 - **id** is a GUID
 
-#### Get Request
+#### Get Custom Field Setup Request
 
 Sends the id of the custom Field Setup inside the route of the request.
 
-#### Get Response
+#### Get Custom Field Setup Response
 
 Returns a custom field setup inside the `customFieldSetup` property. However, the response will be different for each type,
 which is identified by the `$type` discriminator (`<Type>CustomFieldSetupResponse`).

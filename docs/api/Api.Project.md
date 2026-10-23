@@ -2,8 +2,8 @@
 
 * [Project](#project)
   * [Get](#get)
-    * [Get Request](#get-request)
-    * [Get Response](#get-response)
+    * [Get Project Request](#get-project-request)
+    * [Get Project Response](#get-project-response)
   * [Get Overview](#get-overview)
     * [Get Overview Request](#get-overview-request)
     * [Get Overview Response](#get-overview-response)
@@ -76,11 +76,11 @@ GET {{host}}/api/projects/{id}
 
 - **id** is a GUID
 
-#### Get Request
+#### Get Project Request
 
 Sends the id of the project inside the route of the request.
 
-#### Get Response
+#### Get Project Response
 
 Returns a project.
 
