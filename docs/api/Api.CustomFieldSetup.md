@@ -36,6 +36,9 @@
 
 This is the controller that takes care of creating, updating, deleting and querying Custom Field Setups.
 
+The conventions shared by all the endpoints (responses, errors, search, order, etc.) are described in the [Api documentation](../Api.md#conventions),
+and the constraints of their properties in the documentation of the [Custom Field Setup](../domain/aggregates/Aggregate.CustomFieldSetup.md).
+
 ### Get
 
 Only members and admins of the workspace can read a custom field setup
@@ -48,7 +51,7 @@ When the project is private, only allowed members can read a custom field setup
 GET {{host}}/api/customFieldSetups/{id}
 ```
 
-- **id** is a 36-character string
+- **id** is a GUID
 
 #### Get Request
 
@@ -197,7 +200,7 @@ Only members and admins of the workspace can read the custom field setups
 GET {{host}}/api/customFieldSetups/workspace/{workspaceId}
 ```
 
-- **workspaceId** is a 36-character string
+- **workspaceId** is a GUID
 
 #### Get Collection From Workspace Request
 
@@ -238,7 +241,7 @@ When the project is private, only allowed members can read custom field setups
 GET {{host}}/api/customFieldSetups/project/{projectId}
 ```
 
-- **projectId** is a 36-character string
+- **projectId** is a GUID
 
 #### Get Collection From Project Request
 
@@ -270,7 +273,7 @@ Returns the custom field setups from a project.
 ### Create On Workspace
 
 Only admins of the workspace can create a custom field setup on workspace
-([Create Custom Field Setup On Workspace Permission](../Security.md/#permissions)).
+([Create Custom Field Setup On Workspace Permission](../Security.md#permissions)).
 
 ```js
 POST {{host}}/api/customFieldSetups/workspace
@@ -456,7 +459,7 @@ When the project is private, only allowed members can delete a custom field setu
 DELETE {{host}}/api/customFieldSetups/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Delete Custom Field Setup Request
 
@@ -475,8 +478,8 @@ Only admins of the workspace can remove a custom field setup from a project
 DELETE {{host}}/api/customFieldSetups/{id}/remove-project/{projectId}
 ```
 
-- **id** is a 36 characters strings
-- **projectId** is a 36 characters strings
+- **id** is a GUID
+- **projectId** is a GUID
 
 #### Remove Custom Field Setup From Project Request
 

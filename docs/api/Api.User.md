@@ -16,6 +16,8 @@
 
 This is the controller that takes care of reading, updating and deleting a User.
 
+The constraints of the properties (i.e., maximum lengths) are described in the documentation of the [User](../domain/aggregates/Aggregate.User.md).
+
 ### Get
 
 Anyone logged in can read the data of another user.
@@ -24,7 +26,7 @@ Anyone logged in can read the data of another user.
 GET {{host}}/api/users/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Get User Request
 

@@ -37,6 +37,8 @@
 This is the controller that takes care of creating, updating, deleting and querying Project Sprints.
 Additionally, Project Stages can be added through the project sprints.
 
+The constraints of the properties (i.e., maximum lengths) are described in the documentation of the [Project Sprint](../domain/aggregates/Aggregate.ProjectSprint.md) and the [Project Stage](../domain/entities/project-sprint/Entity.ProjectStage.md).
+
 ### Get
 
 Anyone that is part of a workspace can read the sprint
@@ -49,7 +51,7 @@ When the project is private, only allowed members can read the sprint
 GET {{host}}/api/projects/sprints/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Get Project Sprint Request
 
@@ -137,7 +139,7 @@ When the project is private, only allowed members can access the stages
 GET {{host}}/api/projects/sprints/{id}/stages
 ```
 
-- **id** is a 36-character strings
+- **id** is a GUID
 
 #### Get Stages From Project Sprint Request
 
@@ -328,7 +330,7 @@ When the project is private, only allowed members can delete a sprint
 DELETE {{host}}/api/projects/sprints/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Delete Project Sprint Request
 
@@ -350,8 +352,8 @@ When the project is private, only allowed members can remove a stage
 DELETE {{host}}/api/projects/sprints/{id}/remove-stage/{stageId}
 ```
 
-- **id** is a 36-character strings
-- **stageId** is a 36-character strings
+- **id** is a GUID
+- **stageId** is a GUID
 
 #### Remove Stage From Project Sprint Request
 

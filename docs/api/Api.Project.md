@@ -60,6 +60,8 @@
 
 This is the controller that takes care of creating, updating, deleting and querying Projects and their statuses.
 
+The constraints of the properties (i.e., maximum lengths) are described in the documentation of the [Project](../domain/aggregates/Aggregate.Project.md) and the [Project Status](../domain/entities/project/Entity.ProjectStatus.md).
+
 ### Get
 
 Anyone that is part of the workspace can read a project
@@ -72,7 +74,7 @@ When the project is private, only allowed members can read it
 GET {{host}}/api/projects/{id}
 ```
 
-- **id** is a 36-character string
+- **id** is a GUID
 
 #### Get Request
 
@@ -129,7 +131,7 @@ When the project is private, only allowed members can read its overview
 GET {{host}}/api/projects/overview/{id}
 ```
 
-- **id** is a 36-character string
+- **id** is a GUID
 
 #### Get Overview Request
 
@@ -227,7 +229,7 @@ When the project is private, only allowed members can read the statuses
 GET {{host}}/api/projects/{id}/statuses
 ```
 
-- **id** is a 36-character string
+- **id** is a GUID
 
 #### Get Statuses From Project Request
 
@@ -293,7 +295,7 @@ When the project is private, only allowed members can read the allowed members
 GET {{host}}/api/projects/{id}/allowed-members
 ```
 
-- **id** is a 36-character string
+- **id** is a GUID
 
 #### Get Allowed Members From Project Request
 
@@ -571,7 +573,7 @@ When the project is private, only allowed members can delete a project
 DELETE {{host}}/api/projects/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Delete Project Request
 
@@ -590,7 +592,7 @@ Only when the project is private, can the allowed members leave it (also, they h
 DELETE {{host}}/api/projects/{id}/leave
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Leave Private Project Request
 
@@ -610,8 +612,8 @@ Can only remove allowed members from private projects, and only owners can remov
 DELETE {{host}}/api/projects/{id}/remove-allowed-member/{allowedMemberId}
 ```
 
-- **id** is a 36-character string
-- **allowedMemberId** is a 36-character string
+- **id** is a GUID
+- **allowedMemberId** is a GUID
 
 #### Remove Allowed Member From Project Request
 
@@ -633,8 +635,8 @@ When the project is private, only allowed members can remove a status
 DELETE {{host}}/api/projects/{id}/remove-status/{statusId}
 ```
 
-- **id** is a 36-character string
-- **statusId** is a 36-character string
+- **id** is a GUID
+- **statusId** is a GUID
 
 #### Remove Status From Project Request
 

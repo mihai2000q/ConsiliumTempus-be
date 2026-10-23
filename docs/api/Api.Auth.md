@@ -25,6 +25,8 @@ See the example below:
 Also, the token is short-lived; therefore, when it expires, it can be refreshed using the _Refresh Token_,
 which has a long lifetime.
 
+The constraints of the properties (i.e., maximum lengths) are described in the documentation of the [User](../domain/aggregates/Aggregate.User.md).
+
 ### Register
 
 Anyone can register.

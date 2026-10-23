@@ -33,6 +33,8 @@
 
 This is the controller that takes care of creating, updating, deleting and querying Project Tasks.
 
+The constraints of the properties (i.e., maximum lengths) are described in the documentation of the [Project Task](../domain/aggregates/Aggregate.ProjectTask.md) and the [Custom Field](../domain/entities/project-task/Entity.CustomField.md).
+
 ### Get
 
 Anyone that is part of the workspace can read a project task
@@ -45,7 +47,7 @@ When the project is private, only allowed members can read a project task
 GET {{host}}/api/projects/tasks/{id}
 ```
 
-- **id** is a 36-character string
+- **id** is a GUID
 
 #### Get Request
 
@@ -200,10 +202,10 @@ Returns the project tasks and their total count.
 ### Create
 
 All members that are part of the workspace can create a project task
-([Create Project Task Permission](../Security.md/#permissions)).
+([Create Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can create a project task
-([Project Authorization Level: Is Allowed](../Security.md/#project-authorization-levels)).
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
 ```js
 POST {{host}}/api/projects/tasks
@@ -385,8 +387,8 @@ When the project is private, only allowed members can delete a project task
 DELETE {{host}}/api/projects/tasks/{id}/from/{stageId}
 ```
 
-- **id** is a 36 characters strings
-- **stageId** is a 36 characters strings
+- **id** is a GUID
+- **stageId** is a GUID
 
 #### Delete Project Task Request
 

@@ -57,6 +57,8 @@
 
 This is the controller that takes care of creating, reading, updating and deleting a Workspace.
 
+The constraints of the properties (i.e., maximum lengths) are described in the documentation of the [Workspace](../domain/aggregates/Aggregate.Workspace.md) and the [Membership](../domain/entities/Entity.Membership.md).
+
 ### Get
 
 Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md#permissions)).
@@ -65,7 +67,7 @@ Only users that are part of the workspace can retrieve it ([Read Workspace Permi
 GET {{host}}/api/workspaces/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Get Workspace Request
 
@@ -97,7 +99,7 @@ Only users that are part of the workspace can retrieve it
 GET {{host}}/api/workspaces/overview/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Get Overview Workspace Request
 
@@ -176,7 +178,7 @@ Only users that are part of the workspace can retrieve it
 GET {{host}}/api/workspaces/{id}/collaborators?searchValue=michelle&pageSize=2&currentPage=1&orderBy=user_name.asc&orderBy=workspace_role_id.desc&search=workspace_role_id eq 1
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Get Collaborators From Workspace Request
 
@@ -500,7 +502,7 @@ Only admin users that are part of the workspace can delete it
 DELETE {{host}}/api/workspaces/{id}
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Delete Workspace Request
 
@@ -519,8 +521,8 @@ Only admin users that are part of the workspace can kick other collaborators
 DELETE {{host}}/api/workspaces/{id}/kick-collaborator/{collaboratorId}
 ```
 
-- **id** is a 36 characters strings
-- **collaboratorId** is a 36 characters strings
+- **id** is a GUID
+- **collaboratorId** is a GUID
 
 #### Kick Collaborator From Workspace Request
 
@@ -539,7 +541,7 @@ Everyone can leave the workspace, as long as they are collaborators
 DELETE {{host}}/api/workspaces/{id}/leave
 ```
 
-- **id** is a 36 characters strings
+- **id** is a GUID
 
 #### Leave Workspace Request
 
