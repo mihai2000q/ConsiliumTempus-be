@@ -8,7 +8,8 @@ services:
     ports:
       - "${API_PORT}:${HTTP_PORT}"
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     environment:
       - ASPNETCORE_HTTP_PORTS=${HTTP_PORT}
 
@@ -20,3 +21,15 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${DATABASE_PASSWORD}
+    healthcheck:
+      test: $$(ls /opt/mssql-tools18/bin/sqlcmd /opt/mssql-tools/bin/sqlcmd 2>/dev/null | head -n 1) -C -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1" -b -o /dev/null
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+    restart: unless-stopped
+    volumes:
+      - database-data:/var/opt/mssql
+
+volumes:
+  database-data:

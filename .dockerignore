@@ -1,6 +1,6 @@
 # Compiled files
-[b|B]in
-[O|o]bj
+**/[bB]in
+**/[oO]bj
 
 # Git
 .github/
@@ -11,14 +11,16 @@
 
 # Doc
 docs/
-Readme.md
+README.md
+LICENSE
 
 # Environment
-.env*/
+.env*
 
 # Shell Scripts
-*.sh
+**/*.sh
 
 # Docker
 Dockerfile
 docker-compose.yml
+docker-compose-prod.yml
