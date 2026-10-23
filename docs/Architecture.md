@@ -111,3 +111,24 @@ and all the application layer *results* map to an api layer **response**.
 Also, to be noted that all the mapping configurations are injected on runtime via the executing assembly.
 
 More about the Api and the HTTP Requests and Response can be found at [Api documentation](Api.md).
+
+## Life of a Request
+
+To put everything together, this is what happens to a request, from the network to the database and back:
+
+1. The request reaches a controller of the [Presentation Layer](#presentation-layerapi).
+   Before the endpoint is executed, the JWT token is validated and the authorization attributes of the endpoint
+   (permissions, project and workspace authorization levels) are checked by handlers from the
+   [Infrastructure Layer](#infrastructure-layer) (see [Authorization](Api.md#authorization)).
+2. The controller maps the request to a command or a query, with _Mapster_, and sends it through _MediatR_.
+3. The request goes through the pipeline behaviors of the [Application Layer](#application-layer), in this order:
+   - the **validation** behavior runs the validators of the request,
+     and returns the errors without ever reaching the handler, if there are any
+   - the **unit of work** behavior, which applies only to commands (the requests with the suffix _Command_),
+     wraps the handling in a transaction and saves the changes only if the handler did not return an error
+4. The handler does the actual work: it loads the aggregates through the repository interfaces,
+   calls the business logic of the [Domain Layer](#domain-layer) and returns a result or an error.
+5. When the changes are saved, the domain events raised by the aggregates are published first,
+   so their handlers (inside the Application Layer) can make further changes, which are saved in the same transaction.
+6. Finally, the controller maps the result to a response, or the errors to a *Problem Details*
+   response (see [Errors](Api.md#errors)).
