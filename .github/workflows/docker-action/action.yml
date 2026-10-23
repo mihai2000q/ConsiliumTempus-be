@@ -3,8 +3,8 @@ name: Setup Docker Environment
 description: 'Action for setting up the Docker Environment'
 
 inputs:
-  secret-key: 
-    description: 'Secrey Key used for JWT Settings'
+  secret-key:
+    description: 'Secret Key used for JWT Settings'
     required: true
 
 runs:
@@ -12,8 +12,14 @@ runs:
   steps:
   - name: Add JWT Settings Secret Key on appsettings
     shell: bash
+    env:
+      SECRET_KEY: ${{ inputs.secret-key }}
     run: |
-      sed -i "s/\"SecretKey\": \"\"/\"SecretKey\": \"${{ inputs.secret-key }}\"/g" ./src/ConsiliumTempus.Api/appsettings.json
+      perl -pi -e 's/"SecretKey": ""/"SecretKey": "$ENV{SECRET_KEY}"/g' ./src/ConsiliumTempus.Api/appsettings.json
+      if grep -q '"SecretKey": ""' ./src/ConsiliumTempus.Api/appsettings.json; then
+        echo "SecretKey placeholder was not replaced"
+        exit 1
+      fi
 
   - name: Copy Environment File (.env)
     shell: bash
@@ -21,7 +27,7 @@ runs:
 
   - name: Run Docker Containers
     shell: bash
-    run: docker compose -f docker-compose-prod.yml up -d
+    run: docker compose -f docker-compose-prod.yml up -d --build --wait
 
   - name: Permission on all scripts
     shell: bash
