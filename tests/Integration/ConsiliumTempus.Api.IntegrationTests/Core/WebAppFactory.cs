@@ -22,8 +22,7 @@ namespace ConsiliumTempus.Api.IntegrationTests.Core;
 public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly MsSqlContainer _dbContainer =
-        new MsSqlBuilder()
-            .WithImage(SetupConstants.MsSqlImage)
+        new MsSqlBuilder(SetupConstants.MsSqlImage)
             .WithPassword(SetupConstants.DatabasePassword)
             .WithWaitStrategy(Wait.ForUnixContainer()
                 .UntilMessageIsLogged("SQL Server is now ready for client connections."))

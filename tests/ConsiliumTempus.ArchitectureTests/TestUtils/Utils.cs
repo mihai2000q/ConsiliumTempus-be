@@ -7,7 +7,7 @@ namespace ConsiliumTempus.ArchitectureTests.TestUtils;
 public static class Utils
 {
     public static GivenTypesConjunction AreNotInterfaces(
-        this GivenTypesThat<GivenTypesConjunction, IType> givenTypesThat) =>
+        this GivenTypesThat givenTypesThat) =>
         givenTypesThat.DoNotHaveNameStartingWith("I");
 
     public static void ShouldHaveSameCount(Architecture architecture, Type type, string @namespace) =>
