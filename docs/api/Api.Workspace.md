@@ -61,7 +61,7 @@ The constraints of the properties (i.e., maximum lengths) are described in the d
 
 ### Get
 
-Only users that are part of the workspace can retrieve it ([Read Workspace Permission](../Security.md#permissions)).
+Anyone that is part of the workspace can retrieve it ([Read Workspace Permission](../Security.md#permissions)).
 
 ```js
 GET {{host}}/api/workspaces/{id}
@@ -92,7 +92,7 @@ Returns the workspace.
 
 ### Get Overview
 
-Only users that are part of the workspace can retrieve it 
+Anyone that is part of the workspace can retrieve it 
 ([Read Overview Workspace Permission](../Security.md#permissions)).
 
 ```js
@@ -171,7 +171,7 @@ Returns the workspaces and their total count.
 
 ### Get Collaborators
 
-Only users that are part of the workspace can retrieve it 
+Anyone that is part of the workspace can retrieve it 
 ([Read Collaborators From Workspace Permission](../Security.md#permissions)).
 
 ```js
@@ -304,7 +304,7 @@ Returns a confirmation message that the workspace has been created successfully.
 
 ### Invite Collaborator
 
-Only admins of the workspace can invite new collaborators
+Only **Admin** users of the workspace can invite new collaborators
 ([Invite Collaborator To Workspace Permission](../Security.md#permissions)).
 
 ```js
@@ -374,7 +374,7 @@ Returns a confirmation message that the invitation has been rejected successfull
 
 ### Update
 
-Only member or admin users that are part of the workspace can update it
+Only **Member** and **Admin** users of the workspace can update it
 ([Update Workspace Permission](../Security.md#permissions)).
 
 ```js
@@ -398,7 +398,7 @@ Returns a confirmation message that the workspace has been updated successfully.
 
 ### Update Collaborator
 
-Only admins that are part of the workspace can update a collaborator
+Only **Admin** users of the workspace can update a collaborator
 ([Update Collaborator From Workspace Permission](../Security.md#permissions)).
 
 ```js
@@ -447,7 +447,7 @@ Returns a confirmation message that the workspace favorites have been updated su
 
 ### Update Overview
 
-Only member or admin users that are part of the workspace can update it
+Only **Member** and **Admin** users of the workspace can update it
 ([Update Overview Workspace Permission](../Security.md#permissions)).
 
 ```js
@@ -495,7 +495,7 @@ Returns a confirmation message that the workspace owner has been updated success
 
 ### Delete
 
-Only admin users that are part of the workspace can delete it
+Only **Admin** users of the workspace can delete it
 ([Delete Workspace Permission](../Security.md#permissions)).
 
 ```js
@@ -514,7 +514,7 @@ Returns a confirmation message that the workspace has been deleted successfully.
 
 ### Kick Collaborator
 
-Only admin users that are part of the workspace can kick other collaborators
+Only **Admin** users of the workspace can kick other collaborators
 ([Kick Collaborator From Workspace Permission](../Security.md#permissions)).
 
 ```js

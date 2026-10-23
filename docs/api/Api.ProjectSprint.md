@@ -41,7 +41,7 @@ The constraints of the properties (i.e., maximum lengths) are described in the d
 
 ### Get
 
-Anyone that is part of a workspace can read the sprint
+Anyone that is part of the workspace can read the sprint
 ([Read Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can read the sprint
@@ -83,7 +83,7 @@ Returns the project sprint.
 
 ### Get Collection
 
-Anyone that is part of a workspace can access the project sprints
+Anyone that is part of the workspace can access the project sprints
 ([Read Collection Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can access the sprints
@@ -129,7 +129,7 @@ Returns the project sprints.
 
 ### Get Stages
 
-Anyone that is part of a workspace can access the project stages
+Anyone that is part of the workspace can access the project stages
 ([Read Stages From Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can access the stages
@@ -170,7 +170,7 @@ Returns the project stages.
 
 ### Create
 
-Only admin users that are part of the workspace can create a project sprint
+Only **Admin** users of the workspace can create a project sprint
 ([Create Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can create a sprint
@@ -207,7 +207,7 @@ Returns a confirmation message that the sprint has been created successfully.
 
 ### Add Stage
 
-Only admin users that are part of the workspace can add a project stage
+Only **Admin** users of the workspace can add a project stage
 ([Add Stage To Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can add a stage
@@ -235,7 +235,7 @@ Returns a confirmation message that the stage has been added successfully.
 
 ### Update
 
-Only admin and member users that are part of the workspace can update a project sprint
+Only **Member** and **Admin** users of the workspace can update a project sprint
 ([Update Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update the sprint
@@ -264,7 +264,7 @@ Returns a confirmation message that the sprint has been updated successfully.
 
 ### Move Stage
 
-Only admin users that are part of the workspace can move a project stage
+Only **Admin** users of the workspace can move a project stage
 ([Move Stage From Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can move a stage
@@ -292,7 +292,7 @@ Returns a confirmation message that the stage has been moved successfully.
 
 ### Update Stage
 
-Only admin and member users that are part of the workspace can update a project stage
+Only **Member** and **Admin** users of the workspace can update a project stage
 ([Update Stage From Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a stage
@@ -320,7 +320,7 @@ Returns a confirmation message that the stage has been updated successfully.
 
 ### Delete
 
-Only admin users that are part of the workspace can delete a project sprint
+Only **Admin** users of the workspace can delete a project sprint
 ([Delete Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can delete a sprint
@@ -342,7 +342,7 @@ Returns a confirmation message that the sprint has been deleted successfully.
 
 ### Remove Stage
 
-Only admin users that are part of the workspace can remove a project stage
+Only **Admin** users of the workspace can remove a project stage
 ([Remove Stage From Project Sprint Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can remove a stage

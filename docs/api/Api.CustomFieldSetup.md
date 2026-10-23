@@ -36,12 +36,11 @@
 
 This is the controller that takes care of creating, updating, deleting and querying Custom Field Setups.
 
-The conventions shared by all the endpoints (responses, errors, search, order, etc.) are described in the [Api documentation](../Api.md#conventions),
-and the constraints of their properties in the documentation of the [Custom Field Setup](../domain/aggregates/Aggregate.CustomFieldSetup.md).
+The constraints of the properties (i.e., maximum lengths) are described in the documentation of the [Custom Field Setup](../domain/aggregates/Aggregate.CustomFieldSetup.md).
 
 ### Get
 
-Only members and admins of the workspace can read a custom field setup
+Only **Member** and **Admin** users of the workspace can read a custom field setup
 ([Read Custom Field Setup Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can read a custom field setup
@@ -193,7 +192,7 @@ Returns a custom field setup. However, the response will be different for each t
 
 ### Get Collection From Workspace
 
-Only members and admins of the workspace can read the custom field setups
+Only **Member** and **Admin** users of the workspace can read the custom field setups
 ([Read Collection Custom Field Setup From Workspace Permission](../Security.md#permissions)).
 
 ```js
@@ -231,7 +230,7 @@ Returns the custom field setups from workspace.
 
 ### Get Collection From Project
 
-Only members and admins of the workspace can read the custom field setups
+Only **Member** and **Admin** users of the workspace can read the custom field setups
 ([Read Collection Custom Field Setup From Project Permission](../Security.md#permissions)),
 
 When the project is private, only allowed members can read custom field setups
@@ -272,7 +271,7 @@ Returns the custom field setups from a project.
 
 ### Create On Workspace
 
-Only admins of the workspace can create a custom field setup on workspace
+Only **Admin** users of the workspace can create a custom field setup on workspace
 ([Create Custom Field Setup On Workspace Permission](../Security.md#permissions)).
 
 ```js
@@ -308,7 +307,7 @@ Returns a confirmation message that the custom field setup has been created succ
 
 ### Create On Project
 
-Only admins of the workspace can create a custom field setup
+Only **Admin** users of the workspace can create a custom field setup
 ([Create Custom Field Setup On Project Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can create a custom field setup
@@ -356,7 +355,7 @@ Returns a confirmation message that the custom field setup has been created succ
 
 ### Add To Project
 
-Only admins of the workspace can add the custom field setup to project
+Only **Admin** users of the workspace can add the custom field setup to project
 ([Add Custom Field Setup To Project Permission](../Security.md#permissions)).
 
 ```js
@@ -380,7 +379,7 @@ Returns a confirmation message that the custom field setup has been added to the
 
 ### Update
 
-Only admins of the workspace can update a custom field setup
+Only **Admin** users of the workspace can update a custom field setup
 ([Update Custom Field Setup Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a custom field setup
@@ -423,7 +422,7 @@ Returns a confirmation message that the custom field setup has been updated succ
 
 ### Make Global
 
-Only admins of the workspace can make the custom field setup global
+Only **Admin** users of the workspace can make the custom field setup global
 ([Make Custom Field Setup Global Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can make the custom field setup global
@@ -449,7 +448,7 @@ Returns a confirmation message that the custom field setup has been made global 
 
 ### Delete
 
-Only admins of the workspace can delete a custom field setup
+Only **Admin** users of the workspace can delete a custom field setup
 ([Delete Custom Field Setup Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can delete a custom field setup
@@ -471,7 +470,7 @@ Returns a confirmation message that the custom field setup has been deleted succ
 
 ### Remove From Project
 
-Only admins of the workspace can remove a custom field setup from a project
+Only **Admin** users of the workspace can remove a custom field setup from a project
 ([Remove Custom Field Setup From Project Permission](../Security.md#permissions)).
 
 ```js

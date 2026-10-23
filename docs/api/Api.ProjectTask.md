@@ -201,7 +201,7 @@ Returns the project tasks and their total count.
 
 ### Create
 
-All members that are part of the workspace can create a project task
+Only **Member** and **Admin** users of the workspace can create a project task
 ([Create Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can create a project task
@@ -229,7 +229,7 @@ Returns a confirmation message that the project task has been created successful
 
 ### Move
 
-All members that are part of the workspace can move a project task
+Only **Member** and **Admin** users of the workspace can move a project task
 ([Move Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can move a project task
@@ -256,7 +256,7 @@ Returns a confirmation message that the project task has been moved successfully
 
 ### Update
 
-All members that are part of the workspace can update a project task
+Only **Member** and **Admin** users of the workspace can update a project task
 ([Update Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a task
@@ -284,7 +284,7 @@ Returns a confirmation message that the project task has been updated successful
 
 ### Update Custom Field
 
-All members that are part of the workspace can update a task's custom field
+Only **Member** and **Admin** users of the workspace can update a task's custom field
 ([Update Custom Field From Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a task's custom field
@@ -321,7 +321,7 @@ Returns a confirmation message that the project task's custom field has been upd
 
 ### Update Is Completed
 
-All members that are part of the workspace can update a task's completion status
+Only **Member** and **Admin** users of the workspace can update a task's completion status
 ([Update Is Completed Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a task's completion status
@@ -348,7 +348,7 @@ Returns a confirmation message that the project task's completion status has bee
 
 ### Update Overview
 
-All members that are part of the workspace can update a project task overview
+Only **Member** and **Admin** users of the workspace can update a project task overview
 ([Update Overview Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a task's overview
@@ -377,7 +377,7 @@ Returns a confirmation message that the project task overview has been updated s
 
 ### Delete
 
-Only admins and members that are part of the workspace can delete a project task
+Only **Member** and **Admin** users of the workspace can delete a project task
 ([Delete Project Task Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can delete a project task

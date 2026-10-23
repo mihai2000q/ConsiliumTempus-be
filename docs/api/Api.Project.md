@@ -285,7 +285,7 @@ Returns the project statuses and their total count.
 
 ### Get Allowed Members
 
-Only members and admins of the workspace can read the allowed members of a project
+Only **Member** and **Admin** users of the workspace can read the allowed members of a project
 ([Read Allowed Members From Project Permission](../Security.md#permissions))
 
 When the project is private, only allowed members can read the allowed members
@@ -324,7 +324,7 @@ Returns the allowed members.
 
 ### Create
 
-Only admin users that are part of the workspace can create a project
+Only **Admin** users of the workspace can create a project
 ([Create Project Permission](../Security.md#permissions)).
 
 ```js
@@ -374,7 +374,7 @@ Returns a confirmation message that the allowed member has been added to the pro
 
 ### Add Status
 
-Only admin users that are part of the workspace can add a status to the project
+Only **Admin** users of the workspace can add a status to the project
 ([Add Status To Project Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can add a status
@@ -403,7 +403,7 @@ Returns a confirmation message that the project status has been added successful
 
 ### Update
 
-All members that are part of the workspace can update a project
+Only **Member** and **Admin** users of the workspace can update a project
 ([Update Project Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update it
@@ -458,7 +458,7 @@ Returns a confirmation message that the project favorites have been updated succ
 
 ### Update Overview
 
-All members that are part of the workspace can update a project overview
+Only **Member** and **Admin** users of the workspace can update a project overview
 ([Update Overview Project Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update its overview
@@ -533,7 +533,7 @@ Returns a confirmation message that the project privacy has been updated success
 
 ### Update Status
 
-Only members and admin users that are part of the workspace can update a status from the project
+Only **Member** and **Admin** users of the workspace can update a status from the project
 ([Update Status From Project Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can update a status
@@ -563,7 +563,7 @@ Returns a confirmation message that the project status has been updated successf
 
 ### Delete
 
-Only admin users that are part of the workspace can delete a project
+Only **Admin** users of the workspace can delete a project
 ([Delete Project Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can delete a project
@@ -625,7 +625,7 @@ Returns a confirmation message that the allowed member has been removed from pro
 
 ### Remove Status
 
-Only admin users that are part of the workspace can remove a status from the project
+Only **Admin** users of the workspace can remove a status from the project
 ([Remove Status From Project Permission](../Security.md#permissions)).
 
 When the project is private, only allowed members can remove a status
