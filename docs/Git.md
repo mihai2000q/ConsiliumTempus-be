@@ -53,4 +53,4 @@ To put everything together, this is how the work on a new feature would look lik
 2. Create the branch for it, from **develop**: `feature/139-infrastructure-new-repository-for-menus`.
 3. Commit the work in small steps, following the structure: `#139 Infrastructure - Add New Repository for Menu`.
 4. Open a pull request into **develop** and merge it (the merge shows up as *Merge pull request #... from ...*).
-5. Once enough features are ready, **develop** gets released into **master**.
+5. Once enough features are ready, **develop** gets released into **master** (see [Continuous Integration](CI.md#release-and-deployment)).
