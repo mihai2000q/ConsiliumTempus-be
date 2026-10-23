@@ -85,11 +85,15 @@ It is created by copying `.env.dev` (see [Docker Containers](../README.md#docker
 | `DATABASE_NAME`     | the name of the database, used by the sample data script                                     |
 | `DATABASE_USER`     | the user of the database, used by the sample data script                                     |
 | `DATABASE_PASSWORD` | the password of the database user                                                            |
-| `HTTP_PORT`         | the port that the application listens to, inside its container                              |
-| `API_PORT`          | the port of the host that is mapped to the port of the application (also used by the e2e tests) |
+| `API_PORT`          | the port of the host that is mapped to the port `8080` of the application container (also used by the e2e tests) |
 | `USER_SECRETS_PATH` | optional, the folder of the dotnet user secrets, for Linux and macOS (see `.env.sample`)     |
 
-The database settings from the `appsettings` files must match the ones from the `.env` file.
+Docker Compose passes the database variables to the application container as the `DatabaseSettings__*` environment variables,
+which override the `appsettings` files (the server is the `database` service and the port is `1433`).
+So, in Docker, the `.env` file is the only source of the database settings.
+
+When running the application directly on the host, the `DatabaseSettings` from `appsettings.Development.json`
+must still match the `.env` file (the *Port* with `DATABASE_PORT`, and the *Name*, *User* and *Password*).
 
 ## Logging
 

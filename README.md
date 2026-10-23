@@ -109,14 +109,9 @@ Follow the steps below, in this order:
    <br>
    This script will also install the necessary tools for that purpose.
    It reads the `appsettings.Development.json` file (inside `src/ConsiliumTempus.Api`),
-   so, at this point, the file must have its default values: the *Server* **Localhost** and the *Port* **7133**.
+   which targets the database from the host machine (the *Server* **Localhost** and the *Port* **7133**).
 
-4. Sync up the application with the database, so that the application container can find it:
-   inside the same `appsettings.Development.json` file, change the *Server* parameter from **Localhost**
-   to the container name, which by default is **CT-Database**, and also the *Port* from **7133** to **1433**
-   (`appsettings.json` already has these values).
-
-5. Start the application, by typing the following command:
+4. Start the application, by typing the following command:
 
    ```sh
    docker compose up -d
@@ -124,9 +119,9 @@ Follow the steps below, in this order:
 
    This command will open up the two containers: the database one (already running) and the one for the application,
    which is running by default in development mode.
-
-To go back to running the application locally, restore the default values from the 4th step
-(see [Local Development](#local-development)).
+   <br>
+   Docker Compose overrides the database settings of the application container with the values from the `.env` file,
+   so `appsettings.Development.json` does not have to be changed (see [Configuration](docs/Configuration.md#environment-file)).
 
 ### Local Development
 
@@ -136,8 +131,8 @@ For local development, you will either install your own database instance or use
 For recapitulation purposes:
 - create an `.env` file
 - start only the database container
-- make sure the `appsettings.Development.json` has the local values (the *Server* **Localhost** and the *Port* from the `.env`,
-  which is **7133** by default), in case the Docker steps changed them
+- make sure the `DatabaseSettings` from `appsettings.Development.json` match the `.env`
+  (the *Port* is **7133** by default)
 - apply the migration
 
 To run only the docker database, run the following command:
