@@ -51,8 +51,8 @@ At a glance, the first run looks like this:
 
 #### Microsoft SDK
 
-This application is written in .NET 8.0; therefore, the developer requires the Microsoft SDK of that version. 
-If you do not have it already, please download it from here `https://dotnet.microsoft.com/en-us/download/dotnet/8.0` 
+This application is written in .NET 10.0; therefore, the developer requires the Microsoft SDK of that version. 
+If you do not have it already, please download it from here `https://dotnet.microsoft.com/en-us/download/dotnet/10.0` 
 (you may have to restart afterward).
 
 #### Docker

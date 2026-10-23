@@ -15,7 +15,7 @@ Both workflows run on each push and pull request to the **develop** branch.
 ### Build
 
 The **Build** workflow (`build.yml`) checks that the application builds.
-It uses the `build-action`, which installs the .NET SDK (8.0.203), restores the dependencies and builds the solution.
+It uses the `build-action`, which installs the .NET SDK (10.0.x), restores the dependencies and builds the solution.
 
 ### Testing
 
