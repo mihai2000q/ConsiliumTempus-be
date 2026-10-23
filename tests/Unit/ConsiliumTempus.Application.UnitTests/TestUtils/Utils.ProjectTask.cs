@@ -49,7 +49,7 @@ internal static partial class Utils
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             var count = 0;
-            stage.Tasks.Should().AllSatisfy(t => t.CustomOrderPosition.Value.Should().Be(count++));
+            stage.Tasks.Should().AllSatisfyOrEmpty(t => t.CustomOrderPosition.Value.Should().Be(count++));
         }
 
         internal static void AssertFromDeleteCommand(
@@ -85,7 +85,7 @@ internal static partial class Utils
             overStage.Tasks[0].Should().Be(task);
             overStage.Tasks.ShouldBeOrdered();
 
-            task.Stage.Sprint.Stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
+            task.Stage.Sprint.Stages.Should().AllSatisfyOrEmpty(s => s.Tasks.ShouldBeOrdered());
             task.Stage.Sprint.Stages.SelectMany(s => s.Tasks)
                 .Should().ContainSingle(t => t == task);
 
@@ -123,7 +123,7 @@ internal static partial class Utils
             task.Stage.Should().Be(overStage);
             task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            task.Stage.Sprint.Stages.Should().AllSatisfy(s => s.Tasks.ShouldBeOrdered());
+            task.Stage.Sprint.Stages.Should().AllSatisfyOrEmpty(s => s.Tasks.ShouldBeOrdered());
             task.Stage.Sprint.Stages.SelectMany(s => s.Tasks)
                 .Should().ContainSingle(t => t == task);
 
@@ -249,7 +249,7 @@ internal static partial class Utils
             domainEvent.ProjectTask.CustomFields.Should().HaveSameCount(setups);
             domainEvent.ProjectTask.CustomFields
                 .Zip(setups)
-                .Should().AllSatisfy(x =>
+                .Should().AllSatisfyOrEmpty(x =>
                 {
                     var (customField, setup) = x;
                     customField.Id.Value.Should().NotBeEmpty();

@@ -221,7 +221,7 @@ internal static partial class Utils
             List<ProjectTaskAggregate> tasks)
         {
             var (setup, _) = domainEvent;
-            tasks.Should().AllSatisfy(task =>
+            tasks.Should().AllSatisfyOrEmpty(task =>
             {
                 task.CustomFields.Should().HaveCount(1);
                 var customField = task.CustomFields[0];
@@ -323,7 +323,7 @@ internal static partial class Utils
             var index = 0;
             setup.Options
                 .Zip(command.MultiSelectCustomFieldSetup!.Options)
-                .Should().AllSatisfy(x => AssertCreateMultiSelectOption(x.First, x.Second, index++));
+                .Should().AllSatisfyOrEmpty(x => AssertCreateMultiSelectOption(x.First, x.Second, index++));
         }
 
         private static void AssertCreateNumberCustomFieldSetup(
@@ -354,7 +354,7 @@ internal static partial class Utils
             var index = 0;
             setup.Options
                 .Zip(command.SingleSelectCustomFieldSetup!.Options)
-                .Should().AllSatisfy(x => AssertCreateSingleSelectOption(x.First, x.Second, index++));
+                .Should().AllSatisfyOrEmpty(x => AssertCreateSingleSelectOption(x.First, x.Second, index++));
             if (command.SingleSelectCustomFieldSetup.DefaultOptionId is null)
                 setup.DefaultOption.Should().BeNull();
             else

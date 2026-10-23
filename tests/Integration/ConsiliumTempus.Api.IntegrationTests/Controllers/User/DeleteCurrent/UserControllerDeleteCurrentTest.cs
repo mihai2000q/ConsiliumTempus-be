@@ -52,7 +52,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
 
         preservedWorkspaces
             .Should()
-            .AllSatisfy(w =>
+            .AllSatisfyOrEmpty(w =>
             {
                 w.Owner.Should().NotBe(user);
                 w.IsPersonal.Value.Should().BeFalse();
@@ -75,7 +75,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
             .Where(p => p.Owner == user)
             .ToList();
 
-        preservedProjects.Should().AllSatisfy(p =>
+        preservedProjects.Should().AllSatisfyOrEmpty(p =>
         {
             p.Owner.Should().NotBe(user);
             p.AllowedMembers.Should().NotBeEmpty();

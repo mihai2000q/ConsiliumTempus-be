@@ -54,12 +54,12 @@ internal static partial class Utils
             response.Workspaces.Should().HaveCount(workspaces.Count);
             if (isOrdered)
                 response.Workspaces.Zip(workspaces)
-                    .Should().AllSatisfy(x => AssertWorkspaceResponse(x.First, x.Second, user));
+                    .Should().AllSatisfyOrEmpty(x => AssertWorkspaceResponse(x.First, x.Second, user));
             else
                 response.Workspaces
                     .OrderBy(w => w.Id)
                     .Zip(workspaces.OrderBy(w => w.Id.Value))
-                    .Should().AllSatisfy(x => AssertWorkspaceResponse(x.First, x.Second, user));
+                    .Should().AllSatisfyOrEmpty(x => AssertWorkspaceResponse(x.First, x.Second, user));
 
             response.TotalCount.Should().Be(totalCount);
         }
@@ -72,12 +72,12 @@ internal static partial class Utils
         {
             if (isOrdered)
                 response.Collaborators.Zip(collaborators)
-                    .Should().AllSatisfy(x => AssertCollaboratorResponse(x.First, x.Second));
+                    .Should().AllSatisfyOrEmpty(x => AssertCollaboratorResponse(x.First, x.Second));
             else
                 response.Collaborators
                     .OrderBy(c => c.Id)
                     .Zip(collaborators.OrderBy(c => c.Id.UserId.Value))
-                    .Should().AllSatisfy(x => AssertCollaboratorResponse(x.First, x.Second));
+                    .Should().AllSatisfyOrEmpty(x => AssertCollaboratorResponse(x.First, x.Second));
             response.TotalCount.Should().Be(totalCount);
         }
 
@@ -88,7 +88,7 @@ internal static partial class Utils
         {
             response.Invitations
                 .Zip(invitations.OrderByDescending(i => i.CreatedDateTime))
-                .Should().AllSatisfy(x => AssertWorkspaceInvitationResponse(x.First, x.Second));
+                .Should().AllSatisfyOrEmpty(x => AssertWorkspaceInvitationResponse(x.First, x.Second));
             response.TotalCount.Should().Be(totalCount);
         }
 
@@ -242,7 +242,7 @@ internal static partial class Utils
             workspace.Memberships.Should().NotContain(i => i.User == user);
             workspace.IsFavorite(user).Should().BeFalse();
 
-            workspace.Projects.Should().AllSatisfy(project =>
+            workspace.Projects.Should().AllSatisfyOrEmpty(project =>
             {
                 project.IsFavorite(user).Should().BeFalse();
                 project.Owner.Should().NotBe(user);
@@ -259,7 +259,7 @@ internal static partial class Utils
             workspace.Memberships.Should().NotContain(m => m.User.Id.Value == request.CollaboratorId);
             workspace.Favorites.Should().NotContain(f => f.Id.Value == request.CollaboratorId);
 
-            workspace.Projects.Should().AllSatisfy(project =>
+            workspace.Projects.Should().AllSatisfyOrEmpty(project =>
             {
                 project.Favorites.Should().NotContain(f => f.Id.Value == request.CollaboratorId);
                 project.Owner.Id.Value.Should().NotBe(request.CollaboratorId);

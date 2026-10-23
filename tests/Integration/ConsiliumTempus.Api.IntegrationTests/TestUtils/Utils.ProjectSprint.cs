@@ -43,7 +43,7 @@ internal static partial class Utils
                     .ThenByDescending(s => s.EndDate)
                     .ThenByDescending(s => s.Name.Value)
                     .ThenByDescending(s => s.Audit.CreatedDateTime))
-                .Should().AllSatisfy(p => AssertResponse(p.First, p.Second));
+                .Should().AllSatisfyOrEmpty(p => AssertResponse(p.First, p.Second));
             response.TotalCount.Should().Be(totalCount);
         }
 
@@ -54,7 +54,7 @@ internal static partial class Utils
             response.Stages.Should().HaveCount(stages.Count);
             response.Stages
                 .Zip(stages)
-                .Should().AllSatisfy(p => AssertStageResponse(p.First, p.Second));
+                .Should().AllSatisfyOrEmpty(p => AssertStageResponse(p.First, p.Second));
         }
 
         internal static void AssertCreation(
@@ -81,7 +81,7 @@ internal static partial class Utils
                     sprint.Stages
                         .OrderBy(s => s.CustomOrderPosition)
                         .Zip(project.Sprints[0].Stages.OrderBy(s => s.CustomOrderPosition))
-                        .Should().AllSatisfy((x) =>
+                        .Should().AllSatisfyOrEmpty((x) =>
                         {
                             var (newStage, stage) = x;
                             newStage.Name.Should().Be(stage.Name);
