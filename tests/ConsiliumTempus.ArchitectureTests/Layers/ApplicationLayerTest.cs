@@ -115,7 +115,7 @@ public class ApplicationLayerTest : BaseArchitectureTest
             .HaveNameContaining("Behavior")
             .Check(Architecture);
 
-        Utils.ShouldHaveSameCount(
+        Utils.ShouldHaveSameTypes(
             Architecture,
             typeof(IPipelineBehavior<,>),
             "ConsiliumTempus.Application.Common.Behaviors");

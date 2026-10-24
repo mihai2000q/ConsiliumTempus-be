@@ -10,20 +10,21 @@ public static class Utils
         this GivenTypesThat givenTypesThat) =>
         givenTypesThat.DoNotHaveNameStartingWith("I");
 
-    public static void ShouldHaveSameCount(Architecture architecture, Type type, string @namespace) =>
+    public static void ShouldHaveSameTypes(Architecture architecture, Type type, string @namespace) =>
         ArchRuleDefinition
             .Classes()
             .That()
             .AreAssignableTo(type)
             .GetObjects(architecture)
+            .Select(c => c.FullName)
             .Should()
-            .HaveCount(
+            .BeEquivalentTo(
                 ArchRuleDefinition
                     .Classes()
                     .That()
                     .ResideInNamespace(@namespace)
                     .GetObjects(architecture)
-                    .Count());
+                    .Select(c => c.FullName));
 
     public static void ShouldHavePrivateConstructors(this IEnumerable<Class?> classes) =>
         classes

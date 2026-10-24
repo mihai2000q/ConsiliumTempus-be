@@ -81,7 +81,7 @@ public class InfrastructureLayerTest : BaseArchitectureTest
             .HaveNameEndingWith("Interceptor")
             .Check(Architecture);
 
-        Utils.ShouldHaveSameCount(
+        Utils.ShouldHaveSameTypes(
             Architecture,
             typeof(IInterceptor),
             "ConsiliumTempus.Infrastructure.Persistence.Interceptors");

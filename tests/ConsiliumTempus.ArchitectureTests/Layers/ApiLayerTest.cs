@@ -54,7 +54,7 @@ public class ApiLayerTest : BaseArchitectureTest
             .HaveNameEndingWith("MappingConfig")
             .Check(Architecture);
 
-        Utils.ShouldHaveSameCount(
+        Utils.ShouldHaveSameTypes(
             Architecture,
             typeof(IRegister),
             "ConsiliumTempus.Api.Common.Mapping");
@@ -95,7 +95,7 @@ public class ApiLayerTest : BaseArchitectureTest
             .HaveNameEndingWith("Controller")
             .Check(Architecture);
 
-        Utils.ShouldHaveSameCount(
+        Utils.ShouldHaveSameTypes(
             Architecture,
             typeof(ApiController),
             "ConsiliumTempus.Api.Controllers");
