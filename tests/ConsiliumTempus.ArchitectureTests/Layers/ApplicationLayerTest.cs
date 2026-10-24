@@ -7,6 +7,8 @@ namespace ConsiliumTempus.ArchitectureTests.Layers;
 
 public class ApplicationLayerTest : BaseArchitectureTest
 {
+    private const string BehaviorNamePattern = @"Behavior(`\d+)?$";
+
     [Fact]
     public void Application_ShouldNotHaveDependencyOnApi()
     {
@@ -105,8 +107,8 @@ public class ApplicationLayerTest : BaseArchitectureTest
             .That()
             .AreAssignableTo(typeof(IPipelineBehavior<,>))
             .Should()
-            // Should have been NameEndingWith, however it only works if you add: "`2" at the end
-            .HaveNameContaining("Behavior")
+            // Generic types have the arity at the end of their name (i.e., "ValidationBehavior`2")
+            .HaveNameMatching(BehaviorNamePattern)
             .Check(Architecture);
 
         ArchRuleDefinition
@@ -114,7 +116,7 @@ public class ApplicationLayerTest : BaseArchitectureTest
             .That()
             .ResideInNamespace("ConsiliumTempus.Application.Common.Behaviors")
             .Should()
-            .HaveNameContaining("Behavior")
+            .HaveNameMatching(BehaviorNamePattern)
             .Check(Architecture);
 
         Utils.ShouldHaveSameTypes(
