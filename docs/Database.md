@@ -42,7 +42,7 @@ dotnet tool install --global dotnet-ef --version 10.0.13
 ```
 
 The version has been mentioned just as a precaution, as the project is using .Net 10
-(it is the same version that the `apply-migration-to-database.sh` script installs).
+(it is the same version that the migrator image is built with, see the `Dockerfile`).
 If an older version is already installed, update it with `dotnet tool update --global dotnet-ef --version 10.0.13`.
 
 To make sure that it has been installed, you can type the following:
@@ -72,7 +72,17 @@ otherwise, if the table has been thoroughly modified `Update_User` suffices.
 
 ### Apply Migration
 
-To apply the migration, you can type the following command:
+In Docker, the migrations are applied by the `migrator` service of the Docker Compose files,
+which runs every time before the application starts (and it is safe to run again, as already applied migrations are skipped).
+The migrator is built as an [EF Core migration bundle](https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying#bundles),
+so it needs neither the SDK nor the EF tools to run. To apply the migrations on their own, type the following command:
+
+```sh
+docker compose up -d database migrator
+```
+
+Outside of Docker, or when the application runs on the host machine against the database container,
+you can also type the following command:
 
 ```sh
 dotnet ef database update -p ./src/ConsiliumTempus.Infrastructure -s ./src/ConsiliumTempus.Api/
@@ -83,8 +93,6 @@ The command uses the configuration of the Api project in the *Development* envir
 so the database has to be reachable from the machine that runs it,
 i.e., `localhost` and the published port `7133` of the database container.
 If that file points to the name of the container (**CT-Database**), use the connection flag from below.
-
-Alternatively, the shell script `apply-migration-to-database.sh` can be used, as you did when you got setup.
 
 ### Apply Migration—with the connection flag
 
@@ -104,5 +112,3 @@ Make sure that inside the double brackets you add the actual parameters, but by 
 - **database_password** is StrongPassword123 (Lead Choice)
 
 Check out the `.env` file, and the `appsettings.Development.json`, in case they have been changed.
-
-Alternatively, the shell script `apply-migration-to-database.sh` can be used, as you did when you got setup.
