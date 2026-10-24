@@ -7,6 +7,8 @@ namespace ConsiliumTempus.ArchitectureTests.Layers;
 
 public class DomainLayerTest : BaseArchitectureTest
 {
+    private const string DomainEventsNamespacePattern = @"^ConsiliumTempus\.Domain\.\w+\.Events$";
+
     [Fact]
     public void Domain_ShouldNotHaveDependencyOnApi()
     {
@@ -117,6 +119,26 @@ public class DomainLayerTest : BaseArchitectureTest
             .AreNotAbstract()
             .GetObjects(Architecture)
             .ShouldHavePrivateParameterlessConstructor();
+    }
+
+    [Fact]
+    public void DomainEvents_ShouldResideInEventsNamespace()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(IDomainEvent))
+            .Should()
+            .ResideInNamespaceMatching(DomainEventsNamespacePattern)
+            .Check(Architecture);
+
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .ResideInNamespaceMatching(DomainEventsNamespacePattern)
+            .Should()
+            .BeAssignableTo(typeof(IDomainEvent))
+            .Check(Architecture);
     }
 
     [Fact]
