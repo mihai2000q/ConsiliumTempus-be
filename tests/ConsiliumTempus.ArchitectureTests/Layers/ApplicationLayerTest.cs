@@ -118,18 +118,30 @@ public class ApplicationLayerTest : BaseArchitectureTest
         var events = ArchRuleDefinition
             .Classes()
             .That()
+            .Are(DomainLayer)
+            .And()
             .AreAssignableTo(typeof(IDomainEvent))
             .GetObjects(Architecture)
-            .Select(e => $"{e.Name}Handler");
-
+            .Select(c => c.ToType())
+            .ToList();
         var handlers = ArchRuleDefinition
             .Classes()
             .That()
+            .Are(ApplicationLayer)
+            .And()
             .AreAssignableTo(typeof(INotificationHandler<>))
             .GetObjects(Architecture)
-            .Select(h => h.Name);
+            .Select(c => c.ToType())
+            .ToList();
 
-        handlers.Should().BeEquivalentTo(events);
+        events.Should().AllSatisfy(@event =>
+            handlers
+                .Where(h => h.GetHandledNotificationTypes().Contains(@event))
+                .Select(h => h.Name)
+                .Should()
+                .Equal($"{@event.Name}Handler"));
+        handlers.Should().AllSatisfy(handler =>
+            handler.GetHandledNotificationTypes().Should().OnlyContain(n => events.Contains(n)));
     }
 
     [Fact]
