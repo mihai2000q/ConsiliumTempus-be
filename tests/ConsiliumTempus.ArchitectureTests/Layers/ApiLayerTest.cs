@@ -77,7 +77,7 @@ public class ApiLayerTest : BaseArchitectureTest
     }
 
     [Fact]
-    public void Controllers_ShouldHaveSuffixMappingConfig()
+    public void Controllers_ShouldHaveSuffixController()
     {
         ArchRuleDefinition
             .Classes()
