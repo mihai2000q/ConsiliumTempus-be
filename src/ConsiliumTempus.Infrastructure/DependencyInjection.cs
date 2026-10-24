@@ -29,7 +29,8 @@ public static class DependencyInjection
     {
         services.AddAppAuthentication(configuration)
             .AddAppAuthorization()
-            .AddPersistence(configuration);
+            .AddHealthCheck();
+        services.AddPersistence(configuration);
 
         return services;
     }
@@ -81,6 +82,14 @@ public static class DependencyInjection
         services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, WorkspaceAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, ProjectAuthorizationHandler>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddHealthCheck(this IServiceCollection services)
+    {
+        services.AddHealthChecks()
+            .AddDbContextCheck<ConsiliumTempusDbContext>("database");
 
         return services;
     }

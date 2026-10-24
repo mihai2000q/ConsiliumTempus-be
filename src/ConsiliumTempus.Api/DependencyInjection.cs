@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 using ConsiliumTempus.Api.Common.Cors;
 using ConsiliumTempus.Api.Common.Errors;
 using Mapster;
-using ConsiliumTempus.Infrastructure.Persistence.Database;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Serilog;
@@ -18,7 +17,6 @@ public static class DependencyInjection
             .AddMappings()
             .AddSingleton<ProblemDetailsFactory, ConsiliumTempusProblemDetailsFactory>()
             .AddCorsPolicies()
-            .AddHealthCheck()
             .AddControllers()
             .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
     }
@@ -41,13 +39,6 @@ public static class DependencyInjection
         config.Scan(Assembly.GetExecutingAssembly());
         services.AddSingleton(config);
         services.AddScoped<IMapper, ServiceMapper>();
-        return services;
-    }
-
-    private static IServiceCollection AddHealthCheck(this IServiceCollection services)
-    {
-        services.AddHealthChecks()
-            .AddDbContextCheck<ConsiliumTempusDbContext>("database");
         return services;
     }
 
