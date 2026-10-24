@@ -23,6 +23,18 @@ COPY --from=migrations-build-env /migrations/efbundle .
 
 ENTRYPOINT ["./efbundle"]
 
+# Inserts the sample data into an already migrated database, independent from the migrations and the Api
+FROM build-env AS sample-data-build-env
+
+RUN dotnet publish sample-data -c Release -o /sample-data
+
+FROM mcr.microsoft.com/dotnet/runtime:10.0 AS sample-data
+
+WORKDIR /sample-data
+COPY --from=sample-data-build-env /sample-data .
+
+ENTRYPOINT ["dotnet", "ConsiliumTempus.SampleData.dll"]
+
 # Keep the api as the last stage, so it is the default build target
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime-env
 

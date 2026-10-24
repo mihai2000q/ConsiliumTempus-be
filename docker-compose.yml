@@ -38,6 +38,23 @@ services:
       - "--connection"
       - "Server=database,1433;Database=${DATABASE_NAME};User Id=${DATABASE_USER};Password=${DATABASE_PASSWORD};Encrypt=false"
 
+  # one-shot service that inserts the sample data, once the database is migrated (only when enabled in the .env)
+  sample-data:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: sample-data
+    container_name: CT-SampleData
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+    restart: "no"
+    environment:
+      - SampleData__Enabled=${SAMPLE_DATA_ENABLED:-false}
+    command:
+      - "--connection"
+      - "Server=database,1433;Database=${DATABASE_NAME};User Id=${DATABASE_USER};Password=${DATABASE_PASSWORD};Encrypt=false"
+
   database:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     container_name: CT-Database
@@ -53,7 +70,6 @@ services:
       retries: 20
       start_period: 15s
     volumes:
-      - ./sample-data:/mnt/sample-data
       - database-data:/var/opt/mssql
 
 volumes:
