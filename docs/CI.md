@@ -31,7 +31,7 @@ The **Testing** workflow (`testing.yml`) runs the tests, each kind in its own jo
 
 For the end-to-end job, the `docker-action` prepares the environment:
 it writes the secret key of the Jwt Settings inside the `appsettings.json`, copies `.env.dev` to `.env`,
-starts the containers with Docker Compose and applies the migrations to the database.
+starts the containers with Docker Compose (the `migrator` service applies the migrations before the application starts).
 After that, the job installs the Node dependencies and the Playwright browsers, and runs the tests.
 
 ## Secrets

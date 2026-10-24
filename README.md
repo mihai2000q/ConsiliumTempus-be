@@ -96,30 +96,19 @@ Follow the steps below, in this order:
 1. Create the `.env` file, which is locally defined for each user,
    by copying the `.env.dev` file and renaming it to `.env`.
    It contains the parameters needed for the Database container initialization
-   and the appliance of the migrations shell script (see [Configuration](docs/Configuration.md#environment-file)).
+   and the Docker Compose services (see [Configuration](docs/Configuration.md#environment-file)).
    On Linux/macOS, also set `USER_SECRETS_PATH` in the `.env` file (see `.env.sample`),
    as the user secrets folder defaults to the Windows location.
 
-2. Start only the database:
-
-   ```sh
-   docker compose up -d database
-   ```
-
-3. Apply the migration to the database, by running the `scripts/apply-migration-to-database.sh`.
-   <br>
-   This script will also install the necessary tools for that purpose.
-   It reads the `appsettings.Development.json` file (inside `src/ConsiliumTempus.Api`),
-   which targets the database from the host machine (the *Server* **Localhost** and the *Port* **7133**).
-
-4. Start the application, by typing the following command:
+2. Start the application, by typing the following command:
 
    ```sh
    docker compose up -d
    ```
 
-   This command will open up the two containers: the database one (already running) and the one for the application,
-   which is running by default in development mode.
+   This command will build and start the containers, in this order:
+   the database, the migrator (a one-shot service that applies the migrations to the database and exits),
+   and the application, which is running by default in development mode.
    <br>
    Docker Compose overrides the database settings of the application container with the values from the `.env` file,
    so `appsettings.Development.json` does not have to be changed (see [Configuration](docs/Configuration.md#environment-file)).
@@ -134,12 +123,13 @@ For recapitulation purposes:
 - start only the database container
 - make sure the `DatabaseSettings` from `appsettings.Development.json` match the `.env`
   (the *Port* is **7133** by default)
-- apply the migration
+- apply the migrations
 
-To run only the docker database, run the following command:
+To run only the docker database, with the migrations applied (the `migrator` service exits when it is done),
+run the following command:
 
 ```sh
-docker compose up -d database
+docker compose up -d database migrator
 ```
 
 #### Restore Dependencies
