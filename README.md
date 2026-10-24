@@ -108,7 +108,8 @@ Follow the steps below, in this order:
 
    This command will build and start the containers, in this order:
    the database, the migrator (a one-shot service that applies the migrations to the database and exits),
-   and the application, which is running by default in development mode.
+   and then the application, which is running by default in development mode,
+   along with the sample data (another one-shot service, see [Sample Data](#sample-data)).
    <br>
    Docker Compose overrides the database settings of the application container with the values from the `.env` file,
    so `appsettings.Development.json` does not have to be changed (see [Configuration](docs/Configuration.md#environment-file)).
@@ -186,9 +187,26 @@ now you know that you have a working connection to the API and to the database.
 
 ### Sample Data
 
-Inside the `sample-data` directory there are `.sql` files intended to insert into the Database with sample data,
-that can be used for both backend and frontend development. 
-To insert it, run the `scripts/add-sample-data.sh` script.
+The sample data (a few users, their workspaces and memberships), that can be used for both backend and frontend development,
+is inserted by the `sample-data` service of Docker Compose, once the database has been migrated.
+It only runs when `SAMPLE_DATA_ENABLED=true` in the `.env` file (`.env.dev` enables it), so `docker compose up -d` is enough.
+All the sample users have the password `Password123`, for example `michael@jordan.com`.
+<br>
+To insert it on its own, in an already running environment, type the following command:
+
+```sh
+docker compose run --rm sample-data
+```
+
+The data is written in plain `.sql` files, one per table, inside `sample-data/Data`.
+They are executed by the order of their names, so to add sample data for another table, just add a new file
+(for example `4.projects.sql`); to change a value, edit the file.
+<br>
+The `ConsiliumTempus.SampleData` project is independent of the migrations and of the Api, so the sample data
+never ships with the application. It is only inserted into an empty database (without users), so it is safe to run multiple times.
+Keep in mind that the files are plain T-SQL (no `GO`) and that they have to follow the schema:
+if a migration renames a column, update the files as well, otherwise the service fails.
+Also, as the service exits when it is done, `docker compose up --wait` reports a failure for it, so use plain `docker compose up -d`.
 
 ## Testing
 
