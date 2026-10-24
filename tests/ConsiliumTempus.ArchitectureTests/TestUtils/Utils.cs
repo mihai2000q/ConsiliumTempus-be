@@ -8,7 +8,7 @@ public static class Utils
 {
     public static GivenTypesConjunction AreNotInterfaces(
         this GivenTypesThat givenTypesThat) =>
-        givenTypesThat.DoNotHaveNameStartingWith("I");
+        givenTypesThat.AreNot(ArchRuleDefinition.Interfaces());
 
     public static void ShouldHaveSameTypes(Architecture architecture, Type type, string @namespace) =>
         ArchRuleDefinition
