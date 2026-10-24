@@ -163,27 +163,20 @@ or by specifying the profile on run.
 
 ### Test Development Environment
 
-To send a request (via Postman) to test if everything works accordingly, see the example below.
+To check that the API is up and that it can reach the database, send a request to the health endpoint
+(via the browser, Postman or curl), see the example below.
 By default, the *host* is `http://localhost:7123` for http,
 and `https://localhost:7122` for https (you can use any of them in https mode).
 <br>
 To be noted that, in case docker is used, the default port is: `7123`.
 
-```js
-POST {{host}}/api/auth/login
+```sh
+curl http://localhost:7123/api/health
 ```
 
-And the body of the request shall be:
-
-```json
-{
-    "email": "Some@Example.com",
-    "password": "Password123"
-}
-```
-
-It will return an Invalid Credentials Error, however, 
-now you know that you have a working connection to the API and to the database.
+It returns `200` with `Healthy` when the API is running and the database is reachable,
+and `503` with `Unhealthy` when the database cannot be reached.
+The endpoint is anonymous, so no token is needed.
 
 ### Sample Data
 
