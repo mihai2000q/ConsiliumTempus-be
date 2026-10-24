@@ -1,5 +1,6 @@
 using ConsiliumTempus.ArchitectureTests.Core;
 using ConsiliumTempus.ArchitectureTests.TestUtils;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -98,8 +99,7 @@ public class InfrastructureLayerTest : BaseArchitectureTest
             .HaveNameEndingWith("Repository")
             .Check(Architecture);
 
-        const string repositoryInterfacesNamespace =
-            "ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository";
+        var repositoryInterfacesNamespace = typeof(IUserRepository).Namespace;
 
         var implementations = ArchRuleDefinition
             .Classes()
