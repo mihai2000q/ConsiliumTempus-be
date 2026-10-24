@@ -1,5 +1,6 @@
 using ConsiliumTempus.ArchitectureTests.Core;
 using ConsiliumTempus.ArchitectureTests.TestUtils;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using FluentValidation;
 using MediatR;
 
@@ -7,6 +8,8 @@ namespace ConsiliumTempus.ArchitectureTests.Layers;
 
 public class ApplicationLayerTest : BaseArchitectureTest
 {
+    private const string BehaviorNamePattern = @"Behavior(`\d+)?$";
+
     [Fact]
     public void Application_ShouldNotHaveDependencyOnApi()
     {
@@ -38,6 +41,8 @@ public class ApplicationLayerTest : BaseArchitectureTest
             .Classes()
             .That()
             .Are(ApplicationLayer)
+            .And()
+            .AreNotAbstract()
             .Should()
             .BeSealed()
             .Check(Architecture);
@@ -96,6 +101,50 @@ public class ApplicationLayerTest : BaseArchitectureTest
     }
 
     [Fact]
+    public void NotificationHandlers_ShouldResideInEventsNamespace()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(INotificationHandler<>))
+            .Should()
+            .ResideInNamespaceMatching(@"^ConsiliumTempus\.Application\.\w+\.Events$")
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void DomainEvents_ShouldHaveExactlyOneHandlerNamedAfterThem()
+    {
+        var events = ArchRuleDefinition
+            .Classes()
+            .That()
+            .Are(DomainLayer)
+            .And()
+            .AreAssignableTo(typeof(IDomainEvent))
+            .GetObjects(Architecture)
+            .Select(c => c.ToType())
+            .ToList();
+        var handlers = ArchRuleDefinition
+            .Classes()
+            .That()
+            .Are(ApplicationLayer)
+            .And()
+            .AreAssignableTo(typeof(INotificationHandler<>))
+            .GetObjects(Architecture)
+            .Select(c => c.ToType())
+            .ToList();
+
+        events.Should().AllSatisfy(@event =>
+            handlers
+                .Where(h => h.GetHandledNotificationTypes().Contains(@event))
+                .Select(h => h.Name)
+                .Should()
+                .Equal($"{@event.Name}Handler"));
+        handlers.Should().AllSatisfy(handler =>
+            handler.GetHandledNotificationTypes().Should().OnlyContain(n => events.Contains(n)));
+    }
+
+    [Fact]
     public void Behaviors_ShouldHaveSuffixBehavior()
     {
         ArchRuleDefinition
@@ -103,8 +152,8 @@ public class ApplicationLayerTest : BaseArchitectureTest
             .That()
             .AreAssignableTo(typeof(IPipelineBehavior<,>))
             .Should()
-            // Should have been NameEndingWith, however it only works if you add: "`2" at the end
-            .HaveNameContaining("Behavior")
+            // Generic types have the arity at the end of their name (i.e., "ValidationBehavior`2")
+            .HaveNameMatching(BehaviorNamePattern)
             .Check(Architecture);
 
         ArchRuleDefinition
@@ -112,10 +161,10 @@ public class ApplicationLayerTest : BaseArchitectureTest
             .That()
             .ResideInNamespace("ConsiliumTempus.Application.Common.Behaviors")
             .Should()
-            .HaveNameContaining("Behavior")
+            .HaveNameMatching(BehaviorNamePattern)
             .Check(Architecture);
 
-        Utils.ShouldHaveSameCount(
+        Utils.ShouldHaveSameTypes(
             Architecture,
             typeof(IPipelineBehavior<,>),
             "ConsiliumTempus.Application.Common.Behaviors");

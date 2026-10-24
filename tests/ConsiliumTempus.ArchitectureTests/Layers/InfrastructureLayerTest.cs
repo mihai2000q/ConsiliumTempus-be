@@ -1,5 +1,6 @@
 using ConsiliumTempus.ArchitectureTests.Core;
 using ConsiliumTempus.ArchitectureTests.TestUtils;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -81,7 +82,7 @@ public class InfrastructureLayerTest : BaseArchitectureTest
             .HaveNameEndingWith("Interceptor")
             .Check(Architecture);
 
-        Utils.ShouldHaveSameCount(
+        Utils.ShouldHaveSameTypes(
             Architecture,
             typeof(IInterceptor),
             "ConsiliumTempus.Infrastructure.Persistence.Interceptors");
@@ -97,6 +98,25 @@ public class InfrastructureLayerTest : BaseArchitectureTest
             .Should()
             .HaveNameEndingWith("Repository")
             .Check(Architecture);
+
+        var repositoryInterfacesNamespace = typeof(IUserRepository).Namespace;
+
+        var implementations = ArchRuleDefinition
+            .Classes()
+            .That()
+            .Are(InfrastructureLayer)
+            .GetObjects(Architecture)
+            .Where(c => c.ImplementedInterfaces.Any(i => i.FullName.StartsWith($"{repositoryInterfacesNamespace}.")))
+            .Select(c => c.FullName);
+
+        var repositories = ArchRuleDefinition
+            .Classes()
+            .That()
+            .ResideInNamespace("ConsiliumTempus.Infrastructure.Persistence.Repository")
+            .GetObjects(Architecture)
+            .Select(c => c.FullName);
+
+        implementations.Should().BeEquivalentTo(repositories);
     }
 
     [Fact]
