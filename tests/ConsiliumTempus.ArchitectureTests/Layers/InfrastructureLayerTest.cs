@@ -97,6 +97,26 @@ public class InfrastructureLayerTest : BaseArchitectureTest
             .Should()
             .HaveNameEndingWith("Repository")
             .Check(Architecture);
+
+        const string repositoryInterfacesNamespace =
+            "ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository";
+
+        var implementations = ArchRuleDefinition
+            .Classes()
+            .That()
+            .Are(InfrastructureLayer)
+            .GetObjects(Architecture)
+            .Where(c => c.ImplementedInterfaces.Any(i => i.FullName.StartsWith($"{repositoryInterfacesNamespace}.")))
+            .Select(c => c.FullName);
+
+        var repositories = ArchRuleDefinition
+            .Classes()
+            .That()
+            .ResideInNamespace("ConsiliumTempus.Infrastructure.Persistence.Repository")
+            .GetObjects(Architecture)
+            .Select(c => c.FullName);
+
+        implementations.Should().BeEquivalentTo(repositories);
     }
 
     [Fact]
