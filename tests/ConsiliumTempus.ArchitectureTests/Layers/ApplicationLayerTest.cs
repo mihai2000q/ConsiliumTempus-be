@@ -1,5 +1,6 @@
 using ConsiliumTempus.ArchitectureTests.Core;
 using ConsiliumTempus.ArchitectureTests.TestUtils;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using FluentValidation;
 using MediatR;
 
@@ -97,6 +98,38 @@ public class ApplicationLayerTest : BaseArchitectureTest
             .Should()
             .HaveNameEndingWith("Handler")
             .Check(Architecture);
+    }
+
+    [Fact]
+    public void NotificationHandlers_ShouldResideInEventsNamespace()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(INotificationHandler<>))
+            .Should()
+            .ResideInNamespaceMatching(@"^ConsiliumTempus\.Application\.\w+\.Events$")
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void DomainEvents_ShouldHaveExactlyOneHandlerNamedAfterThem()
+    {
+        var events = ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(IDomainEvent))
+            .GetObjects(Architecture)
+            .Select(e => $"{e.Name}Handler");
+
+        var handlers = ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(INotificationHandler<>))
+            .GetObjects(Architecture)
+            .Select(h => h.Name);
+
+        handlers.Should().BeEquivalentTo(events);
     }
 
     [Fact]
