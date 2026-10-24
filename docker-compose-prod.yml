@@ -8,8 +8,8 @@ services:
     ports:
       - "${API_PORT}:8080"
     depends_on:
-      database:
-        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
     environment:
       # override the DatabaseSettings of the appsettings files, so the .env is the single source in Docker
       - DatabaseSettings__Server=database
@@ -17,6 +17,21 @@ services:
       - DatabaseSettings__Name=${DATABASE_NAME}
       - DatabaseSettings__User=${DATABASE_USER}
       - DatabaseSettings__Password=${DATABASE_PASSWORD}
+
+  # one-shot service that applies the EF migrations to the database, then exits
+  migrator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrator
+    container_name: CT-Migrator
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: "no"
+    command:
+      - "--connection"
+      - "Server=database,1433;Database=${DATABASE_NAME};User Id=${DATABASE_USER};Password=${DATABASE_PASSWORD};Encrypt=false"
 
   database:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
