@@ -28,11 +28,3 @@ runs:
   - name: Run Docker Containers
     shell: bash
     run: docker compose -f docker-compose-prod.yml up -d --build --wait
-
-  - name: Permission on all scripts
-    shell: bash
-    run: chmod +x ./scripts/*.sh
-
-  - name: Apply Database Migrations to the Docker Container
-    shell: bash
-    run: ./scripts/apply-migration-to-database.sh
