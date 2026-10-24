@@ -38,6 +38,8 @@ public class ApplicationLayerTest : BaseArchitectureTest
             .Classes()
             .That()
             .Are(ApplicationLayer)
+            .And()
+            .AreNotAbstract()
             .Should()
             .BeSealed()
             .Check(Architecture);
