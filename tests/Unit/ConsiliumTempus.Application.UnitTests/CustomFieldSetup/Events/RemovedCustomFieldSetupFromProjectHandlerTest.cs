@@ -6,14 +6,14 @@ using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 
 namespace ConsiliumTempus.Application.UnitTests.CustomFieldSetup.Events;
 
-public class RemovedCustomFieldSetupToProjectHandlerTest
+public class RemovedCustomFieldSetupFromProjectHandlerTest
 {
     #region Setup
 
     private readonly IProjectTaskRepository _projectTaskRepository;
     private readonly RemovedCustomFieldSetupFromProjectHandler _uut;
 
-    public RemovedCustomFieldSetupToProjectHandlerTest()
+    public RemovedCustomFieldSetupFromProjectHandlerTest()
     {
         _projectTaskRepository = Substitute.For<IProjectTaskRepository>();
         _uut = new RemovedCustomFieldSetupFromProjectHandler(_projectTaskRepository);

@@ -13,7 +13,7 @@ using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.ProjectTask.Commands.UpdateCustomField;
 
-public class UpdateCustomFieldProjectTaskCommandHandlerTest
+public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
 {
     #region Setup
 
@@ -21,7 +21,7 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
     private readonly IUserRepository _userRepository;
     private readonly UpdateCustomFieldFromProjectTaskCommandHandler _uut;
 
-    public UpdateCustomFieldProjectTaskCommandHandlerTest()
+    public UpdateCustomFieldFromProjectTaskCommandHandlerTest()
     {
         _projectTaskRepository = Substitute.For<IProjectTaskRepository>();
         _userRepository = Substitute.For<IUserRepository>();
