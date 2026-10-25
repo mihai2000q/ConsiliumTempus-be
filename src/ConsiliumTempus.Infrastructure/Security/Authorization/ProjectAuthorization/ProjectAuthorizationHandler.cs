@@ -16,7 +16,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authorization.ProjectAuthorization;
 
-public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
+internal sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
     : AuthorizationHandler<ProjectAuthorizationRequirement>
 {
     protected override async Task HandleRequirementAsync(

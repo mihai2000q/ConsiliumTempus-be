@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authorization.WorkspaceAuthorization;
 
-public sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
+internal sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
     : AuthorizationHandler<WorkspaceAuthorizationRequirement>
 {
     protected override async Task HandleRequirementAsync(

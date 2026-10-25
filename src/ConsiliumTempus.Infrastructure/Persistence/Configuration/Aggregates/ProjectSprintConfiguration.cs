@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
-public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<ProjectSprintAggregate>
+internal sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<ProjectSprintAggregate>
 {
     public void Configure(EntityTypeBuilder<ProjectSprintAggregate> builder)
     {
@@ -41,7 +41,7 @@ public sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Projec
     }
 }
 
-public sealed class ProjectStageConfiguration : IEntityTypeConfiguration<ProjectStage>
+internal sealed class ProjectStageConfiguration : IEntityTypeConfiguration<ProjectStage>
 {
     public void Configure(EntityTypeBuilder<ProjectStage> builder)
     {

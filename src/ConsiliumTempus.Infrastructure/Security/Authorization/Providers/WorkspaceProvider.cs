@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 
-public sealed class WorkspaceProvider(ConsiliumTempusDbContext dbContext) : IWorkspaceProvider
+internal sealed class WorkspaceProvider(ConsiliumTempusDbContext dbContext) : IWorkspaceProvider
 {
     public async Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default)
     {

@@ -3,5 +3,5 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authorization.ProjectAuthorization;
 
-public sealed record ProjectAuthorizationRequirement(ProjectAuthorizationLevel AuthorizationLevel)
+internal sealed record ProjectAuthorizationRequirement(ProjectAuthorizationLevel AuthorizationLevel)
     : IAuthorizationRequirement;

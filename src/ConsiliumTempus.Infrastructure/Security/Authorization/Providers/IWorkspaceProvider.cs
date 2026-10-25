@@ -7,7 +7,7 @@ using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 
-public interface IWorkspaceProvider
+internal interface IWorkspaceProvider
 {
     Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default);
 

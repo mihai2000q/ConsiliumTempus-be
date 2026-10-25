@@ -3,5 +3,5 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authorization.WorkspaceAuthorization;
 
-public sealed record WorkspaceAuthorizationRequirement(WorkspaceAuthorizationLevel AuthorizationLevel)
+internal sealed record WorkspaceAuthorizationRequirement(WorkspaceAuthorizationLevel AuthorizationLevel)
     : IAuthorizationRequirement;

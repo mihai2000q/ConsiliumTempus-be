@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public sealed class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRepository, IUserProvider
+internal sealed class UserRepository(ConsiliumTempusDbContext dbContext) : IUserRepository, IUserProvider
 {
     public async Task<UserAggregate?> Get(UserId id, CancellationToken cancellationToken = default)
     {

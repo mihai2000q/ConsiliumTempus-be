@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
-public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTaskAggregate>
+internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTaskAggregate>
 {
     public void Configure(EntityTypeBuilder<ProjectTaskAggregate> builder)
     {
@@ -90,7 +90,7 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
     }
 }
 
-public sealed class CustomFieldConfiguration : IEntityTypeConfiguration<CustomField>
+internal sealed class CustomFieldConfiguration : IEntityTypeConfiguration<CustomField>
 {
     public void Configure(EntityTypeBuilder<CustomField> builder)
     {
@@ -107,7 +107,7 @@ public sealed class CustomFieldConfiguration : IEntityTypeConfiguration<CustomFi
     }
 }
 
-public sealed class DateCustomFieldConfiguration : IEntityTypeConfiguration<DateCustomField>
+internal sealed class DateCustomFieldConfiguration : IEntityTypeConfiguration<DateCustomField>
 {
     public void Configure(EntityTypeBuilder<DateCustomField> builder)
     {
@@ -122,7 +122,7 @@ public sealed class DateCustomFieldConfiguration : IEntityTypeConfiguration<Date
     }
 }
 
-public sealed class DateTimeCustomFieldConfiguration : IEntityTypeConfiguration<DateTimeCustomField>
+internal sealed class DateTimeCustomFieldConfiguration : IEntityTypeConfiguration<DateTimeCustomField>
 {
     public void Configure(EntityTypeBuilder<DateTimeCustomField> builder)
     {
@@ -137,7 +137,7 @@ public sealed class DateTimeCustomFieldConfiguration : IEntityTypeConfiguration<
     }
 }
 
-public sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguration<DurationCustomField>
+internal sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguration<DurationCustomField>
 {
     public void Configure(EntityTypeBuilder<DurationCustomField> builder)
     {
@@ -153,7 +153,7 @@ public sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguration<
     }
 }
 
-public sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfiguration<MultiSelectCustomField>
+internal sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfiguration<MultiSelectCustomField>
 {
     public void Configure(EntityTypeBuilder<MultiSelectCustomField> builder)
     {
@@ -171,7 +171,7 @@ public sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfigurati
     }
 }
 
-public sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<NumberCustomField>
+internal sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<NumberCustomField>
 {
     public void Configure(EntityTypeBuilder<NumberCustomField> builder)
     {
@@ -189,7 +189,7 @@ public sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<Nu
     }
 }
 
-public sealed class PeopleCustomFieldConfiguration : IEntityTypeConfiguration<PeopleCustomField>
+internal sealed class PeopleCustomFieldConfiguration : IEntityTypeConfiguration<PeopleCustomField>
 {
     public void Configure(EntityTypeBuilder<PeopleCustomField> builder)
     {
@@ -206,7 +206,7 @@ public sealed class PeopleCustomFieldConfiguration : IEntityTypeConfiguration<Pe
     }
 }
 
-public sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfiguration<SingleSelectCustomField>
+internal sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfiguration<SingleSelectCustomField>
 {
     public void Configure(EntityTypeBuilder<SingleSelectCustomField> builder)
     {
@@ -223,7 +223,7 @@ public sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfigurat
     }
 }
 
-public sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<TextCustomField>
+internal sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<TextCustomField>
 {
     public void Configure(EntityTypeBuilder<TextCustomField> builder)
     {
@@ -240,7 +240,7 @@ public sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<Text
     }
 }
 
-public sealed class TimeCustomFieldConfiguration : IEntityTypeConfiguration<TimeCustomField>
+internal sealed class TimeCustomFieldConfiguration : IEntityTypeConfiguration<TimeCustomField>
 {
     public void Configure(EntityTypeBuilder<TimeCustomField> builder)
     {

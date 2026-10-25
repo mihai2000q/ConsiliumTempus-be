@@ -1,6 +1,6 @@
 ﻿namespace ConsiliumTempus.Infrastructure.Extensions;
 
-public static class TypeExtensions
+internal static class TypeExtensions
 {
     public static string ToCamelId(this Type type) =>
         type.Name

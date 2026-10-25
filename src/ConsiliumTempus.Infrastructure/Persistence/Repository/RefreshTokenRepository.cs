@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public sealed class RefreshTokenRepository(ConsiliumTempusDbContext dbContext) : IRefreshTokenRepository
+internal sealed class RefreshTokenRepository(ConsiliumTempusDbContext dbContext) : IRefreshTokenRepository
 {
     public Task<RefreshToken?> Get(RefreshTokenId id, CancellationToken cancellationToken = default)
     {

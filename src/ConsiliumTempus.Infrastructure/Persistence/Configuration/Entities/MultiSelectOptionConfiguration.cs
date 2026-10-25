@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Entities;
 
-public sealed class MultiSelectOptionConfiguration : IEntityTypeConfiguration<MultiSelectOption>
+internal sealed class MultiSelectOptionConfiguration : IEntityTypeConfiguration<MultiSelectOption>
 {
     public void Configure(EntityTypeBuilder<MultiSelectOption> builder)
     {

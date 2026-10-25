@@ -1,6 +1,6 @@
 ﻿namespace ConsiliumTempus.Infrastructure.Extensions;
 
-public static class EnumerableExtensions
+internal static class EnumerableExtensions
 {
     public static void ForEach<TSource>(this IEnumerable<TSource> enumerable, Action<TSource> action)
     {

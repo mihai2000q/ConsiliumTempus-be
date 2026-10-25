@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Entities;
 
-public sealed class SingleSelectOptionConfiguration : IEntityTypeConfiguration<SingleSelectOption>
+internal sealed class SingleSelectOptionConfiguration : IEntityTypeConfiguration<SingleSelectOption>
 {
     public void Configure(EntityTypeBuilder<SingleSelectOption> builder)
     {

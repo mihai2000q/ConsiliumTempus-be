@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
-public sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<CustomFieldSetupAggregate>
+internal sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<CustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<CustomFieldSetupAggregate> builder)
     {
@@ -52,7 +52,7 @@ public sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<Cus
     }
 }
 
-public sealed class DateCustomFieldSetupConfiguration : IEntityTypeConfiguration<DateCustomFieldSetupAggregate>
+internal sealed class DateCustomFieldSetupConfiguration : IEntityTypeConfiguration<DateCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<DateCustomFieldSetupAggregate> builder)
     {
@@ -64,7 +64,7 @@ public sealed class DateCustomFieldSetupConfiguration : IEntityTypeConfiguration
     }
 }
 
-public sealed class DateTimeCustomFieldSetupConfiguration : IEntityTypeConfiguration<DateTimeCustomFieldSetupAggregate>
+internal sealed class DateTimeCustomFieldSetupConfiguration : IEntityTypeConfiguration<DateTimeCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<DateTimeCustomFieldSetupAggregate> builder)
     {
@@ -76,7 +76,7 @@ public sealed class DateTimeCustomFieldSetupConfiguration : IEntityTypeConfigura
     }
 }
 
-public sealed class DurationCustomFieldSetupConfiguration : IEntityTypeConfiguration<DurationCustomFieldSetupAggregate>
+internal sealed class DurationCustomFieldSetupConfiguration : IEntityTypeConfiguration<DurationCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<DurationCustomFieldSetupAggregate> builder)
     {
@@ -89,7 +89,7 @@ public sealed class DurationCustomFieldSetupConfiguration : IEntityTypeConfigura
     }
 }
 
-public sealed class
+internal sealed class
     MultiSelectCustomFieldSetupConfiguration : IEntityTypeConfiguration<MultiSelectCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<MultiSelectCustomFieldSetupAggregate> builder)
@@ -106,7 +106,7 @@ public sealed class
     }
 }
 
-public sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfiguration<NumberCustomFieldSetupAggregate>
+internal sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfiguration<NumberCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<NumberCustomFieldSetupAggregate> builder)
     {
@@ -135,7 +135,7 @@ public sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfigurati
     }
 }
 
-public sealed class PeopleCustomFieldSetupConfiguration : IEntityTypeConfiguration<PeopleCustomFieldSetupAggregate>
+internal sealed class PeopleCustomFieldSetupConfiguration : IEntityTypeConfiguration<PeopleCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<PeopleCustomFieldSetupAggregate> builder)
     {
@@ -145,7 +145,7 @@ public sealed class PeopleCustomFieldSetupConfiguration : IEntityTypeConfigurati
     }
 }
 
-public sealed class
+internal sealed class
     SingleSelectCustomFieldSetupConfiguration : IEntityTypeConfiguration<SingleSelectCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<SingleSelectCustomFieldSetupAggregate> builder)
@@ -167,7 +167,7 @@ public sealed class
     }
 }
 
-public sealed class TextCustomFieldSetupConfiguration : IEntityTypeConfiguration<TextCustomFieldSetupAggregate>
+internal sealed class TextCustomFieldSetupConfiguration : IEntityTypeConfiguration<TextCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<TextCustomFieldSetupAggregate> builder)
     {
@@ -181,7 +181,7 @@ public sealed class TextCustomFieldSetupConfiguration : IEntityTypeConfiguration
     }
 }
 
-public sealed class TimeCustomFieldSetupConfiguration : IEntityTypeConfiguration<TimeCustomFieldSetupAggregate>
+internal sealed class TimeCustomFieldSetupConfiguration : IEntityTypeConfiguration<TimeCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<TimeCustomFieldSetupAggregate> builder)
     {

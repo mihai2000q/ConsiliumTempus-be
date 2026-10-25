@@ -11,7 +11,7 @@ using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegiste
 
 namespace ConsiliumTempus.Infrastructure.Security.Authentication;
 
-public sealed class JwtTokenValidator(
+internal sealed class JwtTokenValidator(
     IOptions<JwtSettings> jwtOptions,
     IUserProvider userProvider) : IJwtTokenValidator
 {

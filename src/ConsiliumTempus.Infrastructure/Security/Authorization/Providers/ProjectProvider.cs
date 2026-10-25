@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 
-public sealed class ProjectProvider(ConsiliumTempusDbContext dbContext) : IProjectProvider
+internal sealed class ProjectProvider(ConsiliumTempusDbContext dbContext) : IProjectProvider
 {
     public Task<ProjectAggregate?> Get(ProjectId id, CancellationToken cancellationToken = default)
     {

@@ -6,7 +6,7 @@ using ConsiliumTempus.Domain.Project;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 
-public interface IProjectProvider
+internal interface IProjectProvider
 {
     Task<ProjectAggregate?> Get(ProjectId id, CancellationToken cancellationToken = default);
 
