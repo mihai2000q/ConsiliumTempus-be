@@ -118,7 +118,7 @@ public class WorkspaceAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task ProjectAuthorizationHandler_WhenRequestControllerIsEmpty_ShouldSucceed(
+    public async Task WorkspaceAuthorizationHandler_WhenRequestControllerIsEmpty_ShouldSucceed(
         WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
         WorkspaceAuthorizationHandlerData.Controller _1,
         WorkspaceAuthorizationHandlerData.Method _2,
@@ -153,7 +153,7 @@ public class WorkspaceAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task ProjectAuthorizationHandler_WhenRequestMethodIsEmpty_ShouldSucceed(
+    public async Task WorkspaceAuthorizationHandler_WhenRequestMethodIsEmpty_ShouldSucceed(
         WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
         WorkspaceAuthorizationHandlerData.Controller controller,
         WorkspaceAuthorizationHandlerData.Method _1,
