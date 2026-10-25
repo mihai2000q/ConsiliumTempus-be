@@ -199,8 +199,7 @@ internal static partial class Utils
 
                 case GetCustomFieldSetupResponse.PeopleCustomFieldSetupResponse peopleSetup:
                     result.CustomFieldSetup.Should().BeOfType<PeopleCustomFieldSetupAggregate>();
-                    AssertPeopleCustomFieldSetupResponse(peopleSetup,
-                        (PeopleCustomFieldSetupAggregate)result.CustomFieldSetup);
+                    AssertPeopleCustomFieldSetupResponse(peopleSetup);
                     break;
 
                 case GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse singleSelectSetup:
@@ -287,11 +286,9 @@ internal static partial class Utils
         }
 
         private static void AssertPeopleCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.PeopleCustomFieldSetupResponse response,
-            PeopleCustomFieldSetupAggregate setup)
+            GetCustomFieldSetupResponse.PeopleCustomFieldSetupResponse response)
         {
             response.Type.Should().Be(CustomFieldType.People);
-            setup.Should().NotBeNull(); // obviously true
         }
 
         private static void AssertSingleSelectCustomFieldSetupResponse(

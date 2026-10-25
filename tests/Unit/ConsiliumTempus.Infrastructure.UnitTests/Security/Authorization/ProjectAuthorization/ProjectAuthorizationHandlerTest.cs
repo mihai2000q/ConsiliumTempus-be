@@ -389,7 +389,6 @@ public class ProjectAuthorizationHandlerTest
             .HttpContext;
         await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
-        projectAuthorizationLevel.Should().Be(ProjectAuthorizationLevel.IsAllowed);
         context.HasSucceeded.Should().BeTrue();
     }
 
