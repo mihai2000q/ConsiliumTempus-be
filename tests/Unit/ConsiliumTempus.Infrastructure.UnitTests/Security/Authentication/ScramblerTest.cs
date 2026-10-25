@@ -42,4 +42,19 @@ public class ScramblerTest
         outcome1.Should().BeTrue();
         outcome2.Should().BeTrue();
     }
+
+    [Fact]
+    public void VerifyPassword_WhenPasswordIsWrong_ShouldReturnFalse()
+    {
+        // Arrange
+        const string password = "Password123";
+        const string wrongPassword = "Password124";
+        var hashedPassword = _uut.HashPassword(password);
+
+        // Act
+        var outcome = _uut.VerifyPassword(wrongPassword, hashedPassword);
+
+        // Assert
+        outcome.Should().BeFalse();
+    }
 }
