@@ -481,4 +481,49 @@ public class ProjectAuthorizationHandlerTest
 
         context.HasSucceeded.Should().BeTrue();
     }
+
+    [Theory]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
+    public async Task ProjectAuthorizationHandler_WhenIsAllowedMemberButNotOwner_ShouldSucceedOnlyForIsAllowedLevel(
+        ProjectAuthorizationLevel projectAuthorizationLevel,
+        ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+        Type? idType,
+        ProjectAuthorizationHandlerData.Controller controller,
+        string requestAction,
+        ProjectAuthorizationHandlerData.StringIdType stringIdType)
+    {
+        // Arrange
+        var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
+        var user = UserFactory.Create();
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
+
+        var project = ProjectFactory.Create(isPrivate: true);
+        project.AddAllowedMember(user);
+        Utils.Authorization.Project.MockProjectProvider(_projectProvider, project);
+
+        var stringId = project.Id.Value.ToString();
+        Utils.Authorization.Project.MockHttpRequest(
+            _httpContextAccessor,
+            requestLocation,
+            idType,
+            controller,
+            requestAction,
+            stringId);
+
+        // Act
+        await _uut.HandleAsync(context);
+
+        // Assert
+        _ = _httpContextAccessor
+            .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .HttpContext;
+        await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
+
+        context.HasSucceeded.Should().Be(projectAuthorizationLevel == ProjectAuthorizationLevel.IsAllowed);
+    }
 }
