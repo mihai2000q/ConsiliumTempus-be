@@ -20,6 +20,10 @@ internal static class GetCollaboratorsFromWorkspaceQueryHandlerData
             Add(query);
 
             query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery(
+                searchValue: "  john  ");
+            Add(query);
+
+            query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery(
                 search: ["user_name sw John", "workspace_role_id eq 1", "workspace_role_name neq Viewer"]);
             Add(query);
 

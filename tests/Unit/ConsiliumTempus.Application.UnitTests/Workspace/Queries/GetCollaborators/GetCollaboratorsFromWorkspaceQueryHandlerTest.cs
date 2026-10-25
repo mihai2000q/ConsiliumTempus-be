@@ -54,11 +54,12 @@ public class GetCollaboratorsFromWorkspaceQueryHandlerTest
         var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
+        var expectedSearchValue = query.SearchValue?.Trim();
         await _workspaceRepository
             .Received(1)
             .GetCollaborators(
                 Arg.Is<WorkspaceId>(id => query.Id == id.Value),
-                Arg.Is<string>(s => s == query.SearchValue),
+                Arg.Is<string>(s => s == expectedSearchValue),
                 Arg.Is<IReadOnlyList<IFilter<Membership>>>(filters =>
                     filters.AssertFilters(query.Search, MembershipFilter.FilterProperties)),
                 Arg.Is<IReadOnlyList<IOrder<Membership>>>(orders =>
@@ -69,7 +70,7 @@ public class GetCollaboratorsFromWorkspaceQueryHandlerTest
             .Received(1)
             .GetCollaboratorsCount(
                 Arg.Is<WorkspaceId>(id => query.Id == id.Value),
-                Arg.Is<string>(s => s == query.SearchValue),
+                Arg.Is<string>(s => s == expectedSearchValue),
                 Arg.Is<IReadOnlyList<IFilter<Membership>>>(filters =>
                     filters.AssertFilters(query.Search, MembershipFilter.FilterProperties)));
 
