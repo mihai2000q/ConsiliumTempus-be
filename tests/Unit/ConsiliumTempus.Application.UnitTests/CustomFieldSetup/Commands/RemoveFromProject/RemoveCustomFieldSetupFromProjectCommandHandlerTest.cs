@@ -52,7 +52,7 @@ public class RemoveCustomFieldSetupFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
@@ -86,7 +86,7 @@ public class RemoveCustomFieldSetupFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
@@ -112,7 +112,7 @@ public class RemoveCustomFieldSetupFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
@@ -134,7 +134,7 @@ public class RemoveCustomFieldSetupFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));

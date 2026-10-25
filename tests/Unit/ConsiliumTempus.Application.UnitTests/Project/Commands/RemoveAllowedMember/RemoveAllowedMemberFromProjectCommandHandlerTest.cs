@@ -49,7 +49,7 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -85,7 +85,7 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -114,7 +114,7 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -140,7 +140,7 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -165,7 +165,7 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -189,7 +189,7 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));

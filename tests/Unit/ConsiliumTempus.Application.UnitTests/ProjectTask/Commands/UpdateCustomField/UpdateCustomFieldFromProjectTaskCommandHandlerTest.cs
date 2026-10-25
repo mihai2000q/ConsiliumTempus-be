@@ -49,7 +49,7 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -86,7 +86,7 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -121,7 +121,7 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -146,7 +146,7 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -170,7 +170,7 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));

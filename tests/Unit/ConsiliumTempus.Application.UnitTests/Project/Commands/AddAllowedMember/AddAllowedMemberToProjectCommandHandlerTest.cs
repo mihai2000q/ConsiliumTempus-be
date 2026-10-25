@@ -45,7 +45,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -77,7 +77,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -100,7 +100,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -122,7 +122,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -143,7 +143,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));

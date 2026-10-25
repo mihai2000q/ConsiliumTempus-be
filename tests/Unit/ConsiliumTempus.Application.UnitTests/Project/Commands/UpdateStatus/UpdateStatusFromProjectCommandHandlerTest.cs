@@ -48,7 +48,7 @@ public class UpdateStatusFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -76,7 +76,7 @@ public class UpdateStatusFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -97,7 +97,7 @@ public class UpdateStatusFromProjectCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));

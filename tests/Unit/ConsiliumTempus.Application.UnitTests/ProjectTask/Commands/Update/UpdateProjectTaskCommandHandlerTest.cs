@@ -47,7 +47,7 @@ public class UpdateProjectTaskCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -75,7 +75,7 @@ public class UpdateProjectTaskCommandHandlerTest
         // Act
         var outcome = await _uut.Handle(command, default);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
