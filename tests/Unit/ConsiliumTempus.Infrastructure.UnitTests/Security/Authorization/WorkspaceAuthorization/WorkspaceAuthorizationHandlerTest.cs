@@ -409,4 +409,46 @@ public class WorkspaceAuthorizationHandlerTest
 
         context.HasSucceeded.Should().BeTrue();
     }
+
+    [Theory]
+    [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
+    public async Task WorkspaceAuthorizationHandler_WhenIsCollaboratorButNotOwner_ShouldSucceedOnlyForCollaboratorLevel(
+        WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
+        WorkspaceAuthorizationHandlerData.Controller controller,
+        WorkspaceAuthorizationHandlerData.Method method,
+        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
+        WorkspaceAuthorizationHandlerData.StringIdType stringIdType)
+    {
+        // Arrange
+        var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
+        var user = UserFactory.Create();
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
+
+        var workspace = WorkspaceFactory.Create();
+        workspace.AddUserMembership(MembershipFactory.Create(user));
+        Utils.Authorization.Workspace.MockWorkspaceProvider(_workspaceProvider, workspace);
+
+        var stringId = workspace.Id.ToString();
+        Utils.Authorization.Workspace.MockHttpRequest(
+            _httpContextAccessor,
+            controller,
+            method,
+            requestLocation,
+            stringId);
+
+        // Act
+        await _uut.HandleAsync(context);
+
+        // Assert
+        _ = _httpContextAccessor
+            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .HttpContext;
+        await Utils.Authorization.Workspace.VerifyWorkspaceProvider(_workspaceProvider, stringIdType, stringId);
+
+        context.HasSucceeded.Should().Be(workspaceAuthorizationLevel == WorkspaceAuthorizationLevel.IsCollaborator);
+    }
 }
