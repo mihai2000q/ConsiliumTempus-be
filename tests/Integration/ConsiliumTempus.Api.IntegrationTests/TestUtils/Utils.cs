@@ -41,10 +41,12 @@ internal static partial class Utils
             response.StatusCode.Should().Be(statusCode);
 
             var error = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-            error?.Title.Should().Be(domainError.Description);
-            error?.Status.Should().Be(StatusCodesMap[statusCode]);
-            var errorCodes = error?.Extensions["errorCodes"] as JsonElement?;
-            errorCodes?.ValueKind.Should().Be(JsonValueKind.Array);
+            error.Should().NotBeNull();
+            error!.Title.Should().Be(domainError.Description);
+            error.Status.Should().Be(StatusCodesMap[statusCode]);
+            var errorCodes = error.Extensions["errorCodes"] as JsonElement?;
+            errorCodes.Should().NotBeNull();
+            errorCodes!.Value.ValueKind.Should().Be(JsonValueKind.Array);
         }
 
         internal async Task ValidateValidationErrors()
@@ -52,9 +54,11 @@ internal static partial class Utils
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
             var error = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-            error?.Status.Should().Be(StatusCodes.Status400BadRequest);
-            var errorCodes = error?.Extensions["errors"] as JsonElement?;
-            errorCodes?.ValueKind.Should().Be(JsonValueKind.Object);
+            error.Should().NotBeNull();
+            error!.Status.Should().Be(StatusCodes.Status400BadRequest);
+            var errors = error.Extensions["errors"] as JsonElement?;
+            errors.Should().NotBeNull();
+            errors!.Value.ValueKind.Should().Be(JsonValueKind.Object);
         }
     }
 
