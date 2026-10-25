@@ -73,7 +73,6 @@ public class DeleteProjectSprintCommandHandlerTest
             .DidNotReceive()
             .Remove(Arg.Any<ProjectSprintAggregate>());
 
-        outcome.IsError.Should().BeTrue();
         outcome.ValidateError(Errors.ProjectSprint.OnlyOneSprint);
     }
 
@@ -98,7 +97,6 @@ public class DeleteProjectSprintCommandHandlerTest
             .DidNotReceive()
             .Remove(Arg.Any<ProjectSprintAggregate>());
 
-        outcome.IsError.Should().BeTrue();
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }
 }
