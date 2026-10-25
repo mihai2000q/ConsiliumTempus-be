@@ -60,7 +60,7 @@ internal static class MoveProjectTaskCommandHandlerData
             AddUseCase(10, 5, 7);
             AddUseCase(10, 0, 5);
             AddUseCase(3, 0, 1);
-            AddUseCase(3, 0, 1);
+            AddUseCase(3, 0, 2);
             AddUseCase(2, 0, 1);
 
             // Lower position
