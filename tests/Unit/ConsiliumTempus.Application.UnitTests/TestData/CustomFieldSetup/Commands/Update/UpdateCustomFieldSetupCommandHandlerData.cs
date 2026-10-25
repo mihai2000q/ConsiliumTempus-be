@@ -22,6 +22,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                     null));
             Add(command, dateCustomFieldSetup);
 
+            dateCustomFieldSetup = CustomFieldSetupFactory.CreateDate();
             command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
                 id: dateCustomFieldSetup.Id.Value,
                 type: CustomFieldType.Date,
@@ -38,6 +39,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                     null));
             Add(command, dateTimeCustomFieldSetup);
 
+            dateTimeCustomFieldSetup = CustomFieldSetupFactory.CreateDateTime();
             command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
                 id: dateTimeCustomFieldSetup.Id.Value,
                 type: CustomFieldType.DateTime,
@@ -54,6 +56,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                     null));
             Add(command, durationCustomFieldSetup);
 
+            durationCustomFieldSetup = CustomFieldSetupFactory.CreateDuration();
             command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
                 id: durationCustomFieldSetup.Id.Value,
                 type: CustomFieldType.Duration,
@@ -170,6 +173,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                     null));
             Add(command, numberCustomFieldSetup);
 
+            numberCustomFieldSetup = CustomFieldSetupFactory.CreateNumber();
             command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
                 id: numberCustomFieldSetup.Id.Value,
                 type: CustomFieldType.Number,
@@ -310,6 +314,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                 textCustomFieldSetup: new UpdateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
             Add(command, textCustomFieldSetup);
 
+            textCustomFieldSetup = CustomFieldSetupFactory.CreateText();
             command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
                 id: textCustomFieldSetup.Id.Value,
                 type: CustomFieldType.Text,
@@ -325,6 +330,7 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                     null));
             Add(command, timeCustomFieldSetup);
 
+            timeCustomFieldSetup = CustomFieldSetupFactory.CreateTime();
             command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
                 id: timeCustomFieldSetup.Id.Value,
                 type: CustomFieldType.Time,
