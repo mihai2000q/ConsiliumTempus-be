@@ -57,7 +57,7 @@ public sealed class ConsiliumTempusProblemDetailsFactory(IOptions<ApiBehaviorOpt
             Instance = instance
         };
 
-        if (title is null) problemDetails.Title = title;
+        if (title is not null) problemDetails.Title = title;
 
         ApplyProblemDetails(httpContext, problemDetails, statusCode.Value);
 
