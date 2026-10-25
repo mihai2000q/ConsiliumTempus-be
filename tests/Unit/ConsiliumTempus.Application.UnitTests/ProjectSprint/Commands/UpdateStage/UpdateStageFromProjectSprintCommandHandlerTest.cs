@@ -64,28 +64,6 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateStageFromProjectSprintCommand_WhenSprintIsNotFound_ShouldReturnSprintNotFoundError()
-    {
-        // Arrange
-        var command = ProjectSprintCommandFactory.CreateUpdateStageFromProjectSprintCommand();
-
-        _projectSprintRepository
-            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
-            .ReturnsNull();
-
-        // Act
-        var outcome = await _uut.Handle(command, CancellationToken.None);
-
-        // Assert
-        await _projectSprintRepository
-            .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
-
-        outcome.ValidateError(Errors.ProjectSprint.NotFound);
-    }
-
-    [Fact]
     public async Task HandleUpdateStageFromProjectSprintCommand_WhenStageIsNotFound_ShouldReturnStageNotFoundError()
     {
         // Arrange
@@ -106,5 +84,27 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
         await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectStage.NotFound);
+    }
+
+    [Fact]
+    public async Task HandleUpdateStageFromProjectSprintCommand_WhenSprintIsNotFound_ShouldReturnSprintNotFoundError()
+    {
+        // Arrange
+        var command = ProjectSprintCommandFactory.CreateUpdateStageFromProjectSprintCommand();
+
+        _projectSprintRepository
+            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
+            .ReturnsNull();
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _projectSprintRepository
+            .Received(1)
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
+
+        outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }
 }

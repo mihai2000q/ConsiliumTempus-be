@@ -72,14 +72,16 @@ public class MoveStageFromProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleMoveStageFromProjectSprintCommand_WhenSprintIsNotFound_ShouldReturnSprintNotFoundError()
+    public async Task HandleMoveStageFromProjectSprintCommand_WhenOverStageIsNotFound_ShouldReturnStageNotFoundError()
     {
         // Arrange
-        var command = ProjectSprintCommandFactory.CreateMoveStageFromProjectSprintCommand();
-
+        var sprint = ProjectSprintFactory.Create();
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
-            .ReturnsNull();
+            .Returns(sprint);
+
+        var command = ProjectSprintCommandFactory.CreateMoveStageFromProjectSprintCommand(
+            stageId: sprint.Stages[0].Id.Value);
 
         // Act
         var outcome = await _uut.Handle(command, CancellationToken.None);
@@ -90,7 +92,7 @@ public class MoveStageFromProjectSprintCommandHandlerTest
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
         await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
-        outcome.ValidateError(Errors.ProjectSprint.NotFound);
+        outcome.ValidateError(Errors.ProjectStage.NotFoundWithId(ProjectStageId.Create(command.OverStageId)));
     }
 
     [Fact]
@@ -117,16 +119,14 @@ public class MoveStageFromProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleMoveStageFromProjectSprintCommand_WhenOverStageIsNotFound_ShouldReturnStageNotFoundError()
+    public async Task HandleMoveStageFromProjectSprintCommand_WhenSprintIsNotFound_ShouldReturnSprintNotFoundError()
     {
         // Arrange
-        var sprint = ProjectSprintFactory.Create();
+        var command = ProjectSprintCommandFactory.CreateMoveStageFromProjectSprintCommand();
+
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
-            .Returns(sprint);
-
-        var command = ProjectSprintCommandFactory.CreateMoveStageFromProjectSprintCommand(
-            stageId: sprint.Stages[0].Id.Value);
+            .ReturnsNull();
 
         // Act
         var outcome = await _uut.Handle(command, CancellationToken.None);
@@ -137,6 +137,6 @@ public class MoveStageFromProjectSprintCommandHandlerTest
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
         await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
-        outcome.ValidateError(Errors.ProjectStage.NotFoundWithId(ProjectStageId.Create(command.OverStageId)));
+        outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }
 }

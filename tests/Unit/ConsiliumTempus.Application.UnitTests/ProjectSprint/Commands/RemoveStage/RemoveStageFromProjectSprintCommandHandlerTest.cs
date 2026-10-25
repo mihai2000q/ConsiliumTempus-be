@@ -52,6 +52,28 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
     }
 
     [Fact]
+    public async Task HandleRemoveStageFromProjectSprintCommand_WhenStageIsNotFound_ShouldReturnStageNotFoundError()
+    {
+        // Arrange
+        var command = ProjectSprintCommandFactory.CreateRemoveStageFromProjectSprintCommand();
+
+        var sprint = ProjectSprintFactory.Create();
+        _projectSprintRepository
+            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
+            .Returns(sprint);
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _projectSprintRepository
+            .Received(1)
+            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
+
+        outcome.ValidateError(Errors.ProjectStage.NotFound);
+    }
+
+    [Fact]
     public async Task HandleRemoveStageFromProjectSprintCommand_WhenThereIsOnlyOneStage_ShouldReturnOnlyOneStageError()
     {
         // Arrange
@@ -95,27 +117,5 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
-    }
-
-    [Fact]
-    public async Task HandleRemoveStageFromProjectSprintCommand_WhenStageIsNotFound_ShouldReturnStageNotFoundError()
-    {
-        // Arrange
-        var command = ProjectSprintCommandFactory.CreateRemoveStageFromProjectSprintCommand();
-
-        var sprint = ProjectSprintFactory.Create();
-        _projectSprintRepository
-            .GetWithWorkspace(Arg.Any<ProjectSprintId>())
-            .Returns(sprint);
-
-        // Act
-        var outcome = await _uut.Handle(command, CancellationToken.None);
-
-        // Assert
-        await _projectSprintRepository
-            .Received(1)
-            .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-
-        outcome.ValidateError(Errors.ProjectStage.NotFound);
     }
 }
