@@ -22,6 +22,28 @@ internal static class GetCollectionProjectQueryHandlerData
                 orderBy: ["name.desc"],
                 search: ["name ct Some Project"]);
             Add(query);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                search:
+                [
+                    "name sw Some",
+                    "is_private eq true",
+                    "lifecycle neq Archived",
+                    "latest_status eq OnTrack",
+                    "last_activity gte 2024-01-15",
+                    "created_date_time lt 2024-06-30"
+                ]);
+            Add(query);
+
+            query = ProjectQueryFactory.CreateGetCollectionProjectQuery(
+                orderBy:
+                [
+                    "name.asc",
+                    "last_activity.desc",
+                    "created_date_time.asc",
+                    "updated_date_time.desc"
+                ]);
+            Add(query);
         }
     }
 }
