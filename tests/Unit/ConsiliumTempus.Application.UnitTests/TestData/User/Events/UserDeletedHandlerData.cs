@@ -46,6 +46,8 @@ internal static class UserDeletedHandlerData
 
             var projects = new List<ProjectAggregate>
             {
+                ProjectFactory.Create(owner: user, isPrivate: true, workspace: workspaceWithMembers),
+                ProjectFactory.CreateWithAllowedMembers(owner: user, isPrivate: true, workspace: workspaceWithMembers),
                 ProjectFactory.Create(owner: user),
                 ProjectFactory.Create(owner: user, isPrivate: true),
                 privateProjectWithAllowedMembers,
