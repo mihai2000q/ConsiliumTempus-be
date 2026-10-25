@@ -3,6 +3,7 @@ using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
 using ConsiliumTempus.Infrastructure.Security.Authorization.ProjectAuthorization;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Security.Authorization.WorkspaceAuthorization;
+using ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
@@ -26,8 +27,7 @@ public class AuthorizationPolicyProviderTest
     #endregion
 
     [Theory]
-    [InlineData(WorkspaceAuthorizationLevel.IsCollaborator)]
-    [InlineData(WorkspaceAuthorizationLevel.IsWorkspaceOwner)]
+    [ClassData(typeof(AuthorizationPolicyProviderData.GetWorkspaceAuthorizationLevels))]
     public async Task
         AuthorizationPolicyProvider_WhenPolicyIsWorkspaceAuthorizationLevel_ShouldReturnNewPolicyWithWorkspaceAuthorizationRequirement(
             WorkspaceAuthorizationLevel workspaceAuthorizationLevel)
@@ -45,10 +45,9 @@ public class AuthorizationPolicyProviderTest
     }
 
     [Theory]
-    [InlineData(ProjectAuthorizationLevel.IsAllowed)]
-    [InlineData(ProjectAuthorizationLevel.IsProjectOwner)]
+    [ClassData(typeof(AuthorizationPolicyProviderData.GetProjectAuthorizationLevels))]
     public async Task
-        AuthorizationPolicyProvider_WhenPolicyIsProjectAuthorizationLevel_ShouldReturnNewPolicyWithPermissionRequirement(
+        AuthorizationPolicyProvider_WhenPolicyIsProjectAuthorizationLevel_ShouldReturnNewPolicyWithProjectAuthorizationRequirement(
             ProjectAuthorizationLevel projectAuthorizationLevel)
     {
         // Arrange
@@ -63,12 +62,14 @@ public class AuthorizationPolicyProviderTest
         ((ProjectAuthorizationRequirement)outcome.Requirements[0]).AuthorizationLevel.ToString().Should().Be(policy);
     }
 
-    [Fact]
+    [Theory]
+    [ClassData(typeof(AuthorizationPolicyProviderData.GetPermissions))]
     public async Task
-        AuthorizationPolicyProvider_WhenPolicyIsPermissions_ShouldReturnNewPolicyWithPermissionRequirement()
+        AuthorizationPolicyProvider_WhenPolicyIsPermissions_ShouldReturnNewPolicyWithPermissionRequirement(
+            Permissions permission)
     {
         // Arrange
-        var policy = Permissions.DeleteProject.ToString();
+        var policy = permission.ToString();
 
         // Act
         var outcome = await _uut.GetPolicyAsync(policy);
@@ -77,5 +78,22 @@ public class AuthorizationPolicyProviderTest
         outcome!.Requirements.Should().HaveCount(1);
         outcome.Requirements[0].Should().BeOfType<PermissionRequirement>();
         ((PermissionRequirement)outcome.Requirements[0]).Permission.ToString().Should().Be(policy);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("UnknownPolicy")]
+    [InlineData("isallowed")]
+    [InlineData("deleteproject")]
+    public async Task AuthorizationPolicyProvider_WhenPolicyIsUnknown_ShouldReturnNull(
+        string policy)
+    {
+        // Arrange - parameterized
+
+        // Act
+        var outcome = await _uut.GetPolicyAsync(policy);
+
+        // Assert
+        outcome.Should().BeNull();
     }
 }
