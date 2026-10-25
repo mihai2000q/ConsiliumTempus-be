@@ -57,7 +57,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task Get_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = UserRequestFactory.CreateGetUserRequest();
@@ -100,7 +100,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task GetCurrent_WhenItFails_ShouldReturnProblem()
+    public async Task GetCurrent_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var error = Errors.User.NotFound;
@@ -143,7 +143,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task UpdateCurrent_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateCurrent_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
@@ -186,7 +186,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task DeleteCurrent_WhenItFails_ShouldReturnProblem()
+    public async Task DeleteCurrent_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var error = Errors.User.NotFound;

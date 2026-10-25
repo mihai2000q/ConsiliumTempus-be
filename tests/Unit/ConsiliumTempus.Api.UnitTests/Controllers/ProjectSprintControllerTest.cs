@@ -70,7 +70,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task Get_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetProjectSprintRequest();
@@ -116,7 +116,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task GetCollection_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollection_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetCollectionProjectSprintRequest();
@@ -163,7 +163,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task GetStages_WhenItFails_ShouldReturnProblem()
+    public async Task GetStages_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetStagesFromProjectSprintRequest();
@@ -209,7 +209,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task Create_WhenItFails_ShouldReturnProblem()
+    public async Task Create_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest();
@@ -256,7 +256,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task AddStage_WhenItFails_ShouldReturnProblem()
+    public async Task AddStage_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateAddStageToProjectSprintRequest();
@@ -303,7 +303,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task Update_WhenItFails_ShouldReturnProblem()
+    public async Task Update_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateUpdateProjectSprintRequest();
@@ -350,7 +350,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task UpdateStage_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateStage_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateUpdateStageFromProjectSprintRequest();
@@ -397,7 +397,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task MoveStage_WhenItFails_ShouldReturnProblem()
+    public async Task MoveStage_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateMoveStageFromProjectSprintRequest();
@@ -444,7 +444,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task Delete_WhenItFails_ShouldReturnProblem()
+    public async Task Delete_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateDeleteProjectSprintRequest();
@@ -491,7 +491,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task RemoveStage_WhenItFails_ShouldReturnProblem()
+    public async Task RemoveStage_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateRemoveStageFromProjectSprintRequest();

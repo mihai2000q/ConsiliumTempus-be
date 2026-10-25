@@ -69,7 +69,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task Get_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateGetCollectionCustomFieldSetupFromProjectRequest();
@@ -116,7 +116,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task GetCollectionFromProject_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollectionFromProject_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateGetCollectionCustomFieldSetupFromProjectRequest();
@@ -163,7 +163,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task GetCollectionFromWorkspace_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollectionFromWorkspace_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateGetCollectionCustomFieldSetupFromWorkspaceRequest();
@@ -210,7 +210,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task CreateOnWorkspace_WhenItFails_ShouldReturnProblem()
+    public async Task CreateOnWorkspace_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest();
@@ -257,7 +257,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task CreateOnProject_WhenItFails_ShouldReturnProblem()
+    public async Task CreateOnProject_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest();
@@ -304,7 +304,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task AddToProject_WhenItFails_ShouldReturnProblem()
+    public async Task AddToProject_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest();
@@ -351,7 +351,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task Update_WhenItFails_ShouldReturnProblem()
+    public async Task Update_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest();
@@ -398,7 +398,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task UpdateWorkspace_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateWorkspace_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateMakeCustomFieldSetupGlobalRequest();
@@ -445,7 +445,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task Delete_WhenItFails_ShouldReturnProblem()
+    public async Task Delete_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateDeleteCustomFieldSetupRequest();
@@ -492,7 +492,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task RemoveFromProject_WhenItFails_ShouldReturnProblem()
+    public async Task RemoveFromProject_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest();

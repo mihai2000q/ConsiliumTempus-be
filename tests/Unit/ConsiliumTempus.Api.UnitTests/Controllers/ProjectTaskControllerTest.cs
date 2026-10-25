@@ -68,7 +68,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task Get_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateGetProjectTaskRequest();
@@ -115,7 +115,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task GetCollection_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollection_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest();
@@ -161,7 +161,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task Create_WhenItFails_ShouldReturnProblem()
+    public async Task Create_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateCreateProjectTaskRequest();
@@ -207,7 +207,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task Move_WhenItFails_ShouldReturnProblem()
+    public async Task Move_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest();
@@ -254,7 +254,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task Update_WhenItFails_ShouldReturnProblem()
+    public async Task Update_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateUpdateProjectTaskRequest();
@@ -301,7 +301,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task UpdateCustomField_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateCustomField_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest();
@@ -348,7 +348,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task UpdateIsCompleted_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateIsCompleted_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateUpdateIsCompletedProjectTaskRequest();
@@ -395,7 +395,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task UpdateOverview_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateOverview_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateUpdateOverviewProjectTaskRequest();
@@ -442,7 +442,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task Delete_WhenItFails_ShouldReturnProblem()
+    public async Task Delete_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest();

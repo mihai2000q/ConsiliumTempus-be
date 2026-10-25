@@ -57,7 +57,7 @@ public class AuthenticationControllerTest
     }
 
     [Fact]
-    public async Task Register_WhenItFails_ShouldReturnProblem()
+    public async Task Register_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRegisterRequest();
@@ -105,7 +105,7 @@ public class AuthenticationControllerTest
     }
 
     [Fact]
-    public async Task Login_WhenItFails_ShouldReturnProblem()
+    public async Task Login_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateLoginRequest();
@@ -152,7 +152,7 @@ public class AuthenticationControllerTest
     }
 
     [Fact]
-    public async Task Refresh_WhenFails_ShouldReturnProblem()
+    public async Task Refresh_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = AuthenticationRequestFactory.CreateRefreshRequest();

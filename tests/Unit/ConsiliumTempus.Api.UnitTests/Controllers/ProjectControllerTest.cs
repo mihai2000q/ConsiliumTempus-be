@@ -87,7 +87,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task Get_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetProjectRequest();
@@ -134,7 +134,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task GetOverview_WhenItFails_ShouldReturnProblem()
+    public async Task GetOverview_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetOverviewProjectRequest();
@@ -181,7 +181,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task GetCollection_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollection_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest();
@@ -228,7 +228,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task GetStatuses_WhenItFails_ShouldReturnProblem()
+    public async Task GetStatuses_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetStatusesFromProjectRequest();
@@ -275,7 +275,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task GetAllowedMembers_WhenItFails_ShouldReturnProblem()
+    public async Task GetAllowedMembers_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetAllowedMembersFromProjectRequest();
@@ -321,7 +321,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task Create_WhenItFails_ShouldReturnProblem()
+    public async Task Create_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateCreateProjectRequest();
@@ -367,7 +367,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task AddStatus_WhenItFails_ShouldReturnProblem()
+    public async Task AddStatus_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateAddStatusToProjectRequest();
@@ -414,7 +414,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task AddAllowedMember_WhenItFails_ShouldReturnProblem()
+    public async Task AddAllowedMember_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateAddAllowedMemberToProjectRequest();
@@ -460,7 +460,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task Update_WhenItFails_ShouldReturnProblem()
+    public async Task Update_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateUpdateProjectRequest();
@@ -506,7 +506,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task UpdateFavorites_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateFavorites_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateUpdateFavoritesProjectRequest();
@@ -553,7 +553,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task UpdatePrivacy_WhenItFails_ShouldReturnProblem()
+    public async Task UpdatePrivacy_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateUpdatePrivacyProjectRequest();
@@ -600,7 +600,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task UpdateOverview_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateOverview_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateUpdateOverviewProjectRequest();
@@ -647,7 +647,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task UpdateOwner_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateOwner_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateUpdateOwnerProjectRequest();
@@ -694,7 +694,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task UpdateStatus_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateStatus_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateUpdateStatusFromProjectRequest();
@@ -740,7 +740,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task Delete_WhenItFails_ShouldReturnProblem()
+    public async Task Delete_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateDeleteProjectRequest();
@@ -786,7 +786,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task LeavePrivate_WhenItFails_ShouldReturnProblem()
+    public async Task LeavePrivate_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateLeavePrivateProjectRequest();
@@ -833,7 +833,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task RemoveAllowedMember_WhenItFails_ShouldReturnProblem()
+    public async Task RemoveAllowedMember_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateRemoveAllowedMemberFromProjectRequest();
@@ -880,7 +880,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task RemoveStatus_WhenItFails_ShouldReturnProblem()
+    public async Task RemoveStatus_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateRemoveStatusFromProjectRequest();
