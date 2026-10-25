@@ -322,8 +322,7 @@ internal static partial class Utils
         {
             var index = 0;
             setup.Options
-                .Zip(command.MultiSelectCustomFieldSetup!.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertCreateMultiSelectOption(x.First, x.Second, index++));
+                .AssertEach(command.MultiSelectCustomFieldSetup!.Options, (first, second) => AssertCreateMultiSelectOption(first, second, index++));
         }
 
         private static void AssertCreateNumberCustomFieldSetup(
@@ -353,8 +352,7 @@ internal static partial class Utils
         {
             var index = 0;
             setup.Options
-                .Zip(command.SingleSelectCustomFieldSetup!.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertCreateSingleSelectOption(x.First, x.Second, index++));
+                .AssertEach(command.SingleSelectCustomFieldSetup!.Options, (first, second) => AssertCreateSingleSelectOption(first, second, index++));
             if (command.SingleSelectCustomFieldSetup.DefaultOptionId is null)
                 setup.DefaultOption.Should().BeNull();
             else

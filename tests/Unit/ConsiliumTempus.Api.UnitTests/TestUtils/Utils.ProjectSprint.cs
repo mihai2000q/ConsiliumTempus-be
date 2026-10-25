@@ -160,16 +160,14 @@ internal static partial class Utils
             GetCollectionProjectSprintResponse response,
             GetCollectionProjectSprintResult result)
         {
-            response.Sprints.Zip(result.Sprints)
-                .Should().AllSatisfyOrEmpty(p => AssertProjectSprintResponse(p.First, p.Second));
+            response.Sprints.AssertEach(result.Sprints, AssertProjectSprintResponse);
         }
 
         internal static void AssertGetStagesResponse(
             GetStagesFromProjectSprintResponse response,
             GetStagesFromProjectSprintResult result)
         {
-            response.Stages.Zip(result.Stages)
-                .Should().AllSatisfyOrEmpty(p => AssertProjectStageResponse(p.First, p.Second));
+            response.Stages.AssertEach(result.Stages, AssertProjectStageResponse);
         }
 
         private static void AssertUserResponse(

@@ -152,16 +152,14 @@ internal static partial class Utils
             AssertProjectResponse(response.Project, task.Stage.Sprint.Project);
             AssertWorkspaceResponse(response.Workspace, task.Stage.Sprint.Project.Workspace);
             response.CustomFields
-                .Zip(task.CustomFields.OrderBy(cf => cf.Setup.Audit.CreatedDateTime))
-                .Should().AllSatisfyOrEmpty(x => AssertCustomFieldResponse(x.First, x.Second));
+                .AssertEach(task.CustomFields.OrderBy(cf => cf.Setup.Audit.CreatedDateTime), AssertCustomFieldResponse);
         }
 
         internal static void AssertGetCollectionResponse(
             GetCollectionProjectTaskResponse response,
             GetCollectionProjectTaskResult result)
         {
-            response.Tasks.Zip(result.Tasks)
-                .Should().AllSatisfyOrEmpty(p => AssertProjectTaskResponse(p.First, p.Second));
+            response.Tasks.AssertEach(result.Tasks, AssertProjectTaskResponse);
             response.TotalCount.Should().Be(result.TotalCount);
         }
 
@@ -370,11 +368,9 @@ internal static partial class Utils
         {
             response.Type.Should().Be(CustomFieldType.MultiSelect);
             response.Options
-                .Zip(customField.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertMultiSelectOptionResponse(x.First, x.Second));
+                .AssertEach(customField.Options, AssertMultiSelectOptionResponse);
             response.AvailableOptions
-                .Zip(customField.Setup.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertMultiSelectOptionResponse(x.First, x.Second));
+                .AssertEach(customField.Setup.Options, AssertMultiSelectOptionResponse);
         }
 
         private static void AssertNumberCustomFieldResponse(
@@ -403,8 +399,7 @@ internal static partial class Utils
             response.Type.Should().Be(CustomFieldType.SingleSelect);
             AssertSingleSelectOptionResponse(response.Option, customField.Option);
             response.AvailableOptions
-                .Zip(customField.Setup.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertSingleSelectOptionResponse(x.First, x.Second));
+                .AssertEach(customField.Setup.Options, AssertSingleSelectOptionResponse);
         }
 
         private static void AssertTextCustomFieldResponse(
@@ -479,8 +474,7 @@ internal static partial class Utils
         {
             response.Id.Should().Be(sprint.Id.Value);
             response.Name.Should().Be(sprint.Name.Value);
-            response.Stages.Zip(sprint.Stages)
-                .Should().AllSatisfyOrEmpty(x => AssertProjectStageResponse(x.First, x.Second));
+            response.Stages.AssertEach(sprint.Stages, AssertProjectStageResponse);
         }
 
         private static void AssertProjectResponse(
@@ -509,8 +503,7 @@ internal static partial class Utils
             taskResponse.IsCompleted.Should().Be(task.IsCompleted.Value);
             AssertUserResponse(taskResponse.Assignee, task.Assignee);
             taskResponse.CustomFields
-                .Zip(task.CustomFields)
-                .Should().AllSatisfyOrEmpty(x => AssertCustomFieldResponse(x.First, x.Second));
+                .AssertEach(task.CustomFields, AssertCustomFieldResponse);
         }
 
         private static void AssertUserResponse(
@@ -615,8 +608,7 @@ internal static partial class Utils
         {
             response.Type.Should().Be(CustomFieldType.MultiSelect);
             response.Options
-                .Zip(customField.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertMultiSelectOptionResponse(x.First, x.Second));
+                .AssertEach(customField.Options, AssertMultiSelectOptionResponse);
         }
 
         private static void AssertNumberCustomFieldResponse(

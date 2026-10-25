@@ -253,8 +253,7 @@ internal static partial class Utils
             GetCollectionProjectResponse response,
             GetCollectionProjectResult result)
         {
-            response.Projects.Zip(result.Projects)
-                .Should().AllSatisfyOrEmpty(p => AssertProjectResponse(p.First, p.Second, result.CurrentUser));
+            response.Projects.AssertEach(result.Projects, (first, second) => AssertProjectResponse(first, second, result.CurrentUser));
             response.TotalCount.Should().Be(result.TotalCount);
         }
 
@@ -262,8 +261,7 @@ internal static partial class Utils
             GetStatusesFromProjectResponse response,
             GetStatusesFromProjectResult result)
         {
-            response.Statuses.Zip(result.Statuses)
-                .Should().AllSatisfyOrEmpty(p => AssertProjectStatusResponse(p.First, p.Second));
+            response.Statuses.AssertEach(result.Statuses, AssertProjectStatusResponse);
             response.TotalCount.Should().Be(result.TotalCount);
         }
 
@@ -271,8 +269,7 @@ internal static partial class Utils
             GetAllowedMembersFromProjectResponse response,
             GetAllowedMembersFromProjectResult result)
         {
-            response.AllowedMembers.Zip(result.AllowedMembers)
-                .Should().AllSatisfyOrEmpty(p => AssertUserResponse(p.First, p.Second));
+            response.AllowedMembers.AssertEach(result.AllowedMembers, AssertUserResponse);
         }
 
         private static void AssertProjectStatusResponse(

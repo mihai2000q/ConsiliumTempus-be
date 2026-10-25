@@ -228,8 +228,7 @@ internal static partial class Utils
             GetCollectionCustomFieldSetupResult result)
         {
             response.CustomFieldSetups
-                .Zip(result.CustomFieldSetups)
-                .Should().AllSatisfyOrEmpty(x => AssertCustomFieldSetupResponse(x.First, x.Second));
+                .AssertEach(result.CustomFieldSetups, AssertCustomFieldSetupResponse);
         }
 
         public static void AssertGetCollectionFromProjectResponse(
@@ -237,8 +236,7 @@ internal static partial class Utils
             GetCollectionCustomFieldSetupResult result)
         {
             response.CustomFieldSetups
-                .Zip(result.CustomFieldSetups)
-                .Should().AllSatisfyOrEmpty(x => AssertCustomFieldSetupResponse(x.First, x.Second));
+                .AssertEach(result.CustomFieldSetups, AssertCustomFieldSetupResponse);
         }
 
         private static void AssertDateCustomFieldSetupResponse(
@@ -271,8 +269,7 @@ internal static partial class Utils
         {
             response.Type.Should().Be(CustomFieldType.SingleSelect);
             response.Options
-                .Zip(setup.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertMultiSelectOptionResponse(x.First, x.Second));
+                .AssertEach(setup.Options, AssertMultiSelectOptionResponse);
         }
 
         private static void AssertNumberCustomFieldSetupResponse(
@@ -303,8 +300,7 @@ internal static partial class Utils
         {
             response.Type.Should().Be(CustomFieldType.SingleSelect);
             response.Options
-                .Zip(setup.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertSingleSelectOptionResponse(x.First, x.Second));
+                .AssertEach(setup.Options, AssertSingleSelectOptionResponse);
 
             if (setup.DefaultOption is null)
                 response.DefaultOption.Should().BeNull();
@@ -424,8 +420,7 @@ internal static partial class Utils
 
             command.Should().NotBeNull();
             command!.Options
-                .Zip(request.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertCreateMultiSelectOptionCommand(x.First, x.Second));
+                .AssertEach(request.Options, AssertCreateMultiSelectOptionCommand);
         }
 
         private static void AssertCreateNumberCustomFieldSetupCommand(
@@ -457,8 +452,7 @@ internal static partial class Utils
 
             command.Should().NotBeNull();
             command!.Options
-                .Zip(request.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertCreateSingleSelectOptionCommand(x.First, x.Second));
+                .AssertEach(request.Options, AssertCreateSingleSelectOptionCommand);
             command.DefaultOptionId.Should().Be(request.DefaultOptionId);
         }
 

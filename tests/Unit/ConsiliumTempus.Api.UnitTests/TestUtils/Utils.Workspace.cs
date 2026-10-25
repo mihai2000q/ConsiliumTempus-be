@@ -239,8 +239,7 @@ internal static partial class Utils
             GetCollectionWorkspaceResponse response,
             GetCollectionWorkspaceResult result)
         {
-            response.Workspaces.Zip(result.Workspaces)
-                .Should().AllSatisfyOrEmpty(p => AssertWorkspaceResponse(p.First, p.Second, result.CurrentUser));
+            response.Workspaces.AssertEach(result.Workspaces, (first, second) => AssertWorkspaceResponse(first, second, result.CurrentUser));
             response.TotalCount.Should().Be(result.TotalCount);
         }
 
@@ -248,8 +247,7 @@ internal static partial class Utils
             GetCollaboratorsFromWorkspaceResponse response,
             GetCollaboratorsFromWorkspaceResult result)
         {
-            response.Collaborators.Zip(result.Collaborators)
-                .Should().AllSatisfyOrEmpty(p => AssertCollaboratorResponse(p.First, p.Second));
+            response.Collaborators.AssertEach(result.Collaborators, AssertCollaboratorResponse);
             response.TotalCount.Should().Be(result.TotalCount);
         }
 
@@ -257,8 +255,7 @@ internal static partial class Utils
             GetInvitationsWorkspaceResponse response,
             GetInvitationsWorkspaceResult result)
         {
-            response.Invitations.Zip(result.Invitations)
-                .Should().AllSatisfyOrEmpty(p => AssertWorkspaceInvitationResponse(p.First, p.Second));
+            response.Invitations.AssertEach(result.Invitations, AssertWorkspaceInvitationResponse);
             response.TotalCount.Should().Be(result.TotalCount);
         }
 
