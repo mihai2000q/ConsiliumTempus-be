@@ -121,6 +121,21 @@ public class JwtTokenValidatorTest
         outcome.Should().BeFalse();
     }
 
+    [Theory]
+    [ClassData(typeof(JwtTokenValidatorData.GetMalformedTokens))]
+    public async Task ValidateAccessToken_WhenTokenIsMalformed_ShouldReturnFalse(string token)
+    {
+        // Arrange - parameterized
+
+        // Act
+        var outcome = await _uut.ValidateAccessToken(token);
+
+        // Assert
+        await _userProvider.DidNotReceive().Get(Arg.Any<UserId>());
+
+        outcome.Should().BeFalse();
+    }
+
     [Fact]
     public async Task ValidateAccessToken_WhenUserIdIsWrong_ShouldReturnFalse()
     {

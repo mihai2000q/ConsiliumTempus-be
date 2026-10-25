@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Common.UnitTests.Authentication;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using ConsiliumTempus.Common.UnitTests.Authentication;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Authentication;
 using ConsiliumTempus.Domain.User;
@@ -42,6 +44,11 @@ internal static class JwtTokenValidatorData
 
             token = Utils.Token.GenerateToken(_jwtSettings, audience: "a");
             Add(token);
+
+            token = Utils.Token.GenerateToken(
+                _jwtSettings,
+                extraClaims: [new Claim(JwtRegisteredClaimNames.Aud, "a")]);
+            Add(token);
         }
     }
 
@@ -63,6 +70,40 @@ internal static class JwtTokenValidatorData
 
             token = Utils.Token.GenerateToken(_jwtSettings, user, jti: "");
             Add(token, user);
+
+            token = Utils.Token.GenerateToken(
+                _jwtSettings,
+                user,
+                extraClaims: [new Claim(JwtRegisteredClaimNames.Email, "a@a.com")]);
+            Add(token, user);
+        }
+    }
+
+    internal class GetMalformedTokens : TheoryData<string>
+    {
+        private readonly JwtSettings _jwtSettings = new()
+        {
+            SecretKey = "This-Is-My-Secret-Duper-Key-And-I-Like-It",
+            Audience = "Audience",
+            Issuer = "Issuer",
+            ExpiryMinutes = 7
+        };
+
+        public GetMalformedTokens()
+        {
+            Add("");
+            Add("not a token");
+            Add("a.b.c");
+
+            var token = Utils.Token.GenerateToken(
+                _jwtSettings,
+                extraClaims: [new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())]);
+            Add(token);
+
+            token = Utils.Token.GenerateToken(
+                _jwtSettings,
+                extraClaims: [new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())]);
+            Add(token);
         }
     }
 }

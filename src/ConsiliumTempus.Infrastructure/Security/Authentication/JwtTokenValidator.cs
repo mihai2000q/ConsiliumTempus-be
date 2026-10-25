@@ -24,10 +24,11 @@ public sealed class JwtTokenValidator(
 
     public async Task<bool> ValidateAccessToken(string token)
     {
-        var jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+        var jwtSecurityToken = ReadToken(token);
+        if (jwtSecurityToken is null) return false;
 
         if (jwtSecurityToken.Issuer != _jwtSettings.Issuer ||
-            jwtSecurityToken.Audiences.Single() != _jwtSettings.Audience ||
+            !jwtSecurityToken.Audiences.SequenceEqual([_jwtSettings.Audience]) ||
             jwtSecurityToken.SignatureAlgorithm != SecurityAlgorithms.HmacSha256)
         {
             return false;
@@ -50,8 +51,21 @@ public sealed class JwtTokenValidator(
                Guid.TryParse(GetClaim(claims, JwtRegisteredClaimNames.Jti), out _);
     }
 
+    private static JwtSecurityToken? ReadToken(string token)
+    {
+        try
+        {
+            return new JwtSecurityTokenHandler().ReadJwtToken(token);
+        }
+        catch (Exception e) when (e is ArgumentException or SecurityTokenException)
+        {
+            return null;
+        }
+    }
+
     private static string? GetClaim(IEnumerable<Claim> claims, string type)
     {
-        return claims.SingleOrDefault(x => x.Type == type)?.Value;
+        var matchingClaims = claims.Where(x => x.Type == type).Take(2).ToList();
+        return matchingClaims.Count == 1 ? matchingClaims[0].Value : null;
     }
 }
