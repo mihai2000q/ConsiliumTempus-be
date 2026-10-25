@@ -65,6 +65,37 @@ public class UpdateCustomFieldSetupCommandHandlerTest
     }
 
     [Theory]
+    [ClassData(typeof(UpdateCustomFieldSetupCommandHandlerData.GetMultiSelectCommands))]
+    public async Task
+        HandleUpdateCustomFieldSetupCommand_WhenMultiSelectOptionIsNull_ShouldReturnMultiSelectOptionNotFoundError(
+            UpdateCustomFieldSetupCommand command,
+            MultiSelectCustomFieldSetupAggregate customFieldSetup)
+    {
+        // Arrange
+        _customFieldSetupRepository
+            .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
+            .Returns(customFieldSetup);
+
+        _currentUserProvider
+            .GetCurrentUserAfterPermissionCheck()
+            .Returns(UserFactory.Create());
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _customFieldSetupRepository
+            .Received(1)
+            .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(cId => cId.Value == command.Id));
+
+        await _currentUserProvider
+            .Received(1)
+            .GetCurrentUserAfterPermissionCheck();
+
+        outcome.ValidateError(Errors.MultiSelectOption.NotFound);
+    }
+
+    [Theory]
     [ClassData(typeof(UpdateCustomFieldSetupCommandHandlerData.GetSingleSelectCommands))]
     public async Task
         HandleUpdateCustomFieldSetupCommand_WhenSingleSelectOptionIsNull_ShouldReturnSingleSelectOptionNotFoundError(

@@ -402,4 +402,54 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
             Add(command, singleSelectCustomFieldSetup);
         }
     }
+
+    internal class
+        GetMultiSelectCommands : TheoryData<UpdateCustomFieldSetupCommand, MultiSelectCustomFieldSetupAggregate>
+    {
+        public GetMultiSelectCommands()
+        {
+            var multiSelectCustomFieldSetup = CustomFieldSetupFactory.CreateMultiSelect();
+            var command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: multiSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                    UpdateCustomFieldSetupCommand.OptionOperation.Update,
+                    new UpdateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand.MultiSelectOptionCommand(
+                        "#FF2233",
+                        "High"),
+                    Guid.NewGuid(),
+                    null));
+            Add(command, multiSelectCustomFieldSetup);
+
+            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: multiSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                    UpdateCustomFieldSetupCommand.OptionOperation.Move,
+                    null,
+                    Guid.NewGuid(),
+                    multiSelectCustomFieldSetup.Options[1].Id));
+            Add(command, multiSelectCustomFieldSetup);
+
+            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: multiSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                    UpdateCustomFieldSetupCommand.OptionOperation.Move,
+                    null,
+                    multiSelectCustomFieldSetup.Options[0].Id,
+                    Guid.NewGuid()));
+            Add(command, multiSelectCustomFieldSetup);
+
+            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: multiSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.MultiSelect,
+                multiSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                    UpdateCustomFieldSetupCommand.OptionOperation.Remove,
+                    null,
+                    Guid.NewGuid(),
+                    null));
+            Add(command, multiSelectCustomFieldSetup);
+        }
+    }
 }
