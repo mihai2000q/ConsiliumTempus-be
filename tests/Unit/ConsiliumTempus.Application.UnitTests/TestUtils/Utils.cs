@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Domain.Common.Entities;
+﻿using System.ComponentModel;
+using System.Linq.Expressions;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
@@ -118,11 +120,44 @@ internal static partial class Utils
         string stringFilter,
         IEnumerable<FilterProperty<TEntity>> filterProperties)
     {
-        var (propertyIdentifier, @operator, value) = SplitFilter(stringFilter);
+        var (identifier, @operator, value) = SplitFilter(stringFilter.Trim());
+        var selector = filterProperties.Single(fp => fp.Identifier == identifier).PropertySelector;
+
+        filter.Predicate.Parameters.Should().Equal(selector.Parameters);
+
+        var expectedFilterOperator = Filter.OperatorToFilterOperator[@operator];
+        var expectedValue = ParseFilterValue(selector.ReturnType, value.TrimStart());
+
+        Expression propertyExpression;
+        Expression valueExpression;
+        switch (filter.Predicate.Body)
+        {
+            case BinaryExpression binary:
+                binary.NodeType.Should().Be(ToExpressionType(expectedFilterOperator));
+                propertyExpression = binary.Left;
+                valueExpression = binary.Right;
+                break;
+            case MethodCallExpression { Object: not null } call:
+                call.Method.DeclaringType.Should().Be<string>();
+                call.Method.Name.Should().Be(expectedFilterOperator == FilterOperator.Contains
+                    ? nameof(string.Contains)
+                    : nameof(string.StartsWith));
+                call.Arguments.Should().ContainSingle();
+                propertyExpression = call.Object;
+                valueExpression = call.Arguments[0];
+                break;
+            default:
+                throw new InvalidOperationException(
+                    $"Unexpected filter predicate: {filter.Predicate.Body}");
+        }
+
+        propertyExpression.Should().BeSameAs(selector.Body);
+        valueExpression.Should().BeOfType<ConstantExpression>()
+            .Which.Value.Should().Be(expectedValue);
 
         return true;
     }
-
+    
     private static (string, string, string) SplitFilter(string filter)
     {
         var result = new List<string>();
@@ -141,5 +176,25 @@ internal static partial class Utils
                 current += filter[i];
 
         return (result[0], result[1], result[2]);
+    }
+
+    private static ExpressionType ToExpressionType(FilterOperator filterOperator)
+    {
+        return filterOperator switch
+        {
+            FilterOperator.Equal => ExpressionType.Equal,
+            FilterOperator.NotEqual => ExpressionType.NotEqual,
+            FilterOperator.GreaterThan => ExpressionType.GreaterThan,
+            FilterOperator.GreaterThanOrEqual => ExpressionType.GreaterThanOrEqual,
+            FilterOperator.LessThan => ExpressionType.LessThan,
+            FilterOperator.LessThanOrEqual => ExpressionType.LessThanOrEqual,
+            _ => throw new ArgumentOutOfRangeException(nameof(filterOperator), filterOperator, null)
+        };
+    }
+
+    private static object? ParseFilterValue(Type type, string value)
+    {
+        if (type == typeof(DateTime)) return DateTime.Parse(value);
+        return TypeDescriptor.GetConverter(type).ConvertFromInvariantString(value);
     }
 }
