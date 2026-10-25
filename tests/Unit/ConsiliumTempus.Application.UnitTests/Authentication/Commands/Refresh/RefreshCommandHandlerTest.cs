@@ -68,7 +68,7 @@ public class RefreshCommandHandlerTest
             .Returns(newJwtId);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _jwtTokenValidator
@@ -137,7 +137,7 @@ public class RefreshCommandHandlerTest
             .Returns(token);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _jwtTokenValidator
@@ -202,7 +202,7 @@ public class RefreshCommandHandlerTest
             .Returns(token);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _jwtTokenValidator
@@ -258,7 +258,7 @@ public class RefreshCommandHandlerTest
             .Returns(false);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _jwtTokenValidator
@@ -300,7 +300,7 @@ public class RefreshCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _jwtTokenValidator
@@ -339,7 +339,7 @@ public class RefreshCommandHandlerTest
             .Returns(false);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _jwtTokenValidator

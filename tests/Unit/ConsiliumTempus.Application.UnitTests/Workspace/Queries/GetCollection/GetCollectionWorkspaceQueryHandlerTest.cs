@@ -63,7 +63,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .Returns(workspacesCount);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _currentUserProvider
@@ -107,7 +107,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _currentUserProvider

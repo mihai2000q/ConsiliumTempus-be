@@ -27,7 +27,7 @@ public class AllowedMemberRemovedFromProjectHandlerTest
         var domainEvent = new AllowedMemberRemovedFromProject(project, user);
 
         // Act
-        await _uut.Handle(domainEvent, default);
+        await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
         project.IsFavorite(user).Should().BeFalse();

@@ -38,7 +38,7 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
             stageId: expectedStageToRemove.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
@@ -66,7 +66,7 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
             stageId: expectedStageToRemove.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
@@ -87,7 +87,7 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
@@ -109,7 +109,7 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
             .Returns(sprint);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository

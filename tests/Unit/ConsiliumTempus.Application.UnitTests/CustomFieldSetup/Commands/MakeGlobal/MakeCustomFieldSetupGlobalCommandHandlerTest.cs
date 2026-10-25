@@ -49,7 +49,7 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository
@@ -82,7 +82,7 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
             .Returns(customFieldSetup);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository
@@ -104,7 +104,7 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository

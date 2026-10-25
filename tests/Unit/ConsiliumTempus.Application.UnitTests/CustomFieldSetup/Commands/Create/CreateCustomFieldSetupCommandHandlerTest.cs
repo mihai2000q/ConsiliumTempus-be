@@ -69,7 +69,7 @@ public class CreateCustomFieldSetupCommandHandlerTest
             .Do(res => capturedCustomFieldSetup = res.Arg<CustomFieldSetupAggregate>());
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         if (command.WorkspaceId is not null)
@@ -118,7 +118,7 @@ public class CreateCustomFieldSetupCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository.DidNotReceive().Get(Arg.Any<WorkspaceId>());
@@ -143,7 +143,7 @@ public class CreateCustomFieldSetupCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository

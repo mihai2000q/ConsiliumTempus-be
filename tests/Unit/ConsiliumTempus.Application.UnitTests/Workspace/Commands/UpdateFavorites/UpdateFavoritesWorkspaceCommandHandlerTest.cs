@@ -44,7 +44,7 @@ public class UpdateFavoritesWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateUpdateFavoriteWorkspaceCommand(workspace.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -71,7 +71,7 @@ public class UpdateFavoritesWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository

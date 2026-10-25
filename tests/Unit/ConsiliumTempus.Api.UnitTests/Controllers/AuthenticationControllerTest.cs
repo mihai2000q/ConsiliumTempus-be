@@ -43,7 +43,7 @@ public class AuthenticationControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Register(request, default);
+        var outcome = await _uut.Register(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -68,7 +68,7 @@ public class AuthenticationControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Register(request, default);
+        var outcome = await _uut.Register(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -91,7 +91,7 @@ public class AuthenticationControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Login(request, default);
+        var outcome = await _uut.Login(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -116,7 +116,7 @@ public class AuthenticationControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Login(request, default);
+        var outcome = await _uut.Login(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -139,7 +139,7 @@ public class AuthenticationControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Refresh(request, default);
+        var outcome = await _uut.Refresh(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -163,7 +163,7 @@ public class AuthenticationControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Refresh(request, default);
+        var outcome = await _uut.Refresh(request, CancellationToken.None);
 
         // Assert
         await _mediator

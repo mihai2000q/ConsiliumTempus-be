@@ -33,7 +33,7 @@ public class GetCollectionCustomFieldSetupQueryHandlerTest
             .Returns(customFieldSetups);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository

@@ -26,11 +26,11 @@ public sealed class ProjectTaskComment : Entity<ProjectTaskCommentId>, ITimestam
         UpdatedDateTime = updatedDateTime;
     }
 
-    public Message Message { get; private set; } = default!;
-    public UserAggregate CreatedBy { get; init; } = default!;
+    public Message Message { get; private set; } = null!;
+    public UserAggregate CreatedBy { get; init; } = null!;
     public DateOnly? Date { get; private set; }
     public TimeSpan? TimeSpent { get; private set; }
-    public ProjectTaskAggregate Task { get; init; } = default!;
+    public ProjectTaskAggregate Task { get; init; } = null!;
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
 

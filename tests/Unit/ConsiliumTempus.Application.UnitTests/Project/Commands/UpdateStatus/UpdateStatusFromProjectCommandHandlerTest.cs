@@ -46,7 +46,7 @@ public class UpdateStatusFromProjectCommandHandlerTest
             project.Statuses[0].Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -74,7 +74,7 @@ public class UpdateStatusFromProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateUpdateStatusFromProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -95,7 +95,7 @@ public class UpdateStatusFromProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository

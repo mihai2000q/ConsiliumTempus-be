@@ -42,16 +42,16 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
     private readonly List<CustomField> _customFields = [];
     private readonly List<ProjectTaskComment> _comments = [];
 
-    public Name Name { get; private set; } = default!;
-    public Description Description { get; private set; } = default!;
-    public CustomOrderPosition CustomOrderPosition { get; private set; } = default!;
-    public IsCompleted IsCompleted { get; private set; } = default!;
-    public UserAggregate CreatedBy { get; init; } = default!;
+    public Name Name { get; private set; } = null!;
+    public Description Description { get; private set; } = null!;
+    public CustomOrderPosition CustomOrderPosition { get; private set; } = null!;
+    public IsCompleted IsCompleted { get; private set; } = null!;
+    public UserAggregate CreatedBy { get; init; } = null!;
     public UserAggregate? Assignee { get; private set; }
     public UserAggregate? Reviewer { get; private set; }
     public DateOnly? DueDate { get; private set; }
     public TimeSpan? EstimatedDuration { get; private set; }
-    public ProjectStage Stage { get; private set; } = default!;
+    public ProjectStage Stage { get; private set; } = null!;
     public IReadOnlyList<CustomField> CustomFields => _customFields
         .OrderBy(cf => cf.Setup.Audit.CreatedDateTime)
         .ToList()

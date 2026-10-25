@@ -45,7 +45,7 @@ public class UpdateOverviewProjectTaskCommandHandlerTest
             .Returns(assignee);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository
@@ -74,7 +74,7 @@ public class UpdateOverviewProjectTaskCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository

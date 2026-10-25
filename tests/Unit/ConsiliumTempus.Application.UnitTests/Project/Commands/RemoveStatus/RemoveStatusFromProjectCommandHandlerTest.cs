@@ -37,7 +37,7 @@ public class RemoveStatusFromProjectCommandHandlerTest
             project.Statuses[0].Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -62,7 +62,7 @@ public class RemoveStatusFromProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateRemoveStatusFromProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -83,7 +83,7 @@ public class RemoveStatusFromProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository

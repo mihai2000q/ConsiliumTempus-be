@@ -26,9 +26,9 @@ public sealed class WorkspaceInvitation : Entity<WorkspaceInvitationId>
     }
 
     public DateTime CreatedDateTime { get; init; }
-    public UserAggregate Sender { get; init; } = default!;
-    public UserAggregate Collaborator { get; init; } = default!;
-    public WorkspaceAggregate Workspace { get; init; } = default!;
+    public UserAggregate Sender { get; init; } = null!;
+    public UserAggregate Collaborator { get; init; } = null!;
+    public WorkspaceAggregate Workspace { get; init; } = null!;
 
     public static WorkspaceInvitation Create(
         UserAggregate sender,

@@ -34,7 +34,7 @@ public class UpdateCurrentUserCommandHandlerTest
             .Returns(currentUser);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _currentUserProvider
@@ -53,7 +53,7 @@ public class UpdateCurrentUserCommandHandlerTest
         var command = UserCommandFactory.CreateUpdateUserCommand();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _currentUserProvider

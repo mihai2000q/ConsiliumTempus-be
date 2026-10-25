@@ -46,7 +46,7 @@ public class AddStageToProjectSprintCommandHandlerTest
             .Returns(createdBy);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
@@ -70,7 +70,7 @@ public class AddStageToProjectSprintCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository

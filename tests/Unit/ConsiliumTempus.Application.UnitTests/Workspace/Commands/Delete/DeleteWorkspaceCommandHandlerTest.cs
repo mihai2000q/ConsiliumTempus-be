@@ -37,7 +37,7 @@ public class DeleteWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateDeleteWorkspaceCommand(workspace.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -68,7 +68,7 @@ public class DeleteWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateDeleteWorkspaceCommand(workspace.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -92,7 +92,7 @@ public class DeleteWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository

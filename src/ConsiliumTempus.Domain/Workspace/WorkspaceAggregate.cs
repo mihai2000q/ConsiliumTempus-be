@@ -44,10 +44,10 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, ITimestamps
     private readonly List<WorkspaceInvitation> _invitations = [];
     private readonly List<CustomFieldSetupAggregate> _customFieldSetups = [];
 
-    public Name Name { get; private set; } = default!;
-    public Description Description { get; private set; } = default!;
-    public IsPersonal IsPersonal { get; private set; } = default!;
-    public UserAggregate Owner { get; private set; } = default!;
+    public Name Name { get; private set; } = null!;
+    public Description Description { get; private set; } = null!;
+    public IsPersonal IsPersonal { get; private set; } = null!;
+    public UserAggregate Owner { get; private set; } = null!;
     public DateTime LastActivity { get; private set; }
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }

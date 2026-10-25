@@ -40,7 +40,7 @@ public class ValidationBehaviorTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Handle(command, _nextBehavior, default);
+        var outcome = await _uut.Handle(command, _nextBehavior, CancellationToken.None);
 
         // Assert
         await _validator
@@ -71,7 +71,7 @@ public class ValidationBehaviorTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Handle(command, _nextBehavior, default);
+        var outcome = await _uut.Handle(command, _nextBehavior, CancellationToken.None);
 
         // Assert
         await _validator
@@ -107,7 +107,7 @@ public class ValidationBehaviorTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Handle(command, _nextBehavior, default);
+        var outcome = await _uut.Handle(command, _nextBehavior, CancellationToken.None);
 
         // Assert
         await _validator

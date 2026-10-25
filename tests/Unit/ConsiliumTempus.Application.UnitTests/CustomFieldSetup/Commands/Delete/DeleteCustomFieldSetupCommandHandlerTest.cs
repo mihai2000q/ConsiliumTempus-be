@@ -36,7 +36,7 @@ public class DeleteCustomFieldSetupCommandHandlerTest
             .Returns(customFieldSetup);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository
@@ -74,7 +74,7 @@ public class DeleteCustomFieldSetupCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository

@@ -32,8 +32,8 @@ public abstract class CustomFieldSetupAggregate : AggregateRoot<CustomFieldSetup
 
     private readonly List<ProjectAggregate> _projects = [];
 
-    public Name Name { get; protected set; } = default!;
-    public Description Description { get; protected set; } = default!;
+    public Name Name { get; protected set; } = null!;
+    public Description Description { get; protected set; } = null!;
     public WorkspaceAggregate? Workspace { get; protected set; }
     public IReadOnlyList<ProjectAggregate> Projects => _projects.AsReadOnly();
     public Audit Audit { get; init; } = null!;

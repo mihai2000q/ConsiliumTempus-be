@@ -35,7 +35,7 @@ public class GetUserQueryHandlerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _userRepository
@@ -57,7 +57,7 @@ public class GetUserQueryHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _userRepository

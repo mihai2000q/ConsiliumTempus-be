@@ -47,7 +47,7 @@ public class CollaboratorRemovedFromWorkspaceHandlerTest
             .ToList();
 
         // Act
-        await _uut.Handle(domainEvent, default);
+        await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
         await _projectRepository

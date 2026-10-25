@@ -44,7 +44,7 @@ public class GetProjectQueryHandlerTest
             .Returns(currentUser);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -66,7 +66,7 @@ public class GetProjectQueryHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectRepository

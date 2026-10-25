@@ -48,7 +48,7 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
             collaborator.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -83,7 +83,7 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
             collaboratorId: user.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -109,7 +109,7 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
             collaboratorId: workspace.Owner.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -135,7 +135,7 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
             .Returns(workspace);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -159,7 +159,7 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository

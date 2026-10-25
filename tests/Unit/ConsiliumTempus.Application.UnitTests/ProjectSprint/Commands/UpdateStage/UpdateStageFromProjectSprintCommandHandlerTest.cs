@@ -47,7 +47,7 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
             stageId: expectedStageToUpdate.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
@@ -74,7 +74,7 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
@@ -97,7 +97,7 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
             .Returns(sprint);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository

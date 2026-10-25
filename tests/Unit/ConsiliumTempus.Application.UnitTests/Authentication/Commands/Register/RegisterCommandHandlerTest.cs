@@ -69,7 +69,7 @@ public class RegisterCommandHandlerTest
             .Do(rt => refreshToken = rt.Arg<RefreshToken>());
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _userRepository
@@ -112,7 +112,7 @@ public class RegisterCommandHandlerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _userRepository

@@ -36,9 +36,9 @@ public sealed class UserAggregate : AggregateRoot<UserId>, ITimestamps
 
     private readonly List<Membership> _memberships = [];
 
-    public Credentials Credentials { get; private set; } = default!;
-    public FirstName FirstName { get; private set; } = default!;
-    public LastName LastName { get; private set; } = default!;
+    public Credentials Credentials { get; private set; } = null!;
+    public FirstName FirstName { get; private set; } = null!;
+    public LastName LastName { get; private set; } = null!;
     public Name Name => Name.Create(FirstName.Value + " " + LastName.Value);
     public Role? Role { get; private set; }
     public DateOnly? DateOfBirth { get; private set; }

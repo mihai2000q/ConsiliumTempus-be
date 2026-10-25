@@ -56,7 +56,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -80,7 +80,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollectionFromProject(request, default);
+        var outcome = await _uut.GetCollectionFromProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -103,7 +103,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollectionFromProject(request, default);
+        var outcome = await _uut.GetCollectionFromProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -127,7 +127,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollectionFromProject(request, default);
+        var outcome = await _uut.GetCollectionFromProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -150,7 +150,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollectionFromWorkspace(request, default);
+        var outcome = await _uut.GetCollectionFromWorkspace(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -174,7 +174,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollectionFromWorkspace(request, default);
+        var outcome = await _uut.GetCollectionFromWorkspace(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -197,7 +197,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.CreateOnWorkspace(request, default);
+        var outcome = await _uut.CreateOnWorkspace(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -221,7 +221,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.CreateOnWorkspace(request, default);
+        var outcome = await _uut.CreateOnWorkspace(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -244,7 +244,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.CreateOnProject(request, default);
+        var outcome = await _uut.CreateOnProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -268,7 +268,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.CreateOnProject(request, default);
+        var outcome = await _uut.CreateOnProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -291,7 +291,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.AddToProject(request, default);
+        var outcome = await _uut.AddToProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -315,7 +315,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.AddToProject(request, default);
+        var outcome = await _uut.AddToProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -338,7 +338,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -362,7 +362,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -385,7 +385,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.MakeGlobal(request, default);
+        var outcome = await _uut.MakeGlobal(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -409,7 +409,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.MakeGlobal(request, default);
+        var outcome = await _uut.MakeGlobal(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -432,7 +432,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -456,7 +456,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -479,7 +479,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.RemoveFromProject(request, default);
+        var outcome = await _uut.RemoveFromProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -503,7 +503,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.RemoveFromProject(request, default);
+        var outcome = await _uut.RemoveFromProject(request, CancellationToken.None);
 
         // Assert
         await _mediator

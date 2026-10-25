@@ -35,7 +35,7 @@ public class UpdateWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand(workspace.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -59,7 +59,7 @@ public class UpdateWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository

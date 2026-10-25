@@ -35,7 +35,7 @@ public class GetAllowedMembersFromProjectQueryHandlerTest
             .Returns(project);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -57,7 +57,7 @@ public class GetAllowedMembersFromProjectQueryHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectRepository

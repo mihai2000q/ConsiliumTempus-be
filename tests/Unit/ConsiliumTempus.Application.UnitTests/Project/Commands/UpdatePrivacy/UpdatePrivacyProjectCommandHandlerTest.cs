@@ -35,7 +35,7 @@ public class UpdatePrivacyProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateUpdatePrivacyProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -59,7 +59,7 @@ public class UpdatePrivacyProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository

@@ -59,7 +59,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
             collaborator.Credentials.Email);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -102,7 +102,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         workspace.AddUserMembership(MembershipFactory.Create(collaborator));
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -138,7 +138,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         workspace.AddInvitation(WorkspaceInvitationFactory.Create(collaborator: collaborator));
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -170,7 +170,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -197,7 +197,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository

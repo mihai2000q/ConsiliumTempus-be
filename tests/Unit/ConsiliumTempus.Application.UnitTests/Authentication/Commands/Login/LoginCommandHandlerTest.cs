@@ -67,7 +67,7 @@ public class LoginCommandHandlerTest
             .Do(rt => refreshToken = rt.Arg<RefreshToken>());
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _userRepository
@@ -111,7 +111,7 @@ public class LoginCommandHandlerTest
             .Returns(false);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _userRepository
@@ -146,7 +146,7 @@ public class LoginCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _userRepository

@@ -31,7 +31,7 @@ public class RemovedCustomFieldSetupFromProjectHandlerTest
             ProjectFactory.Create());
 
         // Act
-        await _uut.Handle(domainEvent, default);
+        await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository

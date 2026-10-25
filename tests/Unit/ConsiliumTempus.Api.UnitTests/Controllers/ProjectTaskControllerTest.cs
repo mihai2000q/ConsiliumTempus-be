@@ -55,7 +55,7 @@ public class ProjectTaskControllerTest
             .Returns(task);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -79,7 +79,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -102,7 +102,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollection(request, default);
+        var outcome = await _uut.GetCollection(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -126,7 +126,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollection(request, default);
+        var outcome = await _uut.GetCollection(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -149,7 +149,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Create(request, default);
+        var outcome = await _uut.Create(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -172,7 +172,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Create(request, default);
+        var outcome = await _uut.Create(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -194,7 +194,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Move(request, default);
+        var outcome = await _uut.Move(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -218,7 +218,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Move(request, default);
+        var outcome = await _uut.Move(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -241,7 +241,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -265,7 +265,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -288,7 +288,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateCustomField(request, default);
+        var outcome = await _uut.UpdateCustomField(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -312,7 +312,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateCustomField(request, default);
+        var outcome = await _uut.UpdateCustomField(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -335,7 +335,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateIsCompleted(request, default);
+        var outcome = await _uut.UpdateIsCompleted(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -359,7 +359,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateIsCompleted(request, default);
+        var outcome = await _uut.UpdateIsCompleted(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -382,7 +382,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateOverview(request, default);
+        var outcome = await _uut.UpdateOverview(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -406,7 +406,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateOverview(request, default);
+        var outcome = await _uut.UpdateOverview(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -429,7 +429,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -453,7 +453,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator

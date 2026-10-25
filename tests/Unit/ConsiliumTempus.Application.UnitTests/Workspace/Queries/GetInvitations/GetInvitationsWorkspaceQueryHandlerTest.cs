@@ -57,7 +57,7 @@ public class GetInvitationsWorkspaceQueryHandlerTest
             .Returns(totalCount);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         if (query.IsSender is not null)

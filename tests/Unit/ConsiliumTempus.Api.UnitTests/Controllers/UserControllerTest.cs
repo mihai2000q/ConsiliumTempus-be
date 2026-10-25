@@ -45,7 +45,7 @@ public class UserControllerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -68,7 +68,7 @@ public class UserControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -88,7 +88,7 @@ public class UserControllerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.GetCurrent(default);
+        var outcome = await _uut.GetCurrent(CancellationToken.None);
 
         // Assert
         await _mediator
@@ -109,7 +109,7 @@ public class UserControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCurrent(default);
+        var outcome = await _uut.GetCurrent(CancellationToken.None);
 
         // Assert
         await _mediator
@@ -131,7 +131,7 @@ public class UserControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateCurrent(request, default);
+        var outcome = await _uut.UpdateCurrent(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -154,7 +154,7 @@ public class UserControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateCurrent(request, default);
+        var outcome = await _uut.UpdateCurrent(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -174,7 +174,7 @@ public class UserControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.DeleteCurrent(default);
+        var outcome = await _uut.DeleteCurrent(CancellationToken.None);
 
         // Assert
         await _mediator
@@ -195,7 +195,7 @@ public class UserControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.DeleteCurrent(default);
+        var outcome = await _uut.DeleteCurrent(CancellationToken.None);
 
         // Assert
         await _mediator

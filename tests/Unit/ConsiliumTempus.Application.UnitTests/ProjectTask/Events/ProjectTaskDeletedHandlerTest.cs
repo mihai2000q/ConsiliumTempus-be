@@ -28,7 +28,7 @@ public class ProjectTaskDeletedHandlerTest
         var domainEvent = new ProjectTaskDeleted(ProjectTaskFactory.Create());
 
         // Act
-        await _uut.Handle(domainEvent, default);
+        await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository

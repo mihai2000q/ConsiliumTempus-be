@@ -50,7 +50,7 @@ public class RemoveCustomFieldSetupFromProjectCommandHandlerTest
             project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository
@@ -84,7 +84,7 @@ public class RemoveCustomFieldSetupFromProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository
@@ -110,7 +110,7 @@ public class RemoveCustomFieldSetupFromProjectCommandHandlerTest
             .Returns(customFieldSetup);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository
@@ -132,7 +132,7 @@ public class RemoveCustomFieldSetupFromProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository

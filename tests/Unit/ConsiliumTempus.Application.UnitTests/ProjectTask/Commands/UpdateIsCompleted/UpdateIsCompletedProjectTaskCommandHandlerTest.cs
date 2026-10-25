@@ -35,7 +35,7 @@ public class UpdateIsCompletedProjectTaskCommandHandlerTest
         var command = ProjectTaskCommandFactory.CreateUpdateIsCompletedProjectTaskCommand();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository
@@ -59,7 +59,7 @@ public class UpdateIsCompletedProjectTaskCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository

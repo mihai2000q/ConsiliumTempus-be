@@ -47,7 +47,7 @@ public abstract class Enumeration<TEnum> : Entity<int>
         var fieldsForType = enumerationType
             .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
             .Where(fieldInfo => enumerationType.IsAssignableFrom(fieldInfo.FieldType))
-            .Select(fieldInfo => (TEnum)fieldInfo.GetValue(default)!);
+            .Select(fieldInfo => (TEnum)fieldInfo.GetValue(null)!);
 
         return fieldsForType.ToDictionary(x => x.Id);
     }

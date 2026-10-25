@@ -23,7 +23,7 @@ public class ProjectCreatedHandlerTest
         var domainEvent = new ProjectCreated(project);
 
         // Act
-        await _uut.Handle(domainEvent, default);
+        await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
         project.Sprints.Should().HaveCount(1);

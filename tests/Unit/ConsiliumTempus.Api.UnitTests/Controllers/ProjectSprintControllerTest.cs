@@ -58,7 +58,7 @@ public class ProjectSprintControllerTest
             .Returns(sprint);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -81,7 +81,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -103,7 +103,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollection(request, default);
+        var outcome = await _uut.GetCollection(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -127,7 +127,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollection(request, default);
+        var outcome = await _uut.GetCollection(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -150,7 +150,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetStages(request, default);
+        var outcome = await _uut.GetStages(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -174,7 +174,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetStages(request, default);
+        var outcome = await _uut.GetStages(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -196,7 +196,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Create(request, default);
+        var outcome = await _uut.Create(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -220,7 +220,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Create(request, default);
+        var outcome = await _uut.Create(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -243,7 +243,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.AddStage(request, default);
+        var outcome = await _uut.AddStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -267,7 +267,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.AddStage(request, default);
+        var outcome = await _uut.AddStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -290,7 +290,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -314,7 +314,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -337,7 +337,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateStage(request, default);
+        var outcome = await _uut.UpdateStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -361,7 +361,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateStage(request, default);
+        var outcome = await _uut.UpdateStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -384,7 +384,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.MoveStage(request, default);
+        var outcome = await _uut.MoveStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -408,7 +408,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.MoveStage(request, default);
+        var outcome = await _uut.MoveStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -431,7 +431,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -455,7 +455,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -478,7 +478,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.RemoveStage(request, default);
+        var outcome = await _uut.RemoveStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -502,7 +502,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.RemoveStage(request, default);
+        var outcome = await _uut.RemoveStage(request, CancellationToken.None);
 
         // Assert
         await _mediator

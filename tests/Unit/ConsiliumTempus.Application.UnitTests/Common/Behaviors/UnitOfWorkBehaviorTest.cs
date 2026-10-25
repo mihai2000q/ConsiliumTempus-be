@@ -33,7 +33,7 @@ public class UnitOfWorkBehaviorTest
         var command = ProjectCommandFactory.CreateCreateProjectCommand();
 
         // Act
-        var outcome = await uut.Handle(command, nextBehavior, default);
+        var outcome = await uut.Handle(command, nextBehavior, CancellationToken.None);
 
         // Assert
         await nextBehavior
@@ -62,7 +62,7 @@ public class UnitOfWorkBehaviorTest
         var command = ProjectCommandFactory.CreateCreateProjectCommand();
 
         // Act
-        var outcome = await uut.Handle(command, nextBehavior, default);
+        var outcome = await uut.Handle(command, nextBehavior, CancellationToken.None);
 
         // Assert
         await nextBehavior
@@ -90,7 +90,7 @@ public class UnitOfWorkBehaviorTest
         var query = WorkspaceQueryFactory.CreateGetWorkspaceQuery();
 
         // Act
-        var outcome = await uut.Handle(query, nextBehavior, default);
+        var outcome = await uut.Handle(query, nextBehavior, CancellationToken.None);
 
         // Assert
         await nextBehavior

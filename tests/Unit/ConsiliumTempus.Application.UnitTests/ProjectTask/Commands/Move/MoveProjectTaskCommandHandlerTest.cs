@@ -39,7 +39,7 @@ public class MoveProjectTaskCommandHandlerTest
             .Returns(task);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository
@@ -65,7 +65,7 @@ public class MoveProjectTaskCommandHandlerTest
             .Returns(task);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository
@@ -91,7 +91,7 @@ public class MoveProjectTaskCommandHandlerTest
             .Returns(task);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository
@@ -122,7 +122,7 @@ public class MoveProjectTaskCommandHandlerTest
         var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(task.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository
@@ -143,7 +143,7 @@ public class MoveProjectTaskCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository

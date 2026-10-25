@@ -47,7 +47,7 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository
@@ -84,7 +84,7 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
             .Returns(task);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository
@@ -119,7 +119,7 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository
@@ -144,7 +144,7 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
             .Returns(ProjectTaskFactory.Create());
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository
@@ -168,7 +168,7 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository

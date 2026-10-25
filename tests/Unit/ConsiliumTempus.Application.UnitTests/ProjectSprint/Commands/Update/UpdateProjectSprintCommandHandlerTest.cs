@@ -44,7 +44,7 @@ public class UpdateProjectSprintCommandHandlerTest
         var command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand(sprint.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
@@ -71,7 +71,7 @@ public class UpdateProjectSprintCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository

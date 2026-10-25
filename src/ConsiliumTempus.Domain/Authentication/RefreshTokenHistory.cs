@@ -22,9 +22,9 @@ public sealed class RefreshTokenHistory : Entity<Guid>
         CreatedDateTime = createdDateTime;
     }
 
-    public JwtId JwtId { get; init; } = default!;
+    public JwtId JwtId { get; init; } = null!;
     public DateTime CreatedDateTime { get; init; }
-    public RefreshToken RefreshToken { get; init; } = default!;
+    public RefreshToken RefreshToken { get; init; } = null!;
 
     public static RefreshTokenHistory Create(
         RefreshToken refreshToken,

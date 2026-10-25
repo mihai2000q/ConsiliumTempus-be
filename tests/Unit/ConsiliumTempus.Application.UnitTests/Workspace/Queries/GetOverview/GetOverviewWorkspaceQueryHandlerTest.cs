@@ -35,7 +35,7 @@ public class GetOverviewWorkspaceQueryHandlerTest
             .Returns(workspace);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -57,7 +57,7 @@ public class GetOverviewWorkspaceQueryHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _workspaceRepository

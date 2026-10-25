@@ -45,7 +45,7 @@ public class UpdateFavoritesProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateUpdateFavoritesProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -69,7 +69,7 @@ public class UpdateFavoritesProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository

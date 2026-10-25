@@ -29,7 +29,7 @@ public class UserRegisteredHandlerTest
         var user = UserFactory.Create();
 
         // Act
-        await _uut.Handle(new UserRegistered(user), default);
+        await _uut.Handle(new UserRegistered(user), CancellationToken.None);
 
         // Assert
         await _workspaceRepository

@@ -43,7 +43,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
             collaborator.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -75,7 +75,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
             allowedMember.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -98,7 +98,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateAddAllowedMemberToProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -120,7 +120,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
             .Returns(project);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -141,7 +141,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
