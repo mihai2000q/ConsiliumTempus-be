@@ -65,6 +65,7 @@ public class GetCollectionProjectTaskQueryHandlerTest
                     p.AssertPagination(query.PageSize, query.CurrentPage)));
 
         await _projectTaskRepository
+            .Received(1)
             .GetListByStageCount(
                 Arg.Is<ProjectStageId>(sId => sId.Value == query.ProjectStageId),
                 Arg.Is<IReadOnlyList<IFilter<ProjectTaskAggregate>>>(filters =>
