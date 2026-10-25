@@ -127,6 +127,32 @@ public class PermissionAuthorizationHandlerTest
         context.HasSucceeded.Should().BeFalse();
     }
 
+    [Fact]
+    public async Task PermissionAuthorizationHandler_WhenPermissionIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var requirements = new[] { new PermissionRequirement((Permissions)int.MaxValue) };
+        var user = new ClaimsPrincipal();
+        user.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, user, null);
+
+        Utils.Authorization.Permission.MockEmptyHttpRequest(
+            _httpContextAccessor,
+            PermissionAuthorizationHandlerData.RequestLocation.Route);
+
+        // Act
+        var outcome = async () => await _uut.HandleAsync(context);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
+        await VerifyWorkspaceProviderDidNotReceiveAny();
+        await _permissionProvider.DidNotReceive().GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
+
+        context.HasSucceeded.Should().BeFalse();
+    }
+
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
     public async Task PermissionAuthorizationHandler_WhenRequestIsEmpty_ShouldSucceed(

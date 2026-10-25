@@ -328,6 +328,37 @@ public class WorkspaceAuthorizationHandlerTest
         context.HasSucceeded.Should().BeTrue();
     }
 
+    [Fact]
+    public async Task
+        WorkspaceAuthorizationHandler_WhenAuthorizationLevelIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var requirements = new[] { new WorkspaceAuthorizationRequirement((WorkspaceAuthorizationLevel)int.MaxValue) };
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
+
+        var workspace = WorkspaceFactory.Create();
+        Utils.Authorization.Workspace.MockWorkspaceProvider(_workspaceProvider, workspace);
+
+        Utils.Authorization.Workspace.MockHttpRequest(
+            _httpContextAccessor,
+            WorkspaceAuthorizationHandlerData.Controller.Workspace,
+            WorkspaceAuthorizationHandlerData.Method.DELETE,
+            WorkspaceAuthorizationHandlerData.RequestLocation.Route,
+            workspace.Id.ToString());
+
+        // Act
+        var outcome = async () => await _uut.HandleAsync(context);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
+
+        context.HasSucceeded.Should().BeFalse();
+    }
+
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
     public async Task WorkspaceAuthorizationHandler_WhenNotAuthorized_ShouldFail(

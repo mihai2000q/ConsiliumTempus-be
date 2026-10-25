@@ -349,6 +349,39 @@ public class ProjectAuthorizationHandlerTest
         context.HasSucceeded.Should().BeTrue();
     }
 
+    [Fact]
+    public async Task
+        ProjectAuthorizationHandler_WhenAuthorizationLevelIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var requirements = new[] { new ProjectAuthorizationRequirement((ProjectAuthorizationLevel)int.MaxValue) };
+        var user = UserFactory.Create();
+        var userClaims = new ClaimsPrincipal();
+        userClaims.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, userClaims, null);
+
+        var project = ProjectFactory.Create();
+        Utils.Authorization.Project.MockProjectProvider(_projectProvider, project);
+
+        Utils.Authorization.Project.MockHttpRequest(
+            _httpContextAccessor,
+            ProjectAuthorizationHandlerData.RequestLocation.Route,
+            null,
+            ProjectAuthorizationHandlerData.Controller.Project,
+            "Get",
+            project.Id.Value.ToString());
+
+        // Act
+        var outcome = async () => await _uut.HandleAsync(context);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
+
+        context.HasSucceeded.Should().BeFalse();
+    }
+
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     public async Task ProjectAuthorizationHandler_WhenLevelIsIsAllowedAndProjectIsNotPrivate_ShouldSucceed(
