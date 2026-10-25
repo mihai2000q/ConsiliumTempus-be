@@ -39,21 +39,24 @@ internal static partial class Utils
             .ReturnsNull();
     }
 
-    internal static void ValidateError(this IActionResult response, Error expectedError)
+    extension(IActionResult response)
     {
-        response.Should().BeOfType<ObjectResult>();
-        ((ObjectResult)response).Value.Should().BeOfType<ProblemDetails>();
+        internal void ValidateError(Error expectedError)
+        {
+            response.Should().BeOfType<ObjectResult>();
+            ((ObjectResult)response).Value.Should().BeOfType<ProblemDetails>();
 
-        var error = ((ObjectResult)response).Value as ProblemDetails;
-        error?.Status.Should().Be(StatusCodesMap[expectedError.Type]);
-        error?.Title.Should().Be(expectedError.Description);
-    }
+            var error = ((ObjectResult)response).Value as ProblemDetails;
+            error?.Status.Should().Be(StatusCodesMap[expectedError.Type]);
+            error?.Title.Should().Be(expectedError.Description);
+        }
 
-    internal static T ToResponse<T>(this IActionResult outcome)
-    {
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<T>();
+        internal T ToResponse<T>()
+        {
+            response.Should().BeOfType<OkObjectResult>();
+            ((OkObjectResult)response).Value.Should().BeOfType<T>();
 
-        return (T)((OkObjectResult)outcome).Value!;
+            return (T)((OkObjectResult)response).Value!;
+        }
     }
 }

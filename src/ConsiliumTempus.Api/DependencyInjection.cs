@@ -33,28 +33,31 @@ public static class DependencyInjection
         logging.AddSerilog(logger);
     }
 
-    private static IServiceCollection AddMappings(this IServiceCollection services)
+    extension(IServiceCollection services)
     {
-        var config = TypeAdapterConfig.GlobalSettings;
-        config.Scan(Assembly.GetExecutingAssembly());
-        services.AddSingleton(config);
-        services.AddScoped<IMapper, ServiceMapper>();
-        return services;
-    }
-
-    private static IServiceCollection AddCorsPolicies(this IServiceCollection services)
-    {
-        services.AddCors(options =>
+        private IServiceCollection AddMappings()
         {
-            options.AddPolicy(CorsPolicies.Frontend.Policy, policy =>
+            var config = TypeAdapterConfig.GlobalSettings;
+            config.Scan(Assembly.GetExecutingAssembly());
+            services.AddSingleton(config);
+            services.AddScoped<IMapper, ServiceMapper>();
+            return services;
+        }
+
+        private IServiceCollection AddCorsPolicies()
+        {
+            services.AddCors(options =>
             {
-                policy
-                    .WithOrigins(CorsPolicies.Frontend.Origin)
-                    .WithMethods(CorsPolicies.Frontend.Methods)
-                    //.WithHeaders(CorsPolicies.Frontend.Headers)
-                    .AllowAnyHeader();
+                options.AddPolicy(CorsPolicies.Frontend.Policy, policy =>
+                {
+                    policy
+                        .WithOrigins(CorsPolicies.Frontend.Origin)
+                        .WithMethods(CorsPolicies.Frontend.Methods)
+                        //.WithHeaders(CorsPolicies.Frontend.Headers)
+                        .AllowAnyHeader();
+                });
             });
-        });
-        return services;
+            return services;
+        }
     }
 }

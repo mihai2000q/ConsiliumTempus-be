@@ -5,40 +5,43 @@ public static class StringExtensions
     private static readonly char[] Numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     private static readonly char[] Separators = [' ', '-'];
 
-    public static string Dot(this string str, string str2) => str + "." + str2;
-
-    public static bool ContainsUppercase(this string str) =>
-        str.Any(char.IsUpper);
-
-    public static bool ContainsLowercase(this string str) =>
-        str.Any(char.IsLower);
-
-    public static bool ContainsNumber(this string str) =>
-        str.Any(Numbers.Contains);
-
-    public static string Capitalize(this string str)
+    extension(string str)
     {
-        if (str.Length == 0) return string.Empty;
-        if (str.Length == 1) return str.ToUpper();
-        foreach (var separator in Separators)
+        public string Dot(string str2) => str + "." + str2;
+
+        public bool ContainsUppercase() =>
+            str.Any(char.IsUpper);
+
+        public bool ContainsLowercase() =>
+            str.Any(char.IsLower);
+
+        public bool ContainsNumber() =>
+            str.Any(Numbers.Contains);
+
+        public string Capitalize()
         {
-            if (str.Contains(separator))
+            if (str.Length == 0) return string.Empty;
+            if (str.Length == 1) return str.ToUpper();
+            foreach (var separator in Separators)
             {
-                return str.CapitalizeEachWord(separator);
+                if (str.Contains(separator))
+                {
+                    return str.CapitalizeEachWord(separator);
+                }
             }
+
+            return str.CapitalizeWord();
         }
 
-        return str.CapitalizeWord();
-    }
+        public string CapitalizeWord() =>
+            str.ToUpper()[0] + str.ToLower()[1..];
 
-    public static string CapitalizeWord(this string word) =>
-        word.ToUpper()[0] + word.ToLower()[1..];
-
-    private static string CapitalizeEachWord(this string str, char separator)
-    {
-        return string
-            .Join(separator, str
-                .Split(separator)
-                .Select(CapitalizeWord));
+        private string CapitalizeEachWord(char separator)
+        {
+            return string
+                .Join(separator, str
+                    .Split(separator)
+                    .Select(CapitalizeWord));
+        }
     }
 }

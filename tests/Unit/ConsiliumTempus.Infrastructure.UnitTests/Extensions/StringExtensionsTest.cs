@@ -6,7 +6,7 @@ public class StringExtensionsTest
 {
     [Theory]
     [InlineData("first", "second", "first_second")]
-    public void Dash_ShouldConcatenate2StringsWithUnderscoreSymbol(string input1, string input2, string expected)
+    public void Underscore_ShouldConcatenate2StringsWithUnderscoreSymbol(string input1, string input2, string expected)
     {
         // Arrange - parameterized
 

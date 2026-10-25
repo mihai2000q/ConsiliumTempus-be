@@ -25,109 +25,111 @@ namespace ConsiliumTempus.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        services.AddAppAuthentication(configuration)
-            .AddAppAuthorization()
-            .AddHealthCheck();
-        services.AddPersistence(configuration);
+        public IServiceCollection AddInfrastructure(IConfiguration configuration)
+        {
+            services.AddAppAuthentication(configuration)
+                .AddAppAuthorization()
+                .AddHealthCheck();
+            services.AddPersistence(configuration);
 
-        return services;
-    }
+            return services;
+        }
 
-    private static IServiceCollection AddAppAuthentication(this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        var jwtSettings = new JwtSettings();
-        configuration.Bind(JwtSettings.SectionName, jwtSettings);
+        private IServiceCollection AddAppAuthentication(IConfiguration configuration)
+        {
+            var jwtSettings = new JwtSettings();
+            configuration.Bind(JwtSettings.SectionName, jwtSettings);
 
-        services.AddSingleton(Options.Create(jwtSettings));
+            services.AddSingleton(Options.Create(jwtSettings));
 
-        services.AddAuthentication(auth =>
-            {
-                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
+            services.AddAuthentication(auth =>
                 {
-                    ValidIssuer = jwtSettings.Issuer,
-                    ValidAudience = jwtSettings.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true
-                };
-                options.MapInboundClaims = false;
-            });
+                    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = jwtSettings.Issuer,
+                        ValidAudience = jwtSettings.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true
+                    };
+                    options.MapInboundClaims = false;
+                });
 
-        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-        services.AddScoped<IJwtTokenValidator, JwtTokenValidator>();
-        services.AddSingleton<IScrambler, Scrambler>();
+            services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<IJwtTokenValidator, JwtTokenValidator>();
+            services.AddSingleton<IScrambler, Scrambler>();
 
-        return services;
-    }
+            return services;
+        }
 
-    private static IServiceCollection AddAppAuthorization(this IServiceCollection services)
-    {
-        services.AddAuthorization();
+        private IServiceCollection AddAppAuthorization()
+        {
+            services.AddAuthorization();
 
-        services.AddScoped<IWorkspaceProvider, WorkspaceProvider>();
-        services.AddScoped<IProjectProvider, ProjectProvider>();
-        services.AddScoped<IPermissionProvider, PermissionProvider>();
-        services.AddScoped<IUserProvider, UserRepository>();
-        services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
-        services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
-        services.AddSingleton<IAuthorizationHandler, WorkspaceAuthorizationHandler>();
-        services.AddSingleton<IAuthorizationHandler, ProjectAuthorizationHandler>();
+            services.AddScoped<IWorkspaceProvider, WorkspaceProvider>();
+            services.AddScoped<IProjectProvider, ProjectProvider>();
+            services.AddScoped<IPermissionProvider, PermissionProvider>();
+            services.AddScoped<IUserProvider, UserRepository>();
+            services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, WorkspaceAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, ProjectAuthorizationHandler>();
 
-        return services;
-    }
+            return services;
+        }
 
-    private static IServiceCollection AddHealthCheck(this IServiceCollection services)
-    {
-        services.AddHealthChecks()
-            .AddDbContextCheck<ConsiliumTempusDbContext>("database");
+        private IServiceCollection AddHealthCheck()
+        {
+            services.AddHealthChecks()
+                .AddDbContextCheck<ConsiliumTempusDbContext>("database");
 
-        return services;
-    }
+            return services;
+        }
 
-    private static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
-    {
-        var databaseSettings = new DatabaseSettings();
-        configuration.Bind(DatabaseSettings.SectionName, databaseSettings);
+        private void AddPersistence(IConfiguration configuration)
+        {
+            var databaseSettings = new DatabaseSettings();
+            configuration.Bind(DatabaseSettings.SectionName, databaseSettings);
 
-        services.AddDbContext<ConsiliumTempusDbContext>(options =>
-            options.UseSqlServer($"" +
-                                 $"Server={databaseSettings.Server},{databaseSettings.Port};" +
-                                 $"Database={databaseSettings.Name};" +
-                                 $"User Id={databaseSettings.User};" +
-                                 $"Password={databaseSettings.Password};" +
-                                 $"Encrypt=false"));
+            services.AddDbContext<ConsiliumTempusDbContext>(options =>
+                options.UseSqlServer($"" +
+                                     $"Server={databaseSettings.Server},{databaseSettings.Port};" +
+                                     $"Database={databaseSettings.Name};" +
+                                     $"User Id={databaseSettings.User};" +
+                                     $"Password={databaseSettings.Password};" +
+                                     $"Encrypt=false"));
 
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
-        services.AddInterceptors()
-            .AddRepositories();
-    }
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+            services.AddInterceptors()
+                .AddRepositories();
+        }
 
-    private static IServiceCollection AddInterceptors(this IServiceCollection services)
-    {
-        services.AddScoped<PublishDomainEventsInterceptor>();
+        private IServiceCollection AddInterceptors()
+        {
+            services.AddScoped<PublishDomainEventsInterceptor>();
 
-        return services;
-    }
+            return services;
+        }
 
-    private static void AddRepositories(this IServiceCollection services)
-    {
-        services.AddScoped<ICustomFieldSetupRepository, CustomFieldSetupRepository>();
-        services.AddScoped<IProjectRepository, ProjectRepository>();
-        services.AddScoped<IProjectSprintRepository, ProjectSprintRepository>();
-        services.AddScoped<IProjectTaskRepository, ProjectTaskRepository>();
-        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
+        private void AddRepositories()
+        {
+            services.AddScoped<ICustomFieldSetupRepository, CustomFieldSetupRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IProjectSprintRepository, ProjectSprintRepository>();
+            services.AddScoped<IProjectTaskRepository, ProjectTaskRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
+        }
     }
 }
