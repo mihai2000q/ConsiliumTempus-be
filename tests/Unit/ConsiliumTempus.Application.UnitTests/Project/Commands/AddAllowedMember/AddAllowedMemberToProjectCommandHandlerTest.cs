@@ -42,6 +42,8 @@ public class AddAllowedMemberToProjectCommandHandlerTest
             project.Id.Value,
             collaborator.Id.Value);
 
+        var previousAllowedMembers = project.AllowedMembers.ToList();
+
         // Act
         var outcome = await _uut.Handle(command, CancellationToken.None);
 
@@ -53,7 +55,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new AddAllowedMemberToProjectResult());
 
-        Utils.Project.AssertFromAddAllowedMemberCommand(project, command, collaborator);
+        Utils.Project.AssertFromAddAllowedMemberCommand(project, command, collaborator, previousAllowedMembers);
     }
 
     [Fact]
