@@ -46,42 +46,38 @@ internal sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory service
         HttpRequest request,
         IWorkspaceProvider workspaceProvider)
     {
-        var (stringId, idType) = await GetStringId(request);
+        if (await GetStringId(request) is not var (stringId, idType)) return null;
         if (!Guid.TryParse(stringId, out var workspaceId)) return null;
         return idType switch
         {
             StringIdType.Workspace => await workspaceProvider.GetWithMemberships(WorkspaceId.Create(workspaceId)),
             StringIdType.Project => await workspaceProvider.GetByProjectWithMemberships(ProjectId.Create(workspaceId)),
-            StringIdType.Empty => null,
             _ => throw new ArgumentOutOfRangeException(nameof(request))
         };
     }
 
-    private static async Task<(string?, StringIdType)> GetStringId(HttpRequest request)
+    private static async Task<(string?, StringIdType)?> GetStringId(HttpRequest request)
     {
-        (string?, StringIdType) empty = (null, StringIdType.Empty);
-
         return request.RouteValues["controller"] switch
         {
             "Workspace" => request.Method switch
             {
                 "GET" or "DELETE" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.Workspace),
                 "PUT" or "POST" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.Workspace),
-                _ => empty
+                _ => null
             },
             "Project" => request.Method switch
             {
                 "GET" or "DELETE" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.Project),
                 "PUT" or "POST" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.Project),
-                _ => empty
+                _ => null
             },
-            _ => empty
+            _ => null
         };
     }
 
     private enum StringIdType
     {
-        Empty,
         Workspace,
         Project
     }
