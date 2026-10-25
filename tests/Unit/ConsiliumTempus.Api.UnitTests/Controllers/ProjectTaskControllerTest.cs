@@ -9,6 +9,7 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateCustomField;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Api.Controllers;
+using ConsiliumTempus.Api.UnitTests.TestData;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
@@ -19,8 +20,13 @@ using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
+using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -41,15 +47,22 @@ public class ProjectTaskControllerTest
         Utils.ResolveHttpContext(_uut);
     }
 
+    // a custom field variant that the mapping does not know about
+    private sealed class UnsupportedCustomField(ProjectTaskAggregate task)
+        : CustomField(CustomFieldId.CreateUnique(), task)
+    {
+        public override CustomFieldSetupAggregate Setup { get; } = CustomFieldSetupFactory.CreateText();
+    }
+
     #endregion
 
-    [Fact]
-    public async Task Get_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(ProjectTaskControllerData.GetTasks))]
+    public async Task Get_WhenIsSuccessful_ShouldReturnResponse(ProjectTaskAggregate task)
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateGetProjectTaskRequest();
 
-        var task = ProjectTaskFactory.Create();
         _mediator
             .Send(Arg.Any<GetProjectTaskQuery>())
             .Returns(task);
@@ -65,6 +78,25 @@ public class ProjectTaskControllerTest
 
         var response = outcome.ToResponse<GetProjectTaskResponse>();
         Utils.ProjectTask.AssertGetProjectTaskResponse(response, task);
+    }
+
+    [Fact]
+    public async Task Get_WhenCustomFieldTypeIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var request = ProjectTaskRequestFactory.CreateGetProjectTaskRequest();
+
+        var task = ProjectTaskFactory.Create();
+        task.AddCustomField(new UnsupportedCustomField(task));
+        _mediator
+            .Send(Arg.Any<GetProjectTaskQuery>())
+            .Returns(task);
+
+        // Act
+        var outcome = async () => await _uut.Get(request, CancellationToken.None);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
     }
 
     [Fact]
@@ -90,13 +122,13 @@ public class ProjectTaskControllerTest
         outcome.ValidateError(error);
     }
 
-    [Fact]
-    public async Task GetCollection_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(ProjectTaskControllerData.GetCollectionTaskResults))]
+    public async Task GetCollection_WhenIsSuccessful_ShouldReturnResponse(GetCollectionProjectTaskResult result)
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest();
 
-        var result = ProjectTaskResultFactory.CreateGetCollectionProjectTaskResult();
         _mediator
             .Send(Arg.Any<GetCollectionProjectTaskQuery>())
             .Returns(result);
@@ -112,6 +144,25 @@ public class ProjectTaskControllerTest
 
         var response = outcome.ToResponse<GetCollectionProjectTaskResponse>();
         Utils.ProjectTask.AssertGetCollectionResponse(response, result);
+    }
+
+    [Fact]
+    public async Task GetCollection_WhenCustomFieldTypeIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest();
+
+        var task = ProjectTaskFactory.Create();
+        task.AddCustomField(new UnsupportedCustomField(task));
+        _mediator
+            .Send(Arg.Any<GetCollectionProjectTaskQuery>())
+            .Returns(ProjectTaskResultFactory.CreateGetCollectionProjectTaskResult([task]));
+
+        // Act
+        var outcome = async () => await _uut.GetCollection(request, CancellationToken.None);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
     }
 
     [Fact]
@@ -276,11 +327,11 @@ public class ProjectTaskControllerTest
         outcome.ValidateError(error);
     }
 
-    [Fact]
-    public async Task UpdateCustomField_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(ProjectTaskControllerData.GetUpdateCustomFieldRequests))]
+    public async Task UpdateCustomField_WhenIsSuccessful_ShouldReturnResponse(UpdateCustomFieldFromProjectTaskRequest request)
     {
         // Arrange
-        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest();
 
         var result = ProjectTaskResultFactory.CreateUpdateCustomFieldFromProjectTaskResult();
         _mediator

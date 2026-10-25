@@ -18,6 +18,7 @@ using ConsiliumTempus.Api.Contracts.Project.UpdateOwner;
 using ConsiliumTempus.Api.Contracts.Project.UpdatePrivacy;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Api.Controllers;
+using ConsiliumTempus.Api.UnitTests.TestData;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
@@ -62,13 +63,13 @@ public class ProjectControllerTest
 
     #endregion
 
-    [Fact]
-    public async Task Get_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(ProjectControllerData.GetProjectResults))]
+    public async Task Get_WhenIsSuccessful_ShouldReturnResponse(GetProjectResult result)
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetProjectRequest();
 
-        var result = ProjectResultFactory.CreateGetProjectResult();
         _mediator
             .Send(Arg.Any<GetProjectQuery>())
             .Returns(result);
@@ -156,13 +157,13 @@ public class ProjectControllerTest
         outcome.ValidateError(error);
     }
 
-    [Fact]
-    public async Task GetCollection_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(ProjectControllerData.GetCollectionProjectResults))]
+    public async Task GetCollection_WhenIsSuccessful_ShouldReturnResponse(GetCollectionProjectResult result)
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest();
 
-        var result = ProjectResultFactory.CreateGetCollectionProjectResult();
         _mediator
             .Send(Arg.Any<GetCollectionProjectQuery>())
             .Returns(result);

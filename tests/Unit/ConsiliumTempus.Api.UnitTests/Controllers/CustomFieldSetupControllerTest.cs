@@ -21,7 +21,12 @@ using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
+using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -41,6 +46,15 @@ public class CustomFieldSetupControllerTest
 
         Utils.ResolveHttpContext(_uut);
     }
+
+    // a custom field setup variant that the mapping does not know about
+    private sealed class UnsupportedCustomFieldSetup()
+        : CustomFieldSetupAggregate(
+            CustomFieldSetupId.CreateUnique(),
+            Name.Create("Unsupported"),
+            Description.Create("Unsupported"),
+            null,
+            Audit.Create(UserFactory.Create()));
 
     #endregion
 
@@ -66,6 +80,23 @@ public class CustomFieldSetupControllerTest
 
         var response = outcome.ToResponse<GetCustomFieldSetupResponse>();
         Utils.CustomFieldSetup.AssertGetCustomFieldSetupResponse(response, result);
+    }
+
+    [Fact]
+    public async Task Get_WhenCustomFieldSetupTypeIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateGetCustomFieldSetupRequest();
+
+        _mediator
+            .Send(Arg.Any<GetCustomFieldSetupQuery>())
+            .Returns(new GetCustomFieldSetupResult(new UnsupportedCustomFieldSetup()));
+
+        // Act
+        var outcome = async () => await _uut.Get(request, CancellationToken.None);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
     }
 
     [Fact]
@@ -185,11 +216,11 @@ public class CustomFieldSetupControllerTest
         outcome.ValidateError(error);
     }
 
-    [Fact]
-    public async Task CreateOnWorkspace_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(CustomFieldSetupControllerData.GetCreateOnWorkspaceRequests))]
+    public async Task CreateOnWorkspace_WhenIsSuccessful_ShouldReturnResponse(CreateCustomFieldSetupOnWorkspaceRequest request)
     {
         // Arrange
-        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest();
 
         var result = CustomFieldSetupResultFactory.CreateCreateCustomFieldSetupResult();
         _mediator
@@ -232,11 +263,11 @@ public class CustomFieldSetupControllerTest
         outcome.ValidateError(error);
     }
     
-    [Fact]
-    public async Task CreateOnProject_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(CustomFieldSetupControllerData.GetCreateOnProjectRequests))]
+    public async Task CreateOnProject_WhenIsSuccessful_ShouldReturnResponse(CreateCustomFieldSetupOnProjectRequest request)
     {
         // Arrange
-        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest();
 
         var result = CustomFieldSetupResultFactory.CreateCreateCustomFieldSetupResult();
         _mediator
@@ -326,11 +357,11 @@ public class CustomFieldSetupControllerTest
         outcome.ValidateError(error);
     }
 
-    [Fact]
-    public async Task Update_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(CustomFieldSetupControllerData.GetUpdateRequests))]
+    public async Task Update_WhenIsSuccessful_ShouldReturnResponse(UpdateCustomFieldSetupRequest request)
     {
         // Arrange
-        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest();
 
         var result = CustomFieldSetupResultFactory.CreateUpdateCustomFieldSetupResult();
         _mediator
