@@ -20,13 +20,30 @@ internal static class HttpRequestReader
     internal static async Task<string?> GetStringIdFromBody(HttpRequest request, string property = "id")
     {
         request.EnableBuffering();
-        var body = await JsonSerializer.DeserializeAsync<Dictionary<string, JsonElement>>(request.Body);
-        request.Body.Position = 0;
+        try
+        {
+            using var body = await JsonDocument.ParseAsync(request.Body);
+            if (body.RootElement.ValueKind != JsonValueKind.Object) return null;
 
-        if (body is null) return null;
-        if (!body.TryGetValue(property, out var jsonElement)) return null;
-        if (jsonElement.ValueKind != JsonValueKind.String) return null;
-        var id = jsonElement.GetString();
-        return !string.IsNullOrEmpty(id) ? id : null;
+            // the model binding matches the property names case-insensitively, so this has to do it as well,
+            // otherwise the id would be missed here, but still bound afterwards
+            var jsonElement = body.RootElement
+                .EnumerateObject()
+                .Where(p => string.Equals(p.Name, property, StringComparison.OrdinalIgnoreCase))
+                .Select(p => (JsonElement?)p.Value)
+                .LastOrDefault();
+
+            if (jsonElement is not { ValueKind: JsonValueKind.String }) return null;
+            var id = jsonElement.Value.GetString();
+            return !string.IsNullOrEmpty(id) ? id : null;
+        }
+        catch (JsonException)
+        {
+            return null; // let the system return the validation error
+        }
+        finally
+        {
+            request.Body.Position = 0;
+        }
     }
 }
