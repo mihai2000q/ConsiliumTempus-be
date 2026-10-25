@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
+using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Queries;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Filters;
@@ -26,12 +27,12 @@ public class GetCollectionProjectTaskQueryHandlerTest
 
     #endregion
 
-    [Fact]
-    public async Task HandleGetCollectionProjectTaskQuery_WhenSucceeds_ShouldReturnProjectTasks()
+    [Theory]
+    [ClassData(typeof(GetCollectionProjectTaskQueryHandlerData.GetQueries))]
+    public async Task HandleGetCollectionProjectTaskQuery_WhenSucceeds_ShouldReturnProjectTasks(
+        GetCollectionProjectTaskQuery query)
     {
         // Arrange
-        var query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery();
-
         var tasks = ProjectTaskFactory.CreateList();
         _projectTaskRepository
             .GetListByStage(

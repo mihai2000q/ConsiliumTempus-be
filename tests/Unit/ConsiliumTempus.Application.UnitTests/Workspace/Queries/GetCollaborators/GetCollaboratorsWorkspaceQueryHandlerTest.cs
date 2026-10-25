@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Application.UnitTests.TestData.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Common.UnitTests.Common.Entities;
@@ -27,12 +28,12 @@ public class GetCollaboratorsFromWorkspaceQueryHandlerTest
 
     #endregion
 
-    [Fact]
-    public async Task HandleGetCollaboratorsFromWorkspaceQuery_WhenIsSuccessful_ShouldReturnCollaborators()
+    [Theory]
+    [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryHandlerData.GetQueries))]
+    public async Task HandleGetCollaboratorsFromWorkspaceQuery_WhenIsSuccessful_ShouldReturnCollaborators(
+        GetCollaboratorsFromWorkspaceQuery query)
     {
         // Arrange
-        var query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery();
-
         var collaborators = MembershipFactory.CreateList();
         _workspaceRepository
             .GetCollaborators(Arg.Any<WorkspaceId>(),

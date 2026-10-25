@@ -81,10 +81,32 @@ internal static partial class Utils
         List<string> orderBy,
         IEnumerable<OrderProperty<TEntity>> orderProperties)
     {
-        orderBy.Should().HaveSameCount(orders);
+        var expectedOrders = orderBy
+            .SelectMany(stringOrder => ExpectedOrders(stringOrder, orderProperties))
+            .ToList();
+
+        orders.Should().HaveSameCount(expectedOrders);
         return orders
-            .Zip(orderBy)
-            .All(x => x.First.AssertOrder(x.Second, orderProperties));
+            .Zip(expectedOrders)
+            .All(x =>
+            {
+                x.First.Type.Should().Be(x.Second.Type);
+                x.First.PropertySelector.Should().BeSameAs(x.Second.PropertySelector);
+                return true;
+            });
+    }
+    
+    private static IEnumerable<(OrderType Type, Expression<Func<TEntity, object?>> PropertySelector)>
+        ExpectedOrders<TEntity>(string stringOrder, IEnumerable<OrderProperty<TEntity>> orderProperties)
+    {
+        var split = stringOrder.Trim().Split(Order.Separator);
+        var type = split[1] == Order.Descending ? OrderType.Descending : OrderType.Ascending;
+
+        // a single order property can map to several selectors (e.g. user name -> first name, last name)
+        return orderProperties
+            .Single(op => op.Identifier == split[0])
+            .PropertySelectors
+            .Select(propertySelector => (type, propertySelector));
     }
 
     internal static bool AssertFilters<TEntity>(
@@ -96,23 +118,6 @@ internal static partial class Utils
         return filters
             .Zip(search)
             .All(x => x.First.AssertFilter(x.Second, filterProperties));
-    }
-
-    private static bool AssertOrder<TEntity>(
-        this IOrder<TEntity> order,
-        string stringOrder,
-        IEnumerable<OrderProperty<TEntity>> orderProperties)
-    {
-        var split = stringOrder.Trim().Split(Order.Separator);
-
-        order.Type
-            .Should()
-            .Be(split[1] == Order.Descending ? OrderType.Descending : OrderType.Ascending);
-
-        return orderProperties
-            .Single(op => op.Identifier == split[0])
-            .PropertySelectors
-            .Any(propertySelector => propertySelector == order.PropertySelector);
     }
 
     private static bool AssertFilter<TEntity>(
