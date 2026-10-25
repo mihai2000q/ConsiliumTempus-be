@@ -9,7 +9,7 @@ using Serilog;
 
 namespace ConsiliumTempus.Api;
 
-public static class DependencyInjection
+internal static class DependencyInjection
 {
     public static void AddPresentation(this IServiceCollection services)
     {

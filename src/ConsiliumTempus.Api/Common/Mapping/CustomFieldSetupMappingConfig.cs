@@ -23,7 +23,7 @@ using Mapster;
 namespace ConsiliumTempus.Api.Common.Mapping;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-public sealed class CustomFieldSetupMappingConfig : IRegister
+internal sealed class CustomFieldSetupMappingConfig : IRegister
 {
     private readonly Dictionary<Type, CustomFieldType> _setupTypeToCustomFieldType = new()
     {

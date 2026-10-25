@@ -12,7 +12,7 @@ using Mapster;
 namespace ConsiliumTempus.Api.Common.Mapping;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-public sealed class UserMappingConfig : IRegister
+internal sealed class UserMappingConfig : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
