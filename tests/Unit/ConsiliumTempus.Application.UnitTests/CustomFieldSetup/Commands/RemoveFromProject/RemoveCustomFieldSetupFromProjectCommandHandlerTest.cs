@@ -122,7 +122,8 @@ public class RemoveCustomFieldSetupFromProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleRemoveCustomFieldSetupFromProjectCommand_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task
+        HandleRemoveCustomFieldSetupFromProjectCommand_WhenCustomFieldSetupIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateRemoveCustomFieldSetupFromProjectCommand();

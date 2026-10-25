@@ -61,7 +61,7 @@ public class UpdateProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateProjectSprintCommand_WhenItFails_ShouldReturnNotFoundError()
+    public async Task HandleUpdateProjectSprintCommand_WhenProjectSprintIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand();

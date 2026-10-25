@@ -64,7 +64,8 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateStageFromProjectSprintCommand_WhenStageIsNotFound_ShouldReturnStageNotFoundError()
+    public async Task
+        HandleUpdateStageFromProjectSprintCommand_WhenProjectStageIsNull_ShouldReturnProjectStageNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateUpdateStageFromProjectSprintCommand();
@@ -87,7 +88,8 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateStageFromProjectSprintCommand_WhenSprintIsNotFound_ShouldReturnSprintNotFoundError()
+    public async Task
+        HandleUpdateStageFromProjectSprintCommand_WhenProjectSprintIsNull_ShouldReturnProjectSprintNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateUpdateStageFromProjectSprintCommand();

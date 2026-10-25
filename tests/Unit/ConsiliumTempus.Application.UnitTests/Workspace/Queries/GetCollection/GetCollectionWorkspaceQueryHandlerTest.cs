@@ -97,7 +97,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetCollectionWorkspaceQuery_WhenItFails_ShouldReturnUserNotFoundError()
+    public async Task HandleGetCollectionWorkspaceQuery_WhenUserIsNull_ShouldReturnUserNotFoundError()
     {
         // Arrange
         var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery();

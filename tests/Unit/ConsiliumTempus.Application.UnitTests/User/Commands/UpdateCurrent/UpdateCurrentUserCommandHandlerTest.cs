@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
+using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.User.Commands.UpdateCurrent;
 
@@ -47,10 +48,14 @@ public class UpdateCurrentUserCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateCurrentUserCommand_WhenItFails_ShouldReturnNotFoundError()
+    public async Task HandleUpdateCurrentUserCommand_WhenUserIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = UserCommandFactory.CreateUpdateUserCommand();
+
+        _currentUserProvider
+            .GetCurrentUser()
+            .ReturnsNull();
 
         // Act
         var outcome = await _uut.Handle(command, CancellationToken.None);

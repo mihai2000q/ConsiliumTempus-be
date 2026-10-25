@@ -57,7 +57,7 @@ public class DeleteProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleDeleteProjectCommand_WhenItFails_ShouldReturnNotFoundError()
+    public async Task HandleDeleteProjectCommand_WhenProjectIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectCommandFactory.CreateDeleteProjectCommand();

@@ -52,7 +52,8 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleRemoveStageFromProjectSprintCommand_WhenStageIsNotFound_ShouldReturnStageNotFoundError()
+    public async Task
+        HandleRemoveStageFromProjectSprintCommand_WhenProjectStageIsNull_ShouldReturnProjectStageNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateRemoveStageFromProjectSprintCommand();
@@ -99,7 +100,8 @@ public class RemoveStageFromProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleRemoveStageFromProjectSprintCommand_WhenSprintIsNotFound_ShouldReturnSprintNotFoundError()
+    public async Task
+        HandleRemoveStageFromProjectSprintCommand_WhenProjectSprintIsNull_ShouldReturnProjectSprintNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateRemoveStageFromProjectSprintCommand();

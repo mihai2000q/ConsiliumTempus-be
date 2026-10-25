@@ -47,7 +47,7 @@ public class GetOverviewProjectQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetOverviewProjectQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetOverviewProjectQuery_WhenProjectIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = ProjectQueryFactory.CreateGetOverviewProjectQuery();

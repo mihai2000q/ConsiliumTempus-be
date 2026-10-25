@@ -56,7 +56,7 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
 
     [Fact]
     public async Task
-        HandleUpdateOwnerWorkspaceCommand_WhenCollaboratorIsNotFound_ShouldReturnCollaboratorNotFoundError()
+        HandleUpdateOwnerWorkspaceCommand_WhenCollaboratorIsNull_ShouldReturnCollaboratorNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateUpdateOwnerWorkspaceCommand();
@@ -78,7 +78,7 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateOwnerWorkspaceCommand_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleUpdateOwnerWorkspaceCommand_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateUpdateOwnerWorkspaceCommand();

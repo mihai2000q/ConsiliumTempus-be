@@ -124,7 +124,7 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
 
     [Fact]
     public async Task
-        HandleKickCollaboratorFromWorkspaceCommand_WhenCollaboratorsIsNull_ShouldReturnCollaboratorNotFoundError()
+        HandleKickCollaboratorFromWorkspaceCommand_WhenCollaboratorIsNull_ShouldReturnCollaboratorNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateKickCollaboratorFromWorkspaceCommand();
@@ -149,7 +149,7 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleKickCollaboratorFromWorkspaceCommand_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleKickCollaboratorFromWorkspaceCommand_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateKickCollaboratorFromWorkspaceCommand();

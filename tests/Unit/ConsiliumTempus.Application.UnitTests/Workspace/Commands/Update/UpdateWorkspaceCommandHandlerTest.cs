@@ -49,7 +49,7 @@ public class UpdateWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateWorkspaceCommand_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleUpdateWorkspaceCommand_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand();

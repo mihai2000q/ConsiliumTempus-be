@@ -47,7 +47,7 @@ public class GetCustomFieldSetupQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetCustomFieldSetupQuery_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task HandleGetCustomFieldSetupQuery_WhenCustomFieldSetupIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = CustomFieldSetupQueryFactory.CreateGetCustomFieldSetupQuery();

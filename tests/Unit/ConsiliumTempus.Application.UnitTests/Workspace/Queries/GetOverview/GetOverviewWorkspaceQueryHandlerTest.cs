@@ -47,7 +47,7 @@ public class GetOverviewWorkspaceQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetOverviewWorkspaceQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetOverviewWorkspaceQuery_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = WorkspaceQueryFactory.CreateGetOverviewWorkspaceQuery();

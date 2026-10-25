@@ -49,7 +49,7 @@ public class UpdateOverviewProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateOverviewProjectCommand_WhenItFails_ShouldReturnNotFoundError()
+    public async Task HandleUpdateOverviewProjectCommand_WhenProjectIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectCommandFactory.CreateUpdateOverviewProjectCommand();

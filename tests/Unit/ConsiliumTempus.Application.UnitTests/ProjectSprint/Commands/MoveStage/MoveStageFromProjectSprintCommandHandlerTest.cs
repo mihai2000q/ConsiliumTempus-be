@@ -96,7 +96,8 @@ public class MoveStageFromProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleMoveStageFromProjectSprintCommand_WhenStageIsNotFound_ShouldReturnStageNotFoundError()
+    public async Task
+        HandleMoveStageFromProjectSprintCommand_WhenProjectStageIsNull_ShouldReturnProjectStageNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateMoveStageFromProjectSprintCommand();
@@ -119,7 +120,8 @@ public class MoveStageFromProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleMoveStageFromProjectSprintCommand_WhenSprintIsNotFound_ShouldReturnSprintNotFoundError()
+    public async Task
+        HandleMoveStageFromProjectSprintCommand_WhenProjectSprintIsNull_ShouldReturnProjectSprintNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateMoveStageFromProjectSprintCommand();

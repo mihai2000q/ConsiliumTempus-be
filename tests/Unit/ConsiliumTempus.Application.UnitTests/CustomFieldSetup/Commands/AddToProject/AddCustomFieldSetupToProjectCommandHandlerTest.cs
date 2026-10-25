@@ -151,7 +151,7 @@ public class AddCustomFieldSetupToProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleAddCustomFieldSetupToProjectCommand_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task HandleAddCustomFieldSetupToProjectCommand_WhenCustomFieldSetupIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateAddCustomFieldSetupToProjectCommand();

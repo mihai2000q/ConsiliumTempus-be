@@ -61,7 +61,7 @@ public class UpdateFavoritesWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateFavoriteWorkspaceCommand_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleUpdateFavoriteWorkspaceCommand_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateUpdateFavoriteWorkspaceCommand();

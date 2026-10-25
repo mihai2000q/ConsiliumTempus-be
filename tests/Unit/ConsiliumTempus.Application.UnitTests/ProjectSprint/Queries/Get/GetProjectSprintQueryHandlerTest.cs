@@ -47,7 +47,7 @@ public class GetProjectSprintQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetProjectSprintQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetProjectSprintQuery_WhenProjectSprintIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = ProjectSprintQueryFactory.CreateGetProjectSprintQuery();

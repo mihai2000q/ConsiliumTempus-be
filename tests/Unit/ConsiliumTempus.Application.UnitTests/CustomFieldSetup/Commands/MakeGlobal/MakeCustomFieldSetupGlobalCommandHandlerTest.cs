@@ -94,7 +94,7 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleMakeCustomFieldSetupGlobalCommand_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task HandleMakeCustomFieldSetupGlobalCommand_WhenCustomFieldSetupIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateMakeCustomFieldSetupGlobalCommand();

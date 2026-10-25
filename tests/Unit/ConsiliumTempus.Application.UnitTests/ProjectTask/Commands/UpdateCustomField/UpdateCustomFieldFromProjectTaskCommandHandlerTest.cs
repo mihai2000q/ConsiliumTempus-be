@@ -158,7 +158,7 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateCustomFieldFromProjectTaskCommand_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task HandleUpdateCustomFieldFromProjectTaskCommand_WhenProjectTaskIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectTaskCommandFactory.CreateUpdateCustomFieldFromProjectTaskCommand();

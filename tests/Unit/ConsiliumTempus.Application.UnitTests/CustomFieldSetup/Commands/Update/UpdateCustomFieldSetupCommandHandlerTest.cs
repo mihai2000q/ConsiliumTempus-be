@@ -127,7 +127,7 @@ public class UpdateCustomFieldSetupCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateCustomFieldSetupCommand_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task HandleUpdateCustomFieldSetupCommand_WhenCustomFieldSetupIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand();

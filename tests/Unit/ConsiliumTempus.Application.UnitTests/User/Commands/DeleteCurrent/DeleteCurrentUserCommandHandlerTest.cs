@@ -60,7 +60,7 @@ public class DeleteCurrentUserCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleDeleteCurrentUserCommand_WhenItFails_ShouldReturnNotFoundError()
+    public async Task HandleDeleteCurrentUserCommand_WhenUserIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = new DeleteCurrentUserCommand();

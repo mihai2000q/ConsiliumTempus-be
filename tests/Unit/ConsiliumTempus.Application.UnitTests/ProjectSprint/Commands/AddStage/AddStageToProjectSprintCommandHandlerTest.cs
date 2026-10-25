@@ -60,7 +60,8 @@ public class AddStageToProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleAddStageToProjectSprintCommand_WhenSprintIsNotFound_ShouldReturnSprintNotFoundError()
+    public async Task
+        HandleAddStageToProjectSprintCommand_WhenProjectSprintIsNull_ShouldReturnProjectSprintNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateAddStageToProjectSprintCommand();

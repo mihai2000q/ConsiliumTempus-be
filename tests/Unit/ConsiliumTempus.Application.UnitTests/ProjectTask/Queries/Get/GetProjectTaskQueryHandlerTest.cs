@@ -47,7 +47,7 @@ public class GetProjectTaskQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetProjectTaskQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetProjectTaskQuery_WhenProjectTaskIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = ProjectTaskQueryFactory.CreateGetProjectTaskQuery();

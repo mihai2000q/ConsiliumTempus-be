@@ -47,7 +47,7 @@ public class GetAllowedMembersFromProjectQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetAllowedMembersFromProjectQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetAllowedMembersFromProjectQuery_WhenProjectIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = ProjectQueryFactory.CreateGetAllowedMembersFromProjectQuery();

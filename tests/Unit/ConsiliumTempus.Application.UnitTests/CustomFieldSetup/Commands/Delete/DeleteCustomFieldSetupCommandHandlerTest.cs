@@ -64,7 +64,7 @@ public class DeleteCustomFieldSetupCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleDeleteCustomFieldSetupCommand_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task HandleDeleteCustomFieldSetupCommand_WhenCustomFieldSetupIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateDeleteCustomFieldSetupCommand();

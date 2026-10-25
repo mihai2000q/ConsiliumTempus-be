@@ -59,7 +59,7 @@ public class UpdateFavoritesProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateFavoritesProjectCommand_WhenItFails_ShouldReturnNotFoundError()
+    public async Task HandleUpdateFavoritesProjectCommand_WhenProjectIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectCommandFactory.CreateUpdateFavoritesProjectCommand();

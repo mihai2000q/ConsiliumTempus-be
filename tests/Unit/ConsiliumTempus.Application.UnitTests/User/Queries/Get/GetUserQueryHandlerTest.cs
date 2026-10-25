@@ -47,7 +47,7 @@ public class GetUserQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetUserQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetUserQuery_WhenUserIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = UserQueryFactory.CreateGetUserQuery();

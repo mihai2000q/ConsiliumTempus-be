@@ -49,7 +49,7 @@ public class UpdateOverviewWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateOverviewWorkspaceCommand_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleUpdateOverviewWorkspaceCommand_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateUpdateOverviewWorkspaceCommand();

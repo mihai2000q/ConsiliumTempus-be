@@ -54,7 +54,7 @@ public class UpdateOwnerProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateOwnerProjectCommand_WhenCollaboratorIsNotFound_ShouldReturnCollaboratorNotFoundError()
+    public async Task HandleUpdateOwnerProjectCommand_WhenCollaboratorIsNull_ShouldReturnCollaboratorNotFoundError()
     {
         // Arrange
         var workspace = WorkspaceFactory.CreateWithCollaborators();
