@@ -77,14 +77,14 @@ public class CreateCustomFieldSetupCommandHandlerTest
                 .Received(1)
                 .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));
         else
-            _workspaceRepository.DidNotReceive();
+            await _workspaceRepository.DidNotReceive().Get(Arg.Any<WorkspaceId>());
 
         if (command.ProjectId is not null)
             await _projectRepository
                 .Received(1)
                 .Get(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
         else
-            _projectRepository.DidNotReceive();
+            await _projectRepository.DidNotReceive().Get(Arg.Any<ProjectId>());
 
         await _currentUserProvider
             .Received(1)
@@ -121,12 +121,12 @@ public class CreateCustomFieldSetupCommandHandlerTest
         var outcome = await _uut.Handle(command, default);
 
         // Assert
-        _workspaceRepository.DidNotReceive();
+        await _workspaceRepository.DidNotReceive().Get(Arg.Any<WorkspaceId>());
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
-        _currentUserProvider.DidNotReceive();
-        _customFieldSetupRepository.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
+        await _customFieldSetupRepository.DidNotReceive().Add(Arg.Any<CustomFieldSetupAggregate>());
 
         outcome.ValidateError(Errors.Project.NotFound);
     }
@@ -149,9 +149,9 @@ public class CreateCustomFieldSetupCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));
-        _projectRepository.DidNotReceive();
-        _currentUserProvider.DidNotReceive();
-        _customFieldSetupRepository.DidNotReceive();
+        await _projectRepository.DidNotReceive().Get(Arg.Any<ProjectId>());
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
+        await _customFieldSetupRepository.DidNotReceive().Add(Arg.Any<CustomFieldSetupAggregate>());
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

@@ -113,7 +113,18 @@ public class GetCollectionWorkspaceQueryHandlerTest
         await _currentUserProvider
             .Received(1)
             .GetCurrentUser();
-        _workspaceRepository.DidNotReceive();
+        await _workspaceRepository
+            .DidNotReceive()
+            .GetListByUser(
+                Arg.Any<UserAggregate>(),
+                Arg.Any<PaginationInfo?>(),
+                Arg.Any<IReadOnlyList<IOrder<WorkspaceAggregate>>>(),
+                Arg.Any<IEnumerable<IFilter<WorkspaceAggregate>>>());
+        await _workspaceRepository
+            .DidNotReceive()
+            .GetListByUserCount(
+                Arg.Any<UserAggregate>(),
+                Arg.Any<IEnumerable<IFilter<WorkspaceAggregate>>>());
 
         outcome.ValidateError(Errors.User.NotFound);
     }

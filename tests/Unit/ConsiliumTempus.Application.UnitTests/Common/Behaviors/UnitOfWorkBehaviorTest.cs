@@ -68,7 +68,9 @@ public class UnitOfWorkBehaviorTest
         await nextBehavior
             .Received(1)
             .Invoke();
-        _unitOfWork.DidNotReceive();
+        await _unitOfWork
+            .DidNotReceive()
+            .SaveChangesAsync();
 
         outcome.ValidateError(error);
     }
@@ -94,7 +96,9 @@ public class UnitOfWorkBehaviorTest
         await nextBehavior
             .Received(1)
             .Invoke();
-        _unitOfWork.DidNotReceive();
+        await _unitOfWork
+            .DidNotReceive()
+            .SaveChangesAsync();
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(result);

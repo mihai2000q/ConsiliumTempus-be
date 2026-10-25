@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.User.Commands.DeleteCurrent;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.Events;
 using NSubstitute.ReturnsExtensions;
 
@@ -75,7 +76,9 @@ public class DeleteCurrentUserCommandHandlerTest
         await _currentUserProvider
             .Received(1)
             .GetCurrentUser();
-        _userRepository.DidNotReceive();
+        _userRepository
+            .DidNotReceive()
+            .Remove(Arg.Any<UserAggregate>());
 
         outcome.ValidateError(Errors.User.NotFound);
     }

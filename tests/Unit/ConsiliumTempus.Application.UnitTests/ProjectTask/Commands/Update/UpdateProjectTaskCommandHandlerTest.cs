@@ -79,7 +79,9 @@ public class UpdateProjectTaskCommandHandlerTest
         await _projectTaskRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        _userRepository.DidNotReceive();
+        await _userRepository
+            .DidNotReceive()
+            .Get(Arg.Any<UserId>());
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);
     }

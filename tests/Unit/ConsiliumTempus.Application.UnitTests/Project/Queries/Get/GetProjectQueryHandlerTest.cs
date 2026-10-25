@@ -72,7 +72,9 @@ public class GetProjectQueryHandlerTest
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(id => query.Id == id.Value));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

@@ -77,7 +77,9 @@ public class ValidationBehaviorTest
         await _validator
             .Received(1)
             .ValidateAsync(Arg.Any<CreateProjectCommand>());
-        _nextBehavior.DidNotReceive();
+        await _nextBehavior
+            .DidNotReceive()
+            .Invoke();
 
         outcome.IsError.Should().BeTrue();
         outcome.Errors.Should().HaveCount(errors.Count);
@@ -108,7 +110,9 @@ public class ValidationBehaviorTest
         var outcome = await _uut.Handle(command, _nextBehavior, default);
 
         // Assert
-        _validator.DidNotReceive();
+        await _validator
+            .DidNotReceive()
+            .ValidateAsync(Arg.Any<CreateProjectCommand>());
         await _nextBehavior
             .Received(1)
             .Invoke();

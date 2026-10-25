@@ -74,7 +74,9 @@ public class CreateWorkspaceCommandHandlerTest
         await _currentUserProvider
             .Received(1)
             .GetCurrentUser();
-        _workspaceRepository.DidNotReceive();
+        await _workspaceRepository
+            .DidNotReceive()
+            .Add(Arg.Any<WorkspaceAggregate>());
 
         outcome.ValidateError(Errors.User.NotFound);
     }

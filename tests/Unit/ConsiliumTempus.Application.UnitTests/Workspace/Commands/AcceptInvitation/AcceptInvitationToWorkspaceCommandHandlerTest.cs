@@ -122,7 +122,9 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUser();
 
         outcome.ValidateError(Errors.WorkspaceInvitation.NotFound);
     }
@@ -144,7 +146,9 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUser();
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

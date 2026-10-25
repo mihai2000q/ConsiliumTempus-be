@@ -116,7 +116,7 @@ public class JwtTokenValidatorTest
         var outcome = await _uut.ValidateAccessToken(token);
 
         // Assert
-        _userProvider.DidNotReceive();
+        await _userProvider.DidNotReceive().Get(Arg.Any<UserId>());
 
         outcome.Should().BeFalse();
     }
@@ -131,7 +131,7 @@ public class JwtTokenValidatorTest
         var outcome = await _uut.ValidateAccessToken(token);
 
         // Assert
-        _userProvider.DidNotReceive();
+        await _userProvider.DidNotReceive().Get(Arg.Any<UserId>());
 
         outcome.Should().BeFalse();
     }

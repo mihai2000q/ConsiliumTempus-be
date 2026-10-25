@@ -122,8 +122,15 @@ public class LoginCommandHandlerTest
             .VerifyPassword(
                 Arg.Is<string>(p => p == command.Password),
                 Arg.Is<string>(hp => hp == user.Credentials.Password));
-        _jwtTokenGenerator.DidNotReceive();
-        _refreshTokenRepository.DidNotReceive();
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GetJwtIdFromToken(Arg.Any<string>());
+        await _refreshTokenRepository
+            .DidNotReceive()
+            .Add(Arg.Any<RefreshToken>());
 
         outcome.ValidateError(Errors.Authentication.InvalidCredentials);
     }
@@ -145,9 +152,18 @@ public class LoginCommandHandlerTest
         await _userRepository
             .Received(1)
             .GetByEmail(Arg.Is<string>(email => email == command.Email.ToLower()));
-        _scrambler.DidNotReceive();
-        _jwtTokenGenerator.DidNotReceive();
-        _refreshTokenRepository.DidNotReceive();
+        _scrambler
+            .DidNotReceive()
+            .VerifyPassword(Arg.Any<string>(), Arg.Any<string>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GetJwtIdFromToken(Arg.Any<string>());
+        await _refreshTokenRepository
+            .DidNotReceive()
+            .Add(Arg.Any<RefreshToken>());
 
         outcome.ValidateError(Errors.Authentication.InvalidCredentials);
     }

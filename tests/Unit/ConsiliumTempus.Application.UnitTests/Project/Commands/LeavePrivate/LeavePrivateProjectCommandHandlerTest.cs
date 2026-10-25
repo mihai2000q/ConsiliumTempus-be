@@ -107,7 +107,9 @@ public class LeavePrivateProjectCommandHandlerTest
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.NotPrivate);
     }
@@ -129,7 +131,9 @@ public class LeavePrivateProjectCommandHandlerTest
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

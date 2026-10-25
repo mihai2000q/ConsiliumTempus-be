@@ -118,8 +118,18 @@ public class RegisterCommandHandlerTest
         await _userRepository
             .Received(1)
             .GetByEmail(Arg.Any<string>());
-        _jwtTokenGenerator.DidNotReceive();
-        _userRepository.DidNotReceive();
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GetJwtIdFromToken(Arg.Any<string>());
+        await _userRepository
+            .DidNotReceive()
+            .Add(Arg.Any<UserAggregate>());
+        await _refreshTokenRepository
+            .DidNotReceive()
+            .Add(Arg.Any<RefreshToken>());
 
         outcome.ValidateError(Errors.User.DuplicateEmail);
     }

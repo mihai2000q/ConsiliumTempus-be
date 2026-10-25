@@ -115,7 +115,9 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Workspace.KickOwner);
     }
@@ -139,7 +141,9 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Workspace.CollaboratorNotFound);
     }
@@ -161,7 +165,9 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

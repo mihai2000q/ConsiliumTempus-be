@@ -88,7 +88,7 @@ public class MoveStageFromProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }
@@ -111,7 +111,7 @@ public class MoveStageFromProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectStage.NotFoundWithId(ProjectStageId.Create(command.StageId)));
     }
@@ -135,7 +135,7 @@ public class MoveStageFromProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectStage.NotFoundWithId(ProjectStageId.Create(command.OverStageId)));
     }

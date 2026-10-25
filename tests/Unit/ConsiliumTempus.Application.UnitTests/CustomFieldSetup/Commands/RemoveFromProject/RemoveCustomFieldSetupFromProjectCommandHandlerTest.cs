@@ -116,7 +116,7 @@ public class RemoveCustomFieldSetupFromProjectCommandHandlerTest
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
-        _projectRepository.DidNotReceive();
+        await _projectRepository.DidNotReceive().Get(Arg.Any<ProjectId>());
 
         outcome.ValidateError(Errors.CustomFieldSetup.NotGlobal);
     }
@@ -138,7 +138,7 @@ public class RemoveCustomFieldSetupFromProjectCommandHandlerTest
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
-        _projectRepository.DidNotReceive();
+        await _projectRepository.DidNotReceive().Get(Arg.Any<ProjectId>());
 
         outcome.ValidateError(Errors.CustomFieldSetup.NotFound);
     }

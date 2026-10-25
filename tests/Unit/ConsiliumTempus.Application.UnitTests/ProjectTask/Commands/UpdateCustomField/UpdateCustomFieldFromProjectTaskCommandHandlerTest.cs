@@ -90,7 +90,9 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        _userRepository.DidNotReceive();
+        await _userRepository
+            .DidNotReceive()
+            .Get(Arg.Any<UserId>());
 
         outcome.ValidateError(Errors.MultiSelectOption.NotFound);
     }
@@ -148,7 +150,9 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        _userRepository.DidNotReceive();
+        await _userRepository
+            .DidNotReceive()
+            .Get(Arg.Any<UserId>());
 
         outcome.ValidateError(Errors.CustomField.NotFound);
     }
@@ -170,7 +174,9 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        _userRepository.DidNotReceive();
+        await _userRepository
+            .DidNotReceive()
+            .Get(Arg.Any<UserId>());
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);
     }

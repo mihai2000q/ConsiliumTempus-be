@@ -112,7 +112,7 @@ public class UpdateCustomFieldSetupCommandHandlerTest
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(cId => cId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.CustomFieldSetup.NotFound);
     }

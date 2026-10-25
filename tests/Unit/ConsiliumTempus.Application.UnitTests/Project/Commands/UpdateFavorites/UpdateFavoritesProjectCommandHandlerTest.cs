@@ -75,7 +75,9 @@ public class UpdateFavoritesProjectCommandHandlerTest
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

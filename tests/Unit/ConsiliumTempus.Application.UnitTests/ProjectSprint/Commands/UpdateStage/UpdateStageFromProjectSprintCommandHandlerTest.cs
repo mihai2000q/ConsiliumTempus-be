@@ -80,7 +80,7 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }
@@ -103,7 +103,7 @@ public class UpdateStageFromProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectStage.NotFound);
     }

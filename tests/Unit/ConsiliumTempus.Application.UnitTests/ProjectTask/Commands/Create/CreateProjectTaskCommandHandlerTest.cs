@@ -81,7 +81,9 @@ public class CreateProjectTaskCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetStageWithTasksAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.ProjectStageId));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectStage.NotFound);
     }

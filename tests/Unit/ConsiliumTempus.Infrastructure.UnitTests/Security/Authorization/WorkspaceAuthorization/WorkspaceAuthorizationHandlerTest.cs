@@ -4,6 +4,8 @@ using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.Security.Authorization.WorkspaceAuthorization;
 using ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorization;
@@ -40,6 +42,12 @@ public class WorkspaceAuthorizationHandlerTest
         _uut = new WorkspaceAuthorizationHandler(scopeFactory);
     }
 
+    private async Task VerifyWorkspaceProviderDidNotReceiveAny()
+    {
+        await _workspaceProvider.DidNotReceive().GetWithMemberships(Arg.Any<WorkspaceId>());
+        await _workspaceProvider.DidNotReceive().GetByProjectWithMemberships(Arg.Any<ProjectId>());
+    }
+
     #endregion
 
     [Fact]
@@ -54,8 +62,8 @@ public class WorkspaceAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.DidNotReceive();
-        _workspaceProvider.DidNotReceive();
+        _ = _httpContextAccessor.DidNotReceive().HttpContext;
+        await VerifyWorkspaceProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeFalse();
     }
@@ -75,8 +83,8 @@ public class WorkspaceAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.DidNotReceive();
-        _workspaceProvider.DidNotReceive();
+        _ = _httpContextAccessor.DidNotReceive().HttpContext;
+        await VerifyWorkspaceProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeFalse();
     }
@@ -103,7 +111,7 @@ public class WorkspaceAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(1)
             .HttpContext;
-        _workspaceProvider.DidNotReceive();
+        await VerifyWorkspaceProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeFalse();
     }
@@ -138,7 +146,7 @@ public class WorkspaceAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-        _workspaceProvider.DidNotReceive();
+        await VerifyWorkspaceProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeTrue();
     }
@@ -173,7 +181,7 @@ public class WorkspaceAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-        _workspaceProvider.DidNotReceive();
+        await VerifyWorkspaceProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeTrue();
     }
@@ -204,7 +212,7 @@ public class WorkspaceAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
             .HttpContext;
-        _workspaceProvider.DidNotReceive();
+        await VerifyWorkspaceProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeTrue();
     }
@@ -241,7 +249,7 @@ public class WorkspaceAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
             .HttpContext;
-        _workspaceProvider.DidNotReceive();
+        await VerifyWorkspaceProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeTrue();
     }
@@ -278,7 +286,7 @@ public class WorkspaceAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
             .HttpContext;
-        _workspaceProvider.DidNotReceive();
+        await VerifyWorkspaceProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeTrue();
     }

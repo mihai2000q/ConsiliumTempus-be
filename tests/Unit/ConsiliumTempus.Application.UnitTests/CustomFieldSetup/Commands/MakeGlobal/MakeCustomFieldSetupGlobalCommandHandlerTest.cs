@@ -88,7 +88,7 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.CustomFieldSetup.AlreadyGlobal);
     }
@@ -110,7 +110,7 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.CustomFieldSetup.NotFound);
     }

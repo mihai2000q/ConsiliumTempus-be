@@ -2,6 +2,10 @@
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Infrastructure.Security.Authorization.ProjectAuthorization;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorization;
@@ -39,6 +43,15 @@ public class ProjectAuthorizationHandlerTest
         _uut = new ProjectAuthorizationHandler(scopeFactory);
     }
 
+    private async Task VerifyProjectProviderDidNotReceiveAny()
+    {
+        await _projectProvider.DidNotReceive().Get(Arg.Any<ProjectId>());
+        await _projectProvider.DidNotReceive().GetByCustomFieldSetup(Arg.Any<CustomFieldSetupId>());
+        await _projectProvider.DidNotReceive().GetByProjectSprint(Arg.Any<ProjectSprintId>());
+        await _projectProvider.DidNotReceive().GetByProjectStage(Arg.Any<ProjectStageId>());
+        await _projectProvider.DidNotReceive().GetByProjectTask(Arg.Any<ProjectTaskId>());
+    }
+
     #endregion
 
     [Fact]
@@ -53,8 +66,8 @@ public class ProjectAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.DidNotReceive();
-        _projectProvider.DidNotReceive();
+        _ = _httpContextAccessor.DidNotReceive().HttpContext;
+        await VerifyProjectProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeFalse();
     }
@@ -74,8 +87,8 @@ public class ProjectAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.DidNotReceive();
-        _projectProvider.DidNotReceive();
+        _ = _httpContextAccessor.DidNotReceive().HttpContext;
+        await VerifyProjectProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeFalse();
     }
@@ -102,7 +115,7 @@ public class ProjectAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(1)
             .HttpContext;
-        _projectProvider.DidNotReceive();
+        await VerifyProjectProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeFalse();
     }
@@ -139,7 +152,7 @@ public class ProjectAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-        _projectProvider.DidNotReceive();
+        await VerifyProjectProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeTrue();
     }
@@ -176,7 +189,7 @@ public class ProjectAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-        _projectProvider.DidNotReceive();
+        await VerifyProjectProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeTrue();
     }
@@ -210,7 +223,7 @@ public class ProjectAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
             .HttpContext;
-        _projectProvider.DidNotReceive();
+        await VerifyProjectProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeTrue();
     }
@@ -250,7 +263,7 @@ public class ProjectAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
             .HttpContext;
-        _projectProvider.DidNotReceive();
+        await VerifyProjectProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeTrue();
     }
@@ -290,7 +303,7 @@ public class ProjectAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
             .HttpContext;
-        _projectProvider.DidNotReceive();
+        await VerifyProjectProviderDidNotReceiveAny();
 
         context.HasSucceeded.Should().BeTrue();
     }

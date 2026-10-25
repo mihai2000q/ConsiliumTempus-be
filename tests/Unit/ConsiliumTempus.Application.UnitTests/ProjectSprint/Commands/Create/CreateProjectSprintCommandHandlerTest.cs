@@ -90,8 +90,8 @@ public class CreateProjectSprintCommandHandlerTest
         await _projectRepository
             .Received(1)
             .GetWithStages(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
-        _currentUserProvider.DidNotReceive();
-        _projectSprintRepository.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
+        await _projectSprintRepository.DidNotReceive().Add(Arg.Any<ProjectSprintAggregate>());
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

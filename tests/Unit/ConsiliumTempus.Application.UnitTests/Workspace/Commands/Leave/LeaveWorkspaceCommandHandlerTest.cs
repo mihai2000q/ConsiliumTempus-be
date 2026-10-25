@@ -112,7 +112,9 @@ public class LeaveWorkspaceCommandHandlerTest
         await _workspaceRepository
             .Received(1)
             .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }
