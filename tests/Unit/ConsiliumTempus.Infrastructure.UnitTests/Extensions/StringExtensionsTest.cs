@@ -6,12 +6,12 @@ public class StringExtensionsTest
 {
     [Theory]
     [InlineData("first", "second", "first_second")]
-    public void Dash_ShouldConcatenate2StringsWithDashSymbol(string input1, string input2, string expected)
+    public void Dash_ShouldConcatenate2StringsWithUnderscoreSymbol(string input1, string input2, string expected)
     {
         // Arrange - parameterized
 
         // Act
-        var outcome = input1.Dash(input2);
+        var outcome = input1.Underscore(input2);
 
         // Assert
         outcome.Should().Be(expected);
@@ -25,7 +25,7 @@ public class StringExtensionsTest
     [InlineData("ThisIsAVariable", "thisIsAVariable")]
     [InlineData("Someone", "someone")]
     [InlineData("ExpectedValue", "expectedValue")]
-    public void FromPascalToCamelCase_LeaveWorkspaceShouldReturnStringWithCamelCaseNotation(string input,
+    public void FromPascalToCamelCase_ShouldReturnStringWithCamelCaseNotation(string input,
         string expected)
     {
         // Arrange - parameterized
@@ -41,7 +41,7 @@ public class StringExtensionsTest
     [InlineData("", "Id")]
     [InlineData("role", "roleId")]
     [InlineData("BigRole", "BigRoleId")]
-    public void ToId_LeaveWorkspaceShouldReturnStringWithSuffixId(string input, string expected)
+    public void ToId_ShouldReturnStringWithSuffixId(string input, string expected)
     {
         // Arrange - parameterized
 
@@ -59,7 +59,7 @@ public class StringExtensionsTest
     [InlineData("aB", "_aB")]
     [InlineData("Role", "_role")]
     [InlineData("WorkspaceRole", "_workspaceRole")]
-    public void ToBackingField_LeaveWorkspaceShouldReturnStringWithBackingFieldNotation(string input, string expected)
+    public void ToBackingField_ShouldReturnStringWithBackingFieldNotation(string input, string expected)
     {
         // Arrange - parameterized
 
@@ -77,7 +77,7 @@ public class StringExtensionsTest
     [InlineData("aB", "_aBId")]
     [InlineData("Role", "_roleId")]
     [InlineData("WorkspaceRole", "_workspaceRoleId")]
-    public void ToIdBackingField_LeaveWorkspaceShouldReturnStringWithIdBackingFieldNotation(string input,
+    public void ToIdBackingField_ShouldReturnStringWithIdBackingFieldNotation(string input,
         string expected)
     {
         // Arrange - parameterized
@@ -94,7 +94,7 @@ public class StringExtensionsTest
     [InlineData("Workspace", "Workspace")]
     [InlineData("WorkspaceAggreg", "WorkspaceAggreg")]
     [InlineData("WorkspaceAggregate", "Workspace")]
-    public void TruncateAggregate_LeaveWorkspaceShouldReturnStringWithoutAggregate(string input, string expected)
+    public void TruncateAggregate_ShouldReturnStringWithoutAggregate(string input, string expected)
     {
         // Arrange - parameterized
 

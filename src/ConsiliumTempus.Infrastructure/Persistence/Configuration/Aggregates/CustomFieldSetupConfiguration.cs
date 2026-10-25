@@ -58,7 +58,7 @@ public sealed class DateCustomFieldSetupConfiguration : IEntityTypeConfiguration
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.Date.ToString()));
+            .Underscore(CustomFieldType.Date.ToString()));
 
         builder.Property(d => d.DefaultDate);
     }
@@ -70,7 +70,7 @@ public sealed class DateTimeCustomFieldSetupConfiguration : IEntityTypeConfigura
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.DateTime.ToString()));
+            .Underscore(CustomFieldType.DateTime.ToString()));
 
         builder.Property(d => d.DefaultDateTime);
     }
@@ -82,7 +82,7 @@ public sealed class DurationCustomFieldSetupConfiguration : IEntityTypeConfigura
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.Duration.ToString()));
+            .Underscore(CustomFieldType.Duration.ToString()));
 
         builder.Property(d => d.DefaultDuration)
             .HasConversion<long>();
@@ -96,7 +96,7 @@ public sealed class
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.MultiSelect.ToString()));
+            .Underscore(CustomFieldType.MultiSelect.ToString()));
 
         builder.HasMany(m => m.Options)
             .WithOne()
@@ -112,7 +112,7 @@ public sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfigurati
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.Number.ToString()));
+            .Underscore(CustomFieldType.Number.ToString()));
 
         builder.OwnsOne(n => n.Settings, nb =>
         {
@@ -141,7 +141,7 @@ public sealed class PeopleCustomFieldSetupConfiguration : IEntityTypeConfigurati
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.People.ToString()));
+            .Underscore(CustomFieldType.People.ToString()));
     }
 }
 
@@ -152,7 +152,7 @@ public sealed class
     {
         var tableName = nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.SingleSelect.ToString());
+            .Underscore(CustomFieldType.SingleSelect.ToString());
         builder.ToTable(tableName);
 
         builder.HasMany(s => s.Options)
@@ -173,7 +173,7 @@ public sealed class TextCustomFieldSetupConfiguration : IEntityTypeConfiguration
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.Text.ToString()));
+            .Underscore(CustomFieldType.Text.ToString()));
 
         builder.OwnsOne(n => n.DefaultText)
             .Property(dt => dt.Value)
@@ -187,7 +187,7 @@ public sealed class TimeCustomFieldSetupConfiguration : IEntityTypeConfiguration
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.Time.ToString()));
+            .Underscore(CustomFieldType.Time.ToString()));
 
         builder.Property(t => t.DefaultTime);
     }
