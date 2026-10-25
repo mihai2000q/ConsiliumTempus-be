@@ -32,7 +32,7 @@ public class WorkspaceControllerGetTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetWorkspace_WhenItFails_ShouldReturnNotFoundError()
+    public async Task GetWorkspace_WhenWorkspaceIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = WorkspaceRequestFactory.CreateGetWorkspaceRequest();

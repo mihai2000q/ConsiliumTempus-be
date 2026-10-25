@@ -32,7 +32,7 @@ public class WorkspaceControllerGetOverviewOverviewTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetOverview_WhenItFails_ShouldReturnNotFoundError()
+    public async Task GetOverview_WhenWorkspaceIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = WorkspaceRequestFactory.CreateGetOverviewWorkspaceRequest();
