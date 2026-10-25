@@ -31,7 +31,9 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
         // Arrange
         var workspace = WorkspaceFactory.Create();
         var invitation = WorkspaceInvitationFactory.Create();
+        var otherInvitation = WorkspaceInvitationFactory.Create();
         workspace.AddInvitation(invitation);
+        workspace.AddInvitation(otherInvitation);
         _workspaceRepository
             .GetWithInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
@@ -51,7 +53,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new RejectInvitationToWorkspaceResult());
 
-        Utils.Workspace.AssertFromRejectInvitationCommand(command, workspace);
+        Utils.Workspace.AssertFromRejectInvitationCommand(command, workspace, [otherInvitation]);
     }
 
     [Fact]

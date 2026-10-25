@@ -17,6 +17,7 @@ using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.Events;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
@@ -72,11 +73,12 @@ internal static partial class Utils
         internal static void AssertFromAcceptInvitationCommand(
             AcceptInvitationToWorkspaceCommand command,
             WorkspaceAggregate workspace,
-            UserAggregate user)
+            UserAggregate user,
+            List<WorkspaceInvitation> remainingInvitations)
         {
             workspace.Id.Value.Should().Be(command.Id);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            workspace.Invitations.Should().HaveCount(0);
+            workspace.Invitations.Should().Equal(remainingInvitations);
             workspace.Memberships.Should().ContainSingle(m => m.User == user);
 
             var membership = workspace.Memberships.Single(m => m.User == user);
@@ -99,10 +101,11 @@ internal static partial class Utils
 
         internal static void AssertFromRejectInvitationCommand(
             RejectInvitationToWorkspaceCommand command,
-            WorkspaceAggregate workspace)
+            WorkspaceAggregate workspace,
+            List<WorkspaceInvitation> remainingInvitations)
         {
             workspace.Id.Value.Should().Be(command.Id);
-            workspace.Invitations.Should().HaveCount(0);
+            workspace.Invitations.Should().Equal(remainingInvitations);
         }
 
         internal static void AssertFromLeaveCommand(

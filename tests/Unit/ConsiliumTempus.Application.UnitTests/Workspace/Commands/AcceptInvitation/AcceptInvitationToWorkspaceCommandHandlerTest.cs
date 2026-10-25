@@ -37,7 +37,9 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         // Arrange
         var workspace = WorkspaceFactory.Create();
         var invitation = WorkspaceInvitationFactory.Create();
+        var otherInvitation = WorkspaceInvitationFactory.Create();
         workspace.AddInvitation(invitation);
+        workspace.AddInvitation(otherInvitation);
         _workspaceRepository
             .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
@@ -66,7 +68,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new AcceptInvitationToWorkspaceResult());
 
-        Utils.Workspace.AssertFromAcceptInvitationCommand(command, workspace, user);
+        Utils.Workspace.AssertFromAcceptInvitationCommand(command, workspace, user, [otherInvitation]);
     }
 
     [Fact]
