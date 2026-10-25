@@ -24,10 +24,8 @@ public sealed class CurrentUserProvider(
 
     public async Task<UserAggregate> GetCurrentUserAfterPermissionCheck(CancellationToken cancellationToken = default)
     {
-        var subUserId = httpContextAccessor.HttpContext!.User.Claims
-            .Single(x => x.Type == JwtRegisteredClaimNames.Sub).Value;
-        var userId = UserId.Create(Guid.Parse(subUserId));
-        var user = await userRepository.Get(userId, cancellationToken);
-        return user!;
+        return await GetCurrentUser(cancellationToken) ??
+               throw new InvalidOperationException(
+                   "The current user could not be found, although the permission check has passed.");
     }
 }
