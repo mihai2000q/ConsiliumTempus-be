@@ -74,8 +74,13 @@ internal sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceSc
                     HttpRequestReader.GetStringIdFromRoute(request, typeof(ProjectAggregate).ToCamelId()),
                     StringIdType.Project),
 
-                "CreateOnProject" => (
-                    await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()), 
+                "CreateOnProject" or
+                "AddToProject" => (
+                    await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()),
+                    StringIdType.Project),
+
+                "RemoveFromProject" => (
+                    HttpRequestReader.GetStringIdFromRoute(request, typeof(ProjectAggregate).ToCamelId()),
                     StringIdType.Project),
 
                 "Update" or
