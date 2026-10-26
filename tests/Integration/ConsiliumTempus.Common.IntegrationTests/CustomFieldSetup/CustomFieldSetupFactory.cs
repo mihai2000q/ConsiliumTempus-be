@@ -148,7 +148,7 @@ public static class CustomFieldSetupFactory
             .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.Workspace), workspace)
             .WithField(nameof(SingleSelectCustomFieldSetupAggregate.Projects).ToBackingField(), projects)
             .WithField(nameof(SingleSelectCustomFieldSetupAggregate.Options).ToBackingField(), options)
-            .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.DefaultOption), defaultOption)
+            .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.DefaultOptionId), defaultOption?.Id)
             .Build();
     }
 

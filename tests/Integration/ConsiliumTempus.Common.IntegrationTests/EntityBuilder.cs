@@ -28,11 +28,17 @@ internal sealed class EntityBuilder<TEntity>
                            ?? properties.FirstOrDefault(p => p.Name == propertyName && p.CanWrite)
                            ?? properties.First(p => p.Name == propertyName);
         if (propertyInfo.CanWrite)
+        {
             propertyInfo.SetValue(Entity, newProperty);
-        else
-            propertyInfo.DeclaringType?.GetRuntimeFields()
-                .SingleOrDefault(f => f.Name == ToObjectBackingField(propertyName))
-                ?.SetValue(Entity, newProperty);
+            return this;
+        }
+
+        var backingField = propertyInfo.DeclaringType?.GetRuntimeFields()
+            .SingleOrDefault(f => f.Name == ToObjectBackingField(propertyName));
+        if (backingField is null)
+            throw new InvalidOperationException(
+                $"The property '{propertyName}' of '{typeof(TEntity).Name}' cannot be written and has no backing field");
+        backingField.SetValue(Entity, newProperty);
 
         return this;
     }
@@ -42,7 +48,7 @@ internal sealed class EntityBuilder<TEntity>
         var field = typeof(TEntity).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (field is not null) field.SetValue(Entity, newField);
-        else if (typeof(TEntity).BaseType is not null) SetParentField(fieldName, newField);
+        else SetParentField(fieldName, newField);
 
         return this;
     }
@@ -66,8 +72,11 @@ internal sealed class EntityBuilder<TEntity>
 
     private void SetParentField(string fieldName, object? newField)
     {
-        typeof(TEntity).BaseType
-            !.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
-            ?.SetValue(Entity, newField);
+        var field = typeof(TEntity).BaseType
+            ?.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+        if (field is null)
+            throw new InvalidOperationException(
+                $"The field '{fieldName}' does not exist in '{typeof(TEntity).Name}' or in its base type");
+        field.SetValue(Entity, newField);
     }
 }

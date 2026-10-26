@@ -15,7 +15,6 @@ public static class MembershipFactory
         DateTime? updatedDateTime = null)
     {
         return EntityBuilder<Membership>.Empty()
-            .WithProperty(nameof(Membership.Id), (user.Id, workspace.Id))
             .WithProperty(nameof(Membership.User), user)
             .WithProperty(nameof(Membership.Workspace), workspace)
             .WithField(nameof(Membership.WorkspaceRole).ToIdBackingField(), workspaceRole.Id)
