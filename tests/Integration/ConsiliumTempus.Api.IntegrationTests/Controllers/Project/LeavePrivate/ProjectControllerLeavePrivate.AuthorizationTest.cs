@@ -13,26 +13,26 @@ public class ProjectControllerLeavePrivateAuthorizationTest(WebAppFactory factor
 {
     // Workspace Authorization
     [Fact]
-    public async Task RemoveAllowedMemberFromProject_WhenIsCollaborator_ShouldReturnSuccessResponse()
+    public async Task LeavePrivateProject_WhenIsCollaborator_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(ProjectData.Users[3]);
     }
 
     [Fact]
-    public async Task RemoveAllowedMemberFromProject_WhenIsNotCollaborator_ShouldReturnForbiddenResponse()
+    public async Task LeavePrivateProject_WhenIsNotCollaborator_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectData.Users[1], ProjectData.Projects[^4]);
     }
 
     // Project Authorization
     [Fact]
-    public async Task RemoveAllowedMemberFromProject_WhenIsAllowed_ShouldReturnSuccessResponse()
+    public async Task LeavePrivateProject_WhenIsAllowed_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(ProjectData.Users[3]);
     }
 
     [Fact]
-    public async Task RemoveAllowedMemberFromProject_WhenIsNotAllowed_ShouldReturnForbiddenResponse()
+    public async Task LeavePrivateProject_WhenIsNotAllowed_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(ProjectData.Users[4]);
     }

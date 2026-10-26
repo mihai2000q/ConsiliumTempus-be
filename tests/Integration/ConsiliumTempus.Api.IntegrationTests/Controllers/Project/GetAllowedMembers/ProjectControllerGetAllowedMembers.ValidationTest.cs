@@ -26,7 +26,7 @@ public class ProjectControllerGetAllowedMembersValidationTest(WebAppFactory fact
     }
 
     [Fact]
-    public async Task GetAllowedMembersProject_WhenRequestIsInvalid_ShouldReturnValidationErrors()
+    public async Task GetAllowedMembersFromProject_WhenRequestIsInvalid_ShouldReturnValidationErrors()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetAllowedMembersFromProjectRequest(Guid.Empty);

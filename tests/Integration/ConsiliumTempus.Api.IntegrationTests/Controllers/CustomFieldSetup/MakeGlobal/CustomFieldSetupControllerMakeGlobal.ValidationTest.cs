@@ -7,7 +7,7 @@ using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.MakeGlobal;
 
 [Collection(nameof(CustomFieldSetupControllerCollection))]
-public class CustomFieldSetupControllerUpdateWorkspaceValidationTest(WebAppFactory factory)
+public class CustomFieldSetupControllerMakeGlobalValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new CustomFieldSetupData())
 {
     [Fact]

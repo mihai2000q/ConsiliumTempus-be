@@ -62,7 +62,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
     {
         // Arrange
         var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
-        var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
+        var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest(
             customFieldSetup.Id.Value,
             Guid.NewGuid());
 
@@ -82,12 +82,12 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenIsNotGlobal_ShouldReturnNotGlobalError()
+    public async Task RemoveCustomFieldSetupFromProject_WhenIsNotGlobal_ShouldReturnNotGlobalError()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
         var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
-        var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
+        var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest(
             customFieldSetup.Id.Value);
 
         // Act
@@ -104,10 +104,10 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task RemoveCustomFieldSetupFromProject_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
-        var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
+        var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest(
             Guid.NewGuid());
 
         // Act

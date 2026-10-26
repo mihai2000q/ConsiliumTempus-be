@@ -107,7 +107,7 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenIsNotGlobal_ShouldReturnNotGlobalError()
+    public async Task AddCustomFieldSetupToProject_WhenIsNotGlobal_ShouldReturnNotGlobalError()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
@@ -129,7 +129,7 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task AddCustomFieldSetupToProject_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(

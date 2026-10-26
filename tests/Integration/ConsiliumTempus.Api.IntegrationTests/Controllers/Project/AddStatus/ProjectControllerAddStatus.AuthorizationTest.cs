@@ -8,7 +8,7 @@ using ConsiliumTempus.Domain.User;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.AddStatus;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerAddStatusToProjectAuthorizationTest(WebAppFactory factory)
+public class ProjectControllerAddStatusAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     // Permission Authorization

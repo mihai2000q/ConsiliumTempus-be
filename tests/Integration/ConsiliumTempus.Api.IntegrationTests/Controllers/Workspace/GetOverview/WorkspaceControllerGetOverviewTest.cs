@@ -10,7 +10,7 @@ using ConsiliumTempus.Domain.Common.Errors;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.GetOverview;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerGetOverviewOverviewTest(WebAppFactory factory)
+public class WorkspaceControllerGetOverviewTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]

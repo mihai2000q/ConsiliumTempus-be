@@ -9,7 +9,7 @@ using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.GetStages;
 
 [Collection(nameof(ProjectSprintControllerCollection))]
-public class ProjectSprintControllerGetStagesStagesTest(WebAppFactory factory)
+public class ProjectSprintControllerGetStagesTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectSprintData())
 {
     [Fact]
@@ -34,7 +34,7 @@ public class ProjectSprintControllerGetStagesStagesTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetStagesProjectSprint_WhenIsNotFound_ShouldReturnEmptyStages()
+    public async Task GetStagesFromProjectSprint_WhenIsNotFound_ShouldReturnEmptyStages()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetStagesFromProjectSprintRequest(

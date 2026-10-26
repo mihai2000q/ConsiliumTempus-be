@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.UpdateOwner;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerUpdateOwnerOwnerTest(WebAppFactory factory)
+public class WorkspaceControllerUpdateOwnerTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
