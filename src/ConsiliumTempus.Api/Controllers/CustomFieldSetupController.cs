@@ -102,6 +102,7 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.AddCustomFieldSetupToProject)]
     [HttpPost("Add-Project")]
     public async Task<IActionResult> AddToProject(AddCustomFieldSetupToProjectRequest request,
@@ -159,6 +160,7 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.RemoveCustomFieldSetupFromProject)]
     [HttpDelete("{id:guid}/Remove-Project/{projectId:guid}")]
     public async Task<IActionResult> RemoveFromProject(RemoveCustomFieldSetupFromProjectRequest request,

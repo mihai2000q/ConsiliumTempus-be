@@ -2,6 +2,7 @@
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.RemoveFromProject;
@@ -10,6 +11,7 @@ namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.Remo
 public class CustomFieldSetupControllerRemoveFromProjectAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new CustomFieldSetupData())
 {
+    // Permission Authorization
     [Fact]
     public async Task RemoveCustomFieldSetupFromProject_WhenWithAdminRole_ShouldReturnSuccessResponse()
     {
@@ -34,27 +36,50 @@ public class CustomFieldSetupControllerRemoveFromProjectAuthorizationTest(WebApp
         await AssertForbiddenResponse(CustomFieldSetupData.Users[1]);
     }
 
-    private async Task AssertSuccessfulResponse(UserAggregate user)
+    // Project Authorization
+    [Fact]
+    public async Task RemoveCustomFieldSetupFromProject_WhenProjectIsNotPrivate_ShouldReturnSuccessResponse()
     {
-        var outcome = await ArrangeAndAct(user);
+        await AssertSuccessfulResponse(CustomFieldSetupData.Users[4], CustomFieldSetupData.Projects[^3]);
+    }
+
+    [Fact]
+    public async Task
+        RemoveCustomFieldSetupFromProject_WhenProjectIsPrivateAndIsAllowedMember_ShouldReturnSuccessResponse()
+    {
+        await AssertSuccessfulResponse(CustomFieldSetupData.Users[0], CustomFieldSetupData.Projects[^2]);
+    }
+
+    [Fact]
+    public async Task
+        RemoveCustomFieldSetupFromProject_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
+    {
+        await AssertForbiddenResponse(CustomFieldSetupData.Users[0], CustomFieldSetupData.Projects[^1]);
+    }
+
+    private async Task AssertSuccessfulResponse(UserAggregate user, ProjectAggregate? project = null)
+    {
+        var outcome = await ArrangeAndAct(user, project);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-    private async Task AssertForbiddenResponse(UserAggregate user)
+    private async Task AssertForbiddenResponse(UserAggregate user, ProjectAggregate? project = null)
     {
-        var outcome = await ArrangeAndAct(user);
+        var outcome = await ArrangeAndAct(user, project);
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
+    private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user, ProjectAggregate? project = null)
     {
         // Arrange
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
-        var project = customFieldSetup.Projects[0];
+        var customFieldSetup = project is null
+            ? CustomFieldSetupData.CustomFieldSetups.First()
+            : CustomFieldSetupData.CustomFieldSetups.First(cfs => cfs.Workspace == project.Workspace);
+        project ??= customFieldSetup.Projects[0];
         var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest(
             customFieldSetup.Id.Value,
             project.Id.Value);
