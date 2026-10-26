@@ -81,7 +81,8 @@ public class ProjectTaskControllerDeleteTest(WebAppFactory factory)
     public async Task DeleteProjectTask_WhenStageIsNotFound_ShouldReturnStageNotFoundError()
     {
         // Arrange
-        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest();
+        var task = ProjectTaskData.ProjectTasks.First();
+        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(task.Id.Value);
 
         // Act
         var outcome = await Client.Delete($"api/projects/tasks/" +
@@ -94,6 +95,6 @@ public class ProjectTaskControllerDeleteTest(WebAppFactory factory)
         dbContext.ProjectTasks.Should().HaveCount(ProjectTaskData.ProjectTasks.Length);
         dbContext.ProjectTasks
             .SingleOrDefault(p => p.Id == ProjectTaskId.Create(request.Id))
-            .Should().BeNull();
+            .Should().NotBeNull();
     }
 }
