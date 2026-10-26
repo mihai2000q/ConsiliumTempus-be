@@ -44,9 +44,5 @@ public static partial class Errors
         public static Error AlreadyCollaborator => Error.Conflict(
             "WorkspaceInvitation.AlreadyCollaborator",
             "This user is already a collaborator");
-
-        public static Error NotInvitedUser => Error.Forbidden(
-            "WorkspaceInvitation.NotInvitedUser",
-            "You are not the user this invitation was sent to");
     }
 }

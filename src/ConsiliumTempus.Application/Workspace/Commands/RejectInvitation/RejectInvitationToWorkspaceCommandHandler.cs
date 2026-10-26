@@ -25,7 +25,7 @@ internal sealed class RejectInvitationToWorkspaceCommandHandler(
 
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
         if (user is null) return Errors.User.NotFound;
-        if (invitation.Collaborator.Id != user.Id) return Errors.WorkspaceInvitation.NotInvitedUser;
+        if (invitation.Collaborator.Id != user.Id) return Errors.WorkspaceInvitation.NotFound;
 
         workspace.RemoveInvitation(invitation);
 

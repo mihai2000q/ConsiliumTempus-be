@@ -108,7 +108,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
 
     [Fact]
     public async Task
-        HandleRejectInvitationToWorkspaceCommand_WhenUserIsNotTheInvitedCollaborator_ShouldReturnNotInvitedUserError()
+        HandleRejectInvitationToWorkspaceCommand_WhenUserIsNotTheInvitedCollaborator_ShouldReturnInvitationNotFoundError()
     {
         // Arrange
         var workspace = WorkspaceFactory.Create();
@@ -138,7 +138,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
             .Received(1)
             .GetCurrentUser();
 
-        outcome.ValidateError(Errors.WorkspaceInvitation.NotInvitedUser);
+        outcome.ValidateError(Errors.WorkspaceInvitation.NotFound);
         workspace.Invitations.Should().Equal(invitation);
     }
 

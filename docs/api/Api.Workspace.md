@@ -328,7 +328,8 @@ Returns a confirmation message that the invitation has been sent successfully.
 
 ### Accept Invitation
 
-Only the invited user can accept the invitation to a workspace.
+Only the invited user can accept the invitation to a workspace
+(for anyone else, the invitation is treated as not found).
 No workspace permission is required, because the user is not yet a collaborator of the workspace.
 
 ```js
@@ -352,7 +353,8 @@ Returns a confirmation message that the invitation has been accepted successfull
 
 ### Reject Invitation
 
-Only the invited user can reject the invitation to a workspace.
+Only the invited user can reject the invitation to a workspace
+(for anyone else, the invitation is treated as not found).
 No workspace permission is required, because the user is not yet a collaborator of the workspace.
 
 ```js
