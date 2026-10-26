@@ -2,7 +2,7 @@
 using ConsiliumTempus.Api.Contracts.User.Get;
 using ConsiliumTempus.Api.Contracts.User.GetCurrent;
 using ConsiliumTempus.Api.Contracts.User.UpdateCurrent;
-using ConsiliumTempus.Application.Common.Extensions;
+using ConsiliumTempus.Common.IntegrationTests.Extensions;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;

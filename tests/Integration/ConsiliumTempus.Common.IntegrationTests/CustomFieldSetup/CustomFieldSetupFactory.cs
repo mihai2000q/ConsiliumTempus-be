@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
+﻿using ConsiliumTempus.Common.IntegrationTests.Extensions;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
@@ -6,7 +6,6 @@ using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace;
-using ConsiliumTempus.Infrastructure.Extensions;
 
 namespace ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 

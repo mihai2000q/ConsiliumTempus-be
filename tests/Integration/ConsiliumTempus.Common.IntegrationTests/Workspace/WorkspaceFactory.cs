@@ -1,9 +1,9 @@
-﻿using ConsiliumTempus.Common.IntegrationTests.TestConstants;
+﻿using ConsiliumTempus.Common.IntegrationTests.Extensions;
+using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
-using ConsiliumTempus.Infrastructure.Extensions;
 
 namespace ConsiliumTempus.Common.IntegrationTests.Workspace;
 
