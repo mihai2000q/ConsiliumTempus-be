@@ -35,8 +35,9 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         HandleAcceptInvitationToWorkspaceCommand_WhenIsSuccessful_ShouldAddUserRemoveInvitationAndReturnSuccessResponse()
     {
         // Arrange
+        var user = UserFactory.Create();
         var workspace = WorkspaceFactory.Create();
-        var invitation = WorkspaceInvitationFactory.Create();
+        var invitation = WorkspaceInvitationFactory.Create(collaborator: user);
         var otherInvitation = WorkspaceInvitationFactory.Create();
         workspace.AddInvitation(invitation);
         workspace.AddInvitation(otherInvitation);
@@ -44,7 +45,6 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
             .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
 
-        var user = UserFactory.Create();
         _currentUserProvider
             .GetCurrentUser()
             .Returns(user);
@@ -153,5 +153,43 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
             .GetCurrentUser();
 
         outcome.ValidateError(Errors.Workspace.NotFound);
+    }
+    
+    [Fact]
+    public async Task
+        HandleAcceptInvitationToWorkspaceCommand_WhenUserIsNotTheInvitedCollaborator_ShouldReturnNotInvitedUserError()
+    {
+        // Arrange
+        var workspace = WorkspaceFactory.Create();
+        var invitation = WorkspaceInvitationFactory.Create();
+        workspace.AddInvitation(invitation);
+        _workspaceRepository
+            .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
+            .Returns(workspace);
+
+        var user = UserFactory.Create();
+        _currentUserProvider
+            .GetCurrentUser()
+            .Returns(user);
+
+        var command = WorkspaceCommandFactory.CreateAcceptInvitationToWorkspaceCommand(
+            workspace.Id.Value,
+            invitation.Id.Value);
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _workspaceRepository
+            .Received(1)
+            .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
+
+        await _currentUserProvider
+            .Received(1)
+            .GetCurrentUser();
+
+        outcome.ValidateError(Errors.WorkspaceInvitation.NotInvitedUser);
+        workspace.Invitations.Should().Equal(invitation);
+        workspace.Memberships.Should().NotContain(m => m.User == user);
     }
 }

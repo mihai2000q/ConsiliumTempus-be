@@ -75,6 +75,32 @@ public class WorkspaceControllerAcceptInvitationTest(WebAppFactory factory)
     }
 
     [Fact]
+    public async Task AcceptInvitationToWorkspace_WhenUserIsNotTheInvitedCollaborator_ShouldReturnNotInvitedUserError()
+    {
+        // Arrange
+        var invitation = WorkspaceData.WorkspaceInvitations.First();
+        var request = WorkspaceRequestFactory.CreateAcceptInvitationToWorkspaceRequest(
+            invitation.Workspace.Id.Value,
+            invitation.Id.Value);
+
+        // Act
+        Client.UseCustomToken(invitation.Sender);
+        var outcome = await Client.Post("api/workspaces/accept-invitation", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.WorkspaceInvitation.NotInvitedUser);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Set<WorkspaceInvitation>()
+            .SingleOrDefault(i => i.Id == invitation.Id)
+            .Should().NotBeNull();
+        dbContext.Workspaces
+            .Include(w => w.Memberships)
+            .Single(w => w.Id == invitation.Workspace.Id)
+            .Memberships.Should().NotContain(m => m.User.Id == invitation.Collaborator.Id);
+    }
+
+    [Fact]
     public async Task AcceptInvitationToWorkspace_WhenInvitationIsNotFound_ShouldReturnInvitationNotFoundError()
     {
         // Arrange

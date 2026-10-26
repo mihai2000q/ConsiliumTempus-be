@@ -328,7 +328,8 @@ Returns a confirmation message that the invitation has been sent successfully.
 
 ### Accept Invitation
 
-Anyone can accept an invitation to a workspace.
+Only the invited user can accept the invitation to a workspace.
+No workspace permission is required, because the user is not yet a collaborator of the workspace.
 
 ```js
 POST {{host}}/api/workspaces/accept-invitation
@@ -351,7 +352,8 @@ Returns a confirmation message that the invitation has been accepted successfull
 
 ### Reject Invitation
 
-Anyone can reject an invitation to a workspace.
+Only the invited user can reject the invitation to a workspace.
+No workspace permission is required, because the user is not yet a collaborator of the workspace.
 
 ```js
 POST {{host}}/api/workspaces/reject-invitation
