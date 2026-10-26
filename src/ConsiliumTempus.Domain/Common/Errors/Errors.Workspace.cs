@@ -37,11 +37,11 @@ public static partial class Errors
             "WorkspaceInvitation.NotFound",
             "Workspace Invitation could not be found");
 
-        public static Error AlreadyInvited => Error.NotFound(
+        public static Error AlreadyInvited => Error.Conflict(
             "WorkspaceInvitation.AlreadyInvited",
             "This user has already been invited");
 
-        public static Error AlreadyCollaborator => Error.NotFound(
+        public static Error AlreadyCollaborator => Error.Conflict(
             "WorkspaceInvitation.AlreadyCollaborator",
             "This user is already a collaborator");
 
