@@ -42,8 +42,7 @@ internal static class FluentValidationExtensions
     {
         return ruleBuilder
             .Matches("^[A-Z]{3}$")
-            .WithMessage("'{PropertyName}' must be valid Currency Code")
-            .When(s => s is not null);
+            .WithMessage("'{PropertyName}' must be valid Currency Code");
     }
 
     public static IRuleBuilderOptions<T, string> IsColor<T>(this IRuleBuilder<T, string> ruleBuilder)
