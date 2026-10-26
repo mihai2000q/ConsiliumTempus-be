@@ -1,5 +1,5 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
+﻿using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
+using ConsiliumTempus.Common.UnitTests.Extensions;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.ProjectTask;
