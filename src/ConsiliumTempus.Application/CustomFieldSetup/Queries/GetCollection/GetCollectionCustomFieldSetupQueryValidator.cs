@@ -9,8 +9,8 @@ internal sealed class GetCollectionCustomFieldSetupQueryValidator : AbstractVali
     {
         RuleFor(c => c)
             .Must(c =>
-                (c.WorkspaceId is not null && c.WorkspaceId != Guid.Empty) ||
-                (c.ProjectId is not null && c.ProjectId != Guid.Empty))
+                c.WorkspaceId.GetValueOrDefault() != Guid.Empty ||
+                c.ProjectId.GetValueOrDefault() != Guid.Empty)
             .WithMessage("Either the 'WorkspaceId' or the 'ProjectId' must be set")
             .WithName(nameof(GetCollectionCustomFieldSetupQuery.WorkspaceId)
                 .Dot(nameof(GetCollectionCustomFieldSetupQuery.ProjectId)));
