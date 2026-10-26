@@ -32,6 +32,23 @@ internal static class CreateCustomFieldSetupCommandValidatorData
                 new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand("Default Text"),
                 null);
             Add(command);
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.NewGuid(),
+                textCustomFieldSetup: new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
+            Add(command);
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                Guid.Empty,
+                Guid.NewGuid(),
+                textCustomFieldSetup: new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
+            Add(command);
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                Guid.NewGuid(),
+                Guid.Empty,
+                textCustomFieldSetup: new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
+            Add(command);
         }
     }
 
@@ -46,6 +63,16 @@ internal static class CreateCustomFieldSetupCommandValidatorData
             command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
                 Guid.Empty,
                 Guid.Empty,
+                textCustomFieldSetup: new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
+            Add(command, nameof(command.WorkspaceId).Dot(nameof(command.ProjectId)));
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                Guid.Empty,
+                textCustomFieldSetup: new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
+            Add(command, nameof(command.WorkspaceId).Dot(nameof(command.ProjectId)));
+
+            command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+                projectId: Guid.Empty,
                 textCustomFieldSetup: new CreateCustomFieldSetupCommand.TextCustomFieldSetupCommand(null));
             Add(command, nameof(command.WorkspaceId).Dot(nameof(command.ProjectId)));
         }
