@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 
-public sealed class RemoveStageFromProjectSprintCommandHandler(IProjectSprintRepository projectSprintRepository)
+internal sealed class RemoveStageFromProjectSprintCommandHandler(IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<RemoveStageFromProjectSprintCommand, ErrorOr<RemoveStageFromProjectSprintResult>>
 {
     public async Task<ErrorOr<RemoveStageFromProjectSprintResult>> Handle(RemoveStageFromProjectSprintCommand command,

@@ -9,7 +9,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.Create;
 
-public sealed class CreateProjectTaskCommandHandler(
+internal sealed class CreateProjectTaskCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<CreateProjectTaskCommand, ErrorOr<CreateProjectTaskResult>>

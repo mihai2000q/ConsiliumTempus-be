@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 
-public sealed class UpdateProjectSprintCommandValidator : AbstractValidator<UpdateProjectSprintCommand>
+internal sealed class UpdateProjectSprintCommandValidator : AbstractValidator<UpdateProjectSprintCommand>
 {
     public UpdateProjectSprintCommandValidator()
     {

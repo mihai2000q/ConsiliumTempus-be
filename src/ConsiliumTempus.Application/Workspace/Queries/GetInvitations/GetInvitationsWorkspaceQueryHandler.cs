@@ -8,7 +8,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Queries.GetInvitations;
 
-public sealed class GetInvitationsWorkspaceQueryHandler(
+internal sealed class GetInvitationsWorkspaceQueryHandler(
     ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository)
     : IRequestHandler<GetInvitationsWorkspaceQuery, ErrorOr<GetInvitationsWorkspaceResult>>

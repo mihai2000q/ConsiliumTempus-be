@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Queries.GetAllowedMembers;
 
-public sealed class GetAllowedMembersFromProjectQueryHandler(IProjectRepository projectRepository)
+internal sealed class GetAllowedMembersFromProjectQueryHandler(IProjectRepository projectRepository)
     : IRequestHandler<GetAllowedMembersFromProjectQuery, ErrorOr<GetAllowedMembersFromProjectResult>>
 {
     public async Task<ErrorOr<GetAllowedMembersFromProjectResult>> Handle(GetAllowedMembersFromProjectQuery query,

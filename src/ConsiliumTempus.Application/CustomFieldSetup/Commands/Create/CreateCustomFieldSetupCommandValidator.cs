@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 
-public sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<CreateCustomFieldSetupCommand>
+internal sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<CreateCustomFieldSetupCommand>
 {
     public CreateCustomFieldSetupCommandValidator()
     {

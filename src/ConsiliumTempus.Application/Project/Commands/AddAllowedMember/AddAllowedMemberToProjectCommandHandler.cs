@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 
-public sealed class AddAllowedMemberToProjectCommandHandler(IProjectRepository projectRepository)
+internal sealed class AddAllowedMemberToProjectCommandHandler(IProjectRepository projectRepository)
     : IRequestHandler<AddAllowedMemberToProjectCommand, ErrorOr<AddAllowedMemberToProjectResult>>
 {
     public async Task<ErrorOr<AddAllowedMemberToProjectResult>> Handle(AddAllowedMemberToProjectCommand command,

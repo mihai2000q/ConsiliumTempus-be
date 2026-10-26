@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 
-public sealed class CreateProjectSprintCommandValidator : AbstractValidator<CreateProjectSprintCommand>
+internal sealed class CreateProjectSprintCommandValidator : AbstractValidator<CreateProjectSprintCommand>
 {
     public CreateProjectSprintCommandValidator()
     {

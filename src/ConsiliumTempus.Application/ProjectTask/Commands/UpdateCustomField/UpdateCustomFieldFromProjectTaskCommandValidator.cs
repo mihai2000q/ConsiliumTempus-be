@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 
-public sealed class UpdateCustomFieldFromProjectTaskCommandValidator
+internal sealed class UpdateCustomFieldFromProjectTaskCommandValidator
     : AbstractValidator<UpdateCustomFieldFromProjectTaskCommand>
 {
     public UpdateCustomFieldFromProjectTaskCommandValidator()

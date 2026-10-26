@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.Workspace.Queries.GetInvitations;
 
-public sealed class GetInvitationsWorkspaceQueryValidator : AbstractValidator<GetInvitationsWorkspaceQuery>
+internal sealed class GetInvitationsWorkspaceQueryValidator : AbstractValidator<GetInvitationsWorkspaceQuery>
 {
     public GetInvitationsWorkspaceQueryValidator()
     {

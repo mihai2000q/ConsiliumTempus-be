@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.RemoveAllowedMember;
 
-public sealed class RemoveAllowedMemberFromProjectCommandHandler(
+internal sealed class RemoveAllowedMemberFromProjectCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IProjectRepository projectRepository)
     : IRequestHandler<RemoveAllowedMemberFromProjectCommand, ErrorOr<RemoveAllowedMemberFromProjectResult>>

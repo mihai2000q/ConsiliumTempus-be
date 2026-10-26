@@ -9,7 +9,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Events;
 
-public sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
+internal sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreated>
 {
     public Task Handle(ProjectCreated notification, CancellationToken cancellationToken)
     {

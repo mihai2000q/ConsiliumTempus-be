@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 
-public sealed class AddAllowedMemberToProjectCommandValidator : AbstractValidator<AddAllowedMemberToProjectCommand>
+internal sealed class AddAllowedMemberToProjectCommandValidator : AbstractValidator<AddAllowedMemberToProjectCommand>
 {
     public AddAllowedMemberToProjectCommandValidator()
     {

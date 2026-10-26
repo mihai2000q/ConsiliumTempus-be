@@ -8,7 +8,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 
-public sealed class UpdateStageFromProjectSprintCommandHandler(
+internal sealed class UpdateStageFromProjectSprintCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<UpdateStageFromProjectSprintCommand, ErrorOr<UpdateStageFromProjectSprintResult>>

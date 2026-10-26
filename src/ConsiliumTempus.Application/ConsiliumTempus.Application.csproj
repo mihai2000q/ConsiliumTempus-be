@@ -15,6 +15,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="ConsiliumTempus.Application.UnitTests"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj"/>
     </ItemGroup>
 

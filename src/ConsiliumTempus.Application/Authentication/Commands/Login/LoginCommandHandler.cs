@@ -8,7 +8,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Authentication.Commands.Login;
 
-public sealed class LoginCommandHandler(
+internal sealed class LoginCommandHandler(
     IUserRepository userRepository,
     IRefreshTokenRepository refreshTokenRepository,
     IScrambler scrambler,

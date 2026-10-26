@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.MoveStage;
 
-public sealed class MoveStageFromProjectSprintCommandHandler(
+internal sealed class MoveStageFromProjectSprintCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<MoveStageFromProjectSprintCommand, ErrorOr<MoveStageFromProjectSprintResult>>

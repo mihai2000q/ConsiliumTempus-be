@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Queries.GetOverview;
 
-public sealed class GetOverviewProjectQueryHandler(IProjectRepository projectRepository)
+internal sealed class GetOverviewProjectQueryHandler(IProjectRepository projectRepository)
     : IRequestHandler<GetOverviewProjectQuery, ErrorOr<GetOverviewProjectResult>>
 {
     public async Task<ErrorOr<GetOverviewProjectResult>> Handle(GetOverviewProjectQuery query,

@@ -10,7 +10,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Queries.GetCollection;
 
-public sealed class GetCollectionProjectQueryHandler(
+internal sealed class GetCollectionProjectQueryHandler(
     ICurrentUserProvider currentUserProvider,
     IProjectRepository projectRepository)
     : IRequestHandler<GetCollectionProjectQuery, ErrorOr<GetCollectionProjectResult>>

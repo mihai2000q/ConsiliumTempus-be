@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Queries.GetOverview;
 
-public sealed class GetOverviewWorkspaceQueryHandler(IWorkspaceRepository workspaceRepository)
+internal sealed class GetOverviewWorkspaceQueryHandler(IWorkspaceRepository workspaceRepository)
     : IRequestHandler<GetOverviewWorkspaceQuery, ErrorOr<WorkspaceAggregate>>
 {
     public async Task<ErrorOr<WorkspaceAggregate>> Handle(GetOverviewWorkspaceQuery query,

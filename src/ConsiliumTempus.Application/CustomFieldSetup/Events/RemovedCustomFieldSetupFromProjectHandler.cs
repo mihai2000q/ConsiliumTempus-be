@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Events;
 
-public sealed class RemovedCustomFieldSetupFromProjectHandler(IProjectTaskRepository projectTaskRepository)
+internal sealed class RemovedCustomFieldSetupFromProjectHandler(IProjectTaskRepository projectTaskRepository)
     : INotificationHandler<RemovedCustomFieldSetupFromProject>
 {
     public async Task Handle(RemovedCustomFieldSetupFromProject notification, CancellationToken cancellationToken)

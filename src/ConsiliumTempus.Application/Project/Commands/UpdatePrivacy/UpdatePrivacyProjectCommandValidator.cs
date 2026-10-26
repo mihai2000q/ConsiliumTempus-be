@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Project.Commands.UpdatePrivacy;
 
-public sealed class UpdatePrivacyProjectCommandValidator : AbstractValidator<UpdatePrivacyProjectCommand>
+internal sealed class UpdatePrivacyProjectCommandValidator : AbstractValidator<UpdatePrivacyProjectCommand>
 {
     public UpdatePrivacyProjectCommandValidator()
     {

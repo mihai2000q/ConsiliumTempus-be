@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectTask.Events;
 
-public sealed class ProjectTaskCreatedHandler(ICustomFieldSetupRepository customFieldSetupRepository) 
+internal sealed class ProjectTaskCreatedHandler(ICustomFieldSetupRepository customFieldSetupRepository) 
     : INotificationHandler<ProjectTaskCreated>
 {
     public async Task Handle(ProjectTaskCreated notification, CancellationToken cancellationToken)

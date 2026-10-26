@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Workspace.Queries.GetOverview;
 
-public sealed class GetOverviewWorkspaceQueryValidator : AbstractValidator<GetOverviewWorkspaceQuery>
+internal sealed class GetOverviewWorkspaceQueryValidator : AbstractValidator<GetOverviewWorkspaceQuery>
 {
     public GetOverviewWorkspaceQueryValidator()
     {

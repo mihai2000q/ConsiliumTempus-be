@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Leave;
 
-public sealed class LeaveWorkspaceCommandValidator : AbstractValidator<LeaveWorkspaceCommand>
+internal sealed class LeaveWorkspaceCommandValidator : AbstractValidator<LeaveWorkspaceCommand>
 {
     public LeaveWorkspaceCommandValidator()
     {

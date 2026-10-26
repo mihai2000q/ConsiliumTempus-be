@@ -13,7 +13,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 
-public sealed class CreateProjectSprintCommandHandler(
+internal sealed class CreateProjectSprintCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IProjectRepository projectRepository,
     IProjectSprintRepository projectSprintRepository)

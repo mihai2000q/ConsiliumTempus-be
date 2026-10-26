@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.Authentication.Commands.Register;
 
-public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
+internal sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {
     public RegisterCommandValidator()
     {

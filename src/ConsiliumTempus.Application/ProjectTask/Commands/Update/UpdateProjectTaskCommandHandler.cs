@@ -8,7 +8,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.Update;
 
-public sealed class UpdateProjectTaskCommandHandler(
+internal sealed class UpdateProjectTaskCommandHandler(
     IProjectTaskRepository projectTaskRepository,
     IUserRepository userRepository)
     : IRequestHandler<UpdateProjectTaskCommand, ErrorOr<UpdateProjectTaskResult>>

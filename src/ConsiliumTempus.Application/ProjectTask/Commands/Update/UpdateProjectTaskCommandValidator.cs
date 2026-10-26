@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.Update;
 
-public sealed class UpdateProjectTaskCommandValidator : AbstractValidator<UpdateProjectTaskCommand>
+internal sealed class UpdateProjectTaskCommandValidator : AbstractValidator<UpdateProjectTaskCommand>
 {
     public UpdateProjectTaskCommandValidator()
     {

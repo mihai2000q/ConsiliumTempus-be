@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 
-public sealed class RejectInvitationToWorkspaceCommandHandler(IWorkspaceRepository workspaceRepository)
+internal sealed class RejectInvitationToWorkspaceCommandHandler(IWorkspaceRepository workspaceRepository)
     : IRequestHandler<RejectInvitationToWorkspaceCommand, ErrorOr<RejectInvitationToWorkspaceResult>>
 {
     public async Task<ErrorOr<RejectInvitationToWorkspaceResult>> Handle(RejectInvitationToWorkspaceCommand command,

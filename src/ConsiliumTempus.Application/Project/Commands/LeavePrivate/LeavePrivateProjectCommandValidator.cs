@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Project.Commands.LeavePrivate;
 
-public sealed class LeavePrivateProjectCommandValidator : AbstractValidator<LeavePrivateProjectCommand>
+internal sealed class LeavePrivateProjectCommandValidator : AbstractValidator<LeavePrivateProjectCommand>
 {
     public LeavePrivateProjectCommandValidator()
     {

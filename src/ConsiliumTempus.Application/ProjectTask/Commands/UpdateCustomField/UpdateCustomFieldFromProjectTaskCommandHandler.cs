@@ -10,7 +10,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 
-public sealed class UpdateCustomFieldFromProjectTaskCommandHandler(
+internal sealed class UpdateCustomFieldFromProjectTaskCommandHandler(
     IProjectTaskRepository projectTaskRepository,
     IUserRepository userRepository)
     : IRequestHandler<UpdateCustomFieldFromProjectTaskCommand, ErrorOr<UpdateCustomFieldFromProjectTaskResult>>

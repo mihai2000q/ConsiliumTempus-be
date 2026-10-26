@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
 
-public sealed class AddStageToProjectSprintCommandValidator : AbstractValidator<AddStageToProjectSprintCommand>
+internal sealed class AddStageToProjectSprintCommandValidator : AbstractValidator<AddStageToProjectSprintCommand>
 {
     public AddStageToProjectSprintCommandValidator()
     {

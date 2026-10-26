@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 
-public sealed class AddCustomFieldSetupToProjectCommandHandler(
+internal sealed class AddCustomFieldSetupToProjectCommandHandler(
     ICustomFieldSetupRepository customFieldSetupRepository,
     IProjectRepository projectRepository)
     : IRequestHandler<AddCustomFieldSetupToProjectCommand, ErrorOr<AddCustomFieldSetupToProjectResult>>

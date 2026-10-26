@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Project.Queries.GetAllowedMembers;
 
-public sealed class GetAllowedMembersFromProjectQueryValidator : AbstractValidator<GetAllowedMembersFromProjectQuery>
+internal sealed class GetAllowedMembersFromProjectQueryValidator : AbstractValidator<GetAllowedMembersFromProjectQuery>
 {
     public GetAllowedMembersFromProjectQueryValidator()
     {

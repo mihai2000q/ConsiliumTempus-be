@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Events;
 
-public sealed class WorkspaceDeletedHandler(
+internal sealed class WorkspaceDeletedHandler(
     IProjectRepository projectRepository,
     IProjectTaskRepository projectTaskRepository,
     ICustomFieldSetupRepository customFieldSetupRepository)

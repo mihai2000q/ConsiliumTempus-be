@@ -8,7 +8,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
 
-public sealed class GetCollectionProjectTaskQueryHandler(IProjectTaskRepository projectTaskRepository)
+internal sealed class GetCollectionProjectTaskQueryHandler(IProjectTaskRepository projectTaskRepository)
     : IRequestHandler<GetCollectionProjectTaskQuery, ErrorOr<GetCollectionProjectTaskResult>>
 {
     public async Task<ErrorOr<GetCollectionProjectTaskResult>> Handle(GetCollectionProjectTaskQuery query,

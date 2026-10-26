@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
 
-public sealed class GetCollectionProjectTaskQueryValidator : AbstractValidator<GetCollectionProjectTaskQuery>
+internal sealed class GetCollectionProjectTaskQueryValidator : AbstractValidator<GetCollectionProjectTaskQuery>
 {
     public GetCollectionProjectTaskQueryValidator()
     {

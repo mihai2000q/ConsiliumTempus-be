@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.UpdateCollaborator;
 
-public sealed class UpdateCollaboratorFromWorkspaceCommandValidator
+internal sealed class UpdateCollaboratorFromWorkspaceCommandValidator
     : AbstractValidator<UpdateCollaboratorFromWorkspaceCommand>
 {
     public UpdateCollaboratorFromWorkspaceCommandValidator()

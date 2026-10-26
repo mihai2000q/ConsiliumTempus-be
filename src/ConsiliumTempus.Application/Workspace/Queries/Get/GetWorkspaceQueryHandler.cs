@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Queries.Get;
 
-public sealed class GetWorkspaceQueryHandler(
+internal sealed class GetWorkspaceQueryHandler(
     ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository)
     : IRequestHandler<GetWorkspaceQuery, ErrorOr<GetWorkspaceResult>>

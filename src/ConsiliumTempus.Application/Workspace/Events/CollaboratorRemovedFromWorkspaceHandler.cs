@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Events;
 
-public sealed class CollaboratorRemovedFromWorkspaceHandler(IProjectRepository projectRepository)
+internal sealed class CollaboratorRemovedFromWorkspaceHandler(IProjectRepository projectRepository)
     : INotificationHandler<CollaboratorRemovedFromWorkspace>
 {
     public async Task Handle(CollaboratorRemovedFromWorkspace notification, CancellationToken cancellationToken)

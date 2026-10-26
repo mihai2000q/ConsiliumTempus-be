@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
 
-public sealed class RemoveCustomFieldSetupFromProjectCommandHandler(
+internal sealed class RemoveCustomFieldSetupFromProjectCommandHandler(
     IProjectRepository projectRepository,
     ICustomFieldSetupRepository customFieldSetupRepository)
     : IRequestHandler<RemoveCustomFieldSetupFromProjectCommand, ErrorOr<RemoveCustomFieldSetupFromProjectResult>>

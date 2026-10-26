@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Workspace.Commands.KickCollaborator;
 
-public sealed class KickCollaboratorFromWorkspaceCommandValidator
+internal sealed class KickCollaboratorFromWorkspaceCommandValidator
     : AbstractValidator<KickCollaboratorFromWorkspaceCommand>
 {
     public KickCollaboratorFromWorkspaceCommandValidator()

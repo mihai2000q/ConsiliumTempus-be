@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Leave;
 
-public sealed class LeaveWorkspaceCommandHandler(
+internal sealed class LeaveWorkspaceCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository)
     : IRequestHandler<LeaveWorkspaceCommand, ErrorOr<LeaveWorkspaceResult>>

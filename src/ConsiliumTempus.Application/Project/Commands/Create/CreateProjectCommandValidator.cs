@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.Project.Commands.Create;
 
-public sealed class CreateProjectCommandValidator : AbstractValidator<CreateProjectCommand>
+internal sealed class CreateProjectCommandValidator : AbstractValidator<CreateProjectCommand>
 {
     public CreateProjectCommandValidator()
     {

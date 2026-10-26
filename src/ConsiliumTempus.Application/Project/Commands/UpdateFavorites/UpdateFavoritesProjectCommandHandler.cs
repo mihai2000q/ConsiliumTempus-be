@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 
-public sealed class UpdateFavoritesProjectCommandHandler(
+internal sealed class UpdateFavoritesProjectCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IProjectRepository projectRepository)
     : IRequestHandler<UpdateFavoritesProjectCommand, ErrorOr<UpdateFavoritesProjectResult>>

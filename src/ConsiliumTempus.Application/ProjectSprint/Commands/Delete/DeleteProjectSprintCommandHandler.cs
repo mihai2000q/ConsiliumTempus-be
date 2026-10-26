@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.Delete;
 
-public sealed class DeleteProjectSprintCommandHandler(
+internal sealed class DeleteProjectSprintCommandHandler(
     IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<DeleteProjectSprintCommand, ErrorOr<DeleteProjectSprintResult>>
 {

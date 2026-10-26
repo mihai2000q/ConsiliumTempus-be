@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.UpdateOwner;
 
-public sealed class UpdateOwnerProjectCommandHandler(IProjectRepository projectRepository)
+internal sealed class UpdateOwnerProjectCommandHandler(IProjectRepository projectRepository)
     : IRequestHandler<UpdateOwnerProjectCommand, ErrorOr<UpdateOwnerProjectResult>>
 {
     public async Task<ErrorOr<UpdateOwnerProjectResult>> Handle(UpdateOwnerProjectCommand command,

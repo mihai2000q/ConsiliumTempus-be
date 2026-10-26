@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Update;
 
-public sealed class UpdateWorkspaceCommandHandler(IWorkspaceRepository workspaceRepository)
+internal sealed class UpdateWorkspaceCommandHandler(IWorkspaceRepository workspaceRepository)
     : IRequestHandler<UpdateWorkspaceCommand, ErrorOr<UpdateWorkspaceResult>>
 {
     public async Task<ErrorOr<UpdateWorkspaceResult>> Handle(UpdateWorkspaceCommand command,

@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Workspace.Commands.UpdateOverview;
 
-public sealed class UpdateOverviewWorkspaceCommandValidator : AbstractValidator<UpdateOverviewWorkspaceCommand>
+internal sealed class UpdateOverviewWorkspaceCommandValidator : AbstractValidator<UpdateOverviewWorkspaceCommand>
 {
     public UpdateOverviewWorkspaceCommandValidator()
     {

@@ -9,7 +9,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.Create;
 
-public sealed class CreateProjectCommandHandler(
+internal sealed class CreateProjectCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository,
     IProjectRepository projectRepository)

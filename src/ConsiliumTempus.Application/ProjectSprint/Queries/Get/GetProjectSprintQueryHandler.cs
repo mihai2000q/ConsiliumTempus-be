@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Queries.Get;
 
-public sealed class GetProjectSprintQueryHandler(IProjectSprintRepository projectSprintRepository)
+internal sealed class GetProjectSprintQueryHandler(IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<GetProjectSprintQuery, ErrorOr<ProjectSprintAggregate>>
 {
     public async Task<ErrorOr<ProjectSprintAggregate>> Handle(GetProjectSprintQuery query,

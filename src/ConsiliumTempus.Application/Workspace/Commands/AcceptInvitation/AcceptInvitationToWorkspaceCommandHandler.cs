@@ -8,7 +8,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
 
-public sealed class AcceptInvitationToWorkspaceCommandHandler(
+internal sealed class AcceptInvitationToWorkspaceCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository)
     : IRequestHandler<AcceptInvitationToWorkspaceCommand, ErrorOr<AcceptInvitationToWorkspaceResult>>

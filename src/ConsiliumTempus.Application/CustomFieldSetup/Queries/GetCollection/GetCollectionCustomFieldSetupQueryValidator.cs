@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 
-public sealed class GetCollectionCustomFieldSetupQueryValidator : AbstractValidator<GetCollectionCustomFieldSetupQuery>
+internal sealed class GetCollectionCustomFieldSetupQueryValidator : AbstractValidator<GetCollectionCustomFieldSetupQuery>
 {
     public GetCollectionCustomFieldSetupQueryValidator()
     {

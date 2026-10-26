@@ -3,7 +3,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Events;
 
-public sealed class AllowedMemberRemovedFromProjectHandler : INotificationHandler<AllowedMemberRemovedFromProject>
+internal sealed class AllowedMemberRemovedFromProjectHandler : INotificationHandler<AllowedMemberRemovedFromProject>
 {
     public Task Handle(AllowedMemberRemovedFromProject notification, CancellationToken cancellationToken)
     {

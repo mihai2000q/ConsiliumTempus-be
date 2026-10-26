@@ -6,7 +6,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.Common.Extensions;
 
-public static class FluentValidationExtensions
+internal static class FluentValidationExtensions
 {
     public static IRuleBuilderOptions<T, string> IsPassword<T>(this IRuleBuilder<T, string> ruleBuilder)
     {

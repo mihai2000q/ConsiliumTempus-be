@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 
-public sealed class UpdateCurrentUserCommandHandler(ICurrentUserProvider currentUserProvider)
+internal sealed class UpdateCurrentUserCommandHandler(ICurrentUserProvider currentUserProvider)
     : IRequestHandler<UpdateCurrentUserCommand, ErrorOr<UpdateCurrentUserResult>>
 {
     public async Task<ErrorOr<UpdateCurrentUserResult>> Handle(UpdateCurrentUserCommand command,

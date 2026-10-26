@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 
-public sealed class GetCollectionWorkspaceQueryValidator : AbstractValidator<GetCollectionWorkspaceQuery>
+internal sealed class GetCollectionWorkspaceQueryValidator : AbstractValidator<GetCollectionWorkspaceQuery>
 {
     public GetCollectionWorkspaceQueryValidator()
     {

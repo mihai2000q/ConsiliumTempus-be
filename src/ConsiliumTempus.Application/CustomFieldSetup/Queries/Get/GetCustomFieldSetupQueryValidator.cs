@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 
-public sealed class GetCustomFieldSetupQueryValidator : AbstractValidator<GetCustomFieldSetupQuery>
+internal sealed class GetCustomFieldSetupQueryValidator : AbstractValidator<GetCustomFieldSetupQuery>
 {
     public GetCustomFieldSetupQueryValidator()
     {

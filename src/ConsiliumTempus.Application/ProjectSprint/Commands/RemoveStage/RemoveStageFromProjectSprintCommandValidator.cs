@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 
-public sealed class RemoveStageFromProjectSprintCommandValidator : AbstractValidator<RemoveStageFromProjectSprintCommand>
+internal sealed class RemoveStageFromProjectSprintCommandValidator : AbstractValidator<RemoveStageFromProjectSprintCommand>
 {
     public RemoveStageFromProjectSprintCommandValidator()
     {

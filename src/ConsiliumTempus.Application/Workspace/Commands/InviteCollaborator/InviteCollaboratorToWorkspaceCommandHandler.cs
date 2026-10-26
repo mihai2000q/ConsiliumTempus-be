@@ -8,7 +8,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.InviteCollaborator;
 
-public sealed class InviteCollaboratorToWorkspaceCommandHandler(
+internal sealed class InviteCollaboratorToWorkspaceCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository,
     IUserRepository userRepository)
