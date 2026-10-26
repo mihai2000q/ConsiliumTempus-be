@@ -98,9 +98,12 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
         await outcome.ValidateError(Errors.CustomFieldSetup.NotGlobal);
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.CustomFieldSetups.SingleOrDefault(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id))
-            .Should().NotBeNull();
-        customFieldSetup.Workspace.Should().BeNull();
+        var storedCustomFieldSetup = await dbContext.CustomFieldSetups
+            .Include(cfs => cfs.Workspace)
+            .Include(cfs => cfs.Projects)
+            .SingleAsync(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id));
+        storedCustomFieldSetup.Workspace.Should().BeNull();
+        storedCustomFieldSetup.Projects.Should().HaveSameCount(customFieldSetup.Projects);
     }
 
     [Fact]
