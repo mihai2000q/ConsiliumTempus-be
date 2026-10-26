@@ -15,7 +15,7 @@ public class ProjectTaskControllerGetCollectionValidationTest(WebAppFactory fact
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest(
-            ProjectTaskData.Projects.First().Id.Value);
+            ProjectTaskData.ProjectStages.First().Id.Value);
 
         // Act
         Client.UseCustomToken(ProjectTaskData.Users.First());
