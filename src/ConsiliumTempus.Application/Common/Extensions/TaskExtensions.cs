@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Common.Extensions;
 
-public static class TaskExtensions
+internal static class TaskExtensions
 {
     public static TaskAwaiter<(T1, T2)> GetAwaiter<T1, T2>(this (Task<T1>, Task<T2>) tasksTuple)
     {

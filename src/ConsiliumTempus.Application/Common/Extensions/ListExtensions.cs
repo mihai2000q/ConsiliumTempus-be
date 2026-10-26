@@ -1,6 +1,6 @@
 ﻿namespace ConsiliumTempus.Application.Common.Extensions;
 
-public static class ListExtensions
+internal static class ListExtensions
 {
     public static bool IsEmpty<TSource>(this IReadOnlyList<TSource> list) => list.Count == 0;
 

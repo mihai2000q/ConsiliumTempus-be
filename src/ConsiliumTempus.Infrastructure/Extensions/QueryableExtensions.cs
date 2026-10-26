@@ -8,7 +8,7 @@ using ConsiliumTempus.Domain.ProjectTask.Entities;
 
 namespace ConsiliumTempus.Infrastructure.Extensions;
 
-public static class QueryableExtensions
+internal static class QueryableExtensions
 {
     public static IQueryable<CustomField> OfCustomFieldType(
         this IQueryable<CustomField> queryable,
