@@ -11,7 +11,7 @@ public class ProjectControllerGetCollectionAuthorizationTest(WebAppFactory facto
     : BaseIntegrationTest(factory, new ProjectData())
 {
     [Fact]
-    public async Task GetCollectionProject_WithoutWorkspace_ShouldReturnSuccessResponse()
+    public async Task GetCollectionProject_WhenWithoutWorkspace_ShouldReturnSuccessResponse()
     {
         // Arrange
 
