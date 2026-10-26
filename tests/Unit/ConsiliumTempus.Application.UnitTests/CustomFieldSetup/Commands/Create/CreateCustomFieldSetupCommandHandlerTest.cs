@@ -7,6 +7,7 @@ using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.Project.ValueObjects;
@@ -103,6 +104,28 @@ public class CreateCustomFieldSetupCommandHandlerTest
             user,
             workspace,
             project);
+    }
+
+    [Fact]
+    public async Task
+        HandleCreateCustomFieldSetupCommand_WhenCustomFieldTypeIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
+            type: (CustomFieldType)int.MaxValue);
+
+        _currentUserProvider
+            .GetCurrentUserAfterPermissionCheck()
+            .Returns(UserFactory.Create());
+
+        // Act
+        var outcome = async () => await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
+        await _customFieldSetupRepository
+            .DidNotReceive()
+            .Add(Arg.Any<CustomFieldSetupAggregate>());
     }
 
     [Fact]

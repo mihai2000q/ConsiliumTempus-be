@@ -5,6 +5,7 @@ using ConsiliumTempus.Application.UnitTests.TestData.CustomFieldSetup.Commands.U
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
@@ -62,6 +63,67 @@ public class UpdateCustomFieldSetupCommandHandlerTest
         outcome.Value.Should().Be(new UpdateCustomFieldSetupResult());
 
         Utils.CustomFieldSetup.AssertFromUpdateCommand(command, customFieldSetup, user);
+    }
+
+    [Fact]
+    public async Task
+        HandleUpdateCustomFieldSetupCommand_WhenMultiSelectOptionOperationIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var customFieldSetup = CustomFieldSetupFactory.CreateMultiSelect();
+        _customFieldSetupRepository
+            .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
+            .Returns(customFieldSetup);
+
+        _currentUserProvider
+            .GetCurrentUserAfterPermissionCheck()
+            .Returns(UserFactory.Create());
+
+        var command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+            id: customFieldSetup.Id.Value,
+            type: CustomFieldType.MultiSelect,
+            multiSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                (UpdateCustomFieldSetupCommand.OptionOperation)int.MaxValue,
+                null,
+                null,
+                null));
+
+        // Act
+        var outcome = async () => await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
+    }
+
+    [Fact]
+    public async Task
+        HandleUpdateCustomFieldSetupCommand_WhenSingleSelectOptionOperationIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var customFieldSetup = CustomFieldSetupFactory.CreateSingleSelect();
+        _customFieldSetupRepository
+            .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
+            .Returns(customFieldSetup);
+
+        _currentUserProvider
+            .GetCurrentUserAfterPermissionCheck()
+            .Returns(UserFactory.Create());
+
+        var command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+            id: customFieldSetup.Id.Value,
+            type: CustomFieldType.SingleSelect,
+            singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                null,
+                (UpdateCustomFieldSetupCommand.OptionOperation)int.MaxValue,
+                null,
+                null,
+                null));
+
+        // Act
+        var outcome = async () => await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
     }
 
     [Theory]
