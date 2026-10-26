@@ -188,7 +188,10 @@ internal class ProjectSprintData : ITestData
             new DateOnly(DateTime.UtcNow.Year, 01, 16)),
         ProjectSprintFactory.Create(
             Projects[3],
-            AuditFactory.Create(Users[0]),
+            AuditFactory.Create(
+                Users[0],
+                Users[0],
+                new DateTime(DateTime.UtcNow.Year - 1, 11, 22, 0, 0, 0, DateTimeKind.Utc)),
             "Sprint From Last Year",
             new DateOnly(DateTime.UtcNow.Year - 1, 11, 22)),
 

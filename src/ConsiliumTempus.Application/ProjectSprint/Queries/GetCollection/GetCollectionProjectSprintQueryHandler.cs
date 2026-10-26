@@ -31,6 +31,7 @@ internal sealed class GetCollectionProjectSprintQueryHandler(IProjectSprintRepos
         if (sprints.IsEmpty() && filters.IsEmpty() && query.FromThisYear)
         {
             sprints = [await projectSprintRepository.GetFirstByProject(projectId, filters, cancellationToken)];
+            totalCount = sprints.Count;
         }
 
         return new GetCollectionProjectSprintResult(sprints, totalCount);

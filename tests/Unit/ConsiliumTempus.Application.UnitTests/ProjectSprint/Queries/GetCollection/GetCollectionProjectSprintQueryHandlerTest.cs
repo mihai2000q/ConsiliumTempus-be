@@ -91,13 +91,12 @@ public class GetCollectionProjectSprintQueryHandlerTest
                 Arg.Any<bool>())
             .Returns([]);
 
-        const int totalCount = 0;
         _projectSprintRepository
             .GetListByProjectCount(
                 Arg.Any<ProjectId>(),
                 Arg.Any<IReadOnlyList<IFilter<ProjectSprintAggregate>>>(),
                 Arg.Any<bool>())
-            .Returns(totalCount);
+            .Returns(0);
 
         var sprint = ProjectSprintFactory.Create();
         _projectSprintRepository
@@ -134,6 +133,6 @@ public class GetCollectionProjectSprintQueryHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Sprints.Should().HaveCount(1);
         outcome.Value.Sprints[0].Should().Be(sprint);
-        outcome.Value.TotalCount.Should().Be(totalCount);
+        outcome.Value.TotalCount.Should().Be(1);
     }
 }
