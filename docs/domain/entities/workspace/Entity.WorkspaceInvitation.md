@@ -28,3 +28,4 @@ For database design checkout the [Workspace Diagram](../../../database-diagrams/
 - **Not Found** (`WorkspaceInvitation.NotFound`, 404) when the workspace invitation cannot be found
 - **Already Invited** (`WorkspaceInvitation.AlreadyInvited`, 404) when the workspace invitation cannot be sent because the user has already been invited
 - **Already Collaborator** (`WorkspaceInvitation.AlreadyCollaborator`, 404) when the workspace invitation cannot be sent because the user is already a collaborator
+- **Not Invited User** (`WorkspaceInvitation.NotInvitedUser`, 403) when the invitation cannot be accepted or rejected because the current user is not the one it was sent to
