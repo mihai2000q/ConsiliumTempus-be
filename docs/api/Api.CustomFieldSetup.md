@@ -386,6 +386,12 @@ Returns a confirmation message that the custom field setup has been created succ
 Only **Admin** users of the workspace can add the custom field setup to project
 ([Add Custom Field Setup To Project Permission](../Security.md#permissions)).
 
+When the project is private, only allowed members can add the custom field setup to it
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
+
+The project must belong to the same workspace as the custom field setup,
+otherwise the project is treated as not found.
+
 ```js
 POST {{host}}/api/customFieldSetups/add-project
 ```
@@ -501,8 +507,11 @@ Returns a confirmation message that the custom field setup has been deleted succ
 Only **Admin** users of the workspace can remove a custom field setup from a project
 ([Remove Custom Field Setup From Project Permission](../Security.md#permissions)).
 
+When the project is private, only allowed members can remove the custom field setup from it
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
+
 ```js
-DELETE {{host}}/api/customFieldSetups/{id}/remove-project/{projectId}
+DELETE {{host}}/api/customFieldSetups/{id}/from-project/{projectId}
 ```
 
 - **id** is a GUID
