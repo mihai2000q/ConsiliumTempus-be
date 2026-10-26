@@ -1,8 +1,11 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
+using ErrorOr;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.GetCollectionFromWorkspace;
 
@@ -29,9 +32,9 @@ public class CustomFieldSetupControllerGetCollectionFromWorkspaceAuthorizationTe
     }
 
     [Fact]
-    public async Task GetCollectionCustomFieldSetupFromWorkspace_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task GetCollectionCustomFieldSetupFromWorkspace_WhenWithoutMembership_ShouldReturnNotFoundError()
     {
-        await AssertForbiddenResponse(CustomFieldSetupData.Users[1]);
+        await AssertNotFoundResponse(Errors.Workspace.NotFound, CustomFieldSetupData.Users[1]);
     }
 
     private async Task AssertSuccessfulResponse(UserAggregate user)
@@ -48,6 +51,14 @@ public class CustomFieldSetupControllerGetCollectionFromWorkspaceAuthorizationTe
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    private async Task AssertNotFoundResponse(Error error, UserAggregate user)
+    {
+        var outcome = await ArrangeAndAct(user);
+
+        // Assert
+        await outcome.ValidateError(error);
     }
 
     private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)

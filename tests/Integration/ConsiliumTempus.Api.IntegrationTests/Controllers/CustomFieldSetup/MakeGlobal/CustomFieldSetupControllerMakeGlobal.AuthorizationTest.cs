@@ -1,9 +1,12 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.User;
+using ErrorOr;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.MakeGlobal;
 
@@ -31,9 +34,9 @@ public class CustomFieldSetupControllerMakeGlobalAuthorizationTest(WebAppFactory
     }
 
     [Fact]
-    public async Task MakeCustomFieldSetupGlobal_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task MakeCustomFieldSetupGlobal_WhenWithoutMembership_ShouldReturnNotFoundError()
     {
-        await AssertForbiddenResponse(CustomFieldSetupData.Users[1]);
+        await AssertNotFoundResponse(Errors.CustomFieldSetup.NotFound, CustomFieldSetupData.Users[1]);
     }
 
     // Project Authorization
@@ -50,9 +53,9 @@ public class CustomFieldSetupControllerMakeGlobalAuthorizationTest(WebAppFactory
     }
 
     [Fact]
-    public async Task MakeCustomFieldSetupGlobal_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
+    public async Task MakeCustomFieldSetupGlobal_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnNotFoundError()
     {
-        await AssertForbiddenResponse(CustomFieldSetupData.Users[0], CustomFieldSetupData.CustomFieldSetups[^1]);
+        await AssertNotFoundResponse(Errors.CustomFieldSetup.NotFound, CustomFieldSetupData.Users[0], CustomFieldSetupData.CustomFieldSetups[^1]);
     }
 
     private async Task AssertSuccessfulResponse(UserAggregate user, CustomFieldSetupAggregate? customFieldSetup = null)
@@ -69,6 +72,14 @@ public class CustomFieldSetupControllerMakeGlobalAuthorizationTest(WebAppFactory
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    private async Task AssertNotFoundResponse(Error error, UserAggregate user, CustomFieldSetupAggregate? customFieldSetup = null)
+    {
+        var outcome = await ArrangeAndAct(user, customFieldSetup);
+
+        // Assert
+        await outcome.ValidateError(error);
     }
 
     private async Task<HttpResponseMessage> ArrangeAndAct(

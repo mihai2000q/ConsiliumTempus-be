@@ -1,9 +1,12 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Project;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
+using ErrorOr;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.AddAllowedMember;
 
@@ -19,9 +22,9 @@ public class ProjectControllerAddAllowedMemberAuthorizationTest(WebAppFactory fa
     }
 
     [Fact]
-    public async Task AddAllowedMemberToProject_WhenIsNotCollaborator_ShouldReturnForbiddenResponse()
+    public async Task AddAllowedMemberToProject_WhenIsNotCollaborator_ShouldReturnNotFoundError()
     {
-        await AssertForbiddenResponse(ProjectData.Users[1], ProjectData.Projects[^4]);
+        await AssertNotFoundResponse(Errors.Project.NotFound, ProjectData.Users[1], ProjectData.Projects[^4]);
     }
 
     // Project Authorization
@@ -51,6 +54,14 @@ public class ProjectControllerAddAllowedMemberAuthorizationTest(WebAppFactory fa
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    private async Task AssertNotFoundResponse(Error error, UserAggregate user, ProjectAggregate? project = null)
+    {
+        var outcome = await ArrangeAndAct(user, project);
+
+        // Assert
+        await outcome.ValidateError(error);
     }
 
     private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user, ProjectAggregate? project = null)

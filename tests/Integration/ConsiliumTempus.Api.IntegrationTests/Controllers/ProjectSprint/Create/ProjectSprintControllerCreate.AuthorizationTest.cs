@@ -1,9 +1,12 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User;
+using ErrorOr;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectSprint.Create;
 
@@ -31,9 +34,9 @@ public class ProjectSprintControllerCreateAuthorizationTest(WebAppFactory factor
     }
 
     [Fact]
-    public async Task CreateProjectSprint_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task CreateProjectSprint_WhenWithoutMembership_ShouldReturnNotFoundError()
     {
-        await AssertForbiddenResponse(ProjectSprintData.Users[1]);
+        await AssertNotFoundResponse(Errors.Project.NotFound, ProjectSprintData.Users[1]);
     }
 
     // Project Authorization
@@ -50,9 +53,9 @@ public class ProjectSprintControllerCreateAuthorizationTest(WebAppFactory factor
     }
 
     [Fact]
-    public async Task CreateProjectSprint_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
+    public async Task CreateProjectSprint_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnNotFoundError()
     {
-        await AssertForbiddenResponse(ProjectSprintData.Users[0], ProjectSprintData.Projects[^1]);
+        await AssertNotFoundResponse(Errors.Project.NotFound, ProjectSprintData.Users[0], ProjectSprintData.Projects[^1]);
     }
 
     private async Task AssertSuccessfulResponse(UserAggregate user, ProjectAggregate? project = null)
@@ -69,6 +72,14 @@ public class ProjectSprintControllerCreateAuthorizationTest(WebAppFactory factor
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    private async Task AssertNotFoundResponse(Error error, UserAggregate user, ProjectAggregate? project = null)
+    {
+        var outcome = await ArrangeAndAct(user, project);
+
+        // Assert
+        await outcome.ValidateError(error);
     }
 
     private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user, ProjectAggregate? project = null)

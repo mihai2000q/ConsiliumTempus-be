@@ -1,8 +1,11 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
+using ErrorOr;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.UpdateOwner;
 
@@ -23,9 +26,9 @@ public class WorkspaceControllerUpdateOwnerAuthorizationTest(WebAppFactory facto
     }
 
     [Fact]
-    public async Task UpdateOwnerWorkspace_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task UpdateOwnerWorkspace_WhenWithoutMembership_ShouldReturnNotFoundError()
     {
-        await AssertForbiddenResponse(WorkspaceData.Users[1]);
+        await AssertNotFoundResponse(Errors.Workspace.NotFound, WorkspaceData.Users[1]);
     }
 
     private async Task AssertSuccessfulResponse(UserAggregate user)
@@ -42,6 +45,14 @@ public class WorkspaceControllerUpdateOwnerAuthorizationTest(WebAppFactory facto
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    private async Task AssertNotFoundResponse(Error error, UserAggregate user)
+    {
+        var outcome = await ArrangeAndAct(user);
+
+        // Assert
+        await outcome.ValidateError(error);
     }
 
     private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)
