@@ -20,28 +20,15 @@ internal static class StringExtensions
 
         public string Capitalize()
         {
-            if (str.Length == 0) return string.Empty;
-            if (str.Length == 1) return str.ToUpper();
-            foreach (var separator in Separators)
+            var chars = str.ToLower().ToCharArray();
+            var isStartOfWord = true;
+            for (var i = 0; i < chars.Length; i++)
             {
-                if (str.Contains(separator))
-                {
-                    return str.CapitalizeEachWord(separator);
-                }
+                if (isStartOfWord) chars[i] = char.ToUpper(chars[i]);
+                isStartOfWord = Separators.Contains(chars[i]);
             }
 
-            return str.CapitalizeWord();
-        }
-
-        public string CapitalizeWord() =>
-            str.ToUpper()[0] + str.ToLower()[1..];
-
-        private string CapitalizeEachWord(char separator)
-        {
-            return string
-                .Join(separator, str
-                    .Split(separator)
-                    .Select(CapitalizeWord));
+            return new string(chars);
         }
     }
 }

@@ -20,8 +20,8 @@ internal static partial class Utils
             string password)
         {
             user.Id.Should().NotBeNull();
-            user.FirstName.Value.Should().Be(command.FirstName.CapitalizeWord());
-            user.LastName.Value.Should().Be(command.LastName.CapitalizeWord());
+            user.FirstName.Value.Should().Be(command.FirstName.Capitalize());
+            user.LastName.Value.Should().Be(command.LastName.Capitalize());
             user.Credentials.Email.Should().Be(command.Email.ToLower());
             user.Credentials.Password.Should().Be(password);
             if (command.Role is null)
