@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Domain.Common.Errors;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Project.GetStatuses;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -30,7 +31,7 @@ public class ProjectControllerGetStatusesTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetStatusesFromProject_WhenProjectIsNotFound_ShouldReturnEmptyStatuses()
+    public async Task GetStatusesFromProject_WhenProjectIsNotFound_ShouldReturnProjectNotFoundError()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetStatusesFromProjectRequest();
@@ -39,9 +40,6 @@ public class ProjectControllerGetStatusesTest(WebAppFactory factory)
         var outcome = await Client.Get($"api/projects/{request.Id}/Statuses");
 
         // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetStatusesFromProjectResponse>();
-        response!.Statuses.Should().BeEmpty();
-        response.TotalCount.Should().Be(0);
+        await outcome.ValidateError(Errors.Project.NotFound);
     }
 }
