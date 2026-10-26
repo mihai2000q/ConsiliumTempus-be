@@ -139,7 +139,8 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
         var user = CustomFieldSetupData.Users.First();
         var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
-            customFieldSetup.Id.Value);
+            customFieldSetup.Id.Value,
+            CustomFieldSetupData.Projects.First().Id.Value);
 
         // Act
         Client.UseCustomToken(user);
