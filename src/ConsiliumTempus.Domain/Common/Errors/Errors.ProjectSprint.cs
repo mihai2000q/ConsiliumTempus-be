@@ -26,7 +26,7 @@ public static partial class Errors
             "ProjectStage.NotFound",
             "Project Stage could not be found");
 
-        public static Error OnlyOneStage => Error.NotFound(
+        public static Error OnlyOneStage => Error.Conflict(
             "ProjectStage.OnlyOneStage",
             "Each Project Sprint should have at least one project stage");
     }
