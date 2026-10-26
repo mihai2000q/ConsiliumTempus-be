@@ -23,11 +23,11 @@ public static partial class Errors
             "Collaborator could not be found inside workspace");
 
         public static Error KickYourself => Error.Conflict(
-            "Project.KickYourself",
+            "Workspace.KickYourself",
             "You cannot kick yourself from workspace");
 
         public static Error KickOwner => Error.Forbidden(
-            "Project.KickOwner",
+            "Workspace.KickOwner",
             "You cannot kick the owner of the workspace");
     }
 
