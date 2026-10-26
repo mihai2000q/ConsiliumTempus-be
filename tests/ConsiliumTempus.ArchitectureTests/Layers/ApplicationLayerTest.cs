@@ -183,4 +183,104 @@ public class ApplicationLayerTest : BaseArchitectureTest
             .HaveNameEndingWith("Extensions")
             .Check(Architecture);
     }
+
+    [Fact]
+    public void RequestHandlers_ShouldBeInternal()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(IRequestHandler<,>))
+            .Should()
+            .BeInternal()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void NotificationHandlers_ShouldBeInternal()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(INotificationHandler<>))
+            .Should()
+            .BeInternal()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void Validators_ShouldBeInternal()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(AbstractValidator<>))
+            .Should()
+            .BeInternal()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void Behaviors_ShouldBeInternal()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(IPipelineBehavior<,>))
+            .Should()
+            .BeInternal()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void Requests_ShouldBePublic()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(IRequest<>))
+            .Should()
+            .BePublic()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void Extensions_ShouldBeInternal()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .ResideInNamespace("ConsiliumTempus.Application.Common.Extensions")
+            .And()
+            .AreNotNested()
+            .Should()
+            .BeInternal()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void Interfaces_ShouldBePublic()
+    {
+        ArchRuleDefinition
+            .Types()
+            .That()
+            .Are(ApplicationLayer)
+            .And()
+            .Are(ArchRuleDefinition.Interfaces())
+            .Should()
+            .BePublic()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void DependencyInjection_ShouldBePublic()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .HaveFullName("ConsiliumTempus.Application.DependencyInjection")
+            .Should()
+            .BePublic()
+            .Check(Architecture);
+    }
 }
