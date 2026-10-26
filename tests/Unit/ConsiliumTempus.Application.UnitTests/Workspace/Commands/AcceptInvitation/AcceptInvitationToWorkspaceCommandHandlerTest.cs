@@ -2,6 +2,7 @@
 using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Commands.AcceptInvitation;
+using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Common.UnitTests.Workspace.Entities;
@@ -103,6 +104,45 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
             .GetCurrentUser();
 
         outcome.ValidateError(Errors.User.NotFound);
+    }
+
+    [Fact]
+    public async Task
+        HandleAcceptInvitationToWorkspaceCommand_WhenUserIsAlreadyCollaborator_ShouldReturnAlreadyCollaboratorError()
+    {
+        // Arrange
+        var user = UserFactory.Create();
+        var workspace = WorkspaceFactory.Create();
+        var invitation = WorkspaceInvitationFactory.Create(collaborator: user);
+        workspace.AddInvitation(invitation);
+        workspace.AddUserMembership(MembershipFactory.Create(user));
+        _workspaceRepository
+            .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
+            .Returns(workspace);
+
+        _currentUserProvider
+            .GetCurrentUser()
+            .Returns(user);
+
+        var command = WorkspaceCommandFactory.CreateAcceptInvitationToWorkspaceCommand(
+            workspace.Id.Value,
+            invitation.Id.Value);
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _workspaceRepository
+            .Received(1)
+            .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
+
+        await _currentUserProvider
+            .Received(1)
+            .GetCurrentUser();
+
+        outcome.ValidateError(Errors.WorkspaceInvitation.AlreadyCollaborator);
+        workspace.Invitations.Should().Equal(invitation);
+        workspace.Memberships.Should().ContainSingle(m => m.User == user);
     }
 
     [Fact]

@@ -4,7 +4,9 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -98,6 +100,42 @@ public class WorkspaceControllerAcceptInvitationTest(WebAppFactory factory)
             .Include(w => w.Memberships)
             .Single(w => w.Id == invitation.Workspace.Id)
             .Memberships.Should().NotContain(m => m.User.Id == invitation.Collaborator.Id);
+    }
+
+    [Fact]
+    public async Task AcceptInvitationToWorkspace_WhenUserIsAlreadyCollaborator_ShouldReturnAlreadyCollaboratorError()
+    {
+        // Arrange
+        var invitation = WorkspaceData.WorkspaceInvitations.First();
+        var collaborator = invitation.Collaborator;
+        var request = WorkspaceRequestFactory.CreateAcceptInvitationToWorkspaceRequest(
+            invitation.Workspace.Id.Value,
+            invitation.Id.Value);
+
+        await using (var arrangeDbContext = await DbContextFactory.CreateDbContextAsync())
+        {
+            arrangeDbContext.Set<Membership>().Add(MembershipFactory.Create(
+                arrangeDbContext.Users.Single(u => u.Id == collaborator.Id),
+                arrangeDbContext.Workspaces.Single(w => w.Id == invitation.Workspace.Id),
+                WorkspaceRole.View));
+            await arrangeDbContext.SaveChangesAsync();
+        }
+
+        // Act
+        Client.UseCustomToken(collaborator);
+        var outcome = await Client.Post("api/workspaces/accept-invitation", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.WorkspaceInvitation.AlreadyCollaborator);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Set<WorkspaceInvitation>()
+            .SingleOrDefault(i => i.Id == invitation.Id)
+            .Should().NotBeNull();
+        dbContext.Set<Membership>()
+            .Where(m => m.Workspace.Id == invitation.Workspace.Id)
+            .Count(m => m.User.Id == collaborator.Id)
+            .Should().Be(1);
     }
 
     [Fact]

@@ -27,6 +27,7 @@ internal sealed class AcceptInvitationToWorkspaceCommandHandler(
         var user = await currentUserProvider.GetCurrentUser(cancellationToken);
         if (user is null) return Errors.User.NotFound;
         if (invitation.Collaborator.Id != user.Id) return Errors.WorkspaceInvitation.NotInvitedUser;
+        if (workspace.Memberships.Any(m => m.User == user)) return Errors.WorkspaceInvitation.AlreadyCollaborator;
 
         var membership = Membership.Create(
             user,
