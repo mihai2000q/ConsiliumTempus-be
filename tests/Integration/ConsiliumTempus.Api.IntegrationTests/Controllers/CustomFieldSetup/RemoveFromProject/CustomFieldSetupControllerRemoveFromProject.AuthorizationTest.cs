@@ -86,6 +86,6 @@ public class CustomFieldSetupControllerRemoveFromProjectAuthorizationTest(WebApp
 
         // Act
         Client.UseCustomToken(user);
-        return await Client.Delete($"api/customFieldSetups/{request.Id}/Remove-Project/{request.ProjectId}");
+        return await Client.Delete($"api/customFieldSetups/{request.Id}/From-Project/{request.ProjectId}");
     }
 }

@@ -23,7 +23,7 @@ public class CustomFieldSetupControllerRemoveFromProjectValidationTest(WebAppFac
         // Act
         Client.UseCustomToken(CustomFieldSetupData.Users.First());
         var outcome = await Client.Delete("api/customFieldSetups/" +
-                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
+                                          $"{request.Id}/From-Project/{request.ProjectId}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -39,7 +39,7 @@ public class CustomFieldSetupControllerRemoveFromProjectValidationTest(WebAppFac
 
         // Act
         var outcome = await Client.Delete("api/customFieldSetups/" +
-                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
+                                          $"{request.Id}/From-Project/{request.ProjectId}");
 
         // Assert
         await outcome.ValidateValidationErrors();

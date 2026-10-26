@@ -2128,7 +2128,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
     })
 
     const response = await request.delete(
-      `/api/customFieldSetups/${textCustomFieldSetup.id}/remove-project/${PROJECT_ID}`,
+      `/api/customFieldSetups/${textCustomFieldSetup.id}/from-project/${PROJECT_ID}`,
       useToken()
     )
 

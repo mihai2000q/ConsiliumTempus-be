@@ -162,7 +162,7 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
 
     [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.RemoveCustomFieldSetupFromProject)]
-    [HttpDelete("{id:guid}/Remove-Project/{projectId:guid}")]
+    [HttpDelete("{id:guid}/From-Project/{projectId:guid}")]
     public async Task<IActionResult> RemoveFromProject(RemoveCustomFieldSetupFromProjectRequest request,
         CancellationToken cancellationToken)
     {

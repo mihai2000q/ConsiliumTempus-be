@@ -31,7 +31,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Delete("api/customFieldSetups/" +
-                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
+                                          $"{request.Id}/From-Project/{request.ProjectId}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -69,7 +69,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
         // Act
         Client.UseCustomToken(CustomFieldSetupData.Users.First());
         var outcome = await Client.Delete("api/customFieldSetups/" +
-                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
+                                          $"{request.Id}/From-Project/{request.ProjectId}");
 
         // Assert
         await outcome.ValidateError(Errors.Project.NotFound);
@@ -93,7 +93,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Delete("api/customFieldSetups/" +
-                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
+                                          $"{request.Id}/From-Project/{request.ProjectId}");
         // Assert
         await outcome.ValidateError(Errors.CustomFieldSetup.NotGlobal);
 
@@ -115,7 +115,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
 
         // Act
         var outcome = await Client.Delete("api/customFieldSetups/" +
-                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
+                                          $"{request.Id}/From-Project/{request.ProjectId}");
         // Assert
         await outcome.ValidateError(Errors.CustomFieldSetup.NotFound);
 
