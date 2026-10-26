@@ -39,7 +39,7 @@ public class UpdateCollaboratorFromWorkspaceCommandHandlerTest
             collaborator.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -54,7 +54,7 @@ public class UpdateCollaboratorFromWorkspaceCommandHandlerTest
 
     [Fact]
     public async Task
-        HandleUpdateCollaboratorFromWorkspaceCommand_WhenCollaboratorsIsNull_ShouldReturnCollaboratorNotFoundError()
+        HandleUpdateCollaboratorFromWorkspaceCommand_WhenCollaboratorIsNull_ShouldReturnCollaboratorNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateUpdateCollaboratorFromWorkspaceCommand();
@@ -65,7 +65,7 @@ public class UpdateCollaboratorFromWorkspaceCommandHandlerTest
             .Returns(workspace);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -76,7 +76,7 @@ public class UpdateCollaboratorFromWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateCollaboratorFromWorkspaceCommand_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleUpdateCollaboratorFromWorkspaceCommand_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateUpdateCollaboratorFromWorkspaceCommand();
@@ -86,7 +86,7 @@ public class UpdateCollaboratorFromWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository

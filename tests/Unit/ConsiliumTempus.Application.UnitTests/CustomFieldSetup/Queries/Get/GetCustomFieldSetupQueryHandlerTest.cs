@@ -35,7 +35,7 @@ public class GetCustomFieldSetupQueryHandlerTest
             .Returns(customFieldSetup);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository
@@ -47,7 +47,7 @@ public class GetCustomFieldSetupQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetCustomFieldSetupQuery_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task HandleGetCustomFieldSetupQuery_WhenCustomFieldSetupIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = CustomFieldSetupQueryFactory.CreateGetCustomFieldSetupQuery();
@@ -57,7 +57,7 @@ public class GetCustomFieldSetupQueryHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository

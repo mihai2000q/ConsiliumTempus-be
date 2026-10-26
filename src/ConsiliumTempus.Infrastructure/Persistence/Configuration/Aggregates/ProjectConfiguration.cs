@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
-public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggregate>
+internal sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggregate>
 {
     public void Configure(EntityTypeBuilder<ProjectAggregate> builder)
     {
@@ -57,7 +57,7 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAggre
     }
 }
 
-public sealed class ProjectStatusConfiguration : IEntityTypeConfiguration<ProjectStatus>
+internal sealed class ProjectStatusConfiguration : IEntityTypeConfiguration<ProjectStatus>
 {
     public void Configure(EntityTypeBuilder<ProjectStatus> builder)
     {

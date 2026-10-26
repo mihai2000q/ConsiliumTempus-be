@@ -127,17 +127,20 @@ dotnet test --filter "FullyQualifiedName~IntegrationTests"
 
 ### Coding Convention
 
-The name of the test **class** will be the class under testing followed by the suffix "Test"
-(the project already mentions that it is an integration Test).
+The name of the test **class** will be the controller and the action under test followed by the suffix "Test"
+(the project already mentions that it is an integration Test), i.e., `UserControllerGetTest`.
+The authorization and the validation scenarios of an endpoint can live in their own classes,
+named `...Controller<Action>.AuthorizationTest` and `...Controller<Action>.ValidationTest`
+(see [Api Integration](#api-integration)).
 <br>
-The name of the **variable** component under testing is going to be called **sut** (System Under Testing).  
+The tests reach the system under test through the **Client**
+(see [App Http Client](#app-http-client)), there is no *sut* variable and no *Setup* region.
+<br>
 The name of the test **methods** can be _T1_T2_, where _T1_ is the scenario that is being tested,
-and _T2_ is the expected outcome. 
+and _T2_ is the expected outcome.
 <br>
-_T1_T2_T3_ is also accepted, where *T1* is the method/component under test, 
-*T2* the scenario and *T3* the expected outcome.
-<br>
-Inside each class there will be a header **region** named _Setup_. 
+_T1_T2_T3_ is also accepted, where *T1* is the endpoint under test (i.e., `Register`),
+*T2* the scenario (starts with `When`) and *T3* the expected outcome (starts with `Should`).
 <br>
 Inside each method there will be **3 stages**:
 - Arrange—to prepare what needs to be done before acting (i.e., initialize test variables)
@@ -145,35 +148,33 @@ Inside each method there will be **3 stages**:
 - Assert—make all the necessary assertions to see if the outcome is the one desired
 (up to the developer to choose what is relevant)
 
+When many tests only differ in the data that they send,
+the *Act* and *Assert* stages (or all of them) can be shared through a private helper of the class
+(i.e., `ActAndAssert`, or `AssertSuccessfulResponse` and `AssertForbiddenResponse` for the authorization tests).
+The test method then keeps what is specific to it and the stages are commented inside the helper.
 
-For example, if the Register Command Handler is being integration tested, take a look at the code below:
+For example, if the Register endpoint is being integration tested, take a look at the code below:
 
 ```csharp
-public class RegisterCommandHandlerTest
+[Collection(nameof(AuthenticationControllerCollection))]
+public class AuthenticationControllerRegisterTest(WebAppFactory factory)
+    : BaseIntegrationTest(factory, new AuthData(), true)
 {
-    #region Setup
-
-    private readonly RegisterCommandHandler _sut;
-
-    public RegisterCommandHandlerTest() 
-    {
-        _sut = new RegisterCommandHandler();
-    }
-
-    #endregion
-
     [Fact]
-    public async Task HandleRegisterCommand_WhenValid_ShouldCreateUserAndReturnNewToken() {
+    public async Task Register_WhenIsSuccessful_ShouldCreateNewUserAndReturnTokens()
+    {
         // Arrange
-        var command = RegisterCommand("Example@Email.com");
+        var request = AuthenticationRequestFactory.CreateRegisterRequest(email: "FirstLast@Example.com");
 
         // Act
-        var outcome = await _sut.Handle(command);
+        var outcome = await Client.Post("/api/auth/Register", request);
 
         // Assert
-        outcome.Token.Should().Be("token for the user Example@Email.com")
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Users.Should().ContainSingle(u => u.Credentials.Email == request.Email.ToLower());
     }
-} 
+}
 ```
 
 ### Api Integration
@@ -193,12 +194,8 @@ The core components are:
 Together, they provide all the functionalities to write Api Integration Tests.
 Also, keep in mind that a test should be part of a *Collection*.
 
-Unlike the other layers, the Api replaces the *SUT* variable component with the **Client**;
-therefore, it does not need the *Setup* region either.
-Also, there is one test class per endpoint, named after the controller and the action,
-and grouped inside `Controllers/<Controller>/<Action>` (i.e., `UserControllerGetTest`).
-Some endpoints also have separate classes for the authorization (`...Controller<Action>.AuthorizationTest`)
-and validation (`...Controller<Action>.ValidationTest`) scenarios.
+There is one test class per endpoint, grouped inside `Controllers/<Controller>/<Action>`
+(the naming of the classes and of the methods is described in the Coding Convention above).
 
 #### Web App Factory
 
@@ -208,10 +205,10 @@ The **Web App Factory** class creates a Docker Container per *Collection* with t
 - **username** = sa
 - **database name** = master
 
-Inside the constructor it removes all "real"
-instances of the database context and injects the above-mentioned container.
-On construction, the Testing Environment is set to take in the parameters in the `appsettings.Testing.json`,
-and the **Test Auth Handler** is invoked to add authentication to the tests.
+When the web host is configured (`ConfigureWebHost`), the Testing Environment is set
+to take in the parameters in the `appsettings.Testing.json`,
+all the "real" instances of the database context are removed and the above-mentioned container is injected,
+and the **Test Auth Handler** is registered to replace the authentication of the tests.
 It also implements the Async Lifetime interface from the **xUnit Framework**
 which provides two methods for initialization and dispose.
 When initializing, it applies the following:
@@ -221,13 +218,21 @@ When initializing, it applies the following:
   that will reset the state of the container after each running method
   (except for the tables that hold static data: *Permission*, *WorkspaceRole* and *WorkspaceRoleHasPermission*)
 
+When disposing, it disposes the web host and the connection of the **Respawner**, and it stops the container.
+
 #### Base Integration Test
 
 This class also implements the Async Lifetime so that it can reset the Database on disposing
 (which happens after each method runs).
 This class also instantiates the **App Http Client** and the Jwt Settings from the Testing configuration
 (`appsettings.Testing.json`).
-Unless the test is marked as anonymous, it also sets a valid token on the client when initializing.
+Unless the test is marked as anonymous (the `isAnonymous` argument of its constructor, `false` by default;
+the authentication endpoints pass `true`), it also sets a valid token on the client when initializing.
+The tests extending it have access to:
+- `Client`—the **App Http Client**
+- `DbContextFactory`—to read the state of the database after the request was made
+- `JwtSettings`—the settings of the Testing configuration
+- `JsonOptions`—the web defaults together with the string enum converter, to deserialize the responses
 The database is capable of reinitializing state,
 therefore, inside the initialize task method,
 it will add datasets from one class that implements **ITestData** interface,
@@ -251,10 +256,13 @@ The method `UseInvalidToken` can be used to test the requests that are not autho
 
 #### Test Auth Handler
 
-This class is used by the Web App Factory to let the Client bypass any Authentication Layer that requires it.
-In other words, some endpoints will require some type of authorization and others might just accept anonymous requests.
-However, those that require authorization will, typically, require a Token as well
-(which is already provided and discussed in the [Base Integration Test](#base-integration-test) class).
+This class is used by the Web App Factory as the authentication of the tests, replacing the real JWT Bearer validation.
+It never rejects a request: it builds the principal from the claims of the token that is currently set
+(or from an empty identity, when there is none) and always succeeds
+(the token is normally provided by the [Base Integration Test](#base-integration-test) class).
+As a consequence, the tests do not cover the validation of the token (signature, issuer, audience and lifetime)
+nor the `401` response; the authorization rules (permission, workspace and project)
+are still applied, based on the claims of the token.
 
 The Handler also makes use of the **Token Provider** class,
 that is injecting a singleton service which holds the current token

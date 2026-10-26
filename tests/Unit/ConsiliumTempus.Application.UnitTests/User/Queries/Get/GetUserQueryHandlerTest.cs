@@ -35,7 +35,7 @@ public class GetUserQueryHandlerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _userRepository
@@ -47,7 +47,7 @@ public class GetUserQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetUserQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetUserQuery_WhenUserIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = UserQueryFactory.CreateGetUserQuery();
@@ -57,7 +57,7 @@ public class GetUserQueryHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _userRepository

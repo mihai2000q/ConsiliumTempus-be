@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.UpdateOverview;
 
-public sealed class UpdateOverviewProjectCommandHandler(IProjectRepository projectRepository)
+internal sealed class UpdateOverviewProjectCommandHandler(IProjectRepository projectRepository)
     : IRequestHandler<UpdateOverviewProjectCommand, ErrorOr<UpdateOverviewProjectResult>>
 {
     public async Task<ErrorOr<UpdateOverviewProjectResult>> Handle(UpdateOverviewProjectCommand command,

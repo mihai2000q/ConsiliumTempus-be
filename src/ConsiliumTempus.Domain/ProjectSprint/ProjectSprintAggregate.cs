@@ -33,12 +33,12 @@ public sealed class ProjectSprintAggregate : AggregateRoot<ProjectSprintId>
 
     private readonly List<ProjectStage> _stages = [];
 
-    public Name Name { get; private set; } = default!;
+    public Name Name { get; private set; } = null!;
     public DateOnly? StartDate { get; private set; }
     public DateOnly? EndDate { get; private set; }
-    public ProjectAggregate Project { get; init; } = default!;
+    public ProjectAggregate Project { get; init; } = null!;
     public IReadOnlyList<ProjectStage> Stages => _stages.AsReadOnly();
-    public Audit Audit { get; } = default!;
+    public Audit Audit { get; } = null!;
 
     public static ProjectSprintAggregate Create(
         Name name,

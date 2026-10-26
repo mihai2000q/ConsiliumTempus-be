@@ -15,12 +15,13 @@ internal static class CollaboratorRemovedFromWorkspaceHandlerData
     {
         public GetData()
         {
-            // Use Case 2
+            // Use Case 1
             var workspace = WorkspaceFactory.Create();
             workspace.AddUserMembership(MembershipFactory.Create(workspaceRole: WorkspaceRole.View));
             var membership = workspace.Memberships[1];
             var collaborator = membership.User;
             workspace.RemoveUserMembership(membership);
+            workspace.UpdateFavorites(true, collaborator);
             workspace.ClearDomainEvents();
 
             var domainEvent = new CollaboratorRemovedFromWorkspace(workspace, collaborator);
@@ -63,6 +64,7 @@ internal static class CollaboratorRemovedFromWorkspaceHandlerData
             membership = workspace.Memberships[1];
             collaborator = membership.User;
             workspace.RemoveUserMembership(membership);
+            workspace.UpdateFavorites(true, collaborator);
             workspace.ClearDomainEvents();
 
             domainEvent = new CollaboratorRemovedFromWorkspace(workspace, collaborator);

@@ -40,7 +40,7 @@ public class ValidationBehaviorTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Handle(command, _nextBehavior, default);
+        var outcome = await _uut.Handle(command, _nextBehavior, CancellationToken.None);
 
         // Assert
         await _validator
@@ -65,19 +65,16 @@ public class ValidationBehaviorTest
             .ValidateAsync(command)
             .Returns(new ValidationResult(errors));
 
-        var result = new CreateProjectResult();
-        _nextBehavior
-            .Invoke()
-            .Returns(result);
-
         // Act
-        var outcome = await _uut.Handle(command, _nextBehavior, default);
+        var outcome = await _uut.Handle(command, _nextBehavior, CancellationToken.None);
 
         // Assert
         await _validator
             .Received(1)
             .ValidateAsync(Arg.Any<CreateProjectCommand>());
-        _nextBehavior.DidNotReceive();
+        await _nextBehavior
+            .DidNotReceive()
+            .Invoke();
 
         outcome.IsError.Should().BeTrue();
         outcome.Errors.Should().HaveCount(errors.Count);
@@ -105,10 +102,9 @@ public class ValidationBehaviorTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Handle(command, _nextBehavior, default);
+        var outcome = await _uut.Handle(command, _nextBehavior, CancellationToken.None);
 
         // Assert
-        _validator.DidNotReceive();
         await _nextBehavior
             .Received(1)
             .Invoke();

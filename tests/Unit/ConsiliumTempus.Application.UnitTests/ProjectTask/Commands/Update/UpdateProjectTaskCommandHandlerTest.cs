@@ -45,9 +45,9 @@ public class UpdateProjectTaskCommandHandlerTest
             .Returns(assignee);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -73,13 +73,15 @@ public class UpdateProjectTaskCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        _userRepository.DidNotReceive();
+        await _userRepository
+            .DidNotReceive()
+            .Get(Arg.Any<UserId>());
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);
     }

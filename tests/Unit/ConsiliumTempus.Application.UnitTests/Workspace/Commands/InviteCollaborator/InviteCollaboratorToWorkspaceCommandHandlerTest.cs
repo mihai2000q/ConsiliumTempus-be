@@ -59,7 +59,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
             collaborator.Credentials.Email);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -102,7 +102,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         workspace.AddUserMembership(MembershipFactory.Create(collaborator));
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -111,7 +111,9 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         await _userRepository
             .Received(1)
             .GetByEmail(Arg.Is<string>(email => email == command.Email));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.WorkspaceInvitation.AlreadyCollaborator);
     }
@@ -136,7 +138,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         workspace.AddInvitation(WorkspaceInvitationFactory.Create(collaborator: collaborator));
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -145,7 +147,9 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         await _userRepository
             .Received(1)
             .GetByEmail(Arg.Is<string>(email => email == command.Email));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.WorkspaceInvitation.AlreadyInvited);
     }
@@ -166,7 +170,7 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -175,7 +179,9 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
         await _userRepository
             .Received(1)
             .GetByEmail(Arg.Is<string>(email => email == command.Email));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.User.NotFound);
     }
@@ -191,14 +197,18 @@ public class InviteCollaboratorToWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
             .Received(1)
             .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _userRepository.DidNotReceive();
-        _currentUserProvider.DidNotReceive();
+        await _userRepository
+            .DidNotReceive()
+            .GetByEmail(Arg.Any<string>());
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

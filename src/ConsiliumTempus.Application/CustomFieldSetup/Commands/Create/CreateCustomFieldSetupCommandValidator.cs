@@ -5,14 +5,14 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 
-public sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<CreateCustomFieldSetupCommand>
+internal sealed class CreateCustomFieldSetupCommandValidator : AbstractValidator<CreateCustomFieldSetupCommand>
 {
     public CreateCustomFieldSetupCommandValidator()
     {
         RuleFor(c => c)
             .Must(c =>
-                (c.WorkspaceId is not null && c.WorkspaceId != Guid.Empty) ||
-                (c.ProjectId is not null && c.ProjectId != Guid.Empty))
+                c.WorkspaceId.GetValueOrDefault() != Guid.Empty ||
+                c.ProjectId.GetValueOrDefault() != Guid.Empty)
             .WithMessage("Either the 'WorkspaceId' or the 'ProjectId' must be set.")
             .WithName(nameof(CreateCustomFieldSetupCommand.WorkspaceId)
                 .Dot(nameof(CreateCustomFieldSetupCommand.ProjectId)));

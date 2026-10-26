@@ -11,7 +11,7 @@ using ConsiliumTempus.Domain.Workspace.ValueObjects;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.UpdateOverview;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerUpdateOverviewOverviewTest(WebAppFactory factory)
+public class WorkspaceControllerUpdateOverviewTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]

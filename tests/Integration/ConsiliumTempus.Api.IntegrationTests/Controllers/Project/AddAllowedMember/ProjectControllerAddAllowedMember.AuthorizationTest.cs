@@ -8,7 +8,7 @@ using ConsiliumTempus.Domain.User;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.AddAllowedMember;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerAddAllowedMemberToProjectAuthorizationTest(WebAppFactory factory)
+public class ProjectControllerAddAllowedMemberAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     // Workspace Authorization

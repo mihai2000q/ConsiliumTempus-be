@@ -42,10 +42,12 @@ public class AddAllowedMemberToProjectCommandHandlerTest
             project.Id.Value,
             collaborator.Id.Value);
 
-        // Act
-        var outcome = await _uut.Handle(command, default);
+        var previousAllowedMembers = project.AllowedMembers.ToList();
 
-        // Arrange
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -53,7 +55,7 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new AddAllowedMemberToProjectResult());
 
-        Utils.Project.AssertFromAddAllowedMemberCommand(project, command, collaborator);
+        Utils.Project.AssertFromAddAllowedMemberCommand(project, command, collaborator, previousAllowedMembers);
     }
 
     [Fact]
@@ -75,9 +77,9 @@ public class AddAllowedMemberToProjectCommandHandlerTest
             allowedMember.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -98,9 +100,9 @@ public class AddAllowedMemberToProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateAddAllowedMemberToProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -120,9 +122,9 @@ public class AddAllowedMemberToProjectCommandHandlerTest
             .Returns(project);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -141,9 +143,9 @@ public class AddAllowedMemberToProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));

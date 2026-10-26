@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Queries.GetStages;
 
-public sealed class GetStagesFromProjectSprintQueryHandler(IProjectSprintRepository projectSprintRepository)
+internal sealed class GetStagesFromProjectSprintQueryHandler(IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<GetStagesFromProjectSprintQuery, ErrorOr<GetStagesFromProjectSprintResult>>
 {
     public async Task<ErrorOr<GetStagesFromProjectSprintResult>> Handle(GetStagesFromProjectSprintQuery query,

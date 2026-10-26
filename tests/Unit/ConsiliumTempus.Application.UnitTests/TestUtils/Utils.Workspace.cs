@@ -17,6 +17,7 @@ using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.Events;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
@@ -72,11 +73,12 @@ internal static partial class Utils
         internal static void AssertFromAcceptInvitationCommand(
             AcceptInvitationToWorkspaceCommand command,
             WorkspaceAggregate workspace,
-            UserAggregate user)
+            UserAggregate user,
+            List<WorkspaceInvitation> remainingInvitations)
         {
             workspace.Id.Value.Should().Be(command.Id);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            workspace.Invitations.Should().HaveCount(0);
+            workspace.Invitations.Should().Equal(remainingInvitations);
             workspace.Memberships.Should().ContainSingle(m => m.User == user);
 
             var membership = workspace.Memberships.Single(m => m.User == user);
@@ -99,10 +101,11 @@ internal static partial class Utils
 
         internal static void AssertFromRejectInvitationCommand(
             RejectInvitationToWorkspaceCommand command,
-            WorkspaceAggregate workspace)
+            WorkspaceAggregate workspace,
+            List<WorkspaceInvitation> remainingInvitations)
         {
             workspace.Id.Value.Should().Be(command.Id);
-            workspace.Invitations.Should().HaveCount(0);
+            workspace.Invitations.Should().Equal(remainingInvitations);
         }
 
         internal static void AssertFromLeaveCommand(
@@ -172,42 +175,42 @@ internal static partial class Utils
         internal static void AssertFromRemovedCollaborator(
             CollaboratorRemovedFromWorkspace domainEvent,
             List<ProjectAggregate> projects,
-            List<ProjectAggregate> ownedProjects,
-            List<ProjectAggregate> favoritesProjects)
+            Dictionary<ProjectAggregate, UserAggregate> previousOwners,
+            List<ProjectAggregate> allowedMemberProjects,
+            List<ProjectAggregate> favoriteOnlyProjects)
         {
             var (workspace, collaborator) = domainEvent;
             workspace.IsFavorite(collaborator).Should().BeFalse();
+
             projects.Should().AllSatisfyOrEmpty(p =>
             {
                 p.Owner.Should().NotBe(collaborator);
                 p.AllowedMembers.Should().NotContain(collaborator);
-                if (p.IsFavorite(collaborator))
-                {
-                    p.DomainEvents.Should().HaveCount(1);
-                    p.DomainEvents[0].Should().BeOfType<AllowedMemberRemovedFromProject>();
-                }
+                if (previousOwners[p] != collaborator) p.Owner.Should().Be(previousOwners[p]);
             });
 
-            var newOwner = workspace.Memberships
-                .OrderBy(m => m.User == workspace.Owner)
-                .ThenByDescending(m => m.WorkspaceRole.Id)
-                .First()
-                .User;
-            projects.Where(ownedProjects.Contains).Should().AllSatisfyOrEmpty(p =>
-                p.Owner.Should().Be(newOwner));
-
-            projects.Where(favoritesProjects.Contains).Should().AllSatisfyOrEmpty(p =>
+            var nonOwnerMemberships = workspace.Memberships
+                .Where(m => m.User != workspace.Owner)
+                .ToList();
+            projects.Where(p => previousOwners[p] == collaborator).Should().AllSatisfyOrEmpty(p =>
             {
-                if (p.IsFavorite(collaborator))
+                if (nonOwnerMemberships.Count == 0)
                 {
-                    p.DomainEvents.Should().HaveCount(1);
-                    p.DomainEvents[0].Should().BeOfType<AllowedMemberRemovedFromProject>();
+                    p.Owner.Should().Be(workspace.Owner);
+                    return;
                 }
-                else
-                {
-                    p.DomainEvents.Should().BeEmpty();
-                }
+
+                var newOwnerMembership = nonOwnerMemberships.Single(m => m.User == p.Owner);
+                newOwnerMembership.WorkspaceRole.Id.Should().Be(nonOwnerMemberships.Max(m => m.WorkspaceRole.Id));
             });
+
+            projects.Where(allowedMemberProjects.Contains).Should().AllSatisfyOrEmpty(p =>
+                p.DomainEvents.Should().ContainSingle(e =>
+                    e is AllowedMemberRemovedFromProject && ((AllowedMemberRemovedFromProject)e).User == collaborator));
+            projects.Where(p => !allowedMemberProjects.Contains(p)).Should().AllSatisfyOrEmpty(p =>
+                p.DomainEvents.Should().BeEmpty());
+            projects.Where(favoriteOnlyProjects.Contains).Should().AllSatisfyOrEmpty(p =>
+                p.IsFavorite(collaborator).Should().BeFalse());
         }
 
         internal static void AssertWorkspace(

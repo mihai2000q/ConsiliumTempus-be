@@ -55,7 +55,7 @@ public class CreateProjectSprintCommandHandlerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -74,7 +74,7 @@ public class CreateProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleCreateProjectSprintCommand_WhenItFails_ShouldReturnProjectNotFoundError()
+    public async Task HandleCreateProjectSprintCommand_WhenProjectIsNull_ShouldReturnProjectNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand();
@@ -84,14 +84,14 @@ public class CreateProjectSprintCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
             .Received(1)
             .GetWithStages(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
-        _currentUserProvider.DidNotReceive();
-        _projectSprintRepository.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
+        await _projectSprintRepository.DidNotReceive().Add(Arg.Any<ProjectSprintAggregate>());
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

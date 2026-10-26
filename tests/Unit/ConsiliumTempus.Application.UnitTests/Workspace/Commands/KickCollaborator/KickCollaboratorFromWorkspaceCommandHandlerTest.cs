@@ -48,7 +48,7 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
             collaborator.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -83,7 +83,7 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
             collaboratorId: user.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -109,20 +109,22 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
             collaboratorId: workspace.Owner.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
             .Received(1)
             .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Workspace.KickOwner);
     }
 
     [Fact]
     public async Task
-        HandleKickCollaboratorFromWorkspaceCommand_WhenCollaboratorsIsNull_ShouldReturnCollaboratorNotFoundError()
+        HandleKickCollaboratorFromWorkspaceCommand_WhenCollaboratorIsNull_ShouldReturnCollaboratorNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateKickCollaboratorFromWorkspaceCommand();
@@ -133,19 +135,21 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
             .Returns(workspace);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
             .Received(1)
             .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Workspace.CollaboratorNotFound);
     }
 
     [Fact]
-    public async Task HandleKickCollaboratorFromWorkspaceCommand_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleKickCollaboratorFromWorkspaceCommand_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateKickCollaboratorFromWorkspaceCommand();
@@ -155,13 +159,15 @@ public class KickCollaboratorFromWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
             .Received(1)
             .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

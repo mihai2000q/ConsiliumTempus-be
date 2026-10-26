@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IWorkspaceRepository
+internal sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : IWorkspaceRepository
 {
     public async Task<WorkspaceAggregate?> Get(WorkspaceId id, CancellationToken cancellationToken = default)
     {

@@ -13,7 +13,7 @@ public sealed class PaginationInfo
 
     public static PaginationInfo? Create(int? pageSize, int? currentPage)
     {
-        if (pageSize is null || currentPage is null) return default;
+        if (pageSize is null || currentPage is null) return null;
         return new PaginationInfo(pageSize.Value, currentPage.Value);
     }
 

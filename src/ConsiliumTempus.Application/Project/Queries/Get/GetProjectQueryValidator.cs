@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Project.Queries.Get;
 
-public sealed class GetProjectQueryValidator : AbstractValidator<GetProjectQuery>
+internal sealed class GetProjectQueryValidator : AbstractValidator<GetProjectQuery>
 {
     public GetProjectQueryValidator()
     {

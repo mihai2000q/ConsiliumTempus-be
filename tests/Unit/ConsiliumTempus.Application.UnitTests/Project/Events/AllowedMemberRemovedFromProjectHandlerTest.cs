@@ -27,9 +27,27 @@ public class AllowedMemberRemovedFromProjectHandlerTest
         var domainEvent = new AllowedMemberRemovedFromProject(project, user);
 
         // Act
-        await _uut.Handle(domainEvent, default);
+        await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
         project.IsFavorite(user).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task HandleAllowedMemberRemovedFromProject_WhenUserIsNotFavorite_ShouldKeepTheOtherFavorites()
+    {
+        // Arrange
+        var project = ProjectFactory.CreateWithAllowedMembers();
+        var user = project.AllowedMembers[1];
+        var otherUser = project.AllowedMembers[2];
+        project.UpdateFavorites(true, otherUser);
+        var domainEvent = new AllowedMemberRemovedFromProject(project, user);
+
+        // Act
+        await _uut.Handle(domainEvent, CancellationToken.None);
+
+        // Assert
+        project.IsFavorite(user).Should().BeFalse();
+        project.IsFavorite(otherUser).Should().BeTrue();
     }
 }

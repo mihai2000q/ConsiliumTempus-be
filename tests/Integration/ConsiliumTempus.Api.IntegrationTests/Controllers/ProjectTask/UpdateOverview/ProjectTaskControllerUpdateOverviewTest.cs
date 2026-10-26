@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectTask.UpdateOverview;
 
 [Collection(nameof(ProjectTaskControllerCollection))]
-public class ProjectTaskControllerUpdateOverviewOverviewTest(WebAppFactory factory)
+public class ProjectTaskControllerUpdateOverviewTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectTaskData())
 {
     [Fact]

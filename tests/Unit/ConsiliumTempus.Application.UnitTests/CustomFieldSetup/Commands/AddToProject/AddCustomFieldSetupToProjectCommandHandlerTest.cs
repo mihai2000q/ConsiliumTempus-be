@@ -47,9 +47,9 @@ public class AddCustomFieldSetupToProjectCommandHandlerTest
             project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
@@ -83,9 +83,9 @@ public class AddCustomFieldSetupToProjectCommandHandlerTest
         customFieldSetup.AddProject(project);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
@@ -113,9 +113,9 @@ public class AddCustomFieldSetupToProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
@@ -139,19 +139,19 @@ public class AddCustomFieldSetupToProjectCommandHandlerTest
             .Returns(customFieldSetup);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
-        _projectRepository.DidNotReceive();
+        await _projectRepository.DidNotReceive().Get(Arg.Any<ProjectId>());
 
         outcome.ValidateError(Errors.CustomFieldSetup.NotGlobal);
     }
 
     [Fact]
-    public async Task HandleAddCustomFieldSetupToProjectCommand_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task HandleAddCustomFieldSetupToProjectCommand_WhenCustomFieldSetupIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateAddCustomFieldSetupToProjectCommand();
@@ -161,13 +161,13 @@ public class AddCustomFieldSetupToProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
-        _projectRepository.DidNotReceive();
+        await _projectRepository.DidNotReceive().Get(Arg.Any<ProjectId>());
 
         outcome.ValidateError(Errors.CustomFieldSetup.NotFound);
     }

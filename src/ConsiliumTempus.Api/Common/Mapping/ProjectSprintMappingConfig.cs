@@ -25,7 +25,7 @@ using Mapster;
 namespace ConsiliumTempus.Api.Common.Mapping;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-public sealed class ProjectSprintMappingConfig : IRegister
+internal sealed class ProjectSprintMappingConfig : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {

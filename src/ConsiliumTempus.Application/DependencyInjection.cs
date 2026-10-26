@@ -17,7 +17,7 @@ public static class DependencyInjection
             cfg.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
         });
 
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), includeInternalTypes: true);
 
         return services;
     }

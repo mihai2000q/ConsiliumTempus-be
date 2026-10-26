@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Relations;
 
-public sealed class UserHasFavoriteProjectConfiguration : IEntityTypeConfiguration<UserHasFavoriteProject>
+internal sealed class UserHasFavoriteProjectConfiguration : IEntityTypeConfiguration<UserHasFavoriteProject>
 {
     public void Configure(EntityTypeBuilder<UserHasFavoriteProject> builder)
     {

@@ -42,7 +42,7 @@ using Mapster;
 namespace ConsiliumTempus.Api.Common.Mapping;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-public sealed class WorkspaceMappingConfig : IRegister
+internal sealed class WorkspaceMappingConfig : IRegister
 {
     public const string CurrentUser = "CurrentUser";
 

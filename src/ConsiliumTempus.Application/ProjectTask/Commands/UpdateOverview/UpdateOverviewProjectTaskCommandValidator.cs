@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 
-public sealed class UpdateOverviewProjectTaskCommandValidator : AbstractValidator<UpdateOverviewProjectTaskCommand>
+internal sealed class UpdateOverviewProjectTaskCommandValidator : AbstractValidator<UpdateOverviewProjectTaskCommand>
 {
     public UpdateOverviewProjectTaskCommandValidator()
     {

@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
+using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Queries;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Filters;
@@ -26,12 +27,12 @@ public class GetCollectionProjectTaskQueryHandlerTest
 
     #endregion
 
-    [Fact]
-    public async Task HandleGetCollectionProjectTaskQuery_WhenSucceeds_ShouldReturnProjectTasks()
+    [Theory]
+    [ClassData(typeof(GetCollectionProjectTaskQueryHandlerData.GetQueries))]
+    public async Task HandleGetCollectionProjectTaskQuery_WhenSucceeds_ShouldReturnProjectTasks(
+        GetCollectionProjectTaskQuery query)
     {
         // Arrange
-        var query = ProjectTaskQueryFactory.CreateGetCollectionProjectTaskQuery();
-
         var tasks = ProjectTaskFactory.CreateList();
         _projectTaskRepository
             .GetListByStage(
@@ -49,7 +50,7 @@ public class GetCollectionProjectTaskQueryHandlerTest
             .Returns(projectTasksCount);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository
@@ -64,6 +65,7 @@ public class GetCollectionProjectTaskQueryHandlerTest
                     p.AssertPagination(query.PageSize, query.CurrentPage)));
 
         await _projectTaskRepository
+            .Received(1)
             .GetListByStageCount(
                 Arg.Is<ProjectStageId>(sId => sId.Value == query.ProjectStageId),
                 Arg.Is<IReadOnlyList<IFilter<ProjectTaskAggregate>>>(filters =>

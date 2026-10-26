@@ -35,7 +35,7 @@ public class UpdateProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateUpdateProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -49,7 +49,7 @@ public class UpdateProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateProjectCommand_WhenItFails_ShouldReturnNotFoundError()
+    public async Task HandleUpdateProjectCommand_WhenProjectIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectCommandFactory.CreateUpdateProjectCommand();
@@ -59,7 +59,7 @@ public class UpdateProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository

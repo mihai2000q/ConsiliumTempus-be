@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Common.IntegrationTests.Extensions;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.Delete;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -8,7 +9,6 @@ using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
-using ConsiliumTempus.Infrastructure.Extensions;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.Delete;
 

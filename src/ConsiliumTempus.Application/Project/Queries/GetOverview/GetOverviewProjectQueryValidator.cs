@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Project.Queries.GetOverview;
 
-public sealed class GetOverviewProjectQueryValidator : AbstractValidator<GetOverviewProjectQuery>
+internal sealed class GetOverviewProjectQueryValidator : AbstractValidator<GetOverviewProjectQuery>
 {
     public GetOverviewProjectQueryValidator()
     {

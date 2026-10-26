@@ -12,7 +12,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 
-public sealed class UpdateCustomFieldSetupCommandHandler(
+internal sealed class UpdateCustomFieldSetupCommandHandler(
     ICustomFieldSetupRepository customFieldSetupRepository,
     ICurrentUserProvider currentUserProvider)
     : IRequestHandler<UpdateCustomFieldSetupCommand, ErrorOr<UpdateCustomFieldSetupResult>>

@@ -40,7 +40,7 @@ public class UpdateOwnerProjectCommandHandlerTest
             collaborator.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -54,6 +54,31 @@ public class UpdateOwnerProjectCommandHandlerTest
     }
 
     [Fact]
+    public async Task HandleUpdateOwnerProjectCommand_WhenCollaboratorIsNull_ShouldReturnCollaboratorNotFoundError()
+    {
+        // Arrange
+        var workspace = WorkspaceFactory.CreateWithCollaborators();
+        var project = ProjectFactory.Create(workspace: workspace);
+        var owner = project.Owner;
+        _projectRepository
+            .GetWithCollaborators(Arg.Any<ProjectId>())
+            .Returns(project);
+
+        var command = ProjectCommandFactory.CreateUpdateOwnerProjectCommand(project.Id.Value);
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _projectRepository
+            .Received(1)
+            .GetWithCollaborators(Arg.Is<ProjectId>(id => id.Value == command.Id));
+
+        outcome.ValidateError(Errors.Workspace.CollaboratorNotFound);
+        project.Owner.Should().Be(owner);
+    }
+
+    [Fact]
     public async Task HandleUpdateOwnerProjectCommand_WhenProjectIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
@@ -64,7 +89,7 @@ public class UpdateOwnerProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository

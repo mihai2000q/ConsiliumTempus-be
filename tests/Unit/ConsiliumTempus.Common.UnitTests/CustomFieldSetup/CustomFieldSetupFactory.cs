@@ -1,5 +1,5 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
-using ConsiliumTempus.Common.UnitTests.Common.Entities;
+﻿using ConsiliumTempus.Common.UnitTests.Common.Entities;
+using ConsiliumTempus.Common.UnitTests.Extensions;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Entities;

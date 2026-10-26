@@ -9,6 +9,7 @@ using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateCustomField;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateIsCompleted;
 using ConsiliumTempus.Api.Contracts.ProjectTask.UpdateOverview;
 using ConsiliumTempus.Api.Controllers;
+using ConsiliumTempus.Api.UnitTests.TestData;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.ProjectTask.Commands.Delete;
@@ -19,8 +20,13 @@ using ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 using ConsiliumTempus.Application.ProjectTask.Commands.UpdateOverview;
 using ConsiliumTempus.Application.ProjectTask.Queries.Get;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
+using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -41,21 +47,28 @@ public class ProjectTaskControllerTest
         Utils.ResolveHttpContext(_uut);
     }
 
+    // a custom field variant that the mapping does not know about
+    private sealed class UnsupportedCustomField(ProjectTaskAggregate task)
+        : CustomField(CustomFieldId.CreateUnique(), task)
+    {
+        public override CustomFieldSetupAggregate Setup { get; } = CustomFieldSetupFactory.CreateText();
+    }
+
     #endregion
 
-    [Fact]
-    public async Task Get_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(ProjectTaskControllerData.GetTasks))]
+    public async Task Get_WhenIsSuccessful_ShouldReturnResponse(ProjectTaskAggregate task)
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateGetProjectTaskRequest();
 
-        var task = ProjectTaskFactory.Create();
         _mediator
             .Send(Arg.Any<GetProjectTaskQuery>())
             .Returns(task);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -68,7 +81,26 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task Get_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenCustomFieldTypeIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var request = ProjectTaskRequestFactory.CreateGetProjectTaskRequest();
+
+        var task = ProjectTaskFactory.Create();
+        task.AddCustomField(new UnsupportedCustomField(task));
+        _mediator
+            .Send(Arg.Any<GetProjectTaskQuery>())
+            .Returns(task);
+
+        // Act
+        var outcome = async () => await _uut.Get(request, CancellationToken.None);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
+    }
+
+    [Fact]
+    public async Task Get_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateGetProjectTaskRequest();
@@ -79,7 +111,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -90,19 +122,19 @@ public class ProjectTaskControllerTest
         outcome.ValidateError(error);
     }
 
-    [Fact]
-    public async Task GetCollection_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(ProjectTaskControllerData.GetCollectionTaskResults))]
+    public async Task GetCollection_WhenIsSuccessful_ShouldReturnResponse(GetCollectionProjectTaskResult result)
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest();
 
-        var result = ProjectTaskResultFactory.CreateGetCollectionProjectTaskResult();
         _mediator
             .Send(Arg.Any<GetCollectionProjectTaskQuery>())
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollection(request, default);
+        var outcome = await _uut.GetCollection(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -115,7 +147,26 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task GetCollection_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollection_WhenCustomFieldTypeIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest();
+
+        var task = ProjectTaskFactory.Create();
+        task.AddCustomField(new UnsupportedCustomField(task));
+        _mediator
+            .Send(Arg.Any<GetCollectionProjectTaskQuery>())
+            .Returns(ProjectTaskResultFactory.CreateGetCollectionProjectTaskResult([task]));
+
+        // Act
+        var outcome = async () => await _uut.GetCollection(request, CancellationToken.None);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
+    }
+
+    [Fact]
+    public async Task GetCollection_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest();
@@ -126,7 +177,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollection(request, default);
+        var outcome = await _uut.GetCollection(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -149,7 +200,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Create(request, default);
+        var outcome = await _uut.Create(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -161,7 +212,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task Create_WhenItFails_ShouldReturnProblem()
+    public async Task Create_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateCreateProjectTaskRequest();
@@ -172,7 +223,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Create(request, default);
+        var outcome = await _uut.Create(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -194,7 +245,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Move(request, default);
+        var outcome = await _uut.Move(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -207,7 +258,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task Move_WhenItFails_ShouldReturnProblem()
+    public async Task Move_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateMoveProjectTaskRequest();
@@ -218,7 +269,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Move(request, default);
+        var outcome = await _uut.Move(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -241,7 +292,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -254,7 +305,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task Update_WhenItFails_ShouldReturnProblem()
+    public async Task Update_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateUpdateProjectTaskRequest();
@@ -265,7 +316,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -276,11 +327,11 @@ public class ProjectTaskControllerTest
         outcome.ValidateError(error);
     }
 
-    [Fact]
-    public async Task UpdateCustomField_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(ProjectTaskControllerData.GetUpdateCustomFieldRequests))]
+    public async Task UpdateCustomField_WhenIsSuccessful_ShouldReturnResponse(UpdateCustomFieldFromProjectTaskRequest request)
     {
         // Arrange
-        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest();
 
         var result = ProjectTaskResultFactory.CreateUpdateCustomFieldFromProjectTaskResult();
         _mediator
@@ -288,7 +339,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateCustomField(request, default);
+        var outcome = await _uut.UpdateCustomField(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -301,7 +352,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task UpdateCustomField_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateCustomField_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest();
@@ -312,7 +363,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateCustomField(request, default);
+        var outcome = await _uut.UpdateCustomField(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -335,7 +386,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateIsCompleted(request, default);
+        var outcome = await _uut.UpdateIsCompleted(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -348,7 +399,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task UpdateIsCompleted_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateIsCompleted_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateUpdateIsCompletedProjectTaskRequest();
@@ -359,7 +410,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateIsCompleted(request, default);
+        var outcome = await _uut.UpdateIsCompleted(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -382,7 +433,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateOverview(request, default);
+        var outcome = await _uut.UpdateOverview(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -395,7 +446,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task UpdateOverview_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateOverview_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateUpdateOverviewProjectTaskRequest();
@@ -406,7 +457,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateOverview(request, default);
+        var outcome = await _uut.UpdateOverview(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -429,7 +480,7 @@ public class ProjectTaskControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -442,7 +493,7 @@ public class ProjectTaskControllerTest
     }
 
     [Fact]
-    public async Task Delete_WhenItFails_ShouldReturnProblem()
+    public async Task Delete_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest();
@@ -453,7 +504,7 @@ public class ProjectTaskControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator

@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 
-public sealed class UpdateOwnerWorkspaceCommandValidator : AbstractValidator<UpdateOwnerWorkspaceCommand>
+internal sealed class UpdateOwnerWorkspaceCommandValidator : AbstractValidator<UpdateOwnerWorkspaceCommand>
 {
     public UpdateOwnerWorkspaceCommandValidator()
     {

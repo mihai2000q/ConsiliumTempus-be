@@ -33,26 +33,33 @@ internal static partial class Utils
         { HttpStatusCode.Conflict, StatusCodes.Status409Conflict }
     };
 
-    internal static async Task ValidateError(this HttpResponseMessage response, Error domainError)
+    extension(HttpResponseMessage response)
     {
-        var statusCode = ErrorCodeToHttpStatusMap[domainError.Type];
-        response.StatusCode.Should().Be(statusCode);
+        internal async Task ValidateError(Error domainError)
+        {
+            var statusCode = ErrorCodeToHttpStatusMap[domainError.Type];
+            response.StatusCode.Should().Be(statusCode);
 
-        var error = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-        error?.Title.Should().Be(domainError.Description);
-        error?.Status.Should().Be(StatusCodesMap[statusCode]);
-        var errorCodes = error?.Extensions["errorCodes"] as JsonElement?;
-        errorCodes?.ValueKind.Should().Be(JsonValueKind.Array);
-    }
+            var error = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            error.Should().NotBeNull();
+            error!.Title.Should().Be(domainError.Description);
+            error.Status.Should().Be(StatusCodesMap[statusCode]);
+            var errorCodes = error.Extensions["errorCodes"] as JsonElement?;
+            errorCodes.Should().NotBeNull();
+            errorCodes!.Value.ValueKind.Should().Be(JsonValueKind.Array);
+        }
 
-    internal static async Task ValidateValidationErrors(this HttpResponseMessage response)
-    {
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        internal async Task ValidateValidationErrors()
+        {
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-        var error = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-        error?.Status.Should().Be(StatusCodes.Status400BadRequest);
-        var errorCodes = error?.Extensions["errors"] as JsonElement?;
-        errorCodes?.ValueKind.Should().Be(JsonValueKind.Object);
+            var error = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            error.Should().NotBeNull();
+            error!.Status.Should().Be(StatusCodes.Status400BadRequest);
+            var errors = error.Extensions["errors"] as JsonElement?;
+            errors.Should().NotBeNull();
+            errors!.Value.ValueKind.Should().Be(JsonValueKind.Object);
+        }
     }
 
     internal static void ShouldBeOrdered(this IReadOnlyList<ProjectTaskAggregate> tasks)
@@ -83,27 +90,33 @@ internal static partial class Utils
             .Should().AllSatisfyOrEmpty(o => o.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
 
-    internal static void ShouldBeCreated(this Audit audit, UserAggregate createdBy)
+    extension(Audit audit)
     {
-        audit.CreatedBy.Should().Be(createdBy);
-        audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-        audit.UpdatedBy.Should().Be(createdBy);
-        audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        internal void ShouldBeCreated(UserAggregate createdBy)
+        {
+            audit.CreatedBy.Should().Be(createdBy);
+            audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            audit.UpdatedBy.Should().Be(createdBy);
+            audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
+
+        internal void ShouldBeUpdated(UserAggregate updatedBy)
+        {
+            audit.UpdatedBy.Should().Be(updatedBy);
+            audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
     }
 
-    internal static void ShouldBeUpdated(this Audit audit, UserAggregate updatedBy)
+    extension(List<string> orderBy)
     {
-        audit.UpdatedBy.Should().Be(updatedBy);
-        audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-    }
+        internal string ToOrderByQueryParam()
+        {
+            return string.Join('&', orderBy.Select(o => $"orderBy={o}"));
+        }
 
-    internal static string ToOrderByQueryParam(this List<string> orderBy)
-    {
-        return string.Join('&', orderBy.Select(o => $"orderBy={o}"));
-    }
-
-    internal static string ToSearchQueryParam(this List<string> search)
-    {
-        return string.Join('&', search.Select(s => $"search={s}"));
+        internal string ToSearchQueryParam()
+        {
+            return string.Join('&', orderBy.Select(s => $"search={s}"));
+        }
     }
 }

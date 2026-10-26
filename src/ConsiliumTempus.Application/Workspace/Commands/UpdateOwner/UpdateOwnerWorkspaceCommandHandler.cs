@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 
-public sealed class UpdateOwnerWorkspaceCommandHandler(IWorkspaceRepository workspaceRepository)
+internal sealed class UpdateOwnerWorkspaceCommandHandler(IWorkspaceRepository workspaceRepository)
     : IRequestHandler<UpdateOwnerWorkspaceCommand, ErrorOr<UpdateOwnerWorkspaceResult>>
 {
     public async Task<ErrorOr<UpdateOwnerWorkspaceResult>> Handle(UpdateOwnerWorkspaceCommand command,

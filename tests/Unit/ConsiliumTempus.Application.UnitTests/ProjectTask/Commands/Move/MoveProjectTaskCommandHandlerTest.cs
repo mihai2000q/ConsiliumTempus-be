@@ -39,9 +39,9 @@ public class MoveProjectTaskCommandHandlerTest
             .Returns(task);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -65,9 +65,9 @@ public class MoveProjectTaskCommandHandlerTest
             .Returns(task);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -91,9 +91,9 @@ public class MoveProjectTaskCommandHandlerTest
             .Returns(task);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -122,9 +122,9 @@ public class MoveProjectTaskCommandHandlerTest
         var command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(task.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -143,9 +143,9 @@ public class MoveProjectTaskCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));

@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.MakeGlobal;
 
-public sealed class MakeCustomFieldSetupGlobalCommandValidator 
+internal sealed class MakeCustomFieldSetupGlobalCommandValidator 
     : AbstractValidator<MakeCustomFieldSetupGlobalCommand>
 {
     public MakeCustomFieldSetupGlobalCommandValidator()

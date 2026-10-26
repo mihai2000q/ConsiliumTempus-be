@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
-public sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<CustomFieldSetupAggregate>
+internal sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<CustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<CustomFieldSetupAggregate> builder)
     {
@@ -52,51 +52,51 @@ public sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<Cus
     }
 }
 
-public sealed class DateCustomFieldSetupConfiguration : IEntityTypeConfiguration<DateCustomFieldSetupAggregate>
+internal sealed class DateCustomFieldSetupConfiguration : IEntityTypeConfiguration<DateCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<DateCustomFieldSetupAggregate> builder)
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.Date.ToString()));
+            .Underscore(CustomFieldType.Date.ToString()));
 
         builder.Property(d => d.DefaultDate);
     }
 }
 
-public sealed class DateTimeCustomFieldSetupConfiguration : IEntityTypeConfiguration<DateTimeCustomFieldSetupAggregate>
+internal sealed class DateTimeCustomFieldSetupConfiguration : IEntityTypeConfiguration<DateTimeCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<DateTimeCustomFieldSetupAggregate> builder)
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.DateTime.ToString()));
+            .Underscore(CustomFieldType.DateTime.ToString()));
 
         builder.Property(d => d.DefaultDateTime);
     }
 }
 
-public sealed class DurationCustomFieldSetupConfiguration : IEntityTypeConfiguration<DurationCustomFieldSetupAggregate>
+internal sealed class DurationCustomFieldSetupConfiguration : IEntityTypeConfiguration<DurationCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<DurationCustomFieldSetupAggregate> builder)
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.Duration.ToString()));
+            .Underscore(CustomFieldType.Duration.ToString()));
 
         builder.Property(d => d.DefaultDuration)
             .HasConversion<long>();
     }
 }
 
-public sealed class
+internal sealed class
     MultiSelectCustomFieldSetupConfiguration : IEntityTypeConfiguration<MultiSelectCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<MultiSelectCustomFieldSetupAggregate> builder)
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.MultiSelect.ToString()));
+            .Underscore(CustomFieldType.MultiSelect.ToString()));
 
         builder.HasMany(m => m.Options)
             .WithOne()
@@ -106,13 +106,13 @@ public sealed class
     }
 }
 
-public sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfiguration<NumberCustomFieldSetupAggregate>
+internal sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfiguration<NumberCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<NumberCustomFieldSetupAggregate> builder)
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.Number.ToString()));
+            .Underscore(CustomFieldType.Number.ToString()));
 
         builder.OwnsOne(n => n.Settings, nb =>
         {
@@ -135,24 +135,24 @@ public sealed class NumberCustomFieldSetupConfiguration : IEntityTypeConfigurati
     }
 }
 
-public sealed class PeopleCustomFieldSetupConfiguration : IEntityTypeConfiguration<PeopleCustomFieldSetupAggregate>
+internal sealed class PeopleCustomFieldSetupConfiguration : IEntityTypeConfiguration<PeopleCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<PeopleCustomFieldSetupAggregate> builder)
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.People.ToString()));
+            .Underscore(CustomFieldType.People.ToString()));
     }
 }
 
-public sealed class
+internal sealed class
     SingleSelectCustomFieldSetupConfiguration : IEntityTypeConfiguration<SingleSelectCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<SingleSelectCustomFieldSetupAggregate> builder)
     {
         var tableName = nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.SingleSelect.ToString());
+            .Underscore(CustomFieldType.SingleSelect.ToString());
         builder.ToTable(tableName);
 
         builder.HasMany(s => s.Options)
@@ -167,13 +167,13 @@ public sealed class
     }
 }
 
-public sealed class TextCustomFieldSetupConfiguration : IEntityTypeConfiguration<TextCustomFieldSetupAggregate>
+internal sealed class TextCustomFieldSetupConfiguration : IEntityTypeConfiguration<TextCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<TextCustomFieldSetupAggregate> builder)
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.Text.ToString()));
+            .Underscore(CustomFieldType.Text.ToString()));
 
         builder.OwnsOne(n => n.DefaultText)
             .Property(dt => dt.Value)
@@ -181,13 +181,13 @@ public sealed class TextCustomFieldSetupConfiguration : IEntityTypeConfiguration
     }
 }
 
-public sealed class TimeCustomFieldSetupConfiguration : IEntityTypeConfiguration<TimeCustomFieldSetupAggregate>
+internal sealed class TimeCustomFieldSetupConfiguration : IEntityTypeConfiguration<TimeCustomFieldSetupAggregate>
 {
     public void Configure(EntityTypeBuilder<TimeCustomFieldSetupAggregate> builder)
     {
         builder.ToTable(nameof(CustomFieldSetupAggregate)
             .TruncateAggregate()
-            .Dash(CustomFieldType.Time.ToString()));
+            .Underscore(CustomFieldType.Time.ToString()));
 
         builder.Property(t => t.DefaultTime);
     }

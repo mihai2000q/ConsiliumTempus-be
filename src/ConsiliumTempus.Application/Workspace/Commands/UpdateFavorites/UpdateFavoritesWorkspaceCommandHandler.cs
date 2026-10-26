@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 
-public sealed class UpdateFavoritesWorkspaceCommandHandler(
+internal sealed class UpdateFavoritesWorkspaceCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository)
     : IRequestHandler<UpdateFavoritesWorkspaceCommand, ErrorOr<UpdateFavoritesWorkspaceResult>>

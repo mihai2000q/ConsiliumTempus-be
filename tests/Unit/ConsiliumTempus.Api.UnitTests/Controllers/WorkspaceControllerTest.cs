@@ -71,7 +71,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -83,7 +83,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task Get_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetWorkspaceRequest();
@@ -94,7 +94,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -116,7 +116,7 @@ public class WorkspaceControllerTest
             .Returns(workspace);
 
         // Act
-        var outcome = await _uut.GetOverview(request, default);
+        var outcome = await _uut.GetOverview(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -129,7 +129,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task GetOverview_WhenItFails_ShouldReturnProblem()
+    public async Task GetOverview_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetOverviewWorkspaceRequest();
@@ -140,7 +140,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetOverview(request, default);
+        var outcome = await _uut.GetOverview(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -163,7 +163,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollection(request, default);
+        var outcome = await _uut.GetCollection(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -176,7 +176,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task GetCollection_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollection_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest();
@@ -187,7 +187,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollection(request, default);
+        var outcome = await _uut.GetCollection(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -210,7 +210,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollaborators(request, default);
+        var outcome = await _uut.GetCollaborators(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -223,7 +223,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task GetCollaborators_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollaborators_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollaboratorsFromWorkspaceRequest();
@@ -234,7 +234,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollaborators(request, default);
+        var outcome = await _uut.GetCollaborators(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -257,7 +257,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetInvitations(request, default);
+        var outcome = await _uut.GetInvitations(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -270,7 +270,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task GetInvitations_WhenItFails_ShouldReturnProblem()
+    public async Task GetInvitations_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetInvitationsWorkspaceRequest();
@@ -281,7 +281,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetInvitations(request, default);
+        var outcome = await _uut.GetInvitations(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -304,7 +304,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Create(request, default);
+        var outcome = await _uut.Create(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -317,7 +317,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task Create_WhenItFails_ShouldReturnProblem()
+    public async Task Create_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateCreateWorkspaceRequest();
@@ -328,7 +328,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Create(request, default);
+        var outcome = await _uut.Create(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -351,7 +351,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.InviteCollaborator(request, default);
+        var outcome = await _uut.InviteCollaborator(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -364,7 +364,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task InviteCollaborator_WhenItFails_ShouldReturnProblem()
+    public async Task InviteCollaborator_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateInviteCollaboratorToWorkspaceRequest();
@@ -375,7 +375,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.InviteCollaborator(request, default);
+        var outcome = await _uut.InviteCollaborator(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -398,7 +398,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.AcceptInvitation(request, default);
+        var outcome = await _uut.AcceptInvitation(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -411,7 +411,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task AcceptInvitation_WhenItFails_ShouldReturnProblem()
+    public async Task AcceptInvitation_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateAcceptInvitationToWorkspaceRequest();
@@ -422,7 +422,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.AcceptInvitation(request, default);
+        var outcome = await _uut.AcceptInvitation(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -445,7 +445,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.RejectInvitation(request, default);
+        var outcome = await _uut.RejectInvitation(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -458,7 +458,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task RejectInvitation_WhenItFails_ShouldReturnProblem()
+    public async Task RejectInvitation_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateRejectInvitationToWorkspaceRequest();
@@ -469,7 +469,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.RejectInvitation(request, default);
+        var outcome = await _uut.RejectInvitation(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -492,7 +492,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -505,7 +505,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task Update_WhenItFails_ShouldReturnProblem()
+    public async Task Update_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateWorkspaceRequest();
@@ -516,7 +516,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -539,7 +539,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateCollaborator(request, default);
+        var outcome = await _uut.UpdateCollaborator(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -552,7 +552,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task UpdateCollaborator_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateCollaborator_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateCollaboratorFromWorkspaceRequest();
@@ -563,7 +563,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateCollaborator(request, default);
+        var outcome = await _uut.UpdateCollaborator(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -586,7 +586,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateFavorites(request, default);
+        var outcome = await _uut.UpdateFavorites(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -599,7 +599,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task UpdateFavorites_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateFavorites_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateFavoritesWorkspaceRequest();
@@ -610,7 +610,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateFavorites(request, default);
+        var outcome = await _uut.UpdateFavorites(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -633,7 +633,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateOverview(request, default);
+        var outcome = await _uut.UpdateOverview(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -646,7 +646,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task UpdateOverview_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateOverview_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateOverviewWorkspaceRequest();
@@ -657,7 +657,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateOverview(request, default);
+        var outcome = await _uut.UpdateOverview(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -680,7 +680,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateOwner(request, default);
+        var outcome = await _uut.UpdateOwner(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -693,7 +693,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task UpdateOwner_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateOwner_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateUpdateOwnerWorkspaceRequest();
@@ -704,7 +704,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateOwner(request, default);
+        var outcome = await _uut.UpdateOwner(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -727,7 +727,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -740,7 +740,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task Delete_WhenItFails_ShouldReturnProblem()
+    public async Task Delete_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateDeleteWorkspaceRequest();
@@ -751,7 +751,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -774,7 +774,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.KickCollaborator(request, default);
+        var outcome = await _uut.KickCollaborator(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -787,7 +787,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task KickCollaborator_WhenItFails_ShouldReturnProblem()
+    public async Task KickCollaborator_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateKickCollaboratorFromWorkspaceRequest();
@@ -798,7 +798,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.KickCollaborator(request, default);
+        var outcome = await _uut.KickCollaborator(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -821,7 +821,7 @@ public class WorkspaceControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Leave(request, default);
+        var outcome = await _uut.Leave(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -834,7 +834,7 @@ public class WorkspaceControllerTest
     }
 
     [Fact]
-    public async Task Leave_WhenItFails_ShouldReturnProblem()
+    public async Task Leave_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateLeaveWorkspaceRequest();
@@ -845,7 +845,7 @@ public class WorkspaceControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Leave(request, default);
+        var outcome = await _uut.Leave(request, CancellationToken.None);
 
         // Assert
         await _mediator

@@ -9,7 +9,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.User.Events;
 
-public sealed class UserDeletedHandler(
+internal sealed class UserDeletedHandler(
     IUserRepository userRepository,
     IWorkspaceRepository workspaceRepository,
     IProjectRepository projectRepository)

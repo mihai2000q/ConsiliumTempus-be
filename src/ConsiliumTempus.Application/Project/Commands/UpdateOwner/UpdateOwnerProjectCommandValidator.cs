@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Project.Commands.UpdateOwner;
 
-public sealed class UpdateOwnerProjectCommandValidator : AbstractValidator<UpdateOwnerProjectCommand>
+internal sealed class UpdateOwnerProjectCommandValidator : AbstractValidator<UpdateOwnerProjectCommand>
 {
     public UpdateOwnerProjectCommandValidator()
     {

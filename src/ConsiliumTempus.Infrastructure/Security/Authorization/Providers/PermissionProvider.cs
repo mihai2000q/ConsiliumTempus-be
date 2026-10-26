@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 
-public sealed class PermissionProvider(ConsiliumTempusDbContext dbContext) : IPermissionProvider
+internal sealed class PermissionProvider(ConsiliumTempusDbContext dbContext) : IPermissionProvider
 {
     public async Task<HashSet<string>> GetPermissions(UserId userId, WorkspaceId workspaceId)
     {

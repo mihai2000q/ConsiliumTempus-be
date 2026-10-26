@@ -39,9 +39,9 @@ public class DeleteProjectTaskCommandHandlerTest
             stage.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectSprintRepository
             .Received(1)
             .GetStageWithTasksAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.StageId));
@@ -64,9 +64,9 @@ public class DeleteProjectTaskCommandHandlerTest
             .Returns(stage);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectSprintRepository
             .Received(1)
             .GetStageWithTasksAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.StageId));
@@ -85,9 +85,9 @@ public class DeleteProjectTaskCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectSprintRepository
             .Received(1)
             .GetStageWithTasksAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.StageId));

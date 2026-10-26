@@ -51,9 +51,9 @@ public class CreateProjectCommandHandlerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));
@@ -82,14 +82,18 @@ public class CreateProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));
-        _currentUserProvider.DidNotReceive();
-        _projectRepository.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
+        await _projectRepository
+            .DidNotReceive()
+            .Add(Arg.Any<ProjectAggregate>());
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

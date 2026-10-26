@@ -38,19 +38,19 @@ public class CustomFieldSetupControllerGetCollectionFromProjectAuthorizationTest
 
     // Project Authorization
     [Fact]
-    public async Task GetCustomFieldSetup_WhenProjectIsNotPrivate_ShouldReturnSuccessResponse()
+    public async Task GetCollectionCustomFieldSetupFromProject_WhenProjectIsNotPrivate_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(CustomFieldSetupData.Users[4], CustomFieldSetupData.Projects[^3]);
     }
 
     [Fact]
-    public async Task GetCustomFieldSetup_WhenProjectIsPrivateAndIsAllowedMember_ShouldReturnSuccessResponse()
+    public async Task GetCollectionCustomFieldSetupFromProject_WhenProjectIsPrivateAndIsAllowedMember_ShouldReturnSuccessResponse()
     {
         await AssertSuccessfulResponse(CustomFieldSetupData.Users[0], CustomFieldSetupData.Projects[^2]);
     }
 
     [Fact]
-    public async Task GetCustomFieldSetup_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
+    public async Task GetCollectionCustomFieldSetupFromProject_WhenProjectIsPrivateButIsNotAllowedMember_ShouldReturnForbiddenResponse()
     {
         await AssertForbiddenResponse(CustomFieldSetupData.Users[0], CustomFieldSetupData.Projects[^1]);
     }

@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.Delete;
 
-public sealed class DeleteProjectCommandHandler(IProjectRepository projectRepository)
+internal sealed class DeleteProjectCommandHandler(IProjectRepository projectRepository)
     : IRequestHandler<DeleteProjectCommand, ErrorOr<DeleteProjectResult>>
 {
     public async Task<ErrorOr<DeleteProjectResult>> Handle(DeleteProjectCommand command,

@@ -100,4 +100,80 @@ public class ApiLayerTest : BaseArchitectureTest
             typeof(ApiController),
             "ConsiliumTempus.Api.Controllers");
     }
+
+    [Fact]
+    public void Controllers_ShouldBePublic()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(ApiController))
+            .Should()
+            .BePublic()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void Contracts_ShouldBePublic()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .Are(ApiLayer)
+            .And()
+            .ResideInNamespaceMatching(@"^ConsiliumTempus\.Api\.Contracts(\..*)?$")
+            .Should()
+            .BePublic()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void Program_ShouldBePublic()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(Program))
+            .Should()
+            .BePublic()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void Mappers_ShouldBeInternal()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(IRegister))
+            .Should()
+            .BeInternal()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void Attributes_ShouldBeInternal()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .Are(ApiLayer)
+            .And()
+            .HaveNameEndingWith("Attribute")
+            .Should()
+            .BeInternal()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void DependencyInjection_ShouldBeInternal()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .HaveFullName("ConsiliumTempus.Api.DependencyInjection")
+            .Should()
+            .BeInternal()
+            .Check(Architecture);
+    }
 }

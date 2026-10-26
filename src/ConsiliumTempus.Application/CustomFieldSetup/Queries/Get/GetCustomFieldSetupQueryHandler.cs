@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 
-public sealed class GetCustomFieldSetupQueryHandler(ICustomFieldSetupRepository customFieldSetupRepository)
+internal sealed class GetCustomFieldSetupQueryHandler(ICustomFieldSetupRepository customFieldSetupRepository)
     : IRequestHandler<GetCustomFieldSetupQuery, ErrorOr<GetCustomFieldSetupResult>>
 {
     public async Task<ErrorOr<GetCustomFieldSetupResult>> Handle(GetCustomFieldSetupQuery query,

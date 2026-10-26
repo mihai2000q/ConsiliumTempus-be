@@ -13,7 +13,7 @@ using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.ProjectTask.Commands.UpdateCustomField;
 
-public class UpdateCustomFieldProjectTaskCommandHandlerTest
+public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
 {
     #region Setup
 
@@ -21,7 +21,7 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
     private readonly IUserRepository _userRepository;
     private readonly UpdateCustomFieldFromProjectTaskCommandHandler _uut;
 
-    public UpdateCustomFieldProjectTaskCommandHandlerTest()
+    public UpdateCustomFieldFromProjectTaskCommandHandlerTest()
     {
         _projectTaskRepository = Substitute.For<IProjectTaskRepository>();
         _userRepository = Substitute.For<IUserRepository>();
@@ -47,9 +47,9 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -84,13 +84,15 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
             .Returns(task);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        _userRepository.DidNotReceive();
+        await _userRepository
+            .DidNotReceive()
+            .Get(Arg.Any<UserId>());
 
         outcome.ValidateError(Errors.MultiSelectOption.NotFound);
     }
@@ -117,9 +119,9 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -142,19 +144,21 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
             .Returns(ProjectTaskFactory.Create());
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        _userRepository.DidNotReceive();
+        await _userRepository
+            .DidNotReceive()
+            .Get(Arg.Any<UserId>());
 
         outcome.ValidateError(Errors.CustomField.NotFound);
     }
 
     [Fact]
-    public async Task HandleUpdateCustomFieldFromProjectTaskCommand_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task HandleUpdateCustomFieldFromProjectTaskCommand_WhenProjectTaskIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectTaskCommandFactory.CreateUpdateCustomFieldFromProjectTaskCommand();
@@ -164,13 +168,15 @@ public class UpdateCustomFieldProjectTaskCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        _userRepository.DidNotReceive();
+        await _userRepository
+            .DidNotReceive()
+            .Get(Arg.Any<UserId>());
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);
     }

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 
-public sealed class UpdateStageFromProjectSprintCommandValidator : AbstractValidator<UpdateStageFromProjectSprintCommand>
+internal sealed class UpdateStageFromProjectSprintCommandValidator : AbstractValidator<UpdateStageFromProjectSprintCommand>
 {
     public UpdateStageFromProjectSprintCommandValidator()
     {

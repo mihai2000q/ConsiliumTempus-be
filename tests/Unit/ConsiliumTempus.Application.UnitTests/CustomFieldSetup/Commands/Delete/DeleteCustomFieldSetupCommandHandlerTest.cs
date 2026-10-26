@@ -1,10 +1,12 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.UnitTests.TestData.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.CustomFieldSetup.Commands.Delete;
@@ -24,21 +26,22 @@ public class DeleteCustomFieldSetupCommandHandlerTest
 
     #endregion
 
-    [Fact]
-    public async Task HandleDeleteCustomFieldSetupCommand_WhenSuccessful_ShouldDeleteAndReturnSuccessResult()
+    [Theory]
+    [ClassData(typeof(DeleteCustomFieldSetupCommandHandlerData.GetCustomFieldSetups))]
+    public async Task HandleDeleteCustomFieldSetupCommand_WhenSuccessful_ShouldDeleteAndReturnSuccessResult(
+        CustomFieldSetupAggregate customFieldSetup)
     {
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateDeleteCustomFieldSetupCommand();
 
-        var customFieldSetup = CustomFieldSetupFactory.CreateText();
         _customFieldSetupRepository
             .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
             .Returns(customFieldSetup);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
@@ -64,7 +67,7 @@ public class DeleteCustomFieldSetupCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleDeleteCustomFieldSetupCommand_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task HandleDeleteCustomFieldSetupCommand_WhenCustomFieldSetupIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateDeleteCustomFieldSetupCommand();
@@ -74,9 +77,9 @@ public class DeleteCustomFieldSetupCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));

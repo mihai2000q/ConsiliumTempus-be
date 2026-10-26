@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
-public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTaskAggregate>
+internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTaskAggregate>
 {
     public void Configure(EntityTypeBuilder<ProjectTaskAggregate> builder)
     {
@@ -90,7 +90,7 @@ public sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectT
     }
 }
 
-public sealed class CustomFieldConfiguration : IEntityTypeConfiguration<CustomField>
+internal sealed class CustomFieldConfiguration : IEntityTypeConfiguration<CustomField>
 {
     public void Configure(EntityTypeBuilder<CustomField> builder)
     {
@@ -107,12 +107,12 @@ public sealed class CustomFieldConfiguration : IEntityTypeConfiguration<CustomFi
     }
 }
 
-public sealed class DateCustomFieldConfiguration : IEntityTypeConfiguration<DateCustomField>
+internal sealed class DateCustomFieldConfiguration : IEntityTypeConfiguration<DateCustomField>
 {
     public void Configure(EntityTypeBuilder<DateCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dash(CustomFieldType.Date.ToString()));
+            .Underscore(CustomFieldType.Date.ToString()));
 
         builder.Property(d => d.Date);
 
@@ -122,12 +122,12 @@ public sealed class DateCustomFieldConfiguration : IEntityTypeConfiguration<Date
     }
 }
 
-public sealed class DateTimeCustomFieldConfiguration : IEntityTypeConfiguration<DateTimeCustomField>
+internal sealed class DateTimeCustomFieldConfiguration : IEntityTypeConfiguration<DateTimeCustomField>
 {
     public void Configure(EntityTypeBuilder<DateTimeCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dash(CustomFieldType.DateTime.ToString()));
+            .Underscore(CustomFieldType.DateTime.ToString()));
 
         builder.Property(d => d.DateTime);
 
@@ -137,12 +137,12 @@ public sealed class DateTimeCustomFieldConfiguration : IEntityTypeConfiguration<
     }
 }
 
-public sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguration<DurationCustomField>
+internal sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguration<DurationCustomField>
 {
     public void Configure(EntityTypeBuilder<DurationCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dash(CustomFieldType.Duration.ToString()));
+            .Underscore(CustomFieldType.Duration.ToString()));
 
         builder.Property(d => d.Duration)
             .HasConversion<long>();
@@ -153,12 +153,12 @@ public sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguration<
     }
 }
 
-public sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfiguration<MultiSelectCustomField>
+internal sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfiguration<MultiSelectCustomField>
 {
     public void Configure(EntityTypeBuilder<MultiSelectCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dash(CustomFieldType.MultiSelect.ToString()));
+            .Underscore(CustomFieldType.MultiSelect.ToString()));
 
         builder.HasMany(m => m.Options)
             .WithMany()
@@ -171,12 +171,12 @@ public sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfigurati
     }
 }
 
-public sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<NumberCustomField>
+internal sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<NumberCustomField>
 {
     public void Configure(EntityTypeBuilder<NumberCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dash(CustomFieldType.Number.ToString()));
+            .Underscore(CustomFieldType.Number.ToString()));
 
         builder.OwnsOne(n => n.Number)
             .Property(n => n.Value)
@@ -189,12 +189,12 @@ public sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<Nu
     }
 }
 
-public sealed class PeopleCustomFieldConfiguration : IEntityTypeConfiguration<PeopleCustomField>
+internal sealed class PeopleCustomFieldConfiguration : IEntityTypeConfiguration<PeopleCustomField>
 {
     public void Configure(EntityTypeBuilder<PeopleCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dash(CustomFieldType.People.ToString()));
+            .Underscore(CustomFieldType.People.ToString()));
 
         builder.HasOne(p => p.Person)
             .WithMany();
@@ -206,12 +206,12 @@ public sealed class PeopleCustomFieldConfiguration : IEntityTypeConfiguration<Pe
     }
 }
 
-public sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfiguration<SingleSelectCustomField>
+internal sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfiguration<SingleSelectCustomField>
 {
     public void Configure(EntityTypeBuilder<SingleSelectCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dash(CustomFieldType.SingleSelect.ToString()));
+            .Underscore(CustomFieldType.SingleSelect.ToString()));
 
         builder.HasOne(s => s.Option)
             .WithMany();
@@ -223,12 +223,12 @@ public sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfigurat
     }
 }
 
-public sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<TextCustomField>
+internal sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<TextCustomField>
 {
     public void Configure(EntityTypeBuilder<TextCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dash(CustomFieldType.Text.ToString()));
+            .Underscore(CustomFieldType.Text.ToString()));
 
         builder.OwnsOne(t => t.Text)
             .Property(n => n.Value)
@@ -240,12 +240,12 @@ public sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<Text
     }
 }
 
-public sealed class TimeCustomFieldConfiguration : IEntityTypeConfiguration<TimeCustomField>
+internal sealed class TimeCustomFieldConfiguration : IEntityTypeConfiguration<TimeCustomField>
 {
     public void Configure(EntityTypeBuilder<TimeCustomField> builder)
     {
         builder.ToTable(nameof(CustomField)
-            .Dash(CustomFieldType.Time.ToString()));
+            .Underscore(CustomFieldType.Time.ToString()));
 
         builder.Property(t => t.Time);
 

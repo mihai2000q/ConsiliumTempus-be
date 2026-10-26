@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Project.Commands.UpdateFavorites;
 
-public sealed class UpdateFavoritesProjectCommandValidator : AbstractValidator<UpdateFavoritesProjectCommand>
+internal sealed class UpdateFavoritesProjectCommandValidator : AbstractValidator<UpdateFavoritesProjectCommand>
 {
     public UpdateFavoritesProjectCommandValidator()
     {

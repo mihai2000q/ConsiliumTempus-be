@@ -45,7 +45,7 @@ public class UpdateFavoritesProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateUpdateFavoritesProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -59,7 +59,7 @@ public class UpdateFavoritesProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateFavoritesProjectCommand_WhenItFails_ShouldReturnNotFoundError()
+    public async Task HandleUpdateFavoritesProjectCommand_WhenProjectIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectCommandFactory.CreateUpdateFavoritesProjectCommand();
@@ -69,13 +69,15 @@ public class UpdateFavoritesProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

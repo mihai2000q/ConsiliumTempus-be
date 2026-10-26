@@ -8,7 +8,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 
-public sealed class GetCollaboratorsFromWorkspaceQueryHandler(IWorkspaceRepository workspaceRepository)
+internal sealed class GetCollaboratorsFromWorkspaceQueryHandler(IWorkspaceRepository workspaceRepository)
     : IRequestHandler<GetCollaboratorsFromWorkspaceQuery, ErrorOr<GetCollaboratorsFromWorkspaceResult>>
 {
     public async Task<ErrorOr<GetCollaboratorsFromWorkspaceResult>> Handle(GetCollaboratorsFromWorkspaceQuery query,

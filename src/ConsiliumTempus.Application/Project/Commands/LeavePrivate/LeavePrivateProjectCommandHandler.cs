@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.LeavePrivate;
 
-public sealed class LeavePrivateProjectCommandHandler(
+internal sealed class LeavePrivateProjectCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IProjectRepository projectRepository)
     : IRequestHandler<LeavePrivateProjectCommand, ErrorOr<LeavePrivateProjectResult>>

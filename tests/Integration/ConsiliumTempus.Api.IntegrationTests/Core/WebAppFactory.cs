@@ -96,6 +96,8 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     public new async Task DisposeAsync()
     {
+        await base.DisposeAsync();
+        await _dbConnection.DisposeAsync();
         await _dbContainer.StopAsync();
     }
 }

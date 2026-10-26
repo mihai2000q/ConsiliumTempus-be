@@ -101,6 +101,15 @@ public class StringExtensionsTest
     [InlineData("aNdReI", "Andrei")]
     [InlineData("mIchAel JaMES", "Michael James")]
     [InlineData("CHRISTIAN-MICHAEL", "Christian-Michael")]
+    [InlineData("jean-luc picard", "Jean-Luc Picard")]
+    [InlineData("ana-maria van der berg", "Ana-Maria Van Der Berg")]
+    [InlineData("o'neil", "O'neil")]
+    [InlineData("éLODIE", "Élodie")]
+    [InlineData("Mary  Ann", "Mary  Ann")]
+    [InlineData(" mary", " Mary")]
+    [InlineData("mary ", "Mary ")]
+    [InlineData("-x", "-X")]
+    [InlineData("  ", "  ")]
     public void Capitalize_ShouldReturnCapitalizedWords(string input, string expected)
     {
         // Arrange - parameterized

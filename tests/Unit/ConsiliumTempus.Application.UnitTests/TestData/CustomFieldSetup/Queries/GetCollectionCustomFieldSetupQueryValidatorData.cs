@@ -17,6 +17,20 @@ public static class GetCollectionCustomFieldSetupQueryValidatorData
                 Guid.NewGuid(),
                 null);
             Add(query);
+
+            query = CustomFieldSetupQueryFactory.CreateGetCollectionCustomFieldSetupQuery(
+                projectId: Guid.NewGuid());
+            Add(query);
+
+            query = CustomFieldSetupQueryFactory.CreateGetCollectionCustomFieldSetupQuery(
+                Guid.Empty,
+                Guid.NewGuid());
+            Add(query);
+
+            query = CustomFieldSetupQueryFactory.CreateGetCollectionCustomFieldSetupQuery(
+                Guid.NewGuid(),
+                Guid.Empty);
+            Add(query);
         }
     }
 
@@ -30,6 +44,14 @@ public static class GetCollectionCustomFieldSetupQueryValidatorData
             query = CustomFieldSetupQueryFactory.CreateGetCollectionCustomFieldSetupQuery(
                 Guid.Empty,
                 Guid.Empty);
+            Add(query, nameof(query.WorkspaceId).Dot(nameof(query.ProjectId)));
+
+            query = CustomFieldSetupQueryFactory.CreateGetCollectionCustomFieldSetupQuery(
+                Guid.Empty);
+            Add(query, nameof(query.WorkspaceId).Dot(nameof(query.ProjectId)));
+
+            query = CustomFieldSetupQueryFactory.CreateGetCollectionCustomFieldSetupQuery(
+                projectId: Guid.Empty);
             Add(query, nameof(query.WorkspaceId).Dot(nameof(query.ProjectId)));
         }
     }

@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.Move;
 
-public sealed class MoveProjectTaskCommandHandler(IProjectTaskRepository projectTaskRepository)
+internal sealed class MoveProjectTaskCommandHandler(IProjectTaskRepository projectTaskRepository)
     : IRequestHandler<MoveProjectTaskCommand, ErrorOr<MoveProjectTaskResult>>
 {
     public async Task<ErrorOr<MoveProjectTaskResult>> Handle(MoveProjectTaskCommand command,

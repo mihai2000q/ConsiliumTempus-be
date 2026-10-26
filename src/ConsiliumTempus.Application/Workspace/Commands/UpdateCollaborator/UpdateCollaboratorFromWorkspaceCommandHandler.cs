@@ -8,7 +8,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.UpdateCollaborator;
 
-public sealed class UpdateCollaboratorFromWorkspaceCommandHandler(IWorkspaceRepository workspaceRepository)
+internal sealed class UpdateCollaboratorFromWorkspaceCommandHandler(IWorkspaceRepository workspaceRepository)
     : IRequestHandler<UpdateCollaboratorFromWorkspaceCommand, ErrorOr<UpdateCollaboratorFromWorkspaceResult>>
 {
     public async Task<ErrorOr<UpdateCollaboratorFromWorkspaceResult>> Handle(

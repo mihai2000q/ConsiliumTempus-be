@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IProjectRepository
+internal sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IProjectRepository
 {
     public async Task<ProjectAggregate?> Get(ProjectId id, CancellationToken cancellationToken = default)
     {

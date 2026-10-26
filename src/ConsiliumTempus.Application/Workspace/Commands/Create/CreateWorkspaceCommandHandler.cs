@@ -9,7 +9,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
-public sealed class CreateWorkspaceCommandHandler(
+internal sealed class CreateWorkspaceCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository)
     : IRequestHandler<CreateWorkspaceCommand, ErrorOr<CreateWorkspaceResult>>

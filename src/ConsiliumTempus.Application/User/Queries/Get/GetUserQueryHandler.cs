@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.User.Queries.Get;
 
-public sealed class GetUserQueryHandler(IUserRepository userRepository)
+internal sealed class GetUserQueryHandler(IUserRepository userRepository)
     : IRequestHandler<GetUserQuery, ErrorOr<UserAggregate>>
 {
     public async Task<ErrorOr<UserAggregate>> Handle(GetUserQuery query,

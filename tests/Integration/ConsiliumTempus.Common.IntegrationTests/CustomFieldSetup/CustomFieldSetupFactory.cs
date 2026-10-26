@@ -1,4 +1,4 @@
-﻿using ConsiliumTempus.Application.Common.Extensions;
+﻿using ConsiliumTempus.Common.IntegrationTests.Extensions;
 using ConsiliumTempus.Common.IntegrationTests.TestConstants;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
@@ -6,7 +6,6 @@ using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace;
-using ConsiliumTempus.Infrastructure.Extensions;
 
 namespace ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 
@@ -149,7 +148,7 @@ public static class CustomFieldSetupFactory
             .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.Workspace), workspace)
             .WithField(nameof(SingleSelectCustomFieldSetupAggregate.Projects).ToBackingField(), projects)
             .WithField(nameof(SingleSelectCustomFieldSetupAggregate.Options).ToBackingField(), options)
-            .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.DefaultOption), defaultOption)
+            .WithProperty(nameof(SingleSelectCustomFieldSetupAggregate.DefaultOptionId), defaultOption?.Id)
             .Build();
     }
 

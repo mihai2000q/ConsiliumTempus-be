@@ -3,7 +3,7 @@ using ConsiliumTempus.Application.UnitTests.TestData.Project.Queries.GetAllowedM
 
 namespace ConsiliumTempus.Application.UnitTests.Project.Queries.GetAllowedMembers;
 
-public class GetAllowedMembersAllowedMembersFromProjectQueryValidatorTest
+public class GetAllowedMembersFromProjectQueryValidatorTest
 {
     #region Setup
 

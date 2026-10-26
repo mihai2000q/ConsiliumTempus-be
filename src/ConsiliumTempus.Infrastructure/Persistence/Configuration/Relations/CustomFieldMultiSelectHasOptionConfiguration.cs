@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Relations;
 
-public sealed class
+internal sealed class
     CustomFieldMultiSelectHasOptionConfiguration : IEntityTypeConfiguration<CustomFieldMultiSelectHasOption>
 {
     public void Configure(EntityTypeBuilder<CustomFieldMultiSelectHasOption> builder)

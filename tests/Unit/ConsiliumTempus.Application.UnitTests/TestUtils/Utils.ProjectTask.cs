@@ -246,12 +246,9 @@ internal static partial class Utils
             ProjectTaskCreated domainEvent,
             List<CustomFieldSetupAggregate> setups)
         {
-            domainEvent.ProjectTask.CustomFields.Should().HaveSameCount(setups);
             domainEvent.ProjectTask.CustomFields
-                .Zip(setups)
-                .Should().AllSatisfyOrEmpty(x =>
+                .AssertEach(setups, (customField, setup) =>
                 {
-                    var (customField, setup) = x;
                     customField.Id.Value.Should().NotBeEmpty();
                     customField.ProjectTask.Should().Be(domainEvent.ProjectTask);
 

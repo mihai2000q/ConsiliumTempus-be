@@ -11,7 +11,7 @@ public class WorkspaceControllerGetInvitationsAuthorizationTest(WebAppFactory fa
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
-    public async Task GetInvitationsWorkspace_WithoutWorkspace_ShouldReturnSuccessResponse()
+    public async Task GetInvitationsWorkspace_WhenWithoutWorkspace_ShouldReturnSuccessResponse()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetInvitationsWorkspaceRequest(isSender: false);

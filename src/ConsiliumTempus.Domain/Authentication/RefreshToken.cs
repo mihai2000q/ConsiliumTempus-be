@@ -30,9 +30,9 @@ public sealed class RefreshToken : Entity<RefreshTokenId>
     private readonly List<RefreshTokenHistory> _history = [];
 
     public DateTime ExpiryDateTime { get; init; }
-    public IsInvalidated IsInvalidated { get; private set; } = default!;
+    public IsInvalidated IsInvalidated { get; private set; } = null!;
     public DateTime CreatedDateTime { get; init; }
-    public UserAggregate User { get; init; } = default!;
+    public UserAggregate User { get; init; } = null!;
     public IReadOnlyList<RefreshTokenHistory> History => _history.AsReadOnly();
     public JwtId JwtId => _history[^1].JwtId;
     public DateTime UpdatedDateTime => _history[^1].CreatedDateTime;

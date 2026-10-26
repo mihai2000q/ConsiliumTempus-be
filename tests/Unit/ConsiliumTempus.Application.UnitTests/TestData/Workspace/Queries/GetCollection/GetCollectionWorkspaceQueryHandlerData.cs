@@ -24,6 +24,26 @@ internal static class GetCollectionWorkspaceQueryHandlerData
             Add(query);
 
             query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                search:
+                [
+                    "name sw Something",
+                    "is_personal eq false",
+                    "last_activity lte 2024-01-15",
+                    "updated_date_time gt 2024-06-30"
+                ]);
+            Add(query);
+
+            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+                orderBy:
+                [
+                    "name.desc",
+                    "last_activity.asc",
+                    "created_date_time.desc",
+                    "updated_date_time.asc"
+                ]);
+            Add(query);
+
+            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
                 isPersonalWorkspaceFirst: true);
             Add(query);
         }

@@ -13,8 +13,11 @@ internal static partial class Utils
     private static readonly Dictionary<ErrorType, int> StatusCodesMap = new()
     {
         { ErrorType.Unauthorized, StatusCodes.Status401Unauthorized },
+        { ErrorType.Forbidden, StatusCodes.Status403Forbidden },
         { ErrorType.NotFound, StatusCodes.Status404NotFound },
-        { ErrorType.Conflict, StatusCodes.Status409Conflict }
+        { ErrorType.Conflict, StatusCodes.Status409Conflict },
+        { ErrorType.Failure, StatusCodes.Status500InternalServerError },
+        { ErrorType.Unexpected, StatusCodes.Status500InternalServerError }
     };
 
     // Scanning the global config is not thread safe once it has been used, so it is done only once for all tests
@@ -39,21 +42,24 @@ internal static partial class Utils
             .ReturnsNull();
     }
 
-    internal static void ValidateError(this IActionResult response, Error expectedError)
+    extension(IActionResult response)
     {
-        response.Should().BeOfType<ObjectResult>();
-        ((ObjectResult)response).Value.Should().BeOfType<ProblemDetails>();
+        internal void ValidateError(Error expectedError)
+        {
+            response.Should().BeOfType<ObjectResult>();
+            ((ObjectResult)response).Value.Should().BeOfType<ProblemDetails>();
 
-        var error = ((ObjectResult)response).Value as ProblemDetails;
-        error?.Status.Should().Be(StatusCodesMap[expectedError.Type]);
-        error?.Title.Should().Be(expectedError.Description);
-    }
+            var error = (ProblemDetails)((ObjectResult)response).Value!;
+            error.Status.Should().Be(StatusCodesMap[expectedError.Type]);
+            error.Title.Should().Be(expectedError.Description);
+        }
 
-    internal static T ToResponse<T>(this IActionResult outcome)
-    {
-        outcome.Should().BeOfType<OkObjectResult>();
-        ((OkObjectResult)outcome).Value.Should().BeOfType<T>();
+        internal T ToResponse<T>()
+        {
+            response.Should().BeOfType<OkObjectResult>();
+            ((OkObjectResult)response).Value.Should().BeOfType<T>();
 
-        return (T)((OkObjectResult)outcome).Value!;
+            return (T)((OkObjectResult)response).Value!;
+        }
     }
 }

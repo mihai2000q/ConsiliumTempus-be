@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.User.Commands.DeleteCurrent;
 
-public sealed class DeleteCurrentUserCommandHandler(
+internal sealed class DeleteCurrentUserCommandHandler(
     IUserRepository userRepository,
     ICurrentUserProvider currentUserProvider)
     : IRequestHandler<DeleteCurrentUserCommand, ErrorOr<DeleteCurrentUserResult>>

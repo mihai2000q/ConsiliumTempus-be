@@ -8,7 +8,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
 
-public sealed class DeleteCustomFieldSetupCommandHandler(ICustomFieldSetupRepository customFieldSetupRepository)
+internal sealed class DeleteCustomFieldSetupCommandHandler(ICustomFieldSetupRepository customFieldSetupRepository)
     : IRequestHandler<DeleteCustomFieldSetupCommand, ErrorOr<DeleteCustomFieldSetupResult>>
 {
     public async Task<ErrorOr<DeleteCustomFieldSetupResult>> Handle(DeleteCustomFieldSetupCommand command,

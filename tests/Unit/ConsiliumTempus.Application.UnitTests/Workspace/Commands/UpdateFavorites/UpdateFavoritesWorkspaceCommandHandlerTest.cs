@@ -44,7 +44,7 @@ public class UpdateFavoritesWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateUpdateFavoriteWorkspaceCommand(workspace.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -61,7 +61,7 @@ public class UpdateFavoritesWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateFavoriteWorkspaceCommand_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleUpdateFavoriteWorkspaceCommand_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateUpdateFavoriteWorkspaceCommand();
@@ -71,13 +71,15 @@ public class UpdateFavoritesWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

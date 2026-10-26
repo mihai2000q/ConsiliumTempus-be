@@ -44,9 +44,9 @@ public class AddStatusToProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateAddStatusToProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -72,13 +72,15 @@ public class AddStatusToProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

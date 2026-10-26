@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Workspace.Commands.RejectInvitation;
 
-public sealed class RejectInvitationToWorkspaceCommandValidator : AbstractValidator<RejectInvitationToWorkspaceCommand>
+internal sealed class RejectInvitationToWorkspaceCommandValidator : AbstractValidator<RejectInvitationToWorkspaceCommand>
 {
     public RejectInvitationToWorkspaceCommandValidator()
     {

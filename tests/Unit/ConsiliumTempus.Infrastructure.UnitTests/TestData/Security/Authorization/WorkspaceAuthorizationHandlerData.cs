@@ -38,7 +38,7 @@ public static class WorkspaceAuthorizationHandlerData
         public GetAuthorizationLevels()
         {
             var level = WorkspaceAuthorizationLevel.IsCollaborator;
-            Add(level, Controller.Workspace, Method.POST, RequestLocation.Body, StringIdType.Workspace);
+            Add(level, Controller.Workspace, Method.DELETE, RequestLocation.Route, StringIdType.Workspace);
 
             Add(level, Controller.Project, Method.GET, RequestLocation.Route, StringIdType.Project);
             Add(level, Controller.Project, Method.POST, RequestLocation.Body, StringIdType.Project);
@@ -46,7 +46,7 @@ public static class WorkspaceAuthorizationHandlerData
             Add(level, Controller.Project, Method.DELETE, RequestLocation.Route, StringIdType.Project);
 
             level = WorkspaceAuthorizationLevel.IsWorkspaceOwner;
-            Add(level, Controller.Workspace, Method.POST, RequestLocation.Body, StringIdType.Workspace);
+            Add(level, Controller.Workspace, Method.PUT, RequestLocation.Body, StringIdType.Workspace);
         }
     }
 }

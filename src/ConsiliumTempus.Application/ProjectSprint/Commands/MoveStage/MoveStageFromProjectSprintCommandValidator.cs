@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.MoveStage;
 
-public sealed class MoveStageFromProjectSprintCommandValidator : AbstractValidator<MoveStageFromProjectSprintCommand>
+internal sealed class MoveStageFromProjectSprintCommandValidator : AbstractValidator<MoveStageFromProjectSprintCommand>
 {
     public MoveStageFromProjectSprintCommandValidator()
     {

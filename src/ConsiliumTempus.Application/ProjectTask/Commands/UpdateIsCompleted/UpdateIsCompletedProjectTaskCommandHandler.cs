@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 
-public sealed class UpdateIsCompletedProjectTaskCommandHandler(IProjectTaskRepository projectTaskRepository)
+internal sealed class UpdateIsCompletedProjectTaskCommandHandler(IProjectTaskRepository projectTaskRepository)
     : IRequestHandler<UpdateIsCompletedProjectTaskCommand, ErrorOr<UpdateIsCompletedProjectTaskResult>>
 {
     public async Task<ErrorOr<UpdateIsCompletedProjectTaskResult>> Handle(UpdateIsCompletedProjectTaskCommand command,

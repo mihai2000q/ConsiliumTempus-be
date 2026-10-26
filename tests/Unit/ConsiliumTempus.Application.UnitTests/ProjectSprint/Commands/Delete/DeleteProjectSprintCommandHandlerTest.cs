@@ -36,7 +36,7 @@ public class DeleteProjectSprintCommandHandlerTest
         var command = ProjectSprintCommandFactory.CreateDeleteProjectSprintCommand(projectSprint.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
@@ -63,7 +63,7 @@ public class DeleteProjectSprintCommandHandlerTest
         var command = ProjectSprintCommandFactory.CreateDeleteProjectSprintCommand(projectSprint.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
@@ -73,12 +73,11 @@ public class DeleteProjectSprintCommandHandlerTest
             .DidNotReceive()
             .Remove(Arg.Any<ProjectSprintAggregate>());
 
-        outcome.IsError.Should().BeTrue();
         outcome.ValidateError(Errors.ProjectSprint.OnlyOneSprint);
     }
 
     [Fact]
-    public async Task HandleDeleteProjectSprintCommand_WhenItFails_ShouldReturnNotFoundError()
+    public async Task HandleDeleteProjectSprintCommand_WhenProjectSprintIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateDeleteProjectSprintCommand();
@@ -88,7 +87,7 @@ public class DeleteProjectSprintCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
@@ -98,7 +97,6 @@ public class DeleteProjectSprintCommandHandlerTest
             .DidNotReceive()
             .Remove(Arg.Any<ProjectSprintAggregate>());
 
-        outcome.IsError.Should().BeTrue();
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }
 }

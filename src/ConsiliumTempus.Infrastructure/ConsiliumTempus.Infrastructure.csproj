@@ -20,6 +20,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="ConsiliumTempus.Infrastructure.UnitTests"/>
+        <!-- NSubstitute (Castle DynamicProxy) needs it to mock the internal interfaces -->
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\ConsiliumTempus.Application\ConsiliumTempus.Application.csproj"/>
         <ProjectReference Include="..\ConsiliumTempus.Domain\ConsiliumTempus.Domain.csproj"/>
     </ItemGroup>

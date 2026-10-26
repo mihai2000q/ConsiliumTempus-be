@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.ProjectTask.Commands.UpdateIsCompleted;
 
-public sealed class UpdateIsCompletedProjectTaskCommandValidator : AbstractValidator<UpdateIsCompletedProjectTaskCommand>
+internal sealed class UpdateIsCompletedProjectTaskCommandValidator : AbstractValidator<UpdateIsCompletedProjectTaskCommand>
 {
     public UpdateIsCompletedProjectTaskCommandValidator()
     {

@@ -3,7 +3,7 @@ using ArchUnitNET.Loader;
 using ConsiliumTempus.Api.Controllers;
 using ConsiliumTempus.Application.User.Queries.Get;
 using ConsiliumTempus.Domain.User;
-using ConsiliumTempus.Infrastructure.Persistence.Repository;
+using ConsiliumTempus.Infrastructure;
 using Assembly = System.Reflection.Assembly;
 
 namespace ConsiliumTempus.ArchitectureTests.Core;
@@ -13,7 +13,7 @@ public class BaseArchitectureTest
     private static readonly Assembly ApiAssembly = typeof(UserController).Assembly;
     private static readonly Assembly ApplicationAssembly = typeof(GetUserQuery).Assembly;
     private static readonly Assembly DomainAssembly = typeof(UserAggregate).Assembly;
-    private static readonly Assembly InfrastructureAssembly = typeof(UserRepository).Assembly;
+    private static readonly Assembly InfrastructureAssembly = typeof(DependencyInjection).Assembly;
 
     protected static readonly Architecture Architecture = new ArchLoader()
         .LoadAssemblies(

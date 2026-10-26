@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectTask.Events;
 
-public sealed class ProjectTaskDeletedHandler(IProjectTaskRepository projectTaskRepository) 
+internal sealed class ProjectTaskDeletedHandler(IProjectTaskRepository projectTaskRepository) 
     : INotificationHandler<ProjectTaskDeleted>
 {
     public async Task Handle(ProjectTaskDeleted notification, CancellationToken cancellationToken)

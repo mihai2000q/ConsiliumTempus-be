@@ -9,7 +9,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.AddStatus;
 
-public sealed class AddStatusToProjectCommandHandler(
+internal sealed class AddStatusToProjectCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IProjectRepository projectRepository)
     : IRequestHandler<AddStatusToProjectCommand, ErrorOr<AddStatusToProjectResult>>

@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Project.Commands.Delete;
 
-public sealed class DeleteProjectCommandValidator : AbstractValidator<DeleteProjectCommand>
+internal sealed class DeleteProjectCommandValidator : AbstractValidator<DeleteProjectCommand>
 {
     public DeleteProjectCommandValidator()
     {

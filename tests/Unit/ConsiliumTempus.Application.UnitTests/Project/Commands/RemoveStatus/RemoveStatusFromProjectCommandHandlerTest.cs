@@ -37,9 +37,9 @@ public class RemoveStatusFromProjectCommandHandlerTest
             project.Statuses[0].Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -62,9 +62,9 @@ public class RemoveStatusFromProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateRemoveStatusFromProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -83,9 +83,9 @@ public class RemoveStatusFromProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));

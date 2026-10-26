@@ -45,7 +45,7 @@ public class UserControllerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -57,7 +57,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task Get_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = UserRequestFactory.CreateGetUserRequest();
@@ -68,7 +68,7 @@ public class UserControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -88,7 +88,7 @@ public class UserControllerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.GetCurrent(default);
+        var outcome = await _uut.GetCurrent(CancellationToken.None);
 
         // Assert
         await _mediator
@@ -100,7 +100,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task GetCurrent_WhenItFails_ShouldReturnProblem()
+    public async Task GetCurrent_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var error = Errors.User.NotFound;
@@ -109,7 +109,7 @@ public class UserControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCurrent(default);
+        var outcome = await _uut.GetCurrent(CancellationToken.None);
 
         // Assert
         await _mediator
@@ -131,7 +131,7 @@ public class UserControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateCurrent(request, default);
+        var outcome = await _uut.UpdateCurrent(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -143,7 +143,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task UpdateCurrent_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateCurrent_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = UserRequestFactory.CreateUpdateCurrentUserRequest();
@@ -154,7 +154,7 @@ public class UserControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateCurrent(request, default);
+        var outcome = await _uut.UpdateCurrent(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -174,7 +174,7 @@ public class UserControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.DeleteCurrent(default);
+        var outcome = await _uut.DeleteCurrent(CancellationToken.None);
 
         // Assert
         await _mediator
@@ -186,7 +186,7 @@ public class UserControllerTest
     }
 
     [Fact]
-    public async Task DeleteCurrent_WhenItFails_ShouldReturnProblem()
+    public async Task DeleteCurrent_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var error = Errors.User.NotFound;
@@ -195,7 +195,7 @@ public class UserControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.DeleteCurrent(default);
+        var outcome = await _uut.DeleteCurrent(CancellationToken.None);
 
         // Assert
         await _mediator

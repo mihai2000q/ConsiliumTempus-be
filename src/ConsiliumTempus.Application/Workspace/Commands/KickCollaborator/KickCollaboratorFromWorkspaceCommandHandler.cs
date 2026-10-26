@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.KickCollaborator;
 
-public sealed class KickCollaboratorFromWorkspaceCommandHandler(
+internal sealed class KickCollaboratorFromWorkspaceCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository)
     : IRequestHandler<KickCollaboratorFromWorkspaceCommand, ErrorOr<KickCollaboratorFromWorkspaceResult>>

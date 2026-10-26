@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 
-public sealed class GetCollectionProjectSprintQueryHandler(IProjectSprintRepository projectSprintRepository)
+internal sealed class GetCollectionProjectSprintQueryHandler(IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<GetCollectionProjectSprintQuery, ErrorOr<GetCollectionProjectSprintResult>>
 {
     public async Task<ErrorOr<GetCollectionProjectSprintResult>> Handle(
@@ -31,6 +31,7 @@ public sealed class GetCollectionProjectSprintQueryHandler(IProjectSprintReposit
         if (sprints.IsEmpty() && filters.IsEmpty() && query.FromThisYear)
         {
             sprints = [await projectSprintRepository.GetFirstByProject(projectId, filters, cancellationToken)];
+            totalCount = sprints.Count;
         }
 
         return new GetCollectionProjectSprintResult(sprints, totalCount);

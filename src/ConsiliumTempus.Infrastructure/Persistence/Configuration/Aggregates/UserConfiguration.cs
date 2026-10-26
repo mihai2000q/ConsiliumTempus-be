@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
-public sealed class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
+internal sealed class UserConfiguration : IEntityTypeConfiguration<UserAggregate>
 {
     public void Configure(EntityTypeBuilder<UserAggregate> builder)
     {

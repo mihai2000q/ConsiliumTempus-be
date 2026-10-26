@@ -3,7 +3,7 @@ using BC = BCrypt.Net;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authentication;
 
-public sealed class Scrambler : IScrambler
+internal sealed class Scrambler : IScrambler
 {
     public string HashPassword(string password)
     {

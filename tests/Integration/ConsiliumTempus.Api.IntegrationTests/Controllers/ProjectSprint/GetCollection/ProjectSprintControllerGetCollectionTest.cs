@@ -132,7 +132,7 @@ public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionProjectSprint_WhenRequestHasFromThisYearAndInitialEmptyReturn_ShouldReturnSprints()
+    public async Task GetCollectionProjectSprint_WhenRequestHasFromThisYearAndNoSprintsFromThisYear_ShouldReturnLatestSprint()
     {
         // Arrange
         var project = ProjectSprintData.Projects[3];

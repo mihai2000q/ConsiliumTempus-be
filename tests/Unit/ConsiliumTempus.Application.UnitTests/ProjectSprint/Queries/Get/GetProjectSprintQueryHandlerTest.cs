@@ -35,7 +35,7 @@ public class GetProjectSprintQueryHandlerTest
             .Returns(projectSprint);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
@@ -47,7 +47,7 @@ public class GetProjectSprintQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetProjectSprintQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetProjectSprintQuery_WhenProjectSprintIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = ProjectSprintQueryFactory.CreateGetProjectSprintQuery();
@@ -57,7 +57,7 @@ public class GetProjectSprintQueryHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository

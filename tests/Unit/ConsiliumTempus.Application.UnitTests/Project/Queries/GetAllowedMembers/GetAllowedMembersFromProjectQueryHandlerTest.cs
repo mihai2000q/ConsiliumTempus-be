@@ -35,7 +35,7 @@ public class GetAllowedMembersFromProjectQueryHandlerTest
             .Returns(project);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -47,7 +47,7 @@ public class GetAllowedMembersFromProjectQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetAllowedMembersFromProjectQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetAllowedMembersFromProjectQuery_WhenProjectIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = ProjectQueryFactory.CreateGetAllowedMembersFromProjectQuery();
@@ -57,7 +57,7 @@ public class GetAllowedMembersFromProjectQueryHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectRepository

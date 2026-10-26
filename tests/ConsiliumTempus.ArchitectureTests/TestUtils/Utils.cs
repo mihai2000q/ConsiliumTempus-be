@@ -36,27 +36,33 @@ public static class Utils
             .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INotificationHandler<>))
             .Select(i => i.GetGenericArguments()[0]);
 
-    public static void ShouldHavePrivateConstructors(this IEnumerable<Class?> classes) =>
-        classes
-            .Should()
-            .AllSatisfy(@class => @class
-                .GetConstructors()
-                .HasPrivateConstructors()
+    extension(IEnumerable<Class?> classes)
+    {
+        public void ShouldHavePrivateConstructors() =>
+            classes
                 .Should()
-                .BeTrue($"{@class}"));
+                .AllSatisfy(@class => @class
+                    .GetConstructors()
+                    .HasPrivateConstructors()
+                    .Should()
+                    .BeTrue($"{@class}"));
 
-    public static void ShouldHavePrivateParameterlessConstructor(this IEnumerable<Class?> classes) =>
-        classes
-            .Should()
-            .AllSatisfy(@class => @class
-                .GetConstructors()
-                .HasPrivateParameterlessConstructor()
+        public void ShouldHavePrivateParameterlessConstructor() =>
+            classes
                 .Should()
-                .BeTrue($"{@class}"));
+                .AllSatisfy(@class => @class
+                    .GetConstructors()
+                    .HasPrivateParameterlessConstructor()
+                    .Should()
+                    .BeTrue($"{@class}"));
+    }
 
-    private static bool HasPrivateConstructors(this IEnumerable<MethodMember> constructors) =>
-        constructors.All(c => c.Visibility == Visibility.Private);
+    extension(IEnumerable<MethodMember> constructors)
+    {
+        private bool HasPrivateConstructors() =>
+            constructors.All(c => c.Visibility == Visibility.Private);
 
-    private static bool HasPrivateParameterlessConstructor(this IEnumerable<MethodMember> constructors) =>
-        constructors.Any(c => c.Visibility == Visibility.Private && !c.Parameters.Any());
+        private bool HasPrivateParameterlessConstructor() =>
+            constructors.Any(c => c.Visibility == Visibility.Private && !c.Parameters.Any());
+    }
 }

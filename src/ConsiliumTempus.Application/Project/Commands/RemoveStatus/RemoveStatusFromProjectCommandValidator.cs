@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Project.Commands.RemoveStatus;
 
-public sealed class RemoveStatusFromProjectCommandValidator : AbstractValidator<RemoveStatusFromProjectCommand>
+internal sealed class RemoveStatusFromProjectCommandValidator : AbstractValidator<RemoveStatusFromProjectCommand>
 {
     public RemoveStatusFromProjectCommandValidator()
     {

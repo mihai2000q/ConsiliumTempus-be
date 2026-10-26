@@ -1,4 +1,6 @@
-﻿using ConsiliumTempus.Domain.Common.Entities;
+﻿using System.ComponentModel;
+using System.Linq.Expressions;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
@@ -49,18 +51,21 @@ internal static partial class Utils
             .Should().AllSatisfyOrEmpty(o => o.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
     }
 
-    internal static void ShouldBeCreated(this Audit audit, UserAggregate createdBy)
+    extension(Audit audit)
     {
-        audit.CreatedBy.Should().Be(createdBy);
-        audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-        audit.UpdatedBy.Should().Be(createdBy);
-        audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-    }
+        internal void ShouldBeCreated(UserAggregate createdBy)
+        {
+            audit.CreatedBy.Should().Be(createdBy);
+            audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            audit.UpdatedBy.Should().Be(createdBy);
+            audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
 
-    internal static void ShouldBeUpdated(this Audit audit, UserAggregate updatedBy)
-    {
-        audit.UpdatedBy.Should().Be(updatedBy);
-        audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        internal void ShouldBeUpdated(UserAggregate updatedBy)
+        {
+            audit.UpdatedBy.Should().Be(updatedBy);
+            audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+        }
     }
 
     internal static bool AssertPagination(this PaginationInfo? paginationInfo, int? pageSize, int? currentPage)
@@ -76,10 +81,32 @@ internal static partial class Utils
         List<string> orderBy,
         IEnumerable<OrderProperty<TEntity>> orderProperties)
     {
-        orderBy.Should().HaveSameCount(orders);
+        var expectedOrders = orderBy
+            .SelectMany(stringOrder => ExpectedOrders(stringOrder, orderProperties))
+            .ToList();
+
+        orders.Should().HaveSameCount(expectedOrders);
         return orders
-            .Zip(orderBy)
-            .All(x => x.First.AssertOrder(x.Second, orderProperties));
+            .Zip(expectedOrders)
+            .All(x =>
+            {
+                x.First.Type.Should().Be(x.Second.Type);
+                x.First.PropertySelector.Should().BeSameAs(x.Second.PropertySelector);
+                return true;
+            });
+    }
+    
+    private static IEnumerable<(OrderType Type, Expression<Func<TEntity, object?>> PropertySelector)>
+        ExpectedOrders<TEntity>(string stringOrder, IEnumerable<OrderProperty<TEntity>> orderProperties)
+    {
+        var split = stringOrder.Trim().Split(Order.Separator);
+        var type = split[1] == Order.Descending ? OrderType.Descending : OrderType.Ascending;
+
+        // a single order property can map to several selectors (e.g. user name -> first name, last name)
+        return orderProperties
+            .Single(op => op.Identifier == split[0])
+            .PropertySelectors
+            .Select(propertySelector => (type, propertySelector));
     }
 
     internal static bool AssertFilters<TEntity>(
@@ -93,33 +120,49 @@ internal static partial class Utils
             .All(x => x.First.AssertFilter(x.Second, filterProperties));
     }
 
-    private static bool AssertOrder<TEntity>(
-        this IOrder<TEntity> order,
-        string stringOrder,
-        IEnumerable<OrderProperty<TEntity>> orderProperties)
-    {
-        var split = stringOrder.Trim().Split(Order.Separator);
-
-        order.Type
-            .Should()
-            .Be(split[1] == Order.Descending ? OrderType.Descending : OrderType.Ascending);
-
-        return orderProperties
-            .Single(op => op.Identifier == split[0])
-            .PropertySelectors
-            .Any(propertySelector => propertySelector == order.PropertySelector);
-    }
-
     private static bool AssertFilter<TEntity>(
         this IFilter<TEntity> filter,
         string stringFilter,
         IEnumerable<FilterProperty<TEntity>> filterProperties)
     {
-        var (propertyIdentifier, @operator, value) = SplitFilter(stringFilter);
+        var (identifier, @operator, value) = SplitFilter(stringFilter.Trim());
+        var selector = filterProperties.Single(fp => fp.Identifier == identifier).PropertySelector;
+
+        filter.Predicate.Parameters.Should().Equal(selector.Parameters);
+
+        var expectedFilterOperator = Filter.OperatorToFilterOperator[@operator];
+        var expectedValue = ParseFilterValue(selector.ReturnType, value.TrimStart());
+
+        Expression propertyExpression;
+        Expression valueExpression;
+        switch (filter.Predicate.Body)
+        {
+            case BinaryExpression binary:
+                binary.NodeType.Should().Be(ToExpressionType(expectedFilterOperator));
+                propertyExpression = binary.Left;
+                valueExpression = binary.Right;
+                break;
+            case MethodCallExpression { Object: not null } call:
+                call.Method.DeclaringType.Should().Be<string>();
+                call.Method.Name.Should().Be(expectedFilterOperator == FilterOperator.Contains
+                    ? nameof(string.Contains)
+                    : nameof(string.StartsWith));
+                call.Arguments.Should().ContainSingle();
+                propertyExpression = call.Object;
+                valueExpression = call.Arguments[0];
+                break;
+            default:
+                throw new InvalidOperationException(
+                    $"Unexpected filter predicate: {filter.Predicate.Body}");
+        }
+
+        propertyExpression.Should().BeSameAs(selector.Body);
+        valueExpression.Should().BeOfType<ConstantExpression>()
+            .Which.Value.Should().Be(expectedValue);
 
         return true;
     }
-
+    
     private static (string, string, string) SplitFilter(string filter)
     {
         var result = new List<string>();
@@ -138,5 +181,25 @@ internal static partial class Utils
                 current += filter[i];
 
         return (result[0], result[1], result[2]);
+    }
+
+    private static ExpressionType ToExpressionType(FilterOperator filterOperator)
+    {
+        return filterOperator switch
+        {
+            FilterOperator.Equal => ExpressionType.Equal,
+            FilterOperator.NotEqual => ExpressionType.NotEqual,
+            FilterOperator.GreaterThan => ExpressionType.GreaterThan,
+            FilterOperator.GreaterThanOrEqual => ExpressionType.GreaterThanOrEqual,
+            FilterOperator.LessThan => ExpressionType.LessThan,
+            FilterOperator.LessThanOrEqual => ExpressionType.LessThanOrEqual,
+            _ => throw new ArgumentOutOfRangeException(nameof(filterOperator), filterOperator, null)
+        };
+    }
+
+    private static object? ParseFilterValue(Type type, string value)
+    {
+        if (type == typeof(DateTime)) return DateTime.Parse(value);
+        return TypeDescriptor.GetConverter(type).ConvertFromInvariantString(value);
     }
 }

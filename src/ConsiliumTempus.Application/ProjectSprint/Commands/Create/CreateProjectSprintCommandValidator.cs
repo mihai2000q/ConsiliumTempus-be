@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 
-public sealed class CreateProjectSprintCommandValidator : AbstractValidator<CreateProjectSprintCommand>
+internal sealed class CreateProjectSprintCommandValidator : AbstractValidator<CreateProjectSprintCommand>
 {
     public CreateProjectSprintCommandValidator()
     {
@@ -16,7 +16,7 @@ public sealed class CreateProjectSprintCommandValidator : AbstractValidator<Crea
             .MaximumLength(PropertiesValidation.ProjectSprint.NameMaximumLength);
 
         RuleFor(c => c)
-            .Must(c => c.StartDate < c.EndDate)
+            .Must(c => c.StartDate!.Value < c.EndDate!.Value)
             .WithMessage("The 'EndDate' must be bigger than the 'StartDate'")
             .WithName(nameof(CreateProjectSprintCommand.StartDate).Dot(nameof(CreateProjectSprintCommand.EndDate)))
             .When(c => c.StartDate is not null && c.EndDate is not null);

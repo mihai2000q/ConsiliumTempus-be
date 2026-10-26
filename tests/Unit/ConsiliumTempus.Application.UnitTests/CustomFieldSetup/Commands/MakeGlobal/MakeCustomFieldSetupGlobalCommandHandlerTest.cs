@@ -49,7 +49,7 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository
@@ -82,19 +82,19 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
             .Returns(customFieldSetup);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.CustomFieldSetup.AlreadyGlobal);
     }
 
     [Fact]
-    public async Task HandleMakeCustomFieldSetupGlobalCommand_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task HandleMakeCustomFieldSetupGlobalCommand_WhenCustomFieldSetupIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateMakeCustomFieldSetupGlobalCommand();
@@ -104,13 +104,13 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.CustomFieldSetup.NotFound);
     }

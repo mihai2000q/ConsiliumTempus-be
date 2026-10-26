@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.MakeGlobal;
 
-public sealed class MakeCustomFieldSetupGlobalCommandHandler(
+internal sealed class MakeCustomFieldSetupGlobalCommandHandler(
     ICustomFieldSetupRepository customFieldSetupRepository,
     ICurrentUserProvider currentUserProvider)
     : IRequestHandler<MakeCustomFieldSetupGlobalCommand, ErrorOr<MakeCustomFieldSetupGlobalResult>>

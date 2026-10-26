@@ -54,7 +54,7 @@ public class WorkspaceControllerDeleteTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task WorkspaceDelete_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task DeleteWorkspace_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateDeleteWorkspaceRequest();

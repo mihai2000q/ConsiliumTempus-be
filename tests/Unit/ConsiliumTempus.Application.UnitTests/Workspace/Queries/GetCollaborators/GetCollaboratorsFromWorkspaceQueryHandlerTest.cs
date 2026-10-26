@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Application.UnitTests.TestData.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollaborators;
 using ConsiliumTempus.Common.UnitTests.Common.Entities;
@@ -27,12 +28,12 @@ public class GetCollaboratorsFromWorkspaceQueryHandlerTest
 
     #endregion
 
-    [Fact]
-    public async Task HandleGetCollaboratorsFromWorkspaceQuery_WhenIsSuccessful_ShouldReturnCollaborators()
+    [Theory]
+    [ClassData(typeof(GetCollaboratorsFromWorkspaceQueryHandlerData.GetQueries))]
+    public async Task HandleGetCollaboratorsFromWorkspaceQuery_WhenIsSuccessful_ShouldReturnCollaborators(
+        GetCollaboratorsFromWorkspaceQuery query)
     {
         // Arrange
-        var query = WorkspaceQueryFactory.CreateGetCollaboratorsFromWorkspaceQuery();
-
         var collaborators = MembershipFactory.CreateList();
         _workspaceRepository
             .GetCollaborators(Arg.Any<WorkspaceId>(),
@@ -50,14 +51,15 @@ public class GetCollaboratorsFromWorkspaceQueryHandlerTest
             .Returns(totalCount);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
+        var expectedSearchValue = query.SearchValue?.Trim();
         await _workspaceRepository
             .Received(1)
             .GetCollaborators(
                 Arg.Is<WorkspaceId>(id => query.Id == id.Value),
-                Arg.Is<string>(s => s == query.SearchValue),
+                Arg.Is<string>(s => s == expectedSearchValue),
                 Arg.Is<IReadOnlyList<IFilter<Membership>>>(filters =>
                     filters.AssertFilters(query.Search, MembershipFilter.FilterProperties)),
                 Arg.Is<IReadOnlyList<IOrder<Membership>>>(orders =>
@@ -68,7 +70,7 @@ public class GetCollaboratorsFromWorkspaceQueryHandlerTest
             .Received(1)
             .GetCollaboratorsCount(
                 Arg.Is<WorkspaceId>(id => query.Id == id.Value),
-                Arg.Is<string>(s => s == query.SearchValue),
+                Arg.Is<string>(s => s == expectedSearchValue),
                 Arg.Is<IReadOnlyList<IFilter<Membership>>>(filters =>
                     filters.AssertFilters(query.Search, MembershipFilter.FilterProperties)));
 

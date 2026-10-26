@@ -107,7 +107,7 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenIsNotGlobal_ShouldReturnNotGlobalError()
+    public async Task AddCustomFieldSetupToProject_WhenIsNotGlobal_ShouldReturnNotGlobalError()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
@@ -123,13 +123,16 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
         await outcome.ValidateError(Errors.CustomFieldSetup.NotGlobal);
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        dbContext.CustomFieldSetups.SingleOrDefault(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id))
-            .Should().NotBeNull();
-        customFieldSetup.Workspace.Should().BeNull();
+        var storedCustomFieldSetup = await dbContext.CustomFieldSetups
+            .Include(cfs => cfs.Workspace)
+            .Include(cfs => cfs.Projects)
+            .SingleAsync(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id));
+        storedCustomFieldSetup.Workspace.Should().BeNull();
+        storedCustomFieldSetup.Projects.Should().HaveSameCount(customFieldSetup.Projects);
     }
 
     [Fact]
-    public async Task UpdateWorkspaceCustomFieldSetup_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task AddCustomFieldSetupToProject_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(

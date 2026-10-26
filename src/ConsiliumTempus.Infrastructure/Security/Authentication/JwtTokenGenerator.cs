@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authentication;
 
-public sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTokenGenerator
+internal sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwtTokenGenerator
 {
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
 

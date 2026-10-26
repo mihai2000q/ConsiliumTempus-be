@@ -39,7 +39,7 @@ public class WorkspaceDeletedHandlerTest
             .Returns(projects);
 
         // Act
-        await _uut.Handle(domainEvent, default);
+        await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
         await _projectTaskRepository

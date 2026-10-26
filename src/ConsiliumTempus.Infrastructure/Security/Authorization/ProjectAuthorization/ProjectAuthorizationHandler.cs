@@ -16,7 +16,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authorization.ProjectAuthorization;
 
-public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
+internal sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
     : AuthorizationHandler<ProjectAuthorizationRequirement>
 {
     protected override async Task HandleRequirementAsync(
@@ -48,7 +48,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
 
     private static async Task<ProjectAggregate?> GetProject(HttpRequest request, IProjectProvider projectProvider)
     {
-        var (stringId, idType) = await GetStringId(request);
+        if (await GetStringId(request) is not var (stringId, idType)) return null;
         if (!Guid.TryParse(stringId, out var guidId)) return null;
         return idType switch
         {
@@ -57,12 +57,11 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
             StringIdType.ProjectSprint => await projectProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
             StringIdType.ProjectStage => await projectProvider.GetByProjectStage(ProjectStageId.Create(guidId)),
             StringIdType.ProjectTask => await projectProvider.GetByProjectTask(ProjectTaskId.Create(guidId)),
-            StringIdType.Empty => null,
             _ => throw new ArgumentOutOfRangeException(nameof(request))
         };
     }
 
-    private static async Task<(string?, StringIdType)> GetStringId(HttpRequest request)
+    private static async Task<(string?, StringIdType)?> GetStringId(HttpRequest request)
     {
         return request.RouteValues["controller"] switch
         {
@@ -82,7 +81,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
                 "Update" or
                 "MakeGlobal" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.CustomFieldSetup),
 
-                _ => (null, StringIdType.Empty)
+                _ => null
             },
             "Project" => request.RouteValues["action"] switch
             {
@@ -104,7 +103,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
                 "UpdatePrivacy" or
                 "UpdateStatus" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.Project),
 
-                _ => (null, StringIdType.Empty)
+                _ => null
             },
             "ProjectSprint" => request.RouteValues["action"] switch
             {
@@ -126,7 +125,7 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
                 "MoveStage" or
                 "UpdateStage" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.ProjectSprint),
 
-                _ => (null, StringIdType.Empty)
+                _ => null
             },
             "ProjectTask" => request.RouteValues["action"] switch
             {
@@ -147,9 +146,9 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
                 "UpdateIsCompleted" or
                 "UpdateOverview" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.ProjectTask),
 
-                _ => (null, StringIdType.Empty)
+                _ => null
             },
-            _ => (null, StringIdType.Empty)
+            _ => null
         };
     }
 
@@ -173,7 +172,6 @@ public sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceScop
         Project,
         ProjectSprint,
         ProjectStage,
-        ProjectTask,
-        Empty,
+        ProjectTask
     }
 }

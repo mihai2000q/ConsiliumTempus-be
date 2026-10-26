@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.User.Commands.UpdateCurrent;
 
-public sealed class UpdateCurrentUserCommandValidator : AbstractValidator<UpdateCurrentUserCommand>
+internal sealed class UpdateCurrentUserCommandValidator : AbstractValidator<UpdateCurrentUserCommand>
 {
     public UpdateCurrentUserCommandValidator()
     {

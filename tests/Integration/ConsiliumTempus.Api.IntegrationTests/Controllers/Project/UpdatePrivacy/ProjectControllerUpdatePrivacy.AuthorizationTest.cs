@@ -8,7 +8,7 @@ using ConsiliumTempus.Domain.User;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.UpdatePrivacy;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerUpdatePrivacyProjectAuthorizationTest(WebAppFactory factory)
+public class ProjectControllerUpdatePrivacyAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     // Workspace Authorization

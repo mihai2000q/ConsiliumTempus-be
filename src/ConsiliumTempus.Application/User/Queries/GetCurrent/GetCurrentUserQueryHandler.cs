@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.User.Queries.GetCurrent;
 
-public sealed class GetCurrentUserQueryHandler(ICurrentUserProvider currentUserProvider)
+internal sealed class GetCurrentUserQueryHandler(ICurrentUserProvider currentUserProvider)
     : IRequestHandler<GetCurrentUserQuery, ErrorOr<UserAggregate>>
 {
     public async Task<ErrorOr<UserAggregate>> Handle(GetCurrentUserQuery query, CancellationToken cancellationToken)

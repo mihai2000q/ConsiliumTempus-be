@@ -38,16 +38,25 @@ public class CollaboratorRemovedFromWorkspaceHandlerTest
                 Arg.Any<WorkspaceId>())
             .Returns(projects);
 
-        var ownedProjects = projects
-            .Where(p => p.Owner == domainEvent.Collaborator)
+        var previousOwners = projects.ToDictionary(p => p, p => p.Owner);
+
+        var projectsToRemove = projects
+            .Where(p =>
+                p.IsPrivate.Value &&
+                p.AllowedMembers.Count == 1 &&
+                p.AllowedMembers.Contains(domainEvent.Collaborator))
             .ToList();
 
-        var favoritesProjects = projects
-            .Where(p => p.IsFavorite(domainEvent.Collaborator))
+        var allowedMemberProjects = projects
+            .Where(p => !projectsToRemove.Contains(p) && p.AllowedMembers.Contains(domainEvent.Collaborator))
+            .ToList();
+
+        var favoriteOnlyProjects = projects
+            .Where(p => p.IsFavorite(domainEvent.Collaborator) && !p.AllowedMembers.Contains(domainEvent.Collaborator))
             .ToList();
 
         // Act
-        await _uut.Handle(domainEvent, default);
+        await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -56,12 +65,6 @@ public class CollaboratorRemovedFromWorkspaceHandlerTest
                 Arg.Is(domainEvent.Collaborator.Id),
                 Arg.Is(domainEvent.Workspace.Id));
 
-        var projectsToRemove = projects
-            .Where(p =>
-                p.IsPrivate.Value &&
-                p.Owner == domainEvent.Collaborator &&
-                p.AllowedMembers.Count == 1)
-            .ToList();
         _projectRepository
             .Received(projectsToRemove.Count)
             .Remove(Arg.Any<ProjectAggregate>());
@@ -70,7 +73,11 @@ public class CollaboratorRemovedFromWorkspaceHandlerTest
                 .Received(1)
                 .Remove(project));
 
-        projects.RemoveAll(projectsToRemove.Contains);
-        Utils.Workspace.AssertFromRemovedCollaborator(domainEvent, projects, ownedProjects, favoritesProjects);
+        Utils.Workspace.AssertFromRemovedCollaborator(
+            domainEvent,
+            projects.Where(p => !projectsToRemove.Contains(p)).ToList(),
+            previousOwners,
+            allowedMemberProjects,
+            favoriteOnlyProjects);
     }
 }

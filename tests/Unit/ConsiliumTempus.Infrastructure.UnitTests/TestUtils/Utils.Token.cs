@@ -20,7 +20,8 @@ internal static partial class Utils
             string? audience = null,
             string? sub = null,
             string? email = null,
-            string? jti = null)
+            string? jti = null,
+            Claim[]? extraClaims = null)
         {
             user ??= UserFactory.Create();
 
@@ -33,7 +34,9 @@ internal static partial class Utils
                 new Claim(JwtRegisteredClaimNames.Sub, sub ?? user.Id.Value.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, email ?? user.Credentials.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, jti ?? Guid.NewGuid().ToString())
-            };
+            }
+                .Concat(extraClaims ?? [])
+                .ToArray();
 
             var securityToken = new JwtSecurityToken(
                 issuer ?? jwtSettings.Issuer,

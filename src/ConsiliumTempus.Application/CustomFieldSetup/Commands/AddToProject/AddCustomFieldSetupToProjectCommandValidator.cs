@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.AddToProject;
 
-public sealed class AddCustomFieldSetupToProjectCommandValidator 
+internal sealed class AddCustomFieldSetupToProjectCommandValidator 
     : AbstractValidator<AddCustomFieldSetupToProjectCommand>
 {
     public AddCustomFieldSetupToProjectCommandValidator()

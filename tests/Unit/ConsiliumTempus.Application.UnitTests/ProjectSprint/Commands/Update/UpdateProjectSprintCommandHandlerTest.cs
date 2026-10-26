@@ -44,7 +44,7 @@ public class UpdateProjectSprintCommandHandlerTest
         var command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand(sprint.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
@@ -61,7 +61,7 @@ public class UpdateProjectSprintCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateProjectSprintCommand_WhenItFails_ShouldReturnNotFoundError()
+    public async Task HandleUpdateProjectSprintCommand_WhenProjectSprintIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectSprintCommandFactory.CreateUpdateProjectSprintCommand();
@@ -71,13 +71,13 @@ public class UpdateProjectSprintCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }

@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Authentication.Commands.Refresh;
 
-public sealed class RefreshCommandHandler(
+internal sealed class RefreshCommandHandler(
     IJwtTokenValidator jwtTokenValidator,
     IJwtTokenGenerator jwtTokenGenerator,
     IRefreshTokenRepository refreshTokenRepository)

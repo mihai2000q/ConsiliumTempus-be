@@ -21,7 +21,12 @@ using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
+using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -42,6 +47,15 @@ public class CustomFieldSetupControllerTest
         Utils.ResolveHttpContext(_uut);
     }
 
+    // a custom field setup variant that the mapping does not know about
+    private sealed class UnsupportedCustomFieldSetup()
+        : CustomFieldSetupAggregate(
+            CustomFieldSetupId.CreateUnique(),
+            Name.Create("Unsupported"),
+            Description.Create("Unsupported"),
+            null,
+            Audit.Create(UserFactory.Create()));
+
     #endregion
 
     [Theory]
@@ -56,7 +70,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -69,7 +83,24 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task Get_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenCustomFieldSetupTypeIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var request = CustomFieldSetupRequestFactory.CreateGetCustomFieldSetupRequest();
+
+        _mediator
+            .Send(Arg.Any<GetCustomFieldSetupQuery>())
+            .Returns(new GetCustomFieldSetupResult(new UnsupportedCustomFieldSetup()));
+
+        // Act
+        var outcome = async () => await _uut.Get(request, CancellationToken.None);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
+    }
+
+    [Fact]
+    public async Task Get_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateGetCollectionCustomFieldSetupFromProjectRequest();
@@ -80,7 +111,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollectionFromProject(request, default);
+        var outcome = await _uut.GetCollectionFromProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -103,7 +134,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollectionFromProject(request, default);
+        var outcome = await _uut.GetCollectionFromProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -116,7 +147,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task GetCollectionFromProject_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollectionFromProject_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateGetCollectionCustomFieldSetupFromProjectRequest();
@@ -127,7 +158,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollectionFromProject(request, default);
+        var outcome = await _uut.GetCollectionFromProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -150,7 +181,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollectionFromWorkspace(request, default);
+        var outcome = await _uut.GetCollectionFromWorkspace(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -163,7 +194,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task GetCollectionFromWorkspace_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollectionFromWorkspace_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateGetCollectionCustomFieldSetupFromWorkspaceRequest();
@@ -174,7 +205,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollectionFromWorkspace(request, default);
+        var outcome = await _uut.GetCollectionFromWorkspace(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -185,11 +216,11 @@ public class CustomFieldSetupControllerTest
         outcome.ValidateError(error);
     }
 
-    [Fact]
-    public async Task CreateOnWorkspace_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(CustomFieldSetupControllerData.GetCreateOnWorkspaceRequests))]
+    public async Task CreateOnWorkspace_WhenIsSuccessful_ShouldReturnResponse(CreateCustomFieldSetupOnWorkspaceRequest request)
     {
         // Arrange
-        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest();
 
         var result = CustomFieldSetupResultFactory.CreateCreateCustomFieldSetupResult();
         _mediator
@@ -197,7 +228,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.CreateOnWorkspace(request, default);
+        var outcome = await _uut.CreateOnWorkspace(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -210,7 +241,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task CreateOnWorkspace_WhenItFails_ShouldReturnProblem()
+    public async Task CreateOnWorkspace_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnWorkspaceRequest();
@@ -221,7 +252,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.CreateOnWorkspace(request, default);
+        var outcome = await _uut.CreateOnWorkspace(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -232,11 +263,11 @@ public class CustomFieldSetupControllerTest
         outcome.ValidateError(error);
     }
     
-    [Fact]
-    public async Task CreateOnProject_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(CustomFieldSetupControllerData.GetCreateOnProjectRequests))]
+    public async Task CreateOnProject_WhenIsSuccessful_ShouldReturnResponse(CreateCustomFieldSetupOnProjectRequest request)
     {
         // Arrange
-        var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest();
 
         var result = CustomFieldSetupResultFactory.CreateCreateCustomFieldSetupResult();
         _mediator
@@ -244,7 +275,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.CreateOnProject(request, default);
+        var outcome = await _uut.CreateOnProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -257,7 +288,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task CreateOnProject_WhenItFails_ShouldReturnProblem()
+    public async Task CreateOnProject_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateCreateCustomFieldSetupOnProjectRequest();
@@ -268,7 +299,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.CreateOnProject(request, default);
+        var outcome = await _uut.CreateOnProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -291,7 +322,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.AddToProject(request, default);
+        var outcome = await _uut.AddToProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -304,7 +335,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task AddToProject_WhenItFails_ShouldReturnProblem()
+    public async Task AddToProject_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest();
@@ -315,7 +346,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.AddToProject(request, default);
+        var outcome = await _uut.AddToProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -326,11 +357,11 @@ public class CustomFieldSetupControllerTest
         outcome.ValidateError(error);
     }
 
-    [Fact]
-    public async Task Update_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(CustomFieldSetupControllerData.GetUpdateRequests))]
+    public async Task Update_WhenIsSuccessful_ShouldReturnResponse(UpdateCustomFieldSetupRequest request)
     {
         // Arrange
-        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest();
 
         var result = CustomFieldSetupResultFactory.CreateUpdateCustomFieldSetupResult();
         _mediator
@@ -338,7 +369,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -351,7 +382,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task Update_WhenItFails_ShouldReturnProblem()
+    public async Task Update_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest();
@@ -362,7 +393,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -385,7 +416,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.MakeGlobal(request, default);
+        var outcome = await _uut.MakeGlobal(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -398,7 +429,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task UpdateWorkspace_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateWorkspace_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateMakeCustomFieldSetupGlobalRequest();
@@ -409,7 +440,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.MakeGlobal(request, default);
+        var outcome = await _uut.MakeGlobal(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -432,7 +463,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -445,7 +476,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task Delete_WhenItFails_ShouldReturnProblem()
+    public async Task Delete_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateDeleteCustomFieldSetupRequest();
@@ -456,7 +487,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -479,7 +510,7 @@ public class CustomFieldSetupControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.RemoveFromProject(request, default);
+        var outcome = await _uut.RemoveFromProject(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -492,7 +523,7 @@ public class CustomFieldSetupControllerTest
     }
 
     [Fact]
-    public async Task RemoveFromProject_WhenItFails_ShouldReturnProblem()
+    public async Task RemoveFromProject_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest();
@@ -503,7 +534,7 @@ public class CustomFieldSetupControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.RemoveFromProject(request, default);
+        var outcome = await _uut.RemoveFromProject(request, CancellationToken.None);
 
         // Assert
         await _mediator

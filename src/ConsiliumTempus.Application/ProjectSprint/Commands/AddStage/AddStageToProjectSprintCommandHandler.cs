@@ -9,7 +9,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.AddStage;
 
-public sealed class AddStageToProjectSprintCommandHandler(
+internal sealed class AddStageToProjectSprintCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<AddStageToProjectSprintCommand, ErrorOr<AddStageToProjectSprintResult>>

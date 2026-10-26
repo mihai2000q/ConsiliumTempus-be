@@ -68,7 +68,7 @@ public class RefreshCommandHandlerTest
             .Returns(newJwtId);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _jwtTokenValidator
@@ -137,7 +137,7 @@ public class RefreshCommandHandlerTest
             .Returns(token);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _jwtTokenValidator
@@ -202,7 +202,7 @@ public class RefreshCommandHandlerTest
             .Returns(token);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _jwtTokenValidator
@@ -258,7 +258,7 @@ public class RefreshCommandHandlerTest
             .Returns(false);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _jwtTokenValidator
@@ -272,7 +272,15 @@ public class RefreshCommandHandlerTest
             .Received(1)
             .Get(Arg.Is<RefreshTokenId>(id => id.Value == command.RefreshToken));
 
-        _jwtTokenGenerator.DidNotReceive();
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GetJwtIdFromToken(Arg.Any<string>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>(), Arg.Any<Guid>());
 
         outcome.ValidateError(Errors.Authentication.InvalidTokens);
     }
@@ -292,7 +300,7 @@ public class RefreshCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _jwtTokenValidator
@@ -307,8 +315,15 @@ public class RefreshCommandHandlerTest
             .DidNotReceive()
             .ValidateRefreshToken(Arg.Any<RefreshToken>());
 
-        _refreshTokenRepository.DidNotReceive();
-        _jwtTokenGenerator.DidNotReceive();
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GetJwtIdFromToken(Arg.Any<string>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>(), Arg.Any<Guid>());
 
         outcome.ValidateError(Errors.Authentication.InvalidTokens);
     }
@@ -324,7 +339,7 @@ public class RefreshCommandHandlerTest
             .Returns(false);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _jwtTokenValidator
@@ -335,8 +350,18 @@ public class RefreshCommandHandlerTest
             .DidNotReceive()
             .ValidateRefreshToken(Arg.Any<RefreshToken>());
 
-        _refreshTokenRepository.DidNotReceive();
-        _jwtTokenGenerator.DidNotReceive();
+        await _refreshTokenRepository
+            .DidNotReceive()
+            .Get(Arg.Any<RefreshTokenId>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GetJwtIdFromToken(Arg.Any<string>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>(), Arg.Any<Guid>());
 
         outcome.ValidateError(Errors.Authentication.InvalidTokens);
     }

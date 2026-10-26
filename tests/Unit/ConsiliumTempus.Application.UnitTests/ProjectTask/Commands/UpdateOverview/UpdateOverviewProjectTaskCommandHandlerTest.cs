@@ -45,9 +45,9 @@ public class UpdateOverviewProjectTaskCommandHandlerTest
             .Returns(assignee);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -63,8 +63,7 @@ public class UpdateOverviewProjectTaskCommandHandlerTest
     }
 
     [Fact]
-    public async Task
-        HandleUpdateOverviewProjectTaskCommand_WhenProjectStageIsNull_ShouldReturnProjectStageNotFoundError()
+    public async Task HandleUpdateOverviewProjectTaskCommand_WhenProjectTaskIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectTaskCommandFactory.CreateUpdateOverviewProjectTaskCommand();
@@ -74,13 +73,15 @@ public class UpdateOverviewProjectTaskCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        _userRepository.DidNotReceive();
+        await _userRepository
+            .DidNotReceive()
+            .Get(Arg.Any<UserId>());
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);
     }

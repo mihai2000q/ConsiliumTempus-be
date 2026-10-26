@@ -31,7 +31,9 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
         // Arrange
         var workspace = WorkspaceFactory.Create();
         var invitation = WorkspaceInvitationFactory.Create();
+        var otherInvitation = WorkspaceInvitationFactory.Create();
         workspace.AddInvitation(invitation);
+        workspace.AddInvitation(otherInvitation);
         _workspaceRepository
             .GetWithInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
@@ -41,7 +43,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
             invitation.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -51,7 +53,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new RejectInvitationToWorkspaceResult());
 
-        Utils.Workspace.AssertFromRejectInvitationCommand(command, workspace);
+        Utils.Workspace.AssertFromRejectInvitationCommand(command, workspace, [otherInvitation]);
     }
 
     [Fact]
@@ -67,7 +69,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
             .Returns(workspace);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -88,7 +90,7 @@ public class RejectInvitationToWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository

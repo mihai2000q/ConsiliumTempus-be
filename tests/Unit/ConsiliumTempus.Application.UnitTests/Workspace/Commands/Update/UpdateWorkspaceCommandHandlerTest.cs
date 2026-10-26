@@ -35,7 +35,7 @@ public class UpdateWorkspaceCommandHandlerTest
         var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand(workspace.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -49,7 +49,7 @@ public class UpdateWorkspaceCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateWorkspaceCommand_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleUpdateWorkspaceCommand_WhenWorkspaceIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = WorkspaceCommandFactory.CreateUpdateWorkspaceCommand();
@@ -59,7 +59,7 @@ public class UpdateWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository

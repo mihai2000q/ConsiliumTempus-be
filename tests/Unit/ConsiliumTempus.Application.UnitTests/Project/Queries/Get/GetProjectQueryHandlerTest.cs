@@ -44,7 +44,7 @@ public class GetProjectQueryHandlerTest
             .Returns(currentUser);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -56,7 +56,7 @@ public class GetProjectQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetProjectQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetProjectQuery_WhenProjectIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = ProjectQueryFactory.CreateGetProjectQuery();
@@ -66,13 +66,15 @@ public class GetProjectQueryHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(id => query.Id == id.Value));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

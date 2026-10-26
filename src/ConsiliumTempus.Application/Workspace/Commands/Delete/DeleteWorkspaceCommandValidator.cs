@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Delete;
 
-public sealed class DeleteWorkspaceCommandValidator : AbstractValidator<DeleteWorkspaceCommand>
+internal sealed class DeleteWorkspaceCommandValidator : AbstractValidator<DeleteWorkspaceCommand>
 {
     public DeleteWorkspaceCommandValidator()
     {

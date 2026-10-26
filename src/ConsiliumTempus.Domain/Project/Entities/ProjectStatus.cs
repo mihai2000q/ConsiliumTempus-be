@@ -30,11 +30,11 @@ public sealed class ProjectStatus : Entity<ProjectStatusId>
         Audit = audit;
     }
 
-    public Title Title { get; private set; } = default!;
+    public Title Title { get; private set; } = null!;
     public ProjectStatusType Status { get; private set; }
-    public Description Description { get; private set; } = default!;
-    public ProjectAggregate Project { get; init; } = default!;
-    public Audit Audit { get; init; } = default!;
+    public Description Description { get; private set; } = null!;
+    public ProjectAggregate Project { get; init; } = null!;
+    public Audit Audit { get; init; } = null!;
 
     public static ProjectStatus Create(
         Title title,

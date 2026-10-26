@@ -37,7 +37,9 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         // Arrange
         var workspace = WorkspaceFactory.Create();
         var invitation = WorkspaceInvitationFactory.Create();
+        var otherInvitation = WorkspaceInvitationFactory.Create();
         workspace.AddInvitation(invitation);
+        workspace.AddInvitation(otherInvitation);
         _workspaceRepository
             .GetWithCollaboratorsAndInvitations(Arg.Any<WorkspaceId>())
             .Returns(workspace);
@@ -52,7 +54,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
             invitation.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -66,7 +68,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new AcceptInvitationToWorkspaceResult());
 
-        Utils.Workspace.AssertFromAcceptInvitationCommand(command, workspace, user);
+        Utils.Workspace.AssertFromAcceptInvitationCommand(command, workspace, user, [otherInvitation]);
     }
 
     [Fact]
@@ -89,7 +91,7 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
             invitation.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
@@ -116,13 +118,15 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
             .Returns(workspace);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
             .Received(1)
             .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUser();
 
         outcome.ValidateError(Errors.WorkspaceInvitation.NotFound);
     }
@@ -138,13 +142,15 @@ public class AcceptInvitationToWorkspaceCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
             .Received(1)
             .GetWithCollaboratorsAndInvitations(Arg.Is<WorkspaceId>(wId => wId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUser();
 
         outcome.ValidateError(Errors.Workspace.NotFound);
     }

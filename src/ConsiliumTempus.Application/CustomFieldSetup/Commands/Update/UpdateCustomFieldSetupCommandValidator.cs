@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 
-public sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<UpdateCustomFieldSetupCommand>
+internal sealed class UpdateCustomFieldSetupCommandValidator : AbstractValidator<UpdateCustomFieldSetupCommand>
 {
     public UpdateCustomFieldSetupCommandValidator()
     {

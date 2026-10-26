@@ -36,7 +36,7 @@ public class ProjectTaskCreatedHandlerTest
             .Returns(customFieldSetups);
 
         // Act
-        await _uut.Handle(domainEvent, default);
+        await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
         await _customFieldSetupRepository

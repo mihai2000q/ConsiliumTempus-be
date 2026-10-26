@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.Project.Commands.AddStatus;
 
-public sealed class AddStatusToProjectCommandValidator : AbstractValidator<AddStatusToProjectCommand>
+internal sealed class AddStatusToProjectCommandValidator : AbstractValidator<AddStatusToProjectCommand>
 {
     public AddStatusToProjectCommandValidator()
     {

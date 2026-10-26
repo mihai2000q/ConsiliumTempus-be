@@ -18,7 +18,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 
-public sealed class CreateCustomFieldSetupCommandHandler(
+internal sealed class CreateCustomFieldSetupCommandHandler(
     ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository,
     IProjectRepository projectRepository,

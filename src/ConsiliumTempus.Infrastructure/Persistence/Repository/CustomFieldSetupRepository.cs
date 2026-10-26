@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Repository;
 
-public sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContext) : ICustomFieldSetupRepository
+internal sealed class CustomFieldSetupRepository(ConsiliumTempusDbContext dbContext) : ICustomFieldSetupRepository
 {
     public async Task<CustomFieldSetupAggregate?> Get(CustomFieldSetupId id,
         CancellationToken cancellationToken = default)

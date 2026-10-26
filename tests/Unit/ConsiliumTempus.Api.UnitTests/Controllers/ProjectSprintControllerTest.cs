@@ -58,7 +58,7 @@ public class ProjectSprintControllerTest
             .Returns(sprint);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -70,7 +70,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task Get_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetProjectSprintRequest();
@@ -81,7 +81,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -103,7 +103,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollection(request, default);
+        var outcome = await _uut.GetCollection(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -116,7 +116,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task GetCollection_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollection_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetCollectionProjectSprintRequest();
@@ -127,7 +127,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollection(request, default);
+        var outcome = await _uut.GetCollection(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -150,7 +150,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetStages(request, default);
+        var outcome = await _uut.GetStages(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -163,7 +163,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task GetStages_WhenItFails_ShouldReturnProblem()
+    public async Task GetStages_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetStagesFromProjectSprintRequest();
@@ -174,7 +174,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetStages(request, default);
+        var outcome = await _uut.GetStages(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -196,7 +196,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Create(request, default);
+        var outcome = await _uut.Create(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -209,7 +209,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task Create_WhenItFails_ShouldReturnProblem()
+    public async Task Create_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateCreateProjectSprintRequest();
@@ -220,7 +220,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Create(request, default);
+        var outcome = await _uut.Create(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -243,7 +243,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.AddStage(request, default);
+        var outcome = await _uut.AddStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -256,7 +256,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task AddStage_WhenItFails_ShouldReturnProblem()
+    public async Task AddStage_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateAddStageToProjectSprintRequest();
@@ -267,7 +267,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.AddStage(request, default);
+        var outcome = await _uut.AddStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -290,7 +290,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -303,7 +303,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task Update_WhenItFails_ShouldReturnProblem()
+    public async Task Update_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateUpdateProjectSprintRequest();
@@ -314,7 +314,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -337,7 +337,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateStage(request, default);
+        var outcome = await _uut.UpdateStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -350,7 +350,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task UpdateStage_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateStage_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateUpdateStageFromProjectSprintRequest();
@@ -361,7 +361,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateStage(request, default);
+        var outcome = await _uut.UpdateStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -384,7 +384,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.MoveStage(request, default);
+        var outcome = await _uut.MoveStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -397,7 +397,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task MoveStage_WhenItFails_ShouldReturnProblem()
+    public async Task MoveStage_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateMoveStageFromProjectSprintRequest();
@@ -408,7 +408,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.MoveStage(request, default);
+        var outcome = await _uut.MoveStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -431,7 +431,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -444,7 +444,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task Delete_WhenItFails_ShouldReturnProblem()
+    public async Task Delete_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateDeleteProjectSprintRequest();
@@ -455,7 +455,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -478,7 +478,7 @@ public class ProjectSprintControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.RemoveStage(request, default);
+        var outcome = await _uut.RemoveStage(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -491,7 +491,7 @@ public class ProjectSprintControllerTest
     }
 
     [Fact]
-    public async Task RemoveStage_WhenItFails_ShouldReturnProblem()
+    public async Task RemoveStage_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateRemoveStageFromProjectSprintRequest();
@@ -502,7 +502,7 @@ public class ProjectSprintControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.RemoveStage(request, default);
+        var outcome = await _uut.RemoveStage(request, CancellationToken.None);
 
         // Assert
         await _mediator

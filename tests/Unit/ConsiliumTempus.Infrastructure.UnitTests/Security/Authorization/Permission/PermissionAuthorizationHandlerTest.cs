@@ -1,6 +1,10 @@
 ﻿using System.Security.Claims;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.Project.ValueObjects;
+using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
+using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
@@ -42,6 +46,16 @@ public class PermissionAuthorizationHandlerTest
         _uut = new PermissionAuthorizationHandler(scopeFactory);
     }
 
+    private async Task VerifyWorkspaceProviderDidNotReceiveAny()
+    {
+        await _workspaceProvider.DidNotReceive().Get(Arg.Any<WorkspaceId>());
+        await _workspaceProvider.DidNotReceive().GetByCustomFieldSetup(Arg.Any<CustomFieldSetupId>());
+        await _workspaceProvider.DidNotReceive().GetByProject(Arg.Any<ProjectId>());
+        await _workspaceProvider.DidNotReceive().GetByProjectSprint(Arg.Any<ProjectSprintId>());
+        await _workspaceProvider.DidNotReceive().GetByProjectStage(Arg.Any<ProjectStageId>());
+        await _workspaceProvider.DidNotReceive().GetByProjectTask(Arg.Any<ProjectTaskId>());
+    }
+
     #endregion
 
     [Fact]
@@ -56,9 +70,9 @@ public class PermissionAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.DidNotReceive();
-        _workspaceProvider.DidNotReceive();
-        _permissionProvider.DidNotReceive();
+        _ = _httpContextAccessor.DidNotReceive().HttpContext;
+        await VerifyWorkspaceProviderDidNotReceiveAny();
+        await _permissionProvider.DidNotReceive().GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
 
         context.HasSucceeded.Should().BeFalse();
     }
@@ -78,9 +92,9 @@ public class PermissionAuthorizationHandlerTest
         await _uut.HandleAsync(context);
 
         // Assert
-        _httpContextAccessor.DidNotReceive();
-        _workspaceProvider.DidNotReceive();
-        _permissionProvider.DidNotReceive();
+        _ = _httpContextAccessor.DidNotReceive().HttpContext;
+        await VerifyWorkspaceProviderDidNotReceiveAny();
+        await _permissionProvider.DidNotReceive().GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
 
         context.HasSucceeded.Should().BeFalse();
     }
@@ -107,8 +121,34 @@ public class PermissionAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(1)
             .HttpContext;
-        _workspaceProvider.DidNotReceive();
-        _permissionProvider.DidNotReceive();
+        await VerifyWorkspaceProviderDidNotReceiveAny();
+        await _permissionProvider.DidNotReceive().GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
+
+        context.HasSucceeded.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task PermissionAuthorizationHandler_WhenPermissionIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var requirements = new[] { new PermissionRequirement((Permissions)int.MaxValue) };
+        var user = new ClaimsPrincipal();
+        user.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, user, null);
+
+        Utils.Authorization.Permission.MockEmptyHttpRequest(
+            _httpContextAccessor,
+            PermissionAuthorizationHandlerData.RequestLocation.Route);
+
+        // Act
+        var outcome = async () => await _uut.HandleAsync(context);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
+        await VerifyWorkspaceProviderDidNotReceiveAny();
+        await _permissionProvider.DidNotReceive().GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
 
         context.HasSucceeded.Should().BeFalse();
     }
@@ -138,8 +178,8 @@ public class PermissionAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-        _workspaceProvider.DidNotReceive();
-        _permissionProvider.DidNotReceive();
+        await VerifyWorkspaceProviderDidNotReceiveAny();
+        await _permissionProvider.DidNotReceive().GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
 
         context.HasSucceeded.Should().BeTrue();
     }
@@ -170,8 +210,8 @@ public class PermissionAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-        _workspaceProvider.DidNotReceive();
-        _permissionProvider.DidNotReceive();
+        await VerifyWorkspaceProviderDidNotReceiveAny();
+        await _permissionProvider.DidNotReceive().GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
 
         context.HasSucceeded.Should().BeTrue();
     }
@@ -202,8 +242,8 @@ public class PermissionAuthorizationHandlerTest
         _ = _httpContextAccessor
             .Received(2)
             .HttpContext;
-        _workspaceProvider.DidNotReceive();
-        _permissionProvider.DidNotReceive();
+        await VerifyWorkspaceProviderDidNotReceiveAny();
+        await _permissionProvider.DidNotReceive().GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
 
         context.HasSucceeded.Should().BeTrue();
     }
@@ -235,14 +275,14 @@ public class PermissionAuthorizationHandlerTest
             .Received(2)
             .HttpContext;
         await Utils.Authorization.Permission.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
-        _permissionProvider.DidNotReceive();
+        await _permissionProvider.DidNotReceive().GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
 
         context.HasSucceeded.Should().BeTrue();
     }
 
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
-    public async Task PermissionAuthorizationHandler_WhenDoesNotHavePermission_ShouldFail(
+    public async Task PermissionAuthorizationHandler_WhenTheyDoNotHavePermission_ShouldFail(
         Permissions permission,
         PermissionAuthorizationHandlerData.RequestLocation requestLocation,
         string? id,
@@ -266,6 +306,53 @@ public class PermissionAuthorizationHandlerTest
         _permissionProvider
             .GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>())
             .Returns([]);
+
+        // Act
+        await _uut.HandleAsync(context);
+
+        // Assert
+        _ = _httpContextAccessor
+            .Received(2)
+            .HttpContext;
+        await Utils.Authorization.Permission.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
+        await _permissionProvider
+            .Received(1)
+            .GetPermissions(
+                Arg.Is<UserId>(uId => uId.Value.ToString() == userId),
+                Arg.Is<WorkspaceId>(wId => wId == workspace.Id));
+
+        context.HasSucceeded.Should().BeFalse();
+    }
+
+    [Theory]
+    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
+    public async Task PermissionAuthorizationHandler_WhenTheyHaveOtherPermissions_ShouldFail(
+        Permissions permission,
+        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        string? id,
+        PermissionAuthorizationHandlerData.StringIdType provider)
+    {
+        // Arrange
+        var requirements = new[] { new PermissionRequirement(permission) };
+        var userId = Guid.NewGuid().ToString();
+        var user = new ClaimsPrincipal();
+        user.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, userId)
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, user, null);
+
+        var stringId = Guid.NewGuid().ToString();
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+
+        var workspace = WorkspaceFactory.Create();
+        Utils.Authorization.Permission.MockWorkspaceProvider(_workspaceProvider, workspace);
+
+        _permissionProvider
+            .GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>())
+            .Returns(Enum.GetValues<Permissions>()
+                .Where(p => p != permission)
+                .Select(p => p.ToString())
+                .ToHashSet());
 
         // Act
         await _uut.HandleAsync(context);

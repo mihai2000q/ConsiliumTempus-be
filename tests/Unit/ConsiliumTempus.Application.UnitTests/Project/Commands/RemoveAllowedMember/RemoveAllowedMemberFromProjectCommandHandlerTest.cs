@@ -47,9 +47,9 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
             allowedMember.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -83,9 +83,9 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
             allowedMember.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -112,13 +112,15 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
             allowedMember.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.RemoveOwner);
     }
@@ -136,13 +138,15 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateRemoveAllowedMemberFromProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.AllowedMemberNotFound);
     }
@@ -159,13 +163,15 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
             .Returns(project);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.NotPrivate);
     }
@@ -181,13 +187,15 @@ public class RemoveAllowedMemberFromProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

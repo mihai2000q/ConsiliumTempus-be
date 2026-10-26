@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Events;
 
-public sealed class ProjectDeletedHandler(
+internal sealed class ProjectDeletedHandler(
     ICustomFieldSetupRepository customFieldSetupRepository,
     IProjectTaskRepository projectTaskRepository)
     : INotificationHandler<ProjectDeleted>

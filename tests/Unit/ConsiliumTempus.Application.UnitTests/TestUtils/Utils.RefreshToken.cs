@@ -37,7 +37,7 @@ internal static partial class Utils
             refreshToken.RefreshTimes.Should().Be(refreshTimes);
             refreshToken.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            refreshToken.History.Should().HaveCount(2);
+            refreshToken.History.Should().HaveCount(refreshTimes + 1);
 
             refreshToken.History[^1].Id.Should().NotBeEmpty();
             refreshToken.History[^1].JwtId.Value.Should().Be(jwtId);

@@ -48,7 +48,7 @@ public class RemovedOptionFromMultiSelectCustomFieldSetupHandlerTest
         var domainEvent = new RemovedOptionFromMultiSelectCustomFieldSetup(customFieldSetup, option);
 
         // Act
-        await _uut.Handle(domainEvent, default);
+        await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
         Utils.CustomFieldSetup.AssertFromRemovedOptionFromMultiSelectCustomFieldSetup(domainEvent, customFields);

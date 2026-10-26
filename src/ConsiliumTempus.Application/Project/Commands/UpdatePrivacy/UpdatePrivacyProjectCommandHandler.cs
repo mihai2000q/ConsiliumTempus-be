@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Commands.UpdatePrivacy;
 
-public sealed class UpdatePrivacyProjectCommandHandler(IProjectRepository projectRepository)
+internal sealed class UpdatePrivacyProjectCommandHandler(IProjectRepository projectRepository)
     : IRequestHandler<UpdatePrivacyProjectCommand, ErrorOr<UpdatePrivacyProjectResult>>
 {
     public async Task<ErrorOr<UpdatePrivacyProjectResult>> Handle(UpdatePrivacyProjectCommand command,

@@ -37,7 +37,7 @@ public class DeleteProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateDeleteProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -57,7 +57,7 @@ public class DeleteProjectCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleDeleteProjectCommand_WhenItFails_ShouldReturnNotFoundError()
+    public async Task HandleDeleteProjectCommand_WhenProjectIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = ProjectCommandFactory.CreateDeleteProjectCommand();
@@ -67,7 +67,7 @@ public class DeleteProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _projectRepository

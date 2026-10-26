@@ -10,7 +10,7 @@ using ConsiliumTempus.Domain.Common.Errors;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Workspace.GetOverview;
 
 [Collection(nameof(WorkspaceControllerCollection))]
-public class WorkspaceControllerGetOverviewOverviewTest(WebAppFactory factory)
+public class WorkspaceControllerGetOverviewTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new WorkspaceData())
 {
     [Fact]
@@ -32,7 +32,7 @@ public class WorkspaceControllerGetOverviewOverviewTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetOverview_WhenItFails_ShouldReturnNotFoundError()
+    public async Task GetOverview_WhenWorkspaceIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = WorkspaceRequestFactory.CreateGetOverviewWorkspaceRequest();

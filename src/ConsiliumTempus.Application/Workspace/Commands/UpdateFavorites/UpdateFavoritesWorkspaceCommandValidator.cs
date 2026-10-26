@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Workspace.Commands.UpdateFavorites;
 
-public sealed class UpdateFavoriteWorkspaceCommandValidator : AbstractValidator<UpdateFavoritesWorkspaceCommand>
+internal sealed class UpdateFavoriteWorkspaceCommandValidator : AbstractValidator<UpdateFavoritesWorkspaceCommand>
 {
     public UpdateFavoriteWorkspaceCommandValidator()
     {

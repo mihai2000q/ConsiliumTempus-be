@@ -9,7 +9,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 
-public sealed class GetCollectionWorkspaceQueryHandler(
+internal sealed class GetCollectionWorkspaceQueryHandler(
     ICurrentUserProvider currentUserProvider,
     IWorkspaceRepository workspaceRepository)
     : IRequestHandler<GetCollectionWorkspaceQuery, ErrorOr<GetCollectionWorkspaceResult>>

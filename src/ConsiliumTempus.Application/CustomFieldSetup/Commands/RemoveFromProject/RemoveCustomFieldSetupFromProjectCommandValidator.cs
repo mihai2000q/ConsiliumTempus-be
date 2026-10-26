@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.RemoveFromProject;
 
-public sealed class RemoveCustomFieldSetupFromProjectCommandValidator 
+internal sealed class RemoveCustomFieldSetupFromProjectCommandValidator 
     : AbstractValidator<RemoveCustomFieldSetupFromProjectCommand>
 {
     public RemoveCustomFieldSetupFromProjectCommandValidator()

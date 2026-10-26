@@ -1,8 +1,8 @@
 ﻿namespace ConsiliumTempus.Api.Common.Cors;
 
-public static class CorsPolicies
+internal static class CorsPolicies
 {
-    public static class Frontend
+    internal static class Frontend
     {
         public const string Policy = "FrontendPolicy";
         public const string Origin = "http://localhost:8123";

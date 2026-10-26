@@ -30,10 +30,10 @@ public sealed class ProjectStage : Entity<ProjectStageId>
 
     private readonly List<ProjectTaskAggregate> _tasks = [];
 
-    public Name Name { get; private set; } = default!;
-    public CustomOrderPosition CustomOrderPosition { get; private set; } = default!;
-    public ProjectSprintAggregate Sprint { get; init; } = default!;
-    public Audit Audit { get; init; } = default!;
+    public Name Name { get; private set; } = null!;
+    public CustomOrderPosition CustomOrderPosition { get; private set; } = null!;
+    public ProjectSprintAggregate Sprint { get; init; } = null!;
+    public Audit Audit { get; init; } = null!;
     public IReadOnlyList<ProjectTaskAggregate> Tasks => _tasks.AsReadOnly();
 
     public static ProjectStage Create(

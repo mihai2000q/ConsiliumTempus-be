@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Relations;
 
-public sealed class ProjectHasAllowedMemberConfiguration : IEntityTypeConfiguration<ProjectHasAllowedMember>
+internal sealed class ProjectHasAllowedMemberConfiguration : IEntityTypeConfiguration<ProjectHasAllowedMember>
 {
     public void Configure(EntityTypeBuilder<ProjectHasAllowedMember> builder)
     {

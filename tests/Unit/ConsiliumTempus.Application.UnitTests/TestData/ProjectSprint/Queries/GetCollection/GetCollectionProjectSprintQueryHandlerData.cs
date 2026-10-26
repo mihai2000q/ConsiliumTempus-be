@@ -27,7 +27,11 @@ internal static class GetCollectionProjectSprintQueryHandlerData
                 fromThisYear: true);
             Add(query, sprints);
 
+            query = ProjectSprintQueryFactory.CreateGetCollectionProjectSprintQuery();
+            Add(query, []);
+
             query = ProjectSprintQueryFactory.CreateGetCollectionProjectSprintQuery(
+                search: ["name ct something"],
                 fromThisYear: true);
             Add(query, []);
         }

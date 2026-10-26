@@ -43,9 +43,9 @@ public class LeavePrivateProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateLeavePrivateProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -76,9 +76,9 @@ public class LeavePrivateProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateLeavePrivateProjectCommand(project.Id.Value);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
@@ -101,13 +101,15 @@ public class LeavePrivateProjectCommandHandlerTest
             .Returns(project);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.NotPrivate);
     }
@@ -123,13 +125,15 @@ public class LeavePrivateProjectCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectRepository
             .Received(1)
             .GetWithAllowedMembers(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider
+            .DidNotReceive()
+            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

@@ -18,6 +18,7 @@ using ConsiliumTempus.Api.Contracts.Project.UpdateOwner;
 using ConsiliumTempus.Api.Contracts.Project.UpdatePrivacy;
 using ConsiliumTempus.Api.Contracts.Project.UpdateStatus;
 using ConsiliumTempus.Api.Controllers;
+using ConsiliumTempus.Api.UnitTests.TestData;
 using ConsiliumTempus.Api.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Project.Commands.AddAllowedMember;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
@@ -62,19 +63,19 @@ public class ProjectControllerTest
 
     #endregion
 
-    [Fact]
-    public async Task Get_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(ProjectControllerData.GetProjectResults))]
+    public async Task Get_WhenIsSuccessful_ShouldReturnResponse(GetProjectResult result)
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetProjectRequest();
 
-        var result = ProjectResultFactory.CreateGetProjectResult();
         _mediator
             .Send(Arg.Any<GetProjectQuery>())
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -87,7 +88,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task Get_WhenItFails_ShouldReturnProblem()
+    public async Task Get_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetProjectRequest();
@@ -98,7 +99,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Get(request, default);
+        var outcome = await _uut.Get(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -121,7 +122,7 @@ public class ProjectControllerTest
             .Returns(projectOverview);
 
         // Act
-        var outcome = await _uut.GetOverview(request, default);
+        var outcome = await _uut.GetOverview(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -134,7 +135,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task GetOverview_WhenItFails_ShouldReturnProblem()
+    public async Task GetOverview_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetOverviewProjectRequest();
@@ -145,7 +146,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetOverview(request, default);
+        var outcome = await _uut.GetOverview(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -156,19 +157,19 @@ public class ProjectControllerTest
         outcome.ValidateError(error);
     }
 
-    [Fact]
-    public async Task GetCollection_WhenIsSuccessful_ShouldReturnResponse()
+    [Theory]
+    [ClassData(typeof(ProjectControllerData.GetCollectionProjectResults))]
+    public async Task GetCollection_WhenIsSuccessful_ShouldReturnResponse(GetCollectionProjectResult result)
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest();
 
-        var result = ProjectResultFactory.CreateGetCollectionProjectResult();
         _mediator
             .Send(Arg.Any<GetCollectionProjectQuery>())
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetCollection(request, default);
+        var outcome = await _uut.GetCollection(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -181,7 +182,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task GetCollection_WhenItFails_ShouldReturnProblem()
+    public async Task GetCollection_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetCollectionProjectRequest();
@@ -192,7 +193,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetCollection(request, default);
+        var outcome = await _uut.GetCollection(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -215,7 +216,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetStatuses(request, default);
+        var outcome = await _uut.GetStatuses(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -228,7 +229,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task GetStatuses_WhenItFails_ShouldReturnProblem()
+    public async Task GetStatuses_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetStatusesFromProjectRequest();
@@ -239,7 +240,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetStatuses(request, default);
+        var outcome = await _uut.GetStatuses(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -262,7 +263,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.GetAllowedMembers(request, default);
+        var outcome = await _uut.GetAllowedMembers(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -275,7 +276,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task GetAllowedMembers_WhenItFails_ShouldReturnProblem()
+    public async Task GetAllowedMembers_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateGetAllowedMembersFromProjectRequest();
@@ -286,7 +287,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.GetAllowedMembers(request, default);
+        var outcome = await _uut.GetAllowedMembers(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -309,7 +310,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Create(request, default);
+        var outcome = await _uut.Create(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -321,7 +322,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task Create_WhenItFails_ShouldReturnProblem()
+    public async Task Create_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateCreateProjectRequest();
@@ -332,7 +333,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Create(request, default);
+        var outcome = await _uut.Create(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -354,7 +355,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.AddStatus(request, default);
+        var outcome = await _uut.AddStatus(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -367,7 +368,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task AddStatus_WhenItFails_ShouldReturnProblem()
+    public async Task AddStatus_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateAddStatusToProjectRequest();
@@ -378,7 +379,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.AddStatus(request, default);
+        var outcome = await _uut.AddStatus(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -401,7 +402,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.AddAllowedMember(request, default);
+        var outcome = await _uut.AddAllowedMember(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -414,7 +415,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task AddAllowedMember_WhenItFails_ShouldReturnProblem()
+    public async Task AddAllowedMember_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateAddAllowedMemberToProjectRequest();
@@ -425,7 +426,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.AddAllowedMember(request, default);
+        var outcome = await _uut.AddAllowedMember(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -448,7 +449,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -460,7 +461,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task Update_WhenItFails_ShouldReturnProblem()
+    public async Task Update_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateUpdateProjectRequest();
@@ -471,7 +472,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Update(request, default);
+        var outcome = await _uut.Update(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -493,7 +494,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateFavorites(request, default);
+        var outcome = await _uut.UpdateFavorites(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -506,7 +507,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task UpdateFavorites_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateFavorites_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateUpdateFavoritesProjectRequest();
@@ -517,7 +518,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateFavorites(request, default);
+        var outcome = await _uut.UpdateFavorites(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -540,7 +541,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdatePrivacy(request, default);
+        var outcome = await _uut.UpdatePrivacy(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -553,7 +554,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task UpdatePrivacy_WhenItFails_ShouldReturnProblem()
+    public async Task UpdatePrivacy_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateUpdatePrivacyProjectRequest();
@@ -564,7 +565,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdatePrivacy(request, default);
+        var outcome = await _uut.UpdatePrivacy(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -587,7 +588,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateOverview(request, default);
+        var outcome = await _uut.UpdateOverview(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -600,7 +601,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task UpdateOverview_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateOverview_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateUpdateOverviewProjectRequest();
@@ -611,7 +612,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateOverview(request, default);
+        var outcome = await _uut.UpdateOverview(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -634,7 +635,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateOwner(request, default);
+        var outcome = await _uut.UpdateOwner(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -647,7 +648,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task UpdateOwner_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateOwner_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateUpdateOwnerProjectRequest();
@@ -658,7 +659,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateOwner(request, default);
+        var outcome = await _uut.UpdateOwner(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -681,7 +682,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.UpdateStatus(request, default);
+        var outcome = await _uut.UpdateStatus(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -694,7 +695,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task UpdateStatus_WhenItFails_ShouldReturnProblem()
+    public async Task UpdateStatus_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateUpdateStatusFromProjectRequest();
@@ -705,7 +706,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.UpdateStatus(request, default);
+        var outcome = await _uut.UpdateStatus(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -728,7 +729,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -740,7 +741,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task Delete_WhenItFails_ShouldReturnProblem()
+    public async Task Delete_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateDeleteProjectRequest();
@@ -751,7 +752,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.Delete(request, default);
+        var outcome = await _uut.Delete(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -773,7 +774,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.LeavePrivate(request, default);
+        var outcome = await _uut.LeavePrivate(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -786,7 +787,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task LeavePrivate_WhenItFails_ShouldReturnProblem()
+    public async Task LeavePrivate_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateLeavePrivateProjectRequest();
@@ -797,7 +798,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.LeavePrivate(request, default);
+        var outcome = await _uut.LeavePrivate(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -820,7 +821,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.RemoveAllowedMember(request, default);
+        var outcome = await _uut.RemoveAllowedMember(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -833,7 +834,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task RemoveAllowedMember_WhenItFails_ShouldReturnProblem()
+    public async Task RemoveAllowedMember_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateRemoveAllowedMemberFromProjectRequest();
@@ -844,7 +845,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.RemoveAllowedMember(request, default);
+        var outcome = await _uut.RemoveAllowedMember(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -867,7 +868,7 @@ public class ProjectControllerTest
             .Returns(result);
 
         // Act
-        var outcome = await _uut.RemoveStatus(request, default);
+        var outcome = await _uut.RemoveStatus(request, CancellationToken.None);
 
         // Assert
         await _mediator
@@ -880,7 +881,7 @@ public class ProjectControllerTest
     }
 
     [Fact]
-    public async Task RemoveStatus_WhenItFails_ShouldReturnProblem()
+    public async Task RemoveStatus_WhenMediatorReturnsError_ShouldReturnProblem()
     {
         // Arrange
         var request = ProjectRequestFactory.CreateRemoveStatusFromProjectRequest();
@@ -891,7 +892,7 @@ public class ProjectControllerTest
             .Returns(error);
 
         // Act
-        var outcome = await _uut.RemoveStatus(request, default);
+        var outcome = await _uut.RemoveStatus(request, CancellationToken.None);
 
         // Assert
         await _mediator

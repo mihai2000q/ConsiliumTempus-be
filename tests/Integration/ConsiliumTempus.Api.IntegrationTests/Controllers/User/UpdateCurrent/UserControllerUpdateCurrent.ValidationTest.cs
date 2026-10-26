@@ -7,7 +7,7 @@ using ConsiliumTempus.Common.IntegrationTests.User;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.User.UpdateCurrent;
 
 [Collection(nameof(UserControllerCollection))]
-public class UserControllerUpdateValidationTest(WebAppFactory factory)
+public class UserControllerUpdateCurrentValidationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new UserData())
 {
     [Fact]

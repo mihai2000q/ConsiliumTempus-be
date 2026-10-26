@@ -18,7 +18,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
 
-public sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
+internal sealed class PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
     : AuthorizationHandler<PermissionRequirement>
 {
     protected override async Task HandleRequirementAsync(

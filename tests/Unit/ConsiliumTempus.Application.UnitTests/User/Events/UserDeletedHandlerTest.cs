@@ -48,9 +48,15 @@ public class UserDeletedHandlerTest
             .When(wr => wr.Remove(Arg.Any<WorkspaceAggregate>()))
             .Do(info => removedWorkspaces.Add(info.Arg<WorkspaceAggregate>()));
 
+        var emptyWorkspaces = workspaces
+            .Where(w => w.Memberships.Count == 1)
+            .ToList();
         var ownedWorkspaces = workspaces
             .Where(w => w.Memberships.Count > 1)
             .ToList();
+        var previousRoles = ownedWorkspaces.ToDictionary(
+            w => w,
+            w => w.Memberships.ToDictionary(m => m.User, m => m.WorkspaceRole));
 
         _projectRepository
             .GetListByOwner(Arg.Any<UserId>())
@@ -61,23 +67,24 @@ public class UserDeletedHandlerTest
             .When(wr => wr.Remove(Arg.Any<ProjectAggregate>()))
             .Do(info => removedProjects.Add(info.Arg<ProjectAggregate>()));
 
-        var ownedProjects = projects
-            .Where(p => p.Workspace.Memberships.Count > 1 && (!p.IsPrivate.Value || p.AllowedMembers.Count > 1))
+        var emptyProjects = projects
+            .Where(p => p.Workspace.Memberships.Count > 1 && p.IsPrivate.Value && p.AllowedMembers.Count == 1)
             .ToList();
+        var ownedProjects = projects
+            .Where(p => p.Workspace.Memberships.Count > 1 && !emptyProjects.Contains(p))
+            .ToList();
+        var previousAllowedMembers = ownedProjects.ToDictionary(p => p, p => p.AllowedMembers.ToList());
 
         var domainEvent = new UserDeleted(user);
 
         // Act
-        await _uut.Handle(domainEvent, default);
+        await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
         await _workspaceRepository
             .Received(1)
             .GetListByOwner(Arg.Is<UserId>(uId => uId == user.Id));
 
-        var emptyWorkspaces = workspaces
-            .Where(w => w.Memberships.Count == 1)
-            .ToList();
         _workspaceRepository
             .Received(emptyWorkspaces.Count)
             .Remove(Arg.Any<WorkspaceAggregate>());
@@ -89,9 +96,6 @@ public class UserDeletedHandlerTest
             .Received(1)
             .GetListByOwner(Arg.Is<UserId>(uId => uId == user.Id));
 
-        var emptyProjects = projects
-            .Where(p => p.AllowedMembers.Count == 1 && p.IsPrivate.Value && p.Workspace.Memberships.Count > 1)
-            .ToList();
         _projectRepository
             .Received(emptyProjects.Count)
             .Remove(Arg.Any<ProjectAggregate>());
@@ -106,6 +110,6 @@ public class UserDeletedHandlerTest
             .Received(1)
             .RemoveWorkspaceInvitationsByUser(user);
 
-        Utils.User.AssertFromUserDeleted(user, workspaces, projects, ownedWorkspaces, ownedProjects);
+        Utils.User.AssertFromUserDeleted(user, ownedWorkspaces, previousRoles, ownedProjects, previousAllowedMembers);
     }
 }

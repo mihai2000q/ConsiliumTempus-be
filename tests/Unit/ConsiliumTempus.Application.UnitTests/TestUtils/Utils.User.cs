@@ -20,8 +20,8 @@ internal static partial class Utils
             string password)
         {
             user.Id.Should().NotBeNull();
-            user.FirstName.Value.Should().Be(command.FirstName.CapitalizeWord());
-            user.LastName.Value.Should().Be(command.LastName.CapitalizeWord());
+            user.FirstName.Value.Should().Be(command.FirstName.Capitalize());
+            user.LastName.Value.Should().Be(command.LastName.Capitalize());
             user.Credentials.Email.Should().Be(command.Email.ToLower());
             user.Credentials.Password.Should().Be(password);
             if (command.Role is null)
@@ -54,70 +54,46 @@ internal static partial class Utils
 
         internal static void AssertFromUserDeleted(
             UserAggregate user,
-            List<WorkspaceAggregate> workspaces,
-            List<ProjectAggregate> projects,
             List<WorkspaceAggregate> ownedWorkspaces,
-            List<ProjectAggregate> ownedProjects)
+            Dictionary<WorkspaceAggregate, Dictionary<UserAggregate, WorkspaceRole>> previousRoles,
+            List<ProjectAggregate> ownedProjects,
+            Dictionary<ProjectAggregate, List<UserAggregate>> previousAllowedMembers)
         {
             // Update Owned Workspaces
-            var preservedWorkspaces = workspaces
-                .Where(w => w.Memberships.Count > 1)
-                .ToList();
+            ownedWorkspaces.Should().AllSatisfyOrEmpty(w =>
+            {
+                var roles = previousRoles[w];
+                w.Owner.Should().NotBe(user);
+                w.IsPersonal.Value.Should().BeFalse();
 
-            preservedWorkspaces.Should()
-                .HaveSameCount(ownedWorkspaces)
-                .And
-                .BeEquivalentTo(ownedWorkspaces)
-                .And
-                .AllSatisfy(w =>
-                {
-                    w.Owner.Should().NotBe(user);
-                    w.IsPersonal.Value.Should().BeFalse();
+                roles[w.Owner].Id.Should().Be(roles.Where(r => r.Key != user).Max(r => r.Value.Id));
+                var newOwnerMembership = w.Memberships.Single(m => m.User == w.Owner);
+                newOwnerMembership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+                if (roles[w.Owner] != WorkspaceRole.Admin)
+                    newOwnerMembership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-                    var oldWorkspace = ownedWorkspaces.Single(x => x.Id == w.Id);
-                    var newAdminOwner = oldWorkspace.Memberships
-                        .FirstOrDefault(m => m.WorkspaceRole == WorkspaceRole.Admin && m.User != user);
-                    if (newAdminOwner is not null)
-                    {
-                        w.Owner.Should().Be(newAdminOwner.User);
-                    }
-                    else
-                    {
-                        var oldMembership = oldWorkspace.Memberships.First(m => m.User != user);
-                        oldMembership.WorkspaceRole.Should().NotBe(WorkspaceRole.Admin);
-
-                        var newOwner = w.Memberships.Single(m => m.Id == oldMembership.Id);
-                        newOwner.WorkspaceRole.Should().NotBe(oldMembership.WorkspaceRole);
-                        newOwner.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
-                        newOwner.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-                        w.Owner.Should().Be(oldMembership.User);
-                    }
-                });
+                w.Memberships
+                    .Where(m => m.User != w.Owner)
+                    .Should()
+                    .AllSatisfy(m => m.WorkspaceRole.Should().Be(roles[m.User]));
+            });
 
             // Update Owned Projects
-            var preservedProjects = projects
-                .Where(p => p.Workspace.Memberships.Count > 1 && (!p.IsPrivate.Value || p.AllowedMembers.Count > 1))
-                .ToList();
+            ownedProjects.Should().AllSatisfyOrEmpty(p =>
+            {
+                p.Owner.Should().NotBe(user);
+                p.AllowedMembers.Should().HaveCountGreaterThan(1).And.Contain(p.Owner);
 
-            preservedProjects.Should()
-                .HaveSameCount(ownedProjects)
-                .And
-                .BeEquivalentTo(ownedProjects)
-                .And
-                .AllSatisfy(p =>
+                if (p.IsPrivate.Value)
                 {
-                    p.Owner.Should().NotBe(user);
-                    p.AllowedMembers.Should().HaveCountGreaterThan(1);
+                    previousAllowedMembers[p].Should().Contain(p.Owner);
+                    return;
+                }
 
-                    var newOwner = p.IsPrivate.Value
-                        ? p.AllowedMembers.First(u => u != user)
-                        : p.Workspace.Memberships
-                            .OrderByDescending(m => m.WorkspaceRole.Id)
-                            .First(m => m.User != user)
-                            .User;
-                    p.Owner.Should().Be(newOwner);
-                    p.AllowedMembers.Should().Contain(newOwner);
-                });
+                var candidates = p.Workspace.Memberships.Where(m => m.User != user).ToList();
+                candidates.Single(m => m.User == p.Owner).WorkspaceRole.Id
+                    .Should().Be(candidates.Max(m => m.WorkspaceRole.Id));
+            });
         }
 
         internal static bool AssertFromUserRegistered(UserAggregate user, WorkspaceAggregate workspace)

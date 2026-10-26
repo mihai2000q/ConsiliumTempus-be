@@ -5,6 +5,7 @@ using ConsiliumTempus.Application.UnitTests.TestData.CustomFieldSetup.Commands.U
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
@@ -47,9 +48,9 @@ public class UpdateCustomFieldSetupCommandHandlerTest
             .Returns(user);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(cId => cId.Value == command.Id));
@@ -62,6 +63,98 @@ public class UpdateCustomFieldSetupCommandHandlerTest
         outcome.Value.Should().Be(new UpdateCustomFieldSetupResult());
 
         Utils.CustomFieldSetup.AssertFromUpdateCommand(command, customFieldSetup, user);
+    }
+
+    [Fact]
+    public async Task
+        HandleUpdateCustomFieldSetupCommand_WhenMultiSelectOptionOperationIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var customFieldSetup = CustomFieldSetupFactory.CreateMultiSelect();
+        _customFieldSetupRepository
+            .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
+            .Returns(customFieldSetup);
+
+        _currentUserProvider
+            .GetCurrentUserAfterPermissionCheck()
+            .Returns(UserFactory.Create());
+
+        var command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+            id: customFieldSetup.Id.Value,
+            type: CustomFieldType.MultiSelect,
+            multiSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand(
+                (UpdateCustomFieldSetupCommand.OptionOperation)int.MaxValue,
+                null,
+                null,
+                null));
+
+        // Act
+        var outcome = async () => await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
+    }
+
+    [Fact]
+    public async Task
+        HandleUpdateCustomFieldSetupCommand_WhenSingleSelectOptionOperationIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    {
+        // Arrange
+        var customFieldSetup = CustomFieldSetupFactory.CreateSingleSelect();
+        _customFieldSetupRepository
+            .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
+            .Returns(customFieldSetup);
+
+        _currentUserProvider
+            .GetCurrentUserAfterPermissionCheck()
+            .Returns(UserFactory.Create());
+
+        var command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+            id: customFieldSetup.Id.Value,
+            type: CustomFieldType.SingleSelect,
+            singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                null,
+                (UpdateCustomFieldSetupCommand.OptionOperation)int.MaxValue,
+                null,
+                null,
+                null));
+
+        // Act
+        var outcome = async () => await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
+    }
+
+    [Theory]
+    [ClassData(typeof(UpdateCustomFieldSetupCommandHandlerData.GetMultiSelectCommands))]
+    public async Task
+        HandleUpdateCustomFieldSetupCommand_WhenMultiSelectOptionIsNull_ShouldReturnMultiSelectOptionNotFoundError(
+            UpdateCustomFieldSetupCommand command,
+            MultiSelectCustomFieldSetupAggregate customFieldSetup)
+    {
+        // Arrange
+        _customFieldSetupRepository
+            .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
+            .Returns(customFieldSetup);
+
+        _currentUserProvider
+            .GetCurrentUserAfterPermissionCheck()
+            .Returns(UserFactory.Create());
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _customFieldSetupRepository
+            .Received(1)
+            .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(cId => cId.Value == command.Id));
+
+        await _currentUserProvider
+            .Received(1)
+            .GetCurrentUserAfterPermissionCheck();
+
+        outcome.ValidateError(Errors.MultiSelectOption.NotFound);
     }
 
     [Theory]
@@ -81,9 +174,9 @@ public class UpdateCustomFieldSetupCommandHandlerTest
             .Returns(UserFactory.Create());
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(cId => cId.Value == command.Id));
@@ -96,7 +189,7 @@ public class UpdateCustomFieldSetupCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleUpdateCustomFieldSetupCommand_WhenIsNull_ShouldReturnNotFoundError()
+    public async Task HandleUpdateCustomFieldSetupCommand_WhenCustomFieldSetupIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand();
@@ -106,13 +199,13 @@ public class UpdateCustomFieldSetupCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(cId => cId.Value == command.Id));
-        _currentUserProvider.DidNotReceive();
+        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.CustomFieldSetup.NotFound);
     }

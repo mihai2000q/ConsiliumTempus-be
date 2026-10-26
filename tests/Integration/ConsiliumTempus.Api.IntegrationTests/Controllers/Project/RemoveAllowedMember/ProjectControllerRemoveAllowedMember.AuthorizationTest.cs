@@ -8,7 +8,7 @@ using ConsiliumTempus.Domain.User;
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.RemoveAllowedMember;
 
 [Collection(nameof(ProjectControllerCollection))]
-public class ProjectControllerRemoveAllowedMemberFromProjectAuthorizationTest(WebAppFactory factory)
+public class ProjectControllerRemoveAllowedMemberAuthorizationTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new ProjectData())
 {
     // Workspace Authorization

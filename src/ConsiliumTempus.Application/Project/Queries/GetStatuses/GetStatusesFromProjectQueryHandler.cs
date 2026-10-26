@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Queries.GetStatuses;
 
-public sealed class GetStatusesFromProjectQueryHandler(IProjectRepository projectRepository)
+internal sealed class GetStatusesFromProjectQueryHandler(IProjectRepository projectRepository)
     : IRequestHandler<GetStatusesFromProjectQuery, ErrorOr<GetStatusesFromProjectResult>>
 {
     public async Task<ErrorOr<GetStatusesFromProjectResult>> Handle(GetStatusesFromProjectQuery query,

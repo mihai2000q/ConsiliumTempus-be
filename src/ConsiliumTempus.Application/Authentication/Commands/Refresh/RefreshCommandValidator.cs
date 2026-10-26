@@ -2,7 +2,7 @@
 
 namespace ConsiliumTempus.Application.Authentication.Commands.Refresh;
 
-public sealed class RefreshCommandValidator : AbstractValidator<RefreshCommand>
+internal sealed class RefreshCommandValidator : AbstractValidator<RefreshCommand>
 {
     public RefreshCommandValidator()
     {

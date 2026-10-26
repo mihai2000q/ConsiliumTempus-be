@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace ConsiliumTempus.Api.Common.Errors;
 
-public sealed class ConsiliumTempusProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) : ProblemDetailsFactory
+internal sealed class ConsiliumTempusProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) : ProblemDetailsFactory
 {
     private readonly ApiBehaviorOptions _options = options.Value;
 
@@ -57,7 +57,7 @@ public sealed class ConsiliumTempusProblemDetailsFactory(IOptions<ApiBehaviorOpt
             Instance = instance
         };
 
-        if (title is null) problemDetails.Title = title;
+        if (title is not null) problemDetails.Title = title;
 
         ApplyProblemDetails(httpContext, problemDetails, statusCode.Value);
 

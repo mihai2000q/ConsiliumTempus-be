@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConsiliumTempus.Application.Workspace.Commands.Create;
 
-public sealed class CreateWorkspaceCommandValidator : AbstractValidator<CreateWorkspaceCommand>
+internal sealed class CreateWorkspaceCommandValidator : AbstractValidator<CreateWorkspaceCommand>
 {
     public CreateWorkspaceCommandValidator()
     {

@@ -35,7 +35,7 @@ public class GetOverviewProjectQueryHandlerTest
             .Returns(project);
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectRepository
@@ -47,7 +47,7 @@ public class GetOverviewProjectQueryHandlerTest
     }
 
     [Fact]
-    public async Task HandleGetOverviewProjectQuery_WhenIsNotFound_ShouldReturnNotFoundError()
+    public async Task HandleGetOverviewProjectQuery_WhenProjectIsNull_ShouldReturnNotFoundError()
     {
         // Arrange
         var query = ProjectQueryFactory.CreateGetOverviewProjectQuery();
@@ -57,7 +57,7 @@ public class GetOverviewProjectQueryHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(query, default);
+        var outcome = await _uut.Handle(query, CancellationToken.None);
 
         // Assert
         await _projectRepository

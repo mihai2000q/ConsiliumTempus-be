@@ -23,21 +23,26 @@ public class UpdateIsCompletedProjectTaskCommandHandlerTest
 
     #endregion
 
-    [Fact]
-    public async Task HandleUpdateIsCompletedProjectTaskCommand_WhenIsSuccessful_ShouldUpdateIsCompletedProjectTask()
+    [Theory]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    public async Task HandleUpdateIsCompletedProjectTaskCommand_WhenIsSuccessful_ShouldUpdateIsCompletedProjectTask(
+        bool wasCompleted,
+        bool isCompleted)
     {
         // Arrange
         var task = ProjectTaskFactory.Create();
+        task.UpdateIsCompleted(IsCompleted.Create(wasCompleted, wasCompleted ? DateTime.UtcNow : null));
         _projectTaskRepository
             .GetWithWorkspace(Arg.Any<ProjectTaskId>())
             .Returns(task);
 
-        var command = ProjectTaskCommandFactory.CreateUpdateIsCompletedProjectTaskCommand();
+        var command = ProjectTaskCommandFactory.CreateUpdateIsCompletedProjectTaskCommand(isCompleted: isCompleted);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
@@ -59,9 +64,9 @@ public class UpdateIsCompletedProjectTaskCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
-        // Arrange
+        // Assert
         await _projectTaskRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));

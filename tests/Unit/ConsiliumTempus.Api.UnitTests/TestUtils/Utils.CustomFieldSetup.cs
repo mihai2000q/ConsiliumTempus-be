@@ -123,10 +123,18 @@ internal static partial class Utils
             command.Name.Should().Be(request.Name);
             command.Description.Should().Be(request.Description);
             command.Type.Should().Be(request.Type);
+            AssertUpdateDateCustomFieldSetupCommand(command.DateCustomFieldSetup, request.DateCustomFieldSetup);
+            AssertUpdateDateTimeCustomFieldSetupCommand(command.DateTimeCustomFieldSetup,
+                request.DateTimeCustomFieldSetup);
+            AssertUpdateDurationCustomFieldSetupCommand(command.DurationCustomFieldSetup,
+                request.DurationCustomFieldSetup);
+            AssertUpdateMultiSelectCustomFieldSetupCommand(command.MultiSelectCustomFieldSetup,
+                request.MultiSelectCustomFieldSetup);
             AssertUpdateNumberCustomFieldSetupCommand(command.NumberCustomFieldSetup, request.NumberCustomFieldSetup);
             AssertUpdateSingleSelectCustomFieldSetupCommand(command.SingleSelectCustomFieldSetup,
                 request.SingleSelectCustomFieldSetup);
             AssertUpdateTextCustomFieldSetupCommand(command.TextCustomFieldSetup, request.TextCustomFieldSetup);
+            AssertUpdateTimeCustomFieldSetupCommand(command.TimeCustomFieldSetup, request.TimeCustomFieldSetup);
 
             return true;
         }
@@ -199,8 +207,7 @@ internal static partial class Utils
 
                 case GetCustomFieldSetupResponse.PeopleCustomFieldSetupResponse peopleSetup:
                     result.CustomFieldSetup.Should().BeOfType<PeopleCustomFieldSetupAggregate>();
-                    AssertPeopleCustomFieldSetupResponse(peopleSetup,
-                        (PeopleCustomFieldSetupAggregate)result.CustomFieldSetup);
+                    AssertPeopleCustomFieldSetupResponse(peopleSetup);
                     break;
 
                 case GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse singleSelectSetup:
@@ -228,8 +235,7 @@ internal static partial class Utils
             GetCollectionCustomFieldSetupResult result)
         {
             response.CustomFieldSetups
-                .Zip(result.CustomFieldSetups)
-                .Should().AllSatisfyOrEmpty(x => AssertCustomFieldSetupResponse(x.First, x.Second));
+                .AssertEach(result.CustomFieldSetups, AssertCustomFieldSetupResponse);
         }
 
         public static void AssertGetCollectionFromProjectResponse(
@@ -237,8 +243,7 @@ internal static partial class Utils
             GetCollectionCustomFieldSetupResult result)
         {
             response.CustomFieldSetups
-                .Zip(result.CustomFieldSetups)
-                .Should().AllSatisfyOrEmpty(x => AssertCustomFieldSetupResponse(x.First, x.Second));
+                .AssertEach(result.CustomFieldSetups, AssertCustomFieldSetupResponse);
         }
 
         private static void AssertDateCustomFieldSetupResponse(
@@ -269,10 +274,9 @@ internal static partial class Utils
             GetCustomFieldSetupResponse.MultiSelectCustomFieldSetupResponse response,
             MultiSelectCustomFieldSetupAggregate setup)
         {
-            response.Type.Should().Be(CustomFieldType.SingleSelect);
+            response.Type.Should().Be(CustomFieldType.MultiSelect);
             response.Options
-                .Zip(setup.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertMultiSelectOptionResponse(x.First, x.Second));
+                .AssertEach(setup.Options, AssertMultiSelectOptionResponse);
         }
 
         private static void AssertNumberCustomFieldSetupResponse(
@@ -290,11 +294,9 @@ internal static partial class Utils
         }
 
         private static void AssertPeopleCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.PeopleCustomFieldSetupResponse response,
-            PeopleCustomFieldSetupAggregate setup)
+            GetCustomFieldSetupResponse.PeopleCustomFieldSetupResponse response)
         {
             response.Type.Should().Be(CustomFieldType.People);
-            setup.Should().NotBeNull(); // obviously true
         }
 
         private static void AssertSingleSelectCustomFieldSetupResponse(
@@ -303,8 +305,7 @@ internal static partial class Utils
         {
             response.Type.Should().Be(CustomFieldType.SingleSelect);
             response.Options
-                .Zip(setup.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertSingleSelectOptionResponse(x.First, x.Second));
+                .AssertEach(setup.Options, AssertSingleSelectOptionResponse);
 
             if (setup.DefaultOption is null)
                 response.DefaultOption.Should().BeNull();
@@ -424,8 +425,7 @@ internal static partial class Utils
 
             command.Should().NotBeNull();
             command!.Options
-                .Zip(request.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertCreateMultiSelectOptionCommand(x.First, x.Second));
+                .AssertEach(request.Options, AssertCreateMultiSelectOptionCommand);
         }
 
         private static void AssertCreateNumberCustomFieldSetupCommand(
@@ -457,8 +457,7 @@ internal static partial class Utils
 
             command.Should().NotBeNull();
             command!.Options
-                .Zip(request.Options)
-                .Should().AllSatisfyOrEmpty(x => AssertCreateSingleSelectOptionCommand(x.First, x.Second));
+                .AssertEach(request.Options, AssertCreateSingleSelectOptionCommand);
             command.DefaultOptionId.Should().Be(request.DefaultOptionId);
         }
 
@@ -507,6 +506,79 @@ internal static partial class Utils
             command.Color.Should().Be(request.Color);
         }
 
+        private static void AssertUpdateDateCustomFieldSetupCommand(
+            UpdateCustomFieldSetupCommand.DateCustomFieldSetupCommand? command,
+            UpdateCustomFieldSetupRequest.DateCustomFieldSetupRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command.Should().NotBeNull();
+            command.DefaultDate.Should().Be(request.DefaultDate);
+        }
+
+        private static void AssertUpdateDateTimeCustomFieldSetupCommand(
+            UpdateCustomFieldSetupCommand.DateTimeCustomFieldSetupCommand? command,
+            UpdateCustomFieldSetupRequest.DateTimeCustomFieldSetupRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command.Should().NotBeNull();
+            command.DefaultDateTime.Should().Be(request.DefaultDateTime);
+        }
+
+        private static void AssertUpdateDurationCustomFieldSetupCommand(
+            UpdateCustomFieldSetupCommand.DurationCustomFieldSetupCommand? command,
+            UpdateCustomFieldSetupRequest.DurationCustomFieldSetupRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command.Should().NotBeNull();
+            command.DefaultDuration.Should().Be(request.DefaultDuration);
+        }
+
+        private static void AssertUpdateMultiSelectCustomFieldSetupCommand(
+            UpdateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand? command,
+            UpdateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command.Should().NotBeNull();
+            (command.Operation?.ToString()).Should().Be(request.Operation?.ToString());
+            AssertUpdateMultiSelectOptionCommand(command.NewOption, request.NewOption);
+            command.OptionId.Should().Be(request.OptionId);
+            command.OverOptionId.Should().Be(request.OverOptionId);
+        }
+
+        private static void AssertUpdateTimeCustomFieldSetupCommand(
+            UpdateCustomFieldSetupCommand.TimeCustomFieldSetupCommand? command,
+            UpdateCustomFieldSetupRequest.TimeCustomFieldSetupRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command.Should().NotBeNull();
+            command.DefaultTime.Should().Be(request.DefaultTime);
+        }
+
         private static void AssertUpdateNumberCustomFieldSetupCommand(
             UpdateCustomFieldSetupCommand.NumberCustomFieldSetupCommand? command,
             UpdateCustomFieldSetupRequest.NumberCustomFieldSetupRequest? request)
@@ -518,7 +590,7 @@ internal static partial class Utils
             }
 
             command.Should().NotBeNull();
-            command!.Settings.CurrencyCode.Should().Be(request.Settings.CurrencyCode);
+            command.Settings.CurrencyCode.Should().Be(request.Settings.CurrencyCode);
             command.Settings.Decimals.Should().Be(request.Settings.Decimals);
             command.Settings.Rounding.Should().Be(request.Settings.Rounding);
             command.DefaultNumber.Should().Be(request.DefaultNumber);
@@ -535,8 +607,8 @@ internal static partial class Utils
             }
 
             command.Should().NotBeNull();
-            command!.DefaultOptionId.Should().Be(request.DefaultOptionId);
-            command.Operation.ToString().Should().Be(request.Operation?.ToString());
+            command.DefaultOptionId.Should().Be(request.DefaultOptionId);
+            (command.Operation?.ToString()).Should().Be(request.Operation?.ToString());
             AssertUpdateSingleSelectOptionCommand(command.NewOption, request.NewOption);
             command.OptionId.Should().Be(request.OptionId);
             command.OverOptionId.Should().Be(request.OverOptionId);
@@ -556,6 +628,21 @@ internal static partial class Utils
             command!.DefaultText.Should().Be(request.DefaultText);
         }
 
+        private static void AssertUpdateMultiSelectOptionCommand(
+            UpdateCustomFieldSetupCommand.MultiSelectCustomFieldSetupCommand.MultiSelectOptionCommand? command,
+            UpdateCustomFieldSetupRequest.MultiSelectCustomFieldSetupRequest.MultiSelectOptionRequest? request)
+        {
+            if (request is null)
+            {
+                command.Should().BeNull();
+                return;
+            }
+
+            command.Should().NotBeNull();
+            command.Color.Should().Be(request.Color);
+            command.Value.Should().Be(request.Value);
+        }
+
         private static void AssertUpdateSingleSelectOptionCommand(
             UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand.SingleSelectOptionCommand? command,
             UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest.SingleSelectOptionRequest? request)
@@ -567,7 +654,7 @@ internal static partial class Utils
             }
 
             command.Should().NotBeNull();
-            command!.Color.Should().Be(request.Color);
+            command.Color.Should().Be(request.Color);
             command.Value.Should().Be(request.Value);
         }
     }

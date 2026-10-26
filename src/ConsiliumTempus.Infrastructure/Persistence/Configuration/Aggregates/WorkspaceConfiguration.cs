@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConsiliumTempus.Infrastructure.Persistence.Configuration.Aggregates;
 
-public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceAggregate>
+internal sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceAggregate>
 {
     public void Configure(EntityTypeBuilder<WorkspaceAggregate> builder)
     {
@@ -52,7 +52,7 @@ public sealed class WorkspaceConfiguration : IEntityTypeConfiguration<WorkspaceA
     }
 }
 
-public sealed class WorkspaceInvitationConfiguration : IEntityTypeConfiguration<WorkspaceInvitation>
+internal sealed class WorkspaceInvitationConfiguration : IEntityTypeConfiguration<WorkspaceInvitation>
 {
     public void Configure(EntityTypeBuilder<WorkspaceInvitation> builder)
     {

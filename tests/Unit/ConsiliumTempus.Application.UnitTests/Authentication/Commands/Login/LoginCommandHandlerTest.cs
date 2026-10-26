@@ -67,7 +67,7 @@ public class LoginCommandHandlerTest
             .Do(rt => refreshToken = rt.Arg<RefreshToken>());
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _userRepository
@@ -111,7 +111,7 @@ public class LoginCommandHandlerTest
             .Returns(false);
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _userRepository
@@ -122,8 +122,15 @@ public class LoginCommandHandlerTest
             .VerifyPassword(
                 Arg.Is<string>(p => p == command.Password),
                 Arg.Is<string>(hp => hp == user.Credentials.Password));
-        _jwtTokenGenerator.DidNotReceive();
-        _refreshTokenRepository.DidNotReceive();
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GetJwtIdFromToken(Arg.Any<string>());
+        await _refreshTokenRepository
+            .DidNotReceive()
+            .Add(Arg.Any<RefreshToken>());
 
         outcome.ValidateError(Errors.Authentication.InvalidCredentials);
     }
@@ -139,15 +146,24 @@ public class LoginCommandHandlerTest
             .ReturnsNull();
 
         // Act
-        var outcome = await _uut.Handle(command, default);
+        var outcome = await _uut.Handle(command, CancellationToken.None);
 
         // Assert
         await _userRepository
             .Received(1)
             .GetByEmail(Arg.Is<string>(email => email == command.Email.ToLower()));
-        _scrambler.DidNotReceive();
-        _jwtTokenGenerator.DidNotReceive();
-        _refreshTokenRepository.DidNotReceive();
+        _scrambler
+            .DidNotReceive()
+            .VerifyPassword(Arg.Any<string>(), Arg.Any<string>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GetJwtIdFromToken(Arg.Any<string>());
+        await _refreshTokenRepository
+            .DidNotReceive()
+            .Add(Arg.Any<RefreshToken>());
 
         outcome.ValidateError(Errors.Authentication.InvalidCredentials);
     }
