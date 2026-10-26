@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Domain.Common.Errors;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -158,7 +159,7 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollaboratorsFromWorkspace_WhenWorkspaceIsNotFound_ShouldReturnEmpty()
+    public async Task GetCollaboratorsFromWorkspace_WhenWorkspaceIsNotFound_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollaboratorsFromWorkspaceRequest(
@@ -168,8 +169,6 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
         var outcome = await Client.Get($"api/workspaces/{request.Id}/collaborators");
 
         // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollaboratorsFromWorkspaceResponse>();
-        response!.Collaborators.Should().BeEmpty();
+        await outcome.ValidateError(Errors.Workspace.NotFound);
     }
 }

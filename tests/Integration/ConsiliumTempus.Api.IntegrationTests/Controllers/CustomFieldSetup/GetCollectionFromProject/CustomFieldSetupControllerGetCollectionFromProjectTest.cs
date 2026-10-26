@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Domain.Common.Errors;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromProject;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -35,7 +36,7 @@ public class CustomFieldSetupControllerGetCollectionFromProjectTest(WebAppFactor
 
     [Fact]
     public async Task
-        GetCollectionCustomFieldSetupFromProject_WhenProjectIsNotFound_ShouldReturnEmptyCustomFieldSetups()
+        GetCollectionCustomFieldSetupFromProject_WhenProjectIsNotFound_ShouldReturnProjectNotFoundError()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateGetCollectionCustomFieldSetupFromProjectRequest(
@@ -45,8 +46,6 @@ public class CustomFieldSetupControllerGetCollectionFromProjectTest(WebAppFactor
         var outcome = await Client.Get($"api/customFieldSetups/project/{request.ProjectId}");
 
         // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionCustomFieldSetupFromProjectResponse>();
-        response!.CustomFieldSetups.Should().BeEmpty();
+        await outcome.ValidateError(Errors.Project.NotFound);
     }
 }

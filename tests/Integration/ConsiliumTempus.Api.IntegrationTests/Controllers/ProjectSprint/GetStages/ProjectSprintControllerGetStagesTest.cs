@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Domain.Common.Errors;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetStages;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -34,7 +35,7 @@ public class ProjectSprintControllerGetStagesTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetStagesFromProjectSprint_WhenIsNotFound_ShouldReturnEmptyStages()
+    public async Task GetStagesFromProjectSprint_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetStagesFromProjectSprintRequest(
@@ -44,8 +45,6 @@ public class ProjectSprintControllerGetStagesTest(WebAppFactory factory)
         var outcome = await Client.Get($"api/projects/sprints/{request.Id}/stages");
 
         // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetStagesFromProjectSprintResponse>();
-        response!.Stages.Should().BeEmpty();
+        await outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }
 }
