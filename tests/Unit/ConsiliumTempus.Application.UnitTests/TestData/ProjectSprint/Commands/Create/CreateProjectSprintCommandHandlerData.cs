@@ -22,6 +22,11 @@ internal static class CreateProjectSprintCommandHandlerData
 
             command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
                 keepPreviousStages: true);
+            project = ProjectFactory.CreateWithSprints(sprintEndDate: new DateOnly(2024, 10, 13));
+            Add(command, project);
+
+            command = ProjectSprintCommandFactory.CreateCreateProjectSprintCommand(
+                keepPreviousStages: true);
             project = ProjectFactory.Create();
             Add(command, project);
 
