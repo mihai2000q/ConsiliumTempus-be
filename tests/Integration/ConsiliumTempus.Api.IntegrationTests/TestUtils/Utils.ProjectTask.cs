@@ -183,7 +183,7 @@ internal static partial class Utils
 
             // changed
             newTask.Name.Value.Should().Be(request.Name);
-            newTask.Assignee?.Id.Value.Should().Be(request.AssigneeId!.Value);
+            (newTask.Assignee?.Id.Value).Should().Be(request.AssigneeId);
             newTask.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             newTask.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
