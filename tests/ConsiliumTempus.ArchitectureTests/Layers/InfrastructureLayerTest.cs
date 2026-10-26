@@ -1,6 +1,9 @@
 using ConsiliumTempus.ArchitectureTests.Core;
 using ConsiliumTempus.ArchitectureTests.TestUtils;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Infrastructure.Persistence.Database;
+using ConsiliumTempus.Infrastructure.Security.Authentication;
+using ConsiliumTempus.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -8,6 +11,14 @@ namespace ConsiliumTempus.ArchitectureTests.Layers;
 
 public class InfrastructureLayerTest : BaseArchitectureTest
 {
+    // The only types (besides the interceptors) that are used outside of the layer, everything else must be internal
+    private static readonly Type[] PublicTypes =
+    [
+        typeof(DependencyInjection),
+        typeof(ConsiliumTempusDbContext),
+        typeof(JwtSettings)
+    ];
+
     [Fact]
     public void Infrastructure_Should_NotHaveDependencyOnApi()
     {
@@ -128,6 +139,50 @@ public class InfrastructureLayerTest : BaseArchitectureTest
             .ResideInNamespace("ConsiliumTempus.Infrastructure.Extensions")
             .Should()
             .HaveNameEndingWith("Extensions")
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void Types_ShouldBeInternal_ExceptTheOnesUsedOutsideOfTheLayer()
+    {
+        ArchRuleDefinition
+            .Types()
+            .That()
+            .Are(InfrastructureLayer)
+            .And()
+            .AreNotNested()
+            .And()
+            .DoNotResideInNamespace("ConsiliumTempus.Infrastructure.Migrations")
+            .And()
+            .AreNot(PublicTypes)
+            .And()
+            .AreNotAssignableTo(typeof(IInterceptor))
+            .Should()
+            .BeInternal()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void TypesUsedOutsideOfTheLayer_ShouldBePublic()
+    {
+        ArchRuleDefinition
+            .Types()
+            .That()
+            .Are(PublicTypes)
+            .Should()
+            .BePublic()
+            .Check(Architecture);
+    }
+
+    [Fact]
+    public void Interceptors_ShouldBePublic()
+    {
+        ArchRuleDefinition
+            .Classes()
+            .That()
+            .AreAssignableTo(typeof(IInterceptor))
+            .Should()
+            .BePublic()
             .Check(Architecture);
     }
 }
