@@ -1,10 +1,12 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Delete;
+using ConsiliumTempus.Application.UnitTests.TestData.CustomFieldSetup.Commands.Delete;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.CustomFieldSetup.Commands.Delete;
@@ -24,13 +26,14 @@ public class DeleteCustomFieldSetupCommandHandlerTest
 
     #endregion
 
-    [Fact]
-    public async Task HandleDeleteCustomFieldSetupCommand_WhenSuccessful_ShouldDeleteAndReturnSuccessResult()
+    [Theory]
+    [ClassData(typeof(DeleteCustomFieldSetupCommandHandlerData.GetCustomFieldSetups))]
+    public async Task HandleDeleteCustomFieldSetupCommand_WhenSuccessful_ShouldDeleteAndReturnSuccessResult(
+        CustomFieldSetupAggregate customFieldSetup)
     {
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateDeleteCustomFieldSetupCommand();
 
-        var customFieldSetup = CustomFieldSetupFactory.CreateText();
         _customFieldSetupRepository
             .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
             .Returns(customFieldSetup);
