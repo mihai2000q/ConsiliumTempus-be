@@ -17,11 +17,13 @@ internal sealed class UserHasFavoriteWorkspaceConfiguration : IEntityTypeConfigu
         builder.HasKey(u => new { WorkspaceId = u.WorkspaceAggregateId, UserId = u.FavoritesId });
         builder.HasOne<WorkspaceAggregate>()
             .WithMany()
-            .HasForeignKey(u => u.WorkspaceAggregateId);
+            .HasForeignKey(u => u.WorkspaceAggregateId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<UserAggregate>()
             .WithMany()
-            .HasForeignKey(u => u.FavoritesId);
+            .HasForeignKey(u => u.FavoritesId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(u => u.WorkspaceAggregateId)
             .HasConversion(

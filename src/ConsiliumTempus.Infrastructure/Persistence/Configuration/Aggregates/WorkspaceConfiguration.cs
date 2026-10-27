@@ -36,8 +36,7 @@ internal sealed class WorkspaceConfiguration : IEntityTypeConfiguration<Workspac
             .HasColumnName(nameof(IsPersonal));
 
         builder.HasOne(w => w.Owner)
-            .WithMany()
-            .OnDelete(DeleteBehavior.NoAction);
+            .WithMany();
         builder.Navigation(w => w.Owner).AutoInclude();
 
         builder.HasMany(w => w.Favorites)
@@ -65,16 +64,15 @@ internal sealed class WorkspaceInvitationConfiguration : IEntityTypeConfiguratio
                 value => WorkspaceInvitationId.Create(value));
 
         builder.HasOne(i => i.Sender)
-            .WithMany()
-            .OnDelete(DeleteBehavior.NoAction);
+            .WithMany();
         builder.Navigation(i => i.Sender).AutoInclude();
 
         builder.HasOne(i => i.Collaborator)
-            .WithMany()
-            .OnDelete(DeleteBehavior.NoAction);
+            .WithMany();
         builder.Navigation(i => i.Collaborator).AutoInclude();
 
         builder.HasOne(i => i.Workspace)
-            .WithMany(w => w.Invitations);
+            .WithMany(w => w.Invitations)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

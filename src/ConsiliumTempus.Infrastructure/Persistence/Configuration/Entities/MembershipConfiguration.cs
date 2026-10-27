@@ -15,12 +15,14 @@ internal sealed class MembershipConfiguration : IEntityTypeConfiguration<Members
 
         builder.HasOne(m => m.User)
             .WithMany(u => u.Memberships)
-            .HasForeignKey(nameof(UserId));
+            .HasForeignKey(nameof(UserId))
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(m => m.User).AutoInclude();
 
         builder.HasOne(m => m.Workspace)
             .WithMany(w => w.Memberships)
-            .HasForeignKey(nameof(WorkspaceId));
+            .HasForeignKey(nameof(WorkspaceId))
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<WorkspaceRole>(m => m.WorkspaceRole)
             .WithMany()

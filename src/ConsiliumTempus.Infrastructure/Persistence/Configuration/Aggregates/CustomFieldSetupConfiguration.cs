@@ -4,6 +4,7 @@ using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -39,18 +40,25 @@ internal sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<C
         // through more than one cascade path (see the Custom Fields of the Project Task Configuration),
         // so the setups are deleted by the Workspace Deleted event
         builder.HasOne(cfs => cfs.Workspace)
-            .WithMany(w => w.CustomFieldSetups)
-            .OnDelete(DeleteBehavior.NoAction);
+            .WithMany(w => w.CustomFieldSetups);
 
         builder.HasMany(cfs => cfs.Projects)
             .WithMany(p => p.CustomFieldSetups)
-            .UsingEntity("ProjectHasCustomFieldSetup");
+            .UsingEntity(
+                "ProjectHasCustomFieldSetup",
+                r => r.HasOne(typeof(ProjectAggregate))
+                    .WithMany()
+                    .HasForeignKey(nameof(CustomFieldSetupAggregate.Projects).ToId())
+                    .OnDelete(DeleteBehavior.Cascade),
+                l => l.HasOne(typeof(CustomFieldSetupAggregate))
+                    .WithMany()
+                    .HasForeignKey(nameof(ProjectAggregate.CustomFieldSetups).ToId())
+                    .OnDelete(DeleteBehavior.Cascade));
 
         builder.HasOne(s => s.Audit)
             .WithOne()
             .HasForeignKey<CustomFieldSetupAggregate>()
-            .IsRequired()
-            .OnDelete(DeleteBehavior.NoAction);
+            .IsRequired();
         builder.Navigation(cfs => cfs.Audit).AutoInclude();
     }
 }
@@ -104,7 +112,8 @@ internal sealed class
         builder.HasMany(m => m.Options)
             .WithOne()
             .HasForeignKey("SetupId")
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(m => m.Options).AutoInclude();
     }
 }
@@ -161,7 +170,8 @@ internal sealed class
         builder.HasMany(s => s.Options)
             .WithOne()
             .HasForeignKey("SetupId")
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(s => s.Options).AutoInclude();
 
         // Circular Dependency if foreign key

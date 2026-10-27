@@ -17,11 +17,13 @@ internal sealed class UserHasFavoriteProjectConfiguration : IEntityTypeConfigura
         builder.HasKey(u => new { ProjectId = u.ProjectAggregateId, UserId = u.FavoritesId });
         builder.HasOne<ProjectAggregate>()
             .WithMany()
-            .HasForeignKey(u => u.ProjectAggregateId);
+            .HasForeignKey(u => u.ProjectAggregateId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<UserAggregate>()
             .WithMany()
-            .HasForeignKey(u => u.FavoritesId);
+            .HasForeignKey(u => u.FavoritesId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(u => u.ProjectAggregateId)
             .HasConversion(

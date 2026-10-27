@@ -47,20 +47,18 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
 
         builder.HasOne(t => t.CreatedBy)
             .WithMany()
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.NoAction);
+            .IsRequired(false);
 
         builder.HasOne(t => t.Assignee)
-            .WithMany()
-            .OnDelete(DeleteBehavior.NoAction);
+            .WithMany();
         builder.Navigation(t => t.Assignee).AutoInclude();
 
         builder.HasOne(t => t.Reviewer)
-            .WithMany()
-            .OnDelete(DeleteBehavior.NoAction);
+            .WithMany();
 
         builder.HasOne(t => t.Stage)
-            .WithMany(s => s.Tasks);
+            .WithMany(s => s.Tasks)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.OwnsMany(t => t.Comments, ConfigureComments);
         builder.Navigation(t => t.Comments).AutoInclude(false);
@@ -90,8 +88,7 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
 
         builder.HasOne(c => c.CreatedBy)
             .WithMany()
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.NoAction);
+            .IsRequired(false);
 
         builder.HasOne(c => c.Task)
             .WithMany(t => t.Comments);
@@ -125,7 +122,8 @@ internal sealed class DateCustomFieldConfiguration : IEntityTypeConfiguration<Da
         builder.Property(d => d.Date);
 
         builder.HasOne(d => d.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(d => d.Setup).AutoInclude();
     }
 }
@@ -140,7 +138,8 @@ internal sealed class DateTimeCustomFieldConfiguration : IEntityTypeConfiguratio
         builder.Property(d => d.DateTime);
 
         builder.HasOne(d => d.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(d => d.Setup).AutoInclude();
     }
 }
@@ -156,7 +155,8 @@ internal sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguratio
             .HasConversion<long>();
 
         builder.HasOne(d => d.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(d => d.Setup).AutoInclude();
     }
 }
@@ -174,7 +174,8 @@ internal sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfigura
         builder.Navigation(m => m.Options).AutoInclude();
 
         builder.HasOne(m => m.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(m => m.Setup).AutoInclude();
     }
 }
@@ -192,7 +193,8 @@ internal sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<
             .HasPrecision(38, PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum);
 
         builder.HasOne(n => n.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(n => n.Setup).AutoInclude();
     }
 }
@@ -210,7 +212,8 @@ internal sealed class PeopleCustomFieldConfiguration : IEntityTypeConfiguration<
         builder.Navigation(p => p.Person).AutoInclude();
 
         builder.HasOne(p => p.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(p => p.Setup).AutoInclude();
     }
 }
@@ -227,7 +230,8 @@ internal sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfigur
         builder.Navigation(s => s.Option).AutoInclude();
 
         builder.HasOne(s => s.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(s => s.Setup).AutoInclude();
     }
 }
@@ -244,7 +248,8 @@ internal sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<Te
             .HasColumnName(nameof(TextCustomField.Text));
 
         builder.HasOne(t => t.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(t => t.Setup).AutoInclude();
     }
 }
@@ -259,7 +264,8 @@ internal sealed class TimeCustomFieldConfiguration : IEntityTypeConfiguration<Ti
         builder.Property(t => t.Time);
 
         builder.HasOne(t => t.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(t => t.Setup).AutoInclude();
     }
 }

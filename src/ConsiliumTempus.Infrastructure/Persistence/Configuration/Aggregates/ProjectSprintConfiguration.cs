@@ -27,7 +27,8 @@ internal sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Proj
             .HasMaxLength(PropertiesValidation.ProjectSprint.NameMaximumLength);
 
         builder.HasOne(s => s.Project)
-            .WithMany(p => p.Sprints);
+            .WithMany(p => p.Sprints)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(s => s.Stages)
             .WithOne(s => s.Sprint);
@@ -35,8 +36,7 @@ internal sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Proj
         builder.HasOne(s => s.Audit)
             .WithOne()
             .HasForeignKey<ProjectSprintAggregate>()
-            .IsRequired()
-            .OnDelete(DeleteBehavior.NoAction);
+            .IsRequired();
         builder.Navigation(s => s.Audit).AutoInclude();
     }
 }
@@ -63,7 +63,8 @@ internal sealed class ProjectStageConfiguration : IEntityTypeConfiguration<Proje
             .HasColumnName(nameof(CustomOrderPosition));
 
         builder.HasOne(s => s.Sprint)
-            .WithMany(ps => ps.Stages);
+            .WithMany(ps => ps.Stages)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(s => s.Tasks)
             .WithOne(s => s.Stage);
@@ -71,8 +72,7 @@ internal sealed class ProjectStageConfiguration : IEntityTypeConfiguration<Proje
         builder.HasOne(s => s.Audit)
             .WithOne()
             .HasForeignKey<ProjectStage>()
-            .IsRequired()
-            .OnDelete(DeleteBehavior.NoAction);
+            .IsRequired();
         builder.Navigation(s => s.Audit).AutoInclude();
     }
 }

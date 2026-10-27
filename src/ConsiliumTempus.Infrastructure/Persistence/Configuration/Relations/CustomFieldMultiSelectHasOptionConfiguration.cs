@@ -1,6 +1,8 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Relations;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
+using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,10 +20,14 @@ internal sealed class
             .WithMany()
             .HasForeignKey(c => c.MultiSelectCustomFieldId);*/
 
+        builder.HasOne<MultiSelectCustomField>()
+            .WithMany()
+            .HasForeignKey(nameof(MultiSelectCustomField).ToId())
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.HasOne<MultiSelectOption>()
             .WithMany()
-            .HasForeignKey(c => c.OptionsId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .HasForeignKey(c => c.OptionsId);
 
         /*builder.Property(c => c.MultiSelectCustomFieldId)
             .HasConversion(

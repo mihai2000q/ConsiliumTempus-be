@@ -36,12 +36,12 @@ internal sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAgg
             .HasColumnName(nameof(IsPrivate));
 
         builder.HasOne(p => p.Owner)
-            .WithMany()
-            .OnDelete(DeleteBehavior.NoAction);
+            .WithMany();
         builder.Navigation(p => p.Owner).AutoInclude();
 
         builder.HasOne(p => p.Workspace)
-            .WithMany(w => w.Projects);
+            .WithMany(w => w.Projects)
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(p => p.Workspace).AutoInclude();
 
         builder.HasMany(p => p.Statuses)
@@ -79,7 +79,8 @@ internal sealed class ProjectStatusConfiguration : IEntityTypeConfiguration<Proj
             .HasColumnName(nameof(Description));
 
         builder.HasOne(s => s.Project)
-            .WithMany(t => t.Statuses);
+            .WithMany(t => t.Statuses)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(s => s.Audit)
             .WithMany();

@@ -17,11 +17,13 @@ internal sealed class ProjectHasAllowedMemberConfiguration : IEntityTypeConfigur
         builder.HasKey(p => new { p.ProjectAggregateId, p.AllowedMembersId });
         builder.HasOne<ProjectAggregate>()
             .WithMany()
-            .HasForeignKey(p => p.ProjectAggregateId);
+            .HasForeignKey(p => p.ProjectAggregateId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<UserAggregate>()
             .WithMany()
-            .HasForeignKey(p => p.AllowedMembersId);
+            .HasForeignKey(p => p.AllowedMembersId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(p => p.ProjectAggregateId)
             .HasConversion(
