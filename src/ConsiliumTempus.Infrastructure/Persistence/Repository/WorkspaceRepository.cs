@@ -86,6 +86,17 @@ internal sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : 
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<UserAggregate?> GetCollaborator(
+        UserId id,
+        WorkspaceId workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Set<Membership>()
+            .Where(m => m.User.Id == id && m.Workspace.Id == workspaceId)
+            .Select(m => m.User)
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<List<Membership>> GetCollaborators(
         WorkspaceId id,
         string? searchValue,

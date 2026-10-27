@@ -39,6 +39,11 @@ public interface IWorkspaceRepository
 
     Task<List<WorkspaceAggregate>> GetListByOwner(UserId userId, CancellationToken cancellationToken = default);
 
+    Task<UserAggregate?> GetCollaborator(
+        UserId id,
+        WorkspaceId workspaceId,
+        CancellationToken cancellationToken = default);
+
     Task<List<Membership>> GetCollaborators(
         WorkspaceId id,
         string? searchValue,
