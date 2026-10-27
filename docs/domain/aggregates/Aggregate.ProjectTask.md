@@ -63,7 +63,6 @@ For database design checkout the [Project Task Diagram](../../database-diagrams/
 - **Project Task Created**, when the task is created, 
 it should also initialize all the custom fields with their default values, 
 based on the setups from the project
-- **Project Task Deleted**, when the task is deleted, it should also delete all the custom fields
 
 ### Value Objects
 
