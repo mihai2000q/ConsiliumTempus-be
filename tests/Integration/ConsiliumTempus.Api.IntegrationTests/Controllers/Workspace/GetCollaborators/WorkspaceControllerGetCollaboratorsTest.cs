@@ -127,7 +127,44 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
         Utils.Workspace.AssertGetCollaboratorsResponse(
             response!,
             expectedCollaborators,
-            workspace.Memberships.Count);
+            expectedCollaborators.Count);
+    }
+
+    [Fact]
+    public async Task
+        GetCollaboratorsFromWorkspace_WhenRequestHasSearchAndPagination_ShouldReturnTheTotalCountOfTheFilteredCollaborators()
+    {
+        // Arrange
+        var workspace = WorkspaceData.Workspaces.First();
+        var request = WorkspaceRequestFactory.CreateGetCollaboratorsFromWorkspaceRequest(
+            id: workspace.Id.Value,
+            pageSize: 1,
+            currentPage: 1,
+            orderBy: ["user_email.asc"],
+            search: ["workspace_role_name neq View"]);
+
+        // Act
+        Client.UseCustomToken(WorkspaceData.Users.First());
+        var outcome = await Client.Get($"api/workspaces/{request.Id}/collaborators" +
+                                       $"?{request.Search!.ToSearchQueryParam()}" +
+                                       $"&{request.OrderBy!.ToOrderByQueryParam()}" +
+                                       $"&currentPage={request.CurrentPage}&pageSize={request.PageSize}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollaboratorsFromWorkspaceResponse>();
+
+        var filteredCollaborators = workspace.Memberships
+            .Where(m => m.WorkspaceRole.Name != "View")
+            .OrderBy(m => m.User.Credentials.Email)
+            .ToList();
+        filteredCollaborators.Should().HaveCountLessThan(workspace.Memberships.Count);
+
+        Utils.Workspace.AssertGetCollaboratorsResponse(
+            response!,
+            [.. filteredCollaborators.Take(1)],
+            filteredCollaborators.Count,
+            true);
     }
 
     [Fact]

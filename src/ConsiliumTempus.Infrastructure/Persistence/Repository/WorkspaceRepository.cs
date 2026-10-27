@@ -131,6 +131,7 @@ internal sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : 
                 m =>
                     m.User.Credentials.Email.Contains(searchValue!) ||
                     (m.User.FirstName.Value + " " + m.User.LastName.Value).Contains(searchValue!))
+            .ApplyFilters(filters)
             .CountAsync(cancellationToken);
     }
 
