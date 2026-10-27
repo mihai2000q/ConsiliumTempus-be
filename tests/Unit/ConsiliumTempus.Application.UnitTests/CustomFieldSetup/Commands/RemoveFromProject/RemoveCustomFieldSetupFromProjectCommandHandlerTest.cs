@@ -69,6 +69,41 @@ public class RemoveCustomFieldSetupFromProjectCommandHandlerTest
 
     [Fact]
     public async Task
+        HandleRemoveCustomFieldSetupFromProjectCommand_WhenProjectIsNotInCustomFieldSetup_ShouldReturnProjectNotFoundError()
+    {
+        // Arrange
+        var command = CustomFieldSetupCommandFactory.CreateRemoveCustomFieldSetupFromProjectCommand();
+
+        var customFieldSetup = CustomFieldSetupFactory.CreateText(
+            workspace: WorkspaceFactory.Create(),
+            project: ProjectFactory.Create());
+        _customFieldSetupRepository
+            .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
+            .Returns(customFieldSetup);
+
+        var project = ProjectFactory.Create();
+        _projectRepository
+            .Get(Arg.Any<ProjectId>())
+            .Returns(project);
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _customFieldSetupRepository
+            .Received(1)
+            .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
+
+        await _projectRepository
+            .Received(1)
+            .Get(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
+
+        outcome.ValidateError(Errors.Project.NotFound);
+        customFieldSetup.Projects.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public async Task
         HandleRemoveCustomFieldSetupFromProjectCommand_WhenProjectIsNull_ShouldReturnProjectNotFoundError()
     {
         // Arrange

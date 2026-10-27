@@ -510,6 +510,9 @@ Only **Admin** users of the workspace can remove a custom field setup from a pro
 When the project is private, only allowed members can remove the custom field setup from it
 ([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
 
+The project must be one of the projects of the custom field setup,
+otherwise the project is treated as not found.
+
 ```js
 DELETE {{host}}/api/customFieldSetups/{id}/from-project/{projectId}
 ```

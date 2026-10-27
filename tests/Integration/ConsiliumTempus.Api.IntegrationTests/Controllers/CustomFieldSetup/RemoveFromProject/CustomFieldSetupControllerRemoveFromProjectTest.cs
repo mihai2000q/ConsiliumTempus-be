@@ -82,6 +82,36 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
     }
 
     [Fact]
+    public async Task
+        RemoveCustomFieldSetupFromProject_WhenProjectIsNotInCustomFieldSetup_ShouldReturnProjectNotFoundError()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
+        var project = CustomFieldSetupData.Projects[^3];
+        var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest(
+            customFieldSetup.Id.Value,
+            project.Id.Value);
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Delete("api/customFieldSetups/" +
+                                          $"{request.Id}/From-Project/{request.ProjectId}");
+
+        // Assert
+        await outcome.ValidateError(Errors.Project.NotFound);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.CustomFieldSetups
+            .Include(cfs => cfs.Projects)
+            .Single(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id))
+            .Projects.Should().HaveSameCount(customFieldSetup.Projects);
+        dbContext.Projects
+            .Single(p => p.Id == ProjectId.Create(request.ProjectId))
+            .LastActivity.Should().BeCloseTo(project.LastActivity, TimeSpan.FromSeconds(1));
+    }
+
+    [Fact]
     public async Task RemoveCustomFieldSetupFromProject_WhenIsNotGlobal_ShouldReturnNotGlobalError()
     {
         // Arrange

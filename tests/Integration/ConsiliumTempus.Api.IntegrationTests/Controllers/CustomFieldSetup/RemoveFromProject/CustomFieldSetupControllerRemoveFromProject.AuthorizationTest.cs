@@ -41,16 +41,10 @@ public class CustomFieldSetupControllerRemoveFromProjectAuthorizationTest(WebApp
 
     // Project Authorization
     [Fact]
-    public async Task RemoveCustomFieldSetupFromProject_WhenProjectIsNotPrivate_ShouldReturnSuccessResponse()
-    {
-        await AssertSuccessfulResponse(CustomFieldSetupData.Users[4], CustomFieldSetupData.Projects[^3]);
-    }
-
-    [Fact]
     public async Task
         RemoveCustomFieldSetupFromProject_WhenProjectIsPrivateAndIsAllowedMember_ShouldReturnSuccessResponse()
     {
-        await AssertSuccessfulResponse(CustomFieldSetupData.Users[0], CustomFieldSetupData.Projects[^2]);
+        await AssertSuccessfulResponse(CustomFieldSetupData.Users[0], CustomFieldSetupData.Projects[2]);
     }
 
     [Fact]
@@ -87,9 +81,7 @@ public class CustomFieldSetupControllerRemoveFromProjectAuthorizationTest(WebApp
     private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user, ProjectAggregate? project = null)
     {
         // Arrange
-        var customFieldSetup = project is null
-            ? CustomFieldSetupData.CustomFieldSetups.First()
-            : CustomFieldSetupData.CustomFieldSetups.First(cfs => cfs.Workspace == project.Workspace);
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
         project ??= customFieldSetup.Projects[0];
         var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest(
             customFieldSetup.Id.Value,

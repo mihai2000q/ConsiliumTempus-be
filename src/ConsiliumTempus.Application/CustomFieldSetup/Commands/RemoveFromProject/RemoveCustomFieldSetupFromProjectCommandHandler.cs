@@ -23,7 +23,7 @@ internal sealed class RemoveCustomFieldSetupFromProjectCommandHandler(
         if (customFieldSetup.Workspace is null) return Errors.CustomFieldSetup.NotGlobal;
 
         var project = await projectRepository.Get(ProjectId.Create(command.ProjectId), cancellationToken);
-        if (project is null) return Errors.Project.NotFound;
+        if (project is null || !customFieldSetup.Projects.Contains(project)) return Errors.Project.NotFound;
 
         customFieldSetup.RemoveProject(project);
         customFieldSetup.Workspace.RefreshActivity();
