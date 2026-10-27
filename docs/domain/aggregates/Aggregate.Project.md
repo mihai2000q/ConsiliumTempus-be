@@ -69,7 +69,7 @@ For database design checkout the [Project Diagram](../../database-diagrams/aggre
 it also makes sure that the user does not keep the project on favorites
 - **Project Created** when the project gets created, 
 it will also create a sprint, with its stages and a few tasks, as an example for the user. 
-- **Project Deleted** when the project is deleted, it will also delete all local custom field setups and all custom fields
+- **Project Deleted** when the project is deleted, it will also delete all local custom field setups
 
 ### Filters
 
