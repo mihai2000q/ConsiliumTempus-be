@@ -4,14 +4,11 @@ using MediatR;
 
 namespace ConsiliumTempus.Application.Project.Events;
 
-internal sealed class ProjectDeletedHandler(
-    ICustomFieldSetupRepository customFieldSetupRepository,
-    IProjectTaskRepository projectTaskRepository)
+internal sealed class ProjectDeletedHandler(ICustomFieldSetupRepository customFieldSetupRepository)
     : INotificationHandler<ProjectDeleted>
 {
     public async Task Handle(ProjectDeleted notification, CancellationToken cancellationToken)
     {
-        await projectTaskRepository.DeleteCustomFieldsByProject(notification.Project, cancellationToken);
         await customFieldSetupRepository.DeleteByProject(notification.Project, cancellationToken);
     }
 }
