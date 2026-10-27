@@ -29,6 +29,10 @@ public static partial class Errors
         public static Error KickOwner => Error.Forbidden(
             "Workspace.KickOwner",
             "You cannot kick the owner of the workspace");
+
+        public static Error ChangeOwnerRole => Error.Forbidden(
+            "Workspace.ChangeOwnerRole",
+            "You cannot change the role of the owner of the workspace");
     }
 
     public static class WorkspaceInvitation

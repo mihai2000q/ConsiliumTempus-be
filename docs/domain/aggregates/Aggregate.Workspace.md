@@ -61,6 +61,7 @@ For database design checkout the [Workspace Diagram](../../database-diagrams/agg
 - **Collaborator Not Found** (`Workspace.CollaboratorNotFound`, 404) when the collaborator cannot be found within the workspace
 - **Kick Yourself** (`Workspace.KickYourself`, 409) when the user tries to kick themselves from the workspace
 - **Kick Owner** (`Workspace.KickOwner`, 403) when the user tries to kick the owner of the workspace
+- **Change Owner Role** (`Workspace.ChangeOwnerRole`, 403) when the user tries to change the role of the owner of the workspace
 
 ### Domain Events
 
