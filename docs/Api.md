@@ -129,7 +129,8 @@ The endpoints that return collections can accept the following query parameters:
 - **search** to filter the collection, with the format `{property} {operator} {value}`, separated by whitespaces
   (i.e., `search=name ct sprint`)
 - **orderBy** to order the collection, with the format `{property}.{asc|desc}` (i.e., `orderBy=name.desc`)
-- **pageSize** and **currentPage** to paginate the collection (the response also returns a **totalCount**)
+- **pageSize** and **currentPage** to paginate the collection (the response also returns a **totalCount**,
+  which counts all the items that match the **search**, not only the ones from the current page)
 
 **search** and **orderBy** can be repeated to use multiple filters or orders,
 i.e., `orderBy=name.desc&orderBy=updated_date_time.asc`.
