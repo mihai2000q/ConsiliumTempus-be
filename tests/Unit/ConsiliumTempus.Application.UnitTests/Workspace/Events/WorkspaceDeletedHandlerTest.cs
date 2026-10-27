@@ -12,23 +12,21 @@ public class WorkspaceDeletedHandlerTest
     #region Setup
 
     private readonly IProjectRepository _projectRepository;
-    private readonly IProjectTaskRepository _projectTaskRepository;
     private readonly ICustomFieldSetupRepository _customFieldSetupRepository;
     private readonly WorkspaceDeletedHandler _uut;
 
     public WorkspaceDeletedHandlerTest()
     {
         _projectRepository = Substitute.For<IProjectRepository>();
-        _projectTaskRepository = Substitute.For<IProjectTaskRepository>();
         _customFieldSetupRepository = Substitute.For<ICustomFieldSetupRepository>();
-        _uut = new WorkspaceDeletedHandler(_projectRepository, _projectTaskRepository, _customFieldSetupRepository);
+        _uut = new WorkspaceDeletedHandler(_projectRepository, _customFieldSetupRepository);
     }
 
     #endregion
 
     [Fact]
     public async Task
-        HandleWorkspaceDeleted_WhenSuccessful_ShouldRemoveCustomFieldsFromWorkspaceAndCustomFieldSetupsRelatedToWorkspaceOrProjects()
+        HandleWorkspaceDeleted_WhenSuccessful_ShouldRemoveCustomFieldSetupsRelatedToWorkspaceOrProjects()
     {
         // Arrange
         var domainEvent = new WorkspaceDeleted(WorkspaceFactory.Create());
@@ -42,15 +40,12 @@ public class WorkspaceDeletedHandlerTest
         await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
-        await _projectTaskRepository
-            .Received(1)
-            .DeleteCustomFieldsByWorkspace(Arg.Is(domainEvent.Workspace));
-
         await _projectRepository
             .Received(1)
             .GetListByWorkspace(Arg.Is(domainEvent.Workspace.Id));
 
         await _customFieldSetupRepository
+            .Received(1)
             .DeleteByWorkspaceOrProjects(Arg.Is(domainEvent.Workspace), Arg.Is(projects));
     }
 }
