@@ -21,6 +21,7 @@ internal sealed class UpdateCollaboratorFromWorkspaceCommandHandler(IWorkspaceRe
         var collaboratorMembership = workspace.Memberships
             .SingleOrDefault(m => m.User.Id.Value == command.CollaboratorId);
         if (collaboratorMembership is null) return Errors.Workspace.CollaboratorNotFound;
+        if (collaboratorMembership.User == workspace.Owner) return Errors.Workspace.ChangeOwnerRole;
 
         var workspaceRole = WorkspaceRole.FromName(command.WorkspaceRole.Capitalize())!;
         collaboratorMembership.Update(workspaceRole);
