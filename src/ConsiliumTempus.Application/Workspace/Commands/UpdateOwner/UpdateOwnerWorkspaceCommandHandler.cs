@@ -15,6 +15,7 @@ internal sealed class UpdateOwnerWorkspaceCommandHandler(IWorkspaceRepository wo
     {
         var workspace = await workspaceRepository.GetWithCollaborators(WorkspaceId.Create(command.Id), cancellationToken);
         if (workspace is null) return Errors.Workspace.NotFound;
+        if (workspace.IsPersonal.Value) return Errors.Workspace.UpdatePersonalWorkspaceOwner;
 
         var ownerMembership = workspace.Memberships
             .SingleOrDefault(m => m.User.Id.Value == command.OwnerId);

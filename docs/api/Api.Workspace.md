@@ -482,6 +482,9 @@ Only workspace owners can update the owner
 
 The new owner becomes an **Admin** of the workspace, if they are not one already (the owner is always an **Admin**).
 
+The owner of a personal workspace cannot be changed
+(every user keeps their [personal workspace](../domain/aggregates/Aggregate.Workspace.md#value-objects)).
+
 ```js
 PUT {{host}}/api/workspaces/owner
 ```

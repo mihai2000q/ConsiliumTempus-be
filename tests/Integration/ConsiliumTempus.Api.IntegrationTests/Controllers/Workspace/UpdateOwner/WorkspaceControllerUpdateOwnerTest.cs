@@ -48,6 +48,31 @@ public class WorkspaceControllerUpdateOwnerTest(WebAppFactory factory)
     }
 
     [Fact]
+    public async Task UpdateOwnerWorkspace_WhenWorkspaceIsPersonal_ShouldReturnUpdatePersonalWorkspaceOwnerError()
+    {
+        // Arrange
+        var workspace = WorkspaceData.Workspaces[2];
+        workspace.IsPersonal.Value.Should().BeTrue();
+        var request = WorkspaceRequestFactory.CreateUpdateOwnerWorkspaceRequest(
+            workspace.Id.Value,
+            WorkspaceData.Users[3].Id.Value);
+
+        // Act
+        Client.UseCustomToken(workspace.Owner);
+        var outcome = await Client.Put("api/workspaces/Owner", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.Workspace.UpdatePersonalWorkspaceOwner);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Workspaces
+            .AsNoTracking()
+            .Include(w => w.Owner)
+            .Single(w => w.Id == workspace.Id)
+            .Owner.Id.Should().Be(workspace.Owner.Id);
+    }
+
+    [Fact]
     public async Task UpdateOwnerWorkspace_WhenCollaboratorIsNotFound_ShouldReturnCollaboratorNotFoundError()
     {
         // Arrange

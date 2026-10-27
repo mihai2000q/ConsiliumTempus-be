@@ -58,6 +58,7 @@ For database design checkout the [Workspace Diagram](../../database-diagrams/agg
 - **Not Found** (`Workspace.NotFound`, 404) when the workspace cannot be found
 - **Delete Personal Workspace** (`Workspace.DeletePersonalWorkspace`, 409) when the workspace is personal, it cannot be deleted (not even by their owner)
 - **Leave Owned** (`Workspace.LeaveOwned`, 409) when the workspace cannot be left by their owner
+- **Update Personal Workspace Owner** (`Workspace.UpdatePersonalWorkspaceOwner`, 409) when the owner of a personal workspace tries to give up the ownership
 - **Collaborator Not Found** (`Workspace.CollaboratorNotFound`, 404) when the collaborator cannot be found within the workspace
 - **Kick Yourself** (`Workspace.KickYourself`, 409) when the user tries to kick themselves from the workspace
 - **Kick Owner** (`Workspace.KickOwner`, 403) when the user tries to kick the owner of the workspace

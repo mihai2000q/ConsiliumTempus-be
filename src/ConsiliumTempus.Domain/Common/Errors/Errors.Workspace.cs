@@ -18,6 +18,10 @@ public static partial class Errors
             "Workspace.LeaveOwned",
             "Workspaces cannot be left by their owners");
 
+        public static Error UpdatePersonalWorkspaceOwner => Error.Conflict(
+            "Workspace.UpdatePersonalWorkspaceOwner",
+            "The owner of Personal Workspaces cannot be changed");
+
         public static Error CollaboratorNotFound => Error.NotFound(
             "Workspace.CollaboratorNotFound",
             "Collaborator could not be found inside workspace");
