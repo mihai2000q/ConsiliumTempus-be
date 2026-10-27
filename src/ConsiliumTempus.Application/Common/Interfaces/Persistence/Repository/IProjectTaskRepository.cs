@@ -50,20 +50,8 @@ public interface IProjectTaskRepository
         MultiSelectCustomFieldSetupAggregate customFieldSetup,
         CancellationToken cancellationToken = default);
 
-    Task DeleteCustomFieldsByWorkspace(
-        WorkspaceAggregate workspace,
-        CancellationToken cancellationToken = default);
-
-    Task DeleteCustomFieldsByProject(
-        ProjectAggregate project,
-        CancellationToken cancellationToken = default);
-
     Task DeleteCustomFieldsByProjectAndSetup(
         CustomFieldSetupAggregate customFieldSetup,
         ProjectAggregate project,
-        CancellationToken cancellationToken = default);
-
-    Task DeleteCustomFieldsByTask(
-        ProjectTaskId id,
         CancellationToken cancellationToken = default);
 }
