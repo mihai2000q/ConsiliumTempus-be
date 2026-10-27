@@ -31,8 +31,9 @@ public class UpdateOwnerProjectCommandHandlerTest
         var workspace = WorkspaceFactory.CreateWithCollaborators();
         var collaborator = workspace.Memberships[1].User;
         var project = ProjectFactory.Create(workspace: workspace);
+        project.AddAllowedMember(collaborator);
         _projectRepository
-            .GetWithCollaborators(Arg.Any<ProjectId>())
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Any<ProjectId>())
             .Returns(project);
 
         var command = ProjectCommandFactory.CreateUpdateOwnerProjectCommand(
@@ -45,12 +46,66 @@ public class UpdateOwnerProjectCommandHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithCollaborators(Arg.Is<ProjectId>(id => id.Value == command.Id));
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(id => id.Value == command.Id));
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateOwnerProjectResult());
 
         Utils.Project.AssertFromUpdateOwnerCommand(project, command);
+    }
+
+    [Fact]
+    public async Task
+        HandleUpdateOwnerProjectCommand_WhenProjectIsPrivateAndCollaboratorIsNotAllowedMember_ShouldReturnAllowedMemberNotFoundError()
+    {
+        // Arrange
+        var workspace = WorkspaceFactory.CreateWithCollaborators();
+        var collaborator = workspace.Memberships[1].User;
+        var project = ProjectFactory.Create(isPrivate: true, workspace: workspace);
+        var owner = project.Owner;
+        _projectRepository
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Any<ProjectId>())
+            .Returns(project);
+
+        var command = ProjectCommandFactory.CreateUpdateOwnerProjectCommand(
+            project.Id.Value,
+            collaborator.Id.Value);
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _projectRepository
+            .Received(1)
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(id => id.Value == command.Id));
+
+        outcome.ValidateError(Errors.Project.AllowedMemberNotFound);
+        project.Owner.Should().Be(owner);
+    }
+
+    [Fact]
+    public async Task HandleUpdateOwnerProjectCommand_WhenProjectIsNotPrivateAndCollaboratorIsNotAllowedMember_ShouldUpdateOwner()
+    {
+        // Arrange
+        var workspace = WorkspaceFactory.CreateWithCollaborators();
+        var collaborator = workspace.Memberships[1].User;
+        var project = ProjectFactory.Create(isPrivate: false, workspace: workspace);
+        project.AllowedMembers.Should().NotContain(collaborator);
+        _projectRepository
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Any<ProjectId>())
+            .Returns(project);
+
+        var command = ProjectCommandFactory.CreateUpdateOwnerProjectCommand(
+            project.Id.Value,
+            collaborator.Id.Value);
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        outcome.IsError.Should().BeFalse();
+        outcome.Value.Should().Be(new UpdateOwnerProjectResult());
+        project.Owner.Should().Be(collaborator);
     }
 
     [Fact]
@@ -61,7 +116,7 @@ public class UpdateOwnerProjectCommandHandlerTest
         var project = ProjectFactory.Create(workspace: workspace);
         var owner = project.Owner;
         _projectRepository
-            .GetWithCollaborators(Arg.Any<ProjectId>())
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Any<ProjectId>())
             .Returns(project);
 
         var command = ProjectCommandFactory.CreateUpdateOwnerProjectCommand(project.Id.Value);
@@ -72,7 +127,7 @@ public class UpdateOwnerProjectCommandHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithCollaborators(Arg.Is<ProjectId>(id => id.Value == command.Id));
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.Workspace.CollaboratorNotFound);
         project.Owner.Should().Be(owner);
@@ -85,7 +140,7 @@ public class UpdateOwnerProjectCommandHandlerTest
         var command = ProjectCommandFactory.CreateUpdateOwnerProjectCommand();
 
         _projectRepository
-            .GetWithCollaborators(Arg.Any<ProjectId>())
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Any<ProjectId>())
             .ReturnsNull();
 
         // Act
@@ -94,7 +149,7 @@ public class UpdateOwnerProjectCommandHandlerTest
         // Assert
         await _projectRepository
             .Received(1)
-            .GetWithCollaborators(Arg.Is<ProjectId>(id => id.Value == command.Id));
+            .GetWithCollaboratorsAndAllowedMembers(Arg.Is<ProjectId>(id => id.Value == command.Id));
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

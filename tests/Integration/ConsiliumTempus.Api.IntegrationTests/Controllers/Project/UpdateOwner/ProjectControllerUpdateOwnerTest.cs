@@ -43,6 +43,59 @@ public class ProjectControllerUpdateOwnerTest(WebAppFactory factory)
     }
 
     [Fact]
+    public async Task UpdateOwnerProject_WhenProjectIsPrivateAndCollaboratorIsNotAllowedMember_ShouldReturnAllowedMemberNotFoundError()
+    {
+        // Arrange
+        var collaborator = ProjectData.Users[4];
+        var project = ProjectData.Projects[^2];
+        project.IsPrivate.Value.Should().BeTrue();
+        project.AllowedMembers.Should().NotContain(collaborator);
+        var request = ProjectRequestFactory.CreateUpdateOwnerProjectRequest(
+            project.Id.Value,
+            collaborator.Id.Value);
+
+        // Act
+        Client.UseCustomToken(project.Owner);
+        var outcome = await Client.Put("api/projects/Owner", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.Project.AllowedMemberNotFound);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        var storedProject = await dbContext.Projects
+            .Include(p => p.AllowedMembers)
+            .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
+        storedProject.Owner.Id.Should().Be(project.Owner.Id);
+        storedProject.AllowedMembers.Should().HaveSameCount(project.AllowedMembers);
+    }
+
+    [Fact]
+    public async Task UpdateOwnerProject_WhenProjectIsNotPrivateAndCollaboratorIsNotAllowedMember_ShouldUpdateOwner()
+    {
+        // Arrange
+        var collaborator = ProjectData.Users[3];
+        var project = ProjectData.Projects[4];
+        project.IsPrivate.Value.Should().BeFalse();
+        project.AllowedMembers.Should().NotContain(collaborator);
+        var request = ProjectRequestFactory.CreateUpdateOwnerProjectRequest(
+            project.Id.Value,
+            collaborator.Id.Value);
+
+        // Act
+        Client.UseCustomToken(project.Owner);
+        var outcome = await Client.Put("api/projects/Owner", request);
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        var updatedProject = await dbContext.Projects
+            .Include(p => p.Workspace)
+            .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
+        Utils.Project.AssertUpdateOwner(updatedProject, request);
+    }
+
+    [Fact]
     public async Task UpdateOwnerProject_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange

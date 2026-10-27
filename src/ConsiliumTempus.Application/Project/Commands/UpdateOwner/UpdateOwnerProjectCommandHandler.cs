@@ -12,13 +12,17 @@ internal sealed class UpdateOwnerProjectCommandHandler(IProjectRepository projec
     public async Task<ErrorOr<UpdateOwnerProjectResult>> Handle(UpdateOwnerProjectCommand command,
         CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetWithCollaborators(ProjectId.Create(command.Id), cancellationToken);
+        var project = await projectRepository.GetWithCollaboratorsAndAllowedMembers(
+            ProjectId.Create(command.Id),
+            cancellationToken);
         if (project is null) return Errors.Project.NotFound;
 
         var collaborator = project.Workspace.Memberships
             .SingleOrDefault(m => m.User.Id.Value == command.OwnerId)
             ?.User;
         if (collaborator is null) return Errors.Workspace.CollaboratorNotFound;
+        if (project.IsPrivate.Value && !project.AllowedMembers.Contains(collaborator))
+            return Errors.Project.AllowedMemberNotFound;
 
         project.UpdateOwner(collaborator);
 
