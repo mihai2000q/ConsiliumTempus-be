@@ -10,7 +10,7 @@ namespace ConsiliumTempus.Application.ProjectTask.Commands.Update;
 
 internal sealed class UpdateProjectTaskCommandHandler(
     IProjectTaskRepository projectTaskRepository,
-    IUserRepository userRepository)
+    IWorkspaceRepository workspaceRepository)
     : IRequestHandler<UpdateProjectTaskCommand, ErrorOr<UpdateProjectTaskResult>>
 {
     public async Task<ErrorOr<UpdateProjectTaskResult>> Handle(UpdateProjectTaskCommand command,
@@ -22,8 +22,12 @@ internal sealed class UpdateProjectTaskCommandHandler(
         if (task is null) return Errors.ProjectTask.NotFound;
 
         var assignee = command.AssigneeId is not null
-            ? await userRepository.Get(UserId.Create(command.AssigneeId.Value), cancellationToken)
+            ? await workspaceRepository.GetCollaborator(
+                UserId.Create(command.AssigneeId.Value),
+                task.Stage.Sprint.Project.Workspace.Id,
+                cancellationToken)
             : null;
+        if (command.AssigneeId is not null && assignee is null) return Errors.User.NotFound;
 
         task.Update(
             Name.Create(command.Name),

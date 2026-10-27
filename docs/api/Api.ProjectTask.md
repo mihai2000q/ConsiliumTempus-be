@@ -276,6 +276,8 @@ PUT {{host}}/api/projects/tasks
 #### Update Project Task Request
 
 Sends body data that the project task needs to be updated.
+The assignee must be a collaborator of the workspace of the task, otherwise the user is treated as not found
+(`User.NotFound`, instead of clearing the assignee).
 
 ```json
 {
@@ -368,6 +370,8 @@ PUT {{host}}/api/projects/tasks/overview
 #### Update Overview Project Task Request
 
 Sends body data that the project overview needs to be updated.
+The assignee must be a collaborator of the workspace of the task, otherwise the user is treated as not found
+(`User.NotFound`, instead of clearing the assignee).
 
 ```json
 {

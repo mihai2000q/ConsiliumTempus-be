@@ -56,6 +56,42 @@ public class ProjectTaskControllerUpdateOverviewTest(WebAppFactory factory)
     }
 
     [Fact]
+    public async Task UpdateOverviewProjectTask_WhenAssigneeIsNotCollaborator_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var task = ProjectTaskData.ProjectTasks.First();
+        var request = ProjectTaskRequestFactory.CreateUpdateOverviewProjectTaskRequest(
+            task.Id.Value,
+            assigneeId: ProjectTaskData.Users[1].Id.Value);
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Put("api/projects/tasks/overview", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.User.NotFound);
+        await AssertAssigneeIsUnchanged(task);
+    }
+
+    [Fact]
+    public async Task UpdateOverviewProjectTask_WhenAssigneeIsNotFound_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var task = ProjectTaskData.ProjectTasks.First();
+        var request = ProjectTaskRequestFactory.CreateUpdateOverviewProjectTaskRequest(
+            task.Id.Value,
+            assigneeId: Guid.NewGuid());
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Put("api/projects/tasks/overview", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.User.NotFound);
+        await AssertAssigneeIsUnchanged(task);
+    }
+
+    [Fact]
     public async Task UpdateOverviewProjectTask_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
@@ -86,5 +122,15 @@ public class ProjectTaskControllerUpdateOverviewTest(WebAppFactory factory)
             .Include(t => t.Stage.Tasks)
             .SingleAsync(t => t.Name.Value == request.Name);
         Utils.ProjectTask.AssertUpdatedOverview(updatedTask, task, request);
+    }
+
+    private async Task AssertAssigneeIsUnchanged(ProjectTaskAggregate task)
+    {
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.ProjectTasks
+            .AsNoTracking()
+            .Include(t => t.Assignee)
+            .Single(t => t.Id == task.Id)
+            .Assignee.Should().Be(task.Assignee);
     }
 }

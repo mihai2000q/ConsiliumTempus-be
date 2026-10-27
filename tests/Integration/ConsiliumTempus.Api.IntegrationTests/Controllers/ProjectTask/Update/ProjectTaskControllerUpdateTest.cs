@@ -56,6 +56,42 @@ public class ProjectTaskControllerUpdateTest(WebAppFactory factory)
     }
 
     [Fact]
+    public async Task UpdateProjectTask_WhenAssigneeIsNotCollaborator_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var task = ProjectTaskData.ProjectTasks.First();
+        var request = ProjectTaskRequestFactory.CreateUpdateProjectTaskRequest(
+            task.Id.Value,
+            assigneeId: ProjectTaskData.Users[1].Id.Value);
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Put("api/projects/tasks", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.User.NotFound);
+        await AssertAssigneeIsUnchanged(task);
+    }
+
+    [Fact]
+    public async Task UpdateProjectTask_WhenAssigneeIsNotFound_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var task = ProjectTaskData.ProjectTasks.First();
+        var request = ProjectTaskRequestFactory.CreateUpdateProjectTaskRequest(
+            task.Id.Value,
+            assigneeId: Guid.NewGuid());
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Put("api/projects/tasks", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.User.NotFound);
+        await AssertAssigneeIsUnchanged(task);
+    }
+
+    [Fact]
     public async Task UpdateProjectTask_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
@@ -85,5 +121,15 @@ public class ProjectTaskControllerUpdateTest(WebAppFactory factory)
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .SingleAsync(t => t.Id == ProjectTaskId.Create(request.Id));
         Utils.ProjectTask.AssertUpdated(updatedTask, task, request);
+    }
+
+    private async Task AssertAssigneeIsUnchanged(ProjectTaskAggregate task)
+    {
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.ProjectTasks
+            .AsNoTracking()
+            .Include(t => t.Assignee)
+            .Single(t => t.Id == task.Id)
+            .Assignee.Should().Be(task.Assignee);
     }
 }
