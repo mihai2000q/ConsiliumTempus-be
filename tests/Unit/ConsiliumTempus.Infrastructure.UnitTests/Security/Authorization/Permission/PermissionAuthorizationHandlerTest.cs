@@ -1,4 +1,7 @@
-﻿using System.Security.Claims;
+﻿using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
+using ErrorOr;
+using System.Security.Claims;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
@@ -250,7 +253,39 @@ public class PermissionAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
-    public async Task PermissionAuthorizationHandler_WhenWorkspaceIsNull_ShouldSucceed(
+    public async Task PermissionAuthorizationHandler_WhenRequestIdIsEmptyGuid_ShouldSucceed(
+        Permissions permission,
+        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        string? id,
+        PermissionAuthorizationHandlerData.StringIdType _1)
+    {
+        // Arrange
+        var requirements = new[] { new PermissionRequirement(permission) };
+        var user = new ClaimsPrincipal();
+        user.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, user, null);
+
+        var stringId = Guid.Empty.ToString();
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+
+        // Act
+        await _uut.HandleAsync(context);
+
+        // Assert
+        _ = _httpContextAccessor
+            .Received(2)
+            .HttpContext;
+        await VerifyWorkspaceProviderDidNotReceiveAny();
+        await _permissionProvider.DidNotReceive().GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
+
+        context.HasSucceeded.Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
+    public async Task PermissionAuthorizationHandler_WhenWorkspaceIsNull_ShouldFailAsNotFound(
         Permissions permission,
         PermissionAuthorizationHandlerData.RequestLocation requestLocation,
         string? id,
@@ -277,7 +312,10 @@ public class PermissionAuthorizationHandlerTest
         await Utils.Authorization.Permission.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
         await _permissionProvider.DidNotReceive().GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
 
-        context.HasSucceeded.Should().BeTrue();
+        context.HasSucceeded.Should().BeFalse();
+        context.HasFailed.Should().BeTrue();
+        context.FailureReasons.OfType<NotFoundAuthorizationFailureReason>().Should().ContainSingle()
+            .Which.Error.Should().Be(GetNotFoundError(provider));
     }
 
     [Theory]
@@ -322,6 +360,54 @@ public class PermissionAuthorizationHandlerTest
                 Arg.Is<WorkspaceId>(wId => wId == workspace.Id));
 
         context.HasSucceeded.Should().BeFalse();
+        context.FailureReasons.Should().BeEmpty(); // the user knows that the workspace exists
+    }
+
+    [Theory]
+    [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
+    public async Task PermissionAuthorizationHandler_WhenTheyAreNotCollaborators_ShouldFailAsNotFound(
+        Permissions permission,
+        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        string? id,
+        PermissionAuthorizationHandlerData.StringIdType provider)
+    {
+        // Arrange
+        var requirements = new[] { new PermissionRequirement(permission) };
+        var userId = Guid.NewGuid().ToString();
+        var user = new ClaimsPrincipal();
+        user.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, userId)
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, user, null);
+
+        var stringId = Guid.NewGuid().ToString();
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+
+        var workspace = WorkspaceFactory.Create();
+        Utils.Authorization.Permission.MockWorkspaceProvider(_workspaceProvider, workspace);
+
+        _permissionProvider
+            .GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>())
+            .ReturnsNull();
+
+        // Act
+        await _uut.HandleAsync(context);
+
+        // Assert
+        _ = _httpContextAccessor
+            .Received(2)
+            .HttpContext;
+        await Utils.Authorization.Permission.VerifyWorkspaceProvider(_workspaceProvider, provider, stringId);
+        await _permissionProvider
+            .Received(1)
+            .GetPermissions(
+                Arg.Is<UserId>(uId => uId.Value.ToString() == userId),
+                Arg.Is<WorkspaceId>(wId => wId == workspace.Id));
+
+        context.HasSucceeded.Should().BeFalse();
+        context.HasFailed.Should().BeTrue();
+        context.FailureReasons.OfType<NotFoundAuthorizationFailureReason>().Should().ContainSingle()
+            .Which.Error.Should().Be(GetNotFoundError(provider));
     }
 
     [Theory]
@@ -369,6 +455,7 @@ public class PermissionAuthorizationHandlerTest
                 Arg.Is<WorkspaceId>(wId => wId == workspace.Id));
 
         context.HasSucceeded.Should().BeFalse();
+        context.FailureReasons.Should().BeEmpty(); // the user knows that the workspace exists
     }
 
     [Theory]
@@ -413,5 +500,19 @@ public class PermissionAuthorizationHandlerTest
                 Arg.Is<WorkspaceId>(wId => wId == workspace.Id));
 
         context.HasSucceeded.Should().BeTrue();
+    }
+
+    private static Error GetNotFoundError(PermissionAuthorizationHandlerData.StringIdType stringIdType)
+    {
+        return stringIdType switch
+        {
+            PermissionAuthorizationHandlerData.StringIdType.CustomFieldSetup => Errors.CustomFieldSetup.NotFound,
+            PermissionAuthorizationHandlerData.StringIdType.Project => Errors.Project.NotFound,
+            PermissionAuthorizationHandlerData.StringIdType.ProjectSprint => Errors.ProjectSprint.NotFound,
+            PermissionAuthorizationHandlerData.StringIdType.ProjectStage => Errors.ProjectStage.NotFound,
+            PermissionAuthorizationHandlerData.StringIdType.ProjectTask => Errors.ProjectTask.NotFound,
+            PermissionAuthorizationHandlerData.StringIdType.Workspace => Errors.Workspace.NotFound,
+            _ => throw new ArgumentOutOfRangeException(nameof(stringIdType))
+        };
     }
 }
