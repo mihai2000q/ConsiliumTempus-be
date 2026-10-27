@@ -71,12 +71,13 @@ public class AddCustomFieldSetupToProjectCommandHandlerTest
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateAddCustomFieldSetupToProjectCommand();
 
-        var customFieldSetup = CustomFieldSetupFactory.CreateText(workspace: WorkspaceFactory.Create());
+        var workspace = WorkspaceFactory.Create();
+        var customFieldSetup = CustomFieldSetupFactory.CreateText(workspace: workspace);
         _customFieldSetupRepository
             .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
             .Returns(customFieldSetup);
 
-        var project = ProjectFactory.Create();
+        var project = ProjectFactory.Create(workspace: workspace);
         _projectRepository
             .Get(Arg.Any<ProjectId>())
             .Returns(project);

@@ -22,9 +22,8 @@ internal sealed class AddCustomFieldSetupToProjectCommandHandler(
         if (customFieldSetup.Workspace is null) return Errors.CustomFieldSetup.NotGlobal;
 
         var project = await projectRepository.Get(ProjectId.Create(command.ProjectId), cancellationToken);
-        if (project is null) return Errors.Project.NotFound;
+        if (project is null || project.Workspace.Id != customFieldSetup.Workspace.Id) return Errors.Project.NotFound;
         if (customFieldSetup.Projects.Contains(project)) return Errors.CustomFieldSetup.ProjectAlreadyPresent;
-        if (project.Workspace.Id != customFieldSetup.Workspace.Id) return Errors.Project.NotFound;
 
         customFieldSetup.AddProject(project);
         customFieldSetup.Workspace.RefreshActivity();

@@ -61,9 +61,10 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
         AddCustomFieldSetupToProject_WhenProjectIsAlreadyPresent_ShouldReturnCustomFieldSetupProjectAlreadyPresentError()
     {
         // Arrange
-        var user = CustomFieldSetupData.Users.First();
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
-        var project = CustomFieldSetupData.Projects[2];
+        var user = CustomFieldSetupData.Users[3];
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups
+            .First(cfs => cfs.Workspace == CustomFieldSetupData.Workspaces[2]);
+        var project = customFieldSetup.Projects[0];
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
             customFieldSetup.Id.Value,
             project.Id.Value);
