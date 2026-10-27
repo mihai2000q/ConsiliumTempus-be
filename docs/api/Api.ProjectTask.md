@@ -400,6 +400,8 @@ DELETE {{host}}/api/projects/tasks/{id}/from/{stageId}
 #### Delete Project Task Request
 
 Sends the id of the task and the stage inside the route request.
+The task must be inside that stage, otherwise it is treated as not found
+(the stage is not checked on its own, so it is not revealed whether it exists).
 
 #### Delete Project Task Response
 

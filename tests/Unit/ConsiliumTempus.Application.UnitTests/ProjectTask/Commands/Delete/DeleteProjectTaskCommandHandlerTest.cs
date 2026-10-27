@@ -75,7 +75,7 @@ public class DeleteProjectTaskCommandHandlerTest
     }
 
     [Fact]
-    public async Task HandleDeleteProjectTaskCommand_WhenProjectStageIsNull_ShouldReturnProjectStageNotFoundError()
+    public async Task HandleDeleteProjectTaskCommand_WhenProjectStageIsNull_ShouldReturnProjectTaskNotFoundError()
     {
         // Arrange
         var command = ProjectTaskCommandFactory.CreateDeleteProjectTaskCommand();
@@ -92,6 +92,6 @@ public class DeleteProjectTaskCommandHandlerTest
             .Received(1)
             .GetStageWithTasksAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.StageId));
 
-        outcome.ValidateError(Errors.ProjectStage.NotFound);
+        outcome.ValidateError(Errors.ProjectTask.NotFound);
     }
 }

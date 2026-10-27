@@ -16,7 +16,7 @@ internal sealed class DeleteProjectTaskCommandHandler(IProjectSprintRepository p
         var stage = await projectSprintRepository.GetStageWithTasksAndWorkspace(
             ProjectStageId.Create(command.StageId),
             cancellationToken);
-        if (stage is null) return Errors.ProjectStage.NotFound;
+        if (stage is null) return Errors.ProjectTask.NotFound; // the stage is not authorized, so it is not revealed
 
         var task = stage.Tasks.SingleOrDefault(t => t.Id.Value == command.Id);
         if (task is null) return Errors.ProjectTask.NotFound;
