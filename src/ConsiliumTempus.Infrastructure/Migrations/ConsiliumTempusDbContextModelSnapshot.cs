@@ -25,7 +25,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.Authentication.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
@@ -46,7 +47,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Audit", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -72,10 +74,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Membership", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid>("WorkspaceId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
@@ -99,7 +103,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.MultiSelectOption", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<string>("Color")
                         .IsRequired()
@@ -124,7 +129,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Permission", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -405,7 +411,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.SingleSelectOption", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<string>("Color")
                         .IsRequired()
@@ -431,7 +438,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .HasColumnType("int")
-                        .HasColumnOrder(0);
+                        .HasColumnOrder(0)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -471,15 +479,16 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     b.Property<Guid>("MultiSelectCustomFieldId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("CustomFieldId");
+                        .HasColumnName("CustomFieldId")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                    b.Property<Guid>("OptionsId")
+                    b.Property<Guid>("OptionId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("OptionId");
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                    b.HasKey("MultiSelectCustomFieldId", "OptionsId");
+                    b.HasKey("MultiSelectCustomFieldId", "OptionId");
 
-                    b.HasIndex("OptionsId");
+                    b.HasIndex("OptionId");
 
                     b.ToTable("CustomField_MultiSelectHasOption", (string)null);
                 });
@@ -488,11 +497,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     b.Property<Guid>("ProjectAggregateId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("ProjectId");
+                        .HasColumnName("ProjectId")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid>("AllowedMembersId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("UserId");
+                        .HasColumnName("UserId")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.HasKey("ProjectAggregateId", "AllowedMembersId");
 
@@ -505,11 +516,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     b.Property<Guid>("ProjectAggregateId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("ProjectId");
+                        .HasColumnName("ProjectId")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid>("FavoritesId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("UserId");
+                        .HasColumnName("UserId")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.HasKey("ProjectAggregateId", "FavoritesId");
 
@@ -522,11 +535,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     b.Property<Guid>("WorkspaceAggregateId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("WorkspaceId");
+                        .HasColumnName("WorkspaceId")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid>("FavoritesId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("UserId");
+                        .HasColumnName("UserId")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.HasKey("WorkspaceAggregateId", "FavoritesId");
 
@@ -538,10 +553,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.WorkspaceRoleHasPermission", b =>
                 {
                     b.Property<int>("WorkspaceRoleId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<int>("PermissionId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.HasKey("WorkspaceRoleId", "PermissionId");
 
@@ -1050,7 +1067,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid>("AuditId")
                         .HasColumnType("uniqueidentifier");
@@ -1076,15 +1094,16 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasIndex("WorkspaceId");
 
-                    b.ToTable((string)null);
+                    b.ToTable("CustomFieldSetup", (string)null);
 
-                    b.UseTpcMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectStatus", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid>("AuditId")
                         .HasColumnType("uniqueidentifier");
@@ -1107,7 +1126,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.ProjectAggregate", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
@@ -1139,7 +1159,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectSprint.Entities.ProjectStage", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid>("AuditId")
                         .HasColumnType("uniqueidentifier");
@@ -1160,7 +1181,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectSprint.ProjectSprintAggregate", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid>("AuditId")
                         .HasColumnType("uniqueidentifier");
@@ -1187,7 +1209,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.CustomField", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid>("ProjectTaskId")
                         .HasColumnType("uniqueidentifier");
@@ -1204,12 +1227,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.ProjectTaskAggregate", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid?>("AssigneeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CreatedById")
+                    b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -1246,7 +1270,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.User.UserAggregate", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
@@ -1265,7 +1290,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.Workspace.Entities.WorkspaceInvitation", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid>("CollaboratorId")
                         .HasColumnType("uniqueidentifier");
@@ -1293,7 +1319,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
@@ -1317,10 +1344,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
             modelBuilder.Entity("ProjectHasCustomFieldSetup", b =>
                 {
                     b.Property<Guid>("CustomFieldSetupsId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<Guid>("ProjectsId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.HasKey("CustomFieldSetupsId", "ProjectsId");
 
@@ -1548,7 +1577,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsMany("ConsiliumTempus.Domain.Authentication.RefreshTokenHistory", "History", b1 =>
                         {
                             b1.Property<Guid>("Id")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<DateTime>("CreatedDateTime")
                                 .HasColumnType("datetime2");
@@ -1568,7 +1598,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.OwnsOne("ConsiliumTempus.Domain.Authentication.ValueObjects.JwtId", "JwtId", b2 =>
                                 {
                                     b2.Property<Guid>("RefreshTokenHistoryId")
-                                        .HasColumnType("uniqueidentifier");
+                                        .HasColumnType("uniqueidentifier")
+                                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                                     b2.Property<Guid>("Value")
                                         .HasColumnType("uniqueidentifier")
@@ -1591,7 +1622,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Authentication.ValueObjects.IsInvalidated", "IsInvalidated", b1 =>
                         {
                             b1.Property<Guid>("RefreshTokenId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<bool>("Value")
                                 .HasColumnType("bit")
@@ -1618,12 +1650,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreatedBy");
 
@@ -1647,7 +1679,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.Common.Entities.WorkspaceRole", "WorkspaceRole")
                         .WithMany()
                         .HasForeignKey("_workspaceRoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1668,7 +1700,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.CustomOrderPosition", "CustomOrderPosition", b1 =>
                         {
                             b1.Property<Guid>("MultiSelectOptionId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<int>("Value")
                                 .HasColumnType("int")
@@ -1697,7 +1730,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.CustomOrderPosition", "CustomOrderPosition", b1 =>
                         {
                             b1.Property<Guid>("SingleSelectOptionId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<int>("Value")
                                 .HasColumnType("int")
@@ -1725,8 +1759,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasOne("ConsiliumTempus.Domain.Common.Entities.MultiSelectOption", null)
                         .WithMany()
-                        .HasForeignKey("OptionsId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasForeignKey("OptionId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -1795,13 +1829,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
                         .WithOne()
                         .HasForeignKey("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", "AuditId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", "Workspace")
                         .WithMany("CustomFieldSetups")
                         .HasForeignKey("WorkspaceId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Audit");
 
@@ -1813,7 +1847,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
                         .WithMany()
                         .HasForeignKey("AuditId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")
@@ -1825,7 +1859,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Title", "Title", b1 =>
                         {
                             b1.Property<Guid>("ProjectStatusId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -1844,7 +1879,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b1 =>
                         {
                             b1.Property<Guid>("ProjectStatusId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -1875,7 +1911,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", "Workspace")
@@ -1887,7 +1923,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.IsPrivate", "IsPrivate", b1 =>
                         {
                             b1.Property<Guid>("ProjectAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<bool>("Value")
                                 .HasColumnType("bit")
@@ -1904,7 +1941,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b1 =>
                         {
                             b1.Property<Guid>("ProjectAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -1922,7 +1960,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Name", "Name", b1 =>
                         {
                             b1.Property<Guid>("ProjectAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -1957,7 +1996,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
                         .WithOne()
                         .HasForeignKey("ConsiliumTempus.Domain.ProjectSprint.Entities.ProjectStage", "AuditId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ConsiliumTempus.Domain.ProjectSprint.ProjectSprintAggregate", "Sprint")
@@ -1969,7 +2008,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.CustomOrderPosition", "CustomOrderPosition", b1 =>
                         {
                             b1.Property<Guid>("ProjectStageId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<int>("Value")
                                 .HasColumnType("int")
@@ -1986,7 +2026,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Name", "Name", b1 =>
                         {
                             b1.Property<Guid>("ProjectStageId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -2018,7 +2059,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
                         .WithOne()
                         .HasForeignKey("ConsiliumTempus.Domain.ProjectSprint.ProjectSprintAggregate", "AuditId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")
@@ -2030,7 +2071,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Name", "Name", b1 =>
                         {
                             b1.Property<Guid>("ProjectSprintAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -2069,17 +2111,18 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Assignee")
                         .WithMany()
-                        .HasForeignKey("AssigneeId");
+                        .HasForeignKey("AssigneeId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Reviewer")
                         .WithMany()
-                        .HasForeignKey("ReviewerId");
+                        .HasForeignKey("ReviewerId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ConsiliumTempus.Domain.ProjectSprint.Entities.ProjectStage", "Stage")
                         .WithMany("Tasks")
@@ -2090,7 +2133,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.CustomOrderPosition", "CustomOrderPosition", b1 =>
                         {
                             b1.Property<Guid>("ProjectTaskAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<int>("Value")
                                 .HasColumnType("int")
@@ -2107,7 +2151,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b1 =>
                         {
                             b1.Property<Guid>("ProjectTaskAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -2125,7 +2170,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Name", "Name", b1 =>
                         {
                             b1.Property<Guid>("ProjectTaskAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -2144,7 +2190,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.ProjectTask.ValueObjects.IsCompleted", "IsCompleted", b1 =>
                         {
                             b1.Property<Guid>("ProjectTaskAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<DateTime?>("CompletedOn")
                                 .HasColumnType("datetime2")
@@ -2165,9 +2212,10 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsMany("ConsiliumTempus.Domain.ProjectTask.Entities.ProjectTaskComment", "Comments", b1 =>
                         {
                             b1.Property<Guid>("Id")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                            b1.Property<Guid>("CreatedById")
+                            b1.Property<Guid?>("CreatedById")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<DateTime>("CreatedDateTime")
@@ -2196,8 +2244,7 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
                                 .WithMany()
                                 .HasForeignKey("CreatedById")
-                                .OnDelete(DeleteBehavior.NoAction)
-                                .IsRequired();
+                                .OnDelete(DeleteBehavior.Restrict);
 
                             b1.WithOwner("Task")
                                 .HasForeignKey("TaskId");
@@ -2205,7 +2252,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Message", "Message", b2 =>
                                 {
                                     b2.Property<Guid>("ProjectTaskCommentId")
-                                        .HasColumnType("uniqueidentifier");
+                                        .HasColumnType("uniqueidentifier")
+                                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                                     b2.Property<string>("Value")
                                         .IsRequired()
@@ -2257,7 +2305,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.User.ValueObjects.Credentials", "Credentials", b1 =>
                         {
                             b1.Property<Guid>("UserAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Email")
                                 .IsRequired()
@@ -2284,7 +2333,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.User.ValueObjects.FirstName", "FirstName", b1 =>
                         {
                             b1.Property<Guid>("UserAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -2303,7 +2353,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.User.ValueObjects.LastName", "LastName", b1 =>
                         {
                             b1.Property<Guid>("UserAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -2322,7 +2373,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.User.ValueObjects.Role", "Role", b1 =>
                         {
                             b1.Property<Guid>("UserAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -2355,13 +2407,13 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Collaborator")
                         .WithMany()
                         .HasForeignKey("CollaboratorId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", "Workspace")
@@ -2382,13 +2434,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.OwnsOne("ConsiliumTempus.Domain.Workspace.ValueObjects.IsPersonal", "IsPersonal", b1 =>
                         {
                             b1.Property<Guid>("WorkspaceAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<bool>("Value")
                                 .HasColumnType("bit")
@@ -2405,7 +2458,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b1 =>
                         {
                             b1.Property<Guid>("WorkspaceAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -2423,7 +2477,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Name", "Name", b1 =>
                         {
                             b1.Property<Guid>("WorkspaceAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -2466,12 +2521,55 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.DateCustomFieldSetupAggregate", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
+                        .WithOne()
+                        .HasForeignKey("ConsiliumTempus.Domain.CustomFieldSetup.Variants.DateCustomFieldSetupAggregate", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.DateTimeCustomFieldSetupAggregate", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
+                        .WithOne()
+                        .HasForeignKey("ConsiliumTempus.Domain.CustomFieldSetup.Variants.DateTimeCustomFieldSetupAggregate", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.DurationCustomFieldSetupAggregate", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
+                        .WithOne()
+                        .HasForeignKey("ConsiliumTempus.Domain.CustomFieldSetup.Variants.DurationCustomFieldSetupAggregate", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.MultiSelectCustomFieldSetupAggregate", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
+                        .WithOne()
+                        .HasForeignKey("ConsiliumTempus.Domain.CustomFieldSetup.Variants.MultiSelectCustomFieldSetupAggregate", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.NumberCustomFieldSetupAggregate", b =>
                 {
+                    b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
+                        .WithOne()
+                        .HasForeignKey("ConsiliumTempus.Domain.CustomFieldSetup.Variants.NumberCustomFieldSetupAggregate", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects.NumberCustomFieldSettings", "Settings", b1 =>
                         {
                             b1.Property<Guid>("NumberCustomFieldSetupAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("CurrencyCode")
                                 .HasMaxLength(3)
@@ -2498,7 +2596,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.DecimalNumber", "DefaultNumber", b1 =>
                         {
                             b1.Property<Guid>("NumberCustomFieldSetupAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<decimal>("Value")
                                 .HasPrecision(38, 9)
@@ -2519,12 +2618,37 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.PeopleCustomFieldSetupAggregate", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
+                        .WithOne()
+                        .HasForeignKey("ConsiliumTempus.Domain.CustomFieldSetup.Variants.PeopleCustomFieldSetupAggregate", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.SingleSelectCustomFieldSetupAggregate", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
+                        .WithOne()
+                        .HasForeignKey("ConsiliumTempus.Domain.CustomFieldSetup.Variants.SingleSelectCustomFieldSetupAggregate", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.TextCustomFieldSetupAggregate", b =>
                 {
+                    b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
+                        .WithOne()
+                        .HasForeignKey("ConsiliumTempus.Domain.CustomFieldSetup.Variants.TextCustomFieldSetupAggregate", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Text", "DefaultText", b1 =>
                         {
                             b1.Property<Guid>("TextCustomFieldSetupAggregateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -2540,6 +2664,15 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         });
 
                     b.Navigation("DefaultText");
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.TimeCustomFieldSetupAggregate", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
+                        .WithOne()
+                        .HasForeignKey("ConsiliumTempus.Domain.CustomFieldSetup.Variants.TimeCustomFieldSetupAggregate", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectTask.Entities.DateCustomField", b =>
@@ -2597,7 +2730,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.DecimalNumber", "Number", b1 =>
                         {
                             b1.Property<Guid>("NumberCustomFieldId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<decimal>("Value")
                                 .HasPrecision(38, 9)
@@ -2621,7 +2755,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Person")
                         .WithMany()
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.Variants.PeopleCustomFieldSetupAggregate", "Setup")
                         .WithMany()
@@ -2638,7 +2773,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     b.HasOne("ConsiliumTempus.Domain.Common.Entities.SingleSelectOption", "Option")
                         .WithMany()
-                        .HasForeignKey("OptionId");
+                        .HasForeignKey("OptionId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.Variants.SingleSelectCustomFieldSetupAggregate", "Setup")
                         .WithMany()
@@ -2662,7 +2798,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Text", "Text", b1 =>
                         {
                             b1.Property<Guid>("TextCustomFieldId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                             b1.Property<string>("Value")
                                 .IsRequired()
