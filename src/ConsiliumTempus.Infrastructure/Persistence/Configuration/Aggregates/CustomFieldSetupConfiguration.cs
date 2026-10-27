@@ -5,6 +5,7 @@ using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -111,7 +112,7 @@ internal sealed class
 
         builder.HasMany(m => m.Options)
             .WithOne()
-            .HasForeignKey("SetupId")
+            .HasForeignKey(nameof(CustomField.Setup).ToId())
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(m => m.Options).AutoInclude();
@@ -169,7 +170,7 @@ internal sealed class
 
         builder.HasMany(s => s.Options)
             .WithOne()
-            .HasForeignKey("SetupId")
+            .HasForeignKey(nameof(CustomField.Setup).ToId())
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(s => s.Options).AutoInclude();
