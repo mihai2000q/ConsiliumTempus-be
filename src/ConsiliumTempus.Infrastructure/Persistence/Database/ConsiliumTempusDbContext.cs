@@ -6,6 +6,7 @@ using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Infrastructure.Extensions;
+using ConsiliumTempus.Infrastructure.Persistence.Configuration.Relations;
 using ConsiliumTempus.Infrastructure.Persistence.Conventions;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
@@ -35,9 +36,14 @@ public sealed class ConsiliumTempusDbContext(
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        var assembly = typeof(ConsiliumTempusDbContext).Assembly;
+        var relationsNamespace = typeof(CustomFieldMultiSelectHasOptionConfiguration).Namespace;
+
         modelBuilder
             .Ignore<List<IDomainEvent>>() // Don't save the list of domain events
-            .ApplyConfigurationsFromAssembly(typeof(ConsiliumTempusDbContext).Assembly);
+            // The joint entities go first, so that the many-to-many relationships find their foreign keys
+            .ApplyConfigurationsFromAssembly(assembly, t => t.Namespace == relationsNamespace)
+            .ApplyConfigurationsFromAssembly(assembly, t => t.Namespace != relationsNamespace);
 
         base.OnModelCreating(modelBuilder);
     }
