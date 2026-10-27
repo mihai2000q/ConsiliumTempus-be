@@ -7,7 +7,10 @@ using ConsiliumTempus.Infrastructure.Security.Authentication;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authentication;
 using ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
+using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 using Microsoft.Extensions.Options;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.Security.Authentication;
 
@@ -23,7 +26,7 @@ public class JwtTokenValidatorTest
     {
         _jwtSettings = new JwtSettings
         {
-            SecretKey = "This-Is-My-Secret-Duper-Key-And-I-Like-It",
+            SecretKey = JwtTokenValidatorData.SecretKey,
             Audience = "Audience",
             ExpiryMinutes = 7,
             Issuer = "Issuer"
@@ -102,6 +105,99 @@ public class JwtTokenValidatorTest
         await _userProvider
             .Received(1)
             .Get(Arg.Is<UserId>(uId => uId.Value == sub));
+
+        outcome.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ValidateAccessToken_WhenTokenIsExpired_ShouldReturnTrue()
+    {
+        // Arrange
+        var user = UserFactory.Create();
+        _userProvider
+            .Get(Arg.Any<UserId>())
+            .Returns(user);
+
+        var expiredSettings = new JwtSettings
+        {
+            SecretKey = _jwtSettings.SecretKey,
+            Audience = _jwtSettings.Audience,
+            Issuer = _jwtSettings.Issuer,
+            ExpiryMinutes = -30
+        };
+        var token = Utils.Token.GenerateToken(expiredSettings, user);
+
+        // Act
+        var outcome = await _uut.ValidateAccessToken(token);
+
+        // Assert
+        outcome.Should().BeTrue(); // the access token is refreshed after it expires
+    }
+
+    [Fact]
+    public async Task ValidateAccessToken_WhenSignedWithAnotherKey_ShouldReturnFalse()
+    {
+        // Arrange
+        var user = UserFactory.Create();
+        var otherSettings = new JwtSettings
+        {
+            SecretKey = "This-Is-Another-Secret-Key-That-Is-Not-The-Real-One",
+            Audience = _jwtSettings.Audience,
+            Issuer = _jwtSettings.Issuer,
+            ExpiryMinutes = _jwtSettings.ExpiryMinutes
+        };
+        var token = Utils.Token.GenerateToken(otherSettings, user);
+
+        // Act
+        var outcome = await _uut.ValidateAccessToken(token);
+
+        // Assert
+        await _userProvider.DidNotReceive().Get(Arg.Any<UserId>());
+
+        outcome.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ValidateAccessToken_WhenPayloadWasTampered_ShouldReturnFalse()
+    {
+        // Arrange
+        var user = UserFactory.Create();
+        var otherUser = UserFactory.Create("other@gmail.com");
+        var token = Utils.Token.GenerateToken(_jwtSettings, user);
+        var otherToken = Utils.Token.GenerateToken(_jwtSettings, otherUser);
+
+        var parts = token.Split('.');
+        var tamperedToken = $"{parts[0]}.{otherToken.Split('.')[1]}.{parts[2]}"; // payload of another token
+
+        // Act
+        var outcome = await _uut.ValidateAccessToken(tamperedToken);
+
+        // Assert
+        await _userProvider.DidNotReceive().Get(Arg.Any<UserId>());
+
+        outcome.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ValidateAccessToken_WhenTokenIsNotSigned_ShouldReturnFalse()
+    {
+        // Arrange
+        var user = UserFactory.Create();
+        var unsignedToken = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(
+            _jwtSettings.Issuer,
+            _jwtSettings.Audience,
+            [
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Credentials.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            ],
+            expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes)));
+
+        // Act
+        var outcome = await _uut.ValidateAccessToken(unsignedToken);
+
+        // Assert
+        await _userProvider.DidNotReceive().Get(Arg.Any<UserId>());
 
         outcome.Should().BeFalse();
     }

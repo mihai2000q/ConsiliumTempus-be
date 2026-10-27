@@ -12,6 +12,10 @@ namespace ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authenticat
 
 internal static class JwtTokenValidatorData
 {
+    // long enough to also sign with HS384 and HS512, so that each invalid token is invalid only because of its own reason
+    internal const string SecretKey =
+        "This-Is-My-Secret-Duper-Key-And-I-Like-It, This-Is-My-Secret-Duper-Key-And-I-Like-It";
+
     internal class GetInvalidRefreshTokens : TheoryData<RefreshToken>
     {
         public GetInvalidRefreshTokens()
@@ -28,7 +32,7 @@ internal static class JwtTokenValidatorData
     {
         private readonly JwtSettings _jwtSettings = new()
         {
-            SecretKey = "This-Is-My-Secret-Duper-Key-And-I-Like-It, This-Is-My-Secret-Duper-Key-And-I-Like-It",
+            SecretKey = SecretKey,
             Audience = "Audience",
             Issuer = "Issuer",
             ExpiryMinutes = 7
@@ -56,7 +60,7 @@ internal static class JwtTokenValidatorData
     {
         private readonly JwtSettings _jwtSettings = new()
         {
-            SecretKey = "This-Is-My-Secret-Duper-Key-And-I-Like-It",
+            SecretKey = SecretKey,
             Audience = "Audience",
             Issuer = "Issuer",
             ExpiryMinutes = 7
@@ -83,7 +87,7 @@ internal static class JwtTokenValidatorData
     {
         private readonly JwtSettings _jwtSettings = new()
         {
-            SecretKey = "This-Is-My-Secret-Duper-Key-And-I-Like-It",
+            SecretKey = SecretKey,
             Audience = "Audience",
             Issuer = "Issuer",
             ExpiryMinutes = 7

@@ -8,6 +8,7 @@ using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
+using System.Text;
 
 namespace ConsiliumTempus.Infrastructure.Security.Authentication;
 
@@ -24,12 +25,26 @@ internal sealed class JwtTokenValidator(
 
     public async Task<bool> ValidateAccessToken(string token)
     {
-        var jwtSecurityToken = ReadToken(token);
-        if (jwtSecurityToken is null) return false;
+        var validationParameters = new TokenValidationParameters
+        {
+            RequireSignedTokens = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
+            ValidAlgorithms = [SecurityAlgorithms.HmacSha256],
+            ValidateIssuer = true,
+            ValidIssuer = _jwtSettings.Issuer,
+            ValidateAudience = true,
+            AudienceValidator = (audiences, _, _) => audiences.SequenceEqual([_jwtSettings.Audience]),
+            ValidateLifetime = false // the access token is refreshed after it expires
+        };
 
-        if (jwtSecurityToken.Issuer != _jwtSettings.Issuer ||
-            !jwtSecurityToken.Audiences.SequenceEqual([_jwtSettings.Audience]) ||
-            jwtSecurityToken.SignatureAlgorithm != SecurityAlgorithms.HmacSha256)
+        JwtSecurityToken jwtSecurityToken;
+        try
+        {
+            new JwtSecurityTokenHandler().ValidateToken(token, validationParameters, out var securityToken);
+            jwtSecurityToken = (JwtSecurityToken)securityToken;
+        }
+        catch (Exception e) when (e is ArgumentException or SecurityTokenException)
         {
             return false;
         }
@@ -49,18 +64,6 @@ internal sealed class JwtTokenValidator(
     {
         return GetClaim(claims, JwtRegisteredClaimNames.Email) == user.Credentials.Email &&
                Guid.TryParse(GetClaim(claims, JwtRegisteredClaimNames.Jti), out _);
-    }
-
-    private static JwtSecurityToken? ReadToken(string token)
-    {
-        try
-        {
-            return new JwtSecurityTokenHandler().ReadJwtToken(token);
-        }
-        catch (Exception e) when (e is ArgumentException or SecurityTokenException)
-        {
-            return null;
-        }
     }
 
     private static string? GetClaim(IEnumerable<Claim> claims, string type)

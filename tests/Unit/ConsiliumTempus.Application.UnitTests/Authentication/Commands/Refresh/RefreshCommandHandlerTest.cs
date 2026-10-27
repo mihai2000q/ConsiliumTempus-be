@@ -53,6 +53,10 @@ public class RefreshCommandHandlerTest
             .Get(Arg.Any<RefreshTokenId>())
             .Returns(refreshToken);
 
+        _jwtTokenGenerator
+            .GetUserIdFromToken(Arg.Is(command.Token))
+            .Returns(refreshToken.User.Id.Value);
+
         _jwtTokenValidator
             .ValidateRefreshToken(Arg.Any<RefreshToken>())
             .Returns(true);
@@ -127,6 +131,10 @@ public class RefreshCommandHandlerTest
             .Get(Arg.Any<RefreshTokenId>())
             .Returns(refreshToken);
 
+        _jwtTokenGenerator
+            .GetUserIdFromToken(Arg.Is(command.Token))
+            .Returns(refreshToken.User.Id.Value);
+
         _jwtTokenValidator
             .ValidateRefreshToken(Arg.Any<RefreshToken>())
             .Returns(true);
@@ -172,6 +180,52 @@ public class RefreshCommandHandlerTest
     }
 
     [Fact]
+    public async Task HandleRefreshCommand_WhenAccessTokenBelongsToAnotherUser_ShouldReturnInvalidTokensError()
+    {
+        // Arrange
+        var command = AuthenticationCommandFactory.CreateRefreshCommand();
+
+        _jwtTokenValidator
+            .ValidateAccessToken(Arg.Any<string>())
+            .Returns(true);
+
+        var jwtId = Guid.NewGuid();
+        var refreshToken = RefreshTokenFactory.Create(jwtId);
+        _refreshTokenRepository
+            .Get(Arg.Any<RefreshTokenId>())
+            .Returns(refreshToken);
+
+        _jwtTokenValidator
+            .ValidateRefreshToken(Arg.Any<RefreshToken>())
+            .Returns(true);
+
+        _jwtTokenGenerator
+            .GetUserIdFromToken(Arg.Is(command.Token))
+            .Returns(Guid.NewGuid());
+        _jwtTokenGenerator
+            .GetJwtIdFromToken(Arg.Is(command.Token))
+            .Returns(jwtId); // the jti is the one of the refresh token, but the access token is from someone else
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _jwtTokenValidator
+            .Received(1)
+            .ValidateAccessToken(Arg.Is<string>(t => t == command.Token));
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>());
+        _jwtTokenGenerator
+            .DidNotReceive()
+            .GenerateToken(Arg.Any<UserAggregate>(), Arg.Any<Guid>());
+
+        outcome.ValidateError(Errors.Authentication.InvalidTokens);
+        refreshToken.JwtId.Value.Should().Be(jwtId);
+        refreshToken.History.Should().HaveCount(1);
+    }
+
+    [Fact]
     public async Task HandleRefreshCommand_WhenJwtIdIsUnknown_ShouldReturnInvalidTokensError()
     {
         // Arrange
@@ -191,6 +245,10 @@ public class RefreshCommandHandlerTest
         _refreshTokenRepository
             .Get(Arg.Any<RefreshTokenId>())
             .Returns(refreshToken);
+
+        _jwtTokenGenerator
+            .GetUserIdFromToken(Arg.Is(command.Token))
+            .Returns(refreshToken.User.Id.Value);
 
         _jwtTokenValidator
             .ValidateRefreshToken(Arg.Any<RefreshToken>())
