@@ -128,6 +128,7 @@ Those include:
 
 - **CustomFieldMultiSelectHasOption**
 - **ProjectHasAllowedMember**
+- **ProjectHasCustomFieldSetup**
 - **UserHasFavoriteProject**
 - **UserHasFavoriteWorkspace**
 - **WorkspaceRoleHasPermission**
