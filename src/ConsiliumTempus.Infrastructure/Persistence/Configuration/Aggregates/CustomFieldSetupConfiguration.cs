@@ -14,7 +14,7 @@ internal sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<C
 {
     public void Configure(EntityTypeBuilder<CustomFieldSetupAggregate> builder)
     {
-        builder.UseTpcMappingStrategy();
+        builder.ToTable(nameof(CustomFieldSetupAggregate).TruncateAggregate());
 
         builder.HasKey(cfs => cfs.Id);
         builder.Property(cfs => cfs.Id)
