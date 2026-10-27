@@ -33,7 +33,7 @@ erDiagram
     Project ||--o{ ProjectStatus : "ProjectId"
     Project ||--o{ UserHasFavoriteProject : "ProjectId"
     User ||--o{ UserHasFavoriteProject : "UserId"
-    Project ||--o{ ProjectHasCustomFieldSetup : "ProjectsId"
+    Project ||--o{ ProjectHasCustomFieldSetup : "ProjectId"
     Project ||--o{ ProjectSprint : "ProjectId"
 
     Project {
@@ -74,8 +74,8 @@ erDiagram
         uniqueidentifier Id PK
     }
     ProjectHasCustomFieldSetup {
-        uniqueidentifier CustomFieldSetupsId PK "references any CustomFieldSetup_* table"
-        uniqueidentifier ProjectsId PK, FK
+        uniqueidentifier CustomFieldSetupId PK, FK
+        uniqueidentifier ProjectId PK, FK
     }
     ProjectSprint {
         uniqueidentifier Id PK

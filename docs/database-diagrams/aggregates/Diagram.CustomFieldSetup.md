@@ -42,8 +42,8 @@ erDiagram
     CustomFieldSetup ||--|| CustomFieldSetup_Time : "Id"
     CustomFieldSetup_MultiSelect ||--o{ MultiSelectOption : "SetupId"
     CustomFieldSetup_SingleSelect ||--o{ SingleSelectOption : "SetupId"
-    Project ||--o{ ProjectHasCustomFieldSetup : "ProjectsId"
-    CustomFieldSetup ||--o{ ProjectHasCustomFieldSetup : "CustomFieldSetupsId"
+    Project ||--o{ ProjectHasCustomFieldSetup : "ProjectId"
+    CustomFieldSetup ||--o{ ProjectHasCustomFieldSetup : "CustomFieldSetupId"
     CustomFieldSetup_Date ||--o{ CustomField_Date : "SetupId"
     CustomFieldSetup_DateTime ||--o{ CustomField_DateTime : "SetupId"
     CustomFieldSetup_Duration ||--o{ CustomField_Duration : "SetupId"
@@ -115,8 +115,8 @@ erDiagram
         uniqueidentifier SetupId FK
     }
     ProjectHasCustomFieldSetup {
-        uniqueidentifier CustomFieldSetupsId PK, FK
-        uniqueidentifier ProjectsId PK, FK
+        uniqueidentifier CustomFieldSetupId PK, FK
+        uniqueidentifier ProjectId PK, FK
     }
     Audit {
         uniqueidentifier Id PK

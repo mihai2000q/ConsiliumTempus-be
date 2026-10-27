@@ -45,7 +45,7 @@ erDiagram
     CustomFieldSetup_SingleSelect ||--o{ SingleSelectOption : "SetupId"
     Project ||--o{ ProjectHasAllowedMember : "ProjectId"
     User ||--o{ ProjectHasAllowedMember : "UserId"
-    Project ||--o{ ProjectHasCustomFieldSetup : "ProjectsId"
+    Project ||--o{ ProjectHasCustomFieldSetup : "ProjectId"
     Audit ||--o| ProjectSprint : "AuditId"
     Project ||--o{ ProjectSprint : "ProjectId"
     Audit ||--o{ ProjectStatus : "AuditId"
@@ -259,8 +259,8 @@ erDiagram
         uniqueidentifier UserId PK, FK
     }
     ProjectHasCustomFieldSetup {
-        uniqueidentifier CustomFieldSetupsId PK "references any CustomFieldSetup_* table"
-        uniqueidentifier ProjectsId PK, FK
+        uniqueidentifier CustomFieldSetupId PK, FK
+        uniqueidentifier ProjectId PK, FK
     }
     ProjectSprint {
         uniqueidentifier Id PK
