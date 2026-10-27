@@ -490,6 +490,10 @@ Only project owners can change the owner (the new owner has to be a collaborator
 ([Project Authorization Level: Is Project Owner](../Security.md#project-authorization-levels)
 and [Workspace Authorization Level: Is Collaborator](../Security.md#workspace-authorization-levels)).
 
+When the project is private, the new owner also has to be one of the allowed members of the project,
+otherwise the allowed member is not found (`Project.AllowedMemberNotFound`).
+(The allowed members only matter for private projects.)
+
 ```js
 PUT {{host}}/api/projects/owner
 ```
