@@ -1,10 +1,10 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.Common.Relations;
 using ConsiliumTempus.Domain.Common.Validation;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
-using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -45,16 +45,7 @@ internal sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<C
 
         builder.HasMany(cfs => cfs.Projects)
             .WithMany(p => p.CustomFieldSetups)
-            .UsingEntity(
-                "ProjectHasCustomFieldSetup",
-                r => r.HasOne(typeof(ProjectAggregate))
-                    .WithMany()
-                    .HasForeignKey(nameof(CustomFieldSetupAggregate.Projects).ToId())
-                    .OnDelete(DeleteBehavior.Cascade),
-                l => l.HasOne(typeof(CustomFieldSetupAggregate))
-                    .WithMany()
-                    .HasForeignKey(nameof(ProjectAggregate.CustomFieldSetups).ToId())
-                    .OnDelete(DeleteBehavior.Cascade));
+            .UsingEntity<ProjectHasCustomFieldSetup>();
 
         builder.HasOne(s => s.Audit)
             .WithOne()
