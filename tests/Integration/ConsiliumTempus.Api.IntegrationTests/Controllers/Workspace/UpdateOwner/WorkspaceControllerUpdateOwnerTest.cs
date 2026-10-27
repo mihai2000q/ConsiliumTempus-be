@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Domain.Common.Entities;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOwner;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -40,6 +41,10 @@ public class WorkspaceControllerUpdateOwnerTest(WebAppFactory factory)
             .Include(w => w.Owner)
             .Single(u => u.Id == WorkspaceId.Create(request.Id));
         Utils.Workspace.AssertUpdatedOwner(updatedWorkspace, request, owner);
+
+        dbContext.Set<Membership>()
+            .Single(m => m.Workspace.Id == updatedWorkspace.Id && m.User.Id == owner.Id)
+            .WorkspaceRole.Should().Be(WorkspaceRole.Admin);
     }
 
     [Fact]

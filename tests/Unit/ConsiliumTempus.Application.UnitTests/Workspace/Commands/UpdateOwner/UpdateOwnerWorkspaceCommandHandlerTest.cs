@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using NSubstitute.ReturnsExtensions;
@@ -31,7 +32,7 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
         // Arrange
         var workspace = WorkspaceFactory.Create();
         var owner = UserFactory.Create();
-        workspace.AddUserMembership(MembershipFactory.Create(owner));
+        workspace.AddUserMembership(MembershipFactory.Create(owner, workspaceRole: WorkspaceRole.View));
         _workspaceRepository
             .GetWithCollaborators(Arg.Any<WorkspaceId>())
             .Returns(workspace);

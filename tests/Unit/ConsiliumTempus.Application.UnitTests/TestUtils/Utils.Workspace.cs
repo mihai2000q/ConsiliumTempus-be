@@ -168,6 +168,7 @@ internal static partial class Utils
         {
             workspace.Id.Value.Should().Be(command.Id);
             workspace.Owner.Id.Value.Should().Be(command.OwnerId);
+            workspace.Memberships.Single(m => m.User == workspace.Owner).WorkspaceRole.Should().Be(WorkspaceRole.Admin);
             workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
