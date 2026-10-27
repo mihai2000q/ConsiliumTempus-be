@@ -6,6 +6,7 @@ using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Infrastructure.Extensions;
+using ConsiliumTempus.Infrastructure.Persistence.Conventions;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -23,6 +24,13 @@ public sealed class ConsiliumTempusDbContext(
     public DbSet<ProjectTaskAggregate> ProjectTasks { get; init; } = null!;
     public DbSet<UserAggregate> Users { get; init; } = null!;
     public DbSet<WorkspaceAggregate> Workspaces { get; init; } = null!;
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Conventions.Add(_ => new RestrictDeleteBehaviorConvention());
+
+        base.ConfigureConventions(configurationBuilder);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
