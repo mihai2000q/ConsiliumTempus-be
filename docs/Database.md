@@ -2,6 +2,9 @@
 
 * [Naming Convention](#naming-convention)
   * [Tables](#tables)
+* [Conventions](#conventions)
+  * [Delete Behavior](#delete-behavior)
+  * [Generated Keys](#generated-keys)
 * [Migrations](#migrations)
   * [Dotnet tools](#dotnet-tools)
   * [Create Migration](#create-migration)
@@ -20,6 +23,50 @@ and for a clear picture of the whole application check out the [Database Diagram
 
 It has been decided to use **singular** for table naming because of several reasons,
 such as aestheticism, order or simplicity, plus **Pascal Case** as it is a C# based application.
+
+## Conventions
+
+Some of the rules of the model are applied to the whole model through **EF Core conventions**,
+instead of being repeated on each configuration.
+They live in `Persistence/Conventions`, and they are registered in the `ConsiliumTempusDbContext`
+(`ConfigureConventions`).
+A convention applies only when the configuration did not say otherwise,
+so a configuration can always override it explicitly.
+
+### Delete Behavior
+
+By default, **EF Core** cascades the delete of the required relationships, which can delete data by accident
+(i.e., deleting a user would delete all the tasks that they created).
+That is why every relationship is **restrictive** (`Restrict`, which is `NO ACTION` in SQL Server),
+unless its delete behavior is configured explicitly, through the `RestrictDeleteBehaviorConvention`
+(so the configurations never have to say `Restrict`).
+
+Whenever the delete of a principal should affect its dependents, the relationship has to say it:
+
+- `Cascade`, when the dependents belong to the principal, and cannot exist without it
+(i.e., the sprints of a project, or the custom fields of a task)
+- `SetNull`, when the dependents should survive without the principal
+(i.e., the person of a people custom field, when the user is deleted)
+
+In any other case, the dependents have to be cleared by the application before the principal is deleted
+(i.e., the *User Deleted* event clears the user from the tasks and from the audit data).
+
+A few things to keep in mind:
+
+- SQL Server allows only **one cascading action** (`Cascade` or `SetNull`) from a table to the same table,
+and it does not allow **multiple cascade paths** either.
+That is why the custom fields cascade from their tasks, but the custom field setups do not cascade from their workspace
+(see the comments on the Project Task and the Custom Field Setup configurations).
+- The delete behavior of the types that are mapped to their own table (table per type) cannot be configured,
+and it always cascades to them.
+- `DeleteBehaviorTest` lists all the relationships that cascade or set to null,
+so the list has to be updated on purpose when one of them is added or changed.
+
+### Generated Keys
+
+The identifiers are created by the domain, never by the database.
+That is why the `NeverGenerateKeysConvention` makes sure that none of the primary keys is generated
+(no `IDENTITY` columns, no default values), without having to say it on each configuration.
 
 ## Migrations
 
