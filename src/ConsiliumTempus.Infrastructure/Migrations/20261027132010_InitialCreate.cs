@@ -781,7 +781,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField_Date_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -806,7 +807,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField_DateTime_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -831,7 +833,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField_Duration_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -855,7 +858,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField_MultiSelect_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -880,7 +884,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField_Number_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -905,7 +910,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField_People_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CustomField_People_User_PersonId",
                         column: x => x.PersonId,
@@ -935,7 +941,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField_SingleSelect_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CustomField_SingleSelect_SingleSelectOption_OptionId",
                         column: x => x.OptionId,
@@ -965,7 +972,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField_Text_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -990,7 +998,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         name: "FK_CustomField_Time_ProjectTask_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTask",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
