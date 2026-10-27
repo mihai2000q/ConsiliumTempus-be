@@ -306,6 +306,10 @@ PUT {{host}}/api/projects/tasks/custom-fields
 #### Update Custom Field From Project Task Request
 
 Sends body data that the project task needs to update the custom field.
+The person of a people custom field must be a collaborator of the workspace of the task,
+otherwise the user is treated as not found (`User.NotFound`).
+The option of a single select custom field must be one of its options (`SingleSelectOption.NotFound`),
+a `null` option clears the selection.
 
 ```json
 {
