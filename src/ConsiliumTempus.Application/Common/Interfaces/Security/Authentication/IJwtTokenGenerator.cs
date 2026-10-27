@@ -9,4 +9,6 @@ public interface IJwtTokenGenerator
     string GenerateToken(UserAggregate user, Guid jti);
 
     Guid GetJwtIdFromToken(string token);
+
+    Guid GetUserIdFromToken(string token);
 }
