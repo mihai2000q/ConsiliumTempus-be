@@ -35,6 +35,9 @@ internal sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<C
                 value => Description.Create(value))
             .HasColumnName(nameof(Description));
 
+        // Cannot cascade: the custom fields already cascade from their tasks, and a workspace cannot reach them
+        // through more than one cascade path (see the Custom Fields of the Project Task Configuration),
+        // so the setups are deleted by the Workspace Deleted event
         builder.HasOne(cfs => cfs.Workspace)
             .WithMany(w => w.CustomFieldSetups)
             .OnDelete(DeleteBehavior.NoAction);

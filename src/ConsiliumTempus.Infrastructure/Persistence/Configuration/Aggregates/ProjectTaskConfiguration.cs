@@ -46,7 +46,9 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
             .HasColumnName(nameof(CustomOrderPosition));
 
         builder.HasOne(t => t.CreatedBy)
-            .WithMany();
+            .WithMany()
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(t => t.Assignee)
             .WithMany();
@@ -61,6 +63,9 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
         builder.OwnsMany(t => t.Comments, ConfigureComments);
         builder.Navigation(t => t.Comments).AutoInclude(false);
 
+        // Only one of the paths from a workspace to its custom fields can cascade (SQL Server does not allow
+        // multiple cascade paths), and it is this one, so that they are deleted with their tasks
+        // (see the Workspace of the Custom Field Setup Configuration for the other path)
         builder.HasMany(t => t.CustomFields)
             .WithOne(cf => cf.ProjectTask)
             .OnDelete(DeleteBehavior.Cascade);
