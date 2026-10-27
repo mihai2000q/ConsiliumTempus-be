@@ -405,6 +405,8 @@ Returns a confirmation message that the workspace has been updated successfully.
 Only **Admin** users of the workspace can update a collaborator
 ([Update Collaborator From Workspace Permission](../Security.md#permissions)).
 
+The role of the owner of the workspace cannot be changed (the owner is always an **Admin**).
+
 ```js
 PUT {{host}}/api/workspaces/collaborators
 ```
@@ -477,6 +479,8 @@ Returns a confirmation message that the workspace overview has been updated succ
 
 Only workspace owners can update the owner
 ([Workspace Authorization Level: Is Workspace Owner](../Security.md#workspace-authorization-levels)).
+
+The new owner becomes an **Admin** of the workspace, if they are not one already (the owner is always an **Admin**).
 
 ```js
 PUT {{host}}/api/workspaces/owner
