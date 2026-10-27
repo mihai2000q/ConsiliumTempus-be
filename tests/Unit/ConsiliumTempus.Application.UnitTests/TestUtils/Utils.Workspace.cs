@@ -195,6 +195,8 @@ internal static partial class Utils
                 .ToList();
             projects.Where(p => previousOwners[p] == collaborator).Should().AllSatisfyOrEmpty(p =>
             {
+                p.AllowedMembers.Should().Contain(p.Owner);
+
                 if (nonOwnerMemberships.Count == 0)
                 {
                     p.Owner.Should().Be(workspace.Owner);

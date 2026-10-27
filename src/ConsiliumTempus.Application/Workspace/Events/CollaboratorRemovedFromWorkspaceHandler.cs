@@ -34,6 +34,7 @@ internal sealed class CollaboratorRemovedFromWorkspaceHandler(IProjectRepository
             if (project.Owner != collaborator) continue;
             var newOwner = workspace.NextProjectOwner();
             project.UpdateOwner(newOwner);
+            if (!project.AllowedMembers.Contains(newOwner)) project.AddAllowedMember(newOwner);
         }
     }
 }
