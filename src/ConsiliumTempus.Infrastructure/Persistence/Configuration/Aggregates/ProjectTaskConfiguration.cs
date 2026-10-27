@@ -48,14 +48,16 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
         builder.HasOne(t => t.CreatedBy)
             .WithMany()
             .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(t => t.Assignee)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
         builder.Navigation(t => t.Assignee).AutoInclude();
 
         builder.HasOne(t => t.Reviewer)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(t => t.Stage)
             .WithMany(s => s.Tasks);
@@ -88,6 +90,7 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
 
         builder.HasOne(c => c.CreatedBy)
             .WithMany()
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(c => c.Task)
@@ -202,7 +205,8 @@ internal sealed class PeopleCustomFieldConfiguration : IEntityTypeConfiguration<
             .Underscore(CustomFieldType.People.ToString()));
 
         builder.HasOne(p => p.Person)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.SetNull);
         builder.Navigation(p => p.Person).AutoInclude();
 
         builder.HasOne(p => p.Setup)
