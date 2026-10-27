@@ -27,12 +27,17 @@ public sealed class ProjectTaskComment : Entity<ProjectTaskCommentId>, ITimestam
     }
 
     public Message Message { get; private set; } = null!;
-    public UserAggregate CreatedBy { get; init; } = null!;
+    public UserAggregate? CreatedBy { get; private set; }
     public DateOnly? Date { get; private set; }
     public TimeSpan? TimeSpent { get; private set; }
     public ProjectTaskAggregate Task { get; init; } = null!;
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
+
+    public void Nullify(UserAggregate user)
+    {
+        if (CreatedBy == user) CreatedBy = null;
+    }
 
     public static ProjectTaskComment Create(
         Message message,

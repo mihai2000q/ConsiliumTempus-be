@@ -33,6 +33,17 @@ internal sealed class UserRepository(ConsiliumTempusDbContext dbContext) : IUser
         dbContext.Users.Remove(user);
     }
 
+    public async Task NullifyTasksByUser(UserAggregate user, CancellationToken cancellationToken = default)
+    {
+        var tasks = await dbContext.ProjectTasks
+            .Include(t => t.Comments)
+            .Where(t => t.CreatedBy == user || t.Assignee == user || t.Reviewer == user ||
+                        t.Comments.Any(c => c.CreatedBy == user))
+            .ToListAsync(cancellationToken);
+
+        tasks.ForEach(t => t.Nullify(user));
+    }
+
     public async Task NullifyAuditsByUser(UserAggregate user, CancellationToken cancellationToken = default)
     {
         var audits = await dbContext.Set<Audit>()

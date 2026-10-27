@@ -19,6 +19,7 @@ internal sealed class UserDeletedHandler(
     {
         await UpdateOwnedWorkspaces(notification.User, cancellationToken);
         await UpdateOwnedProjects(notification.User, cancellationToken);
+        await userRepository.NullifyTasksByUser(notification.User, cancellationToken);
         await userRepository.NullifyAuditsByUser(notification.User, cancellationToken);
         await userRepository.RemoveWorkspaceInvitationsByUser(notification.User, cancellationToken);
     }

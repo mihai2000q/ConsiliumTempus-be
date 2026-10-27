@@ -46,7 +46,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
     public Description Description { get; private set; } = null!;
     public CustomOrderPosition CustomOrderPosition { get; private set; } = null!;
     public IsCompleted IsCompleted { get; private set; } = null!;
-    public UserAggregate CreatedBy { get; init; } = null!;
+    public UserAggregate? CreatedBy { get; private set; }
     public UserAggregate? Assignee { get; private set; }
     public UserAggregate? Reviewer { get; private set; }
     public DateOnly? DueDate { get; private set; }
@@ -103,6 +103,14 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
         UpdatedDateTime = DateTime.UtcNow;
     }
     
+    public void Nullify(UserAggregate user)
+    {
+        if (CreatedBy == user) CreatedBy = null;
+        if (Assignee == user) Assignee = null;
+        if (Reviewer == user) Reviewer = null;
+        _comments.ForEach(c => c.Nullify(user));
+    }
+
     public void RefreshUpdatedDateTime()
     {
         UpdatedDateTime = DateTime.UtcNow;

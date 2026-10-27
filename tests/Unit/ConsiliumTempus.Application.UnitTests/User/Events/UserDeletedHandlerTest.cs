@@ -108,6 +108,9 @@ public class UserDeletedHandlerTest
             .NullifyAuditsByUser(user);
         await _userRepository
             .Received(1)
+            .NullifyTasksByUser(user);
+        await _userRepository
+            .Received(1)
             .RemoveWorkspaceInvitationsByUser(user);
 
         Utils.User.AssertFromUserDeleted(user, ownedWorkspaces, previousRoles, ownedProjects, previousAllowedMembers);
