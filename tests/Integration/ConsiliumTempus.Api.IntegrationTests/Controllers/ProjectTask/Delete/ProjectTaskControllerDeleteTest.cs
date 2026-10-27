@@ -85,6 +85,7 @@ public class ProjectTaskControllerDeleteTest(WebAppFactory factory)
         var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(task.Id.Value);
 
         // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
         var outcome = await Client.Delete($"api/projects/tasks/" +
                                           $"{request.Id}/from/{request.StageId}");
 
@@ -109,6 +110,7 @@ public class ProjectTaskControllerDeleteTest(WebAppFactory factory)
             stage.Id.Value);
 
         // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
         var outcome = await Client.Delete($"api/projects/tasks/" +
                                           $"{request.Id}/from/{request.StageId}");
 
