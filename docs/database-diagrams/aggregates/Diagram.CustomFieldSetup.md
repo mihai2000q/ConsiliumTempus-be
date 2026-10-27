@@ -4,6 +4,9 @@
 
 ### Relationships
 
+The variants are mapped as *table per type*: the **CustomFieldSetup** table holds what they share, and each variant
+(i.e., *CustomFieldSetup_Date*) holds its own columns, with the same *Id*.
+
 - **One-to-One** relationship with the [Audit](../../domain/entities/Entity.Audit.md) entity.
 - **Many-to-One** (optional) relationship with the [Workspace](../../domain/aggregates/Aggregate.Workspace.md) aggregate.
 - **Many-to-Many** relationship with the [Project](../../domain/aggregates/Aggregate.Project.md) aggregate.
@@ -26,27 +29,21 @@ For the notation used, check out the [Legend](../Database.Diagram.md#legend).
 
 ```mermaid
 erDiagram
-    Audit ||--o| CustomFieldSetup_Date : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_Date : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_DateTime : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_DateTime : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_Duration : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_Duration : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_MultiSelect : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_MultiSelect : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_Number : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_Number : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_People : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_People : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_SingleSelect : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_SingleSelect : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_Text : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_Text : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_Time : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_Time : "WorkspaceId"
+    Audit ||--o| CustomFieldSetup : "AuditId"
+    Workspace |o--o{ CustomFieldSetup : "WorkspaceId"
+    CustomFieldSetup ||--|| CustomFieldSetup_Date : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_DateTime : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_Duration : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_MultiSelect : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_Number : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_People : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_SingleSelect : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_Text : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_Time : "Id"
     CustomFieldSetup_MultiSelect ||--o{ MultiSelectOption : "SetupId"
     CustomFieldSetup_SingleSelect ||--o{ SingleSelectOption : "SetupId"
     Project ||--o{ ProjectHasCustomFieldSetup : "ProjectsId"
+    CustomFieldSetup ||--o{ ProjectHasCustomFieldSetup : "CustomFieldSetupsId"
     CustomFieldSetup_Date ||--o{ CustomField_Date : "SetupId"
     CustomFieldSetup_DateTime ||--o{ CustomField_DateTime : "SetupId"
     CustomFieldSetup_Duration ||--o{ CustomField_Duration : "SetupId"
@@ -60,77 +57,48 @@ erDiagram
     MultiSelectOption ||--o{ CustomField_MultiSelectHasOption : "OptionId"
 
     CustomFieldSetup_Date {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
         date DefaultDate "nullable"
     }
     CustomFieldSetup_DateTime {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
         datetime2 DefaultDateTime "nullable"
     }
     CustomFieldSetup_Duration {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
         bigint DefaultDuration "nullable"
     }
     CustomFieldSetup_MultiSelect {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
     }
     CustomFieldSetup_Number {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
         nvarchar(3) CurrencyCode "nullable"
         smallint Decimals
         bit Rounding
         decimal DefaultNumber "precision 38, scale 9, nullable"
     }
     CustomFieldSetup_People {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
     }
     CustomFieldSetup_SingleSelect {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
         uniqueidentifier DefaultOptionId "nullable"
     }
     CustomFieldSetup_Text {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
         nvarchar(max) DefaultText "nullable"
     }
     CustomFieldSetup_Time {
+        uniqueidentifier Id PK, FK
+        time DefaultTime "nullable"
+    }
+    CustomFieldSetup {
         uniqueidentifier Id PK
         nvarchar(50) Name
         nvarchar(max) Description
         uniqueidentifier WorkspaceId FK "nullable"
         uniqueidentifier AuditId FK, UK
-        time DefaultTime "nullable"
     }
     MultiSelectOption {
         uniqueidentifier Id PK
@@ -147,7 +115,7 @@ erDiagram
         uniqueidentifier SetupId FK
     }
     ProjectHasCustomFieldSetup {
-        uniqueidentifier CustomFieldSetupsId PK "references any CustomFieldSetup_* table"
+        uniqueidentifier CustomFieldSetupsId PK, FK
         uniqueidentifier ProjectsId PK, FK
     }
     Audit {

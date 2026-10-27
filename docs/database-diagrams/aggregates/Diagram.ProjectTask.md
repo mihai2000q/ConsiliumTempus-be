@@ -42,7 +42,7 @@ For the notation used, check out the [Legend](../Database.Diagram.md#legend).
 erDiagram
     ProjectStage ||--o{ ProjectTask : "StageId"
     User |o--o{ ProjectTask : "AssigneeId"
-    User ||--o{ ProjectTask : "CreatedById"
+    User |o--o{ ProjectTask : "CreatedById"
     User |o--o{ ProjectTask : "ReviewerId"
     CustomFieldSetup_Date ||--o{ CustomField_Date : "SetupId"
     ProjectTask ||--o{ CustomField_Date : "ProjectTaskId"
@@ -65,7 +65,7 @@ erDiagram
     CustomFieldSetup_Time ||--o{ CustomField_Time : "SetupId"
     ProjectTask ||--o{ CustomField_Time : "ProjectTaskId"
     ProjectTask ||--o{ ProjectTaskComment : "TaskId"
-    User ||--o{ ProjectTaskComment : "CreatedById"
+    User |o--o{ ProjectTaskComment : "CreatedById"
     CustomField_MultiSelect ||--o{ CustomField_MultiSelectHasOption : "CustomFieldId"
     MultiSelectOption ||--o{ CustomField_MultiSelectHasOption : "OptionId"
 
@@ -76,7 +76,7 @@ erDiagram
         int CustomOrderPosition
         bit IsCompleted
         datetime2 CompletedOn "nullable"
-        uniqueidentifier CreatedById FK
+        uniqueidentifier CreatedById FK "nullable"
         uniqueidentifier AssigneeId FK "nullable"
         uniqueidentifier ReviewerId FK "nullable"
         date DueDate "nullable"
@@ -141,7 +141,7 @@ erDiagram
     ProjectTaskComment {
         uniqueidentifier Id PK
         nvarchar(256) Message
-        uniqueidentifier CreatedById FK
+        uniqueidentifier CreatedById FK "nullable"
         date Date "nullable"
         time TimeSpent "nullable"
         uniqueidentifier TaskId FK
