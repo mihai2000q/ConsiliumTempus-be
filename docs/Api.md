@@ -113,6 +113,13 @@ and the **errorCodes** of the errors that occurred (i.e., *Workspace.NotFound*):
 ```
 
 The validation errors (400) list all the failures inside the **errors** object, grouped by property.
+
+A resource that the user has no relationship with (i.e., a workspace they are not a collaborator of,
+or a private project they are not allowed in) is answered with the same **404** that is returned
+when the resource does not exist, so the existence of the resource is not revealed
+(see [Hidden Resources](Security.md#hidden-resources)).
+A user that does know that the resource exists, but is not allowed to do the operation
+(i.e., a **View** collaborator that tries to update the workspace), gets a **403**.
 The errors of each aggregate or entity are listed in its [Domain Models](Domain.md) documentation.
 
 ### Search, Order and Pagination

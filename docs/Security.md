@@ -4,6 +4,7 @@
 * [Role-Based Access Control (RBAC)](#role-based-access-control-rbac)
 * [Workspace Authorization Levels](#workspace-authorization-levels)
 * [Project Authorization Levels](#project-authorization-levels)
+* [Hidden Resources](#hidden-resources)
 * [Workspace Roles](#workspace-roles)
 * [Permissions](#permissions)
 * [Workspace Roles to Permissions](#workspace-roles-to-permissions)
@@ -67,6 +68,27 @@ while the ones that manage the allowed members, the owner or the privacy of a pr
 require a Project Authorization Level together with the Workspace Authorization Level **Is Collaborator**.
 The checks of each endpoint are listed in its [Api documentation](api/Api.Project.md),
 and they are applied through attributes (see [Authorization](Api.md#authorization)).
+
+## Hidden Resources
+
+The authorization must not reveal whether a resource exists.
+Because of that, when the user has no relationship with the resource, the response is the same **404 Not Found**
+that is returned when the resource does not exist (same title and error code, i.e., `Project.NotFound`),
+instead of a **403 Forbidden**.
+The user has no relationship with the resource when:
+- they are not a collaborator of its workspace (checked by the permission and the **Is Collaborator** level)
+- the project is private and they are not one of the allowed members (checked by the project authorization levels)
+
+A **403** is only returned when the user does know that the resource exists
+(i.e., a **View** collaborator that tries to do something that requires the **Member** role,
+or a collaborator that is not the owner of the workspace).
+
+This is achieved in the authorization handlers, which fail with a *not found* reason,
+and in a result handler that turns that reason into the not found response of the resource
+(the one from the identifier that was used to find it, i.e., the project for a project id).
+The handlers also fail with the not found of the resource when a well-formed identifier does not exist,
+so the endpoints answer the same way whether the resource is missing or hidden
+(an empty or malformed identifier is left to the validation).
 
 ## Workspace Roles
 
