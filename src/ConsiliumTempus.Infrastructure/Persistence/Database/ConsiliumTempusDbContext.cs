@@ -28,6 +28,7 @@ public sealed class ConsiliumTempusDbContext(
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder.Conventions.Add(_ => new RestrictDeleteBehaviorConvention());
+        configurationBuilder.Conventions.Add(_ => new NeverGenerateKeysConvention());
 
         base.ConfigureConventions(configurationBuilder);
     }
@@ -37,12 +38,6 @@ public sealed class ConsiliumTempusDbContext(
         modelBuilder
             .Ignore<List<IDomainEvent>>() // Don't save the list of domain events
             .ApplyConfigurationsFromAssembly(typeof(ConsiliumTempusDbContext).Assembly);
-
-        // Never generate any of the primary keys, let the application generate them
-        modelBuilder.Model.GetEntityTypes()
-            .SelectMany(e => e.GetProperties())
-            .Where(p => p.IsPrimaryKey())
-            .ForEach(p => p.ValueGenerated = ValueGenerated.Never);
 
         base.OnModelCreating(modelBuilder);
     }
