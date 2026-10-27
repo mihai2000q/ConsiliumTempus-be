@@ -100,6 +100,10 @@ The workspace roles are:
 - **Member**, they can, in most of the cases, read, update and sometimes even add data
 - **Admin**, they can do everything (except for the actions that are exclusive to the owners)
 
+The owner of a workspace is always an **Admin**: the new owner is promoted when the ownership is transferred
+(or when the owner deletes their account), and the role of the owner cannot be changed by anyone.
+Because the owner cannot leave or be kicked from the workspace either, a workspace always has at least one **Admin**.
+
 ## Permissions
 
 The permissions will be classified on their respective component:
