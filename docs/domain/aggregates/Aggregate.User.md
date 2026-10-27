@@ -55,7 +55,8 @@ For database design, check out the [User Diagram](../../database-diagrams/aggreg
 - **User Deleted** when the user is deleted, it will also delete the workspaces where they were alone,
 or transfer the ownership of the workspaces and promote the new owner to Admin, if necessary.
 The same goes for the projects that they own, and it also clears the user from the audit data
-and removes the workspace invitations related to them 
+and from the tasks (as the creator, the assignee or the reviewer) and their comments, and removes the workspace invitations related to them.
+The tasks are kept
 
 ### Value Objects
 
