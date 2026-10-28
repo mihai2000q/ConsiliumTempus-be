@@ -7,6 +7,7 @@ using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.Persistence;
@@ -28,6 +29,7 @@ public class ConsiliumTempusDbContextTest
             .Options;
         using var dbContext = new ConsiliumTempusDbContext(
             new PublishDomainEventsInterceptor(Substitute.For<IPublisher>()),
+            new StampAuditInterceptor(Substitute.For<IHttpContextAccessor>()),
             options);
 
         // Act

@@ -16,6 +16,7 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Database;
 
 public sealed class ConsiliumTempusDbContext(
     PublishDomainEventsInterceptor publishDomainEventsInterceptor,
+    StampAuditInterceptor stampAuditInterceptor,
     DbContextOptions<ConsiliumTempusDbContext> options)
     : DbContext(options)
 {
@@ -25,6 +26,28 @@ public sealed class ConsiliumTempusDbContext(
     public DbSet<ProjectTaskAggregate> ProjectTasks { get; init; } = null!;
     public DbSet<UserAggregate> Users { get; init; } = null!;
     public DbSet<WorkspaceAggregate> Workspaces { get; init; } = null!;
+
+    private readonly HashSet<IAudit> _markedAsUpdated = [];
+
+    /// <summary>
+    /// For a change that the audit does not count (it is excluded from it, or it is saved on another table),
+    /// but that has to be saved as an update of the entity that the user changed
+    /// (see <see cref="StampAuditInterceptor"/>).
+    /// </summary>
+    public void MarkAsUpdated(IAudit entity)
+    {
+        _markedAsUpdated.Add(entity);
+    }
+
+    /// <summary>
+    /// Returns what was marked as updated, and forgets it.
+    /// </summary>
+    internal IReadOnlyCollection<IAudit> TakeMarkedAsUpdated()
+    {
+        var marked = _markedAsUpdated.ToList();
+        _markedAsUpdated.Clear();
+        return marked;
+    }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
@@ -50,7 +73,9 @@ public sealed class ConsiliumTempusDbContext(
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.AddInterceptors(publishDomainEventsInterceptor);
+        optionsBuilder.AddInterceptors(
+            publishDomainEventsInterceptor,
+            stampAuditInterceptor);
         base.OnConfiguring(optionsBuilder);
     }
 }
