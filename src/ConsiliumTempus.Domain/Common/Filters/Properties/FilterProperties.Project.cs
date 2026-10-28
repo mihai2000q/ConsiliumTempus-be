@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 
 namespace ConsiliumTempus.Domain.Common.Filters.Properties;
@@ -28,11 +29,11 @@ internal static partial class FilterProperties
             p => p.LastActivity.Date);
 
         internal sealed class CreatedDateTimeProperty() : FilterProperty<ProjectAggregate>(
-            nameof(ProjectAggregate.CreatedDateTime),
-            p => p.CreatedDateTime.Date);
+            nameof(Audit.CreatedDateTime),
+            p => p.Audit.CreatedDateTime.Date);
 
         internal sealed class UpdatedDateTimeProperty() : FilterProperty<ProjectAggregate>(
-            nameof(ProjectAggregate.UpdatedDateTime),
-            p => p.UpdatedDateTime.Date);
+            nameof(Audit.UpdatedDateTime),
+            p => p.Audit.UpdatedDateTime.Date);
     }
 }
