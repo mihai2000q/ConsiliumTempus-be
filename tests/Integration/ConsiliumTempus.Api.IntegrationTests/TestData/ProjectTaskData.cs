@@ -74,14 +74,17 @@ internal class ProjectTaskData : ITestData
     [
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Basketball",
             "This is the Description of the first Workspace"),
         WorkspaceFactory.Create(
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Football",
             "This is the Description of the second Workspace"),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Michael Group",
             "This is the Description of the third Workspace",
             true),
@@ -124,24 +127,28 @@ internal class ProjectTaskData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Win NBA",
             "This is an elaborate plan to win NBA"),
 
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Something Not Private",
             isPrivate: false,
             allowedMembers: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Something Private",
             isPrivate: true,
             allowedMembers: [Users[0], Users[3]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[3],
+            AuditFactory.Create(Users[3]),
             "Something More Private",
             isPrivate: true,
             allowedMembers: [Users[3]]),
@@ -221,7 +228,7 @@ internal class ProjectTaskData : ITestData
     [
         ProjectSprintFactory.Create(
             Projects[0],
-            Audit.Create(Users[0]),
+            AuditFactory.Create(Users[0]),
             "Sprint 1 - Qualify on Quarters",
             new DateOnly(2024, 01, 1),
             new DateOnly(2024, 01, 15)),
@@ -274,70 +281,70 @@ internal class ProjectTaskData : ITestData
     public static readonly ProjectTaskAggregate[] ProjectTasks =
     [
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[0],
+            AuditFactory.Create(Users[0]),
             "Should do more dribbling"),
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[0],
+            AuditFactory.Create(Users[0]),
             "Should add more stepping to my shots",
             customOrderPosition: 1,
             assignee: Users[1],
             isCompleted: true),
         ProjectTaskFactory.Create(
-            Users[3],
             ProjectStages[0],
+            AuditFactory.Create(Users[3]),
             "Should tell Michael to PASS MOORE!!",
             assignee: Users[0],
             customOrderPosition: 2),
         ProjectTaskFactory.Create(
-            Users[3],
             ProjectStages[0],
+            AuditFactory.Create(Users[3]),
             "Tell Michael to DRIBBLE LESS!!",
             assignee: Users[0],
             customOrderPosition: 3),
 
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[1],
+            AuditFactory.Create(Users[0]),
             "We want to win the cup"),
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[1],
+            AuditFactory.Create(Users[0]),
             "We want to win them all",
             customOrderPosition: 1),
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[1],
+            AuditFactory.Create(Users[0]),
             "We want to go to coffee after",
             customOrderPosition: 2),
 
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[^3],
+            AuditFactory.Create(Users[0]),
             "Not Private Task"),
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[^2],
+            AuditFactory.Create(Users[0]),
             "Private Task"),
         ProjectTaskFactory.Create(
-            Users[3],
             ProjectStages[^1],
+            AuditFactory.Create(Users[3]),
             "More Private Task"),
 
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[^3],
+            AuditFactory.Create(Users[0]),
             "Not Private Task 2",
             customOrderPosition: 2),
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[^2],
+            AuditFactory.Create(Users[0]),
             "Private Task",
             customOrderPosition: 2),
         ProjectTaskFactory.Create(
-            Users[3],
             ProjectStages[^1],
+            AuditFactory.Create(Users[3]),
             "More Private Task 2",
             customOrderPosition: 2),
     ];

@@ -78,14 +78,17 @@ internal class ProjectData : ITestData
     [
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Basketball",
             "This is the Description of the first Workspace"),
         WorkspaceFactory.Create(
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Football",
             "This is the Description of the second Workspace"),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Michael Group",
             "This is the Description of the third Workspace",
             true),
@@ -132,6 +135,7 @@ internal class ProjectData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Win NBA",
             "This is an elaborate plan to win NBA",
             favorites: [Users[0]],
@@ -139,22 +143,26 @@ internal class ProjectData : ITestData
         ProjectFactory.Create(
             Workspaces[1],
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Win Champions League",
             "Just an idea on how to win the football league",
             favorites: [Users[1]]),
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Win Another Tournament"),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Get a house",
             "this is actually really important",
             favorites: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Start a retiring investment plan",
             "Should do it as soon as possible",
             false,
@@ -163,6 +171,7 @@ internal class ProjectData : ITestData
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Start a new life",
             "criminal activity",
             false,
@@ -172,6 +181,7 @@ internal class ProjectData : ITestData
         ProjectFactory.Create(
             Workspaces[2],
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Something Private - owner not anymore",
             description: "but the owner used to be a collaborator, however this was fixed already",
             allowedMembers: [Users[1], Users[0]]),
@@ -179,12 +189,14 @@ internal class ProjectData : ITestData
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Something Not Private",
             isPrivate: false,
             allowedMembers: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Something Private",
             isPrivate: true,
             allowedMembers: [Users[0], Users[3]],
@@ -192,6 +204,7 @@ internal class ProjectData : ITestData
         ProjectFactory.Create(
             Workspaces[2],
             Users[3],
+            AuditFactory.Create(Users[3]),
             "Something More Private",
             isPrivate: true,
             allowedMembers: [Users[3]]),
@@ -251,7 +264,7 @@ internal class ProjectData : ITestData
     [
         ProjectSprintFactory.Create(
             Projects[0],
-            Audit.Create(Users[0]),
+            AuditFactory.Create(Users[0]),
             "Sprint 1 - Qualify on Semi Finals",
             new DateOnly(2024, 01, 16),
             new DateOnly(2024, 01, 30)),
@@ -278,41 +291,41 @@ internal class ProjectData : ITestData
     public static readonly ProjectTaskAggregate[] ProjectTasks =
     [
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[0],
+            AuditFactory.Create(Users[0]),
             "Should do more dribbling"),
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[0],
+            AuditFactory.Create(Users[0]),
             "Should add more stepping to my shots",
             customOrderPosition: 1,
             assignee: Users[1],
             isCompleted: true),
         ProjectTaskFactory.Create(
-            Users[3],
             ProjectStages[0],
+            AuditFactory.Create(Users[3]),
             "Should tell Michael to PASS MOORE!!",
             assignee: Users[0],
             customOrderPosition: 2),
         ProjectTaskFactory.Create(
-            Users[3],
             ProjectStages[0],
+            AuditFactory.Create(Users[3]),
             "Tell Michael to DRIBBLE LESS!!",
             assignee: Users[0],
             customOrderPosition: 3),
 
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[1],
+            AuditFactory.Create(Users[0]),
             "We want to win the cup"),
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[1],
+            AuditFactory.Create(Users[0]),
             "We want to win them all",
             customOrderPosition: 1),
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[1],
+            AuditFactory.Create(Users[0]),
             "We want to go to coffee after",
             customOrderPosition: 2),
     ];

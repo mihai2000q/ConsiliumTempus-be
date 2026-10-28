@@ -79,19 +79,23 @@ internal class UserData : ITestData
     [
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Basketball",
             "This is the Description of the first Workspace"),
         WorkspaceFactory.Create(
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Football",
             "This is the Description of the second Workspace"),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Michael Group",
             "This is the Description of the third Workspace",
             true),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Michael and Lebron are best friends <3",
             "",
             true), // normally not possible, but testing out multiple use cases at once
@@ -142,27 +146,32 @@ internal class UserData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Win NBA - with new owner",
             "Plan to win NBA"),
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             name: "project will be deleted",
             isPrivate: true,
             allowedMembers: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             name: "Workspace will be deleted",
             isPrivate: true,
             allowedMembers: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[3],
             Users[0],
+            AuditFactory.Create(Users[0]),
             name: "new owner"),
         ProjectFactory.Create(
             Workspaces[3],
             Users[0],
+            AuditFactory.Create(Users[0]),
             name: "deleted",
             isPrivate: true,
             allowedMembers: [Users[0]])
@@ -172,13 +181,13 @@ internal class UserData : ITestData
     [
         ProjectSprintFactory.Create(
             Projects[0],
-            Audit.Create(Users[0]),
+            AuditFactory.Create(Users[0]),
             "Sprint 1 - Qualify on Semi Finals",
             new DateOnly(2024, 01, 16),
             new DateOnly(2024, 01, 30)),
         ProjectSprintFactory.Create(
             Projects[1],
-            Audit.Create(Users[0])),
+            AuditFactory.Create(Users[0])),
     ];
 
     private static readonly SingleSelectOption[] SingleSelectOptions =
@@ -251,13 +260,13 @@ internal class UserData : ITestData
     public static readonly ProjectTaskAggregate[] ProjectTasks =
     [
         ProjectTaskFactory.Create(
-            Users[1], // TODO: Make it back to Users[0], but for the moment the Cascade removes it, which shouldn't happen as the tasks should be preserved
             ProjectStages[0],
+            AuditFactory.Create(Users[1]), // TODO: Make it back to Users[0], but for the moment the Cascade removes it, which shouldn't happen as the tasks should be preserved
             "Should do more dribbling"),
 
         ProjectTaskFactory.Create(
-            Users[1],
-            ProjectStages[1]),
+            ProjectStages[1],
+            AuditFactory.Create(Users[1])),
     ];
 
     public static readonly CustomField[] CustomFields =

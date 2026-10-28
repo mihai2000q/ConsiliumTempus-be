@@ -10,15 +10,13 @@ namespace ConsiliumTempus.Common.IntegrationTests.ProjectTask;
 public static class ProjectTaskFactory
 {
     public static ProjectTaskAggregate Create(
-        UserAggregate createdBy,
         ProjectStage stage,
+        Audit audit,
         string name = Constants.ProjectTask.Name,
         string description = Constants.ProjectTask.Description,
         int customOrderPosition = 0,
         bool isCompleted = false,
-        UserAggregate? assignee = null,
-        DateTime? createdDateTime = null,
-        DateTime? updatedDateTime = null)
+        UserAggregate? assignee = null)
     {
         return EntityBuilder<ProjectTaskAggregate>.Empty()
             .WithProperty(nameof(ProjectTaskAggregate.Id), ProjectTaskId.CreateUnique())
@@ -26,10 +24,8 @@ public static class ProjectTaskFactory
             .WithProperty(nameof(ProjectTaskAggregate.Description), Description.Create(description))
             .WithProperty(nameof(ProjectTaskAggregate.CustomOrderPosition), CustomOrderPosition.Create(customOrderPosition))
             .WithProperty(nameof(ProjectTaskAggregate.IsCompleted), IsCompleted.Create(isCompleted))
-            .WithProperty(nameof(ProjectTaskAggregate.CreatedBy), createdBy)
             .WithProperty(nameof(ProjectTaskAggregate.Assignee), assignee)
-            .WithProperty(nameof(ProjectTaskAggregate.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
-            .WithProperty(nameof(ProjectTaskAggregate.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(ProjectTaskAggregate.Audit), audit)
             .WithProperty(nameof(ProjectTaskAggregate.Stage), stage)
             .Build();
     }
