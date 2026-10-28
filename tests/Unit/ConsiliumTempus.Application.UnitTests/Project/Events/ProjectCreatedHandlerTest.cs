@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Project.Events;
-using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Constants;

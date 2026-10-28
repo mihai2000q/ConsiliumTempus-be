@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.Project.ValueObjects;
 using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.KickCollaborator;
 using ConsiliumTempus.Api.IntegrationTests.Core;

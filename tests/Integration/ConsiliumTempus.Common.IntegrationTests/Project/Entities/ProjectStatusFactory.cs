@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Common.IntegrationTests.TestConstants;
-using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;

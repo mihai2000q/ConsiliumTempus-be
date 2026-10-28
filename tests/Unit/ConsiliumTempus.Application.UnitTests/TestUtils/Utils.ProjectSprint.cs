@@ -9,7 +9,6 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
-using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 

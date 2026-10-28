@@ -1,7 +1,6 @@
 using ConsiliumTempus.Application.Project.Queries.Get;
 using ConsiliumTempus.Application.Project.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.Project;
-using ConsiliumTempus.Common.UnitTests.User;
 
 namespace ConsiliumTempus.Api.UnitTests.TestData;
 
