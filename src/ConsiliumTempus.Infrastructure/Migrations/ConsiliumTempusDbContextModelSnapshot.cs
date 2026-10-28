@@ -44,33 +44,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.ToTable("RefreshToken", (string)null);
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Audit", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
-
-                    b.Property<Guid?>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("UpdatedById");
-
-                    b.ToTable("Audit", (string)null);
-                });
-
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Membership", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -510,6 +483,25 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.HasIndex("AllowedMembersId");
 
                     b.ToTable("ProjectHasAllowedMember", (string)null);
+                });
+
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.ProjectHasCustomFieldSetup", b =>
+                {
+                    b.Property<Guid>("ProjectsId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ProjectId")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                    b.Property<Guid>("CustomFieldSetupsId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CustomFieldSetupId")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                    b.HasKey("ProjectsId", "CustomFieldSetupsId");
+
+                    b.HasIndex("CustomFieldSetupsId");
+
+                    b.ToTable("ProjectHasCustomFieldSetup", (string)null);
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.UserHasFavoriteProject", b =>
@@ -1070,9 +1062,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                    b.Property<Guid>("AuditId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -1089,9 +1078,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuditId")
-                        .IsUnique();
-
                     b.HasIndex("WorkspaceId");
 
                     b.ToTable("CustomFieldSetup", (string)null);
@@ -1105,9 +1091,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                    b.Property<Guid>("AuditId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1115,8 +1098,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AuditId");
 
                     b.HasIndex("ProjectId");
 
@@ -1129,9 +1110,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("LastActivity")
                         .HasColumnType("datetime2");
 
@@ -1140,9 +1118,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdatedDateTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("WorkspaceId")
                         .HasColumnType("uniqueidentifier");
@@ -1162,16 +1137,10 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                    b.Property<Guid>("AuditId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("SprintId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AuditId")
-                        .IsUnique();
 
                     b.HasIndex("SprintId");
 
@@ -1184,9 +1153,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                    b.Property<Guid>("AuditId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateOnly?>("EndDate")
                         .HasColumnType("date");
 
@@ -1197,9 +1163,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("date");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AuditId")
-                        .IsUnique();
 
                     b.HasIndex("ProjectId");
 
@@ -1233,12 +1196,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<Guid?>("AssigneeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateOnly?>("DueDate")
                         .HasColumnType("date");
 
@@ -1251,14 +1208,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Property<Guid>("StageId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("UpdatedDateTime")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AssigneeId");
-
-                    b.HasIndex("CreatedById");
 
                     b.HasIndex("ReviewerId");
 
@@ -1322,40 +1274,17 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("LastActivity")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("UpdatedDateTime")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Workspace", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectHasCustomFieldSetup", b =>
-                {
-                    b.Property<Guid>("CustomFieldSetupsId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
-
-                    b.Property<Guid>("ProjectsId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
-
-                    b.HasKey("CustomFieldSetupsId", "ProjectsId");
-
-                    b.HasIndex("ProjectsId");
-
-                    b.ToTable("ProjectHasCustomFieldSetup");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.DateCustomFieldSetupAggregate", b =>
@@ -1645,23 +1574,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Audit", b =>
-                {
-                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedById")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("UpdatedBy");
-                });
-
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Entities.Membership", b =>
                 {
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "User")
@@ -1779,6 +1691,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.ProjectHasCustomFieldSetup", b =>
+                {
+                    b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
+                        .WithMany()
+                        .HasForeignKey("CustomFieldSetupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ConsiliumTempus.Domain.Common.Relations.UserHasFavoriteProject", b =>
                 {
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", null)
@@ -1826,30 +1753,67 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", b =>
                 {
-                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
-                        .WithOne()
-                        .HasForeignKey("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", "AuditId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("ConsiliumTempus.Domain.Workspace.WorkspaceAggregate", "Workspace")
                         .WithMany("CustomFieldSetups")
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Audit");
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Audit", "Audit", b1 =>
+                        {
+                            b1.Property<Guid>("CustomFieldSetupAggregateId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                            b1.Property<Guid?>("CreatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTime>("CreatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("CreatedDateTime");
+
+                            b1.Property<Guid?>("UpdatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UpdatedById");
+
+                            b1.Property<DateTime>("UpdatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("UpdatedDateTime");
+
+                            b1.HasKey("CustomFieldSetupAggregateId");
+
+                            b1.HasIndex("CreatedById");
+
+                            b1.HasIndex("UpdatedById");
+
+                            b1.ToTable("CustomFieldSetup");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                                .WithMany()
+                                .HasForeignKey("CreatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.WithOwner()
+                                .HasForeignKey("CustomFieldSetupAggregateId");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "UpdatedBy")
+                                .WithMany()
+                                .HasForeignKey("UpdatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.Navigation("CreatedBy");
+
+                            b1.Navigation("UpdatedBy");
+                        });
+
+                    b.Navigation("Audit")
+                        .IsRequired();
 
                     b.Navigation("Workspace");
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.Project.Entities.ProjectStatus", b =>
                 {
-                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
-                        .WithMany()
-                        .HasForeignKey("AuditId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")
                         .WithMany("Statuses")
                         .HasForeignKey("ProjectId")
@@ -1876,6 +1840,54 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("ProjectStatusId");
                         });
 
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Audit", "Audit", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectStatusId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                            b1.Property<Guid?>("CreatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTime>("CreatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("CreatedDateTime");
+
+                            b1.Property<Guid?>("UpdatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UpdatedById");
+
+                            b1.Property<DateTime>("UpdatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("UpdatedDateTime");
+
+                            b1.HasKey("ProjectStatusId");
+
+                            b1.HasIndex("CreatedById");
+
+                            b1.HasIndex("UpdatedById");
+
+                            b1.ToTable("ProjectStatus");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                                .WithMany()
+                                .HasForeignKey("CreatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectStatusId");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "UpdatedBy")
+                                .WithMany()
+                                .HasForeignKey("UpdatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.Navigation("CreatedBy");
+
+                            b1.Navigation("UpdatedBy");
+                        });
+
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b1 =>
                         {
                             b1.Property<Guid>("ProjectStatusId")
@@ -1895,7 +1907,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("ProjectStatusId");
                         });
 
-                    b.Navigation("Audit");
+                    b.Navigation("Audit")
+                        .IsRequired();
 
                     b.Navigation("Description")
                         .IsRequired();
@@ -1938,6 +1951,54 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("ProjectAggregateId");
                         });
 
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Audit", "Audit", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectAggregateId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                            b1.Property<Guid?>("CreatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTime>("CreatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("CreatedDateTime");
+
+                            b1.Property<Guid?>("UpdatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UpdatedById");
+
+                            b1.Property<DateTime>("UpdatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("UpdatedDateTime");
+
+                            b1.HasKey("ProjectAggregateId");
+
+                            b1.HasIndex("CreatedById");
+
+                            b1.HasIndex("UpdatedById");
+
+                            b1.ToTable("Project");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                                .WithMany()
+                                .HasForeignKey("CreatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectAggregateId");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "UpdatedBy")
+                                .WithMany()
+                                .HasForeignKey("UpdatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.Navigation("CreatedBy");
+
+                            b1.Navigation("UpdatedBy");
+                        });
+
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b1 =>
                         {
                             b1.Property<Guid>("ProjectAggregateId")
@@ -1977,6 +2038,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("ProjectAggregateId");
                         });
 
+                    b.Navigation("Audit")
+                        .IsRequired();
+
                     b.Navigation("Description")
                         .IsRequired();
 
@@ -1993,17 +2057,59 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectSprint.Entities.ProjectStage", b =>
                 {
-                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
-                        .WithOne()
-                        .HasForeignKey("ConsiliumTempus.Domain.ProjectSprint.Entities.ProjectStage", "AuditId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("ConsiliumTempus.Domain.ProjectSprint.ProjectSprintAggregate", "Sprint")
                         .WithMany("Stages")
                         .HasForeignKey("SprintId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Audit", "Audit", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectStageId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                            b1.Property<Guid?>("CreatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTime>("CreatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("CreatedDateTime");
+
+                            b1.Property<Guid?>("UpdatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UpdatedById");
+
+                            b1.Property<DateTime>("UpdatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("UpdatedDateTime");
+
+                            b1.HasKey("ProjectStageId");
+
+                            b1.HasIndex("CreatedById");
+
+                            b1.HasIndex("UpdatedById");
+
+                            b1.ToTable("ProjectStage");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                                .WithMany()
+                                .HasForeignKey("CreatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectStageId");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "UpdatedBy")
+                                .WithMany()
+                                .HasForeignKey("UpdatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.Navigation("CreatedBy");
+
+                            b1.Navigation("UpdatedBy");
+                        });
 
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.CustomOrderPosition", "CustomOrderPosition", b1 =>
                         {
@@ -2043,7 +2149,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("ProjectStageId");
                         });
 
-                    b.Navigation("Audit");
+                    b.Navigation("Audit")
+                        .IsRequired();
 
                     b.Navigation("CustomOrderPosition")
                         .IsRequired();
@@ -2056,17 +2163,59 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             modelBuilder.Entity("ConsiliumTempus.Domain.ProjectSprint.ProjectSprintAggregate", b =>
                 {
-                    b.HasOne("ConsiliumTempus.Domain.Common.Entities.Audit", "Audit")
-                        .WithOne()
-                        .HasForeignKey("ConsiliumTempus.Domain.ProjectSprint.ProjectSprintAggregate", "AuditId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", "Project")
                         .WithMany("Sprints")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Audit", "Audit", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectSprintAggregateId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                            b1.Property<Guid?>("CreatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTime>("CreatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("CreatedDateTime");
+
+                            b1.Property<Guid?>("UpdatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UpdatedById");
+
+                            b1.Property<DateTime>("UpdatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("UpdatedDateTime");
+
+                            b1.HasKey("ProjectSprintAggregateId");
+
+                            b1.HasIndex("CreatedById");
+
+                            b1.HasIndex("UpdatedById");
+
+                            b1.ToTable("ProjectSprint");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                                .WithMany()
+                                .HasForeignKey("CreatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectSprintAggregateId");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "UpdatedBy")
+                                .WithMany()
+                                .HasForeignKey("UpdatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.Navigation("CreatedBy");
+
+                            b1.Navigation("UpdatedBy");
+                        });
 
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Name", "Name", b1 =>
                         {
@@ -2088,7 +2237,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("ProjectSprintAggregateId");
                         });
 
-                    b.Navigation("Audit");
+                    b.Navigation("Audit")
+                        .IsRequired();
 
                     b.Navigation("Name")
                         .IsRequired();
@@ -2114,11 +2264,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasForeignKey("AssigneeId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerId")
@@ -2129,6 +2274,54 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasForeignKey("StageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Audit", "Audit", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectTaskAggregateId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                            b1.Property<Guid?>("CreatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTime>("CreatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("CreatedDateTime");
+
+                            b1.Property<Guid?>("UpdatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UpdatedById");
+
+                            b1.Property<DateTime>("UpdatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("UpdatedDateTime");
+
+                            b1.HasKey("ProjectTaskAggregateId");
+
+                            b1.HasIndex("CreatedById");
+
+                            b1.HasIndex("UpdatedById");
+
+                            b1.ToTable("ProjectTask");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                                .WithMany()
+                                .HasForeignKey("CreatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectTaskAggregateId");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "UpdatedBy")
+                                .WithMany()
+                                .HasForeignKey("UpdatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.Navigation("CreatedBy");
+
+                            b1.Navigation("UpdatedBy");
+                        });
 
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.CustomOrderPosition", "CustomOrderPosition", b1 =>
                         {
@@ -2279,9 +2472,10 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
                     b.Navigation("Assignee");
 
-                    b.Navigation("Comments");
+                    b.Navigation("Audit")
+                        .IsRequired();
 
-                    b.Navigation("CreatedBy");
+                    b.Navigation("Comments");
 
                     b.Navigation("CustomOrderPosition")
                         .IsRequired();
@@ -2455,6 +2649,54 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("WorkspaceAggregateId");
                         });
 
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Audit", "Audit", b1 =>
+                        {
+                            b1.Property<Guid>("WorkspaceAggregateId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                            b1.Property<Guid?>("CreatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTime>("CreatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("CreatedDateTime");
+
+                            b1.Property<Guid?>("UpdatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UpdatedById");
+
+                            b1.Property<DateTime>("UpdatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("UpdatedDateTime");
+
+                            b1.HasKey("WorkspaceAggregateId");
+
+                            b1.HasIndex("CreatedById");
+
+                            b1.HasIndex("UpdatedById");
+
+                            b1.ToTable("Workspace");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                                .WithMany()
+                                .HasForeignKey("CreatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "UpdatedBy")
+                                .WithMany()
+                                .HasForeignKey("UpdatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.WithOwner()
+                                .HasForeignKey("WorkspaceAggregateId");
+
+                            b1.Navigation("CreatedBy");
+
+                            b1.Navigation("UpdatedBy");
+                        });
+
                     b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Description", "Description", b1 =>
                         {
                             b1.Property<Guid>("WorkspaceAggregateId")
@@ -2494,6 +2736,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasForeignKey("WorkspaceAggregateId");
                         });
 
+                    b.Navigation("Audit")
+                        .IsRequired();
+
                     b.Navigation("Description")
                         .IsRequired();
 
@@ -2504,21 +2749,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("ProjectHasCustomFieldSetup", b =>
-                {
-                    b.HasOne("ConsiliumTempus.Domain.CustomFieldSetup.CustomFieldSetupAggregate", null)
-                        .WithMany()
-                        .HasForeignKey("CustomFieldSetupsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConsiliumTempus.Domain.Project.ProjectAggregate", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ConsiliumTempus.Domain.CustomFieldSetup.Variants.DateCustomFieldSetupAggregate", b =>

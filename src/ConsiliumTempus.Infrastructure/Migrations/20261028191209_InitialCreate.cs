@@ -58,33 +58,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Audit",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Audit", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Audit_User_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Audit_User_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RefreshToken",
                 columns: table => new
                 {
@@ -115,15 +88,29 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     IsPersonal = table.Column<bool>(type: "bit", nullable: false),
                     OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LastActivity = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Workspace", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Workspace_User_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Workspace_User_OwnerId",
                         column: x => x.OwnerId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Workspace_User_UpdatedById",
+                        column: x => x.UpdatedById,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -181,15 +168,24 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CustomFieldSetup", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CustomFieldSetup_Audit_AuditId",
-                        column: x => x.AuditId,
-                        principalTable: "Audit",
+                        name: "FK_CustomFieldSetup_User_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CustomFieldSetup_User_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -245,15 +241,29 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Lifecycle = table.Column<int>(type: "int", nullable: false),
                     LastActivity = table.Column<DateTime>(type: "datetime2", nullable: false),
                     WorkspaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Project", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Project_User_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Project_User_OwnerId",
                         column: x => x.OwnerId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Project_User_UpdatedById",
+                        column: x => x.UpdatedById,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -513,21 +523,21 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "ProjectHasCustomFieldSetup",
                 columns: table => new
                 {
-                    CustomFieldSetupsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProjectsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CustomFieldSetupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectHasCustomFieldSetup", x => new { x.CustomFieldSetupsId, x.ProjectsId });
+                    table.PrimaryKey("PK_ProjectHasCustomFieldSetup", x => new { x.ProjectId, x.CustomFieldSetupId });
                     table.ForeignKey(
-                        name: "FK_ProjectHasCustomFieldSetup_CustomFieldSetup_CustomFieldSetupsId",
-                        column: x => x.CustomFieldSetupsId,
+                        name: "FK_ProjectHasCustomFieldSetup_CustomFieldSetup_CustomFieldSetupId",
+                        column: x => x.CustomFieldSetupId,
                         principalTable: "CustomFieldSetup",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProjectHasCustomFieldSetup_Project_ProjectsId",
-                        column: x => x.ProjectsId,
+                        name: "FK_ProjectHasCustomFieldSetup_Project_ProjectId",
+                        column: x => x.ProjectId,
                         principalTable: "Project",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -542,23 +552,32 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     StartDate = table.Column<DateOnly>(type: "date", nullable: true),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: true),
                     ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProjectSprint", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProjectSprint_Audit_AuditId",
-                        column: x => x.AuditId,
-                        principalTable: "Audit",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProjectSprint_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Project",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectSprint_User_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectSprint_User_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -570,23 +589,32 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProjectStatus", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProjectStatus_Audit_AuditId",
-                        column: x => x.AuditId,
-                        principalTable: "Audit",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProjectStatus_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Project",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectStatus_User_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectStatus_User_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -663,23 +691,32 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CustomOrderPosition = table.Column<int>(type: "int", nullable: false),
                     SprintId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AuditId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProjectStage", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProjectStage_Audit_AuditId",
-                        column: x => x.AuditId,
-                        principalTable: "Audit",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProjectStage_ProjectSprint_SprintId",
                         column: x => x.SprintId,
                         principalTable: "ProjectSprint",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectStage_User_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectStage_User_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -692,13 +729,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     CustomOrderPosition = table.Column<int>(type: "int", nullable: false),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false),
                     CompletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AssigneeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ReviewerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DueDate = table.Column<DateOnly>(type: "date", nullable: true),
                     EstimatedDuration = table.Column<TimeSpan>(type: "time", nullable: true),
                     StageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -725,6 +763,12 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_ProjectTask_User_ReviewerId",
                         column: x => x.ReviewerId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectTask_User_UpdatedById",
+                        column: x => x.UpdatedById,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -1206,16 +1250,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Audit_CreatedById",
-                table: "Audit",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Audit_UpdatedById",
-                table: "Audit",
-                column: "UpdatedById");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CustomField_Date_ProjectTaskId",
                 table: "CustomField_Date",
                 column: "ProjectTaskId");
@@ -1321,10 +1355,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "SetupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomFieldSetup_AuditId",
+                name: "IX_CustomFieldSetup_CreatedById",
                 table: "CustomFieldSetup",
-                column: "AuditId",
-                unique: true);
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomFieldSetup_UpdatedById",
+                table: "CustomFieldSetup",
+                column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomFieldSetup_WorkspaceId",
@@ -1347,9 +1385,19 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "SetupId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Project_CreatedById",
+                table: "Project",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Project_OwnerId",
                 table: "Project",
                 column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Project_UpdatedById",
+                table: "Project",
+                column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Project_WorkspaceId",
@@ -1362,15 +1410,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectHasCustomFieldSetup_ProjectsId",
+                name: "IX_ProjectHasCustomFieldSetup_CustomFieldSetupId",
                 table: "ProjectHasCustomFieldSetup",
-                column: "ProjectsId");
+                column: "CustomFieldSetupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectSprint_AuditId",
+                name: "IX_ProjectSprint_CreatedById",
                 table: "ProjectSprint",
-                column: "AuditId",
-                unique: true);
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectSprint_ProjectId",
@@ -1378,10 +1425,14 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectStage_AuditId",
+                name: "IX_ProjectSprint_UpdatedById",
+                table: "ProjectSprint",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectStage_CreatedById",
                 table: "ProjectStage",
-                column: "AuditId",
-                unique: true);
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectStage_SprintId",
@@ -1389,14 +1440,24 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "SprintId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectStatus_AuditId",
+                name: "IX_ProjectStage_UpdatedById",
+                table: "ProjectStage",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectStatus_CreatedById",
                 table: "ProjectStatus",
-                column: "AuditId");
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectStatus_ProjectId",
                 table: "ProjectStatus",
                 column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectStatus_UpdatedById",
+                table: "ProjectStatus",
+                column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectTask_AssigneeId",
@@ -1417,6 +1478,11 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 name: "IX_ProjectTask_StageId",
                 table: "ProjectTask",
                 column: "StageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTask_UpdatedById",
+                table: "ProjectTask",
+                column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectTaskComment_CreatedById",
@@ -1460,9 +1526,19 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Workspace_CreatedById",
+                table: "Workspace",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Workspace_OwnerId",
                 table: "Workspace",
                 column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Workspace_UpdatedById",
+                table: "Workspace",
+                column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkspaceInvitation_CollaboratorId",
@@ -1601,9 +1677,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProjectSprint");
-
-            migrationBuilder.DropTable(
-                name: "Audit");
 
             migrationBuilder.DropTable(
                 name: "Project");
