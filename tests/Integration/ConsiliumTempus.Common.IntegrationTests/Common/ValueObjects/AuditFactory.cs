@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Common.IntegrationTests.Common.Entities;
+namespace ConsiliumTempus.Common.IntegrationTests.Common.ValueObjects;
 
 public static class AuditFactory
 {
