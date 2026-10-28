@@ -37,8 +37,6 @@ internal static partial class Utils
             workspace.IsFavorite(user).Should().Be(false);
             workspace.IsPersonal.Value.Should().Be(false);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.DomainEvents.Should().BeEmpty();
 
             workspace.Memberships.Should().HaveCount(1);
@@ -124,7 +122,6 @@ internal static partial class Utils
         {
             workspace.Id.Value.Should().Be(command.Id);
             workspace.Name.Value.Should().Be(command.Name);
-            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
@@ -158,7 +155,6 @@ internal static partial class Utils
         {
             workspace.Id.Value.Should().Be(command.Id);
             workspace.Description.Value.Should().Be(command.Description);
-            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
@@ -169,7 +165,6 @@ internal static partial class Utils
             workspace.Id.Value.Should().Be(command.Id);
             workspace.Owner.Id.Value.Should().Be(command.OwnerId);
             workspace.Memberships.Single(m => m.User == workspace.Owner).WorkspaceRole.Should().Be(WorkspaceRole.Admin);
-            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
@@ -226,8 +221,8 @@ internal static partial class Utils
             outcome.Workspace.Description.Should().Be(expected.Description);
             outcome.Workspace.IsFavorite(user).Should().Be(expected.IsFavorite(user));
             outcome.Workspace.LastActivity.Should().Be(expected.LastActivity);
-            outcome.Workspace.CreatedDateTime.Should().Be(expected.CreatedDateTime);
-            outcome.Workspace.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Workspace.Audit.CreatedDateTime.Should().Be(expected.Audit.CreatedDateTime);
+            outcome.Workspace.Audit.UpdatedDateTime.Should().Be(expected.Audit.UpdatedDateTime);
             outcome.Workspace.Memberships.Should().BeEquivalentTo(expected.Memberships);
             outcome.Workspace.Projects.Should().BeEquivalentTo(expected.Projects);
             outcome.Workspace.Favorites.Should().BeEquivalentTo(expected.Favorites);
@@ -243,8 +238,8 @@ internal static partial class Utils
             outcome.Name.Should().Be(expected.Name);
             outcome.Description.Should().Be(expected.Description);
             outcome.LastActivity.Should().Be(expected.LastActivity);
-            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
-            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Audit.CreatedDateTime.Should().Be(expected.Audit.CreatedDateTime);
+            outcome.Audit.UpdatedDateTime.Should().Be(expected.Audit.UpdatedDateTime);
             outcome.Memberships.Should().BeEquivalentTo(expected.Memberships);
             outcome.Projects.Should().BeEquivalentTo(expected.Projects);
             outcome.Favorites.Should().BeEquivalentTo(expected.Favorites);

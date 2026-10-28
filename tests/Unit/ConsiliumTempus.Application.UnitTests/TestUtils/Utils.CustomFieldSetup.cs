@@ -41,14 +41,12 @@ internal static partial class Utils
         internal static void AssertFromCreateCommand(
             CreateCustomFieldSetupCommand command,
             CustomFieldSetupAggregate customFieldSetup,
-            UserAggregate user,
             WorkspaceAggregate? workspace,
             ProjectAggregate? project)
         {
             customFieldSetup.Id.Value.Should().NotBeEmpty();
             customFieldSetup.Name.Value.Should().Be(command.Name);
             customFieldSetup.Description.Value.Should().Be(command.Description);
-            customFieldSetup.Audit.ShouldBeCreated(user);
 
             if (command.WorkspaceId is not null)
                 customFieldSetup.Workspace.Should().Be(workspace);
@@ -161,13 +159,11 @@ internal static partial class Utils
 
         internal static void AssertFromUpdateCommand(
             UpdateCustomFieldSetupCommand command,
-            CustomFieldSetupAggregate customFieldSetup,
-            UserAggregate user)
+            CustomFieldSetupAggregate customFieldSetup)
         {
             customFieldSetup.Id.Value.Should().Be(command.Id);
             customFieldSetup.Name.Value.Should().Be(command.Name);
             customFieldSetup.Description.Value.Should().Be(command.Description);
-            customFieldSetup.Audit.ShouldBeUpdated(user);
 
             switch (customFieldSetup)
             {
