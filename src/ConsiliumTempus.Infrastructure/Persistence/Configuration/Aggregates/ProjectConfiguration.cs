@@ -47,6 +47,9 @@ internal sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAgg
 
         builder.OwnsAudit(p => p.Audit);
 
+        builder.Property(p => p.LastActivity)
+            .ExcludeFromAudit();
+
         builder.HasMany(p => p.Statuses)
             .WithOne(ps => ps.Project);
 

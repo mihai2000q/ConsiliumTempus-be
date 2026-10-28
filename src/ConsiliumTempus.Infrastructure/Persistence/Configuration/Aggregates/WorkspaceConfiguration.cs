@@ -42,6 +42,9 @@ internal sealed class WorkspaceConfiguration : IEntityTypeConfiguration<Workspac
 
         builder.OwnsAudit(w => w.Audit);
 
+        builder.Property(w => w.LastActivity)
+            .ExcludeFromAudit();
+
         builder.HasMany(w => w.Favorites)
             .WithMany()
             .UsingEntity<UserHasFavoriteWorkspace>();

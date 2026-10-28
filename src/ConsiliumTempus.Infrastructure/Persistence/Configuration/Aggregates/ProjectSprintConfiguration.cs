@@ -58,6 +58,7 @@ internal sealed class ProjectStageConfiguration : IEntityTypeConfiguration<Proje
         builder.OwnsOne(s => s.CustomOrderPosition)
             .Property(o => o.Value)
             .HasColumnName(nameof(CustomOrderPosition));
+        builder.Navigation(s => s.CustomOrderPosition).ExcludeFromAudit();
 
         builder.HasOne(s => s.Sprint)
             .WithMany(ps => ps.Stages)

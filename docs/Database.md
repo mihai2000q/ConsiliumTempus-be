@@ -76,7 +76,7 @@ its columns (`CreatedById`, `CreatedDateTime`, `UpdatedById` and `UpdatedDateTim
 so there is no *Audit* table, and it goes away with the entity that holds it.
 The configurations say it with `OwnsAudit`.
 
-The entities that hold an audit implement `IAudited`, and the domain does not create nor update it.
+The entities that hold an audit implement `IAudit`, and the domain does not create nor update it.
 The `StampAuditInterceptor` (which goes after the one that publishes the domain events, as they add and modify entities too)
 stamps the current user and the date and time when the changes are saved, based on the state of the entity:
 
@@ -84,13 +84,37 @@ stamps the current user and the date and time when the changes are saved, based 
 - **Modified**: the audit is updated, so any change on the entity updates it
 (i.e., a stage whose position changes because another one is moved).
 
-Two things do not count as a change of the entity: its **last activity** (the project and the workspace refresh it
-whenever something under them changes), and the audit itself.
-A change that is saved on another table but that has to count as an update of the entity
-(i.e., the custom fields of a task) is marked explicitly, with `IProjectTaskRepository.MarkAsUpdated`.
-
 When there is no current user (i.e., there is no request), or the current user is being deleted, the user is left empty.
 The *User Deleted* event clears the user from the audits, which does not update them.
+
+#### Excluded from the audit
+
+Some changes are not a change of the entity itself, so they do not update its audit.
+They are excluded in the configuration of the entity, with `ExcludeFromAudit`:
+
+- the **last activity** of a project and of a workspace, which is refreshed whenever something under them changes
+- the **custom order position** of a project stage and of a project task, which changes whenever another one is moved or added
+
+```csharp
+builder.Property(p => p.LastActivity).ExcludeFromAudit();
+builder.Navigation(t => t.CustomOrderPosition).ExcludeFromAudit();
+```
+
+`AuditExclusionTest` lists all the exclusions, so a new one has to be added to the list on purpose.
+
+A change that has to count anyway can be marked with `MarkAsUpdated` (on the repository, which marks it on the `ConsiliumTempusDbContext`),
+without touching the entity. It is used when:
+
+- the change is saved on another table (i.e., the custom fields of a task)
+- the change is excluded, but the user did it to that entity (i.e., the stage or the task that the user moves,
+as opposed to the ones that are only shifted)
+
+#### ExecuteUpdate
+
+`ExecuteUpdate` (and `ExecuteDelete`) do not go through the change tracker, so they skip the `StampAuditInterceptor`.
+That is why an `ExecuteUpdate` on an entity that has an audit is **forbidden**, unless it only changes properties
+that are excluded from the audit (i.e., the last activity). Any other change has to be loaded, changed and saved,
+so that the audit is stamped.
 
 ## Migrations
 

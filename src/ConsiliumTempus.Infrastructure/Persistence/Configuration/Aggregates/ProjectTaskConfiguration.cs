@@ -45,6 +45,7 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
         builder.OwnsOne(t => t.CustomOrderPosition)
             .Property(o => o.Value)
             .HasColumnName(nameof(CustomOrderPosition));
+        builder.Navigation(t => t.CustomOrderPosition).ExcludeFromAudit();
 
         builder.OwnsAudit(t => t.Audit);
 
