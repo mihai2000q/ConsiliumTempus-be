@@ -327,7 +327,7 @@ internal static partial class Utils
             AssertUserResponse(response.Owner, project.Owner);
             response.IsPrivate.Should().Be(project.IsPrivate.Value);
             AssertProjectStatusResponse(response.LatestStatus, project.LatestStatus);
-            response.CreatedDateTime.Should().Be(project.CreatedDateTime);
+            response.CreatedDateTime.Should().Be(project.Audit.CreatedDateTime);
         }
 
         private static void AssertUserResponse(

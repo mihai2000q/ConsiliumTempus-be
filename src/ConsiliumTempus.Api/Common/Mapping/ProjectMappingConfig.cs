@@ -121,7 +121,8 @@ internal sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.IsFavorite,
                 src => src.IsFavorite((UserAggregate)MapContext.Current!.Parameters[CurrentUser]))
             .Map(dest => dest.Lifecycle, src => src.Lifecycle.ToString())
-            .Map(dest => dest.IsPrivate, src => src.IsPrivate.Value);
+            .Map(dest => dest.IsPrivate, src => src.IsPrivate.Value)
+            .Map(dest => dest.CreatedDateTime, src => src.Audit.CreatedDateTime);
         config.NewConfig<UserAggregate, GetCollectionProjectResponse.UserResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
