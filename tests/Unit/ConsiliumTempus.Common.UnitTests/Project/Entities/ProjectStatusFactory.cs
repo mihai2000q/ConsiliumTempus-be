@@ -1,5 +1,5 @@
-﻿using ConsiliumTempus.Common.UnitTests.TestConstants;
-using ConsiliumTempus.Common.UnitTests.User;
+﻿using ConsiliumTempus.Common.UnitTests.Common.ValueObjects;
+using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
@@ -17,12 +17,14 @@ public static class ProjectStatusFactory
         ProjectStatusType status = ProjectStatusType.OnTrack,
         string description = Constants.ProjectStatus.Description)
     {
-        return ProjectStatus.Create(
+        var projectStatus = ProjectStatus.Create(
             Title.Create(title),
             status,
             Description.Create(description),
-            project ?? ProjectFactory.Create(),
-            createdBy ?? UserFactory.Create());
+            project ?? ProjectFactory.Create());
+        projectStatus.WithAudit(createdBy);
+
+        return projectStatus;
     }
 
     public static List<ProjectStatus> CreateList(int count = 5)

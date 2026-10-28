@@ -1,7 +1,7 @@
 ﻿using ConsiliumTempus.Common.UnitTests.Common.Entities;
+using ConsiliumTempus.Common.UnitTests.Common.ValueObjects;
 using ConsiliumTempus.Common.UnitTests.Extensions;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
-using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -28,9 +28,9 @@ public static class CustomFieldSetupFactory
             Name.Create(name),
             Description.Create(description),
             workspace,
-            project,
-            createdBy ?? UserFactory.Create());
+            project);
 
+        setup.WithAudit(createdBy);
         setup.ClearDomainEvents();
 
         return setup;
@@ -49,9 +49,9 @@ public static class CustomFieldSetupFactory
             Name.Create(name),
             Description.Create(description),
             workspace,
-            project,
-            createdBy ?? UserFactory.Create());
+            project);
 
+        setup.WithAudit(createdBy);
         setup.ClearDomainEvents();
 
         return setup;
@@ -70,9 +70,9 @@ public static class CustomFieldSetupFactory
             Name.Create(name),
             Description.Create(description),
             workspace,
-            project,
-            createdBy ?? UserFactory.Create());
+            project);
 
+        setup.WithAudit(createdBy);
         setup.ClearDomainEvents();
 
         return setup;
@@ -98,9 +98,9 @@ public static class CustomFieldSetupFactory
             Name.Create(name),
             Description.Create(description),
             workspace,
-            project,
-            createdBy ?? UserFactory.Create());
+            project);
 
+        setup.WithAudit(createdBy);
         setup.ClearDomainEvents();
 
         return setup;
@@ -124,9 +124,9 @@ public static class CustomFieldSetupFactory
             Name.Create(name),
             Description.Create(description),
             workspace,
-            project,
-            createdBy ?? UserFactory.Create());
+            project);
 
+        setup.WithAudit(createdBy);
         setup.ClearDomainEvents();
 
         return setup;
@@ -143,9 +143,9 @@ public static class CustomFieldSetupFactory
             Name.Create(name),
             Description.Create(description),
             workspace,
-            project,
-            createdBy ?? UserFactory.Create());
+            project);
 
+        setup.WithAudit(createdBy);
         setup.ClearDomainEvents();
 
         return setup;
@@ -173,9 +173,9 @@ public static class CustomFieldSetupFactory
             Name.Create(name),
             Description.Create(description),
             workspace,
-            project,
-            createdBy ?? UserFactory.Create());
+            project);
 
+        setup.WithAudit(createdBy);
         setup.ClearDomainEvents();
 
         return setup;
@@ -194,9 +194,9 @@ public static class CustomFieldSetupFactory
             Name.Create(name),
             Description.Create(description),
             workspace,
-            project,
-            createdBy ?? UserFactory.Create());
+            project);
 
+        setup.WithAudit(createdBy);
         setup.ClearDomainEvents();
 
         return setup;
@@ -215,9 +215,9 @@ public static class CustomFieldSetupFactory
             Name.Create(name),
             Description.Create(description),
             workspace,
-            project,
-            createdBy ?? UserFactory.Create());
+            project);
 
+        setup.WithAudit(createdBy);
         setup.ClearDomainEvents();
 
         return setup;

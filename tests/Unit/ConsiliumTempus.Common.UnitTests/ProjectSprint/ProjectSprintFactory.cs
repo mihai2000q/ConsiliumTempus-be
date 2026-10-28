@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Common.UnitTests.Project;
+﻿using ConsiliumTempus.Common.UnitTests.Common.ValueObjects;
+using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
@@ -25,9 +26,9 @@ public static class ProjectSprintFactory
         var sprint = ProjectSprintAggregate.Create(
             Name.Create(name),
             project,
-            createdBy,
             startDate,
             endDate);
+        sprint.WithAudit(createdBy);
 
         project.AddSprint(sprint);
 
