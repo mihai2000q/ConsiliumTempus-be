@@ -7,6 +7,7 @@ using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Infrastructure.Extensions;
+using ConsiliumTempus.Infrastructure.Persistence.Configuration.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -47,11 +48,7 @@ internal sealed class CustomFieldSetupConfiguration : IEntityTypeConfiguration<C
             .WithMany(p => p.CustomFieldSetups)
             .UsingEntity<ProjectHasCustomFieldSetup>();
 
-        builder.HasOne(s => s.Audit)
-            .WithOne()
-            .HasForeignKey<CustomFieldSetupAggregate>()
-            .IsRequired();
-        builder.Navigation(cfs => cfs.Audit).AutoInclude();
+        builder.OwnsAudit(s => s.Audit);
     }
 }
 

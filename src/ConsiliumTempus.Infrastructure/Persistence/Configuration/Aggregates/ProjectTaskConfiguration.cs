@@ -6,6 +6,7 @@ using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
+using ConsiliumTempus.Infrastructure.Persistence.Configuration.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -45,9 +46,7 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
             .Property(o => o.Value)
             .HasColumnName(nameof(CustomOrderPosition));
 
-        builder.HasOne(t => t.CreatedBy)
-            .WithMany()
-            .IsRequired(false);
+        builder.OwnsAudit(t => t.Audit);
 
         builder.HasOne(t => t.Assignee)
             .WithMany();

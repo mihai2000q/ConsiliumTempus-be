@@ -5,6 +5,7 @@ using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
+using ConsiliumTempus.Infrastructure.Persistence.Configuration.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -38,6 +39,8 @@ internal sealed class WorkspaceConfiguration : IEntityTypeConfiguration<Workspac
         builder.HasOne(w => w.Owner)
             .WithMany();
         builder.Navigation(w => w.Owner).AutoInclude();
+
+        builder.OwnsAudit(w => w.Audit);
 
         builder.HasMany(w => w.Favorites)
             .WithMany()

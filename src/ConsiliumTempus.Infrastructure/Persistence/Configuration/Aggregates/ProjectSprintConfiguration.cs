@@ -4,6 +4,7 @@ using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
+using ConsiliumTempus.Infrastructure.Persistence.Configuration.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -33,11 +34,7 @@ internal sealed class ProjectSprintConfiguration : IEntityTypeConfiguration<Proj
         builder.HasMany(s => s.Stages)
             .WithOne(s => s.Sprint);
 
-        builder.HasOne(s => s.Audit)
-            .WithOne()
-            .HasForeignKey<ProjectSprintAggregate>()
-            .IsRequired();
-        builder.Navigation(s => s.Audit).AutoInclude();
+        builder.OwnsAudit(s => s.Audit);
     }
 }
 
@@ -69,10 +66,6 @@ internal sealed class ProjectStageConfiguration : IEntityTypeConfiguration<Proje
         builder.HasMany(s => s.Tasks)
             .WithOne(s => s.Stage);
 
-        builder.HasOne(s => s.Audit)
-            .WithOne()
-            .HasForeignKey<ProjectStage>()
-            .IsRequired();
-        builder.Navigation(s => s.Audit).AutoInclude();
+        builder.OwnsAudit(s => s.Audit);
     }
 }
