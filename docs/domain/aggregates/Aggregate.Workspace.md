@@ -16,7 +16,6 @@ class Workspace
     void UpdateIsPersonal()
     void AddUserMembership()
     void RemoveUserMembership()
-    void RefreshUpdatedDateTime()
     void RefreshActivity()
     void AddInvitation()
     void RemoveInvitation()
@@ -32,8 +31,7 @@ class Workspace
   "isPersonal": { "value": true },
   "owner": {},
   "lastActivity": "2020-01-01T00:00:00.0000000Z",
-  "createdDateTime": "2020-01-01T00:00:00.0000000Z",
-  "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
+  "audit": {},
   "memberships": [{}],
   "projects": [{}],
   "favorites": [{}],

@@ -7,7 +7,8 @@
 - **Many-to-one** relationship with the [Project Stage](../../domain/entities/project-sprint/Entity.ProjectStage.md) entity.
 - **One-to-Many** relationship with the [Custom Field](../../domain/entities/project-task/Entity.CustomField.md) entity.
 - **One-to-Many** relationship with the [Project Task Comment](../../domain/entities/project-task/Entity.ProjectTaskComment.md) entity.
-- Three **Many-to-one** relationships with the [User](../../domain/aggregates/Aggregate.User.md) aggregate.
+- Four **Many-to-one** relationships with the [User](../../domain/aggregates/Aggregate.User.md) aggregate
+(two of them through the **Audit**).
 
 ### Owned Entities Relationships
 
@@ -43,6 +44,7 @@ erDiagram
     ProjectStage ||--o{ ProjectTask : "StageId"
     User |o--o{ ProjectTask : "AssigneeId"
     User |o--o{ ProjectTask : "CreatedById"
+    User |o--o{ ProjectTask : "UpdatedById"
     User |o--o{ ProjectTask : "ReviewerId"
     CustomFieldSetup_Date ||--o{ CustomField_Date : "SetupId"
     ProjectTask ||--o{ CustomField_Date : "ProjectTaskId"
@@ -76,13 +78,14 @@ erDiagram
         int CustomOrderPosition
         bit IsCompleted
         datetime2 CompletedOn "nullable"
-        uniqueidentifier CreatedById FK "nullable"
         uniqueidentifier AssigneeId FK "nullable"
         uniqueidentifier ReviewerId FK "nullable"
         date DueDate "nullable"
         time EstimatedDuration "nullable"
         uniqueidentifier StageId FK
+        uniqueidentifier CreatedById FK "nullable"
         datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
         datetime2 UpdatedDateTime
     }
     CustomField_Date {

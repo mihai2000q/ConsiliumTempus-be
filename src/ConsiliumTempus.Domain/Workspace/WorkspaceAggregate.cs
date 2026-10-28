@@ -12,7 +12,7 @@ using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Workspace;
 
-public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, ITimestamps
+public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, IAudit
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private WorkspaceAggregate()
@@ -25,17 +25,13 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, ITimestamps
         Description description,
         UserAggregate owner,
         IsPersonal isPersonal,
-        DateTime lastActivity,
-        DateTime createdDateTime,
-        DateTime updatedDateTime) : base(id)
+        DateTime lastActivity) : base(id)
     {
         Name = name;
         Description = description;
         Owner = owner;
         IsPersonal = isPersonal;
         LastActivity = lastActivity;
-        CreatedDateTime = createdDateTime;
-        UpdatedDateTime = updatedDateTime;
     }
 
     private readonly List<Membership> _memberships = [];
@@ -49,8 +45,7 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, ITimestamps
     public IsPersonal IsPersonal { get; private set; } = null!;
     public UserAggregate Owner { get; private set; } = null!;
     public DateTime LastActivity { get; private set; }
-    public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; private set; }
+    public Audit Audit { get; init; } = null!;
     public IReadOnlyList<Membership> Memberships => _memberships.AsReadOnly();
     public IReadOnlyList<ProjectAggregate> Projects => _projects.AsReadOnly();
     public IReadOnlyList<UserAggregate> Favorites => _favorites.AsReadOnly();
@@ -69,8 +64,6 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, ITimestamps
             description,
             owner,
             isPersonal,
-            DateTime.UtcNow,
-            DateTime.UtcNow,
             DateTime.UtcNow);
 
         var membership = Membership.Create(owner, workspace, WorkspaceRole.Admin);
@@ -87,7 +80,6 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, ITimestamps
     public void Update(Name name)
     {
         Name = name;
-        UpdatedDateTime = DateTime.UtcNow;
         LastActivity = DateTime.UtcNow;
     }
 
@@ -102,7 +94,6 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, ITimestamps
     public void UpdateOverview(Description description)
     {
         Description = description;
-        UpdatedDateTime = DateTime.UtcNow;
         LastActivity = DateTime.UtcNow;
     }
 
@@ -114,11 +105,6 @@ public sealed class WorkspaceAggregate : AggregateRoot<WorkspaceId>, ITimestamps
     public void UpdateIsPersonal(IsPersonal isPersonal)
     {
         IsPersonal = isPersonal;
-    }
-
-    public void RefreshUpdatedDateTime()
-    {
-        UpdatedDateTime = DateTime.UtcNow;
     }
 
     public void RefreshActivity()

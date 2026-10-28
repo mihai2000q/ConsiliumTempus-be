@@ -7,7 +7,8 @@
 The variants are mapped as *table per type*: the **CustomFieldSetup** table holds what they share, and each variant
 (i.e., *CustomFieldSetup_Date*) holds its own columns, with the same *Id*.
 
-- **One-to-One** relationship with the [Audit](../../domain/entities/Entity.Audit.md) entity.
+- 2x **Many-to-one** relationships with the [User](../../domain/aggregates/Aggregate.User.md) aggregate
+(through the **Audit**).
 - **Many-to-One** (optional) relationship with the [Workspace](../../domain/aggregates/Aggregate.Workspace.md) aggregate.
 - **Many-to-Many** relationship with the [Project](../../domain/aggregates/Aggregate.Project.md) aggregate.
 (via the *ProjectHasCustomFieldSetup* entity)
@@ -29,7 +30,8 @@ For the notation used, check out the [Legend](../Database.Diagram.md#legend).
 
 ```mermaid
 erDiagram
-    Audit ||--o| CustomFieldSetup : "AuditId"
+    User |o--o{ CustomFieldSetup : "CreatedById"
+    User |o--o{ CustomFieldSetup : "UpdatedById"
     Workspace |o--o{ CustomFieldSetup : "WorkspaceId"
     CustomFieldSetup ||--|| CustomFieldSetup_Date : "Id"
     CustomFieldSetup ||--|| CustomFieldSetup_DateTime : "Id"
@@ -98,7 +100,10 @@ erDiagram
         nvarchar(50) Name
         nvarchar(max) Description
         uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier CreatedById FK "nullable"
+        datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
+        datetime2 UpdatedDateTime
     }
     MultiSelectOption {
         uniqueidentifier Id PK
@@ -118,7 +123,7 @@ erDiagram
         uniqueidentifier CustomFieldSetupId PK, FK
         uniqueidentifier ProjectId PK, FK
     }
-    Audit {
+    User {
         uniqueidentifier Id PK
     }
     Workspace {

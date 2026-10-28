@@ -1,14 +1,13 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.Enums;
 using ConsiliumTempus.Domain.Project.ValueObjects;
-using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Domain.Project.Entities;
 
-public sealed class ProjectStatus : Entity<ProjectStatusId>
+public sealed class ProjectStatus : Entity<ProjectStatusId>, IAudit
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectStatus()
@@ -20,14 +19,12 @@ public sealed class ProjectStatus : Entity<ProjectStatusId>
         Title title,
         ProjectStatusType status,
         Description description,
-        ProjectAggregate project,
-        Audit audit) : base(id)
+        ProjectAggregate project) : base(id)
     {
         Title = title;
         Status = status;
         Description = description;
         Project = project;
-        Audit = audit;
     }
 
     public Title Title { get; private set; } = null!;
@@ -40,28 +37,24 @@ public sealed class ProjectStatus : Entity<ProjectStatusId>
         Title title,
         ProjectStatusType status,
         Description description,
-        ProjectAggregate project,
-        UserAggregate createdBy)
+        ProjectAggregate project)
     {
         return new ProjectStatus(
             ProjectStatusId.CreateUnique(),
             title,
             status,
             description,
-            project,
-            Audit.Create(createdBy));
+            project);
     }
 
     public void Update(
         Title title,
         ProjectStatusType status,
-        Description description,
-        UserAggregate updatedBy)
+        Description description)
     {
         Title = title;
         Status = status;
         Description = description;
-        Audit.Update(updatedBy);
         Project.RefreshActivity();
     }
 }

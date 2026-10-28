@@ -12,7 +12,6 @@ class ProjectTask
     void UpdateOverview()
     void UpdateIsCompleted()
     void UpdateCustomOrderPosition()
-    void RefreshUpdatedDateTime()
     void AddCustomField()
     void AddComment()
     bool Move()
@@ -29,9 +28,7 @@ class ProjectTask
     "value": true,
     "completedOn": "2020-01-01T00:00:00.0000000Z"
   },
-  "createdBy": {},
-  "createdDateTime": "2020-01-01T00:00:00.0000000Z",
-  "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
+  "audit": {},
   "assignee": {},
   "reviewer": {},
   "dueDate": "2020-01-01",

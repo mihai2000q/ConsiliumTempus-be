@@ -5,6 +5,7 @@
 * [Conventions](#conventions)
   * [Delete Behavior](#delete-behavior)
   * [Generated Keys](#generated-keys)
+  * [Audit](#audit)
 * [Migrations](#migrations)
   * [Dotnet tools](#dotnet-tools)
   * [Create Migration](#create-migration)
@@ -67,6 +68,29 @@ so the list has to be updated on purpose when one of them is added or changed.
 The identifiers are created by the domain, never by the database.
 That is why the `NeverGenerateKeysConvention` makes sure that none of the primary keys is generated
 (no `IDENTITY` columns, no default values), without having to say it on each configuration.
+
+### Audit
+
+The [Audit](Domain.md#value-objects) of an entity (i.e., of a project sprint) is an **owned type**:
+its columns (`CreatedById`, `CreatedDateTime`, `UpdatedById` and `UpdatedDateTime`) are in the table of the entity,
+so there is no *Audit* table, and it goes away with the entity that holds it.
+The configurations say it with `OwnsAudit`.
+
+The entities that hold an audit implement `IAudited`, and the domain does not create nor update it.
+The `StampAuditInterceptor` (which goes after the one that publishes the domain events, as they add and modify entities too)
+stamps the current user and the date and time when the changes are saved, based on the state of the entity:
+
+- **Added**: the audit is created, unless the entity already has one (i.e., the one of the data that is imported).
+- **Modified**: the audit is updated, so any change on the entity updates it
+(i.e., a stage whose position changes because another one is moved).
+
+Two things do not count as a change of the entity: its **last activity** (the project and the workspace refresh it
+whenever something under them changes), and the audit itself.
+A change that is saved on another table but that has to count as an update of the entity
+(i.e., the custom fields of a task) is marked explicitly, with `IProjectTaskRepository.MarkAsUpdated`.
+
+When there is no current user (i.e., there is no request), or the current user is being deleted, the user is left empty.
+The *User Deleted* event clears the user from the audits, which does not update them.
 
 ## Migrations
 

@@ -1,15 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
-using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Domain.ProjectSprint;
 
-public sealed class ProjectSprintAggregate : AggregateRoot<ProjectSprintId>
+public sealed class ProjectSprintAggregate : AggregateRoot<ProjectSprintId>, IAudit
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectSprintAggregate()
@@ -21,14 +20,12 @@ public sealed class ProjectSprintAggregate : AggregateRoot<ProjectSprintId>
         Name name,
         ProjectAggregate project,
         DateOnly? startDate,
-        DateOnly? endDate,
-        Audit audit) : base(id)
+        DateOnly? endDate) : base(id)
     {
         Name = name;
         Project = project;
         StartDate = startDate;
         EndDate = endDate;
-        Audit = audit;
     }
 
     private readonly List<ProjectStage> _stages = [];
@@ -38,12 +35,11 @@ public sealed class ProjectSprintAggregate : AggregateRoot<ProjectSprintId>
     public DateOnly? EndDate { get; private set; }
     public ProjectAggregate Project { get; init; } = null!;
     public IReadOnlyList<ProjectStage> Stages => _stages.AsReadOnly();
-    public Audit Audit { get; } = null!;
+    public Audit Audit { get; init; } = null!;
 
     public static ProjectSprintAggregate Create(
         Name name,
         ProjectAggregate project,
-        UserAggregate createdBy,
         DateOnly? startDate = null,
         DateOnly? endDate = null)
     {
@@ -52,26 +48,22 @@ public sealed class ProjectSprintAggregate : AggregateRoot<ProjectSprintId>
             name,
             project,
             startDate,
-            endDate,
-            Audit.Create(createdBy));
+            endDate);
     }
 
     public void Update(
         Name name,
         DateOnly? startDate,
-        DateOnly? endDate,
-        UserAggregate updatedBy)
+        DateOnly? endDate)
     {
         Name = name;
         StartDate = startDate;
         EndDate = endDate;
-        Audit.Update(updatedBy);
     }
 
-    public void UpdateEndDate(DateOnly? endDate, UserAggregate updatedBy)
+    public void UpdateEndDate(DateOnly? endDate)
     {
         EndDate = endDate;
-        Audit.Update(updatedBy);
     }
 
     public void AddStage(ProjectStage stage, bool onTop = false)

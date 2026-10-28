@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.CustomFieldSetup.Variants;
@@ -20,8 +18,7 @@ public sealed class TimeCustomFieldSetupAggregate : CustomFieldSetupAggregate
         CustomFieldSetupId id,
         Name name,
         Description description,
-        WorkspaceAggregate? workspace,
-        Audit audit) : base(id, name, description, workspace, audit)
+        WorkspaceAggregate? workspace) : base(id, name, description, workspace)
     {
         DefaultTime = defaultTime;
     }
@@ -33,16 +30,14 @@ public sealed class TimeCustomFieldSetupAggregate : CustomFieldSetupAggregate
         Name name,
         Description description,
         WorkspaceAggregate? workspace,
-        ProjectAggregate? project,
-        UserAggregate createdBy)
+        ProjectAggregate? project)
     {
         var setup = new TimeCustomFieldSetupAggregate(
             defaultTime,
             CustomFieldSetupId.CreateUnique(),
             name,
             description,
-            workspace,
-            Audit.Create(createdBy));
+            workspace);
         
         if (project != null) setup.AddProject(project);
 
@@ -52,10 +47,9 @@ public sealed class TimeCustomFieldSetupAggregate : CustomFieldSetupAggregate
     public void Update(
         TimeOnly? defaultTime,
         Name name,
-        Description description,
-        UserAggregate upTimedBy)
+        Description description)
     {
         DefaultTime = defaultTime;
-        base.Update(name, description, upTimedBy);
+        base.Update(name, description);
     }
 }
