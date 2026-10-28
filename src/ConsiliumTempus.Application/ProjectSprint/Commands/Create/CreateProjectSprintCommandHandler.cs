@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Constants;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
@@ -14,7 +13,6 @@ using MediatR;
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.Create;
 
 internal sealed class CreateProjectSprintCommandHandler(
-    ICurrentUserProvider currentUserProvider,
     IProjectRepository projectRepository,
     IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<CreateProjectSprintCommand, ErrorOr<CreateProjectSprintResult>>
@@ -27,12 +25,9 @@ internal sealed class CreateProjectSprintCommandHandler(
             cancellationToken);
         if (project is null) return Errors.Project.NotFound;
 
-        var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
-
         var projectSprint = ProjectSprintAggregate.Create(
             Name.Create(command.Name),
             project,
-            user,
             command.StartDate,
             command.EndDate);
 
@@ -40,14 +35,14 @@ internal sealed class CreateProjectSprintCommandHandler(
         {
             var previousSprint = sprints[0];
             if (previousSprint.EndDate is null)
-                previousSprint.UpdateEndDate(DateOnly.FromDateTime(DateTime.UtcNow), user);
+                previousSprint.UpdateEndDate(DateOnly.FromDateTime(DateTime.UtcNow));
         });
 
         if (command.KeepPreviousStages)
         {
             project.Sprints.IfNotEmpty(sprints =>
                 projectSprint.AddStages(sprints[0].Stages
-                    .Select(s => s.CopyToSprint(projectSprint, user))
+                    .Select(s => s.CopyToSprint(projectSprint))
                     .ToList())
             );
         }
@@ -56,8 +51,7 @@ internal sealed class CreateProjectSprintCommandHandler(
             projectSprint.AddStage(ProjectStage.Create(
                 Name.Create(Constants.ProjectStage.Names[0]),
                 CustomOrderPosition.Create(0),
-                projectSprint,
-                user));
+                projectSprint));
         }
 
         await projectSprintRepository.Add(projectSprint, cancellationToken);
@@ -68,8 +62,7 @@ internal sealed class CreateProjectSprintCommandHandler(
                 Title.Create(command.ProjectStatus.Title),
                 command.ProjectStatus.Status,
                 Description.Create(command.ProjectStatus.Description),
-                project,
-                user));
+                project));
         }
 
         project.RefreshActivity();

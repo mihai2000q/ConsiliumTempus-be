@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.Enums;
@@ -10,7 +9,6 @@ using MediatR;
 namespace ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 
 internal sealed class UpdateStatusFromProjectCommandHandler(
-    ICurrentUserProvider currentUserProvider,
     IProjectRepository projectRepository)
     : IRequestHandler<UpdateStatusFromProjectCommand, ErrorOr<UpdateStatusFromProjectResult>>
 {
@@ -25,13 +23,10 @@ internal sealed class UpdateStatusFromProjectCommandHandler(
         var status = project.Statuses.SingleOrDefault(s => s.Id.Value == command.StatusId);
         if (status is null) return Errors.ProjectStatus.NotFound;
 
-        var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
-
         status.Update(
             Title.Create(command.Title),
             Enum.Parse<ProjectStatusType>(command.Status, true),
-            Description.Create(command.Description),
-            user);
+            Description.Create(command.Description));
 
         return new UpdateStatusFromProjectResult();
     }

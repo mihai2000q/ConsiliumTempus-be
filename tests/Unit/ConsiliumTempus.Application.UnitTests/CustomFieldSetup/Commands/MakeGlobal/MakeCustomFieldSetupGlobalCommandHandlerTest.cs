@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.MakeGlobal;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
@@ -17,16 +16,13 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
     #region Setup
 
     private readonly ICustomFieldSetupRepository _customFieldSetupRepository;
-    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly MakeCustomFieldSetupGlobalCommandHandler _uut;
 
     public MakeCustomFieldSetupGlobalCommandHandlerTest()
     {
         _customFieldSetupRepository = Substitute.For<ICustomFieldSetupRepository>();
-        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _uut = new MakeCustomFieldSetupGlobalCommandHandler(
-            _customFieldSetupRepository,
-            _currentUserProvider);
+            _customFieldSetupRepository);
     }
 
     #endregion
@@ -44,9 +40,6 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
             .Returns(customFieldSetup);
 
         var user = UserFactory.Create();
-        _currentUserProvider
-            .GetCurrentUserAfterPermissionCheck()
-            .Returns(user);
 
         // Act
         var outcome = await _uut.Handle(command, CancellationToken.None);
@@ -56,16 +49,11 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
 
-        await _currentUserProvider
-            .Received(1)
-            .GetCurrentUserAfterPermissionCheck();
-
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new MakeCustomFieldSetupGlobalResult());
 
         var workspace = customFieldSetup.Projects.Single().Workspace;
         customFieldSetup.Workspace.Should().Be(workspace);
-        customFieldSetup.Audit.ShouldBeUpdated(user);
         workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
     }
 
@@ -88,7 +76,6 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
-        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.CustomFieldSetup.AlreadyGlobal);
     }
@@ -110,7 +97,6 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
         await _customFieldSetupRepository
             .Received(1)
             .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
-        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.CustomFieldSetup.NotFound);
     }

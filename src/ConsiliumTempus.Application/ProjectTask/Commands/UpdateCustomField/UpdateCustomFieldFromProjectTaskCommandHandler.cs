@@ -92,7 +92,7 @@ internal sealed class UpdateCustomFieldFromProjectTaskCommandHandler(
             return Errors.SingleSelectOption.NotFound;
         }
 
-        task.RefreshUpdatedDateTime();
+        projectTaskRepository.MarkAsUpdated(task);
         task.Stage.Sprint.Project.RefreshActivity();
 
         return new UpdateCustomFieldFromProjectTaskResult();

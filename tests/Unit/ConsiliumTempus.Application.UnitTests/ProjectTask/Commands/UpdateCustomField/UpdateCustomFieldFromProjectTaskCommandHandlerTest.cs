@@ -61,6 +61,10 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
                     Arg.Is<UserId>(id => id.Value == command.PeopleCustomField.PersonId),
                     Arg.Is<WorkspaceId>(wId => wId == task.Stage.Sprint.Project.Workspace.Id));
 
+        _projectTaskRepository
+            .Received(1)
+            .MarkAsUpdated(task);
+
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateCustomFieldFromProjectTaskResult());
 

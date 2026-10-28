@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ErrorOr;
@@ -8,7 +7,6 @@ using MediatR;
 namespace ConsiliumTempus.Application.ProjectSprint.Commands.MoveStage;
 
 internal sealed class MoveStageFromProjectSprintCommandHandler(
-    ICurrentUserProvider currentUserProvider,
     IProjectSprintRepository projectSprintRepository)
     : IRequestHandler<MoveStageFromProjectSprintCommand, ErrorOr<MoveStageFromProjectSprintResult>>
 {
@@ -28,9 +26,8 @@ internal sealed class MoveStageFromProjectSprintCommandHandler(
         var overStage = sprint.Stages.SingleOrDefault(s => s.Id == overStageId);
         if (overStage is null) return Errors.ProjectStage.NotFoundWithId(overStageId);
 
-        var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
-
-        stage.Move(overStage, user);
+        stage.Move(overStage);
+        projectSprintRepository.MarkAsUpdated(stage);
         sprint.Project.RefreshActivity();
 
         return new MoveStageFromProjectSprintResult();

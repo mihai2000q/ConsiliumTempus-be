@@ -1,9 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.Project.Commands.AddStatus;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
-using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using NSubstitute.ReturnsExtensions;
@@ -14,15 +12,13 @@ public class AddStatusToProjectCommandHandlerTest
 {
     #region Setup
 
-    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IProjectRepository _projectRepository;
     private readonly AddStatusToProjectCommandHandler _uut;
 
     public AddStatusToProjectCommandHandlerTest()
     {
-        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _projectRepository = Substitute.For<IProjectRepository>();
-        _uut = new AddStatusToProjectCommandHandler(_currentUserProvider, _projectRepository);
+        _uut = new AddStatusToProjectCommandHandler(_projectRepository);
     }
 
     #endregion
@@ -36,11 +32,6 @@ public class AddStatusToProjectCommandHandlerTest
             .Get(Arg.Any<ProjectId>())
             .Returns(project);
 
-        var user = UserFactory.Create();
-        _currentUserProvider
-            .GetCurrentUserAfterPermissionCheck()
-            .Returns(user);
-
         var command = ProjectCommandFactory.CreateAddStatusToProjectCommand(project.Id.Value);
 
         // Act
@@ -51,14 +42,10 @@ public class AddStatusToProjectCommandHandlerTest
             .Received(1)
             .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
 
-        await _currentUserProvider
-            .Received(1)
-            .GetCurrentUserAfterPermissionCheck();
-
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new AddStatusToProjectResult());
 
-        Utils.Project.AssertFromAddStatusCommand(project, command, user);
+        Utils.Project.AssertFromAddStatusCommand(project, command);
     }
 
     [Fact]
@@ -78,9 +65,6 @@ public class AddStatusToProjectCommandHandlerTest
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
-        await _currentUserProvider
-            .DidNotReceive()
-            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.Project.NotFound);
     }

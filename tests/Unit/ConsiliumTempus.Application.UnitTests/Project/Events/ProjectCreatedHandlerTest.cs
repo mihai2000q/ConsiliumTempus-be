@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Project.Events;
+using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Constants;
@@ -34,10 +35,6 @@ public class ProjectCreatedHandlerTest
         sprint.StartDate.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
         sprint.EndDate.Should().BeNull();
 
-        sprint.Audit.CreatedBy.Should().Be(owner);
-        sprint.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-        sprint.Audit.UpdatedBy.Should().Be(owner);
-        sprint.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
         var count = 0;
         sprint.Stages.Should().HaveCount(Constants.ProjectStage.Names.Length);
@@ -50,10 +47,6 @@ public class ProjectCreatedHandlerTest
                 stage.CustomOrderPosition.Value.Should().Be(count++);
                 stage.Sprint.Should().Be(project.Sprints[0]);
 
-                stage.Audit.CreatedBy.Should().Be(owner);
-                stage.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-                stage.Audit.UpdatedBy.Should().Be(owner);
-                stage.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
             });
         sprint.Stages
             .Zip(Constants.ProjectStage.Names)
@@ -74,10 +67,7 @@ public class ProjectCreatedHandlerTest
                 task.Id.Value.ToString().Should().NotBeEmpty();
                 task.Description.Value.Should().BeEmpty();
                 task.IsCompleted.Value.Should().BeFalse();
-                task.CreatedBy.Should().Be(owner);
                 task.CustomOrderPosition.Value.Should().Be(count++);
-                task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-                task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
                 task.Assignee.Should().BeNull();
                 task.Reviewer.Should().BeNull();
                 task.DueDate.Should().BeNull();

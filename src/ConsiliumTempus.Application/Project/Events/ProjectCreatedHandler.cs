@@ -16,7 +16,6 @@ internal sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreate
         var sprint = ProjectSprintAggregate.Create(
             Name.Create(Constants.ProjectSprint.Name),
             notification.Project,
-            notification.Project.Owner,
             DateOnly.FromDateTime(DateTime.UtcNow));
         notification.Project.AddSprint(sprint);
 
@@ -24,8 +23,7 @@ internal sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreate
             .Select((name, index) => ProjectStage.Create(
                 Name.Create(name),
                 CustomOrderPosition.Create(index),
-                sprint,
-                notification.Project.Owner))
+                sprint))
             .ForEach(stage => sprint.AddStage(stage));
 
         var stage = sprint.Stages[0];
@@ -34,7 +32,6 @@ internal sealed class ProjectCreatedHandler : INotificationHandler<ProjectCreate
                 Name.Create(name),
                 Description.Create(string.Empty),
                 CustomOrderPosition.Create(index),
-                notification.Project.Owner,
                 stage))
             .ForEach(task => stage.AddTask(task));
 

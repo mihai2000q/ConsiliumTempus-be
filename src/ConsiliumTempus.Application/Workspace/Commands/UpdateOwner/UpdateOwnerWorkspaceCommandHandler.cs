@@ -23,7 +23,6 @@ internal sealed class UpdateOwnerWorkspaceCommandHandler(IWorkspaceRepository wo
 
         if (ownerMembership.WorkspaceRole != WorkspaceRole.Admin) ownerMembership.Update(WorkspaceRole.Admin);
         workspace.UpdateOwner(ownerMembership.User);
-        workspace.RefreshUpdatedDateTime();
         workspace.RefreshActivity();
 
         return new UpdateOwnerWorkspaceResult();

@@ -1,9 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.Project.Commands.UpdateStatus;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.Project;
-using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using NSubstitute.ReturnsExtensions;
@@ -14,15 +12,13 @@ public class UpdateStatusFromProjectCommandHandlerTest
 {
     #region Setup
 
-    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IProjectRepository _projectRepository;
     private readonly UpdateStatusFromProjectCommandHandler _uut;
 
     public UpdateStatusFromProjectCommandHandlerTest()
     {
-        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _projectRepository = Substitute.For<IProjectRepository>();
-        _uut = new UpdateStatusFromProjectCommandHandler(_currentUserProvider, _projectRepository);
+        _uut = new UpdateStatusFromProjectCommandHandler(_projectRepository);
     }
 
     #endregion
@@ -36,11 +32,6 @@ public class UpdateStatusFromProjectCommandHandlerTest
             .Get(Arg.Any<ProjectId>())
             .Returns(project);
 
-        var user = UserFactory.Create();
-        _currentUserProvider
-            .GetCurrentUserAfterPermissionCheck()
-            .Returns(user);
-
         var command = ProjectCommandFactory.CreateUpdateStatusFromProjectCommand(
             project.Id.Value,
             project.Statuses[0].Id.Value);
@@ -52,14 +43,11 @@ public class UpdateStatusFromProjectCommandHandlerTest
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(pId => pId.Value == command.Id));
-        await _currentUserProvider
-            .Received(1)
-            .GetCurrentUserAfterPermissionCheck();
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateStatusFromProjectResult());
 
-        Utils.Project.AssertFromUpdateStatusCommand(project, command, user);
+        Utils.Project.AssertFromUpdateStatusCommand(project, command);
     }
 
     [Fact]

@@ -1,11 +1,9 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
-using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using NSubstitute.ReturnsExtensions;
@@ -16,17 +14,13 @@ public class CreateProjectTaskCommandHandlerTest
 {
     #region Setup
 
-    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IProjectSprintRepository _projectSprintRepository;
     private readonly CreateProjectTaskCommandHandler _uut;
 
     public CreateProjectTaskCommandHandlerTest()
     {
-        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _projectSprintRepository = Substitute.For<IProjectSprintRepository>();
-        _uut = new CreateProjectTaskCommandHandler(
-            _currentUserProvider,
-            _projectSprintRepository);
+        _uut = new CreateProjectTaskCommandHandler(_projectSprintRepository);
     }
 
     #endregion
@@ -42,11 +36,6 @@ public class CreateProjectTaskCommandHandlerTest
             .GetStageWithTasksAndWorkspace(Arg.Any<ProjectStageId>())
             .Returns(stage);
 
-        var user = UserFactory.Create();
-        _currentUserProvider
-            .GetCurrentUserAfterPermissionCheck()
-            .Returns(user);
-
         // Act
         var outcome = await _uut.Handle(command, CancellationToken.None);
 
@@ -54,14 +43,11 @@ public class CreateProjectTaskCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetStageWithTasksAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.ProjectStageId));
-        await _currentUserProvider
-            .Received(1)
-            .GetCurrentUserAfterPermissionCheck();
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new CreateProjectTaskResult());
 
-        Utils.ProjectTask.AssertFromCreateCommand(command, stage, user);
+        Utils.ProjectTask.AssertFromCreateCommand(command, stage);
     }
 
     [Fact]
@@ -81,9 +67,6 @@ public class CreateProjectTaskCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetStageWithTasksAndWorkspace(Arg.Is<ProjectStageId>(id => id.Value == command.ProjectStageId));
-        await _currentUserProvider
-            .DidNotReceive()
-            .GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectStage.NotFound);
     }

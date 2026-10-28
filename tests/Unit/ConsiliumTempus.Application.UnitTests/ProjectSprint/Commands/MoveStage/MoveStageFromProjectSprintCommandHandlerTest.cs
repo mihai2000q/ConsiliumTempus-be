@@ -1,10 +1,8 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.ProjectSprint.Commands.MoveStage;
 using ConsiliumTempus.Application.UnitTests.TestData.ProjectSprint.Commands.MoveStage;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
-using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
@@ -17,15 +15,13 @@ public class MoveStageFromProjectSprintCommandHandlerTest
 {
     #region Setup
 
-    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IProjectSprintRepository _projectSprintRepository;
     private readonly MoveStageFromProjectSprintCommandHandler _uut;
 
     public MoveStageFromProjectSprintCommandHandlerTest()
     {
-        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _projectSprintRepository = Substitute.For<IProjectSprintRepository>();
-        _uut = new MoveStageFromProjectSprintCommandHandler(_currentUserProvider, _projectSprintRepository);
+        _uut = new MoveStageFromProjectSprintCommandHandler(_projectSprintRepository);
     }
 
     #endregion
@@ -45,11 +41,6 @@ public class MoveStageFromProjectSprintCommandHandlerTest
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);
 
-        var user = UserFactory.Create();
-        _currentUserProvider
-            .GetCurrentUserAfterPermissionCheck()
-            .Returns(user);
-
         // Act
         var outcome = await _uut.Handle(command, CancellationToken.None);
 
@@ -57,9 +48,9 @@ public class MoveStageFromProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        await _currentUserProvider
+        _projectSprintRepository
             .Received(1)
-            .GetCurrentUserAfterPermissionCheck();
+            .MarkAsUpdated(stage);
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new MoveStageFromProjectSprintResult());
@@ -67,7 +58,6 @@ public class MoveStageFromProjectSprintCommandHandlerTest
         Utils.ProjectSprint.AssertFromMoveStageCommand(
             stage,
             command,
-            user,
             expectedCustomOrderPosition);
     }
 
@@ -90,7 +80,6 @@ public class MoveStageFromProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectStage.NotFoundWithId(ProjectStageId.Create(command.OverStageId)));
     }
@@ -114,7 +103,6 @@ public class MoveStageFromProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectStage.NotFoundWithId(ProjectStageId.Create(command.StageId)));
     }
@@ -137,7 +125,6 @@ public class MoveStageFromProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }

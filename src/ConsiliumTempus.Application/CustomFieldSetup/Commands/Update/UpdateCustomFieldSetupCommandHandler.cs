@@ -1,20 +1,17 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
-using ConsiliumTempus.Domain.User;
 using ErrorOr;
 using MediatR;
 
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 
 internal sealed class UpdateCustomFieldSetupCommandHandler(
-    ICustomFieldSetupRepository customFieldSetupRepository,
-    ICurrentUserProvider currentUserProvider)
+    ICustomFieldSetupRepository customFieldSetupRepository)
     : IRequestHandler<UpdateCustomFieldSetupCommand, ErrorOr<UpdateCustomFieldSetupResult>>
 {
     private sealed class SingleSelectOptionNotFoundException : Exception;
@@ -28,46 +25,44 @@ internal sealed class UpdateCustomFieldSetupCommandHandler(
             cancellationToken);
         if (customFieldSetup is null) return Errors.CustomFieldSetup.NotFound;
 
-        var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
-
         try
         {
             switch (customFieldSetup)
             {
                 case DateCustomFieldSetupAggregate dateSetup:
-                    UpdateDateCustomFieldSetup(command, dateSetup, user);
+                    UpdateDateCustomFieldSetup(command, dateSetup);
                     break;
 
                 case DateTimeCustomFieldSetupAggregate dateTimeSetup:
-                    UpdateDateTimeCustomFieldSetup(command, dateTimeSetup, user);
+                    UpdateDateTimeCustomFieldSetup(command, dateTimeSetup);
                     break;
 
                 case DurationCustomFieldSetupAggregate durationSetup:
-                    UpdateDurationCustomFieldSetup(command, durationSetup, user);
+                    UpdateDurationCustomFieldSetup(command, durationSetup);
                     break;
 
                 case MultiSelectCustomFieldSetupAggregate multiSelectSetup:
-                    UpdateMultiSelectCustomFieldSetup(command, multiSelectSetup, user);
+                    UpdateMultiSelectCustomFieldSetup(command, multiSelectSetup);
                     break;
 
                 case NumberCustomFieldSetupAggregate numberSetup:
-                    UpdateNumberCustomFieldSetup(command, numberSetup, user);
+                    UpdateNumberCustomFieldSetup(command, numberSetup);
                     break;
 
                 case PeopleCustomFieldSetupAggregate peopleSetup:
-                    UpdatePeopleCustomFieldSetup(command, peopleSetup, user);
+                    UpdatePeopleCustomFieldSetup(command, peopleSetup);
                     break;
 
                 case SingleSelectCustomFieldSetupAggregate singleSelectSetup:
-                    UpdateSingleSelectCustomFieldSetup(command, singleSelectSetup, user);
+                    UpdateSingleSelectCustomFieldSetup(command, singleSelectSetup);
                     break;
 
                 case TextCustomFieldSetupAggregate textSetup:
-                    UpdateTextCustomFieldSetup(command, textSetup, user);
+                    UpdateTextCustomFieldSetup(command, textSetup);
                     break;
 
                 case TimeCustomFieldSetupAggregate timeSetup:
-                    UpdateTimeCustomFieldSetup(command, timeSetup, user);
+                    UpdateTimeCustomFieldSetup(command, timeSetup);
                     break;
             }
         }
@@ -88,49 +83,41 @@ internal sealed class UpdateCustomFieldSetupCommandHandler(
 
     private static void UpdateDateCustomFieldSetup(
         UpdateCustomFieldSetupCommand command,
-        DateCustomFieldSetupAggregate setup,
-        UserAggregate user)
+        DateCustomFieldSetupAggregate setup)
     {
         setup.Update(
             command.DateCustomFieldSetup!.DefaultDate,
             Name.Create(command.Name),
-            Description.Create(command.Description),
-            user);
+            Description.Create(command.Description));
     }
 
     private static void UpdateDateTimeCustomFieldSetup(
         UpdateCustomFieldSetupCommand command,
-        DateTimeCustomFieldSetupAggregate setup,
-        UserAggregate user)
+        DateTimeCustomFieldSetupAggregate setup)
     {
         setup.Update(
             command.DateTimeCustomFieldSetup!.DefaultDateTime,
             Name.Create(command.Name),
-            Description.Create(command.Description),
-            user);
+            Description.Create(command.Description));
     }
 
     private static void UpdateDurationCustomFieldSetup(
         UpdateCustomFieldSetupCommand command,
-        DurationCustomFieldSetupAggregate setup,
-        UserAggregate user)
+        DurationCustomFieldSetupAggregate setup)
     {
         setup.Update(
             command.DurationCustomFieldSetup!.DefaultDuration,
             Name.Create(command.Name),
-            Description.Create(command.Description),
-            user);
+            Description.Create(command.Description));
     }
 
     private static void UpdateMultiSelectCustomFieldSetup(
         UpdateCustomFieldSetupCommand command,
-        MultiSelectCustomFieldSetupAggregate setup,
-        UserAggregate user)
+        MultiSelectCustomFieldSetupAggregate setup)
     {
         setup.Update(
             Name.Create(command.Name),
-            Description.Create(command.Description),
-            user);
+            Description.Create(command.Description));
 
         if (command.MultiSelectCustomFieldSetup!.Operation is null) return;
 
@@ -139,8 +126,7 @@ internal sealed class UpdateCustomFieldSetupCommandHandler(
 
     private static void UpdateNumberCustomFieldSetup(
         UpdateCustomFieldSetupCommand command,
-        NumberCustomFieldSetupAggregate setup,
-        UserAggregate user)
+        NumberCustomFieldSetupAggregate setup)
     {
         setup.Update(
             NumberCustomFieldSettings.Create(
@@ -149,25 +135,21 @@ internal sealed class UpdateCustomFieldSetupCommandHandler(
                 command.NumberCustomFieldSetup!.Settings.Rounding),
             command.NumberCustomFieldSetup!.DefaultNumber.IfNotNull(DecimalNumber.Create),
             Name.Create(command.Name),
-            Description.Create(command.Description),
-            user);
+            Description.Create(command.Description));
     }
 
     private static void UpdatePeopleCustomFieldSetup(
         UpdateCustomFieldSetupCommand command,
-        PeopleCustomFieldSetupAggregate setup,
-        UserAggregate user)
+        PeopleCustomFieldSetupAggregate setup)
     {
         setup.Update(
             Name.Create(command.Name),
-            Description.Create(command.Description),
-            user);
+            Description.Create(command.Description));
     }
 
     private static void UpdateSingleSelectCustomFieldSetup(
         UpdateCustomFieldSetupCommand command,
-        SingleSelectCustomFieldSetupAggregate setup,
-        UserAggregate user)
+        SingleSelectCustomFieldSetupAggregate setup)
     {
         var defaultOption = setup.Options.SingleOrDefault(o =>
             o.Id == command.SingleSelectCustomFieldSetup!.DefaultOptionId);
@@ -177,8 +159,7 @@ internal sealed class UpdateCustomFieldSetupCommandHandler(
         setup.Update(
             defaultOption?.Id,
             Name.Create(command.Name),
-            Description.Create(command.Description),
-            user);
+            Description.Create(command.Description));
 
         if (command.SingleSelectCustomFieldSetup.Operation is null) return;
 
@@ -187,26 +168,22 @@ internal sealed class UpdateCustomFieldSetupCommandHandler(
 
     private static void UpdateTextCustomFieldSetup(
         UpdateCustomFieldSetupCommand command,
-        TextCustomFieldSetupAggregate setup,
-        UserAggregate user)
+        TextCustomFieldSetupAggregate setup)
     {
         setup.Update(
             command.TextCustomFieldSetup!.DefaultText.IfNotNull(Text.Create),
             Name.Create(command.Name),
-            Description.Create(command.Description),
-            user);
+            Description.Create(command.Description));
     }
 
     private static void UpdateTimeCustomFieldSetup(
         UpdateCustomFieldSetupCommand command,
-        TimeCustomFieldSetupAggregate setup,
-        UserAggregate user)
+        TimeCustomFieldSetupAggregate setup)
     {
         setup.Update(
             command.TimeCustomFieldSetup!.DefaultTime,
             Name.Create(command.Name),
-            Description.Create(command.Description),
-            user);
+            Description.Create(command.Description));
     }
 
     private static void UpdateMultiSelectCustomFieldSetupOptions(

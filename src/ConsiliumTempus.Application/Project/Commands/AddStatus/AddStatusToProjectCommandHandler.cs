@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Project.Entities;
@@ -10,7 +9,6 @@ using MediatR;
 namespace ConsiliumTempus.Application.Project.Commands.AddStatus;
 
 internal sealed class AddStatusToProjectCommandHandler(
-    ICurrentUserProvider currentUserProvider,
     IProjectRepository projectRepository)
     : IRequestHandler<AddStatusToProjectCommand, ErrorOr<AddStatusToProjectResult>>
 {
@@ -22,14 +20,11 @@ internal sealed class AddStatusToProjectCommandHandler(
             cancellationToken);
         if (project is null) return Errors.Project.NotFound;
 
-        var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
-
         project.AddStatus(ProjectStatus.Create(
             Title.Create(command.Title),
             command.Status,
             Description.Create(command.Description),
-            project,
-            user));
+            project));
 
         project.RefreshActivity();
 
