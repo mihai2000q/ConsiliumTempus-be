@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.Common.Orders.Properties;
@@ -16,11 +17,11 @@ internal static partial class OrderProperties
             p => p.LastActivity);
 
         public sealed record CreatedDateTimeProperty() : OrderProperty<WorkspaceAggregate>(
-            nameof(WorkspaceAggregate.CreatedDateTime),
-            p => p.CreatedDateTime);
+            nameof(WorkspaceAggregate.Audit.CreatedDateTime),
+            p => p.Audit.CreatedDateTime);
 
         public sealed record UpdatedDateTimeProperty() : OrderProperty<WorkspaceAggregate>(
-            nameof(WorkspaceAggregate.UpdatedDateTime),
-            p => p.UpdatedDateTime);
+            nameof(WorkspaceAggregate.Audit.UpdatedDateTime),
+            p => p.Audit.UpdatedDateTime);
     }
 }
