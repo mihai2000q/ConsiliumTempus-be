@@ -21,12 +21,13 @@ public class ProjectControllerUpdateOwnerTest(WebAppFactory factory)
         // Arrange
         var collaborator = ProjectData.Users[3];
         var project = ProjectData.Projects.First();
+        var user = project.Owner;
         var request = ProjectRequestFactory.CreateUpdateOwnerProjectRequest(
             project.Id.Value,
             collaborator.Id.Value);
 
         // Act
-        Client.UseCustomToken(project.Owner);
+        Client.UseCustomToken(user);
         var outcome = await Client.Put("api/projects/Owner", request);
 
         // Assert
@@ -39,7 +40,7 @@ public class ProjectControllerUpdateOwnerTest(WebAppFactory factory)
         var updatedProject = await dbContext.Projects
             .Include(p => p.Workspace)
             .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
-        Utils.Project.AssertUpdateOwner(updatedProject, request);
+        Utils.Project.AssertUpdateOwner(updatedProject, request, user);
     }
 
     [Fact]
@@ -75,6 +76,7 @@ public class ProjectControllerUpdateOwnerTest(WebAppFactory factory)
         // Arrange
         var collaborator = ProjectData.Users[3];
         var project = ProjectData.Projects[4];
+        var user = project.Owner;
         project.IsPrivate.Value.Should().BeFalse();
         project.AllowedMembers.Should().NotContain(collaborator);
         var request = ProjectRequestFactory.CreateUpdateOwnerProjectRequest(
@@ -82,7 +84,7 @@ public class ProjectControllerUpdateOwnerTest(WebAppFactory factory)
             collaborator.Id.Value);
 
         // Act
-        Client.UseCustomToken(project.Owner);
+        Client.UseCustomToken(user);
         var outcome = await Client.Put("api/projects/Owner", request);
 
         // Assert
@@ -92,7 +94,7 @@ public class ProjectControllerUpdateOwnerTest(WebAppFactory factory)
         var updatedProject = await dbContext.Projects
             .Include(p => p.Workspace)
             .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
-        Utils.Project.AssertUpdateOwner(updatedProject, request);
+        Utils.Project.AssertUpdateOwner(updatedProject, request, user);
     }
 
     [Fact]

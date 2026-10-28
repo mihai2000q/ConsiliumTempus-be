@@ -8,6 +8,7 @@ using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
+using ConsiliumTempus.Domain.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectTask.UpdateOverview;
@@ -31,7 +32,7 @@ public class ProjectTaskControllerUpdateOverviewTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        await AssertSuccess(outcome, task, request);
+        await AssertSuccess(outcome, task, request, user);
     }
 
     [Fact]
@@ -52,7 +53,7 @@ public class ProjectTaskControllerUpdateOverviewTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        await AssertSuccess(outcome, task, request);
+        await AssertSuccess(outcome, task, request, user);
     }
 
     [Fact]
@@ -111,7 +112,8 @@ public class ProjectTaskControllerUpdateOverviewTest(WebAppFactory factory)
     private async Task AssertSuccess(
         HttpResponseMessage outcome,
         ProjectTaskAggregate task,
-        UpdateOverviewProjectTaskRequest request)
+        UpdateOverviewProjectTaskRequest request,
+        UserAggregate user)
     {
         var response = await outcome.Content.ReadFromJsonAsync<UpdateOverviewProjectTaskResponse>();
         response!.Message.Should().Be("Project Task Overview has been updated successfully!");
@@ -121,7 +123,7 @@ public class ProjectTaskControllerUpdateOverviewTest(WebAppFactory factory)
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .Include(t => t.Stage.Tasks)
             .SingleAsync(t => t.Name.Value == request.Name);
-        Utils.ProjectTask.AssertUpdatedOverview(updatedTask, task, request);
+        Utils.ProjectTask.AssertUpdatedOverview(updatedTask, task, request, user);
     }
 
     private async Task AssertAssigneeIsUnchanged(ProjectTaskAggregate task)

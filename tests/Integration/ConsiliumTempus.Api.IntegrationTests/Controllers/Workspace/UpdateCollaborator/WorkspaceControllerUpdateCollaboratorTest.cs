@@ -41,7 +41,7 @@ public class WorkspaceControllerUpdateCollaboratorTest(WebAppFactory factory)
         var updatedWorkspace = dbContext.Workspaces
             .Include(w => w.Memberships)
             .Single(u => u.Id == WorkspaceId.Create(request.Id));
-        Utils.Workspace.AssertUpdateCollaborator(updatedWorkspace, request);
+        Utils.Workspace.AssertUpdateCollaborator(updatedWorkspace, request, user);
     }
 
     [Fact]

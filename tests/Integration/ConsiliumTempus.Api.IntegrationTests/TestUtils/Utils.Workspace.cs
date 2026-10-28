@@ -103,8 +103,7 @@ internal static partial class Utils
             workspace.Owner.Should().Be(user);
             workspace.IsPersonal.Value.Should().Be(false);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.Audit.ShouldBeCreated(user);
 
             workspace.Memberships.Should().HaveCount(1);
             workspace.Memberships[0].User.Should().Be(user);
@@ -162,21 +161,24 @@ internal static partial class Utils
         internal static void AssertUpdated(
             WorkspaceAggregate workspace,
             WorkspaceAggregate newWorkspace,
-            UpdateWorkspaceRequest request)
+            UpdateWorkspaceRequest request,
+            UserAggregate user)
         {
             // unchanged
             newWorkspace.Id.Value.Should().Be(request.Id);
-            newWorkspace.CreatedDateTime.Should().Be(workspace.CreatedDateTime);
+            newWorkspace.Audit.CreatedDateTime.Should().Be(workspace.Audit.CreatedDateTime);
+            newWorkspace.Audit.CreatedBy.Should().Be(workspace.Audit.CreatedBy);
 
             // changed
             newWorkspace.Name.Value.Should().Be(request.Name);
-            newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newWorkspace.Audit.ShouldBeUpdated(user);
             newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdateCollaborator(
             WorkspaceAggregate workspace,
-            UpdateCollaboratorFromWorkspaceRequest request)
+            UpdateCollaboratorFromWorkspaceRequest request,
+            UserAggregate user)
         {
             // unchanged
             workspace.Id.Value.Should().Be(request.Id);
@@ -188,7 +190,7 @@ internal static partial class Utils
             collaboratorMembership.WorkspaceRole.Name.Should().Be(request.WorkspaceRole.Capitalize());
             collaboratorMembership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
-            workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            workspace.Audit.ShouldBeUpdated(user);
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
@@ -206,21 +208,23 @@ internal static partial class Utils
 
         internal static void AssertUpdatedOverview(
             WorkspaceAggregate newWorkspace,
-            UpdateOverviewWorkspaceRequest request)
+            UpdateOverviewWorkspaceRequest request,
+            UserAggregate user)
         {
             // unchanged
             newWorkspace.Id.Value.Should().Be(request.Id);
 
             // changed
             newWorkspace.Description.Value.Should().Be(request.Description);
-            newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newWorkspace.Audit.ShouldBeUpdated(user);
             newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdatedOwner(
             WorkspaceAggregate newWorkspace,
             UpdateOwnerWorkspaceRequest request,
-            UserAggregate owner)
+            UserAggregate owner,
+            UserAggregate user)
         {
             // unchanged
             newWorkspace.Id.Value.Should().Be(request.Id);
@@ -228,7 +232,7 @@ internal static partial class Utils
 
             // changed
             newWorkspace.Owner.Should().Be(owner);
-            newWorkspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newWorkspace.Audit.ShouldBeUpdated(user);
             newWorkspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 

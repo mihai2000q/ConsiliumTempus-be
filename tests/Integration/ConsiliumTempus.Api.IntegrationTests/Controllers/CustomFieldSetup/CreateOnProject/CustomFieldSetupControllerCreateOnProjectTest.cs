@@ -224,7 +224,6 @@ public class CustomFieldSetupControllerCreateOnProjectTest(WebAppFactory factory
         dbContext.CustomFieldSetups.Should().HaveCount(CustomFieldSetupData.CustomFieldSetups.Length + 1);
         var createdCustomFieldSetup = await dbContext.CustomFieldSetups
             .AsNoTracking()
-            .Include(cfs => cfs.Audit)
             .Include(cfs => cfs.Workspace)
             .Include(cfs => cfs.Projects)
             .SingleAsync(cfs => cfs.Name == Name.Create(request.Name));

@@ -27,7 +27,8 @@ public class WorkspaceControllerUpdateOwnerTest(WebAppFactory factory)
             owner.Id.Value);
 
         // Act
-        Client.UseCustomToken(WorkspaceData.Users.First());
+        var user = WorkspaceData.Users.First();
+        Client.UseCustomToken(user);
         var outcome = await Client.Put("api/workspaces/Owner", request);
 
         // Assert
@@ -40,7 +41,7 @@ public class WorkspaceControllerUpdateOwnerTest(WebAppFactory factory)
             .AsNoTracking()
             .Include(w => w.Owner)
             .Single(u => u.Id == WorkspaceId.Create(request.Id));
-        Utils.Workspace.AssertUpdatedOwner(updatedWorkspace, request, owner);
+        Utils.Workspace.AssertUpdatedOwner(updatedWorkspace, request, owner, user);
 
         dbContext.Set<Membership>()
             .Single(m => m.Workspace.Id == updatedWorkspace.Id && m.User.Id == owner.Id)

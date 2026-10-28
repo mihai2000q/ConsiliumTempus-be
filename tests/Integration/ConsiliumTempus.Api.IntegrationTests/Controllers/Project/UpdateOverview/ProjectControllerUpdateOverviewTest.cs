@@ -19,11 +19,12 @@ public class ProjectControllerUpdateOverviewTest(WebAppFactory factory)
     public async Task UpdateOverviewProject_WhenSucceeds_ShouldUpdateOverviewAndReturnSuccessResponse()
     {
         // Arrange
+        var user = ProjectData.Users.First();
         var project = ProjectData.Projects.First();
         var request = ProjectRequestFactory.CreateUpdateOverviewProjectRequest(project.Id.Value);
 
         // Act
-        Client.UseCustomToken(ProjectData.Users.First());
+        Client.UseCustomToken(user);
         var outcome = await Client.Put("api/projects/overview", request);
 
         // Assert
@@ -36,7 +37,7 @@ public class ProjectControllerUpdateOverviewTest(WebAppFactory factory)
         var updatedProject = await dbContext.Projects
             .Include(p => p.Workspace)
             .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
-        Utils.Project.AssertUpdateOverview(updatedProject, request);
+        Utils.Project.AssertUpdateOverview(updatedProject, request, user);
     }
 
     [Fact]

@@ -9,8 +9,8 @@ using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.CreateOnWorkspace;
@@ -224,7 +224,6 @@ public class CustomFieldSetupControllerCreateOnWorkspaceTest(WebAppFactory facto
         dbContext.CustomFieldSetups.Should().HaveCount(CustomFieldSetupData.CustomFieldSetups.Length + 1);
         var createdCustomFieldSetup = await dbContext.CustomFieldSetups
             .AsNoTracking()
-            .Include(cfs => cfs.Audit)
             .Include(cfs => cfs.Workspace)
             .Include(cfs => cfs.Projects)
             .SingleAsync(cfs => cfs.Name == Name.Create(request.Name));

@@ -42,7 +42,6 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedCustomFieldSetup = await dbContext.CustomFieldSetups
             .AsNoTracking()
-            .Include(cfs => cfs.Audit)
             .Include(cfs => cfs.Projects)
             .Include(cfs => cfs.Workspace)
             .SingleAsync(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id));

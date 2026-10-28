@@ -34,7 +34,7 @@ public class WorkspaceControllerUpdateTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedWorkspace = dbContext.Workspaces
             .Single(u => u.Id == WorkspaceId.Create(request.Id));
-        Utils.Workspace.AssertUpdated(workspace, updatedWorkspace!, request);
+        Utils.Workspace.AssertUpdated(workspace, updatedWorkspace!, request, user);
     }
 
     [Fact]
