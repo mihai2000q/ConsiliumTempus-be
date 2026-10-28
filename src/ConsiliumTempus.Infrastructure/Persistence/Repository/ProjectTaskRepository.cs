@@ -9,7 +9,6 @@ using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
-using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
@@ -108,6 +107,11 @@ internal sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) 
             .OfType<MultiSelectCustomField>()
             .Where(cf => cf.Setup == customFieldSetup)
             .ToListAsync(cancellationToken);
+    }
+
+    public void MarkAsUpdated(ProjectTaskAggregate task)
+    {
+        dbContext.MarkAsUpdated(task);
     }
 
     public async Task DeleteCustomFieldsByProjectAndSetup(

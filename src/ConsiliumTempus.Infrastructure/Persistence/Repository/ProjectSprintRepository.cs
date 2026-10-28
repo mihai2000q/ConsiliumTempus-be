@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint;
@@ -115,9 +114,13 @@ internal sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext
         await dbContext.ProjectSprints.AddAsync(sprint, cancellationToken);
     }
 
+    public void MarkAsUpdated(ProjectStage stage)
+    {
+        dbContext.MarkAsUpdated(stage);
+    }
+
     public void Remove(ProjectSprintAggregate sprint)
     {
         dbContext.ProjectSprints.Remove(sprint);
-        dbContext.Set<Audit>().Remove(sprint.Audit);
     }
 }

@@ -8,7 +8,6 @@ using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
-using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 
@@ -49,6 +48,8 @@ public interface IProjectTaskRepository
     Task<List<MultiSelectCustomField>> GetMultiSelectCustomFieldsBySetup(
         MultiSelectCustomFieldSetupAggregate customFieldSetup,
         CancellationToken cancellationToken = default);
+
+    void MarkAsUpdated(ProjectTaskAggregate task);
 
     Task DeleteCustomFieldsByProjectAndSetup(
         CustomFieldSetupAggregate customFieldSetup,

@@ -39,5 +39,7 @@ public interface IProjectSprintRepository
 
     Task Add(ProjectSprintAggregate sprint, CancellationToken cancellationToken = default);
 
+    void MarkAsUpdated(ProjectStage stage);
+
     void Remove(ProjectSprintAggregate sprint);
 }
