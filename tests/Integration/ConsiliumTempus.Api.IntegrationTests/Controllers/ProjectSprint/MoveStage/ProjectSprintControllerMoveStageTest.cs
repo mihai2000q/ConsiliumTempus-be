@@ -47,7 +47,12 @@ public class ProjectSprintControllerMoveStageTest(WebAppFactory factory)
             .Include(ps => ps.Stages.OrderBy(s => s.CustomOrderPosition.Value))
             .Include(ps => ps.Project.Workspace)
             .SingleAsync(ps => ps.Id == sprint.Id);
-        Utils.ProjectSprint.AssertMovedStage(newSprint, request, user, expectedCustomOrderPosition);
+        Utils.ProjectSprint.AssertMovedStage(
+            newSprint, 
+            request,
+            user, 
+            expectedCustomOrderPosition,
+            sprint);
     }
 
     [Fact]

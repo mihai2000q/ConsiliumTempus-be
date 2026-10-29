@@ -115,13 +115,23 @@ internal static partial class Utils
             MoveProjectTaskRequest request,
             ProjectTaskAggregate task,
             int expectedCustomOrderPosition,
-            UserAggregate user)
+            UserAggregate user,
+            List<ProjectTaskAggregate> originalTasks)
         {
             task.Id.Value.Should().Be(request.Id);
             task.CustomOrderPosition.Value.Should().Be(expectedCustomOrderPosition);
             task.Stage.Tasks.ShouldBeOrdered();
             task.Stage.Tasks.Should().ContainSingle(t => t.Id.Value == request.OverId);
+
+            // the task that is moved is updated, and the ones that are only shifted are not
             task.Audit.ShouldBeUpdated(user);
+            task.Audit.UpdatedDateTime.Should().BeAfter(originalTasks.Single(t => t.Id == task.Id).Audit.UpdatedDateTime);
+            task.Stage.Tasks.Where(t => t.Id != task.Id).Should().AllSatisfy(shiftedTask =>
+            {
+                var originalTask = originalTasks.Single(t => t.Id == shiftedTask.Id);
+                shiftedTask.Audit.UpdatedBy.Should().Be(originalTask.Audit.UpdatedBy);
+                shiftedTask.Audit.UpdatedDateTime.Should().Be(originalTask.Audit.UpdatedDateTime);
+            });
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

@@ -50,7 +50,15 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
             .SelectMany(s => s.Tasks)
             .Single(t => t.Id == task.Id);
 
-        Utils.ProjectTask.AssertMoveWithinStage(request, movedTask, expectedCustomOrderPosition, user);
+        var originalTasks = ProjectTaskData.ProjectTasks
+            .Where(t => t.Stage.Id == task.Stage.Id)
+            .ToList();
+        Utils.ProjectTask.AssertMoveWithinStage(
+            request,
+            movedTask, 
+            expectedCustomOrderPosition, 
+            user, 
+            originalTasks);
     }
 
     [Fact]
@@ -86,7 +94,15 @@ public class ProjectTaskControllerMoveTest(WebAppFactory factory)
             .SelectMany(s => s.Tasks)
             .Single(t => t.Id == task.Id);
 
-        Utils.ProjectTask.AssertMoveWithinStage(request, movedTask, expectedCustomOrderPosition, user);
+        var originalTasks = ProjectTaskData.ProjectTasks
+            .Where(t => t.Stage.Id == task.Stage.Id)
+            .ToList();
+        Utils.ProjectTask.AssertMoveWithinStage(
+            request, 
+            movedTask, 
+            expectedCustomOrderPosition, 
+            user, 
+            originalTasks);
     }
 
     [Fact]

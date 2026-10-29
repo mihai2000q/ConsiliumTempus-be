@@ -181,14 +181,25 @@ internal static partial class Utils
             ProjectSprintAggregate sprint,
             MoveStageFromProjectSprintRequest request,
             UserAggregate updatedBy,
-            int newCustomOrderPosition)
+            int newCustomOrderPosition,
+            ProjectSprintAggregate originalSprint)
         {
             sprint.Id.Value.Should().Be(request.Id);
             var stage = sprint.Stages.Single(s => s.Id.Value == request.StageId);
 
             stage.Id.Value.Should().Be(request.StageId);
             stage.CustomOrderPosition.Value.Should().Be(newCustomOrderPosition);
+
+            // the stage that is moved is updated, and the ones that are only shifted are not
             stage.Audit.ShouldBeUpdated(updatedBy);
+            stage.Audit.UpdatedDateTime.Should()
+                .BeAfter(originalSprint.Stages.Single(s => s.Id == stage.Id).Audit.UpdatedDateTime);
+            sprint.Stages.Where(s => s.Id != stage.Id).Should().AllSatisfy(shiftedStage =>
+            {
+                var originalStage = originalSprint.Stages.Single(s => s.Id == shiftedStage.Id);
+                shiftedStage.Audit.UpdatedBy.Should().Be(originalStage.Audit.UpdatedBy);
+                shiftedStage.Audit.UpdatedDateTime.Should().Be(originalStage.Audit.UpdatedDateTime);
+            });
 
             sprint.Stages.ShouldBeOrdered();
 
