@@ -64,8 +64,7 @@ internal static partial class Utils
             membership.Workspace.Owner.Should().Be(user);
             membership.Workspace.IsPersonal.Value.Should().Be(true);
             membership.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            membership.Workspace.Audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            membership.Workspace.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            membership.Workspace.Audit.ShouldBeCreated(user);
         }
 
         internal static void AssertUpdate(
