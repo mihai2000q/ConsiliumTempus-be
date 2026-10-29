@@ -4,7 +4,6 @@ using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
-using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -106,20 +105,11 @@ public class WorkspaceControllerAcceptInvitationTest(WebAppFactory factory)
     public async Task AcceptInvitationToWorkspace_WhenUserIsAlreadyCollaborator_ShouldReturnAlreadyCollaboratorError()
     {
         // Arrange
-        var invitation = WorkspaceData.WorkspaceInvitations.First();
+        var invitation = WorkspaceData.WorkspaceInvitations[5]; // the collaborator is already a member
         var collaborator = invitation.Collaborator;
         var request = WorkspaceRequestFactory.CreateAcceptInvitationToWorkspaceRequest(
             invitation.Workspace.Id.Value,
             invitation.Id.Value);
-
-        await using (var arrangeDbContext = await DbContextFactory.CreateDbContextAsync())
-        {
-            arrangeDbContext.Set<Membership>().Add(MembershipFactory.Create(
-                arrangeDbContext.Users.Single(u => u.Id == collaborator.Id),
-                arrangeDbContext.Workspaces.Single(w => w.Id == invitation.Workspace.Id),
-                WorkspaceRole.View));
-            await arrangeDbContext.SaveChangesAsync();
-        }
 
         // Act
         Client.UseCustomToken(collaborator);
