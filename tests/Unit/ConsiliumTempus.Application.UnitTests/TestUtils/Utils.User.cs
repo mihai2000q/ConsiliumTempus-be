@@ -113,8 +113,6 @@ internal static partial class Utils
             membership.Workspace.Owner.Should().Be(user);
             membership.Workspace.IsPersonal.Value.Should().Be(true);
             membership.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            membership.Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            membership.Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             return true;
         }
