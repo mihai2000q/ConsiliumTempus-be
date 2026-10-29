@@ -98,7 +98,7 @@ internal sealed class ProjectMappingConfig : IRegister
             .Map(dest => dest.Email, src => src.Credentials.Email);
         config.NewConfig<WorkspaceAggregate, GetProjectResponse.WorkspaceResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Id, src => src.Name.Value);
+            .Map(dest => dest.Name, src => src.Name.Value);
     }
 
     private static void GetOverviewMappings(TypeAdapterConfig config)
