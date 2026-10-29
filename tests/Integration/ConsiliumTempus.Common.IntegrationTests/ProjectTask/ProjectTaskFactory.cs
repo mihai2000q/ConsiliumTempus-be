@@ -16,7 +16,8 @@ public static class ProjectTaskFactory
         string description = Constants.ProjectTask.Description,
         int customOrderPosition = 0,
         bool isCompleted = false,
-        UserAggregate? assignee = null)
+        UserAggregate? assignee = null,
+        UserAggregate? reviewer = null)
     {
         return EntityBuilder<ProjectTaskAggregate>.Empty()
             .WithProperty(nameof(ProjectTaskAggregate.Id), ProjectTaskId.CreateUnique())
@@ -25,6 +26,7 @@ public static class ProjectTaskFactory
             .WithProperty(nameof(ProjectTaskAggregate.CustomOrderPosition), CustomOrderPosition.Create(customOrderPosition))
             .WithProperty(nameof(ProjectTaskAggregate.IsCompleted), IsCompleted.Create(isCompleted))
             .WithProperty(nameof(ProjectTaskAggregate.Assignee), assignee)
+            .WithProperty(nameof(ProjectTaskAggregate.Reviewer), reviewer)
             .WithProperty(nameof(ProjectTaskAggregate.Audit), audit)
             .WithProperty(nameof(ProjectTaskAggregate.Stage), stage)
             .Build();
