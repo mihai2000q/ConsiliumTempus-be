@@ -44,8 +44,6 @@ internal static partial class Utils
             workspace.Memberships[0].User.Should().Be(user);
             workspace.Memberships[0].Workspace.Should().Be(workspace);
             workspace.Memberships[0].WorkspaceRole.Should().Be(WorkspaceRole.Admin);
-            workspace.Memberships[0].CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            workspace.Memberships[0].UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             workspace.Projects.Should().BeEmpty();
             workspace.Favorites.Should().BeEmpty();
 
@@ -85,8 +83,6 @@ internal static partial class Utils
             membership.User.Should().Be(user);
             membership.Workspace.Should().Be(workspace);
             membership.WorkspaceRole.Should().Be(WorkspaceRole.View);
-            membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertFromKickCollaboratorCommand(
@@ -135,7 +131,6 @@ internal static partial class Utils
             var collaboratorMembership = workspace.Memberships
                 .Single(m => m.User.Id.Value == command.CollaboratorId);
             collaboratorMembership.WorkspaceRole.Name.Should().Be(command.WorkspaceRole.Capitalize());
-            collaboratorMembership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }

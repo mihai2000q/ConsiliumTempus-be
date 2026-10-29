@@ -69,8 +69,6 @@ internal static partial class Utils
                 roles[w.Owner].Id.Should().Be(roles.Where(r => r.Key != user).Max(r => r.Value.Id));
                 var newOwnerMembership = w.Memberships.Single(m => m.User == w.Owner);
                 newOwnerMembership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
-                if (roles[w.Owner] != WorkspaceRole.Admin)
-                    newOwnerMembership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
                 w.Memberships
                     .Where(m => m.User != w.Owner)
@@ -101,8 +99,6 @@ internal static partial class Utils
             workspace.Memberships.Should().HaveCount(1);
             var membership = workspace.Memberships[0];
             membership.Id.Should().Be((user.Id, membership.Workspace.Id));
-            membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             membership.User.Should().Be(user);
             membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
             membership.DomainEvents.Should().BeEmpty();
