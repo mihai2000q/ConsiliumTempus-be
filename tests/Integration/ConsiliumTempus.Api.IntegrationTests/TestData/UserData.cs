@@ -10,6 +10,7 @@ using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
 using ConsiliumTempus.Common.IntegrationTests.ProjectTask.Entities;
 using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
+using ConsiliumTempus.Common.IntegrationTests.Workspace.Entities;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
@@ -21,6 +22,7 @@ using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Entities;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestData;
 
@@ -33,12 +35,14 @@ internal class UserData : ITestData
             Users,
             Workspaces,
             Memberships,
+            WorkspaceInvitations,
             Projects,
             Statuses,
             CustomFieldSetups,
             ProjectSprints,
             ProjectStages,
             ProjectTasks,
+            ProjectTaskComments,
             CustomFields
         ];
     }
@@ -154,6 +158,22 @@ internal class UserData : ITestData
             WorkspaceRole.Admin)
     ];
 
+    public static readonly WorkspaceInvitation[] WorkspaceInvitations =
+    [
+        WorkspaceInvitationFactory.Create(
+            Users[0],
+            Users[1],
+            Workspaces[0]),
+        WorkspaceInvitationFactory.Create(
+            Users[1],
+            Users[0],
+            Workspaces[1]),
+        WorkspaceInvitationFactory.Create(
+            Users[1],
+            Users[3],
+            Workspaces[1])
+    ];
+
     public static readonly ProjectAggregate[] Projects =
     [
         ProjectFactory.Create(
@@ -242,6 +262,11 @@ internal class UserData : ITestData
             [Projects[0]],
             AuditFactory.Create(Users[0]),
             "Notes field"),
+        CustomFieldSetupFactory.CreatePeople(
+            null,
+            [Projects[0]],
+            AuditFactory.Create(Users[0]),
+            "People field"),
 
         CustomFieldSetupFactory.CreateNumber(
             null,
@@ -288,6 +313,36 @@ internal class UserData : ITestData
         ProjectTaskFactory.Create(
             ProjectStages[1],
             AuditFactory.Create(Users[1])),
+
+        ProjectTaskFactory.Create(
+            ProjectStages[0],
+            AuditFactory.Create(Users[1]),
+            "Assigned to the user",
+            customOrderPosition: 1,
+            assignee: Users[0]),
+        ProjectTaskFactory.Create(
+            ProjectStages[0],
+            AuditFactory.Create(Users[1]),
+            "Reviewed by the user",
+            customOrderPosition: 2,
+            reviewer: Users[0]),
+        ProjectTaskFactory.Create(
+            ProjectStages[0],
+            AuditFactory.Create(Users[0]),
+            "Created by the user",
+            customOrderPosition: 3),
+        ProjectTaskFactory.Create(
+            ProjectStages[0],
+            AuditFactory.Create(Users[1]),
+            "Commented by the user",
+            customOrderPosition: 4)
+    ];
+
+    public static readonly ProjectTaskComment[] ProjectTaskComments =
+    [
+        ProjectTaskCommentFactory.Create(
+            ProjectTasks[^1],
+            Users[0])
     ];
 
     public static readonly CustomField[] CustomFields =
@@ -304,6 +359,10 @@ internal class UserData : ITestData
             ProjectTasks[0],
             (TextCustomFieldSetupAggregate)CustomFieldSetups[2],
             "Something"),
+        CustomFieldFactory.CreatePeople(
+            ProjectTasks[0],
+            (PeopleCustomFieldSetupAggregate)CustomFieldSetups[3],
+            Users[0]),
 
         CustomFieldFactory.CreateNumber(
             ProjectTasks[1],
