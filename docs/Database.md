@@ -78,7 +78,7 @@ The configurations say it with `OwnsAudit`.
 
 The entities that hold an audit implement `IAudit`, and the domain does not create nor update it.
 
-The `StampAuditInterceptor` (which goes after the one that publishes the domain events, as they add and modify entities too)
+The `StampInterceptor` (which goes after the one that publishes the domain events, as they add and modify entities too)
 stamps the current user and the date and time when the changes are saved, based on the state of the entity:
 
 - **Added**: the audit is created, unless the entity already has one (i.e., the one of the data that is imported).
@@ -88,16 +88,35 @@ stamps the current user and the date and time when the changes are saved, based 
 When there is no current user (i.e., there is no request), or the current user is being deleted, the user is left empty.
 The only exception is the registration of a user: nobody is logged in, so the user that is registering is the one who does it
 (i.e., the personal workspace that is created for them). This is only when exactly one user is added in the same save.
-The *User Deleted* event clears the user from the audits, which does not update them.
+The *User Deleted* event clears the user from the audits (and from the authorships), which does not update them.
 
-#### IAudit or ITimestamps
+#### IAudit, IAuthored or ITimestamps
 
 As a suggestion, not a rule: when an entity should be stamped, the choice depends on who can change it.
 
 - An entity that **more than one user** can change should implement `IAudit`, so that it says who did it and when
 (i.e., a workspace or a membership, which any admin can update).
-- An entity that **only one user** can change (i.e., the data of a user, such as their name or email) can implement
-`ITimestamps`, as the user is always the same one, so only the dates are useful.
+- An entity that **only its author** can change (i.e., a comment) should implement `IAuthored`,
+so that it says who wrote it, and when it was written and last edited. There is no updater to say,
+as it is always the author.
+- An entity that **only one user** can change and that is not written by a user (i.e., the data of a user,
+such as their name or email) can implement `ITimestamps`, as the user is always the same one, so only the dates are useful.
+
+### Authorship
+
+The [Authorship](Domain.md#value-objects) of an entity (i.e., of a comment) is an **owned type** too:
+its columns (`AuthorId`, `CreatedDateTime` and `UpdatedDateTime`) are in the table of the entity,
+and the configurations say it with `OwnsAuthorship` (which also works for the entities that are owned, like the comments of a task).
+
+The entities that hold it implement `IAuthored`, and the domain does not create nor update it either.
+The `StampInterceptor` stamps it when the changes are saved, in the same way as the audit (with the same current user):
+
+- **Added**: the authorship is created, with the current user as the author (unless the entity already has one).
+- **Modified**: only the date of the update changes, as the author never does.
+
+A change of an authored entity does not update the audit of the entity that it is a part of
+(i.e., a comment does not update its task).
+`AuthorshipConfigurationTest` makes sure that every `IAuthored` entity maps its authorship (with `OwnsAuthorship`).
 
 #### Excluded from the audit
 
@@ -124,7 +143,7 @@ as opposed to the ones that are only shifted)
 
 #### ExecuteUpdate
 
-`ExecuteUpdate` (and `ExecuteDelete`) do not go through the change tracker, so they skip the `StampAuditInterceptor`.
+`ExecuteUpdate` (and `ExecuteDelete`) do not go through the change tracker, so they skip the `StampInterceptor`.
 That is why an `ExecuteUpdate` on an entity that has an audit is **forbidden**, unless:
 
 - it only changes properties that are excluded from the audit (i.e., the last activity), or

@@ -14,7 +14,8 @@
 
 #### Project Task Comment
 
-- **Many-to-one** relationships with the [User](../../domain/aggregates/Aggregate.User.md) aggregate.
+- **Many-to-one** relationship with the [User](../../domain/aggregates/Aggregate.User.md) aggregate
+(through the **Authorship**).
 
 ### Custom Field Relationships
 
@@ -67,7 +68,7 @@ erDiagram
     CustomFieldSetup_Time ||--o{ CustomField_Time : "SetupId"
     ProjectTask ||--o{ CustomField_Time : "ProjectTaskId"
     ProjectTask ||--o{ ProjectTaskComment : "TaskId"
-    User |o--o{ ProjectTaskComment : "CreatedById"
+    User |o--o{ ProjectTaskComment : "AuthorId"
     CustomField_MultiSelect ||--o{ CustomField_MultiSelectHasOption : "CustomFieldId"
     MultiSelectOption ||--o{ CustomField_MultiSelectHasOption : "OptionId"
 
@@ -144,7 +145,7 @@ erDiagram
     ProjectTaskComment {
         uniqueidentifier Id PK
         nvarchar(256) Message
-        uniqueidentifier CreatedById FK "nullable"
+        uniqueidentifier AuthorId FK "nullable"
         date Date "nullable"
         time TimeSpent "nullable"
         uniqueidentifier TaskId FK

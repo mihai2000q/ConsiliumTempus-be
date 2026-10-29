@@ -76,7 +76,7 @@ erDiagram
     User |o--o{ ProjectTask : "UpdatedById"
     User |o--o{ ProjectTask : "ReviewerId"
     User |o--o{ CustomField_People : "PersonId"
-    User ||--o{ ProjectTaskComment : "CreatedById"
+    User |o--o{ ProjectTaskComment : "AuthorId"
 
     User {
         uniqueidentifier Id PK

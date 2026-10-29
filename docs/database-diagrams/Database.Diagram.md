@@ -82,7 +82,7 @@ erDiagram
     CustomFieldSetup_Time ||--o{ CustomField_Time : "SetupId"
     ProjectTask ||--o{ CustomField_Time : "ProjectTaskId"
     ProjectTask ||--o{ ProjectTaskComment : "TaskId"
-    User ||--o{ ProjectTaskComment : "CreatedById"
+    User |o--o{ ProjectTaskComment : "AuthorId"
     CustomField_MultiSelect ||--o{ CustomField_MultiSelectHasOption : "CustomFieldId"
     MultiSelectOption ||--o{ CustomField_MultiSelectHasOption : "OptionId"
 
@@ -347,7 +347,7 @@ erDiagram
     ProjectTaskComment {
         uniqueidentifier Id PK
         nvarchar(256) Message
-        uniqueidentifier CreatedById FK
+        uniqueidentifier AuthorId FK "nullable"
         date Date "nullable"
         time TimeSpent "nullable"
         uniqueidentifier TaskId FK
