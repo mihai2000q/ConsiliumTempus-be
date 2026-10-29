@@ -113,6 +113,7 @@ builder.Navigation(t => t.CustomOrderPosition).ExcludeFromAudit();
 ```
 
 `AuditExclusionConfigurationTest` lists all the exclusions, so a new one has to be added to the list on purpose.
+`AuditConfigurationTest` makes sure that every `IAudit` entity maps its audit (with `OwnsAudit`).
 
 A change that has to count anyway can be marked with `MarkAsUpdated` (on the repository, which marks it on the `ConsiliumTempusDbContext`),
 without touching the entity. It is used when:

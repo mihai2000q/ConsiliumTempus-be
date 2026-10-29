@@ -3,6 +3,7 @@ using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 
@@ -20,6 +21,12 @@ internal static partial class Utils
                 new PublishDomainEventsInterceptor(Substitute.For<IPublisher>()),
                 new StampAuditInterceptor(Substitute.For<IHttpContextAccessor>()),
                 options);
+        }
+
+        // What the interceptors receive when the changes are about to be saved.
+        internal static DbContextEventData CreateEventData(DbContext? dbContext)
+        {
+            return new DbContextEventData(null!, (_, _) => string.Empty, dbContext);
         }
     }
 }
