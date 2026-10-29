@@ -134,6 +134,8 @@ The endpoints that return collections can accept the following query parameters:
 
 **search** and **orderBy** can be repeated to use multiple filters or orders,
 i.e., `orderBy=name.desc&orderBy=updated_date_time.asc`.
+When there is an **orderBy**, the identifier is always the last order, so the items that the orders cannot tell apart
+are always in the same order, which keeps the pages from overlapping.
 
 The properties are written in snake case, and the available ones are the **Filters** and the **Orders**
 from the documentation of each aggregate or entity (i.e., *LastActivity* becomes `last_activity`).

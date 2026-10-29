@@ -125,27 +125,27 @@ public class QueryableExtensionsTest
         // Arrange - nothing
 
         // Act
-        var outcome = Items().ApplyOrders([]).ToList();
+        var outcome = Items().ApplyOrders([], i => i.Value).ToList();
 
         // Assert
         outcome.Should().Equal(Items().ToList());
     }
 
     [Theory]
-    [InlineData(OrderType.Ascending, new[] { 1, 1, 1, 2, 2, 2 })]
-    [InlineData(OrderType.Descending, new[] { 2, 2, 2, 1, 1, 1 })]
-    public void ApplyOrders_WhenThereIsOneOrder_ShouldOrderByItInTheGivenDirection(
+    [InlineData(OrderType.Ascending, new[] { 1, 2, 3, 1, 2, 3 })]
+    [InlineData(OrderType.Descending, new[] { 1, 2, 3, 1, 2, 3 })]
+    public void ApplyOrders_WhenTheOrdersCannotTellItemsApart_ShouldBreakTheTiesWithTheTieBreakerAscending(
         OrderType type,
-        int[] expectedGroups)
+        int[] expectedValues)
     {
         // Arrange
         var orders = new[] { new TestOrder(i => i.Group, type) };
 
         // Act
-        var outcome = Items().ApplyOrders(orders).ToList();
+        var outcome = Items().ApplyOrders(orders, i => i.Value).ToList();
 
         // Assert
-        outcome.Select(i => i.Group).Should().Equal(expectedGroups);
+        outcome.Select(i => i.Value).Should().Equal(expectedValues);
     }
 
     [Theory]
@@ -166,7 +166,7 @@ public class QueryableExtensionsTest
         };
 
         // Act
-        var outcome = Items().ApplyOrders(orders).ToList();
+        var outcome = Items().ApplyOrders(orders, i => i.Group).ToList();
 
         // Assert
         outcome.Select(i => i.Value).Should().Equal(expectedValues);

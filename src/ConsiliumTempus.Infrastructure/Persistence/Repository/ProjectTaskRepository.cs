@@ -72,7 +72,7 @@ internal sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) 
             .Include(t => t.CustomFields)
             .Where(t => t.Stage.Id == stageId)
             .ApplyFilters(filters)
-            .ApplyOrders(orders)
+            .ApplyOrders(orders, t => t.Id)
             .OrderByIf(orders.Count == 0, t => t.CustomOrderPosition.Value)
             .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);

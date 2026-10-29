@@ -61,7 +61,7 @@ internal sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : 
             .Include(w => w.Favorites)
             .Where(w => w.Memberships.Any(m => m.User == user))
             .ApplyFilters(filters)
-            .ApplyOrders(orders)
+            .ApplyOrders(orders, w => w.Id)
             .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);
     }
@@ -113,7 +113,7 @@ internal sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : 
                     m.User.Credentials.Email.Contains(searchValue!) ||
                     (m.User.FirstName.Value + " " + m.User.LastName.Value).Contains(searchValue!))
             .ApplyFilters(filters)
-            .ApplyOrders(orders)
+            .ApplyOrders(orders, m => m.User.Id)
             .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);
     }

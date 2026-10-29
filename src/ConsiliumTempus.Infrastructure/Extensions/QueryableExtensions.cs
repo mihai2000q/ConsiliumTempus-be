@@ -36,15 +36,22 @@ internal static class QueryableExtensions
         return filters.Aggregate(queryable, (query, filter) => query.Where(filter.Predicate));
     }
 
-    public static IQueryable<TSource> ApplyOrders<TSource>(
+    /// <summary>
+    /// The tie-breaker (i.e., the identifier) goes after the orders, so that the items that the orders
+    /// cannot tell apart are always in the same order, and the pages do not overlap.
+    /// It is not applied when there are no orders.
+    /// </summary>
+    public static IQueryable<TSource> ApplyOrders<TSource, TKey>(
         this IQueryable<TSource> queryable,
-        IReadOnlyList<IOrder<TSource>> orders)
+        IReadOnlyList<IOrder<TSource>> orders,
+        Expression<Func<TSource, TKey>> tieBreaker)
     {
         if (orders.Count == 0) return queryable;
         var orderedQueryable = queryable.ApplyOrder(orders[0]);
         return orders
             .Skip(1)
-            .Aggregate(orderedQueryable, ThenApplyOrder);
+            .Aggregate(orderedQueryable, ThenApplyOrder)
+            .ThenBy(tieBreaker);
     }
 
     public static IQueryable<TSource> Paginate<TSource>(
