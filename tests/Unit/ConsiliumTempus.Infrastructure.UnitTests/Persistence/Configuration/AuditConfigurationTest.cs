@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ConsiliumTempus.Infrastructure.UnitTests.Persistence.Configuration;
 
 /// <summary>
-/// The audit is stamped by the <c>StampAuditInterceptor</c> on every entity that has one,
+/// The audit is stamped by the <c>StampInterceptor</c> on every entity that has one,
 /// so every one of them has to map it (see <c>OwnsAudit</c>).
 /// </summary>
 public class AuditConfigurationTest

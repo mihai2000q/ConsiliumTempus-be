@@ -119,7 +119,7 @@ public static class DependencyInjection
         private IServiceCollection AddInterceptors()
         {
             services.AddScoped<PublishDomainEventsInterceptor>();
-            services.AddScoped<StampAuditInterceptor>();
+            services.AddScoped<StampInterceptor>();
 
             return services;
         }

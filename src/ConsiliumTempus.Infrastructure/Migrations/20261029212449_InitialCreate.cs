@@ -1039,10 +1039,10 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Date = table.Column<DateOnly>(type: "date", nullable: true),
                     TimeSpent = table.Column<TimeSpan>(type: "time", nullable: true),
                     TaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -1056,8 +1056,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProjectTaskComment_User_CreatedById",
-                        column: x => x.CreatedById,
+                        name: "FK_ProjectTaskComment_User_AuthorId",
+                        column: x => x.AuthorId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -1509,9 +1509,9 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectTaskComment_CreatedById",
+                name: "IX_ProjectTaskComment_AuthorId",
                 table: "ProjectTaskComment",
-                column: "CreatedById");
+                column: "AuthorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectTaskComment_TaskId",

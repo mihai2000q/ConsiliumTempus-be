@@ -19,7 +19,7 @@ internal static partial class Utils
 
             return new ConsiliumTempusDbContext(
                 new PublishDomainEventsInterceptor(Substitute.For<IPublisher>()),
-                new StampAuditInterceptor(Substitute.For<IHttpContextAccessor>()),
+                new StampInterceptor(Substitute.For<IHttpContextAccessor>()),
                 options);
         }
 

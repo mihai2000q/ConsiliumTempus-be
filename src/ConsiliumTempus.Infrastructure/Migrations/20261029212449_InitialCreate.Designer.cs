@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsiliumTempus.Infrastructure.Migrations
 {
     [DbContext(typeof(ConsiliumTempusDbContext))]
-    [Migration("20261029133639_InitialCreate")]
+    [Migration("20261029212449_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -2463,12 +2463,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                 .HasColumnType("uniqueidentifier")
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                            b1.Property<Guid?>("CreatedById")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<DateTime>("CreatedDateTime")
-                                .HasColumnType("datetime2");
-
                             b1.Property<DateOnly?>("Date")
                                 .HasColumnType("date");
 
@@ -2478,24 +2472,49 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                             b1.Property<TimeSpan?>("TimeSpent")
                                 .HasColumnType("time");
 
-                            b1.Property<DateTime>("UpdatedDateTime")
-                                .HasColumnType("datetime2");
-
                             b1.HasKey("Id");
-
-                            b1.HasIndex("CreatedById");
 
                             b1.HasIndex("TaskId");
 
                             b1.ToTable("ProjectTaskComment", (string)null);
 
-                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
-                                .WithMany()
-                                .HasForeignKey("CreatedById")
-                                .OnDelete(DeleteBehavior.Restrict);
-
                             b1.WithOwner("Task")
                                 .HasForeignKey("TaskId");
+
+                            b1.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Authorship", "Authorship", b2 =>
+                                {
+                                    b2.Property<Guid>("ProjectTaskCommentId")
+                                        .HasColumnType("uniqueidentifier")
+                                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                                    b2.Property<Guid?>("AuthorId")
+                                        .HasColumnType("uniqueidentifier")
+                                        .HasColumnName("AuthorId");
+
+                                    b2.Property<DateTime>("CreatedDateTime")
+                                        .HasColumnType("datetime2")
+                                        .HasColumnName("CreatedDateTime");
+
+                                    b2.Property<DateTime>("UpdatedDateTime")
+                                        .HasColumnType("datetime2")
+                                        .HasColumnName("UpdatedDateTime");
+
+                                    b2.HasKey("ProjectTaskCommentId");
+
+                                    b2.HasIndex("AuthorId");
+
+                                    b2.ToTable("ProjectTaskComment");
+
+                                    b2.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "Author")
+                                        .WithMany()
+                                        .HasForeignKey("AuthorId")
+                                        .OnDelete(DeleteBehavior.Restrict);
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("ProjectTaskCommentId");
+
+                                    b2.Navigation("Author");
+                                });
 
                             b1.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Message", "Message", b2 =>
                                 {
@@ -2517,7 +2536,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                                         .HasForeignKey("ProjectTaskCommentId");
                                 });
 
-                            b1.Navigation("CreatedBy");
+                            b1.Navigation("Authorship")
+                                .IsRequired();
 
                             b1.Navigation("Message")
                                 .IsRequired();

@@ -14,18 +14,19 @@ using Microsoft.IdentityModel.JsonWebTokens;
 namespace ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 
 /// <summary>
-/// Stamps the <see cref="Audit"/> of the entities that are saved: the current user and the date and time of the changes.
-/// It is created for the added entities (unless they already have one), and updated for the modified ones
-/// (and for the ones that are marked as updated, see <see cref="ConsiliumTempusDbContext.MarkAsUpdated"/>).
+/// Stamps the <see cref="Audit"/> and the <see cref="Authorship"/> of the entities that are saved:
+/// the current user and the date and time of the changes.
+/// They are created for the added entities (unless they already have one), and updated for the modified ones
+/// (and the audit also for the ones that are marked as updated, see <see cref="ConsiliumTempusDbContext.MarkAsUpdated"/>).
 /// It has to go after the <see cref="PublishDomainEventsInterceptor"/>, as the domain events add and modify entities too.
 /// </summary>
-public sealed class StampAuditInterceptor(IHttpContextAccessor httpContextAccessor) : SaveChangesInterceptor
+public sealed class StampInterceptor(IHttpContextAccessor httpContextAccessor) : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,
         InterceptionResult<int> result)
     {
-        StampAudits(eventData.Context).GetAwaiter().GetResult();
+        Stamp(eventData.Context).GetAwaiter().GetResult();
         return base.SavingChanges(eventData, result);
     }
 
@@ -34,25 +35,32 @@ public sealed class StampAuditInterceptor(IHttpContextAccessor httpContextAccess
         InterceptionResult<int> result,
         CancellationToken cancellationToken = new())
     {
-        await StampAudits(eventData.Context, cancellationToken);
+        await Stamp(eventData.Context, cancellationToken);
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private async Task StampAudits(DbContext? dbContext, CancellationToken cancellationToken = default)
+    private async Task Stamp(DbContext? dbContext, CancellationToken cancellationToken = default)
     {
         if (dbContext is null) return;
 
         var markedAsUpdated = (dbContext as ConsiliumTempusDbContext)?.TakeMarkedAsUpdated() ?? [];
-        var entries = dbContext.ChangeTracker
+        var audited = dbContext.ChangeTracker
             .Entries<IAudit>()
             .Where(entry => entry.State == EntityState.Added || IsUpdated(entry) || markedAsUpdated.Contains(entry.Entity))
             .ToList();
-        if (entries.Count == 0) return;
+        var authored = dbContext.ChangeTracker
+            .Entries<IAuthored>()
+            .Where(entry => entry.State == EntityState.Added || IsUpdated(entry))
+            .ToList();
+        if (audited.Count == 0 && authored.Count == 0) return;
 
-        var user = await GetCurrentUser(dbContext, cancellationToken);
         var now = DateTime.UtcNow;
+        // the user is not needed to update an authorship, as its author never changes
+        var user = audited.Count > 0 || authored.Any(entry => entry.State == EntityState.Added)
+            ? await GetCurrentUser(dbContext, cancellationToken)
+            : null;
 
-        foreach (var entry in entries)
+        foreach (var entry in audited)
         {
             var audit = entry.Reference(nameof(IAudit.Audit));
             if (entry.State == EntityState.Added)
@@ -66,12 +74,25 @@ public sealed class StampAuditInterceptor(IHttpContextAccessor httpContextAccess
             }
         }
 
+        foreach (var entry in authored)
+        {
+            var authorship = entry.Reference(nameof(IAuthored.Authorship));
+            if (entry.State == EntityState.Added)
+            {
+                authorship.CurrentValue ??= Authorship.Create(user, now);
+            }
+            else
+            {
+                authorship.CurrentValue = entry.Entity.Authorship.Update(now);
+            }
+        }
+
         dbContext.ChangeTracker.DetectChanges();
     }
 
     /// <summary>
     /// An entity is updated when its own properties or its owned types (i.e., its name) change.
-    /// The audit is not a change of the entity, and neither is what is excluded from it
+    /// The audit and the authorship are not a change of the entity, and neither is what is excluded from the audit
     /// (see <see cref="AuditExtensions.ExcludeFromAudit{TProperty}"/>), so they do not count.
     /// </summary>
     private static bool IsUpdated(EntityEntry entry)
@@ -83,6 +104,7 @@ public sealed class StampAuditInterceptor(IHttpContextAccessor httpContextAccess
         return entry.References
             .Where(reference => reference.Metadata is INavigation { ForeignKey.IsOwnership: true } &&
                                 reference.Metadata.Name != nameof(IAudit.Audit) &&
+                                reference.Metadata.Name != nameof(IAuthored.Authorship) &&
                                 !reference.Metadata.IsExcludedFromAudit())
             .Any(reference => reference.TargetEntry is { State: not EntityState.Unchanged });
     }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ConsiliumTempus.Infrastructure.UnitTests.Persistence.Configuration;
 
 /// <summary>
-/// A change that is excluded from the audit does not update it (see <c>StampAuditInterceptor</c>),
+/// A change that is excluded from the audit does not update it (see <c>StampInterceptor</c>),
 /// and it is the only kind of change that <c>ExecuteUpdate</c> is allowed to do on an audited entity.
 /// So the exclusions have to be added to the list on purpose, together with their configuration.
 /// </summary>

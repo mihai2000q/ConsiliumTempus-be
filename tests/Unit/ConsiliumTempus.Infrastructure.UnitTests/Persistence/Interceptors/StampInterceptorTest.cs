@@ -1,11 +1,16 @@
 using System.Security.Claims;
+using ConsiliumTempus.Common.UnitTests.Common.ValueObjects;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
+using ConsiliumTempus.Common.UnitTests.ProjectTask;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
+using ConsiliumTempus.Domain.ProjectTask;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
@@ -17,17 +22,17 @@ using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.Persistence.Interceptors;
 
-public class StampAuditInterceptorTest
+public class StampInterceptorTest
 {
     #region Setup
 
     private readonly IHttpContextAccessor _httpContextAccessor = Substitute.For<IHttpContextAccessor>();
-    private readonly StampAuditInterceptor _uut;
+    private readonly StampInterceptor _uut;
     private readonly ConsiliumTempusDbContext _dbContext = Utils.Persistence.CreateDbContext();
 
-    public StampAuditInterceptorTest()
+    public StampInterceptorTest()
     {
-        _uut = new StampAuditInterceptor(_httpContextAccessor);
+        _uut = new StampInterceptor(_httpContextAccessor);
     }
 
     private void LoginAs(string? sub)
@@ -57,6 +62,27 @@ public class StampAuditInterceptorTest
         return stage;
     }
 
+    // A task that is already saved, and so is the comment that it has (if there is an author)
+    private ProjectTaskAggregate AttachATask(UserAggregate? commentedBy = null, DateTime? commentedAt = null)
+    {
+        var task = ProjectTaskFactory.Create();
+        if (commentedBy is not null)
+        {
+            var comment = CreateAComment(task);
+            comment.WithAuthorship(commentedBy, commentedAt);
+            task.AddComment(comment);
+        }
+
+        _dbContext.Attach(task);
+
+        return task;
+    }
+
+    private static ProjectTaskComment CreateAComment(ProjectTaskAggregate task)
+    {
+        return ProjectTaskComment.Create(Message.Create("A comment"), task);
+    }
+
     // A stage that is not saved yet, in a sprint that is
     private ProjectStage AddAStage()
     {
@@ -75,7 +101,7 @@ public class StampAuditInterceptorTest
     #endregion
 
     [Fact]
-    public async Task StampAudit_WhenAnEntityIsAdded_ShouldCreateItsAudit()
+    public async Task Stamp_WhenAnEntityIsAdded_ShouldCreateItsAudit()
     {
         // Arrange
         var user = LoginAsATrackedUser();
@@ -92,7 +118,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenAnAddedEntityHasNoOwnedTypes_ShouldCreateItsAudit()
+    public async Task Stamp_WhenAnAddedEntityHasNoOwnedTypes_ShouldCreateItsAudit()
     {
         // Arrange
         var user = LoginAsATrackedUser();
@@ -110,7 +136,133 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenAnAddedEntityAlreadyHasAnAudit_ShouldKeepIt()
+    public async Task Stamp_WhenAnAuthoredEntityIsAdded_ShouldCreateItsAuthorship()
+    {
+        // Arrange
+        var user = LoginAsATrackedUser();
+        var task = AttachATask();
+        var comment = CreateAComment(task);
+        task.AddComment(comment);
+
+        // Act
+        await Stamp();
+
+        // Assert
+        comment.Authorship.Author.Should().Be(user);
+        comment.Authorship.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 5.Seconds());
+        comment.Authorship.UpdatedDateTime.Should().Be(comment.Authorship.CreatedDateTime);
+    }
+
+    [Fact]
+    public async Task Stamp_WhenAnAuthoredEntityIsAddedAndNobodyIsLoggedIn_ShouldCreateItsAuthorshipWithoutAnAuthor()
+    {
+        // Arrange
+        LoginAs(null);
+        var task = AttachATask();
+        var comment = CreateAComment(task);
+        task.AddComment(comment);
+
+        // Act
+        await Stamp();
+
+        // Assert
+        comment.Authorship.Author.Should().BeNull();
+        comment.Authorship.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 5.Seconds());
+    }
+
+    [Fact]
+    public async Task Stamp_WhenAnAddedAuthoredEntityAlreadyHasAnAuthorship_ShouldKeepIt()
+    {
+        // Arrange
+        LoginAsATrackedUser();
+        var task = AttachATask();
+        var comment = CreateAComment(task);
+        comment.WithAuthorship(UserFactory.Create());
+        var authorship = comment.Authorship;
+        task.AddComment(comment);
+
+        // Act
+        await Stamp();
+
+        // Assert
+        comment.Authorship.Should().BeSameAs(authorship);
+    }
+
+    [Fact]
+    public async Task Stamp_WhenAnAuthoredEntityIsUpdated_ShouldOnlyUpdateTheDateOfItsAuthorship()
+    {
+        // Arrange
+        var author = UserFactory.Create();
+        LoginAs(null);
+        var createdDateTime = DateTime.UtcNow.AddDays(-1);
+        var task = AttachATask(author, createdDateTime);
+        var comment = task.Comments.Single();
+        typeof(ProjectTaskComment)
+            .GetProperty(nameof(ProjectTaskComment.Message))!
+            .SetValue(comment, Message.Create("Edited"));
+
+        // Act
+        await Stamp();
+
+        // Assert
+        comment.Authorship.Author.Should().Be(author);
+        comment.Authorship.CreatedDateTime.Should().Be(createdDateTime);
+        comment.Authorship.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, 5.Seconds());
+    }
+
+    [Fact]
+    public async Task Stamp_WhenTheAuthorOfAnAuthoredEntityIsCleared_ShouldNotUpdateItsAuthorship()
+    {
+        // Arrange
+        LoginAs(null);
+        var author = UserFactory.Create();
+        var createdDateTime = DateTime.UtcNow.AddDays(-1);
+        var task = AttachATask(author, createdDateTime);
+        var comment = task.Comments.Single();
+        _dbContext.Entry(comment).Reference(nameof(IAuthored.Authorship)).CurrentValue =
+            comment.Authorship.ClearUser(author);
+
+        // Act
+        await Stamp();
+
+        // Assert
+        comment.Authorship.Author.Should().BeNull();
+        comment.Authorship.UpdatedDateTime.Should().Be(createdDateTime);
+    }
+
+    [Fact]
+    public async Task Stamp_WhenAnAuthoredEntityIsNotChanged_ShouldNotUpdateItsAuthorship()
+    {
+        // Arrange
+        LoginAsATrackedUser();
+        var task = AttachATask(UserFactory.Create());
+        var authorship = task.Comments.Single().Authorship;
+
+        // Act
+        await Stamp();
+
+        // Assert
+        task.Comments.Single().Authorship.Should().BeSameAs(authorship);
+    }
+
+    [Fact]
+    public async Task Stamp_WhenACommentIsAddedToATask_ShouldNotUpdateTheAuditOfTheTask()
+    {
+        // Arrange
+        LoginAsATrackedUser();
+        var task = AttachATask();
+        var audit = task.Audit;
+        task.AddComment(CreateAComment(task));
+
+        // Act
+        await Stamp();
+
+        // Assert
+        task.Audit.Should().BeSameAs(audit);
+    }
+
+    [Fact]
+    public async Task Stamp_WhenAnAddedEntityAlreadyHasAnAudit_ShouldKeepIt()
     {
         // Arrange
         LoginAsATrackedUser();
@@ -127,7 +279,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenAnEntityIsUpdated_ShouldUpdateItsAudit()
+    public async Task Stamp_WhenAnEntityIsUpdated_ShouldUpdateItsAudit()
     {
         // Arrange
         var user = LoginAsATrackedUser();
@@ -148,7 +300,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenOnlyAChangeExcludedFromTheAuditIsMade_ShouldNotUpdateTheAudit()
+    public async Task Stamp_WhenOnlyAChangeExcludedFromTheAuditIsMade_ShouldNotUpdateTheAudit()
     {
         // Arrange
         LoginAsATrackedUser();
@@ -164,7 +316,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenOnlyAPropertyExcludedFromTheAuditIsChanged_ShouldNotUpdateTheAudit()
+    public async Task Stamp_WhenOnlyAPropertyExcludedFromTheAuditIsChanged_ShouldNotUpdateTheAudit()
     {
         // Arrange
         LoginAsATrackedUser();
@@ -181,7 +333,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenAnEntityIsMarkedAsUpdated_ShouldUpdateItsAuditEvenIfItDidNotChange()
+    public async Task Stamp_WhenAnEntityIsMarkedAsUpdated_ShouldUpdateItsAuditEvenIfItDidNotChange()
     {
         // Arrange
         var user = LoginAsATrackedUser();
@@ -197,7 +349,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenTheEntityMarkedAsUpdatedIsSaved_ShouldForgetIt()
+    public async Task Stamp_WhenTheEntityMarkedAsUpdatedIsSaved_ShouldForgetIt()
     {
         // Arrange
         LoginAsATrackedUser();
@@ -214,7 +366,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenNothingIsChanged_ShouldNotUpdateAnyAudit()
+    public async Task Stamp_WhenNothingIsChanged_ShouldNotUpdateAnyAudit()
     {
         // Arrange
         LoginAsATrackedUser();
@@ -229,7 +381,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenTheCurrentUserIsBeingDeleted_ShouldStampWithoutAUser()
+    public async Task Stamp_WhenTheCurrentUserIsBeingDeleted_ShouldStampWithoutAUser()
     {
         // Arrange
         var user = LoginAsATrackedUser();
@@ -245,7 +397,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenTheCurrentUserIdIsNotValid_ShouldStampWithoutAUser()
+    public async Task Stamp_WhenTheCurrentUserIdIsNotValid_ShouldStampWithoutAUser()
     {
         // Arrange
         LoginAs("not a guid");
@@ -260,7 +412,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenNobodyIsLoggedInAndOneUserIsAdded_ShouldStampWithThatUser()
+    public async Task Stamp_WhenNobodyIsLoggedInAndOneUserIsAdded_ShouldStampWithThatUser()
     {
         // Arrange
         LoginAs(null);
@@ -277,7 +429,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenThereIsNoHttpContextAndOneUserIsAdded_ShouldStampWithThatUser()
+    public async Task Stamp_WhenThereIsNoHttpContextAndOneUserIsAdded_ShouldStampWithThatUser()
     {
         // Arrange
         _httpContextAccessor.HttpContext.Returns((HttpContext?)null);
@@ -293,7 +445,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenNobodyIsLoggedInAndManyUsersAreAdded_ShouldStampWithoutAUser()
+    public async Task Stamp_WhenNobodyIsLoggedInAndManyUsersAreAdded_ShouldStampWithoutAUser()
     {
         // Arrange
         LoginAs(null);
@@ -310,7 +462,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenNobodyIsLoggedInAndNoUserIsAdded_ShouldStampWithoutAUser()
+    public async Task Stamp_WhenNobodyIsLoggedInAndNoUserIsAdded_ShouldStampWithoutAUser()
     {
         // Arrange
         LoginAs(null);
@@ -325,7 +477,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public async Task StampAudit_WhenThereIsNoDbContext_ShouldDoNothing()
+    public async Task Stamp_WhenThereIsNoDbContext_ShouldDoNothing()
     {
         // Act
         var outcome = await _uut.SavingChangesAsync(Utils.Persistence.CreateEventData(null), default);
@@ -335,7 +487,7 @@ public class StampAuditInterceptorTest
     }
 
     [Fact]
-    public void StampAudit_WhenSavingSynchronously_ShouldCreateTheAuditOfAnAddedEntity()
+    public void Stamp_WhenSavingSynchronously_ShouldCreateTheAuditOfAnAddedEntity()
     {
         // Arrange
         var user = LoginAsATrackedUser();

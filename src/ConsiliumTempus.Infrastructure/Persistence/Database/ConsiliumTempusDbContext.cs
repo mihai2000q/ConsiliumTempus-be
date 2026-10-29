@@ -14,7 +14,7 @@ namespace ConsiliumTempus.Infrastructure.Persistence.Database;
 
 public sealed class ConsiliumTempusDbContext(
     PublishDomainEventsInterceptor publishDomainEventsInterceptor,
-    StampAuditInterceptor stampAuditInterceptor,
+    StampInterceptor stampInterceptor,
     DbContextOptions<ConsiliumTempusDbContext> options)
     : DbContext(options)
 {
@@ -30,7 +30,7 @@ public sealed class ConsiliumTempusDbContext(
     /// <summary>
     /// For a change that the audit does not count (it is excluded from it, or it is saved on another table),
     /// but that has to be saved as an update of the entity that the user changed
-    /// (see <see cref="StampAuditInterceptor"/>).
+    /// (see <see cref="StampInterceptor"/>).
     /// </summary>
     public void MarkAsUpdated(IAudit entity)
     {
@@ -73,7 +73,7 @@ public sealed class ConsiliumTempusDbContext(
     {
         optionsBuilder.AddInterceptors(
             publishDomainEventsInterceptor,
-            stampAuditInterceptor);
+            stampInterceptor);
         base.OnConfiguring(optionsBuilder);
     }
 }

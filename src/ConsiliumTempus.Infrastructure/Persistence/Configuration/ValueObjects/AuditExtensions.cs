@@ -17,7 +17,7 @@ internal static class AuditExtensions
         /// A change of this property is not a change of the entity, so it does not update its audit
         /// (i.e., the last activity, which is refreshed whenever something under the entity changes).
         /// An <c>ExecuteUpdate</c> on an audited entity is only allowed for the properties that are excluded,
-        /// as it does not go through the <c>StampAuditInterceptor</c>.
+        /// as it does not go through the <c>StampInterceptor</c>.
         /// </summary>
         public PropertyBuilder<TProperty> ExcludeFromAudit()
         {
