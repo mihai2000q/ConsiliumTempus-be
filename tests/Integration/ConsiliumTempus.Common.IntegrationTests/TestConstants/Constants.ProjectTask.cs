@@ -7,4 +7,9 @@ internal static partial class Constants
         internal const string Name = "Should add more items on the menu page";
         internal const string Description = "Step 1: Go to menu page. Step 2: add items. Step 3: Done";
     }
+
+    internal static class ProjectTaskComment
+    {
+        internal const string Message = "Remember to check the prices of the items";
+    }
 }
