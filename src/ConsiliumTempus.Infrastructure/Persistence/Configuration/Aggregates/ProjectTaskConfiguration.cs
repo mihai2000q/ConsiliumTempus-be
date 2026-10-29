@@ -86,9 +86,7 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
             .HasColumnName(nameof(Message))
             .HasMaxLength(PropertiesValidation.ProjectTaskComment.MessageMaximumLength);
 
-        builder.HasOne(c => c.CreatedBy)
-            .WithMany()
-            .IsRequired(false);
+        builder.OwnsAuthorship(c => c.Authorship);
 
         builder.HasOne(c => c.Task)
             .WithMany(t => t.Comments);
