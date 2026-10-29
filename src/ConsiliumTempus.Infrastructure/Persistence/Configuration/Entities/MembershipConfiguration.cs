@@ -2,6 +2,7 @@
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
+using ConsiliumTempus.Infrastructure.Persistence.Configuration.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -31,6 +32,8 @@ internal sealed class MembershipConfiguration : IEntityTypeConfiguration<Members
         builder.Property(nameof(Membership.WorkspaceRole).ToIdBackingField())
             .HasColumnName(nameof(Membership.WorkspaceRole).ToId());
         builder.Navigation(m => m.WorkspaceRole).AutoInclude();
+
+        builder.OwnsAudit(m => m.Audit);
 
         builder.Ignore(m => m.Id);
         builder.HasKey(nameof(UserId), nameof(WorkspaceId));

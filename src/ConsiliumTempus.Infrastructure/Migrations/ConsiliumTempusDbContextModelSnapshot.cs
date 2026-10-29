@@ -54,12 +54,6 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedDateTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("_workspaceRoleId")
                         .HasColumnType("int")
                         .HasColumnName("WorkspaceRoleId");
@@ -1111,7 +1105,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<DateTime>("LastActivity")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasAnnotation("ConsiliumTempus:ExcludedFromAudit", true);
 
                     b.Property<int>("Lifecycle")
                         .HasColumnType("int");
@@ -1275,7 +1270,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<DateTime>("LastActivity")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasAnnotation("ConsiliumTempus:ExcludedFromAudit", true);
 
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
@@ -1592,6 +1588,61 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("_workspaceRoleId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.OwnsOne("ConsiliumTempus.Domain.Common.ValueObjects.Audit", "Audit", b1 =>
+                        {
+                            b1.Property<Guid>("MembershipUserId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                            b1.Property<Guid>("MembershipWorkspaceId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+                            b1.Property<Guid?>("CreatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTime>("CreatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("CreatedDateTime");
+
+                            b1.Property<Guid?>("UpdatedById")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UpdatedById");
+
+                            b1.Property<DateTime>("UpdatedDateTime")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("UpdatedDateTime");
+
+                            b1.HasKey("MembershipUserId", "MembershipWorkspaceId");
+
+                            b1.HasIndex("CreatedById");
+
+                            b1.HasIndex("UpdatedById");
+
+                            b1.ToTable("Membership");
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "CreatedBy")
+                                .WithMany()
+                                .HasForeignKey("CreatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.HasOne("ConsiliumTempus.Domain.User.UserAggregate", "UpdatedBy")
+                                .WithMany()
+                                .HasForeignKey("UpdatedById")
+                                .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.WithOwner()
+                                .HasForeignKey("MembershipUserId", "MembershipWorkspaceId");
+
+                            b1.Navigation("CreatedBy");
+
+                            b1.Navigation("UpdatedBy");
+                        });
+
+                    b.Navigation("Audit")
                         .IsRequired();
 
                     b.Navigation("User");
@@ -2153,7 +2204,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("CustomOrderPosition")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasAnnotation("ConsiliumTempus:ExcludedFromAudit", true);
 
                     b.Navigation("Name")
                         .IsRequired();
@@ -2478,7 +2530,8 @@ namespace ConsiliumTempus.Infrastructure.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("CustomOrderPosition")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasAnnotation("ConsiliumTempus:ExcludedFromAudit", true);
 
                     b.Navigation("Description")
                         .IsRequired();

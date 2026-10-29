@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -63,6 +64,7 @@ internal sealed class UserRepository(ConsiliumTempusDbContext dbContext) : IUser
         await ClearAuditUser(dbContext.Set<ProjectStage>(), user, cancellationToken);
         await ClearAuditUser(dbContext.Projects, user, cancellationToken);
         await ClearAuditUser(dbContext.Workspaces, user, cancellationToken);
+        await ClearAuditUser(dbContext.Set<Membership>(), user, cancellationToken);
     }
 
     public async Task RemoveWorkspaceInvitationsByUser(UserAggregate user,
