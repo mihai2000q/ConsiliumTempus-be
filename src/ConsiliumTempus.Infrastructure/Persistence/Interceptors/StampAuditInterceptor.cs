@@ -87,11 +87,29 @@ public sealed class StampAuditInterceptor(IHttpContextAccessor httpContextAccess
             .Any(reference => reference.TargetEntry is { State: not EntityState.Unchanged });
     }
 
+    /// <summary>
+    /// Nobody is logged in when a user registers, so the user that is registering is the one who does it
+    /// (i.e., the personal workspace that is created for them). It is only when exactly one user is added,
+    /// so that nothing else can be stamped with a user that did not do it.
+    /// </summary>
+    private static UserAggregate? GetRegisteringUser(DbContext dbContext)
+    {
+        var addedUsers = dbContext.ChangeTracker
+            .Entries<UserAggregate>()
+            .Where(entry => entry.State == EntityState.Added)
+            .Select(entry => entry.Entity)
+            .Take(2)
+            .ToList();
+
+        return addedUsers.Count == 1 ? addedUsers[0] : null;
+    }
+
     private async Task<UserAggregate?> GetCurrentUser(DbContext dbContext, CancellationToken cancellationToken)
     {
         var subUserId = httpContextAccessor.HttpContext?.User.Claims
             .SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
-        if (subUserId is null || !Guid.TryParse(subUserId, out var guidUserId)) return null;
+        if (subUserId is null) return GetRegisteringUser(dbContext);
+        if (!Guid.TryParse(subUserId, out var guidUserId)) return null;
 
         var userId = UserId.Create(guidUserId);
         var user = dbContext.Set<UserAggregate>().Local.FirstOrDefault(u => u.Id == userId) ??
