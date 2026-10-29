@@ -342,7 +342,7 @@ internal class UserData : ITestData
     [
         ProjectTaskCommentFactory.Create(
             ProjectTasks[^1],
-            Users[0])
+            AuthorshipFactory.Create(Users[0]))
     ];
 
     public static readonly CustomField[] CustomFields =

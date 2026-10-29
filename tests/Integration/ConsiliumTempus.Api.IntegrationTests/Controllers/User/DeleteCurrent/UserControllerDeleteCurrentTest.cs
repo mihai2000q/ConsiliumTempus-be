@@ -124,7 +124,7 @@ public class UserControllerDeleteCurrentTest(WebAppFactory factory)
             .Where(t =>
                 t.Assignee == user ||
                 t.Reviewer == user ||
-                t.Comments.Any(c => c.CreatedBy == user))
+                t.Comments.Any(c => c.Authorship.Author == user))
             .ToList()
             .Should().BeEmpty();
         dbContext.Set<PeopleCustomField>()
