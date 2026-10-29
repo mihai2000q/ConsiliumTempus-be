@@ -60,7 +60,7 @@ That is why the custom fields cascade from their tasks, but the custom field set
 (see the comments on the Project Task and the Custom Field Setup configurations).
 - The delete behavior of the types that are mapped to their own table (table per type) cannot be configured,
 and it always cascades to them.
-- `DeleteBehaviorTest` lists all the relationships that cascade or set to null,
+- `OnDeleteBehaviorConfigurationTest` lists all the relationships that cascade or set to null,
 so the list has to be updated on purpose when one of them is added or changed.
 
 ### Generated Keys
@@ -112,7 +112,7 @@ builder.Property(p => p.LastActivity).ExcludeFromAudit();
 builder.Navigation(t => t.CustomOrderPosition).ExcludeFromAudit();
 ```
 
-`AuditExclusionTest` lists all the exclusions, so a new one has to be added to the list on purpose.
+`AuditExclusionConfigurationTest` lists all the exclusions, so a new one has to be added to the list on purpose.
 
 A change that has to count anyway can be marked with `MarkAsUpdated` (on the repository, which marks it on the `ConsiliumTempusDbContext`),
 without touching the entity. It is used when:
