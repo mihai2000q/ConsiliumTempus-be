@@ -85,6 +85,8 @@ stamps the current user and the date and time when the changes are saved, based 
 (i.e., a stage whose position changes because another one is moved).
 
 When there is no current user (i.e., there is no request), or the current user is being deleted, the user is left empty.
+The only exception is the registration of a user: nobody is logged in, so the user that is registering is the one who does it
+(i.e., the personal workspace that is created for them). This is only when exactly one user is added in the same save.
 The *User Deleted* event clears the user from the audits, which does not update them.
 
 #### Excluded from the audit
@@ -112,9 +114,19 @@ as opposed to the ones that are only shifted)
 #### ExecuteUpdate
 
 `ExecuteUpdate` (and `ExecuteDelete`) do not go through the change tracker, so they skip the `StampAuditInterceptor`.
-That is why an `ExecuteUpdate` on an entity that has an audit is **forbidden**, unless it only changes properties
-that are excluded from the audit (i.e., the last activity). Any other change has to be loaded, changed and saved,
-so that the audit is stamped.
+That is why an `ExecuteUpdate` on an entity that has an audit is **forbidden**, unless:
+
+- it only changes properties that are excluded from the audit (i.e., the last activity), or
+- the change must not count as an update of the entity (i.e., when a user is deleted, `UserRepository.ClearReferences`
+clears it from the audits of the entities that it touched, as that does not update them).
+
+Any other change has to be loaded, changed and saved, so that the audit is stamped.
+
+They run inside the transaction of the command (the `UnitOfWorkBehavior` wraps the handler and the save in a `TransactionScope`),
+as the domain events that call them are published while the changes are saved.
+
+They also do not update the entities that are already tracked, so the entities that a command loads
+have to be changed through the entities instead (i.e., the invitations of a deleted user are loaded and removed).
 
 ## Migrations
 
