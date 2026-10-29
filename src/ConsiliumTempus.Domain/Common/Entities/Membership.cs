@@ -34,7 +34,10 @@ public sealed class Membership : Entity<(UserId UserId, WorkspaceId WorkspaceId)
     public WorkspaceAggregate Workspace { get; init; } = null!;
     public WorkspaceRole WorkspaceRole
     {
-        get => _workspaceRole ?? WorkspaceRole.GetValues().Single(wr => wr.Id == _workspaceRoleId);
+        // the one that was loaded goes stale when the role is updated, and it cannot be replaced (EF would track it)
+        get => _workspaceRole is not null && _workspaceRole.Id == _workspaceRoleId
+            ? _workspaceRole
+            : WorkspaceRole.GetValues().Single(wr => wr.Id == _workspaceRoleId);
         init => _workspaceRole = value;
     }
 
