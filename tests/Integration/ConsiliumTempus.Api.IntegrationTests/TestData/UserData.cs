@@ -110,38 +110,47 @@ internal class UserData : ITestData
         MembershipFactory.Create(
             Users[0],
             Workspaces[0],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[2],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[3],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[1],
             Workspaces[1],
+            AuditFactory.Create(Users[1]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[2],
             Workspaces[1],
+            AuditFactory.Create(Users[2]),
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[3],
             Workspaces[0],
+            AuditFactory.Create(Users[3]),
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[4],
             Workspaces[0],
+            AuditFactory.Create(Users[4]),
             WorkspaceRole.View),
         MembershipFactory.Create(
             Users[4],
             Workspaces[3],
+            AuditFactory.Create(Users[4]),
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[5],
             Workspaces[0],
+            AuditFactory.Create(Users[5]),
             WorkspaceRole.Admin)
     ];
 

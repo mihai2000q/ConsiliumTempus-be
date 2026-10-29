@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Common.IntegrationTests.Extensions;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -10,16 +11,14 @@ public static class MembershipFactory
     public static Membership Create(
         UserAggregate user,
         WorkspaceAggregate workspace,
-        WorkspaceRole workspaceRole,
-        DateTime? createdDateTime = null,
-        DateTime? updatedDateTime = null)
+        Audit audit,
+        WorkspaceRole workspaceRole)
     {
         return EntityBuilder<Membership>.Empty()
             .WithProperty(nameof(Membership.User), user)
             .WithProperty(nameof(Membership.Workspace), workspace)
             .WithField(nameof(Membership.WorkspaceRole).ToIdBackingField(), workspaceRole.Id)
-            .WithProperty(nameof(Membership.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)
-            .WithProperty(nameof(Membership.UpdatedDateTime), updatedDateTime ?? DateTime.UtcNow)
+            .WithProperty(nameof(Membership.Audit), audit)
             .Build();
     }
 }

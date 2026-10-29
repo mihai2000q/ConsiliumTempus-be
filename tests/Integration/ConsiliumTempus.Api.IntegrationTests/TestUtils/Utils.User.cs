@@ -56,8 +56,7 @@ internal static partial class Utils
             var membership = user.Memberships[0];
             membership.User.Should().Be(user);
             membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
-            membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            membership.Audit.ShouldBeCreated(user);
 
             membership.Workspace.Name.Value.Should().Be(Constants.Workspace.Name);
             membership.Workspace.Description.Value.Should().Be(Constants.Workspace.Description);
