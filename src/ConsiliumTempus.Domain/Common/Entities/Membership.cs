@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
@@ -8,7 +9,7 @@ using ConsiliumTempus.Domain.Workspace.ValueObjects;
 
 namespace ConsiliumTempus.Domain.Common.Entities;
 
-public sealed class Membership : Entity<(UserId UserId, WorkspaceId WorkspaceId)>, ITimestamps
+public sealed class Membership : Entity<(UserId UserId, WorkspaceId WorkspaceId)>, IAudit
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private Membership()
@@ -18,14 +19,10 @@ public sealed class Membership : Entity<(UserId UserId, WorkspaceId WorkspaceId)
     private Membership(
         UserAggregate user,
         WorkspaceAggregate workspace,
-        DateTime createdDateTime,
-        DateTime updatedDateTime,
         int workspaceRoleId) : base((user.Id, workspace.Id))
     {
         User = user;
         Workspace = workspace;
-        CreatedDateTime = createdDateTime;
-        UpdatedDateTime = updatedDateTime;
         _workspaceRoleId = workspaceRoleId;
     }
 
@@ -41,8 +38,7 @@ public sealed class Membership : Entity<(UserId UserId, WorkspaceId WorkspaceId)
         init => _workspaceRole = value;
     }
 
-    public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; private set; }
+    public Audit Audit { get; init; } = null!;
 
     public static Membership Create(
         UserAggregate user,
@@ -52,14 +48,11 @@ public sealed class Membership : Entity<(UserId UserId, WorkspaceId WorkspaceId)
         return new Membership(
             user,
             workspace,
-            DateTime.UtcNow,
-            DateTime.UtcNow,
             workspaceRole.Id);
     }
 
     public void Update(WorkspaceRole role)
     {
         _workspaceRoleId = role.Id;
-        UpdatedDateTime = DateTime.UtcNow;
     }
 }

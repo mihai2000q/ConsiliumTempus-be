@@ -65,7 +65,9 @@ erDiagram
         uniqueidentifier UserId PK, FK
         uniqueidentifier WorkspaceId PK, FK
         int WorkspaceRoleId FK
+        uniqueidentifier CreatedById FK "nullable"
         datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
         datetime2 UpdatedDateTime
     }
     UserHasFavoriteWorkspace {

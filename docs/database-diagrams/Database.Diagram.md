@@ -26,6 +26,8 @@ erDiagram
     CustomFieldSetup ||--|| CustomFieldSetup_Text : "Id"
     CustomFieldSetup ||--|| CustomFieldSetup_Time : "Id"
     User ||--o{ Membership : "UserId"
+    User |o--o{ Membership : "CreatedById"
+    User |o--o{ Membership : "UpdatedById"
     WorkspaceRole ||--o{ Membership : "WorkspaceRoleId"
     Workspace ||--o{ Membership : "WorkspaceId"
     User |o--o{ Project : "CreatedById"
@@ -184,7 +186,9 @@ erDiagram
         uniqueidentifier UserId PK, FK
         uniqueidentifier WorkspaceId PK, FK
         int WorkspaceRoleId FK
+        uniqueidentifier CreatedById FK "nullable"
         datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
         datetime2 UpdatedDateTime
     }
     Project {

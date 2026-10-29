@@ -77,6 +77,7 @@ so there is no *Audit* table, and it goes away with the entity that holds it.
 The configurations say it with `OwnsAudit`.
 
 The entities that hold an audit implement `IAudit`, and the domain does not create nor update it.
+
 The `StampAuditInterceptor` (which goes after the one that publishes the domain events, as they add and modify entities too)
 stamps the current user and the date and time when the changes are saved, based on the state of the entity:
 
@@ -88,6 +89,15 @@ When there is no current user (i.e., there is no request), or the current user i
 The only exception is the registration of a user: nobody is logged in, so the user that is registering is the one who does it
 (i.e., the personal workspace that is created for them). This is only when exactly one user is added in the same save.
 The *User Deleted* event clears the user from the audits, which does not update them.
+
+#### IAudit or ITimestamps
+
+As a suggestion, not a rule: when an entity should be stamped, the choice depends on who can change it.
+
+- An entity that **more than one user** can change should implement `IAudit`, so that it says who did it and when
+(i.e., a workspace or a membership, which any admin can update).
+- An entity that **only one user** can change (i.e., the data of a user, such as their name or email) can implement
+`ITimestamps`, as the user is always the same one, so only the dates are useful.
 
 #### Excluded from the audit
 

@@ -18,6 +18,8 @@
 - **One-to-many** relationship with the [Refresh Token](../../domain/entities/Entity.RefreshToken.md) entity.
 - 2x **One-to-many** relationship with the [Custom Field Setup](../../domain/aggregates/Aggregate.CustomFieldSetup.md) aggregate
 (through the **Audit**).
+- 2x **One-to-many** relationship with the [Membership](../../domain/entities/Entity.Membership.md) entity
+(through the **Audit**).
 - 2x **One-to-many** relationship with the [Project](../../domain/aggregates/Aggregate.Project.md) aggregate
 (through the **Audit**).
 - 2x **One-to-many** relationship with the [Project Sprint](../../domain/aggregates/Aggregate.ProjectSprint.md) aggregate
@@ -44,6 +46,8 @@ erDiagram
     User ||--o{ RefreshToken : "UserId"
     RefreshToken ||--o{ RefreshTokenHistory : "RefreshTokenId"
     User ||--o{ Membership : "UserId"
+    User |o--o{ Membership : "CreatedById"
+    User |o--o{ Membership : "UpdatedById"
     WorkspaceRole ||--o{ Membership : "WorkspaceRoleId"
     Workspace ||--o{ Membership : "WorkspaceId"
     User ||--o{ UserHasFavoriteWorkspace : "UserId"
@@ -102,7 +106,9 @@ erDiagram
         uniqueidentifier UserId PK, FK
         uniqueidentifier WorkspaceId PK, FK
         int WorkspaceRoleId FK
+        uniqueidentifier CreatedById FK "nullable"
         datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
         datetime2 UpdatedDateTime
     }
     UserHasFavoriteWorkspace {

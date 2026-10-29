@@ -88,7 +88,7 @@ such as *IsCompleted* or *FirstName*, are described in their own documentation):
 
 - **Audit**, which holds who created and who updated something, and when
   (*CreatedBy*, *CreatedDateTime*, *UpdatedBy* and *UpdatedDateTime*).
-  It is a part of the entities that implement `IAudit` (the custom field setups, the projects, the project sprints,
+  It is a part of the entities that implement `IAudit` (the custom field setups, the memberships, the projects, the project sprints,
   the project stages, the project statuses, the project tasks and the workspaces), and the domain never creates nor updates it:
   it is stamped by the `StampAuditInterceptor` when the changes are saved
   (see [Audit](Database.md#audit))

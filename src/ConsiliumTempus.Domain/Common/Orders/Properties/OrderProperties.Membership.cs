@@ -32,11 +32,11 @@ internal static partial class OrderProperties
             m => m.WorkspaceRole.Name);
 
         internal sealed record CreatedDateTimeProperty() : OrderProperty<Entities.Membership>(
-            nameof(Entities.Membership.CreatedDateTime),
-            m => m.CreatedDateTime);
+            nameof(Entities.Membership.Audit.CreatedDateTime),
+            m => m.Audit.CreatedDateTime);
 
         internal sealed record UpdatedDateTimeProperty() : OrderProperty<Entities.Membership>(
-            nameof(Entities.Membership.UpdatedDateTime),
-            m => m.UpdatedDateTime);
+            nameof(Entities.Membership.Audit.UpdatedDateTime),
+            m => m.Audit.UpdatedDateTime);
     }
 }
