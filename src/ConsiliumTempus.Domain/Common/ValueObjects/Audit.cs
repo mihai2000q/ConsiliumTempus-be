@@ -43,7 +43,7 @@ public sealed class Audit : ValueObject
         return new Audit(CreatedBy, CreatedDateTime, updatedBy, updatedDateTime);
     }
 
-    public Audit Nullify(UserAggregate user)
+    public Audit ClearUser(UserAggregate user)
     {
         return new Audit(
             CreatedBy == user ? null : CreatedBy,

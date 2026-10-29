@@ -89,11 +89,11 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, IAudit
         Assignee = assignee;
     }
     
-    public void Nullify(UserAggregate user)
+    public void ClearUser(UserAggregate user)
     {
         if (Assignee == user) Assignee = null;
         if (Reviewer == user) Reviewer = null;
-        _comments.ForEach(c => c.Nullify(user));
+        _comments.ForEach(c => c.ClearUser(user));
     }
 
     public void UpdateIsCompleted(IsCompleted isCompleted)

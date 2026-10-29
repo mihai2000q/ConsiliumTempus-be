@@ -34,7 +34,7 @@ public sealed class ProjectTaskComment : Entity<ProjectTaskCommentId>, ITimestam
     public DateTime CreatedDateTime { get; init; }
     public DateTime UpdatedDateTime { get; private set; }
 
-    public void Nullify(UserAggregate user)
+    public void ClearUser(UserAggregate user)
     {
         if (CreatedBy == user) CreatedBy = null;
     }
