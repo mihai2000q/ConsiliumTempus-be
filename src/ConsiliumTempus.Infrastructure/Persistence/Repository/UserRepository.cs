@@ -47,12 +47,17 @@ internal sealed class UserRepository(ConsiliumTempusDbContext dbContext) : IUser
         var tasks = await dbContext.ProjectTasks
             .Include(t => t.Comments)
             .Where(t => t.Assignee == user || t.Reviewer == user ||
-                        t.Comments.Any(c => c.CreatedBy == user) ||
+                        t.Comments.Any(c => c.Authorship.Author == user) ||
                         t.Audit.UpdatedBy == user || t.Audit.CreatedBy == user)
             .ToListAsync(cancellationToken);
         tasks.ForEach(task =>
         {
             task.ClearUser(user);
+            task.Comments
+                .Where(c => c.Authorship.Author == user)
+                .ToList()
+                .ForEach(c => dbContext.Entry(c).Reference(nameof(IAuthored.Authorship)).CurrentValue =
+                    c.Authorship.ClearUser(user));
             if (task.Audit.UpdatedBy == user || task.Audit.CreatedBy == user)
                 dbContext.Entry(task).Reference(nameof(IAudit.Audit)).CurrentValue = task.Audit.ClearUser(user);
         });
