@@ -3,6 +3,7 @@ using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
 using ConsiliumTempus.Common.IntegrationTests.Common.ValueObjects;
 using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Common.IntegrationTests.Project;
+using ConsiliumTempus.Common.IntegrationTests.Project.Entities;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
@@ -13,6 +14,7 @@ using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -32,6 +34,7 @@ internal class UserData : ITestData
             Workspaces,
             Memberships,
             Projects,
+            Statuses,
             CustomFieldSetups,
             ProjectSprints,
             ProjectStages,
@@ -176,6 +179,14 @@ internal class UserData : ITestData
             name: "deleted",
             isPrivate: true,
             allowedMembers: [Users[0]])
+    ];
+
+    public static readonly ProjectStatus[] Statuses =
+    [
+        ProjectStatusFactory.Create(
+            Projects[0],
+            AuditFactory.Create(Users[0]),
+            "This is a status update")
     ];
 
     public static readonly ProjectSprintAggregate[] ProjectSprints =
