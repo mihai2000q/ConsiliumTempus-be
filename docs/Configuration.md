@@ -3,6 +3,7 @@
 * [Environments](#environments)
 * [Settings](#settings)
   * [Jwt Settings](#jwt-settings)
+  * [Cors Settings](#cors-settings)
   * [Database Settings](#database-settings)
   * [Other Settings](#other-settings)
 * [Environment File](#environment-file)
@@ -66,6 +67,17 @@ The values inside `appsettings.json` are empty, so any other environment has to 
 
 The integration tests do not use any of them, as they create their own database container.
 
+### Cors Settings
+
+| Setting          | Description                                                                          |
+|------------------|--------------------------------------------------------------------------------------|
+| `FrontendOrigin` | the only origin that the CORS policy of the frontend allows (i.e., `http://localhost:8123`) |
+
+It is empty in the `appsettings.json` on purpose, and the application does not start without it.
+Development and the integration tests (`appsettings.Testing.json`) allow `http://localhost:8123`,
+and the production Docker Compose reads it from the `FRONTEND_ORIGIN` of the `.env` file
+(passed as `CorsSettings__FrontendOrigin`).
+
 ### Other Settings
 
 - **Logging** and **Serilog** configure the logs (see [Logging](#logging))
@@ -73,8 +85,7 @@ The integration tests do not use any of them, as they create their own database 
 
 Some values are not settings, as they are written in the code:
 
-- the CORS policy of the frontend allows the origin `http://localhost:8123`,
-  the methods *GET*, *POST*, *PUT* and *DELETE* and any header (see `CorsPolicies`)
+- the CORS policy of the frontend allows the methods *GET*, *POST*, *PUT*, *PATCH* and *DELETE* and any header (see `CorsPolicies`)
 - the `api` prefix of all the routes
 
 ## Environment File
@@ -88,6 +99,7 @@ It is created by copying `.env.dev` (see [Docker Containers](../README.md#docker
 | `DATABASE_NAME`     | the name of the database                                                                     |
 | `DATABASE_USER`     | the user of the database                                                                     |
 | `DATABASE_PASSWORD` | the password of the database user                                                            |
+| `FRONTEND_ORIGIN`   | the origin that the CORS policy allows, only required by `docker-compose-prod.yml` (see [Cors Settings](#cors-settings)) |
 | `API_PORT`          | the port of the host that is mapped to the port `8080` of the application container (also used by the e2e tests) |
 | `SAMPLE_DATA_ENABLED` | `true` to insert the sample data when the migrator runs, only for development (see [Sample Data](../README.md#sample-data)) |
 | `USER_SECRETS_PATH` | optional, the folder of the dotnet user secrets, for Linux and macOS (see `.env.sample`)     |

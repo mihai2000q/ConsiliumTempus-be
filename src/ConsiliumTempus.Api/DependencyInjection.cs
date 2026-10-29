@@ -11,12 +11,12 @@ namespace ConsiliumTempus.Api;
 
 internal static class DependencyInjection
 {
-    public static void AddPresentation(this IServiceCollection services)
+    public static void AddPresentation(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpContextAccessor()
             .AddMappings()
             .AddSingleton<ProblemDetailsFactory, ConsiliumTempusProblemDetailsFactory>()
-            .AddCorsPolicies()
+            .AddCorsPolicies(configuration)
             .AddControllers()
             .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
     }
@@ -44,16 +44,17 @@ internal static class DependencyInjection
             return services;
         }
 
-        private IServiceCollection AddCorsPolicies()
+        private IServiceCollection AddCorsPolicies(IConfiguration configuration)
         {
+            var corsSettings = new CorsSettings();
+            configuration.Bind(CorsSettings.SectionName, corsSettings);
             services.AddCors(options =>
             {
-                options.AddPolicy(CorsPolicies.Frontend.Policy, policy =>
+                options.AddPolicy(CorsPolicies.Policy, policy =>
                 {
                     policy
-                        .WithOrigins(CorsPolicies.Frontend.Origin)
-                        .WithMethods(CorsPolicies.Frontend.Methods)
-                        //.WithHeaders(CorsPolicies.Frontend.Headers)
+                        .WithOrigins(corsSettings.FrontendOrigin)
+                        .WithMethods(CorsPolicies.Methods)
                         .AllowAnyHeader();
                 });
             });
