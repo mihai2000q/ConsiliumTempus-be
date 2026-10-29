@@ -197,11 +197,21 @@ internal static partial class Utils
 
         internal static void AssertUpdateCustomField(
             ProjectTaskAggregate task,
+            ProjectTaskAggregate newTask,
             UpdateCustomFieldFromProjectTaskRequest request,
+            UserAggregate updatedBy,
             UserAggregate? user = null)
         {
-            task.Id.Value.Should().Be(request.Id);
-            var customField = task.CustomFields.Single(cf => cf.Id.Value == request.CustomFieldId);
+            // unchanged
+            newTask.Id.Value.Should().Be(request.Id);
+            newTask.Audit.CreatedDateTime.Should().Be(task.Audit.CreatedDateTime);
+            newTask.Audit.CreatedBy.Should().Be(task.Audit.CreatedBy);
+
+            // changed (the task is stamped with update, although only its custom field changes)
+            newTask.Audit.ShouldBeUpdated(updatedBy);
+            newTask.Audit.UpdatedDateTime.Should().BeAfter(task.Audit.UpdatedDateTime);
+
+            var customField = newTask.CustomFields.Single(cf => cf.Id.Value == request.CustomFieldId);
 
             switch (customField)
             {

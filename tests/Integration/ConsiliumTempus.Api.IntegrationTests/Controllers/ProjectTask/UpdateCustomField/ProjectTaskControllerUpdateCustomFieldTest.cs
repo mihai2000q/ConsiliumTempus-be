@@ -324,12 +324,13 @@ public class ProjectTaskControllerUpdateCustomFieldTest(WebAppFactory factory)
         response!.Message.Should().Be("Custom Field from Project Task has been updated successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        var task = await dbContext.ProjectTasks
+        var newTask = await dbContext.ProjectTasks
             .AsNoTracking()
             .Include(t => t.CustomFields)
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .SingleAsync(t => t.Id == ProjectTaskId.Create(request.Id));
-        Utils.ProjectTask.AssertUpdateCustomField(task, request, person);
+        var task = ProjectTaskData.ProjectTasks.Single(t => t.Id.Value == request.Id);
+        Utils.ProjectTask.AssertUpdateCustomField(task, newTask, request, user, person);
     }
 
     private async Task AssertPersonIsUnchanged(CustomField customField)
