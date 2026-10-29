@@ -113,6 +113,11 @@ Follow the steps below, in this order:
    <br>
    Docker Compose overrides the database settings of the application container with the values from the `.env` file,
    so `appsettings.Development.json` does not have to be changed (see [Configuration](docs/Configuration.md#environment-file)).
+   <br>
+   The data of the database is kept in the `.container-data/database` folder (ignored by Git), so it survives
+   `docker compose down`. To start over with an empty database, stop the containers and delete that folder.
+   On Linux, the folder has to be writable by the user of the SQL Server container (id `10001`),
+   i.e., `mkdir -p .container-data/database && sudo chown -R 10001:0 .container-data/database`.
 
 ### Local Development
 

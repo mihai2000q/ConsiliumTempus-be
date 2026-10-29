@@ -13,6 +13,9 @@ obj/
 # Nuget Dependencies
 packages/
 
+# Data of the Docker containers
+.container-data/
+
 # Logging Folder
 logs/
 
