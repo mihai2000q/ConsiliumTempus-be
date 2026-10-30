@@ -40,6 +40,7 @@ For database design checkout the [Custom Field Setup Diagram](../../database-dia
 (i.e., it is available in just one project)
 - **Already Global** (`CustomFieldSetup.AlreadyGlobal`, 409) when the custom field setup is already global
 - **Project Already Present** (`CustomFieldSetup.ProjectAlreadyPresent`, 409) when the custom field setup already has the project
+- **Type Mismatch** (`CustomFieldSetup.TypeMismatch`, 409) when the type of an update does not match the type of the custom field setup
 
 ### Domain Events
 
