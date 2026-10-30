@@ -49,6 +49,9 @@ it will initialize all the project tasks in the project with the corresponding c
 then delete all the corresponding custom fields from the tasks in the project
 - **Removed Option From Multi Select Custom Field Setup** when an option is removed from a custom field setup,
 then clean up the corresponding multi select custom fields of the option
+- **Removed Option From Single Select Custom Field Setup** when an option is removed from a custom field setup,
+then clear the option of the corresponding single select custom fields
+(the default option of the custom field setup is cleared too, if it was the removed one)
 
 ### Value Objects
 
