@@ -87,3 +87,7 @@ jobs:
     - name: Test
       working-directory: ./tests/e2e
       run: npx playwright test
+
+    - name: Print Container Logs
+      if: failure()
+      run: docker compose -f docker-compose-prod.yml logs --no-color
