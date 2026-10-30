@@ -41,4 +41,9 @@ public sealed class SingleSelectCustomField : CustomField
     {
         Option = option;
     }
+
+    public void RemoveOption(SingleSelectOption option)
+    {
+        if (Option == option) Option = null;
+    }
 }

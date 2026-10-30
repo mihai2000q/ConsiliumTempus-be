@@ -126,6 +126,7 @@ class PeopleCustomField : CustomField
 class SingleSelectCustomField : CustomField
 {
     void Update()
+    void RemoveOption()
 }
 ```
 
