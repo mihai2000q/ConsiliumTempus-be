@@ -694,6 +694,8 @@ internal static partial class Utils
                 case UpdateCustomFieldSetupRequest.OptionOperation.Remove:
                     setup.Options.ShouldBeOrdered();
                     setup.Options.Should().NotContain(o => o.Id == request.SingleSelectCustomFieldSetup!.OptionId);
+                    if (request.SingleSelectCustomFieldSetup.DefaultOptionId == request.SingleSelectCustomFieldSetup.OptionId)
+                        setup.DefaultOptionId.Should().BeNull();
                     break;
 
                 default:

@@ -285,14 +285,16 @@ public class CustomFieldSetupControllerUpdateTest(WebAppFactory factory)
         // Arrange
         var user = CustomFieldSetupData.Users.First();
         var setup = CustomFieldSetupData.CustomFieldSetups[7];
+        // the option is the default, and it is also the value of a custom field
+        var option = ((SingleSelectCustomFieldSetupAggregate)setup).Options[0];
         var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
             setup.Id.Value,
             type: CustomFieldType.SingleSelect,
             singleSelectCustomFieldSetup: new UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest(
-                null,
+                option.Id,
                 UpdateCustomFieldSetupRequest.OptionOperation.Remove,
                 null,
-                ((SingleSelectCustomFieldSetupAggregate)setup).Options[1].Id,
+                option.Id,
                 null));
 
         await ActAndAssert(request, user);
