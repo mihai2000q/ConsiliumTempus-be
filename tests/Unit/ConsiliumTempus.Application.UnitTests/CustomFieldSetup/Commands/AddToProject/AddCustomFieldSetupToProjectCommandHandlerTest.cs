@@ -32,12 +32,13 @@ public class AddCustomFieldSetupToProjectCommandHandlerTest
     public async Task HandleAddCustomFieldSetupToProjectCommand_WhenSuccessful_ShouldAddProjectAndReturnSuccessResult()
     {
         // Arrange
-        var customFieldSetup = CustomFieldSetupFactory.CreateText(workspace: WorkspaceFactory.Create());
+        var workspace = WorkspaceFactory.Create();
+        var customFieldSetup = CustomFieldSetupFactory.CreateText(workspace: workspace);
         _customFieldSetupRepository
             .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
             .Returns(customFieldSetup);
 
-        var project = ProjectFactory.Create();
+        var project = ProjectFactory.Create(workspace: workspace);
         _projectRepository
             .Get(Arg.Any<ProjectId>())
             .Returns(project);
@@ -70,12 +71,13 @@ public class AddCustomFieldSetupToProjectCommandHandlerTest
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateAddCustomFieldSetupToProjectCommand();
 
-        var customFieldSetup = CustomFieldSetupFactory.CreateText(workspace: WorkspaceFactory.Create());
+        var workspace = WorkspaceFactory.Create();
+        var customFieldSetup = CustomFieldSetupFactory.CreateText(workspace: workspace);
         _customFieldSetupRepository
             .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
             .Returns(customFieldSetup);
 
-        var project = ProjectFactory.Create();
+        var project = ProjectFactory.Create(workspace: workspace);
         _projectRepository
             .Get(Arg.Any<ProjectId>())
             .Returns(project);
@@ -95,6 +97,39 @@ public class AddCustomFieldSetupToProjectCommandHandlerTest
             .Get(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
 
         outcome.ValidateError(Errors.CustomFieldSetup.ProjectAlreadyPresent);
+    }
+
+    [Fact]
+    public async Task
+        HandleAddCustomFieldSetupToProjectCommand_WhenProjectIsFromAnotherWorkspace_ShouldReturnProjectNotFoundError()
+    {
+        // Arrange
+        var command = CustomFieldSetupCommandFactory.CreateAddCustomFieldSetupToProjectCommand();
+
+        var customFieldSetup = CustomFieldSetupFactory.CreateText(workspace: WorkspaceFactory.Create());
+        _customFieldSetupRepository
+            .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
+            .Returns(customFieldSetup);
+
+        var project = ProjectFactory.Create(workspace: WorkspaceFactory.Create());
+        _projectRepository
+            .Get(Arg.Any<ProjectId>())
+            .Returns(project);
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _customFieldSetupRepository
+            .Received(1)
+            .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(id => id.Value == command.Id));
+
+        await _projectRepository
+            .Received(1)
+            .Get(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
+
+        outcome.ValidateError(Errors.Project.NotFound);
+        customFieldSetup.Projects.Should().NotContain(project);
     }
 
     [Fact]

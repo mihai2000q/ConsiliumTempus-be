@@ -1,14 +1,13 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
-using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Domain.ProjectSprint.Entities;
 
-public sealed class ProjectStage : Entity<ProjectStageId>
+public sealed class ProjectStage : Entity<ProjectStageId>, IAudit
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectStage()
@@ -19,13 +18,11 @@ public sealed class ProjectStage : Entity<ProjectStageId>
         ProjectStageId id,
         Name name,
         CustomOrderPosition customOrderPosition,
-        ProjectSprintAggregate sprint,
-        Audit audit) : base(id)
+        ProjectSprintAggregate sprint) : base(id)
     {
         Name = name;
         CustomOrderPosition = customOrderPosition;
         Sprint = sprint;
-        Audit = audit;
     }
 
     private readonly List<ProjectTaskAggregate> _tasks = [];
@@ -39,21 +36,18 @@ public sealed class ProjectStage : Entity<ProjectStageId>
     public static ProjectStage Create(
         Name name,
         CustomOrderPosition customOrderPosition,
-        ProjectSprintAggregate sprint,
-        UserAggregate createdBy)
+        ProjectSprintAggregate sprint)
     {
         return new ProjectStage(
             ProjectStageId.CreateUnique(),
             name,
             customOrderPosition,
-            sprint,
-            Audit.Create(createdBy));
+            sprint);
     }
 
-    public void Update(Name name, UserAggregate updatedBy)
+    public void Update(Name name)
     {
         Name = name;
-        Audit.Update(updatedBy);
     }
 
     public void UpdateCustomOrderPosition(CustomOrderPosition customOrderPosition)
@@ -88,17 +82,16 @@ public sealed class ProjectStage : Entity<ProjectStageId>
         _tasks.Remove(task);
     }
 
-    public ProjectStage CopyToSprint(ProjectSprintAggregate sprint, UserAggregate copiedBy)
+    public ProjectStage CopyToSprint(ProjectSprintAggregate sprint)
     {
         return new ProjectStage(
             ProjectStageId.CreateUnique(),
             Name.Create(Name.Value),
             CustomOrderPosition.Create(CustomOrderPosition.Value),
-            sprint,
-            Audit.Create(copiedBy));
+            sprint);
     }
 
-    public void Move(ProjectStage overStage, UserAggregate updatedBy)
+    public void Move(ProjectStage overStage)
     {
         var newCustomOrderPosition = CustomOrderPosition.Create(overStage.CustomOrderPosition.Value);
 
@@ -120,6 +113,5 @@ public sealed class ProjectStage : Entity<ProjectStageId>
         }
 
         CustomOrderPosition = newCustomOrderPosition;
-        Audit.Update(updatedBy);
     }
 }

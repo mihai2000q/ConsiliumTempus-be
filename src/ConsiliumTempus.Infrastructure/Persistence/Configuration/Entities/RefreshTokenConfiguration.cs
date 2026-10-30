@@ -22,7 +22,8 @@ internal sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refre
             .HasColumnName(nameof(IsInvalidated));
 
         builder.HasOne(rt => rt.User)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.OwnsMany(rt => rt.History, ConfigureHistory);
     }

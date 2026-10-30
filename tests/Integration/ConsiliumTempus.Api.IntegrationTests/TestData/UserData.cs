@@ -1,23 +1,28 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
+using ConsiliumTempus.Common.IntegrationTests.Common.ValueObjects;
 using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Common.IntegrationTests.Project;
+using ConsiliumTempus.Common.IntegrationTests.Project.Entities;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
 using ConsiliumTempus.Common.IntegrationTests.ProjectTask.Entities;
 using ConsiliumTempus.Common.IntegrationTests.User;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
+using ConsiliumTempus.Common.IntegrationTests.Workspace.Entities;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
+using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.ProjectSprint;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
+using ConsiliumTempus.Domain.Workspace.Entities;
 
 namespace ConsiliumTempus.Api.IntegrationTests.TestData;
 
@@ -30,11 +35,14 @@ internal class UserData : ITestData
             Users,
             Workspaces,
             Memberships,
+            WorkspaceInvitations,
             Projects,
+            Statuses,
             CustomFieldSetups,
             ProjectSprints,
             ProjectStages,
             ProjectTasks,
+            ProjectTaskComments,
             CustomFields
         ];
     }
@@ -79,19 +87,23 @@ internal class UserData : ITestData
     [
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Basketball",
             "This is the Description of the first Workspace"),
         WorkspaceFactory.Create(
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Football",
             "This is the Description of the second Workspace"),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Michael Group",
             "This is the Description of the third Workspace",
             true),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Michael and Lebron are best friends <3",
             "",
             true), // normally not possible, but testing out multiple use cases at once
@@ -102,39 +114,64 @@ internal class UserData : ITestData
         MembershipFactory.Create(
             Users[0],
             Workspaces[0],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[2],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[3],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[1],
             Workspaces[1],
+            AuditFactory.Create(Users[1]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[2],
             Workspaces[1],
+            AuditFactory.Create(Users[2]),
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[3],
             Workspaces[0],
+            AuditFactory.Create(Users[3]),
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[4],
             Workspaces[0],
+            AuditFactory.Create(Users[4]),
             WorkspaceRole.View),
         MembershipFactory.Create(
             Users[4],
             Workspaces[3],
+            AuditFactory.Create(Users[4]),
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[5],
             Workspaces[0],
+            AuditFactory.Create(Users[5]),
             WorkspaceRole.Admin)
+    ];
+
+    public static readonly WorkspaceInvitation[] WorkspaceInvitations =
+    [
+        WorkspaceInvitationFactory.Create(
+            Users[0],
+            Users[1],
+            Workspaces[0]),
+        WorkspaceInvitationFactory.Create(
+            Users[1],
+            Users[0],
+            Workspaces[1]),
+        WorkspaceInvitationFactory.Create(
+            Users[1],
+            Users[3],
+            Workspaces[1])
     ];
 
     public static readonly ProjectAggregate[] Projects =
@@ -142,43 +179,56 @@ internal class UserData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Win NBA - with new owner",
             "Plan to win NBA"),
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             name: "project will be deleted",
             isPrivate: true,
             allowedMembers: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             name: "Workspace will be deleted",
             isPrivate: true,
             allowedMembers: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[3],
             Users[0],
+            AuditFactory.Create(Users[0]),
             name: "new owner"),
         ProjectFactory.Create(
             Workspaces[3],
             Users[0],
+            AuditFactory.Create(Users[0]),
             name: "deleted",
             isPrivate: true,
             allowedMembers: [Users[0]])
+    ];
+
+    public static readonly ProjectStatus[] Statuses =
+    [
+        ProjectStatusFactory.Create(
+            Projects[0],
+            AuditFactory.Create(Users[0]),
+            "This is a status update")
     ];
 
     public static readonly ProjectSprintAggregate[] ProjectSprints =
     [
         ProjectSprintFactory.Create(
             Projects[0],
-            Audit.Create(Users[0]),
+            AuditFactory.Create(Users[0]),
             "Sprint 1 - Qualify on Semi Finals",
             new DateOnly(2024, 01, 16),
             new DateOnly(2024, 01, 30)),
         ProjectSprintFactory.Create(
             Projects[1],
-            Audit.Create(Users[0])),
+            AuditFactory.Create(Users[0])),
     ];
 
     private static readonly SingleSelectOption[] SingleSelectOptions =
@@ -212,6 +262,11 @@ internal class UserData : ITestData
             [Projects[0]],
             AuditFactory.Create(Users[0]),
             "Notes field"),
+        CustomFieldSetupFactory.CreatePeople(
+            null,
+            [Projects[0]],
+            AuditFactory.Create(Users[0]),
+            "People field"),
 
         CustomFieldSetupFactory.CreateNumber(
             null,
@@ -251,13 +306,43 @@ internal class UserData : ITestData
     public static readonly ProjectTaskAggregate[] ProjectTasks =
     [
         ProjectTaskFactory.Create(
-            Users[1], // TODO: Make it back to Users[0], but for the moment the Cascade removes it, which shouldn't happen as the tasks should be preserved
             ProjectStages[0],
+            AuditFactory.Create(Users[1]), // TODO: Make it back to Users[0], but for the moment the Cascade removes it, which shouldn't happen as the tasks should be preserved
             "Should do more dribbling"),
 
         ProjectTaskFactory.Create(
-            Users[1],
-            ProjectStages[1]),
+            ProjectStages[1],
+            AuditFactory.Create(Users[1])),
+
+        ProjectTaskFactory.Create(
+            ProjectStages[0],
+            AuditFactory.Create(Users[1]),
+            "Assigned to the user",
+            customOrderPosition: 1,
+            assignee: Users[0]),
+        ProjectTaskFactory.Create(
+            ProjectStages[0],
+            AuditFactory.Create(Users[1]),
+            "Reviewed by the user",
+            customOrderPosition: 2,
+            reviewer: Users[0]),
+        ProjectTaskFactory.Create(
+            ProjectStages[0],
+            AuditFactory.Create(Users[0]),
+            "Created by the user",
+            customOrderPosition: 3),
+        ProjectTaskFactory.Create(
+            ProjectStages[0],
+            AuditFactory.Create(Users[1]),
+            "Commented by the user",
+            customOrderPosition: 4)
+    ];
+
+    public static readonly ProjectTaskComment[] ProjectTaskComments =
+    [
+        ProjectTaskCommentFactory.Create(
+            ProjectTasks[^1],
+            AuthorshipFactory.Create(Users[0]))
     ];
 
     public static readonly CustomField[] CustomFields =
@@ -274,6 +359,10 @@ internal class UserData : ITestData
             ProjectTasks[0],
             (TextCustomFieldSetupAggregate)CustomFieldSetups[2],
             "Something"),
+        CustomFieldFactory.CreatePeople(
+            ProjectTasks[0],
+            (PeopleCustomFieldSetupAggregate)CustomFieldSetups[3],
+            Users[0]),
 
         CustomFieldFactory.CreateNumber(
             ProjectTasks[1],

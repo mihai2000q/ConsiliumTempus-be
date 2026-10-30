@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.CustomFieldSetup.Variants;
@@ -20,8 +18,7 @@ public sealed class DurationCustomFieldSetupAggregate : CustomFieldSetupAggregat
         CustomFieldSetupId id,
         Name name,
         Description description,
-        WorkspaceAggregate? workspace,
-        Audit audit) : base(id, name, description, workspace, audit)
+        WorkspaceAggregate? workspace) : base(id, name, description, workspace)
     {
         DefaultDuration = defaultDuration;
     }
@@ -33,16 +30,14 @@ public sealed class DurationCustomFieldSetupAggregate : CustomFieldSetupAggregat
         Name name,
         Description description,
         WorkspaceAggregate? workspace,
-        ProjectAggregate? project,
-        UserAggregate createdBy)
+        ProjectAggregate? project)
     {
         var setup = new DurationCustomFieldSetupAggregate(
             defaultDuration,
             CustomFieldSetupId.CreateUnique(),
             name,
             description,
-            workspace,
-            Audit.Create(createdBy));
+            workspace);
         
         if (project != null) setup.AddProject(project);
 
@@ -52,10 +47,9 @@ public sealed class DurationCustomFieldSetupAggregate : CustomFieldSetupAggregat
     public void Update(
         TimeSpan? defaultDuration,
         Name name,
-        Description description,
-        UserAggregate updatedBy)
+        Description description)
     {
         DefaultDuration = defaultDuration;
-        base.Update(name, description, updatedBy);
+        base.Update(name, description);
     }
 }

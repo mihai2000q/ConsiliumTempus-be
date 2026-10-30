@@ -37,7 +37,6 @@ public class CustomFieldSetupControllerMakeGlobalTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedCustomFieldSetup = await dbContext.CustomFieldSetups
             .AsNoTracking()
-            .Include(cfs => cfs.Audit)
             .Include(cfs => cfs.Workspace)
             .Include(cfs => cfs.Projects)
             .SingleAsync(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id));

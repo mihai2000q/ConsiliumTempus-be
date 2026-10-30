@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Common.UnitTests.Project.Entities;
+﻿using ConsiliumTempus.Common.UnitTests.Common.ValueObjects;
+using ConsiliumTempus.Common.UnitTests.Project.Entities;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
@@ -23,6 +24,7 @@ public static class ProjectFactory
             IsPrivate.Create(isPrivate),
             workspace ?? WorkspaceFactory.Create(),
             owner ?? UserFactory.Create());
+        project.WithAudit(owner);
 
         project.ClearDomainEvents();
 
@@ -42,6 +44,7 @@ public static class ProjectFactory
             IsPrivate.Create(isPrivate),
             workspace ?? WorkspaceFactory.Create(),
             owner ?? UserFactory.Create());
+        project.WithAudit(owner);
 
         ProjectSprintFactory
             .CreateList(sprintsCount, project: project, endDate: sprintEndDate)
@@ -64,6 +67,7 @@ public static class ProjectFactory
             IsPrivate.Create(isPrivate),
             workspace ?? WorkspaceFactory.Create(),
             owner ?? UserFactory.Create());
+        project.WithAudit(owner);
 
         project.ClearDomainEvents();
 
@@ -87,6 +91,7 @@ public static class ProjectFactory
             IsPrivate.Create(isPrivate),
             workspace ?? WorkspaceFactory.Create(),
             owner ?? UserFactory.Create());
+        project.WithAudit(owner);
 
         project.ClearDomainEvents();
 

@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Domain.Common.ValueObjects;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.Leave;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -48,6 +49,48 @@ public class WorkspaceControllerLeaveTest(WebAppFactory factory)
             .Include(w => w.Memberships)
             .SingleAsync(w => w.Id == WorkspaceId.Create(request.Id));
         Utils.Workspace.AssertLeave(request, updatedWorkspace, user);
+    }
+
+    [Fact]
+    public async Task LeaveWorkspace_WhenUserOwnsPrivateProject_ShouldMakeTheNewOwnerAnAllowedMember()
+    {
+        // Arrange
+        var user = WorkspaceData.Users[3];
+        var workspace = WorkspaceData.Workspaces.First();
+        var nextOwner = WorkspaceData.Users[5]; // the admin that is not the owner of the workspace
+        var request = WorkspaceRequestFactory.CreateLeaveWorkspaceRequest(workspace.Id.Value);
+
+        var projectId = WorkspaceData.Projects[2].Id;
+        await using (var arrangeDbContext = await DbContextFactory.CreateDbContextAsync())
+        {
+            var project = await arrangeDbContext.Projects
+                .Include(p => p.AllowedMembers)
+                .SingleAsync(p => p.Id == projectId);
+            var userToOwn = await arrangeDbContext.Users.SingleAsync(u => u.Id == user.Id);
+            var currentOwner = project.Owner;
+            project.UpdatePrivacy(IsPrivate.Create(true));
+            project.UpdateOwner(userToOwn);
+            if (!project.AllowedMembers.Contains(currentOwner)) project.AddAllowedMember(currentOwner);
+            if (!project.AllowedMembers.Contains(userToOwn)) project.AddAllowedMember(userToOwn);
+            project.AllowedMembers.Should().NotContain(u => u.Id == nextOwner.Id);
+            await arrangeDbContext.SaveChangesAsync();
+        }
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Delete($"api/workspaces/{request.Id}/leave");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        var updatedProject = await dbContext.Projects
+            .Include(p => p.AllowedMembers)
+            .SingleAsync(p => p.Id == projectId);
+        updatedProject.Owner.Id.Should().Be(nextOwner.Id);
+        updatedProject.AllowedMembers.Should().Contain(u => u.Id == nextOwner.Id);
+        updatedProject.AllowedMembers.Should().NotContain(u => u.Id == user.Id);
+        updatedProject.AllowedMembers.Count(u => u.Id == nextOwner.Id).Should().Be(1);
     }
 
     [Fact]

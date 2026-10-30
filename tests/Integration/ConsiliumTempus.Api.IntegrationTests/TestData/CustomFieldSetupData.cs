@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
+using ConsiliumTempus.Common.IntegrationTests.Common.ValueObjects;
 using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
@@ -74,14 +75,17 @@ internal class CustomFieldSetupData : ITestData
     [
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Basketball",
             "This is the Description of the first Workspace"),
         WorkspaceFactory.Create(
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Football",
             "This is the Description of the second Workspace"),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Michael Group",
             "This is the Description of the third Workspace",
             true),
@@ -92,34 +96,42 @@ internal class CustomFieldSetupData : ITestData
         MembershipFactory.Create(
             Users[0],
             Workspaces[0],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[2],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[1],
             Workspaces[1],
+            AuditFactory.Create(Users[1]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[2],
             Workspaces[1],
+            AuditFactory.Create(Users[2]),
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[3],
             Workspaces[0],
+            AuditFactory.Create(Users[3]),
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[3],
             Workspaces[2],
+            AuditFactory.Create(Users[3]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[4],
             Workspaces[0],
+            AuditFactory.Create(Users[4]),
             WorkspaceRole.View),
         MembershipFactory.Create(
             Users[4],
             Workspaces[2],
+            AuditFactory.Create(Users[4]),
             WorkspaceRole.Admin)
     ];
 
@@ -128,6 +140,7 @@ internal class CustomFieldSetupData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Win NBA",
             "This is an elaborate plan to win NBA",
             favorites: [Users[0]],
@@ -135,6 +148,7 @@ internal class CustomFieldSetupData : ITestData
         ProjectFactory.Create(
             Workspaces[1],
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Win Champions League",
             "Just an idea on how to win the football league",
             favorites: [Users[1]]),
@@ -142,6 +156,7 @@ internal class CustomFieldSetupData : ITestData
         ProjectFactory.Create(
             Workspaces[2],
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Something Private - owner not anymore",
             description: "but the owner used to be a collaborator, however this was fixed already",
             allowedMembers: [Users[1], Users[0]]),
@@ -149,12 +164,14 @@ internal class CustomFieldSetupData : ITestData
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Something Not Private",
             isPrivate: false,
             allowedMembers: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Something Private",
             isPrivate: true,
             allowedMembers: [Users[0], Users[3]],
@@ -162,6 +179,7 @@ internal class CustomFieldSetupData : ITestData
         ProjectFactory.Create(
             Workspaces[2],
             Users[3],
+            AuditFactory.Create(Users[3]),
             "Something More Private",
             isPrivate: true,
             allowedMembers: [Users[3]]),
@@ -171,7 +189,7 @@ internal class CustomFieldSetupData : ITestData
     [
         ProjectSprintFactory.Create(
             Projects[0],
-            Audit.Create(Users[0]),
+            AuditFactory.Create(Users[0]),
             "Sprint 1 - Qualify on Quarters",
             new DateOnly(2024, 01, 1),
             new DateOnly(2024, 01, 15)),
@@ -188,12 +206,12 @@ internal class CustomFieldSetupData : ITestData
     public static readonly ProjectTaskAggregate[] ProjectTasks =
     [
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[0],
+            AuditFactory.Create(Users[0]),
             "Should do more dribbling"),
         ProjectTaskFactory.Create(
-            Users[0],
             ProjectStages[0],
+            AuditFactory.Create(Users[0]),
             "Should add more stepping to my shots",
             customOrderPosition: 1,
             assignee: Users[1],

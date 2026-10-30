@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint;
@@ -38,7 +37,7 @@ internal sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 
-    public Task<ProjectSprintAggregate> GetFirstByProject(
+    public Task<ProjectSprintAggregate?> GetFirstByProject(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
         CancellationToken cancellationToken = default)
@@ -50,23 +49,16 @@ internal sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext
             .ThenByDescending(s => s.EndDate)
             .ThenByDescending(s => s.Name.Value)
             .ThenByDescending(s => s.Audit.CreatedDateTime)
-            .FirstAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public Task<List<ProjectSprintAggregate>> GetListByProject(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
-        bool fromThisYear,
         CancellationToken cancellationToken = default)
     {
-        var date = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         return dbContext.ProjectSprints
             .Where(ps => ps.Project.Id == projectId)
-            .WhereIf(fromThisYear, ps =>
-                ps.StartDate >= DateOnly.FromDateTime(date) ||
-                ps.EndDate >= DateOnly.FromDateTime(date) ||
-                ps.Audit.CreatedDateTime >= date)
             .ApplyFilters(filters)
             .OrderByDescending(s => s.StartDate)
             .ThenByDescending(s => s.EndDate)
@@ -78,17 +70,10 @@ internal sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext
     public Task<int> GetListByProjectCount(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
-        bool fromThisYear,
         CancellationToken cancellationToken = default)
     {
-        var date = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         return dbContext.ProjectSprints
             .Where(ps => ps.Project.Id == projectId)
-            .WhereIf(fromThisYear, ps =>
-                ps.StartDate >= DateOnly.FromDateTime(date) ||
-                ps.EndDate >= DateOnly.FromDateTime(date) ||
-                ps.Audit.CreatedDateTime >= date)
             .ApplyFilters(filters)
             .CountAsync(cancellationToken);
     }
@@ -115,9 +100,13 @@ internal sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext
         await dbContext.ProjectSprints.AddAsync(sprint, cancellationToken);
     }
 
+    public void MarkAsUpdated(ProjectStage stage)
+    {
+        dbContext.MarkAsUpdated(stage);
+    }
+
     public void Remove(ProjectSprintAggregate sprint)
     {
         dbContext.ProjectSprints.Remove(sprint);
-        dbContext.Set<Audit>().Remove(sprint.Audit);
     }
 }

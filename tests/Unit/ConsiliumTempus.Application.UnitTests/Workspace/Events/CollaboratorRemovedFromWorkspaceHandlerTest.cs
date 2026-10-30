@@ -2,6 +2,11 @@
 using ConsiliumTempus.Application.UnitTests.TestData.Workspace.Events;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Events;
+using ConsiliumTempus.Common.UnitTests.Common.Entities;
+using ConsiliumTempus.Common.UnitTests.Project;
+using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Common.UnitTests.Workspace;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace.Events;
@@ -78,6 +83,75 @@ public class CollaboratorRemovedFromWorkspaceHandlerTest
             projects.Where(p => !projectsToRemove.Contains(p)).ToList(),
             previousOwners,
             allowedMemberProjects,
-            favoriteOnlyProjects);
+            favoriteOnlyProjects,
+            projectsToRemove);
+    }
+
+    [Fact]
+    public async Task
+        HandleCollaboratorRemovedFromWorkspace_WhenCollaboratorOwnsProject_ShouldMakeTheNewOwnerAnAllowedMember()
+    {
+        // Arrange
+        var workspace = WorkspaceFactory.Create();
+        var nextOwner = UserFactory.Create();
+        workspace.AddUserMembership(MembershipFactory.Create(nextOwner, workspaceRole: WorkspaceRole.Admin));
+        var collaboratorMembership = MembershipFactory.Create(workspaceRole: WorkspaceRole.View);
+        workspace.AddUserMembership(collaboratorMembership);
+        var collaborator = collaboratorMembership.User;
+        workspace.RemoveUserMembership(collaboratorMembership);
+        workspace.ClearDomainEvents();
+
+        var otherAllowedMember = UserFactory.Create();
+        var privateProject = ProjectFactory.Create(isPrivate: true, owner: collaborator, workspace: workspace);
+        privateProject.AddAllowedMember(otherAllowedMember);
+        var publicProject = ProjectFactory.Create(isPrivate: false, owner: collaborator, workspace: workspace);
+        List<ProjectAggregate> projects = [privateProject, publicProject];
+        _projectRepository
+            .GetRelatedListByUserAndWorkspace(Arg.Any<UserId>(), Arg.Any<WorkspaceId>())
+            .Returns(projects);
+
+        // Act
+        await _uut.Handle(new CollaboratorRemovedFromWorkspace(workspace, collaborator), CancellationToken.None);
+
+        // Assert
+        _projectRepository.DidNotReceive().Remove(Arg.Any<ProjectAggregate>());
+
+        projects.Should().AllSatisfy(p =>
+        {
+            p.Owner.Should().Be(nextOwner);
+            p.AllowedMembers.Should().Contain(nextOwner);
+            p.AllowedMembers.Should().NotContain(collaborator);
+            p.AllowedMembers.Count(u => u == nextOwner).Should().Be(1);
+        });
+        privateProject.AllowedMembers.Should().Contain(otherAllowedMember);
+    }
+
+    [Fact]
+    public async Task
+        HandleCollaboratorRemovedFromWorkspace_WhenTheNewOwnerIsAlreadyAllowedMember_ShouldNotAddThemAgain()
+    {
+        // Arrange
+        var workspace = WorkspaceFactory.Create();
+        var nextOwner = UserFactory.Create();
+        workspace.AddUserMembership(MembershipFactory.Create(nextOwner, workspaceRole: WorkspaceRole.Admin));
+        var collaboratorMembership = MembershipFactory.Create(workspaceRole: WorkspaceRole.View);
+        workspace.AddUserMembership(collaboratorMembership);
+        var collaborator = collaboratorMembership.User;
+        workspace.RemoveUserMembership(collaboratorMembership);
+        workspace.ClearDomainEvents();
+
+        var project = ProjectFactory.Create(isPrivate: true, owner: collaborator, workspace: workspace);
+        project.AddAllowedMember(nextOwner);
+        _projectRepository
+            .GetRelatedListByUserAndWorkspace(Arg.Any<UserId>(), Arg.Any<WorkspaceId>())
+            .Returns([project]);
+
+        // Act
+        await _uut.Handle(new CollaboratorRemovedFromWorkspace(workspace, collaborator), CancellationToken.None);
+
+        // Assert
+        project.Owner.Should().Be(nextOwner);
+        project.AllowedMembers.Count(u => u == nextOwner).Should().Be(1);
+        project.AllowedMembers.Should().NotContain(collaborator);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Domain.Common.Errors;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.CustomFieldSetup.GetCollectionFromWorkspace;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -35,7 +36,7 @@ public class CustomFieldSetupControllerGetCollectionFromWorkspaceTest(WebAppFact
 
     [Fact]
     public async Task
-        GetCollectionCustomFieldSetupFromWorkspace_WhenWorkspaceIsNotFound_ShouldReturnEmptyCustomFieldSetups()
+        GetCollectionCustomFieldSetupFromWorkspace_WhenWorkspaceIsNotFound_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
         var request = CustomFieldSetupRequestFactory.CreateGetCollectionCustomFieldSetupFromWorkspaceRequest(
@@ -45,8 +46,6 @@ public class CustomFieldSetupControllerGetCollectionFromWorkspaceTest(WebAppFact
         var outcome = await Client.Get($"api/customFieldSetups/Workspace/{request.WorkspaceId}");
 
         // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionCustomFieldSetupFromWorkspaceResponse>();
-        response!.CustomFieldSetups.Should().BeEmpty();
+        await outcome.ValidateError(Errors.Workspace.NotFound);
     }
 }

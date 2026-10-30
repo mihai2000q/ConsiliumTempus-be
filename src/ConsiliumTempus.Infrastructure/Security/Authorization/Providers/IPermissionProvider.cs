@@ -5,5 +5,8 @@ namespace ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 
 internal interface IPermissionProvider
 {
-    Task<HashSet<string>> GetPermissions(UserId userId, WorkspaceId workspaceId);
+    /// <summary>
+    /// The permissions of the user inside the workspace, or null when the user is not a collaborator of it
+    /// </summary>
+    Task<HashSet<string>?> GetPermissions(UserId userId, WorkspaceId workspaceId);
 }

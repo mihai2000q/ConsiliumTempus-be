@@ -10,7 +10,6 @@ using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
-using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
@@ -41,14 +40,12 @@ internal static partial class Utils
         internal static void AssertFromCreateCommand(
             CreateCustomFieldSetupCommand command,
             CustomFieldSetupAggregate customFieldSetup,
-            UserAggregate user,
             WorkspaceAggregate? workspace,
             ProjectAggregate? project)
         {
             customFieldSetup.Id.Value.Should().NotBeEmpty();
             customFieldSetup.Name.Value.Should().Be(command.Name);
             customFieldSetup.Description.Value.Should().Be(command.Description);
-            customFieldSetup.Audit.ShouldBeCreated(user);
 
             if (command.WorkspaceId is not null)
                 customFieldSetup.Workspace.Should().Be(workspace);
@@ -161,13 +158,11 @@ internal static partial class Utils
 
         internal static void AssertFromUpdateCommand(
             UpdateCustomFieldSetupCommand command,
-            CustomFieldSetupAggregate customFieldSetup,
-            UserAggregate user)
+            CustomFieldSetupAggregate customFieldSetup)
         {
             customFieldSetup.Id.Value.Should().Be(command.Id);
             customFieldSetup.Name.Value.Should().Be(command.Name);
             customFieldSetup.Description.Value.Should().Be(command.Description);
-            customFieldSetup.Audit.ShouldBeUpdated(user);
 
             switch (customFieldSetup)
             {
@@ -526,6 +521,12 @@ internal static partial class Utils
                 case UpdateCustomFieldSetupCommand.OptionOperation.Remove:
                     setup.Options.ShouldBeOrdered();
                     setup.Options.Should().NotContain(o => o.Id == command.SingleSelectCustomFieldSetup!.OptionId);
+                    if (command.SingleSelectCustomFieldSetup.DefaultOptionId == command.SingleSelectCustomFieldSetup.OptionId)
+                        setup.DefaultOptionId.Should().BeNull();
+                    setup.DomainEvents.Should().ContainSingle(e =>
+                        e is RemovedOptionFromSingleSelectCustomFieldSetup &&
+                        ((RemovedOptionFromSingleSelectCustomFieldSetup)e).Option.Id ==
+                        command.SingleSelectCustomFieldSetup.OptionId);
                     break;
 
                 default:

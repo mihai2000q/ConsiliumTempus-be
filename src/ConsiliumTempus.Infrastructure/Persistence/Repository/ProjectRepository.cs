@@ -34,14 +34,6 @@ internal sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IP
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<ProjectAggregate?> GetWithCollaborators(ProjectId id,
-        CancellationToken cancellationToken = default)
-    {
-        return await dbContext.Projects
-            .Include(p => p.Workspace.Memberships)
-            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
-    }
-
     public async Task<ProjectAggregate?> GetWithCollaboratorsAndAllowedMembers(ProjectId id,
         CancellationToken cancellationToken = default)
     {
@@ -80,7 +72,7 @@ internal sealed class ProjectRepository(ConsiliumTempusDbContext dbContext) : IP
             .Where(p => !p.IsPrivate.Value || p.AllowedMembers.Any(u => u.Id == userId))
             .WhereIf(workspaceId is not null, p => p.Workspace.Id == workspaceId)
             .ApplyFilters(filters)
-            .ApplyOrders(orders)
+            .ApplyOrders(orders, p => p.Id)
             .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);
     }

@@ -41,7 +41,6 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedCustomFieldSetup = await dbContext.CustomFieldSetups
             .AsNoTracking()
-            .Include(cfs => cfs.Audit)
             .Include(cfs => cfs.Projects)
             .Include(cfs => cfs.Workspace)
             .SingleAsync(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id));
@@ -61,9 +60,10 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
         AddCustomFieldSetupToProject_WhenProjectIsAlreadyPresent_ShouldReturnCustomFieldSetupProjectAlreadyPresentError()
     {
         // Arrange
-        var user = CustomFieldSetupData.Users.First();
-        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
-        var project = CustomFieldSetupData.Projects[2];
+        var user = CustomFieldSetupData.Users[3];
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups
+            .First(cfs => cfs.Workspace == CustomFieldSetupData.Workspaces[2]);
+        var project = customFieldSetup.Projects[0];
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
             customFieldSetup.Id.Value,
             project.Id.Value);
@@ -81,6 +81,32 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
         dbContext.Projects.SingleOrDefault(p => p.Id == ProjectId.Create(request.ProjectId))
             .Should().NotBeNull();
         customFieldSetup.Projects.Should().Contain(project);
+    }
+
+    [Fact]
+    public async Task
+        AddCustomFieldSetupToProject_WhenProjectIsFromAnotherWorkspace_ShouldReturnProjectNotFoundError()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
+        var project = CustomFieldSetupData.Projects[^3];
+        var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
+            customFieldSetup.Id.Value,
+            project.Id.Value);
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Post("api/customFieldSetups/Add-Project", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.Project.NotFound);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.CustomFieldSetups
+            .Include(cfs => cfs.Projects)
+            .Single(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id))
+            .Projects.Should().NotContain(p => p.Id == project.Id);
     }
 
     [Fact]
@@ -113,7 +139,8 @@ public class CustomFieldSetupControllerAddToProjectTest(WebAppFactory factory)
         var user = CustomFieldSetupData.Users.First();
         var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
         var request = CustomFieldSetupRequestFactory.CreateAddCustomFieldSetupToProjectRequest(
-            customFieldSetup.Id.Value);
+            customFieldSetup.Id.Value,
+            CustomFieldSetupData.Projects.First().Id.Value);
 
         // Act
         Client.UseCustomToken(user);

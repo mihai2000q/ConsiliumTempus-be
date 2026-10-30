@@ -41,7 +41,33 @@ public class WorkspaceControllerUpdateCollaboratorTest(WebAppFactory factory)
         var updatedWorkspace = dbContext.Workspaces
             .Include(w => w.Memberships)
             .Single(u => u.Id == WorkspaceId.Create(request.Id));
-        Utils.Workspace.AssertUpdateCollaborator(updatedWorkspace, request);
+        Utils.Workspace.AssertUpdateCollaborator(updatedWorkspace, request, user);
+    }
+
+    [Fact]
+    public async Task UpdateCollaboratorFromWorkspace_WhenCollaboratorIsOwner_ShouldReturnChangeOwnerRoleError()
+    {
+        // Arrange
+        var user = WorkspaceData.Users[5]; // admin, but not the owner
+        var workspace = WorkspaceData.Workspaces.First();
+        var request = WorkspaceRequestFactory.CreateUpdateCollaboratorFromWorkspaceRequest(
+            workspace.Id.Value,
+            workspace.Owner.Id.Value,
+            nameof(WorkspaceRole.View));
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Put("api/workspaces/Collaborators", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.Workspace.ChangeOwnerRole);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Workspaces
+            .Include(w => w.Memberships)
+            .Single(w => w.Id == WorkspaceId.Create(request.Id))
+            .Memberships.Single(m => m.User.Id == workspace.Owner.Id)
+            .WorkspaceRole.Should().Be(WorkspaceRole.Admin);
     }
 
     [Fact]

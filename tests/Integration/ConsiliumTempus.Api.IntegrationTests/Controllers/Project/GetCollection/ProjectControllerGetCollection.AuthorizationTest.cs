@@ -1,8 +1,11 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
+using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Project;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.User;
+using ErrorOr;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.Project.GetCollection;
 
@@ -42,9 +45,9 @@ public class ProjectControllerGetCollectionAuthorizationTest(WebAppFactory facto
     }
 
     [Fact]
-    public async Task GetCollectionProject_WhenWithoutMembership_ShouldReturnForbiddenResponse()
+    public async Task GetCollectionProject_WhenWithoutMembership_ShouldReturnNotFoundError()
     {
-        await AssertForbiddenResponse(ProjectData.Users[1]);
+        await AssertNotFoundResponse(Errors.Workspace.NotFound, ProjectData.Users[1]);
     }
 
     private async Task AssertSuccessfulResponse(UserAggregate user)
@@ -61,6 +64,14 @@ public class ProjectControllerGetCollectionAuthorizationTest(WebAppFactory facto
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    private async Task AssertNotFoundResponse(Error error, UserAggregate user)
+    {
+        var outcome = await ArrangeAndAct(user);
+
+        // Assert
+        await outcome.ValidateError(error);
     }
 
     private async Task<HttpResponseMessage> ArrangeAndAct(UserAggregate user)

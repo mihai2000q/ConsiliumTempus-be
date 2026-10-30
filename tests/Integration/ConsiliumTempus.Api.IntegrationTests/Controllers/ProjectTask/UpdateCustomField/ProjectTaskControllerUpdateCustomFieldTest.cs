@@ -194,6 +194,103 @@ public class ProjectTaskControllerUpdateCustomFieldTest(WebAppFactory factory)
     }
 
     [Fact]
+    public async Task UpdateCustomFieldFromProjectTask_WhenPersonIsNotCollaborator_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var task = ProjectTaskData.ProjectTasks.First();
+        var customField = task.CustomFields.First(cf => cf is PeopleCustomField);
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.People,
+            peopleCustomField: new UpdateCustomFieldFromProjectTaskRequest.PeopleCustomFieldRequest(
+                ProjectTaskData.Users[1].Id.Value));
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Put("api/projects/tasks/custom-fields", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.User.NotFound);
+        await AssertPersonIsUnchanged(customField);
+    }
+
+    [Fact]
+    public async Task UpdateCustomFieldFromProjectTask_WhenPersonIsNotFound_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var task = ProjectTaskData.ProjectTasks.First();
+        var customField = task.CustomFields.First(cf => cf is PeopleCustomField);
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.People,
+            peopleCustomField: new UpdateCustomFieldFromProjectTaskRequest.PeopleCustomFieldRequest(
+                Guid.NewGuid()));
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Put("api/projects/tasks/custom-fields", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.User.NotFound);
+        await AssertPersonIsUnchanged(customField);
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomFieldFromProjectTask_WhenSingleSelectOptionIsNotFound_ShouldReturnSingleSelectOptionNotFoundError()
+    {
+        // Arrange
+        var task = ProjectTaskData.ProjectTasks.First();
+        var customField = task.CustomFields.OfType<SingleSelectCustomField>().First();
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.SingleSelect,
+            singleSelectCustomField: new UpdateCustomFieldFromProjectTaskRequest.SingleSelectCustomFieldRequest(
+                Guid.NewGuid()));
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Put("api/projects/tasks/custom-fields", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.SingleSelectOption.NotFound);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Set<SingleSelectCustomField>()
+            .AsNoTracking()
+            .Include(cf => cf.Option)
+            .Single(cf => cf.Id == customField.Id)
+            .Option.Should().Be(customField.Option);
+    }
+
+    [Fact]
+    public async Task UpdateCustomFieldFromProjectTask_WhenTypeDoesNotMatchTheCustomField_ShouldReturnTypeMismatchError()
+    {
+        // Arrange
+        var task = ProjectTaskData.ProjectTasks.First();
+        var customField = task.CustomFields.OfType<TextCustomField>().First();
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.Number,
+            numberCustomField: new UpdateCustomFieldFromProjectTaskRequest.NumberCustomFieldRequest(10));
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Put("api/projects/tasks/custom-fields", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.CustomField.TypeMismatch);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Set<CustomField>().AsNoTracking().Single(cf => cf.Id == customField.Id)
+            .Should().BeOfType<TextCustomField>();
+    }
+
+    [Fact]
     public async Task UpdateCustomFieldFromProjectTask_WhenCustomFieldIsNotFound_ShouldReturnCustomFieldNotFoundError()
     {
         // Arrange
@@ -251,11 +348,22 @@ public class ProjectTaskControllerUpdateCustomFieldTest(WebAppFactory factory)
         response!.Message.Should().Be("Custom Field from Project Task has been updated successfully!");
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        var task = await dbContext.ProjectTasks
+        var newTask = await dbContext.ProjectTasks
             .AsNoTracking()
             .Include(t => t.CustomFields)
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .SingleAsync(t => t.Id == ProjectTaskId.Create(request.Id));
-        Utils.ProjectTask.AssertUpdateCustomField(task, request, person);
+        var task = ProjectTaskData.ProjectTasks.Single(t => t.Id.Value == request.Id);
+        Utils.ProjectTask.AssertUpdateCustomField(task, newTask, request, user, person);
+    }
+
+    private async Task AssertPersonIsUnchanged(CustomField customField)
+    {
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Set<PeopleCustomField>()
+            .AsNoTracking()
+            .Include(cf => cf.Person)
+            .Single(cf => cf.Id == customField.Id)
+            .Person.Should().Be(((PeopleCustomField)customField).Person);
     }
 }

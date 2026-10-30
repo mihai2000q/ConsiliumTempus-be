@@ -1,10 +1,10 @@
-﻿using ConsiliumTempus.Common.IntegrationTests.Extensions;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.Create;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
+using ConsiliumTempus.Common.IntegrationTests.Extensions;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project;
@@ -112,7 +112,6 @@ public class ProjectSprintControllerCreateTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectSprints.Should().HaveCount(ProjectSprintData.ProjectSprints.Length + 1);
         var createdSprint = await dbContext.ProjectSprints
-            .Include(ps => ps.Audit)
             .Include(ps => ps.Project.Workspace)
             .Include(ps => ps.Project.Sprints)
             .Include(ps => ps.Project.Statuses)

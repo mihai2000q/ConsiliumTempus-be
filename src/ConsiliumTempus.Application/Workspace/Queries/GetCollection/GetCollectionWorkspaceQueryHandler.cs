@@ -1,9 +1,11 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.Orders;
+using ConsiliumTempus.Domain.User;
 using ErrorOr;
 using MediatR;
 
@@ -22,6 +24,7 @@ internal sealed class GetCollectionWorkspaceQueryHandler(
 
         var paginationInfo = PaginationInfo.Create(query.PageSize, query.CurrentPage);
         var orders = WorkspaceOrder.Parse(query.OrderBy);
+        if (query.IsPersonalFirst) orders = [PersonalFirst(user), ..orders];
         var filters = WorkspaceFilter.Parse(query.Search);
 
         var workspaces = await workspaceRepository.GetListByUser(
@@ -35,15 +38,16 @@ internal sealed class GetCollectionWorkspaceQueryHandler(
             filters,
             cancellationToken);
 
-        workspaces = query.IsPersonalWorkspaceFirst
-            ? workspaces
-                .OrderByDescending(w => w.Owner == user && w.IsPersonal.Value)
-                .ToList()
-            : workspaces;
-
         return new GetCollectionWorkspaceResult(
             workspaces,
             workspacesCount,
             user);
+    }
+
+    // The user can also be a member of other people's personal workspaces,
+    // so only the one that the user owns is the personal workspace of the user
+    private static WorkspaceOrder PersonalFirst(UserAggregate user)
+    {
+        return new WorkspaceOrder(w => w.Owner == user && w.IsPersonal.Value, OrderType.Descending);
     }
 }

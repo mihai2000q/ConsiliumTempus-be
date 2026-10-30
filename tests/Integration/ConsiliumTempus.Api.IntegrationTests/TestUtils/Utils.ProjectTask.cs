@@ -62,7 +62,7 @@ internal static partial class Utils
         {
             task.Name.Value.Should().Be(request.Name);
             task.CustomOrderPosition.Value.Should().Be(request.OnTop ? 0 : task.Stage.Tasks.Count - 1);
-            task.CreatedBy.Should().Be(user);
+            task.Audit.ShouldBeCreated(user);
             task.Assignee.Should().BeNull();
             task.Stage.Id.Value.Should().Be(request.ProjectStageId);
             task.Stage.Tasks.ShouldBeOrdered();
@@ -114,13 +114,24 @@ internal static partial class Utils
         internal static void AssertMoveWithinStage(
             MoveProjectTaskRequest request,
             ProjectTaskAggregate task,
-            int expectedCustomOrderPosition)
+            int expectedCustomOrderPosition,
+            UserAggregate user,
+            List<ProjectTaskAggregate> originalTasks)
         {
             task.Id.Value.Should().Be(request.Id);
             task.CustomOrderPosition.Value.Should().Be(expectedCustomOrderPosition);
             task.Stage.Tasks.ShouldBeOrdered();
             task.Stage.Tasks.Should().ContainSingle(t => t.Id.Value == request.OverId);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+
+            // the task that is moved is updated, and the ones that are only shifted are not
+            task.Audit.ShouldBeUpdated(user);
+            task.Audit.UpdatedDateTime.Should().BeAfter(originalTasks.Single(t => t.Id == task.Id).Audit.UpdatedDateTime);
+            task.Stage.Tasks.Where(t => t.Id != task.Id).Should().AllSatisfy(shiftedTask =>
+            {
+                var originalTask = originalTasks.Single(t => t.Id == shiftedTask.Id);
+                shiftedTask.Audit.UpdatedBy.Should().Be(originalTask.Audit.UpdatedBy);
+                shiftedTask.Audit.UpdatedDateTime.Should().Be(originalTask.Audit.UpdatedDateTime);
+            });
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -129,14 +140,15 @@ internal static partial class Utils
         internal static void AssertMoveToAnotherStage(
             MoveProjectTaskRequest request,
             ProjectTaskAggregate task,
-            List<ProjectStage> stages)
+            List<ProjectStage> stages,
+            UserAggregate user)
         {
             var overStage = stages.Single(s => s.Id.Value == request.OverId);
 
             task.Id.Value.Should().Be(request.Id);
             task.CustomOrderPosition.Value.Should().Be(0);
             task.Stage.Should().Be(overStage);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.Audit.ShouldBeUpdated(user);
             overStage.Tasks.Should().Contain(task);
             overStage.Tasks[0].Should().Be(task);
             overStage.Tasks.ShouldBeOrdered();
@@ -154,13 +166,14 @@ internal static partial class Utils
             ProjectTaskAggregate task,
             ProjectStage overStage,
             List<ProjectStage> stages,
-            int expectedCustomOrderPosition)
+            int expectedCustomOrderPosition,
+            UserAggregate user)
         {
             overStage.Tasks.Should().ContainSingle(t => t.Id.Value == request.OverId);
             task.Id.Value.Should().Be(request.Id);
             task.CustomOrderPosition.Value.Should().Be(expectedCustomOrderPosition);
             task.Stage.Should().Be(overStage);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            task.Audit.ShouldBeUpdated(user);
 
             stages.Should().ContainSingle(s => s == overStage);
             stages.Should().AllSatisfyOrEmpty(s => s.Tasks.ShouldBeOrdered());
@@ -174,17 +187,19 @@ internal static partial class Utils
         internal static void AssertUpdated(
             ProjectTaskAggregate newTask,
             ProjectTaskAggregate task,
-            UpdateProjectTaskRequest request)
+            UpdateProjectTaskRequest request,
+            UserAggregate user)
         {
             // unchanged
             newTask.Id.Value.Should().Be(request.Id);
-            newTask.CreatedDateTime.Should().Be(task.CreatedDateTime);
+            newTask.Audit.CreatedDateTime.Should().Be(task.Audit.CreatedDateTime);
+            newTask.Audit.CreatedBy.Should().Be(task.Audit.CreatedBy);
             newTask.Stage.Should().Be(task.Stage);
 
             // changed
             newTask.Name.Value.Should().Be(request.Name);
             (newTask.Assignee?.Id.Value).Should().Be(request.AssigneeId);
-            newTask.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newTask.Audit.ShouldBeUpdated(user);
 
             newTask.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newTask.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -192,11 +207,21 @@ internal static partial class Utils
 
         internal static void AssertUpdateCustomField(
             ProjectTaskAggregate task,
+            ProjectTaskAggregate newTask,
             UpdateCustomFieldFromProjectTaskRequest request,
+            UserAggregate updatedBy,
             UserAggregate? user = null)
         {
-            task.Id.Value.Should().Be(request.Id);
-            var customField = task.CustomFields.Single(cf => cf.Id.Value == request.CustomFieldId);
+            // unchanged
+            newTask.Id.Value.Should().Be(request.Id);
+            newTask.Audit.CreatedDateTime.Should().Be(task.Audit.CreatedDateTime);
+            newTask.Audit.CreatedBy.Should().Be(task.Audit.CreatedBy);
+
+            // changed (the task is stamped with update, although only its custom field changes)
+            newTask.Audit.ShouldBeUpdated(updatedBy);
+            newTask.Audit.UpdatedDateTime.Should().BeAfter(task.Audit.UpdatedDateTime);
+
+            var customField = newTask.CustomFields.Single(cf => cf.Id.Value == request.CustomFieldId);
 
             switch (customField)
             {
@@ -256,7 +281,8 @@ internal static partial class Utils
 
         internal static void AssertUpdatedIsCompleted(
             ProjectTaskAggregate newTask,
-            UpdateIsCompletedProjectTaskRequest request)
+            UpdateIsCompletedProjectTaskRequest request,
+            UserAggregate user)
         {
             // unchanged
             newTask.Id.Value.Should().Be(request.Id);
@@ -267,7 +293,7 @@ internal static partial class Utils
                 newTask.IsCompleted.CompletedOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             else
                 newTask.IsCompleted.CompletedOn.Should().BeNull();
-            newTask.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newTask.Audit.ShouldBeUpdated(user);
 
             newTask.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newTask.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -276,11 +302,13 @@ internal static partial class Utils
         internal static void AssertUpdatedOverview(
             ProjectTaskAggregate newTask,
             ProjectTaskAggregate task,
-            UpdateOverviewProjectTaskRequest request)
+            UpdateOverviewProjectTaskRequest request,
+            UserAggregate user)
         {
             // unchanged
             newTask.Id.Value.Should().Be(request.Id);
-            newTask.CreatedDateTime.Should().Be(task.CreatedDateTime);
+            newTask.Audit.CreatedDateTime.Should().Be(task.Audit.CreatedDateTime);
+            newTask.Audit.CreatedBy.Should().Be(task.Audit.CreatedBy);
             newTask.Stage.Should().Be(task.Stage);
 
             // changed
@@ -290,7 +318,7 @@ internal static partial class Utils
                 newTask.Assignee.Should().BeNull();
             else
                 newTask.Assignee!.Id.Value.Should().Be(request.AssigneeId.Value);
-            newTask.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newTask.Audit.ShouldBeUpdated(user);
 
             newTask.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             newTask.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

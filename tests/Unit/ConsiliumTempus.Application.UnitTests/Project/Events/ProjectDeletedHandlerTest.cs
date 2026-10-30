@@ -11,20 +11,18 @@ public class ProjectDeletedHandlerTest
     #region Setup
 
     private readonly ICustomFieldSetupRepository _customFieldSetupRepository;
-    private readonly IProjectTaskRepository _projectTaskRepository;
     private readonly ProjectDeletedHandler _uut;
 
     public ProjectDeletedHandlerTest()
     {
         _customFieldSetupRepository = Substitute.For<ICustomFieldSetupRepository>();
-        _projectTaskRepository = Substitute.For<IProjectTaskRepository>();
-        _uut = new ProjectDeletedHandler(_customFieldSetupRepository, _projectTaskRepository);
+        _uut = new ProjectDeletedHandler(_customFieldSetupRepository);
     }
 
     #endregion
 
     [Fact]
-    public async Task HandleProjectDeleted_WhenSuccessful_ShouldDeleteRelatedCustomFieldsAndCustomFieldSetups()
+    public async Task HandleProjectDeleted_WhenSuccessful_ShouldDeleteRelatedCustomFieldSetups()
     {
         // Arrange
         var domainEvent = new ProjectDeleted(ProjectFactory.Create());
@@ -33,9 +31,6 @@ public class ProjectDeletedHandlerTest
         await _uut.Handle(domainEvent, CancellationToken.None);
 
         // Assert
-        await _projectTaskRepository
-            .Received(1)
-            .DeleteCustomFieldsByProject(Arg.Is<ProjectAggregate>(p => p == domainEvent.Project));
         await _customFieldSetupRepository
             .Received(1)
             .DeleteByProject(Arg.Is<ProjectAggregate>(p => p == domainEvent.Project));

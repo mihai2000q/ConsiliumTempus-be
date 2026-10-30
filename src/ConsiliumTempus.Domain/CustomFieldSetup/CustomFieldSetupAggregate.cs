@@ -1,16 +1,15 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.CustomFieldSetup;
 
-public abstract class CustomFieldSetupAggregate : AggregateRoot<CustomFieldSetupId>
+public abstract class CustomFieldSetupAggregate : AggregateRoot<CustomFieldSetupId>, IAudit
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     protected CustomFieldSetupAggregate()
@@ -21,13 +20,11 @@ public abstract class CustomFieldSetupAggregate : AggregateRoot<CustomFieldSetup
         CustomFieldSetupId id,
         Name name,
         Description description,
-        WorkspaceAggregate? workspace,
-        Audit audit) : base(id)
+        WorkspaceAggregate? workspace) : base(id)
     {
         Name = name;
         Description = description;
         Workspace = workspace;
-        Audit = audit;
     }
 
     private readonly List<ProjectAggregate> _projects = [];
@@ -40,18 +37,15 @@ public abstract class CustomFieldSetupAggregate : AggregateRoot<CustomFieldSetup
 
     protected void Update(
         Name name,
-        Description description,
-        UserAggregate updatedBy)
+        Description description)
     {
         Name = name;
         Description = description;
-        Audit.Update(updatedBy);
     }
     
-    public void UpdateWorkspace(WorkspaceAggregate workspace, UserAggregate updatedBy)
+    public void UpdateWorkspace(WorkspaceAggregate workspace)
     {
         Workspace = workspace;
-        Audit.Update(updatedBy);
     }
 
     public void AddProject(ProjectAggregate project)

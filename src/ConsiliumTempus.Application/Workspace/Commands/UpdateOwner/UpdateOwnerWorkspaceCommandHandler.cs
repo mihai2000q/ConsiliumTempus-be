@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ErrorOr;
@@ -14,14 +15,14 @@ internal sealed class UpdateOwnerWorkspaceCommandHandler(IWorkspaceRepository wo
     {
         var workspace = await workspaceRepository.GetWithCollaborators(WorkspaceId.Create(command.Id), cancellationToken);
         if (workspace is null) return Errors.Workspace.NotFound;
+        if (workspace.IsPersonal.Value) return Errors.Workspace.UpdatePersonalWorkspaceOwner;
 
-        var owner = workspace.Memberships
-            .SingleOrDefault(m => m.User.Id.Value == command.OwnerId)
-            ?.User;
-        if (owner is null) return Errors.Workspace.CollaboratorNotFound;
+        var ownerMembership = workspace.Memberships
+            .SingleOrDefault(m => m.User.Id.Value == command.OwnerId);
+        if (ownerMembership is null) return Errors.Workspace.CollaboratorNotFound;
 
-        workspace.UpdateOwner(owner);
-        workspace.RefreshUpdatedDateTime();
+        if (ownerMembership.WorkspaceRole != WorkspaceRole.Admin) ownerMembership.Update(WorkspaceRole.Admin);
+        workspace.UpdateOwner(ownerMembership.User);
         workspace.RefreshActivity();
 
         return new UpdateOwnerWorkspaceResult();

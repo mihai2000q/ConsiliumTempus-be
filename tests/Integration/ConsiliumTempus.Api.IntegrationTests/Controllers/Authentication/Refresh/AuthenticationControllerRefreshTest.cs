@@ -1,4 +1,6 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Common.IntegrationTests.User;
+using ConsiliumTempus.Infrastructure.Security.Authentication;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Authentication.Refresh;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -69,6 +71,93 @@ public class AuthenticationControllerRefreshTest(WebAppFactory factory)
             refreshToken.User);
 
         Utils.RefreshToken.AssertAlreadyRefreshed(refreshToken, response.Token);
+    }
+
+    [Fact]
+    public async Task Refresh_WhenAccessTokenIsExpired_ShouldReturnNewToken()
+    {
+        // Arrange
+        var refreshToken = AuthData.RefreshTokens.First();
+        var expiredSettings = new JwtSettings
+        {
+            SecretKey = JwtSettings.SecretKey,
+            Audience = JwtSettings.Audience,
+            Issuer = JwtSettings.Issuer,
+            ExpiryMinutes = -30
+        };
+        var token = Utils.Token.GenerateValidToken(refreshToken.User, expiredSettings, refreshToken.JwtId.ToString());
+        var request = AuthenticationRequestFactory.CreateRefreshRequest(
+            Utils.Token.SecurityTokenToStringToken(token),
+            refreshToken.Id.Value);
+
+        // Act
+        var outcome = await Client.Put("/api/auth/Refresh", request);
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task Refresh_WhenAccessTokenWasNotSignedByTheApplication_ShouldReturnInvalidTokensError()
+    {
+        // Arrange
+        var refreshToken = AuthData.RefreshTokens.First();
+        var otherSettings = new JwtSettings
+        {
+            SecretKey = "This-Is-Another-Secret-Key-That-Is-Not-The-Real-One",
+            Audience = JwtSettings.Audience,
+            Issuer = JwtSettings.Issuer,
+            ExpiryMinutes = JwtSettings.ExpiryMinutes
+        };
+        var token = Utils.Token.GenerateValidToken(refreshToken.User, otherSettings, refreshToken.JwtId.ToString());
+        var request = AuthenticationRequestFactory.CreateRefreshRequest(
+            Utils.Token.SecurityTokenToStringToken(token),
+            refreshToken.Id.Value);
+
+        // Act
+        var outcome = await Client.Put("/api/auth/Refresh", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.Authentication.InvalidTokens);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        var storedRefreshToken = await dbContext.Set<RefreshToken>()
+            .Include(rt => rt.History)
+            .SingleAsync(rt => rt.Id == refreshToken.Id);
+        storedRefreshToken.JwtId.Should().Be(refreshToken.JwtId);
+        storedRefreshToken.History.Should().HaveSameCount(refreshToken.History);
+    }
+
+    [Fact]
+    public async Task Refresh_WhenAccessTokenBelongsToAnotherUser_ShouldReturnInvalidTokensError()
+    {
+        // Arrange
+        var refreshToken = AuthData.RefreshTokens.First();
+        var otherUser = UserFactory.Create("other@gmail.com", "pass", "Other", "User");
+        await using (var arrangeDbContext = await DbContextFactory.CreateDbContextAsync())
+        {
+            arrangeDbContext.Users.Add(otherUser);
+            await arrangeDbContext.SaveChangesAsync();
+        }
+
+        // signed by the application, for another user, but with the jti of the refresh token
+        var token = Utils.Token.GenerateValidToken(otherUser, JwtSettings, refreshToken.JwtId.ToString());
+        var request = AuthenticationRequestFactory.CreateRefreshRequest(
+            Utils.Token.SecurityTokenToStringToken(token),
+            refreshToken.Id.Value);
+
+        // Act
+        var outcome = await Client.Put("/api/auth/Refresh", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.Authentication.InvalidTokens);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        var storedRefreshToken = await dbContext.Set<RefreshToken>()
+            .Include(rt => rt.History)
+            .SingleAsync(rt => rt.Id == refreshToken.Id);
+        storedRefreshToken.JwtId.Should().Be(refreshToken.JwtId);
+        storedRefreshToken.History.Should().HaveSameCount(refreshToken.History);
     }
 
     [Fact]

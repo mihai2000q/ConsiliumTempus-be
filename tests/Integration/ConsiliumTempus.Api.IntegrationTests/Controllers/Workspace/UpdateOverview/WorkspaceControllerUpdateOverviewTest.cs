@@ -22,7 +22,8 @@ public class WorkspaceControllerUpdateOverviewTest(WebAppFactory factory)
         var request = WorkspaceRequestFactory.CreateUpdateOverviewWorkspaceRequest(id: workspace.Id.Value);
 
         // Act
-        Client.UseCustomToken(WorkspaceData.Users.First());
+        var user = WorkspaceData.Users.First();
+        Client.UseCustomToken(user);
         var outcome = await Client.Put("api/workspaces/overview", request);
 
         // Assert
@@ -33,7 +34,7 @@ public class WorkspaceControllerUpdateOverviewTest(WebAppFactory factory)
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedWorkspace = dbContext.Workspaces
             .Single(u => u.Id == WorkspaceId.Create(request.Id));
-        Utils.Workspace.AssertUpdatedOverview(updatedWorkspace!, request);
+        Utils.Workspace.AssertUpdatedOverview(updatedWorkspace!, request, user);
     }
 
     [Fact]

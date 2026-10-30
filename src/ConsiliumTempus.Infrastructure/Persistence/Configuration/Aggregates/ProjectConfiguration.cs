@@ -5,6 +5,7 @@ using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.Entities;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
+using ConsiliumTempus.Infrastructure.Persistence.Configuration.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -36,13 +37,18 @@ internal sealed class ProjectConfiguration : IEntityTypeConfiguration<ProjectAgg
             .HasColumnName(nameof(IsPrivate));
 
         builder.HasOne(p => p.Owner)
-            .WithMany()
-            .OnDelete(DeleteBehavior.NoAction);
+            .WithMany();
         builder.Navigation(p => p.Owner).AutoInclude();
 
         builder.HasOne(p => p.Workspace)
-            .WithMany(w => w.Projects);
+            .WithMany(w => w.Projects)
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(p => p.Workspace).AutoInclude();
+
+        builder.OwnsAudit(p => p.Audit);
+
+        builder.Property(p => p.LastActivity)
+            .ExcludeFromAudit();
 
         builder.HasMany(p => p.Statuses)
             .WithOne(ps => ps.Project);
@@ -79,10 +85,9 @@ internal sealed class ProjectStatusConfiguration : IEntityTypeConfiguration<Proj
             .HasColumnName(nameof(Description));
 
         builder.HasOne(s => s.Project)
-            .WithMany(t => t.Statuses);
+            .WithMany(t => t.Statuses)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(s => s.Audit)
-            .WithMany();
-        builder.Navigation(s => s.Audit).AutoInclude();
+        builder.OwnsAudit(s => s.Audit);
     }
 }

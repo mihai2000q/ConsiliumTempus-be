@@ -1,5 +1,4 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ErrorOr;
@@ -8,8 +7,7 @@ using MediatR;
 namespace ConsiliumTempus.Application.CustomFieldSetup.Commands.MakeGlobal;
 
 internal sealed class MakeCustomFieldSetupGlobalCommandHandler(
-    ICustomFieldSetupRepository customFieldSetupRepository,
-    ICurrentUserProvider currentUserProvider)
+    ICustomFieldSetupRepository customFieldSetupRepository)
     : IRequestHandler<MakeCustomFieldSetupGlobalCommand, ErrorOr<MakeCustomFieldSetupGlobalResult>>
 {
     public async Task<ErrorOr<MakeCustomFieldSetupGlobalResult>> Handle(
@@ -22,10 +20,9 @@ internal sealed class MakeCustomFieldSetupGlobalCommandHandler(
         if (customFieldSetup is null) return Errors.CustomFieldSetup.NotFound;
         if (customFieldSetup.Workspace is not null) return Errors.CustomFieldSetup.AlreadyGlobal;
 
-        var user = await currentUserProvider.GetCurrentUserAfterPermissionCheck(cancellationToken);
         var workspace = customFieldSetup.Projects.Single().Workspace;
 
-        customFieldSetup.UpdateWorkspace(workspace, user);
+        customFieldSetup.UpdateWorkspace(workspace);
         customFieldSetup.Workspace?.RefreshActivity();
 
         return new MakeCustomFieldSetupGlobalResult();

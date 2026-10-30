@@ -12,7 +12,6 @@ class ProjectTask
     void UpdateOverview()
     void UpdateIsCompleted()
     void UpdateCustomOrderPosition()
-    void RefreshUpdatedDateTime()
     void AddCustomField()
     void AddComment()
     bool Move()
@@ -29,9 +28,7 @@ class ProjectTask
     "value": true,
     "completedOn": "2020-01-01T00:00:00.0000000Z"
   },
-  "createdBy": {},
-  "createdDateTime": "2020-01-01T00:00:00.0000000Z",
-  "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
+  "audit": {},
   "assignee": {},
   "reviewer": {},
   "dueDate": "2020-01-01",
@@ -63,7 +60,6 @@ For database design checkout the [Project Task Diagram](../../database-diagrams/
 - **Project Task Created**, when the task is created, 
 it should also initialize all the custom fields with their default values, 
 based on the setups from the project
-- **Project Task Deleted**, when the task is deleted, it should also delete all the custom fields
 
 ### Value Objects
 

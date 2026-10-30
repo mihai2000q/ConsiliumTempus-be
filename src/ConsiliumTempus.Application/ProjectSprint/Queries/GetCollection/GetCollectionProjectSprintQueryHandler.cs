@@ -15,25 +15,26 @@ internal sealed class GetCollectionProjectSprintQueryHandler(IProjectSprintRepos
         CancellationToken cancellationToken)
     {
         var projectId = ProjectId.Create(query.ProjectId);
-        var filters = ProjectSprintFilter.Parse(query.Search);
+        var searchFilters = ProjectSprintFilter.Parse(query.Search);
+        var filters = query.FromThisYear
+            ? [..searchFilters, ProjectSprintFilter.FromThisYear()]
+            : searchFilters;
 
         var sprints = await projectSprintRepository.GetListByProject(
             projectId,
             filters,
-            query.FromThisYear,
             cancellationToken);
         var totalCount = await projectSprintRepository.GetListByProjectCount(
             projectId,
             filters,
-            query.FromThisYear,
             cancellationToken);
 
-        if (sprints.IsEmpty() && filters.IsEmpty() && query.FromThisYear)
-        {
-            sprints = [await projectSprintRepository.GetFirstByProject(projectId, filters, cancellationToken)];
-            totalCount = sprints.Count;
-        }
+        if (!sprints.IsEmpty() || !searchFilters.IsEmpty() || !query.FromThisYear)
+            return new GetCollectionProjectSprintResult(sprints, totalCount);
 
-        return new GetCollectionProjectSprintResult(sprints, totalCount);
+        var firstSprint = await projectSprintRepository.GetFirstByProject(projectId, searchFilters, cancellationToken);
+        return firstSprint is not null 
+            ? new GetCollectionProjectSprintResult([firstSprint], 1) 
+            : new GetCollectionProjectSprintResult(sprints, totalCount);
     }
 }

@@ -13,7 +13,7 @@ using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.Project;
 
-public sealed class ProjectAggregate : AggregateRoot<ProjectId>, ITimestamps
+public sealed class ProjectAggregate : AggregateRoot<ProjectId>, IAudit
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectAggregate()
@@ -28,9 +28,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId>, ITimestamps
         UserAggregate owner,
         ProjectLifecycle lifecycle,
         WorkspaceAggregate workspace,
-        DateTime lastActivity,
-        DateTime createdDateTime,
-        DateTime updatedDateTime) : base(id)
+        DateTime lastActivity) : base(id)
     {
         Name = name;
         Description = description;
@@ -39,8 +37,6 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId>, ITimestamps
         Lifecycle = lifecycle;
         Workspace = workspace;
         LastActivity = lastActivity;
-        CreatedDateTime = createdDateTime;
-        UpdatedDateTime = updatedDateTime;
     }
 
     private readonly List<ProjectSprintAggregate> _sprints = [];
@@ -62,8 +58,7 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId>, ITimestamps
     public IReadOnlyList<UserAggregate> Favorites => _favorites.AsReadOnly();
     public IReadOnlyList<UserAggregate> AllowedMembers => _allowedMembers.AsReadOnly();
     public IReadOnlyList<CustomFieldSetupAggregate> CustomFieldSetups => _customFieldSetups.AsReadOnly();
-    public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; private set; }
+    public Audit Audit { get; init; } = null!;
 
     public static ProjectAggregate Create(
         Name name,
@@ -79,8 +74,6 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId>, ITimestamps
             owner,
             ProjectLifecycle.Active,
             workspace,
-            DateTime.UtcNow,
-            DateTime.UtcNow,
             DateTime.UtcNow);
 
         project.AddAllowedMember(owner);
@@ -99,7 +92,6 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId>, ITimestamps
     {
         Name = name;
         Lifecycle = lifecycle;
-        UpdatedDateTime = DateTime.UtcNow;
         RefreshActivity();
     }
 
@@ -114,21 +106,20 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId>, ITimestamps
     public void UpdatePrivacy(IsPrivate isPrivate)
     {
         IsPrivate = isPrivate;
-        UpdatedDateTime = DateTime.UtcNow;
         RefreshActivity();
     }
 
     public void UpdateOwner(UserAggregate owner)
     {
         Owner = owner;
-        UpdatedDateTime = DateTime.UtcNow;
+        // the owner is always an allowed member
+        if (!_allowedMembers.Contains(owner)) AddAllowedMember(owner);
         RefreshActivity();
     }
 
     public void UpdateOverview(Description description)
     {
         Description = description;
-        UpdatedDateTime = DateTime.UtcNow;
         RefreshActivity();
     }
 

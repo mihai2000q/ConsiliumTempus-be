@@ -58,20 +58,17 @@ Sends the id of the custom Field Setup inside the route of the request.
 
 #### Get Custom Field Setup Response
 
-Returns a custom field setup inside the `customFieldSetup` property. However, the response will be different for each type,
-which is identified by the `$type` discriminator (`<Type>CustomFieldSetupResponse`).
+Returns the custom field setup at the root of the response. However, the response will be different for each type,
+which is identified by the `type` property.
 
 ##### Date
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "DateCustomFieldSetupResponse",
-    "name": "the Date",
-    "description": "This is a custom field",
-    "type": "Date",
-    "defaultDate": "2022-10-10"
-  }
+  "name": "the Date",
+  "description": "This is a custom field",
+  "type": "Date",
+  "defaultDate": "2022-10-10"
 }
 ```
 
@@ -79,13 +76,10 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "DateTimeCustomFieldSetupResponse",
-    "name": "Date and time",
-    "description": "This is a custom field",
-    "type": "DateTime",
-    "defaultDateTime": "2022-10-10T10:30:00"
-  }
+  "name": "Date and time",
+  "description": "This is a custom field",
+  "type": "DateTime",
+  "defaultDateTime": "2022-10-10T10:30:00"
 }
 ```
 
@@ -93,13 +87,10 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "DurationCustomFieldSetupResponse",
-    "name": "the Duration",
-    "description": "This is a custom field",
-    "type": "Duration",
-    "defaultDuration": "10:30:00"
-  }
+  "name": "the Duration",
+  "description": "This is a custom field",
+  "type": "Duration",
+  "defaultDuration": "10:30:00"
 }
 ```
 
@@ -107,24 +98,21 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "MultiSelectCustomFieldSetupResponse",
-    "name": "Priorities",
-    "description": "This is a custom field",
-    "type": "MultiSelect",
-    "options": [
-      {
-        "id": "10000000-0000-0000-0000-000000000000",
-        "color": "#FF0000",
-        "value": "High"
-      },
-      {
-        "id": "20000000-0000-0000-0000-000000000000",
-        "color": "#0000FF",
-        "value": "Low"
-      }
-    ]
-  }
+  "name": "Priorities",
+  "description": "This is a custom field",
+  "type": "MultiSelect",
+  "options": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "color": "#FF0000",
+      "value": "High"
+    },
+    {
+      "id": "20000000-0000-0000-0000-000000000000",
+      "color": "#0000FF",
+      "value": "Low"
+    }
+  ]
 }
 ```
 
@@ -132,18 +120,15 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "NumberCustomFieldSetupResponse",
-    "name": "Budget",
-    "description": "This is a custom field",
-    "type": "Number",
-    "settings": {
-      "currencyCode": "USD",
-      "decimals": 2,
-      "rounding": true
-    },
-    "defaultNumber": 12
-  }
+  "name": "Budget",
+  "description": "This is a custom field",
+  "type": "Number",
+  "settings": {
+    "currencyCode": "USD",
+    "decimals": 2,
+    "rounding": true
+  },
+  "defaultNumber": 12
 }
 ```
 
@@ -151,12 +136,9 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "PeopleCustomFieldSetupResponse",
-    "name": "Guys",
-    "description": "This is a custom field",
-    "type": "People"
-  }
+  "name": "Guys",
+  "description": "This is a custom field",
+  "type": "People"
 }
 ```
 
@@ -164,28 +146,25 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "SingleSelectCustomFieldSetupResponse",
-    "name": "Priority",
-    "description": "This is a custom field",
-    "type": "SingleSelect",
-    "options": [
-      {
-        "id": "10000000-0000-0000-0000-000000000000",
-        "color": "#FF0000",
-        "value": "High"
-      },
-      {
-        "id": "20000000-0000-0000-0000-000000000000",
-        "color": "#0000FF",
-        "value": "Low"
-      }
-    ],
-    "defaultOption": {
+  "name": "Priority",
+  "description": "This is a custom field",
+  "type": "SingleSelect",
+  "options": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "color": "#FF0000",
+      "value": "High"
+    },
+    {
       "id": "20000000-0000-0000-0000-000000000000",
       "color": "#0000FF",
       "value": "Low"
     }
+  ],
+  "defaultOption": {
+    "id": "20000000-0000-0000-0000-000000000000",
+    "color": "#0000FF",
+    "value": "Low"
   }
 }
 ```
@@ -194,13 +173,10 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "TextCustomFieldSetupResponse",
-    "name": "Some Text",
-    "description": "This is a custom field",
-    "type": "Text",
-    "defaultText": "default"
-  }
+  "name": "Some Text",
+  "description": "This is a custom field",
+  "type": "Text",
+  "defaultText": "default"
 }
 ```
 
@@ -208,13 +184,10 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "TimeCustomFieldSetupResponse",
-    "name": "the time",
-    "description": "This is a custom field",
-    "type": "Time",
-    "defaultTime": "10:30:00"
-  }
+  "name": "the time",
+  "description": "This is a custom field",
+  "type": "Time",
+  "defaultTime": "10:30:00"
 }
 ```
 
@@ -386,6 +359,12 @@ Returns a confirmation message that the custom field setup has been created succ
 Only **Admin** users of the workspace can add the custom field setup to project
 ([Add Custom Field Setup To Project Permission](../Security.md#permissions)).
 
+When the project is private, only allowed members can add the custom field setup to it
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
+
+The project must belong to the same workspace as the custom field setup,
+otherwise the project is treated as not found.
+
 ```js
 POST {{host}}/api/customFieldSetups/add-project
 ```
@@ -501,8 +480,14 @@ Returns a confirmation message that the custom field setup has been deleted succ
 Only **Admin** users of the workspace can remove a custom field setup from a project
 ([Remove Custom Field Setup From Project Permission](../Security.md#permissions)).
 
+When the project is private, only allowed members can remove the custom field setup from it
+([Project Authorization Level: Is Allowed](../Security.md#project-authorization-levels)).
+
+The project must be one of the projects of the custom field setup,
+otherwise the project is treated as not found.
+
 ```js
-DELETE {{host}}/api/customFieldSetups/{id}/remove-project/{projectId}
+DELETE {{host}}/api/customFieldSetups/{id}/from-project/{projectId}
 ```
 
 - **id** is a GUID

@@ -46,3 +46,8 @@ For database design checkout the [Project Sprint Diagram](../../database-diagram
 ### Filters
 
 - **Name** to filter by name
+
+Besides the filters that can be searched by (see [Api](../../api/Api.ProjectSprint.md#get-collection-project-sprint-request)),
+the **From This Year** filter (`ProjectSprintFilter.FromThisYear`) is added by the application when the sprints of this year
+are requested. It keeps the project sprints that **start** or **end** on or after the first day of the current year (UTC),
+or that were **created** on or after it. Each of the three is enough for a sprint to be kept.

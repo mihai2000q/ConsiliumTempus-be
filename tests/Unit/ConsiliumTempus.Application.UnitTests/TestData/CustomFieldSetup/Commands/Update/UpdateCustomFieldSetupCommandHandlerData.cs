@@ -307,6 +307,18 @@ internal static class UpdateCustomFieldSetupCommandHandlerData
                     null));
             Add(command, singleSelectCustomFieldSetup);
 
+            // the removed option is the default one
+            command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+                id: singleSelectCustomFieldSetup.Id.Value,
+                type: CustomFieldType.SingleSelect,
+                singleSelectCustomFieldSetup: new UpdateCustomFieldSetupCommand.SingleSelectCustomFieldSetupCommand(
+                    singleSelectCustomFieldSetup.Options[0].Id,
+                    UpdateCustomFieldSetupCommand.OptionOperation.Remove,
+                    null,
+                    singleSelectCustomFieldSetup.Options[0].Id,
+                    null));
+            Add(command, singleSelectCustomFieldSetup);
+
             // Text
             var textCustomFieldSetup = CustomFieldSetupFactory.CreateText();
             command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(

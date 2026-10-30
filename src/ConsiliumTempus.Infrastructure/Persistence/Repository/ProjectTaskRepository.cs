@@ -9,7 +9,6 @@ using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
-using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
@@ -73,7 +72,7 @@ internal sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) 
             .Include(t => t.CustomFields)
             .Where(t => t.Stage.Id == stageId)
             .ApplyFilters(filters)
-            .ApplyOrders(orders)
+            .ApplyOrders(orders, t => t.Id)
             .OrderByIf(orders.Count == 0, t => t.CustomOrderPosition.Value)
             .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);
@@ -110,26 +109,19 @@ internal sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) 
             .ToListAsync(cancellationToken);
     }
 
-    public async Task DeleteCustomFieldsByWorkspace(
-        WorkspaceAggregate workspace,
+    public async Task<List<SingleSelectCustomField>> GetSingleSelectCustomFieldsBySetup(
+        SingleSelectCustomFieldSetupAggregate customFieldSetup,
         CancellationToken cancellationToken = default)
     {
-        var customFields = await dbContext.Set<CustomField>()
-            .IgnoreAutoIncludes()
-            .Where(cf => cf.ProjectTask.Stage.Sprint.Project.Workspace == workspace)
+        return await dbContext.Set<CustomField>()
+            .OfType<SingleSelectCustomField>()
+            .Where(cf => cf.Setup == customFieldSetup)
             .ToListAsync(cancellationToken);
-        dbContext.Set<CustomField>().RemoveRange(customFields);
     }
 
-    public async Task DeleteCustomFieldsByProject(
-        ProjectAggregate project,
-        CancellationToken cancellationToken = default)
+    public void MarkAsUpdated(ProjectTaskAggregate task)
     {
-        var customFields = await dbContext.Set<CustomField>()
-            .IgnoreAutoIncludes()
-            .Where(cf => cf.ProjectTask.Stage.Sprint.Project == project)
-            .ToListAsync(cancellationToken);
-        dbContext.Set<CustomField>().RemoveRange(customFields);
+        dbContext.MarkAsUpdated(task);
     }
 
     public async Task DeleteCustomFieldsByProjectAndSetup(
@@ -142,15 +134,6 @@ internal sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) 
             .OfCustomFieldType(customFieldSetup)
             .Where(cf => cf.ProjectTask.Stage.Sprint.Project == project)
             .Where(cf => cf.Setup == customFieldSetup)
-            .ToListAsync(cancellationToken);
-        dbContext.Set<CustomField>().RemoveRange(customFields);
-    }
-
-    public async Task DeleteCustomFieldsByTask(ProjectTaskId id, CancellationToken cancellationToken = default)
-    {
-        var customFields = await dbContext.Set<CustomField>()
-            .IgnoreAutoIncludes()
-            .Where(cf => cf.ProjectTask.Id == id)
             .ToListAsync(cancellationToken);
         dbContext.Set<CustomField>().RemoveRange(customFields);
     }

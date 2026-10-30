@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services
         .AddApplication()
         .AddInfrastructure(builder.Configuration)
-        .AddPresentation();
+        .AddPresentation(builder.Configuration);
 }
 
 var app = builder.Build();
@@ -20,7 +20,7 @@ var app = builder.Build();
     app.UsePathBase(new PathString("/Api"));
     app.UseRouting();
     app.UseHttpsRedirection();
-    app.UseCors(CorsPolicies.Frontend.Policy);
+    app.UseCors(CorsPolicies.Policy);
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();

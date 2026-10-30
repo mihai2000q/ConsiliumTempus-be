@@ -6,7 +6,8 @@ using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.Common.Filters;
 
-public abstract class WorkspaceFilter : Filter<WorkspaceAggregate>
+public sealed class WorkspaceFilter(Expression<Func<WorkspaceAggregate, bool>> predicate)
+    : Filter<WorkspaceAggregate>(predicate)
 {
     public static readonly IReadOnlyList<FilterProperty<WorkspaceAggregate>> FilterProperties =
     [
@@ -16,10 +17,6 @@ public abstract class WorkspaceFilter : Filter<WorkspaceAggregate>
         new FilterProperties.Workspace.CreatedDateTimeProperty(),
         new FilterProperties.Workspace.UpdatedDateTimeProperty()
     ];
-
-    private WorkspaceFilter(Expression<Func<WorkspaceAggregate, bool>> predicate) : base(predicate)
-    {
-    }
 
     public static IReadOnlyList<IFilter<WorkspaceAggregate>> Parse(List<string> search)
     {

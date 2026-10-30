@@ -12,12 +12,15 @@
 (through the **ProjectHasAllowedMember** entity).
 - **One-to-many** relationship with the [Project Status](../../domain/entities/project/Entity.ProjectStatus.md) entity.
 - **One-to-many** relationship with the [Project Sprint](../../domain/aggregates/Aggregate.ProjectSprint.md) aggregate.
+- 2x **Many-to-one** relationships with the [User](../../domain/aggregates/Aggregate.User.md) aggregate
+(through the **Audit**).
 
 ### Owned Entities Relationships
 
 #### Project Status
 
-- **One-to-one** relationship with the [Audit](../../domain/entities/Entity.Audit.md) entity.
+- 2x **Many-to-one** relationships with the [User](../../domain/aggregates/Aggregate.User.md) aggregate
+(through the **Audit**).
 
 ### Diagram
 
@@ -29,11 +32,14 @@ erDiagram
     Workspace ||--o{ Project : "WorkspaceId"
     Project ||--o{ ProjectHasAllowedMember : "ProjectId"
     User ||--o{ ProjectHasAllowedMember : "UserId"
-    Audit ||--o{ ProjectStatus : "AuditId"
+    User |o--o{ ProjectStatus : "CreatedById"
+    User |o--o{ ProjectStatus : "UpdatedById"
     Project ||--o{ ProjectStatus : "ProjectId"
     Project ||--o{ UserHasFavoriteProject : "ProjectId"
     User ||--o{ UserHasFavoriteProject : "UserId"
-    Project ||--o{ ProjectHasCustomFieldSetup : "ProjectsId"
+    Project ||--o{ ProjectHasCustomFieldSetup : "ProjectId"
+    User |o--o{ Project : "CreatedById"
+    User |o--o{ Project : "UpdatedById"
     Project ||--o{ ProjectSprint : "ProjectId"
 
     Project {
@@ -45,7 +51,9 @@ erDiagram
         int Lifecycle
         datetime2 LastActivity
         uniqueidentifier WorkspaceId FK
+        uniqueidentifier CreatedById FK "nullable"
         datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
         datetime2 UpdatedDateTime
     }
     ProjectHasAllowedMember {
@@ -58,7 +66,10 @@ erDiagram
         int Status
         nvarchar(max) Description
         uniqueidentifier ProjectId FK
-        uniqueidentifier AuditId FK
+        uniqueidentifier CreatedById FK "nullable"
+        datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
+        datetime2 UpdatedDateTime
     }
     UserHasFavoriteProject {
         uniqueidentifier UserId PK, FK
@@ -67,15 +78,12 @@ erDiagram
     User {
         uniqueidentifier Id PK
     }
-    Audit {
-        uniqueidentifier Id PK
-    }
     Workspace {
         uniqueidentifier Id PK
     }
     ProjectHasCustomFieldSetup {
-        uniqueidentifier CustomFieldSetupsId PK "references any CustomFieldSetup_* table"
-        uniqueidentifier ProjectsId PK, FK
+        uniqueidentifier CustomFieldSetupId PK, FK
+        uniqueidentifier ProjectId PK, FK
     }
     ProjectSprint {
         uniqueidentifier Id PK

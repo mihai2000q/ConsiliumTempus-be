@@ -6,7 +6,8 @@ using ConsiliumTempus.Domain.Common.Models;
 
 namespace ConsiliumTempus.Domain.Common.Filters;
 
-public abstract class MembershipFilter : Filter<Membership>
+public sealed class MembershipFilter(Expression<Func<Membership, bool>> predicate)
+    : Filter<Membership>(predicate)
 {
     public static readonly IReadOnlyList<FilterProperty<Membership>> FilterProperties =
     [
@@ -14,10 +15,6 @@ public abstract class MembershipFilter : Filter<Membership>
         new FilterProperties.Membership.WorkspaceRoleIdFilterProperty(),
         new FilterProperties.Membership.WorkspaceRoleNameFilterProperty()
     ];
-
-    private MembershipFilter(Expression<Func<Membership, bool>> predicate) : base(predicate)
-    {
-    }
 
     public static IReadOnlyList<IFilter<Membership>> Parse(List<string> search)
     {

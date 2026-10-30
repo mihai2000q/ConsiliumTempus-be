@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Domain.Common.ValueObjects;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.KickCollaborator;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -53,6 +54,53 @@ public class WorkspaceControllerKickCollaboratorTest(WebAppFactory factory)
             .Include(w => w.Memberships)
             .SingleAsync(w => w.Id == WorkspaceId.Create(request.Id));
         Utils.Workspace.AssertKickCollaborator(request, updatedWorkspace);
+    }
+
+    [Fact]
+    public async Task
+        KickCollaboratorFromWorkspace_WhenCollaboratorOwnsPrivateProject_ShouldMakeTheNewOwnerAnAllowedMember()
+    {
+        // Arrange
+        var user = WorkspaceData.Users.First();
+        var workspace = WorkspaceData.Workspaces.First();
+        var collaborator = WorkspaceData.Users[3];
+        var nextOwner = WorkspaceData.Users[5]; // the admin that is not the owner of the workspace
+        var request = WorkspaceRequestFactory.CreateKickCollaboratorFromWorkspaceRequest(
+            id: workspace.Id.Value,
+            collaboratorId: collaborator.Id.Value);
+
+        var projectId = WorkspaceData.Projects[2].Id;
+        await using (var arrangeDbContext = await DbContextFactory.CreateDbContextAsync())
+        {
+            var project = await arrangeDbContext.Projects
+                .Include(p => p.AllowedMembers)
+                .SingleAsync(p => p.Id == projectId);
+            var collaboratorToOwn = await arrangeDbContext.Users.SingleAsync(u => u.Id == collaborator.Id);
+            var currentOwner = project.Owner;
+            project.UpdatePrivacy(IsPrivate.Create(true));
+            project.UpdateOwner(collaboratorToOwn);
+            if (!project.AllowedMembers.Contains(currentOwner)) project.AddAllowedMember(currentOwner);
+            if (!project.AllowedMembers.Contains(collaboratorToOwn)) project.AddAllowedMember(collaboratorToOwn);
+            project.AllowedMembers.Should().NotContain(u => u.Id == nextOwner.Id);
+            await arrangeDbContext.SaveChangesAsync();
+        }
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Delete($"api/workspaces/" +
+                                          $"{request.Id}/Kick-Collaborator/{request.CollaboratorId}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        var updatedProject = await dbContext.Projects
+            .Include(p => p.AllowedMembers)
+            .SingleAsync(p => p.Id == projectId);
+        updatedProject.Owner.Id.Should().Be(nextOwner.Id);
+        updatedProject.AllowedMembers.Should().Contain(u => u.Id == nextOwner.Id);
+        updatedProject.AllowedMembers.Should().NotContain(u => u.Id == collaborator.Id);
+        updatedProject.AllowedMembers.Count(u => u.Id == nextOwner.Id).Should().Be(1);
     }
 
     [Fact]

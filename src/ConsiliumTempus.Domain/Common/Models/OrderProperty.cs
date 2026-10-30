@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using ConsiliumTempus.Domain.Common.Extensions;
 
 namespace ConsiliumTempus.Domain.Common.Models;
 
@@ -6,17 +7,18 @@ public abstract record OrderProperty<TEntity>(
     string Identifier,
     params Expression<Func<TEntity, object?>>[] PropertySelectors)
 {
-    public string Identifier { get; } = UpperCamelCaseToSnakeCase(Identifier);
+    public string Identifier { get; } = Identifier.UpperCamelCaseToSnakeCase();
 
-    private static string UpperCamelCaseToSnakeCase(string str)
+    // Expression trees only have reference equality, so the Identifier (unique per entity) defines the property
+    public virtual bool Equals(OrderProperty<TEntity>? other)
     {
-        if (string.IsNullOrEmpty(str)) return string.Empty;
-        var result = str[0].ToString().ToLower();
-        for (var i = 1; i < str.Length; i++)
-        {
-            result += char.IsUpper(str[i]) ? "_" + str[i].ToString().ToLower() : str[i];
-        }
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return EqualityContract == other.EqualityContract && Identifier == other.Identifier;
+    }
 
-        return result;
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(EqualityContract, Identifier);
     }
 }

@@ -9,6 +9,7 @@ using ConsiliumTempus.Infrastructure.Persistence.Interceptors;
 using ConsiliumTempus.Infrastructure.Persistence.Repository;
 using ConsiliumTempus.Infrastructure.Security;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
+using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Permission;
 using ConsiliumTempus.Infrastructure.Security.Authorization.ProjectAuthorization;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
@@ -59,7 +60,8 @@ public static class DependencyInjection
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateIssuerSigningKey = true,
-                        ValidateLifetime = true
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromMinutes(1)
                     };
                     options.MapInboundClaims = false;
                 });
@@ -74,6 +76,7 @@ public static class DependencyInjection
         private IServiceCollection AddAppAuthorization()
         {
             services.AddAuthorization();
+            services.AddSingleton<IAuthorizationMiddlewareResultHandler, NotFoundAuthorizationMiddlewareResultHandler>();
 
             services.AddScoped<IWorkspaceProvider, WorkspaceProvider>();
             services.AddScoped<IProjectProvider, ProjectProvider>();
@@ -117,6 +120,7 @@ public static class DependencyInjection
         private IServiceCollection AddInterceptors()
         {
             services.AddScoped<PublishDomainEventsInterceptor>();
+            services.AddScoped<StampInterceptor>();
 
             return services;
         }

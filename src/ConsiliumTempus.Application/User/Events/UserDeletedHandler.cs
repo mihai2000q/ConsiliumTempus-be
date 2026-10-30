@@ -19,7 +19,7 @@ internal sealed class UserDeletedHandler(
     {
         await UpdateOwnedWorkspaces(notification.User, cancellationToken);
         await UpdateOwnedProjects(notification.User, cancellationToken);
-        await userRepository.NullifyAuditsByUser(notification.User, cancellationToken);
+        await userRepository.ClearReferences(notification.User, cancellationToken);
         await userRepository.RemoveWorkspaceInvitationsByUser(notification.User, cancellationToken);
     }
 
@@ -63,7 +63,6 @@ internal sealed class UserDeletedHandler(
                     .First(m => m.User != user)
                     .User;
             project.UpdateOwner(newOwner);
-            if (!project.AllowedMembers.Contains(newOwner)) project.AddAllowedMember(newOwner);
         }
     }
 }

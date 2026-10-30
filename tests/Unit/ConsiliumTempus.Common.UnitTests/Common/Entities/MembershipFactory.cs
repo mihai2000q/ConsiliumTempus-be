@@ -1,4 +1,5 @@
-﻿using ConsiliumTempus.Common.UnitTests.User;
+﻿using ConsiliumTempus.Common.UnitTests.Common.ValueObjects;
+using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.User;
@@ -13,10 +14,13 @@ public static class MembershipFactory
         WorkspaceAggregate? workspace = null,
         WorkspaceRole? workspaceRole = null)
     {
-        return Membership.Create(
+        var membership = Membership.Create(
             user ?? UserFactory.Create(),
             workspace ?? WorkspaceFactory.Create(),
             workspaceRole ?? WorkspaceRole.Member);
+        membership.WithAudit(user);
+
+        return membership;
     }
 
     public static List<Membership> CreateList(int count = 5)

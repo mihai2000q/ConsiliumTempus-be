@@ -105,7 +105,7 @@ public class UserDeletedHandlerTest
 
         await _userRepository
             .Received(1)
-            .NullifyAuditsByUser(user);
+            .ClearReferences(user);
         await _userRepository
             .Received(1)
             .RemoveWorkspaceInvitationsByUser(user);

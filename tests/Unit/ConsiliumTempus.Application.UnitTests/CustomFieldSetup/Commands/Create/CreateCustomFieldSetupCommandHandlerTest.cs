@@ -1,11 +1,9 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestData.CustomFieldSetup.Commands.Create;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Common.UnitTests.Project;
-using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
@@ -20,7 +18,6 @@ public class CreateCustomFieldSetupCommandHandlerTest
 {
     #region Setup
 
-    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IWorkspaceRepository _workspaceRepository;
     private readonly IProjectRepository _projectRepository;
     private readonly ICustomFieldSetupRepository _customFieldSetupRepository;
@@ -28,12 +25,10 @@ public class CreateCustomFieldSetupCommandHandlerTest
 
     public CreateCustomFieldSetupCommandHandlerTest()
     {
-        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _workspaceRepository = Substitute.For<IWorkspaceRepository>();
         _projectRepository = Substitute.For<IProjectRepository>();
         _customFieldSetupRepository = Substitute.For<ICustomFieldSetupRepository>();
         _uut = new CreateCustomFieldSetupCommandHandler(
-            _currentUserProvider,
             _workspaceRepository,
             _projectRepository,
             _customFieldSetupRepository);
@@ -57,11 +52,6 @@ public class CreateCustomFieldSetupCommandHandlerTest
         _projectRepository
             .Get(Arg.Any<ProjectId>())
             .Returns(project);
-
-        var user = UserFactory.Create();
-        _currentUserProvider
-            .GetCurrentUserAfterPermissionCheck()
-            .Returns(user);
 
         // Capture Arguments
         CustomFieldSetupAggregate? capturedCustomFieldSetup = null;
@@ -87,10 +77,6 @@ public class CreateCustomFieldSetupCommandHandlerTest
         else
             await _projectRepository.DidNotReceive().Get(Arg.Any<ProjectId>());
 
-        await _currentUserProvider
-            .Received(1)
-            .GetCurrentUserAfterPermissionCheck();
-
         await _customFieldSetupRepository
             .Received(1)
             .Add(Arg.Any<CustomFieldSetupAggregate>());
@@ -101,7 +87,6 @@ public class CreateCustomFieldSetupCommandHandlerTest
         Utils.CustomFieldSetup.AssertFromCreateCommand(
             command,
             capturedCustomFieldSetup!,
-            user,
             workspace,
             project);
     }
@@ -113,10 +98,6 @@ public class CreateCustomFieldSetupCommandHandlerTest
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateCreateCustomFieldSetupCommand(
             type: (CustomFieldType)int.MaxValue);
-
-        _currentUserProvider
-            .GetCurrentUserAfterPermissionCheck()
-            .Returns(UserFactory.Create());
 
         // Act
         var outcome = async () => await _uut.Handle(command, CancellationToken.None);
@@ -148,7 +129,6 @@ public class CreateCustomFieldSetupCommandHandlerTest
         await _projectRepository
             .Received(1)
             .Get(Arg.Is<ProjectId>(id => id.Value == command.ProjectId));
-        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
         await _customFieldSetupRepository.DidNotReceive().Add(Arg.Any<CustomFieldSetupAggregate>());
 
         outcome.ValidateError(Errors.Project.NotFound);
@@ -173,7 +153,6 @@ public class CreateCustomFieldSetupCommandHandlerTest
             .Received(1)
             .Get(Arg.Is<WorkspaceId>(id => id.Value == command.WorkspaceId));
         await _projectRepository.DidNotReceive().Get(Arg.Any<ProjectId>());
-        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
         await _customFieldSetupRepository.DidNotReceive().Add(Arg.Any<CustomFieldSetupAggregate>());
 
         outcome.ValidateError(Errors.Workspace.NotFound);

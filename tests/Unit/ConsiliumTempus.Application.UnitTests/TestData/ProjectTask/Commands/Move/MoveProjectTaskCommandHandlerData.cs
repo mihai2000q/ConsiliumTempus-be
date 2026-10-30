@@ -48,6 +48,22 @@ internal static class MoveProjectTaskCommandHandlerData
                 id: task.Id.Value,
                 overId: overStage.Id.Value);
             Add(command, task);
+
+            // Use Case 3: the over stage is the stage that the task is already in (it goes on top of it)
+            sprint = ProjectSprintFactory.Create(stagesCount: 0);
+            stages = ProjectStageFactory.CreateListWithTasks(
+                sprint: sprint,
+                stagesCount: 2,
+                tasksCount: 10);
+            sprint.AddStages(stages);
+
+            currentStage = stages[0];
+            task = currentStage.Tasks[4];
+
+            command = ProjectTaskCommandFactory.CreateMoveProjectTaskCommand(
+                id: task.Id.Value,
+                overId: currentStage.Id.Value);
+            Add(command, task);
         }
     }
 

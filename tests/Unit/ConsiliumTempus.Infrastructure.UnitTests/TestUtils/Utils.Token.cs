@@ -3,7 +3,12 @@ using System.Security.Claims;
 using System.Text;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.User;
+using ConsiliumTempus.Infrastructure;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
@@ -21,7 +26,8 @@ internal static partial class Utils
             string? sub = null,
             string? email = null,
             string? jti = null,
-            Claim[]? extraClaims = null)
+            Claim[]? extraClaims = null,
+            DateTime? expires = null)
         {
             user ??= UserFactory.Create();
 
@@ -41,11 +47,34 @@ internal static partial class Utils
             var securityToken = new JwtSecurityToken(
                 issuer ?? jwtSettings.Issuer,
                 audience ?? jwtSettings.Audience,
-                expires: DateTime.UtcNow.AddMinutes(jwtSettings.ExpiryMinutes),
+                expires: expires ?? DateTime.UtcNow.AddMinutes(jwtSettings.ExpiryMinutes),
                 claims: claims,
                 signingCredentials: signingCredentials);
 
             return new JwtSecurityTokenHandler().WriteToken(securityToken);
+        }
+
+        internal static TokenValidationParameters GetTokenValidationParameters(JwtSettings jwtSettings)
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    [$"{JwtSettings.SectionName}:{nameof(JwtSettings.SecretKey)}"] = jwtSettings.SecretKey,
+                    [$"{JwtSettings.SectionName}:{nameof(JwtSettings.Issuer)}"] = jwtSettings.Issuer,
+                    [$"{JwtSettings.SectionName}:{nameof(JwtSettings.Audience)}"] = jwtSettings.Audience,
+                    [$"{JwtSettings.SectionName}:{nameof(JwtSettings.ExpiryMinutes)}"] =
+                        jwtSettings.ExpiryMinutes.ToString()
+                })
+                .Build();
+            var services = new ServiceCollection();
+            services.AddLogging();
+            services.AddInfrastructure(configuration);
+
+            using var provider = services.BuildServiceProvider();
+            return provider
+                .GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
+                .Get(JwtBearerDefaults.AuthenticationScheme)
+                .TokenValidationParameters;
         }
     }
 }

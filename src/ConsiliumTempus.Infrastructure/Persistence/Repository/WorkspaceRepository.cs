@@ -61,7 +61,7 @@ internal sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : 
             .Include(w => w.Favorites)
             .Where(w => w.Memberships.Any(m => m.User == user))
             .ApplyFilters(filters)
-            .ApplyOrders(orders)
+            .ApplyOrders(orders, w => w.Id)
             .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);
     }
@@ -86,6 +86,17 @@ internal sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : 
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<UserAggregate?> GetCollaborator(
+        UserId id,
+        WorkspaceId workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Set<Membership>()
+            .Where(m => m.User.Id == id && m.Workspace.Id == workspaceId)
+            .Select(m => m.User)
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<List<Membership>> GetCollaborators(
         WorkspaceId id,
         string? searchValue,
@@ -102,7 +113,7 @@ internal sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : 
                     m.User.Credentials.Email.Contains(searchValue!) ||
                     (m.User.FirstName.Value + " " + m.User.LastName.Value).Contains(searchValue!))
             .ApplyFilters(filters)
-            .ApplyOrders(orders)
+            .ApplyOrders(orders, m => m.User.Id)
             .Paginate(paginationInfo)
             .ToListAsync(cancellationToken);
     }
@@ -120,6 +131,7 @@ internal sealed class WorkspaceRepository(ConsiliumTempusDbContext dbContext) : 
                 m =>
                     m.User.Credentials.Email.Contains(searchValue!) ||
                     (m.User.FirstName.Value + " " + m.User.LastName.Value).Contains(searchValue!))
+            .ApplyFilters(filters)
             .CountAsync(cancellationToken);
     }
 

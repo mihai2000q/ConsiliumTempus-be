@@ -276,6 +276,8 @@ PUT {{host}}/api/projects/tasks
 #### Update Project Task Request
 
 Sends body data that the project task needs to be updated.
+The assignee must be a collaborator of the workspace of the task, otherwise the user is treated as not found
+(`User.NotFound`, instead of clearing the assignee).
 
 ```json
 {
@@ -304,6 +306,10 @@ PUT {{host}}/api/projects/tasks/custom-fields
 #### Update Custom Field From Project Task Request
 
 Sends body data that the project task needs to update the custom field.
+The person of a people custom field must be a collaborator of the workspace of the task,
+otherwise the user is treated as not found (`User.NotFound`).
+The option of a single select custom field must be one of its options (`SingleSelectOption.NotFound`),
+a `null` option clears the selection.
 
 ```json
 {
@@ -368,6 +374,8 @@ PUT {{host}}/api/projects/tasks/overview
 #### Update Overview Project Task Request
 
 Sends body data that the project overview needs to be updated.
+The assignee must be a collaborator of the workspace of the task, otherwise the user is treated as not found
+(`User.NotFound`, instead of clearing the assignee).
 
 ```json
 {
@@ -400,6 +408,8 @@ DELETE {{host}}/api/projects/tasks/{id}/from/{stageId}
 #### Delete Project Task Request
 
 Sends the id of the task and the stage inside the route request.
+The task must be inside that stage, otherwise it is treated as not found
+(the stage is not checked on its own, so it is not revealed whether it exists).
 
 #### Delete Project Task Response
 

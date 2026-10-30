@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
+using ConsiliumTempus.Common.IntegrationTests.Common.ValueObjects;
 using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint;
 using ConsiliumTempus.Common.IntegrationTests.ProjectSprint.Entities;
@@ -64,14 +65,17 @@ internal class ProjectSprintData : ITestData
     [
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Basketball",
             "This is the Description of the first Workspace"),
         WorkspaceFactory.Create(
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Football",
             "This is the Description of the second Workspace"),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Michael Group",
             "This is the Description of the third Workspace",
             true),
@@ -82,34 +86,42 @@ internal class ProjectSprintData : ITestData
         MembershipFactory.Create(
             Users[0],
             Workspaces[0],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[2],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[1],
             Workspaces[1],
+            AuditFactory.Create(Users[1]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[2],
             Workspaces[1],
+            AuditFactory.Create(Users[2]),
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[3],
             Workspaces[0],
+            AuditFactory.Create(Users[3]),
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[3],
             Workspaces[2],
+            AuditFactory.Create(Users[3]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[4],
             Workspaces[0],
+            AuditFactory.Create(Users[4]),
             WorkspaceRole.View),
         MembershipFactory.Create(
             Users[4],
             Workspaces[2],
+            AuditFactory.Create(Users[4]),
             WorkspaceRole.Admin)
     ];
 
@@ -118,36 +130,43 @@ internal class ProjectSprintData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Win NBA",
             "This is an elaborate plan to win NBA"),
         ProjectFactory.Create(
             Workspaces[1],
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Win Champions League",
             "Just an idea on how to win the football league"),
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Do Something with your life?"),
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Buy a house!"),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Something Not Private",
             isPrivate: false,
             allowedMembers: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Something Private",
             isPrivate: true,
             allowedMembers: [Users[0], Users[3]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[3],
+            AuditFactory.Create(Users[3]),
             "Something More Private",
             isPrivate: true,
             allowedMembers: [Users[3]]),

@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Project.Events;
 using ConsiliumTempus.Domain.Workspace.Events;
 using MediatR;
 
@@ -19,10 +20,11 @@ internal sealed class CollaboratorRemovedFromWorkspaceHandler(IProjectRepository
 
         foreach (var project in projects)
         {
-            var isLastAllowedMember = project.AllowedMembers.Count == 1;
+            var isLastAllowedMember = project.AllowedMembers.Count == 1 && project.AllowedMembers.Contains(collaborator);
             if (project.IsPrivate.Value && isLastAllowedMember)
             {
                 projectRepository.Remove(project);
+                project.AddDomainEvent(new ProjectDeleted(project));
                 continue;
             }
 

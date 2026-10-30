@@ -46,6 +46,10 @@ public class MoveProjectTaskCommandHandlerTest
             .Received(1)
             .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
 
+        _projectTaskRepository
+            .Received(1)
+            .MarkAsUpdated(Arg.Any<ProjectTaskAggregate>());
+
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new MoveProjectTaskResult());
 
@@ -72,6 +76,10 @@ public class MoveProjectTaskCommandHandlerTest
             .Received(1)
             .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
 
+        _projectTaskRepository
+            .Received(1)
+            .MarkAsUpdated(Arg.Any<ProjectTaskAggregate>());
+
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new MoveProjectTaskResult());
 
@@ -97,6 +105,10 @@ public class MoveProjectTaskCommandHandlerTest
         await _projectTaskRepository
             .Received(1)
             .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+
+        _projectTaskRepository
+            .Received(1)
+            .MarkAsUpdated(Arg.Any<ProjectTaskAggregate>());
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new MoveProjectTaskResult());
@@ -128,6 +140,9 @@ public class MoveProjectTaskCommandHandlerTest
         await _projectTaskRepository
             .Received(1)
             .GetWithTasksAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+        _projectTaskRepository
+            .DidNotReceive()
+            .MarkAsUpdated(Arg.Any<ProjectTaskAggregate>());
 
         outcome.ValidateError(Errors.ProjectTask.OverNotFound);
     }

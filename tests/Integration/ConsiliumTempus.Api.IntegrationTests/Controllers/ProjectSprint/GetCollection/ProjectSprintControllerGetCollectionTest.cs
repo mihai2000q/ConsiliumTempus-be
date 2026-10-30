@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Domain.Common.Errors;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.ProjectSprint.GetCollection;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -157,7 +158,7 @@ public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionProjectSprint_WhenProjectIsNotFound_ShouldReturnEmptySprints()
+    public async Task GetCollectionProjectSprint_WhenProjectIsNotFound_ShouldReturnProjectNotFoundError()
     {
         // Arrange
         var request = ProjectSprintRequestFactory.CreateGetCollectionProjectSprintRequest(
@@ -167,8 +168,6 @@ public class ProjectSprintControllerGetCollectionTest(WebAppFactory factory)
         var outcome = await Client.Get($"api/projects/sprints?projectId={request.ProjectId}");
 
         // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectSprintResponse>();
-        response!.Sprints.Should().BeEmpty();
+        await outcome.ValidateError(Errors.Project.NotFound);
     }
 }

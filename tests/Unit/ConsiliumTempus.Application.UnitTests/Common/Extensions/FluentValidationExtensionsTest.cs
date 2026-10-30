@@ -11,6 +11,7 @@ public class FluentValidationExtensionsTest
 {
     #region Setup
 
+    // ReSharper disable once ClassNeverInstantiated.Local
     private sealed record Item(
         string Name,
         int Count,
@@ -24,6 +25,7 @@ public class FluentValidationExtensionsTest
     private sealed class ItemFilterProperty(string identifier, Expression<Func<Item, object>> selector)
         : FilterProperty<Item>(identifier, selector);
 
+    // ReSharper disable NotAccessedPositionalProperty.Local
     private sealed record ItemOrderProperty(string Key, Expression<Func<Item, object?>> Selector)
         : OrderProperty<Item>(Key, Selector);
 
@@ -322,6 +324,8 @@ public class FluentValidationExtensionsTest
     [Theory]
     [InlineData("name.asc")]
     [InlineData("count.desc")]
+    [InlineData("name .asc")]
+    [InlineData("name.asc ")]
     public async Task HasOrderByFormat_WhenOrderIsValid_ShouldBeValid(string order)
     {
         // Arrange - parameterized
@@ -339,6 +343,7 @@ public class FluentValidationExtensionsTest
     [InlineData("Name.asc")]
     [InlineData("amount.asc")]
     [InlineData("name.asc", "name.desc")]
+    [InlineData("name.asc", "name .desc")]
     public async Task HasOrderByFormat_WhenOrderIsInvalid_ShouldBeInvalid(params string[] orders)
     {
         // Arrange - parameterized

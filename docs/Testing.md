@@ -150,7 +150,7 @@ Inside each method there will be **3 stages**:
 
 When many tests only differ in the data that they send,
 the *Act* and *Assert* stages (or all of them) can be shared through a private helper of the class
-(i.e., `ActAndAssert`, or `AssertSuccessfulResponse` and `AssertForbiddenResponse` for the authorization tests).
+(i.e., `ActAndAssert`, or `AssertSuccessfulResponse`, `AssertForbiddenResponse` and `AssertNotFoundResponse` for the authorization tests).
 The test method then keeps what is specific to it and the stages are commented inside the helper.
 
 For example, if the Register endpoint is being integration tested, take a look at the code below:

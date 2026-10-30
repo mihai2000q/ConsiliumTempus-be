@@ -8,6 +8,7 @@ using ConsiliumTempus.Common.IntegrationTests.ProjectTask;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
+using ConsiliumTempus.Domain.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.ProjectTask.UpdateOverview;
@@ -31,7 +32,7 @@ public class ProjectTaskControllerUpdateOverviewTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        await AssertSuccess(outcome, task, request);
+        await AssertSuccess(outcome, task, request, user);
     }
 
     [Fact]
@@ -52,7 +53,43 @@ public class ProjectTaskControllerUpdateOverviewTest(WebAppFactory factory)
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        await AssertSuccess(outcome, task, request);
+        await AssertSuccess(outcome, task, request, user);
+    }
+
+    [Fact]
+    public async Task UpdateOverviewProjectTask_WhenAssigneeIsNotCollaborator_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var task = ProjectTaskData.ProjectTasks.First();
+        var request = ProjectTaskRequestFactory.CreateUpdateOverviewProjectTaskRequest(
+            task.Id.Value,
+            assigneeId: ProjectTaskData.Users[1].Id.Value);
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Put("api/projects/tasks/overview", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.User.NotFound);
+        await AssertAssigneeIsUnchanged(task);
+    }
+
+    [Fact]
+    public async Task UpdateOverviewProjectTask_WhenAssigneeIsNotFound_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var task = ProjectTaskData.ProjectTasks.First();
+        var request = ProjectTaskRequestFactory.CreateUpdateOverviewProjectTaskRequest(
+            task.Id.Value,
+            assigneeId: Guid.NewGuid());
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Put("api/projects/tasks/overview", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.User.NotFound);
+        await AssertAssigneeIsUnchanged(task);
     }
 
     [Fact]
@@ -75,7 +112,8 @@ public class ProjectTaskControllerUpdateOverviewTest(WebAppFactory factory)
     private async Task AssertSuccess(
         HttpResponseMessage outcome,
         ProjectTaskAggregate task,
-        UpdateOverviewProjectTaskRequest request)
+        UpdateOverviewProjectTaskRequest request,
+        UserAggregate user)
     {
         var response = await outcome.Content.ReadFromJsonAsync<UpdateOverviewProjectTaskResponse>();
         response!.Message.Should().Be("Project Task Overview has been updated successfully!");
@@ -85,6 +123,16 @@ public class ProjectTaskControllerUpdateOverviewTest(WebAppFactory factory)
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .Include(t => t.Stage.Tasks)
             .SingleAsync(t => t.Name.Value == request.Name);
-        Utils.ProjectTask.AssertUpdatedOverview(updatedTask, task, request);
+        Utils.ProjectTask.AssertUpdatedOverview(updatedTask, task, request, user);
+    }
+
+    private async Task AssertAssigneeIsUnchanged(ProjectTaskAggregate task)
+    {
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.ProjectTasks
+            .AsNoTracking()
+            .Include(t => t.Assignee)
+            .Single(t => t.Id == task.Id)
+            .Assignee.Should().Be(task.Assignee);
     }
 }

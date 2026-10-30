@@ -25,6 +25,6 @@ For database design checkout the [Workspace Diagram](../../../database-diagrams/
 
 ### Domain Errors
 
-- **Not Found** (`WorkspaceInvitation.NotFound`, 404) when the workspace invitation cannot be found
-- **Already Invited** (`WorkspaceInvitation.AlreadyInvited`, 404) when the workspace invitation cannot be sent because the user has already been invited
-- **Already Collaborator** (`WorkspaceInvitation.AlreadyCollaborator`, 404) when the workspace invitation cannot be sent because the user is already a collaborator
+- **Not Found** (`WorkspaceInvitation.NotFound`, 404) when the workspace invitation cannot be found, or it was sent to another user
+- **Already Invited** (`WorkspaceInvitation.AlreadyInvited`, 409) when the workspace invitation cannot be sent because the user has already been invited
+- **Already Collaborator** (`WorkspaceInvitation.AlreadyCollaborator`, 409) when the workspace invitation cannot be sent or accepted because the user is already a collaborator

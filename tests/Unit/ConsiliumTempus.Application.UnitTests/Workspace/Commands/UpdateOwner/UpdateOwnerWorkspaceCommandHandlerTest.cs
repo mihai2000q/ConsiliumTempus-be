@@ -4,6 +4,7 @@ using ConsiliumTempus.Application.Workspace.Commands.UpdateOwner;
 using ConsiliumTempus.Common.UnitTests.Common.Entities;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using NSubstitute.ReturnsExtensions;
@@ -31,7 +32,7 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
         // Arrange
         var workspace = WorkspaceFactory.Create();
         var owner = UserFactory.Create();
-        workspace.AddUserMembership(MembershipFactory.Create(owner));
+        workspace.AddUserMembership(MembershipFactory.Create(owner, workspaceRole: WorkspaceRole.View));
         _workspaceRepository
             .GetWithCollaborators(Arg.Any<WorkspaceId>())
             .Returns(workspace);
@@ -52,6 +53,36 @@ public class UpdateOwnerWorkspaceCommandHandlerTest
         outcome.Value.Should().Be(new UpdateOwnerWorkspaceResult());
 
         Utils.Workspace.AssertFromUpdateOwnerCommand(workspace, command);
+    }
+
+    [Fact]
+    public async Task
+        HandleUpdateOwnerWorkspaceCommand_WhenWorkspaceIsPersonal_ShouldReturnUpdatePersonalWorkspaceOwnerError()
+    {
+        // Arrange
+        var workspace = WorkspaceFactory.Create(isPersonal: true);
+        var currentOwner = workspace.Owner;
+        var newOwner = UserFactory.Create();
+        workspace.AddUserMembership(MembershipFactory.Create(newOwner));
+        _workspaceRepository
+            .GetWithCollaborators(Arg.Any<WorkspaceId>())
+            .Returns(workspace);
+
+        var command = WorkspaceCommandFactory.CreateUpdateOwnerWorkspaceCommand(
+            workspace.Id.Value,
+            newOwner.Id.Value);
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _workspaceRepository
+            .Received(1)
+            .GetWithCollaborators(Arg.Is<WorkspaceId>(id => id.Value == command.Id));
+
+        outcome.ValidateError(Errors.Workspace.UpdatePersonalWorkspaceOwner);
+        workspace.Owner.Should().Be(currentOwner);
+        workspace.Memberships.Single(m => m.User == newOwner).WorkspaceRole.Should().Be(WorkspaceRole.Member);
     }
 
     [Fact]

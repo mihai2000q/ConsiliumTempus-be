@@ -6,10 +6,12 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.MoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
+using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Constants;
+using ConsiliumTempus.Domain.Common.Filters;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
-using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
 
@@ -19,9 +21,7 @@ internal static partial class Utils
     {
         internal static void AssertFromAddStageCommand(
             ProjectSprintAggregate sprint,
-            AddStageToProjectSprintCommand command,
-            UserAggregate createdBy,
-            UserAggregate sprintCreatedBy)
+            AddStageToProjectSprintCommand command)
         {
             var projectStage = command.OnTop ? sprint.Stages[0] : sprint.Stages[^1];
 
@@ -29,7 +29,6 @@ internal static partial class Utils
             projectStage.Name.Value.Should().Be(command.Name);
             projectStage.CustomOrderPosition.Value.Should().Be(command.OnTop ? 0 : sprint.Stages.Count - 1);
             projectStage.Sprint.Should().Be(sprint);
-            projectStage.Audit.ShouldBeCreated(createdBy);
             projectStage.Tasks.Should().BeEmpty();
             projectStage.DomainEvents.Should().BeEmpty();
 
@@ -37,24 +36,18 @@ internal static partial class Utils
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             sprint.Stages.ShouldBeOrdered();
-            sprint.Stages.Should().AllSatisfyOrEmpty(stage =>
-            {
-                stage.Audit.UpdatedBy.Should().Be(stage == projectStage ? createdBy : sprintCreatedBy);
-            });
         }
 
         internal static bool AssertFromCreateCommand(
             ProjectSprintAggregate projectSprint,
             CreateProjectSprintCommand command,
             ProjectAggregate project,
-            UserAggregate createdBy,
             DateOnly? previousSprintEndDate)
         {
             projectSprint.Id.Value.Should().NotBeEmpty();
             projectSprint.Name.Value.Should().Be(command.Name);
             projectSprint.StartDate.Should().Be(command.StartDate);
             projectSprint.EndDate.Should().Be(command.EndDate);
-            projectSprint.Audit.ShouldBeCreated(createdBy);
             projectSprint.DomainEvents.Should().BeEmpty();
             projectSprint.Project.Should().Be(project);
 
@@ -72,7 +65,6 @@ internal static partial class Utils
                             newStage.Name.Should().Be(stage.Name);
                             newStage.CustomOrderPosition.Should().Be(stage.CustomOrderPosition);
                             newStage.Sprint.Should().Be(projectSprint);
-                            newStage.Audit.ShouldBeCreated(createdBy);
                         });
                 }
                 else
@@ -127,12 +119,10 @@ internal static partial class Utils
         internal static void AssertFromMoveStageCommand(
             Domain.ProjectSprint.Entities.ProjectStage stage,
             MoveStageFromProjectSprintCommand command,
-            UserAggregate updatedBy,
             int newCustomOrderPosition)
         {
             stage.Id.Value.Should().Be(command.StageId);
             stage.CustomOrderPosition.Value.Should().Be(newCustomOrderPosition);
-            stage.Audit.ShouldBeUpdated(updatedBy);
 
             var sprint = stage.Sprint;
 
@@ -159,15 +149,13 @@ internal static partial class Utils
 
         internal static void AssertFromUpdateCommand(
             ProjectSprintAggregate sprint,
-            UpdateProjectSprintCommand command,
-            UserAggregate updatedBy)
+            UpdateProjectSprintCommand command)
         {
             sprint.Id.Value.Should().Be(command.Id);
             sprint.Name.Value.Should().Be(command.Name);
             sprint.StartDate.Should().Be(command.StartDate);
             sprint.EndDate.Should().Be(command.EndDate);
 
-            sprint.Audit.ShouldBeUpdated(updatedBy);
 
             sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -175,14 +163,11 @@ internal static partial class Utils
 
         internal static void AssertFromUpdateStageCommand(
             Domain.ProjectSprint.Entities.ProjectStage stage,
-            UpdateStageFromProjectSprintCommand command,
-            UserAggregate updatedBy)
+            UpdateStageFromProjectSprintCommand command)
         {
             stage.Id.Value.Should().Be(command.StageId);
             stage.Name.Value.Should().Be(command.Name);
 
-            stage.Audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            stage.Audit.UpdatedBy.Should().Be(updatedBy);
 
             stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -199,6 +184,19 @@ internal static partial class Utils
             outcome.Project.Should().Be(expected.Project);
             outcome.Audit.Should().Be(expected.Audit);
             outcome.Stages.Should().BeEquivalentTo(expected.Stages);
+        }
+
+        internal static bool AssertGetCollectionFilters(
+            IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
+            GetCollectionProjectSprintQuery query)
+        {
+            // the filters of the search, and then the one of this year
+            filters.Should().HaveCount(query.Search.Count + (query.FromThisYear ? 1 : 0));
+            if (query.FromThisYear)
+                filters[^1].Predicate.ToString().Should().Be(ProjectSprintFilter.FromThisYear().Predicate.ToString());
+            var searchFilters = query.FromThisYear ? filters.Take(filters.Count - 1).ToList() : filters;
+
+            return searchFilters.AssertFilters(query.Search, ProjectSprintFilter.FilterProperties);
         }
     }
 }

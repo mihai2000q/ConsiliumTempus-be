@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Domain.Common.Errors;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.ProjectTask.GetCollection;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -179,7 +180,7 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollectionProjectTask_WhenStageIsNotFound_ShouldReturnEmptyTasks()
+    public async Task GetCollectionProjectTask_WhenStageIsNotFound_ShouldReturnStageNotFoundError()
     {
         // Arrange
         var request = ProjectTaskRequestFactory.CreateGetCollectionProjectTaskRequest(
@@ -190,9 +191,6 @@ public class ProjectTaskControllerGetCollectionTest(WebAppFactory factory)
                                        $"?projectStageId={request.ProjectStageId}");
 
         // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollectionProjectTaskResponse>();
-        response!.Tasks.Should().BeEmpty();
-        response.TotalCount.Should().Be(0);
+        await outcome.ValidateError(Errors.ProjectStage.NotFound);
     }
 }

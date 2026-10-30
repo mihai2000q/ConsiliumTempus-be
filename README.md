@@ -113,6 +113,9 @@ Follow the steps below, in this order:
    <br>
    Docker Compose overrides the database settings of the application container with the values from the `.env` file,
    so `appsettings.Development.json` does not have to be changed (see [Configuration](docs/Configuration.md#environment-file)).
+   <br>
+   The data of the database is kept in the `database-data` Docker volume, so it survives `docker compose down`.
+   To start over with an empty database, run `docker compose down -v`, which also removes the volume.
 
 ### Local Development
 

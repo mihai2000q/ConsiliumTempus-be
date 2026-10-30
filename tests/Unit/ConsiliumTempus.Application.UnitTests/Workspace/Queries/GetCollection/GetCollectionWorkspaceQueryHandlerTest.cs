@@ -1,10 +1,12 @@
-﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+﻿using System.Linq.Expressions;
+using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.UnitTests.TestData.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.Filters;
 using ConsiliumTempus.Domain.Common.Interfaces;
@@ -44,9 +46,7 @@ public class GetCollectionWorkspaceQueryHandlerTest
             .GetCurrentUser()
             .Returns(user);
 
-        var personalWorkspace = WorkspaceFactory.Create(owner: user, isPersonal: true);
         var workspaces = WorkspaceFactory.CreateList();
-        workspaces.Add(personalWorkspace);
         _workspaceRepository
             .GetListByUser(
                 Arg.Any<UserAggregate>(),
@@ -92,8 +92,50 @@ public class GetCollectionWorkspaceQueryHandlerTest
             query,
             workspaces,
             workspacesCount,
-            personalWorkspace,
             user);
+    }
+
+    [Fact]
+    public async Task HandleGetCollectionWorkspaceQuery_WhenIsPersonalFirst_ShouldOrderFirstByThePersonalWorkspaceOwnedByTheUser()
+    {
+        // Arrange
+        var user = UserFactory.Create();
+        _currentUserProvider
+            .GetCurrentUser()
+            .Returns(user);
+
+        IReadOnlyList<IOrder<WorkspaceAggregate>>? orders = null;
+        _workspaceRepository
+            .GetListByUser(
+                Arg.Any<UserAggregate>(),
+                Arg.Any<PaginationInfo?>(),
+                Arg.Do<IReadOnlyList<IOrder<WorkspaceAggregate>>>(o => orders = o),
+                Arg.Any<IEnumerable<IFilter<WorkspaceAggregate>>>())
+            .Returns(WorkspaceFactory.CreateList());
+
+        var query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
+            isPersonalFirst: true,
+            orderBy: ["name.asc", "last_activity.desc"]);
+
+        // Act
+        var outcome = await _uut.Handle(query, CancellationToken.None);
+
+        // Assert
+        outcome.IsError.Should().BeFalse();
+        orders.Should().NotBeNull();
+        orders.Select(o => o.Type).Should().Equal(OrderType.Descending, OrderType.Ascending, OrderType.Descending);
+        orders[1].PropertySelector.Should().BeSameAs(OrderSelector("name"));
+        orders[2].PropertySelector.Should().BeSameAs(OrderSelector("last_activity"));
+
+        var isPersonalSelector = orders[0].PropertySelector.Compile();
+        isPersonalSelector(WorkspaceFactory.Create(owner: user, isPersonal: true)).Should().Be(true);
+        isPersonalSelector(WorkspaceFactory.Create(isPersonal: true)).Should().Be(false);
+        isPersonalSelector(WorkspaceFactory.Create(owner: user)).Should().Be(false);
+    }
+
+    private static Expression<Func<WorkspaceAggregate, object?>> OrderSelector(string identifier)
+    {
+        return WorkspaceOrder.OrderProperties.Single(op => op.Identifier == identifier).PropertySelectors.Single();
     }
 
     [Fact]

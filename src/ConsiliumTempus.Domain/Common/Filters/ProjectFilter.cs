@@ -6,7 +6,8 @@ using ConsiliumTempus.Domain.Project;
 
 namespace ConsiliumTempus.Domain.Common.Filters;
 
-public abstract class ProjectFilter : Filter<ProjectAggregate>
+public sealed class ProjectFilter(Expression<Func<ProjectAggregate, bool>> predicate)
+    : Filter<ProjectAggregate>(predicate)
 {
     public static readonly IReadOnlyList<FilterProperty<ProjectAggregate>> FilterProperties =
     [
@@ -18,10 +19,6 @@ public abstract class ProjectFilter : Filter<ProjectAggregate>
         new FilterProperties.Project.CreatedDateTimeProperty(),
         new FilterProperties.Project.UpdatedDateTimeProperty()
     ];
-
-    private ProjectFilter(Expression<Func<ProjectAggregate, bool>> predicate) : base(predicate)
-    {
-    }
 
     public static IReadOnlyList<IFilter<ProjectAggregate>> Parse(List<string> search)
     {

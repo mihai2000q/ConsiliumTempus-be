@@ -5,6 +5,7 @@ using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
+using ConsiliumTempus.Infrastructure.Persistence.Configuration.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -36,9 +37,13 @@ internal sealed class WorkspaceConfiguration : IEntityTypeConfiguration<Workspac
             .HasColumnName(nameof(IsPersonal));
 
         builder.HasOne(w => w.Owner)
-            .WithMany()
-            .OnDelete(DeleteBehavior.NoAction);
+            .WithMany();
         builder.Navigation(w => w.Owner).AutoInclude();
+
+        builder.OwnsAudit(w => w.Audit);
+
+        builder.Property(w => w.LastActivity)
+            .ExcludeFromAudit();
 
         builder.HasMany(w => w.Favorites)
             .WithMany()
@@ -65,16 +70,15 @@ internal sealed class WorkspaceInvitationConfiguration : IEntityTypeConfiguratio
                 value => WorkspaceInvitationId.Create(value));
 
         builder.HasOne(i => i.Sender)
-            .WithMany()
-            .OnDelete(DeleteBehavior.NoAction);
+            .WithMany();
         builder.Navigation(i => i.Sender).AutoInclude();
 
         builder.HasOne(i => i.Collaborator)
-            .WithMany()
-            .OnDelete(DeleteBehavior.NoAction);
+            .WithMany();
         builder.Navigation(i => i.Collaborator).AutoInclude();
 
         builder.HasOne(i => i.Workspace)
-            .WithMany(w => w.Invitations);
+            .WithMany(w => w.Invitations)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

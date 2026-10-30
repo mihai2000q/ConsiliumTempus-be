@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Common.IntegrationTests.Common.Entities;
+using ConsiliumTempus.Common.IntegrationTests.Common.ValueObjects;
 using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Common.IntegrationTests.Project;
 using ConsiliumTempus.Common.IntegrationTests.User;
@@ -80,29 +81,36 @@ internal class WorkspaceData : ITestData
     [
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Basketball",
             "This is the Description of the first Workspace"),
         WorkspaceFactory.Create(
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Football",
             "This is the Description of the second Workspace"),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Michael Group",
             "This is the Description of the third Workspace",
             true),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Some Group"),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Some Group That I Want To Delete"),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Test Test",
             favorites: [Users[0]]),
         WorkspaceFactory.Create(
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Hi There")
     ];
 
@@ -111,46 +119,57 @@ internal class WorkspaceData : ITestData
         MembershipFactory.Create(
             Users[0],
             Workspaces[0],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[2],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[1],
             Workspaces[1],
+            AuditFactory.Create(Users[1]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[2],
             Workspaces[1],
+            AuditFactory.Create(Users[2]),
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[3],
             Workspaces[0],
+            AuditFactory.Create(Users[3]),
             WorkspaceRole.Member),
         MembershipFactory.Create(
             Users[4],
             Workspaces[0],
+            AuditFactory.Create(Users[4]),
             WorkspaceRole.View),
         MembershipFactory.Create(
             Users[5],
             Workspaces[0],
+            AuditFactory.Create(Users[5]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[3],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[4],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[5],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
         MembershipFactory.Create(
             Users[0],
             Workspaces[6],
+            AuditFactory.Create(Users[0]),
             WorkspaceRole.Admin),
     ];
 
@@ -176,6 +195,12 @@ internal class WorkspaceData : ITestData
             Users[0],
             Users[7],
             Workspaces[2]),
+
+        // The collaborator is already a member of the workspace
+        WorkspaceInvitationFactory.Create(
+            Users[0],
+            Users[4],
+            Workspaces[0])
     ];
 
     public static readonly ProjectAggregate[] Projects =
@@ -183,6 +208,7 @@ internal class WorkspaceData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Win NBA",
             "This is an elaborate plan to win NBA",
             favorites: [Users[0]],
@@ -190,22 +216,26 @@ internal class WorkspaceData : ITestData
         ProjectFactory.Create(
             Workspaces[1],
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Win Champions League",
             "Just an idea on how to win the football league",
             favorites: [Users[1]]),
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Win Another Tournament"),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Get a house",
             "this is actually really important",
             favorites: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Start a retiring investment plan",
             "Should do it as soon as possible",
             false,
@@ -214,6 +244,7 @@ internal class WorkspaceData : ITestData
         ProjectFactory.Create(
             Workspaces[2],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Start a new life",
             "criminal activity",
             false,
@@ -223,6 +254,7 @@ internal class WorkspaceData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[1],
+            AuditFactory.Create(Users[1]),
             "Something Private - owner not anymore",
             description: "but the owner used to be a collaborator, however this was fixed already",
             allowedMembers: [Users[1], Users[0]]),
@@ -230,12 +262,14 @@ internal class WorkspaceData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Something Not Private",
             isPrivate: false,
             allowedMembers: [Users[0]]),
         ProjectFactory.Create(
             Workspaces[0],
             Users[0],
+            AuditFactory.Create(Users[0]),
             "Something Private",
             isPrivate: true,
             allowedMembers: [Users[0], Users[3]],
@@ -243,6 +277,7 @@ internal class WorkspaceData : ITestData
         ProjectFactory.Create(
             Workspaces[0],
             Users[3],
+            AuditFactory.Create(Users[3]),
             "Something More Private",
             isPrivate: true,
             allowedMembers: [Users[3]]),

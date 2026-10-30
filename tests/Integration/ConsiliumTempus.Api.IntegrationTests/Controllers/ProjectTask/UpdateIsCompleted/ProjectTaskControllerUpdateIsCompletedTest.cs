@@ -37,7 +37,7 @@ public class ProjectTaskControllerUpdateIsCompletedTest(WebAppFactory factory)
         var updatedTask = await dbContext.ProjectTasks
             .Include(t => t.Stage.Sprint.Project.Workspace)
             .SingleAsync(t => t.Id == ProjectTaskId.Create(request.Id));
-        Utils.ProjectTask.AssertUpdatedIsCompleted(updatedTask, request);
+        Utils.ProjectTask.AssertUpdatedIsCompleted(updatedTask, request, user);
     }
 
     [Fact]

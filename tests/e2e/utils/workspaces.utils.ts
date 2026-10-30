@@ -7,7 +7,7 @@ import AcceptInvitationToWorkspaceRequest from "../types/requests/workspace/Acce
 import UpdateCollaboratorFromWorkspaceRequest from "../types/requests/workspace/UpdateCollaboratorFromWorkspaceRequest";
 
 export async function getPersonalWorkspace(request: APIRequestContext, token?: string | undefined) {
-  const response = await request.get('/api/workspaces?isPersonalWorkspaceFirst=true', useToken(token))
+  const response = await request.get('/api/workspaces?isPersonalFirst=true', useToken(token))
   expect(response.ok()).toBeTruthy()
   const json = await response.json()
   expect(json.workspaces.length).toBeGreaterThanOrEqual(1)

@@ -10,6 +10,9 @@ const LASTNAME = "Jordan"
 const ROLE = "Pro Basketball Player"
 const DATE_OF_BIRTH = "2000-12-21"
 
+// every user registered through registerUser, so they can all be removed at the end of the test
+const registeredUsers: LoginRequest[] = []
+
 export async function getCurrentUser(request: APIRequestContext, token?: string | undefined) {
   const response = await request.get('api/users/current', useToken(token))
 
@@ -45,7 +48,34 @@ export async function registerUser(
 
   expect(res.ok()).toBeTruthy()
 
+  registeredUsers.push({ email: email, password: password })
+
   return await res.json()
+}
+
+export async function deleteAllUsers(request: APIRequestContext) {
+  const failed: string[] = []
+
+  // last registered first, so the collaborators are removed before the owners
+  for (const user of registeredUsers.splice(0).reverse()) {
+    const loginRes = await request.post('api/auth/login', {
+      headers: {
+        'Authorization': ''
+      },
+      data: user
+    })
+
+    // the user was already deleted by the test itself
+    if (!loginRes.ok()) continue
+
+    const token = (await loginRes.json()).token
+    const res = await request.delete('api/users/current', useToken(token))
+    if (!res.ok()) failed.push(user.email)
+  }
+
+  delete process.env.API_TOKEN
+
+  expect(failed).toEqual([])
 }
 
 export async function deleteUser(

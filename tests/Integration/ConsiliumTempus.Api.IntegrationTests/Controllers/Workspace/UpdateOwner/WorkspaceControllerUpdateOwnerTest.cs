@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Domain.Common.Entities;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.UpdateOwner;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -26,7 +27,8 @@ public class WorkspaceControllerUpdateOwnerTest(WebAppFactory factory)
             owner.Id.Value);
 
         // Act
-        Client.UseCustomToken(WorkspaceData.Users.First());
+        var user = WorkspaceData.Users.First();
+        Client.UseCustomToken(user);
         var outcome = await Client.Put("api/workspaces/Owner", request);
 
         // Assert
@@ -39,7 +41,36 @@ public class WorkspaceControllerUpdateOwnerTest(WebAppFactory factory)
             .AsNoTracking()
             .Include(w => w.Owner)
             .Single(u => u.Id == WorkspaceId.Create(request.Id));
-        Utils.Workspace.AssertUpdatedOwner(updatedWorkspace, request, owner);
+        Utils.Workspace.AssertUpdatedOwner(updatedWorkspace, request, owner, user);
+
+        dbContext.Set<Membership>()
+            .Single(m => m.Workspace.Id == updatedWorkspace.Id && m.User.Id == owner.Id)
+            .WorkspaceRole.Should().Be(WorkspaceRole.Admin);
+    }
+
+    [Fact]
+    public async Task UpdateOwnerWorkspace_WhenWorkspaceIsPersonal_ShouldReturnUpdatePersonalWorkspaceOwnerError()
+    {
+        // Arrange
+        var workspace = WorkspaceData.Workspaces[2];
+        workspace.IsPersonal.Value.Should().BeTrue();
+        var request = WorkspaceRequestFactory.CreateUpdateOwnerWorkspaceRequest(
+            workspace.Id.Value,
+            WorkspaceData.Users[3].Id.Value);
+
+        // Act
+        Client.UseCustomToken(workspace.Owner);
+        var outcome = await Client.Put("api/workspaces/Owner", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.Workspace.UpdatePersonalWorkspaceOwner);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Workspaces
+            .AsNoTracking()
+            .Include(w => w.Owner)
+            .Single(w => w.Id == workspace.Id)
+            .Owner.Id.Should().Be(workspace.Owner.Id);
     }
 
     [Fact]

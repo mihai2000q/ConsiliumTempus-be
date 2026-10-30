@@ -16,7 +16,7 @@ public interface IProjectSprintRepository
         ProjectSprintId id,
         CancellationToken cancellationToken = default);
 
-    Task<ProjectSprintAggregate> GetFirstByProject(
+    Task<ProjectSprintAggregate?> GetFirstByProject(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
         CancellationToken cancellationToken = default);
@@ -24,13 +24,11 @@ public interface IProjectSprintRepository
     Task<List<ProjectSprintAggregate>> GetListByProject(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
-        bool fromThisYear,
         CancellationToken cancellationToken = default);
 
     Task<int> GetListByProjectCount(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
-        bool fromThisYear,
         CancellationToken cancellationToken = default);
 
     Task<List<ProjectStage>> GetStages(ProjectSprintId id, CancellationToken cancellationToken = default);
@@ -38,6 +36,8 @@ public interface IProjectSprintRepository
     Task<ProjectStage?> GetStageWithTasksAndWorkspace(ProjectStageId id, CancellationToken cancellationToken = default);
 
     Task Add(ProjectSprintAggregate sprint, CancellationToken cancellationToken = default);
+
+    void MarkAsUpdated(ProjectStage stage);
 
     void Remove(ProjectSprintAggregate sprint);
 }

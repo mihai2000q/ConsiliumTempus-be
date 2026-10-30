@@ -72,4 +72,18 @@ public class JwtTokenGeneratorTest
         // Assert
         outcome.Should().Be(jti);
     }
+
+    [Fact]
+    public void WhenGetUserIdFromToken_ShouldReturnSub()
+    {
+        // Arrange
+        var user = UserFactory.Create();
+        var token = Utils.Token.GenerateToken(_jwtSettings, user);
+
+        // Act
+        var outcome = _uut.GetUserIdFromToken(token);
+
+        // Assert
+        outcome.Should().Be(user.Id.Value);
+    }
 }

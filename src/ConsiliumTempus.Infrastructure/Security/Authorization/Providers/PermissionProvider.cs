@@ -8,7 +8,7 @@ namespace ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 
 internal sealed class PermissionProvider(ConsiliumTempusDbContext dbContext) : IPermissionProvider
 {
-    public async Task<HashSet<string>> GetPermissions(UserId userId, WorkspaceId workspaceId)
+    public async Task<HashSet<string>?> GetPermissions(UserId userId, WorkspaceId workspaceId)
     {
         var membership = await dbContext.Set<Membership>()
             .IgnoreAutoIncludes()
@@ -19,6 +19,6 @@ internal sealed class PermissionProvider(ConsiliumTempusDbContext dbContext) : I
             ?.WorkspaceRole
             .Permissions
             .Select(x => x.Name)
-            .ToHashSet() ?? [];
+            .ToHashSet();
     }
 }

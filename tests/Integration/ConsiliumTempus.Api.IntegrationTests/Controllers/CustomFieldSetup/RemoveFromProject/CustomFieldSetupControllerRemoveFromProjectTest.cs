@@ -31,7 +31,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Delete("api/customFieldSetups/" +
-                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
+                                          $"{request.Id}/From-Project/{request.ProjectId}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -42,7 +42,6 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedCustomFieldSetup = await dbContext.CustomFieldSetups
             .AsNoTracking()
-            .Include(cfs => cfs.Audit)
             .Include(cfs => cfs.Projects)
             .Include(cfs => cfs.Workspace)
             .SingleAsync(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id));
@@ -69,7 +68,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
         // Act
         Client.UseCustomToken(CustomFieldSetupData.Users.First());
         var outcome = await Client.Delete("api/customFieldSetups/" +
-                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
+                                          $"{request.Id}/From-Project/{request.ProjectId}");
 
         // Assert
         await outcome.ValidateError(Errors.Project.NotFound);
@@ -82,18 +81,49 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
     }
 
     [Fact]
+    public async Task
+        RemoveCustomFieldSetupFromProject_WhenProjectIsNotInCustomFieldSetup_ShouldReturnProjectNotFoundError()
+    {
+        // Arrange
+        var user = CustomFieldSetupData.Users.First();
+        var customFieldSetup = CustomFieldSetupData.CustomFieldSetups.First();
+        var project = CustomFieldSetupData.Projects[^3];
+        var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest(
+            customFieldSetup.Id.Value,
+            project.Id.Value);
+
+        // Act
+        Client.UseCustomToken(user);
+        var outcome = await Client.Delete("api/customFieldSetups/" +
+                                          $"{request.Id}/From-Project/{request.ProjectId}");
+
+        // Assert
+        await outcome.ValidateError(Errors.Project.NotFound);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.CustomFieldSetups
+            .Include(cfs => cfs.Projects)
+            .Single(cfs => cfs.Id == CustomFieldSetupId.Create(request.Id))
+            .Projects.Should().HaveSameCount(customFieldSetup.Projects);
+        dbContext.Projects
+            .Single(p => p.Id == ProjectId.Create(request.ProjectId))
+            .LastActivity.Should().BeCloseTo(project.LastActivity, TimeSpan.FromSeconds(1));
+    }
+
+    [Fact]
     public async Task RemoveCustomFieldSetupFromProject_WhenIsNotGlobal_ShouldReturnNotGlobalError()
     {
         // Arrange
         var user = CustomFieldSetupData.Users.First();
         var customFieldSetup = CustomFieldSetupData.CustomFieldSetups[1];
         var request = CustomFieldSetupRequestFactory.CreateRemoveCustomFieldSetupFromProjectRequest(
-            customFieldSetup.Id.Value);
+            customFieldSetup.Id.Value,
+            CustomFieldSetupData.Projects.First().Id.Value);
 
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Delete("api/customFieldSetups/" +
-                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
+                                          $"{request.Id}/From-Project/{request.ProjectId}");
         // Assert
         await outcome.ValidateError(Errors.CustomFieldSetup.NotGlobal);
 
@@ -115,7 +145,7 @@ public class CustomFieldSetupControllerRemoveFromProjectTest(WebAppFactory facto
 
         // Act
         var outcome = await Client.Delete("api/customFieldSetups/" +
-                                          $"{request.Id}/Remove-Project/{request.ProjectId}");
+                                          $"{request.Id}/From-Project/{request.ProjectId}");
         // Assert
         await outcome.ValidateError(Errors.CustomFieldSetup.NotFound);
 

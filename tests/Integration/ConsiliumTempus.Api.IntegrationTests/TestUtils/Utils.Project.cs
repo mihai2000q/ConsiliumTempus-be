@@ -104,8 +104,7 @@ internal static partial class Utils
             project.Owner.Should().Be(owner);
             project.Lifecycle.Should().Be(ProjectLifecycle.Active);
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            project.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Audit.ShouldBeCreated(owner);
             project.Statuses.Should().BeEmpty();
 
             project.Workspace.Id.Value.Should().Be(request.WorkspaceId);
@@ -154,17 +153,18 @@ internal static partial class Utils
         internal static void AssertUpdate(
             ProjectAggregate project,
             ProjectAggregate newProject,
-            UpdateProjectRequest request)
+            UpdateProjectRequest request,
+            UserAggregate user)
         {
             // unchanged
             newProject.Id.Value.Should().Be(request.Id);
-            newProject.CreatedDateTime.Should().Be(project.CreatedDateTime);
+            newProject.Audit.ShouldBeCreated(user);
 
             // changed
             newProject.Name.Value.Should().Be(request.Name);
             newProject.Lifecycle.Should().Be(request.Lifecycle);
             newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newProject.Audit.ShouldBeUpdated(user);
 
             newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
@@ -183,7 +183,8 @@ internal static partial class Utils
 
         internal static void AssertUpdateOverview(
             ProjectAggregate newProject,
-            UpdateOverviewProjectRequest request)
+            UpdateOverviewProjectRequest request,
+            UserAggregate user)
         {
             // unchanged
             newProject.Id.Value.Should().Be(request.Id);
@@ -191,29 +192,32 @@ internal static partial class Utils
             // changed
             newProject.Description.Value.Should().Be(request.Description);
             newProject.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            newProject.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            newProject.Audit.ShouldBeUpdated(user);
 
             newProject.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdateOwner(
             ProjectAggregate project,
-            UpdateOwnerProjectRequest request)
+            UpdateOwnerProjectRequest request,
+            UserAggregate user)
         {
             // unchanged
             project.Id.Value.Should().Be(request.Id);
 
             // changed
             project.Owner.Id.Value.Should().Be(request.OwnerId);
+            project.AllowedMembers.Count(u => u == project.Owner).Should().Be(1);
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Audit.ShouldBeUpdated(user);
 
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
 
         internal static void AssertUpdatePrivacy(
             ProjectAggregate project,
-            UpdatePrivacyProjectRequest request)
+            UpdatePrivacyProjectRequest request,
+            UserAggregate user)
         {
             // unchanged
             project.Id.Value.Should().Be(request.Id);
@@ -221,7 +225,7 @@ internal static partial class Utils
             // changed
             project.IsPrivate.Value.Should().Be(request.IsPrivate);
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            project.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
+            project.Audit.ShouldBeUpdated(user);
 
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
         }
@@ -328,7 +332,7 @@ internal static partial class Utils
                 projectResponse.LatestStatus.Should().BeNull();
             else
                 AssertProjectStatusResponse(projectResponse.LatestStatus!, GetLatestStatus(project));
-            projectResponse.CreatedDateTime.Should().Be(project.CreatedDateTime);
+            projectResponse.CreatedDateTime.Should().Be(project.Audit.CreatedDateTime);
         }
 
         private static void AssertUserResponse(

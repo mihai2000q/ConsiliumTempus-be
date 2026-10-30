@@ -71,9 +71,12 @@ public class DomainLayerTest : BaseArchitectureTest
             .And()
             .AreNotAbstract()
             .And()
-            .AreNot(typeof(Filter<>), typeof(Order<>))
-            .And()
-            .AreNotAssignableTo(typeof(IDomainEvent), typeof(FilterProperty<>), typeof(OrderProperty<>))
+            .AreNotAssignableTo(
+                typeof(IDomainEvent),
+                typeof(Filter<>),
+                typeof(Order<>),
+                typeof(FilterProperty<>),
+                typeof(OrderProperty<>))
             .GetObjects(Architecture)
             .ShouldHavePrivateConstructors();
     }

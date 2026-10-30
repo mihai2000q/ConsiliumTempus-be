@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Project;
@@ -8,7 +9,9 @@ using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Http;
+using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
+using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,23 +37,38 @@ internal sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceSc
         var request = httpContextAccessor.HttpContext?.Request;
         if (request is null) return;
 
-        var project = await GetProject(request, projectProvider);
-        if (project is null)
+        var (project, idType, hasValidId) = await GetProject(request, projectProvider);
+        if (!hasValidId)
         {
-            context.Succeed(requirement); // let the system return the not found or validation error 
+            context.Succeed(requirement); // let the system return the validation error
+        }
+        else if (project is null && idType == StringIdType.CustomFieldSetup)
+        {
+            // global custom field setups do not belong to a project, and the ones that do not exist
+            // are already reported by the permission authorization, which finds the workspace of the setup
+            context.Succeed(requirement);
+        }
+        else if (project is null)
+        {
+            context.Fail(new NotFoundAuthorizationFailureReason(this, GetNotFoundError(idType)));
         }
         else
         {
             var userId = UserId.Create(guidUserId);
-            if (IsAuthorized(requirement.AuthorizationLevel, project, userId)) context.Succeed(requirement);
+            if (IsAuthorized(requirement.AuthorizationLevel, project, userId))
+                context.Succeed(requirement);
+            else if (!IsAllowed(project, userId)) // the user must not know that the resource exists
+                context.Fail(new NotFoundAuthorizationFailureReason(this, GetNotFoundError(idType)));
         }
     }
 
-    private static async Task<ProjectAggregate?> GetProject(HttpRequest request, IProjectProvider projectProvider)
+    private static async Task<(ProjectAggregate?, StringIdType, bool)> GetProject(
+        HttpRequest request,
+        IProjectProvider projectProvider)
     {
-        if (await GetStringId(request) is not var (stringId, idType)) return null;
-        if (!Guid.TryParse(stringId, out var guidId)) return null;
-        return idType switch
+        if (await GetStringId(request) is not var (stringId, idType)) return (null, default, false);
+        if (!Guid.TryParse(stringId, out var guidId) || guidId == Guid.Empty) return (null, idType, false);
+        var project = idType switch
         {
             StringIdType.CustomFieldSetup => await projectProvider.GetByCustomFieldSetup(CustomFieldSetupId.Create(guidId)),
             StringIdType.Project => await projectProvider.Get(ProjectId.Create(guidId)),
@@ -59,6 +77,7 @@ internal sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceSc
             StringIdType.ProjectTask => await projectProvider.GetByProjectTask(ProjectTaskId.Create(guidId)),
             _ => throw new ArgumentOutOfRangeException(nameof(request))
         };
+        return (project, idType, true);
     }
 
     private static async Task<(string?, StringIdType)?> GetStringId(HttpRequest request)
@@ -74,8 +93,13 @@ internal sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceSc
                     HttpRequestReader.GetStringIdFromRoute(request, typeof(ProjectAggregate).ToCamelId()),
                     StringIdType.Project),
 
-                "CreateOnProject" => (
-                    await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()), 
+                "CreateOnProject" or
+                "AddToProject" => (
+                    await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()),
+                    StringIdType.Project),
+
+                "RemoveFromProject" => (
+                    HttpRequestReader.GetStringIdFromRoute(request, typeof(ProjectAggregate).ToCamelId()),
                     StringIdType.Project),
 
                 "Update" or
@@ -152,6 +176,24 @@ internal sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceSc
         };
     }
 
+    private static Error GetNotFoundError(StringIdType idType)
+    {
+        return idType switch
+        {
+            StringIdType.CustomFieldSetup => Errors.CustomFieldSetup.NotFound,
+            StringIdType.Project => Errors.Project.NotFound,
+            StringIdType.ProjectSprint => Errors.ProjectSprint.NotFound,
+            StringIdType.ProjectStage => Errors.ProjectStage.NotFound,
+            StringIdType.ProjectTask => Errors.ProjectTask.NotFound,
+            _ => throw new ArgumentOutOfRangeException(nameof(idType))
+        };
+    }
+
+    private static bool IsAllowed(ProjectAggregate project, UserId userId)
+    {
+        return !project.IsPrivate.Value || project.AllowedMembers.Any(u => u.Id == userId);
+    }
+
     private static bool IsAuthorized(
         ProjectAuthorizationLevel authorizationLevel,
         ProjectAggregate project,
@@ -159,8 +201,7 @@ internal sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceSc
     {
         return authorizationLevel switch
         {
-            ProjectAuthorizationLevel.IsAllowed => !project.IsPrivate.Value ||
-                                                   project.AllowedMembers.Any(u => u.Id == userId),
+            ProjectAuthorizationLevel.IsAllowed => IsAllowed(project, userId),
             ProjectAuthorizationLevel.IsProjectOwner => project.Owner.Id == userId,
             _ => throw new ArgumentOutOfRangeException(nameof(authorizationLevel))
         };

@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using ConsiliumTempus.Domain.Common.Extensions;
 
 namespace ConsiliumTempus.Domain.Common.Models;
 
@@ -6,20 +7,8 @@ public abstract class FilterProperty<TEntity>(
     string identifier,
     Expression<Func<TEntity, object>> selector)
 {
-    public string Identifier { get; } = UpperCamelCaseToSnakeCase(identifier);
+    public string Identifier { get; } = identifier.UpperCamelCaseToSnakeCase();
     public LambdaExpression PropertySelector { get; } = StripConvert(selector);
-
-    private static string UpperCamelCaseToSnakeCase(string str)
-    {
-        if (string.IsNullOrEmpty(str)) return string.Empty;
-        var result = str[0].ToString().ToLower();
-        for (var i = 1; i < str.Length; i++)
-        {
-            result += char.IsUpper(str[i]) ? "_" + str[i].ToString().ToLower() : str[i];
-        }
-
-        return result;
-    }
 
     private static LambdaExpression StripConvert<T>(Expression<Func<T, object>> source)
     {
@@ -34,21 +23,17 @@ public abstract class FilterProperty<TEntity>(
         return Expression.Lambda(result, source.Parameters);
     }
 
+    // Expression trees only have reference equality, so the Identifier (unique per entity) defines the property
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         return obj.GetType() == GetType() &&
-               Equals((FilterProperty<TEntity>)obj);
+               Identifier == ((FilterProperty<TEntity>)obj).Identifier;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Identifier, PropertySelector);
-    }
-
-    private bool Equals(FilterProperty<TEntity> other)
-    {
-        return Identifier == other.Identifier && PropertySelector.Equals(other.PropertySelector);
+        return HashCode.Combine(GetType(), Identifier);
     }
 }

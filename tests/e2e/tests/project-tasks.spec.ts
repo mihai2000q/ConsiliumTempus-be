@@ -1,8 +1,8 @@
 import { test } from "@playwright/test";
 import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
-import { deleteUser, getCurrentUser, registerUser } from "../utils/users.utils";
-import { getPersonalWorkspace } from "../utils/workspaces.utils";
+import { deleteAllUsers, registerUser } from "../utils/users.utils";
+import { addCollaboratorToWorkspace, getPersonalWorkspace } from "../utils/workspaces.utils";
 import { createProject } from "../utils/projects.utils";
 import { addStageToProjectSprint, getProjectSprints } from "../utils/project-sprint.utils";
 import CreateProjectTaskRequest from "../types/requests/project-task/CreateProjectTaskRequest";
@@ -40,7 +40,7 @@ test.describe('should allow operations on the project task entity', () => {
   })
 
   test.afterEach('should delete user', async ({ request }) => {
-    await deleteUser(request)
+    await deleteAllUsers(request)
   })
 
   test('should get project task', async ({ request }) => {
@@ -732,8 +732,8 @@ test.describe('should allow operations on the project task entity', () => {
       }
       const task = await createProjectTask(request, createProjectTaskRequest)
 
-      const newUserToken = (await registerUser(request, "some_new_user@gmail.com")).token
-      const person = await getCurrentUser(request, newUserToken)
+      const workspace = await getPersonalWorkspace(request)
+      const person = await addCollaboratorToWorkspace(request, "some_new_user@gmail.com", workspace.id)
 
       const body: UpdateCustomFieldFromProjectTaskRequest = {
         id: task.id,

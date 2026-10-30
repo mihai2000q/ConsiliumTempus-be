@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
@@ -10,7 +11,9 @@ using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Http;
+using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
+using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,33 +40,41 @@ internal sealed class PermissionAuthorizationHandler(IServiceScopeFactory servic
         var request = httpContextAccessor.HttpContext?.Request;
         if (request is null) return;
 
-        var workspaceId = await GetWorkspaceId(request, workspaceProvider, requirement.Permission);
-        if (workspaceId is null)
+        var (workspaceId, idType, hasValidId) =
+            await GetWorkspaceId(request, workspaceProvider, requirement.Permission);
+        if (!hasValidId)
         {
-            context.Succeed(requirement); // let the system return the not found or validation error 
+            context.Succeed(requirement); // let the system return the validation error
+        }
+        else if (workspaceId is null)
+        {
+            context.Fail(new NotFoundAuthorizationFailureReason(this, GetNotFoundError(idType)));
         }
         else
         {
             var userId = UserId.Create(guidUserId);
             var permissions = await permissionProvider.GetPermissions(userId, workspaceId);
-            if (permissions.Contains(requirement.Permission.ToString())) context.Succeed(requirement);
+            if (permissions is null) // not a collaborator, so the user must not know that the resource exists
+                context.Fail(new NotFoundAuthorizationFailureReason(this, GetNotFoundError(idType)));
+            else if (permissions.Contains(requirement.Permission.ToString())) context.Succeed(requirement);
         }
     }
 
     /// <summary>
     /// Get Workspace id from query, route or body of the request or related entity
     /// <returns>
-    /// the workspace or null when the workspace was either not found, or there is a validation error
+    /// the workspace (null when it was not found), the type of the id used to find it,
+    /// and whether there is a valid id at all (when there is not, it is a validation error)
     /// </returns>
     /// </summary>
-    private static async Task<WorkspaceId?> GetWorkspaceId(
+    private static async Task<(WorkspaceId?, StringIdType, bool)> GetWorkspaceId(
         HttpRequest request,
         IWorkspaceProvider workspaceProvider,
         Permissions permission)
     {
         var (stringId, idType) = await GetStringId(request, permission);
 
-        if (!Guid.TryParse(stringId, out var guidId)) return null;
+        if (!Guid.TryParse(stringId, out var guidId) || guidId == Guid.Empty) return (null, idType, false);
 
         var workspace = idType switch
         {
@@ -76,7 +87,21 @@ internal sealed class PermissionAuthorizationHandler(IServiceScopeFactory servic
             _ => throw new ArgumentOutOfRangeException(nameof(permission))
         };
 
-        return workspace?.Id;
+        return (workspace?.Id, idType, true);
+    }
+
+    private static Error GetNotFoundError(StringIdType idType)
+    {
+        return idType switch
+        {
+            StringIdType.CustomFieldSetup => Errors.CustomFieldSetup.NotFound,
+            StringIdType.Project => Errors.Project.NotFound,
+            StringIdType.ProjectSprint => Errors.ProjectSprint.NotFound,
+            StringIdType.ProjectStage => Errors.ProjectStage.NotFound,
+            StringIdType.ProjectTask => Errors.ProjectTask.NotFound,
+            StringIdType.Workspace => Errors.Workspace.NotFound,
+            _ => throw new ArgumentOutOfRangeException(nameof(idType))
+        };
     }
 
     /// <summary>

@@ -95,6 +95,11 @@ Returns an access token and a refresh token.
 
 Anyone can refresh their token.
 
+The access token sent has to be signed by the application (HS256, with its issuer and audience),
+and it has to belong to the same user as the refresh token, otherwise the tokens are invalid
+(`Authentication.InvalidTokens`).
+The access token can already be expired, since that is the reason to refresh it.
+
 ```js
 PUT {{host}}/api/auth/refresh
 ```

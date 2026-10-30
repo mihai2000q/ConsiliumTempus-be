@@ -4,7 +4,7 @@
 
 This entity holds the relationship between the [User](../aggregates/Aggregate.User.md) 
 and the [Workspace](../aggregates/Aggregate.Workspace.md). 
-In addition, it also persists the timestamps and the role of the user inside the workspace.
+In addition, it also persists the role of the user inside the workspace, and its audit.
 
 ```csharp
 class Membership 
@@ -18,8 +18,7 @@ class Membership
 {
   "user": {},
   "workspace": {},
-  "createdDateTime": "2020-01-01T00:00:00.0000000Z",
-  "updatedDateTime": "2020-01-01T00:00:00.0000000Z",
+  "audit": {},
   "workspaceRoleId": 2
 }
 ```

@@ -131,7 +131,7 @@ Sends optional query parameters for ordering, filtering, and page-based paginati
 - **currentPage** is used to specify the current page
 - **orderBy** is used to order the collection
 - **search** is used to filter the collection
-- **isPersonalWorkspaceFirst** is used to place the personal workspace of the user on top of the others
+- **isPersonalFirst** is used to place the personal workspace of the user on top of the others
 
 #### Get Collection Workspace Response
 
@@ -328,7 +328,9 @@ Returns a confirmation message that the invitation has been sent successfully.
 
 ### Accept Invitation
 
-Anyone can accept an invitation to a workspace.
+Only the invited user can accept the invitation to a workspace
+(for anyone else, the invitation is treated as not found).
+No workspace permission is required, because the user is not yet a collaborator of the workspace.
 
 ```js
 POST {{host}}/api/workspaces/accept-invitation
@@ -351,7 +353,9 @@ Returns a confirmation message that the invitation has been accepted successfull
 
 ### Reject Invitation
 
-Anyone can reject an invitation to a workspace.
+Only the invited user can reject the invitation to a workspace
+(for anyone else, the invitation is treated as not found).
+No workspace permission is required, because the user is not yet a collaborator of the workspace.
 
 ```js
 POST {{host}}/api/workspaces/reject-invitation
@@ -400,6 +404,8 @@ Returns a confirmation message that the workspace has been updated successfully.
 
 Only **Admin** users of the workspace can update a collaborator
 ([Update Collaborator From Workspace Permission](../Security.md#permissions)).
+
+The role of the owner of the workspace cannot be changed (the owner is always an **Admin**).
 
 ```js
 PUT {{host}}/api/workspaces/collaborators
@@ -473,6 +479,11 @@ Returns a confirmation message that the workspace overview has been updated succ
 
 Only workspace owners can update the owner
 ([Workspace Authorization Level: Is Workspace Owner](../Security.md#workspace-authorization-levels)).
+
+The new owner becomes an **Admin** of the workspace, if they are not one already (the owner is always an **Admin**).
+
+The owner of a personal workspace cannot be changed
+(every user keeps their [personal workspace](../domain/aggregates/Aggregate.Workspace.md#value-objects)).
 
 ```js
 PUT {{host}}/api/workspaces/owner

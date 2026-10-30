@@ -11,7 +11,7 @@ using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Domain.ProjectTask;
 
-public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimestamps
+public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, IAudit
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectTaskAggregate()
@@ -24,19 +24,13 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
         Description description,
         IsCompleted isCompleted,
         CustomOrderPosition customOrderPosition,
-        UserAggregate createdBy,
-        ProjectStage stage,
-        DateTime createdDateTime,
-        DateTime updatedDateTime) : base(id)
+        ProjectStage stage) : base(id)
     {
         Name = name;
         Description = description;
         IsCompleted = isCompleted;
         CustomOrderPosition = customOrderPosition;
-        CreatedBy = createdBy;
         Stage = stage;
-        CreatedDateTime = createdDateTime;
-        UpdatedDateTime = updatedDateTime;
     }
 
     private readonly List<CustomField> _customFields = [];
@@ -46,7 +40,6 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
     public Description Description { get; private set; } = null!;
     public CustomOrderPosition CustomOrderPosition { get; private set; } = null!;
     public IsCompleted IsCompleted { get; private set; } = null!;
-    public UserAggregate CreatedBy { get; init; } = null!;
     public UserAggregate? Assignee { get; private set; }
     public UserAggregate? Reviewer { get; private set; }
     public DateOnly? DueDate { get; private set; }
@@ -57,14 +50,12 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
         .ToList()
         .AsReadOnly();
     public IReadOnlyList<ProjectTaskComment> Comments => _comments.AsReadOnly();
-    public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; private set; }
+    public Audit Audit { get; init; } = null!;
 
     public static ProjectTaskAggregate Create(
         Name name,
         Description description,
         CustomOrderPosition customOrderPosition,
-        UserAggregate createdBy,
         ProjectStage stage)
     {
         var task = new ProjectTaskAggregate(
@@ -73,10 +64,7 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
             description,
             IsCompleted.Create(false),
             customOrderPosition,
-            createdBy,
-            stage,
-            DateTime.UtcNow,
-            DateTime.UtcNow);
+            stage);
 
         task.AddDomainEvent(new ProjectTaskCreated(task));
 
@@ -89,7 +77,6 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
     {
         Name = name;
         Assignee = assignee;
-        UpdatedDateTime = DateTime.UtcNow;
     }
 
     public void UpdateOverview(
@@ -100,18 +87,17 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
         Name = name;
         Description = description;
         Assignee = assignee;
-        UpdatedDateTime = DateTime.UtcNow;
     }
     
-    public void RefreshUpdatedDateTime()
+    public void ClearUser(UserAggregate user)
     {
-        UpdatedDateTime = DateTime.UtcNow;
+        if (Assignee == user) Assignee = null;
+        if (Reviewer == user) Reviewer = null;
     }
 
     public void UpdateIsCompleted(IsCompleted isCompleted)
     {
         IsCompleted = isCompleted;
-        UpdatedDateTime = DateTime.UtcNow;
     }
 
     public void UpdateCustomOrderPosition(CustomOrderPosition customOrderPosition)
@@ -135,13 +121,9 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
 
         if (overStage is not null)
         {
-            Parallel.Invoke(
-                () =>
-                {
-                    ReorderStage();
-                    Stage.RemoveTask(this, false);
-                },
-                () => overStage.AddTask(this, true));
+            ReorderStage();
+            Stage.RemoveTask(this, false);
+            overStage.AddTask(this, true);
 
             CustomOrderPosition = CustomOrderPosition.Create(0);
             Stage = overStage;
@@ -160,7 +142,6 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
             else return true;
         }
 
-        UpdatedDateTime = DateTime.UtcNow;
 
         return false;
     }
@@ -190,21 +171,15 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, ITimest
 
         var newCustomOrderPosition = CustomOrderPosition.Create(overTask.CustomOrderPosition.Value);
 
-        Parallel.Invoke(
-            () =>
-            {
-                // reorder new stage
-                for (var i = overTask.CustomOrderPosition.Value; i < overStage.Tasks.Count; i++)
-                {
-                    overStage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
-                }
-                overStage.AddTask(this);
-            },
-            () =>
-            {
-                ReorderStage();
-                Stage.RemoveTask(this, false);
-            });
+        // reorder new stage
+        for (var i = overTask.CustomOrderPosition.Value; i < overStage.Tasks.Count; i++)
+        {
+            overStage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
+        }
+        overStage.AddTask(this);
+
+        ReorderStage();
+        Stage.RemoveTask(this, false);
 
         Stage = overStage;
         CustomOrderPosition = newCustomOrderPosition;

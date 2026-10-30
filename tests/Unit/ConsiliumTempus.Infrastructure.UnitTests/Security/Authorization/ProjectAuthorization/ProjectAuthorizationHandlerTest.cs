@@ -1,4 +1,7 @@
-﻿using System.Security.Claims;
+﻿using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
+using ErrorOr;
+using System.Security.Claims;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -311,7 +314,47 @@ public class ProjectAuthorizationHandlerTest
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
-    public async Task ProjectAuthorizationHandler_WhenProjectIsNull_ShouldSucceed(
+    public async Task ProjectAuthorizationHandler_WhenRequestIdIsEmptyGuid_ShouldSucceed(
+        ProjectAuthorizationLevel projectAuthorizationLevel,
+        ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+        Type? idType,
+        ProjectAuthorizationHandlerData.Controller controller,
+        string requestAction,
+        ProjectAuthorizationHandlerData.StringIdType _1)
+    {
+        // Arrange
+        var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
+        var user = new ClaimsPrincipal();
+        user.AddIdentity(new ClaimsIdentity([
+            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
+        ]));
+        var context = new AuthorizationHandlerContext(requirements, user, null);
+
+        var stringId = Guid.Empty.ToString();
+        Utils.Authorization.Project.MockHttpRequest(
+            _httpContextAccessor,
+            requestLocation,
+            idType,
+            controller,
+            requestAction,
+            stringId);
+
+        // Act
+        await _uut.HandleAsync(context);
+
+        // Assert
+        _ = _httpContextAccessor
+            .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .HttpContext;
+        await VerifyProjectProviderDidNotReceiveAny();
+
+        context.HasSucceeded.Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
+    [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
+    public async Task ProjectAuthorizationHandler_WhenProjectIsNull_ShouldSucceedForGlobalCustomFieldSetupsAndFailAsNotFoundForTheRest(
         ProjectAuthorizationLevel projectAuthorizationLevel,
         ProjectAuthorizationHandlerData.RequestLocation requestLocation,
         Type? idType,
@@ -346,7 +389,18 @@ public class ProjectAuthorizationHandlerTest
             .HttpContext;
         await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
-        context.HasSucceeded.Should().BeTrue();
+        if (stringIdType == ProjectAuthorizationHandlerData.StringIdType.CustomFieldSetup)
+        {
+            // global custom field setups have no project, and the missing ones are found by the permission handler
+            context.HasSucceeded.Should().BeTrue();
+        }
+        else
+        {
+            context.HasSucceeded.Should().BeFalse();
+            context.HasFailed.Should().BeTrue();
+            context.FailureReasons.OfType<NotFoundAuthorizationFailureReason>().Should().ContainSingle()
+                .Which.Error.Should().Be(GetNotFoundError(stringIdType));
+        }
     }
 
     [Fact]
@@ -428,7 +482,7 @@ public class ProjectAuthorizationHandlerTest
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
-    public async Task ProjectAuthorizationHandler_WhenNotAuthorized_ShouldFail(
+    public async Task ProjectAuthorizationHandler_WhenIsNotAllowed_ShouldFailAsNotFound(
         ProjectAuthorizationLevel projectAuthorizationLevel,
         ProjectAuthorizationHandlerData.RequestLocation requestLocation,
         Type? idType,
@@ -467,6 +521,9 @@ public class ProjectAuthorizationHandlerTest
         await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().BeFalse();
+        context.HasFailed.Should().BeTrue();
+        context.FailureReasons.OfType<NotFoundAuthorizationFailureReason>().Should().ContainSingle()
+            .Which.Error.Should().Be(GetNotFoundError(stringIdType));
     }
 
     [Theory]
@@ -512,6 +569,7 @@ public class ProjectAuthorizationHandlerTest
         await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().Be(projectAuthorizationLevel == ProjectAuthorizationLevel.IsAllowed);
+        context.FailureReasons.Should().BeEmpty(); // the user knows that the project exists
     }
 
     [Theory]
@@ -557,5 +615,18 @@ public class ProjectAuthorizationHandlerTest
         await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().BeTrue();
+    }
+
+    private static Error GetNotFoundError(ProjectAuthorizationHandlerData.StringIdType stringIdType)
+    {
+        return stringIdType switch
+        {
+            ProjectAuthorizationHandlerData.StringIdType.CustomFieldSetup => Errors.CustomFieldSetup.NotFound,
+            ProjectAuthorizationHandlerData.StringIdType.Project => Errors.Project.NotFound,
+            ProjectAuthorizationHandlerData.StringIdType.ProjectSprint => Errors.ProjectSprint.NotFound,
+            ProjectAuthorizationHandlerData.StringIdType.ProjectStage => Errors.ProjectStage.NotFound,
+            ProjectAuthorizationHandlerData.StringIdType.ProjectTask => Errors.ProjectTask.NotFound,
+            _ => throw new ArgumentOutOfRangeException(nameof(stringIdType))
+        };
     }
 }

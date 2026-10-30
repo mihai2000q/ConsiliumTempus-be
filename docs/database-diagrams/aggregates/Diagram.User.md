@@ -16,10 +16,25 @@
 - **One-to-many** relationship with the [Custom Field](../../domain/entities/project-task/Entity.CustomField.md) entity
 (the *People* variant).
 - **One-to-many** relationship with the [Refresh Token](../../domain/entities/Entity.RefreshToken.md) entity.
-- 2x **One-to-many** relationship with the [Audit](../../domain/entities/Entity.Audit.md) entity.
+- 2x **One-to-many** relationship with the [Custom Field Setup](../../domain/aggregates/Aggregate.CustomFieldSetup.md) aggregate
+(through the **Audit**).
+- 2x **One-to-many** relationship with the [Membership](../../domain/entities/Entity.Membership.md) entity
+(through the **Audit**).
+- 2x **One-to-many** relationship with the [Project](../../domain/aggregates/Aggregate.Project.md) aggregate
+(through the **Audit**).
+- 2x **One-to-many** relationship with the [Project Sprint](../../domain/aggregates/Aggregate.ProjectSprint.md) aggregate
+(through the **Audit**).
+- 2x **One-to-many** relationship with the [Project Stage](../../domain/entities/project-sprint/Entity.ProjectStage.md) entity
+(through the **Audit**).
+- 2x **One-to-many** relationship with the [Project Status](../../domain/entities/project/Entity.ProjectStatus.md) entity
+(through the **Audit**).
+- 2x **One-to-many** relationship with the [Project Task](../../domain/aggregates/Aggregate.ProjectTask.md) aggregate
+(through the **Audit**).
+- 2x **One-to-many** relationship with the [Workspace](../../domain/aggregates/Aggregate.Workspace.md) aggregate
+(through the **Audit**).
 - **One-to-many** relationship with the [Workspace](../../domain/aggregates/Aggregate.Workspace.md) aggregate.
 - **One-to-many** relationship with the [Project](../../domain/aggregates/Aggregate.Project.md) aggregate.
-- 3x **One-to-many** relationships with the [Project Task](../../domain/aggregates/Aggregate.ProjectTask.md) aggregate.
+- 2x **One-to-many** relationships with the [Project Task](../../domain/aggregates/Aggregate.ProjectTask.md) aggregate.
 - **One-to-many** relationship with the [Project Task Comment](../../domain/entities/project-task/Entity.ProjectTaskComment.md) entity.
 
 ### Diagram
@@ -31,24 +46,37 @@ erDiagram
     User ||--o{ RefreshToken : "UserId"
     RefreshToken ||--o{ RefreshTokenHistory : "RefreshTokenId"
     User ||--o{ Membership : "UserId"
+    User |o--o{ Membership : "CreatedById"
+    User |o--o{ Membership : "UpdatedById"
     WorkspaceRole ||--o{ Membership : "WorkspaceRoleId"
     Workspace ||--o{ Membership : "WorkspaceId"
     User ||--o{ UserHasFavoriteWorkspace : "UserId"
     Workspace ||--o{ UserHasFavoriteWorkspace : "WorkspaceId"
     Project ||--o{ UserHasFavoriteProject : "ProjectId"
     User ||--o{ UserHasFavoriteProject : "UserId"
-    User |o--o{ Audit : "CreatedById"
-    User |o--o{ Audit : "UpdatedById"
+    User |o--o{ CustomFieldSetup : "CreatedById"
+    User |o--o{ CustomFieldSetup : "UpdatedById"
+    User |o--o{ ProjectSprint : "CreatedById"
+    User |o--o{ ProjectSprint : "UpdatedById"
+    User |o--o{ ProjectStatus : "CreatedById"
+    User |o--o{ ProjectStatus : "UpdatedById"
+    User |o--o{ ProjectStage : "CreatedById"
+    User |o--o{ ProjectStage : "UpdatedById"
+    User |o--o{ Workspace : "CreatedById"
+    User |o--o{ Workspace : "UpdatedById"
     User ||--o{ Workspace : "OwnerId"
+    User |o--o{ Project : "CreatedById"
+    User |o--o{ Project : "UpdatedById"
     User ||--o{ Project : "OwnerId"
     User ||--o{ WorkspaceInvitation : "CollaboratorId"
     User ||--o{ WorkspaceInvitation : "SenderId"
     User ||--o{ ProjectHasAllowedMember : "UserId"
     User |o--o{ ProjectTask : "AssigneeId"
-    User ||--o{ ProjectTask : "CreatedById"
+    User |o--o{ ProjectTask : "CreatedById"
+    User |o--o{ ProjectTask : "UpdatedById"
     User |o--o{ ProjectTask : "ReviewerId"
     User |o--o{ CustomField_People : "PersonId"
-    User ||--o{ ProjectTaskComment : "CreatedById"
+    User |o--o{ ProjectTaskComment : "AuthorId"
 
     User {
         uniqueidentifier Id PK
@@ -78,7 +106,9 @@ erDiagram
         uniqueidentifier UserId PK, FK
         uniqueidentifier WorkspaceId PK, FK
         int WorkspaceRoleId FK
+        uniqueidentifier CreatedById FK "nullable"
         datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
         datetime2 UpdatedDateTime
     }
     UserHasFavoriteWorkspace {
@@ -92,7 +122,16 @@ erDiagram
     WorkspaceRole {
         int Id PK
     }
-    Audit {
+    CustomFieldSetup {
+        uniqueidentifier Id PK
+    }
+    ProjectSprint {
+        uniqueidentifier Id PK
+    }
+    ProjectStatus {
+        uniqueidentifier Id PK
+    }
+    ProjectStage {
         uniqueidentifier Id PK
     }
     Workspace {

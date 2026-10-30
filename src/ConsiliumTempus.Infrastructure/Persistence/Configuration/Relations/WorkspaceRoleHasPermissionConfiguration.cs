@@ -17,11 +17,13 @@ internal sealed class WorkspaceRoleHasPermissionConfiguration : IEntityTypeConfi
 
         builder.HasOne<WorkspaceRole>()
             .WithMany()
-            .HasForeignKey(w => w.WorkspaceRoleId);
+            .HasForeignKey(w => w.WorkspaceRoleId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<Permission>()
             .WithMany()
-            .HasForeignKey(w => w.PermissionId);
+            .HasForeignKey(w => w.PermissionId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         foreach (var roleHasPermission in WorkspaceRoleHasPermission.DefaultData)
         {

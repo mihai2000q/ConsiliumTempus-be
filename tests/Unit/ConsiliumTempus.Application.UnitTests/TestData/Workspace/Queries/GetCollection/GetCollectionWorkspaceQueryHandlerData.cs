@@ -42,10 +42,6 @@ internal static class GetCollectionWorkspaceQueryHandlerData
                     "updated_date_time.asc"
                 ]);
             Add(query);
-
-            query = WorkspaceQueryFactory.CreateGetCollectionWorkspaceQuery(
-                isPersonalWorkspaceFirst: true);
-            Add(query);
         }
     }
 }

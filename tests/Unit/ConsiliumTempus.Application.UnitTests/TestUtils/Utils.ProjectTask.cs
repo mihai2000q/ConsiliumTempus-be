@@ -21,8 +21,7 @@ internal static partial class Utils
     {
         internal static void AssertFromCreateCommand(
             CreateProjectTaskCommand command,
-            ProjectStage stage,
-            UserAggregate user)
+            ProjectStage stage)
         {
             var task = command.OnTop ? stage.Tasks[0] : stage.Tasks[^1];
 
@@ -31,14 +30,11 @@ internal static partial class Utils
             task.Description.Value.Should().Be(string.Empty);
             task.CustomOrderPosition.Value.Should().Be(command.OnTop ? 0 : stage.Tasks.Count - 1);
             task.IsCompleted.Value.Should().Be(false);
-            task.CreatedBy.Should().Be(user);
             task.Assignee.Should().BeNull();
             task.Reviewer.Should().BeNull();
             task.DueDate.Should().BeNull();
             task.EstimatedDuration.Should().BeNull();
             task.Stage.Should().Be(stage);
-            task.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Comments.Should().BeEmpty();
             task.DomainEvents.Should().HaveCount(1);
             var domainEvent = task.DomainEvents[0];
@@ -57,10 +53,7 @@ internal static partial class Utils
             DeleteProjectTaskCommand command)
         {
             task.Id.Value.Should().Be(command.Id);
-            task.DomainEvents.Should().HaveCount(1);
-            var domainEvent = task.DomainEvents[0];
-            domainEvent.Should().BeOfType<ProjectTaskDeleted>();
-            ((ProjectTaskDeleted)domainEvent).ProjectTask.Should().Be(task);
+            task.DomainEvents.Should().BeEmpty();
 
             var stage = task.Stage;
 
@@ -80,7 +73,6 @@ internal static partial class Utils
             task.Id.Value.Should().Be(command.Id);
             task.CustomOrderPosition.Value.Should().Be(0);
             task.Stage.Should().Be(overStage);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             overStage.Tasks.Should().ContainSingle(t => t == task);
             overStage.Tasks[0].Should().Be(task);
             overStage.Tasks.ShouldBeOrdered();
@@ -102,7 +94,6 @@ internal static partial class Utils
             task.CustomOrderPosition.Value.Should().Be(expectedCustomOrderPosition);
             task.Stage.Tasks.ShouldBeOrdered();
             task.Stage.Tasks.Should().ContainSingle(t => t.Id.Value == command.OverId);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -121,7 +112,6 @@ internal static partial class Utils
             task.Id.Value.Should().Be(command.Id);
             task.CustomOrderPosition.Value.Should().Be(expectedCustomOrderPosition);
             task.Stage.Should().Be(overStage);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             task.Stage.Sprint.Stages.Should().AllSatisfyOrEmpty(s => s.Tasks.ShouldBeOrdered());
             task.Stage.Sprint.Stages.SelectMany(s => s.Tasks)
@@ -138,7 +128,6 @@ internal static partial class Utils
         {
             task.Name.Value.Should().Be(command.Name);
             task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -150,7 +139,6 @@ internal static partial class Utils
             UserAggregate user)
         {
             task.Id.Value.Should().Be(command.Id);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             var customField = task.CustomFields.SingleOrDefault(cf => cf.Id.Value == command.CustomFieldId);
             customField.Should().NotBeNull();
 
@@ -222,7 +210,6 @@ internal static partial class Utils
                 task.IsCompleted.CompletedOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             else
                 task.IsCompleted.CompletedOn.Should().BeNull();
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -236,7 +223,6 @@ internal static partial class Utils
             task.Name.Value.Should().Be(command.Name);
             task.Description.Value.Should().Be(command.Description);
             task.Assignee.Should().Be(command.AssigneeId is null ? null : assignee);
-            task.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
 
             task.Stage.Sprint.Project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             task.Stage.Sprint.Project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
@@ -284,13 +270,13 @@ internal static partial class Utils
             outcome.Description.Should().Be(expected.Description);
             outcome.CustomOrderPosition.Should().Be(expected.CustomOrderPosition);
             outcome.IsCompleted.Should().Be(expected.IsCompleted);
-            outcome.CreatedBy.Should().Be(expected.CreatedBy);
+            outcome.Audit.CreatedBy.Should().Be(expected.Audit.CreatedBy);
             outcome.Assignee.Should().Be(expected.Assignee);
             outcome.Reviewer.Should().Be(expected.Reviewer);
             outcome.DueDate.Should().Be(expected.DueDate);
             outcome.EstimatedDuration.Should().Be(expected.EstimatedDuration);
-            outcome.CreatedDateTime.Should().Be(expected.CreatedDateTime);
-            outcome.UpdatedDateTime.Should().Be(expected.UpdatedDateTime);
+            outcome.Audit.CreatedDateTime.Should().Be(expected.Audit.CreatedDateTime);
+            outcome.Audit.UpdatedDateTime.Should().Be(expected.Audit.UpdatedDateTime);
             outcome.Stage.Should().Be(expected.Stage);
             outcome.Comments.Should().BeEquivalentTo(expected.Comments);
         }

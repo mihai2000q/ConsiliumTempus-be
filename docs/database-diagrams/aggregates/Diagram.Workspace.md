@@ -12,6 +12,8 @@
 - **One-to-Many** relationship with the [Project](../../domain/aggregates/Aggregate.Project.md) aggregate.
 - **One-to-Many** relationship with the [Custom Field Setup](../../domain/aggregates/Aggregate.CustomFieldSetup.md) aggregate (optional).
 - **One-to-Many** relationship with the [Workspace Invitation](../../domain/entities/workspace/Entity.WorkspaceInvitation.md) entity.
+- 2x **Many-to-one** relationships with the [User](../../domain/aggregates/Aggregate.User.md) aggregate
+(through the **Audit**).
 
 ### Entities Relationships
 
@@ -25,6 +27,8 @@ For the notation used, check out the [Legend](../Database.Diagram.md#legend).
 
 ```mermaid
 erDiagram
+    User |o--o{ Workspace : "CreatedById"
+    User |o--o{ Workspace : "UpdatedById"
     User ||--o{ Workspace : "OwnerId"
     User ||--o{ Membership : "UserId"
     WorkspaceRole ||--o{ Membership : "WorkspaceRoleId"
@@ -52,14 +56,18 @@ erDiagram
         bit IsPersonal
         uniqueidentifier OwnerId FK
         datetime2 LastActivity
+        uniqueidentifier CreatedById FK "nullable"
         datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
         datetime2 UpdatedDateTime
     }
     Membership {
         uniqueidentifier UserId PK, FK
         uniqueidentifier WorkspaceId PK, FK
         int WorkspaceRoleId FK
+        uniqueidentifier CreatedById FK "nullable"
         datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
         datetime2 UpdatedDateTime
     }
     UserHasFavoriteWorkspace {

@@ -7,7 +7,7 @@ public sealed class CustomFieldMultiSelectHasOption : Entity<(CustomFieldId, Gui
 {
     private CustomFieldMultiSelectHasOption() {}
 
-    // public override (CustomFieldId, Guid)? Id => new(MultiSelectCustomFieldId, OptionsId);
-    // public CustomFieldId MultiSelectCustomFieldId { get; init; } = null!;
-    public Guid OptionsId { get; init; }
+    public override (CustomFieldId, Guid) Id => new(MultiSelectCustomFieldId, OptionId);
+    public CustomFieldId MultiSelectCustomFieldId { get; init; } = null!;
+    public Guid OptionId { get; init; }
 }

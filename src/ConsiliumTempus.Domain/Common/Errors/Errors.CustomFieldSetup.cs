@@ -21,5 +21,9 @@ public static partial class Errors
         public static Error ProjectAlreadyPresent => Error.Conflict(
             "CustomFieldSetup.ProjectAlreadyPresent",
             "Custom Field Setup already has the project");
+
+        public static Error TypeMismatch => Error.Conflict(
+            "CustomFieldSetup.TypeMismatch",
+            "The type of the request does not match the type of the Custom Field Setup");
     }
 }

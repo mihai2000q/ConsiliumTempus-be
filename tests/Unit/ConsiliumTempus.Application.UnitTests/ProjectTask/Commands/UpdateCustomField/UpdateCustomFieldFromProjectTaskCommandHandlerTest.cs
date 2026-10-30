@@ -3,12 +3,15 @@ using ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
+using ConsiliumTempus.Common.UnitTests.ProjectTask.Entities;
 using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using NSubstitute.ReturnsExtensions;
 
 namespace ConsiliumTempus.Application.UnitTests.ProjectTask.Commands.UpdateCustomField;
@@ -18,14 +21,14 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
     #region Setup
 
     private readonly IProjectTaskRepository _projectTaskRepository;
-    private readonly IUserRepository _userRepository;
+    private readonly IWorkspaceRepository _workspaceRepository;
     private readonly UpdateCustomFieldFromProjectTaskCommandHandler _uut;
 
     public UpdateCustomFieldFromProjectTaskCommandHandlerTest()
     {
         _projectTaskRepository = Substitute.For<IProjectTaskRepository>();
-        _userRepository = Substitute.For<IUserRepository>();
-        _uut = new UpdateCustomFieldFromProjectTaskCommandHandler(_projectTaskRepository, _userRepository);
+        _workspaceRepository = Substitute.For<IWorkspaceRepository>();
+        _uut = new UpdateCustomFieldFromProjectTaskCommandHandler(_projectTaskRepository, _workspaceRepository);
     }
 
     #endregion
@@ -42,8 +45,8 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
             .Returns(task);
 
         var user = UserFactory.Create();
-        _userRepository
-            .Get(Arg.Any<UserId>())
+        _workspaceRepository
+            .GetCollaborator(Arg.Any<UserId>(), Arg.Any<WorkspaceId>())
             .Returns(user);
 
         // Act
@@ -54,9 +57,15 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
         if (command.PeopleCustomField?.PersonId is not null)
-            await _userRepository
+            await _workspaceRepository
                 .Received(1)
-                .Get(Arg.Is<UserId>(id => id.Value == command.PeopleCustomField.PersonId));
+                .GetCollaborator(
+                    Arg.Is<UserId>(id => id.Value == command.PeopleCustomField.PersonId),
+                    Arg.Is<WorkspaceId>(wId => wId == task.Stage.Sprint.Project.Workspace.Id));
+
+        _projectTaskRepository
+            .Received(1)
+            .MarkAsUpdated(task);
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateCustomFieldFromProjectTaskResult());
@@ -75,6 +84,7 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
         var command = ProjectTaskCommandFactory.CreateUpdateCustomFieldFromProjectTaskCommand(
             id: task.Id.Value,
             customFieldId: customField.Id.Value,
+            type: CustomFieldType.MultiSelect,
             multiSelectCustomField: new UpdateCustomFieldFromProjectTaskCommand.MultiSelectCustomFieldCommand(
                 Guid.NewGuid(),
                 true));
@@ -90,16 +100,48 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        await _userRepository
+        await _workspaceRepository
             .DidNotReceive()
-            .Get(Arg.Any<UserId>());
+            .GetCollaborator(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
 
         outcome.ValidateError(Errors.MultiSelectOption.NotFound);
     }
 
     [Fact]
     public async Task
-        HandleUpdateCustomFieldFromProjectTaskCommand_WhenUserIsNull_ShouldReturnUserNotFoundError()
+        HandleUpdateCustomFieldFromProjectTaskCommand_WhenSingleSelectOptionIsNull_ShouldReturnSingleSelectOptionNotFoundError()
+    {
+        // Arrange
+        var task = ProjectTaskFactory.CreateWithCustomFields();
+        var customField = task.CustomFields.OfType<SingleSelectCustomField>().First();
+        var option = customField.Option;
+
+        var command = ProjectTaskCommandFactory.CreateUpdateCustomFieldFromProjectTaskCommand(
+            id: task.Id.Value,
+            customFieldId: customField.Id.Value,
+            type: CustomFieldType.SingleSelect,
+            singleSelectCustomField: new UpdateCustomFieldFromProjectTaskCommand.SingleSelectCustomFieldCommand(
+                Guid.NewGuid()));
+
+        _projectTaskRepository
+            .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
+            .Returns(task);
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _projectTaskRepository
+            .Received(1)
+            .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+
+        outcome.ValidateError(Errors.SingleSelectOption.NotFound);
+        customField.Option.Should().Be(option);
+    }
+
+    [Fact]
+    public async Task
+        HandleUpdateCustomFieldFromProjectTaskCommand_WhenPersonIsNotCollaborator_ShouldReturnUserNotFoundError()
     {
         // Arrange
         var task = ProjectTaskFactory.CreateWithCustomFields();
@@ -108,14 +150,15 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
         var command = ProjectTaskCommandFactory.CreateUpdateCustomFieldFromProjectTaskCommand(
             id: task.Id.Value,
             customFieldId: customField.Id.Value,
+            type: CustomFieldType.People,
             peopleCustomField: new UpdateCustomFieldFromProjectTaskCommand.PeopleCustomFieldCommand(Guid.NewGuid()));
 
         _projectTaskRepository
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
             .Returns(task);
 
-        _userRepository
-            .Get(Arg.Any<UserId>())
+        _workspaceRepository
+            .GetCollaborator(Arg.Any<UserId>(), Arg.Any<WorkspaceId>())
             .ReturnsNull();
 
         // Act
@@ -125,11 +168,46 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        await _userRepository
+        await _workspaceRepository
             .Received(1)
-            .Get(Arg.Is<UserId>(id => id.Value == command.PeopleCustomField!.PersonId));
+            .GetCollaborator(
+                Arg.Is<UserId>(id => id.Value == command.PeopleCustomField!.PersonId),
+                Arg.Is<WorkspaceId>(wId => wId == task.Stage.Sprint.Project.Workspace.Id));
 
         outcome.ValidateError(Errors.User.NotFound);
+    }
+
+    [Fact]
+    public async Task
+        HandleUpdateCustomFieldFromProjectTaskCommand_WhenTypeDoesNotMatchTheCustomField_ShouldReturnCustomFieldTypeMismatchError()
+    {
+        // Arrange
+        var task = ProjectTaskFactory.Create();
+        var customField = CustomFieldFactory.CreateText("Text", task: task);
+        task.AddCustomField(customField);
+        var command = ProjectTaskCommandFactory.CreateUpdateCustomFieldFromProjectTaskCommand(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.Number,
+            numberCustomField: new UpdateCustomFieldFromProjectTaskCommand.NumberCustomFieldCommand(10));
+
+        _projectTaskRepository
+            .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
+            .Returns(task);
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _projectTaskRepository
+            .Received(1)
+            .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+        _projectTaskRepository
+            .DidNotReceive()
+            .MarkAsUpdated(Arg.Any<ProjectTaskAggregate>());
+
+        outcome.ValidateError(Errors.CustomField.TypeMismatch);
+        customField.Text!.Value.Should().Be("Text");
     }
 
     [Fact]
@@ -150,9 +228,9 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        await _userRepository
+        await _workspaceRepository
             .DidNotReceive()
-            .Get(Arg.Any<UserId>());
+            .GetCollaborator(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
 
         outcome.ValidateError(Errors.CustomField.NotFound);
     }
@@ -174,9 +252,9 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
         await _projectTaskRepository
             .Received(1)
             .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
-        await _userRepository
+        await _workspaceRepository
             .DidNotReceive()
-            .Get(Arg.Any<UserId>());
+            .GetCollaborator(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
 
         outcome.ValidateError(Errors.ProjectTask.NotFound);
     }

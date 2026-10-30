@@ -51,6 +51,50 @@ public class WorkspaceControllerRejectInvitationTest(WebAppFactory factory)
     }
 
     [Fact]
+    public async Task RejectInvitationToWorkspace_WhenUserIsNotFound_ShouldReturnUserNotFoundError()
+    {
+        // Arrange
+        var invitation = WorkspaceData.WorkspaceInvitations.First();
+        var request = WorkspaceRequestFactory.CreateRejectInvitationToWorkspaceRequest(
+            invitation.Workspace.Id.Value,
+            invitation.Id.Value);
+
+        // Act
+        Client.UseInvalidToken();
+        var outcome = await Client.Post("api/workspaces/reject-invitation", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.User.NotFound);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Set<WorkspaceInvitation>()
+            .SingleOrDefault(i => i.Id == invitation.Id)
+            .Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task RejectInvitationToWorkspace_WhenUserIsNotTheInvitedCollaborator_ShouldReturnInvitationNotFoundError()
+    {
+        // Arrange
+        var invitation = WorkspaceData.WorkspaceInvitations.First();
+        var request = WorkspaceRequestFactory.CreateRejectInvitationToWorkspaceRequest(
+            invitation.Workspace.Id.Value,
+            invitation.Id.Value);
+
+        // Act
+        Client.UseCustomToken(invitation.Sender);
+        var outcome = await Client.Post("api/workspaces/reject-invitation", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.WorkspaceInvitation.NotFound);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Set<WorkspaceInvitation>()
+            .SingleOrDefault(i => i.Id == invitation.Id)
+            .Should().NotBeNull();
+    }
+
+    [Fact]
     public async Task RejectInvitationToWorkspace_WhenInvitationIsNotFound_ShouldReturnInvitationNotFoundError()
     {
         // Arrange

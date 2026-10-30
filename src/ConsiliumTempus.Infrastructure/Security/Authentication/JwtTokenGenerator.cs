@@ -40,6 +40,15 @@ internal sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions) : IJwt
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }
 
+    public Guid GetUserIdFromToken(string token)
+    {
+        return Guid.Parse(new JwtSecurityTokenHandler()
+            .ReadJwtToken(token)
+            .Claims
+            .Single(c => c.Type == JwtRegisteredClaimNames.Sub)
+            .Value);
+    }
+
     public Guid GetJwtIdFromToken(string token)
     {
         return Guid.Parse(new JwtSecurityTokenHandler()

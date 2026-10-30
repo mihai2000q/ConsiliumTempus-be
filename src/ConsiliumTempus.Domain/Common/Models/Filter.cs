@@ -1,9 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using System.Reflection;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project.Entities;
-using ConsiliumTempus.Domain.Project.Enums;
 
 namespace ConsiliumTempus.Domain.Common.Models;
 
@@ -34,6 +34,43 @@ public static class Filter
         .Where(m => m.Name == nameof(string.StartsWith))
         .Where(m => m.GetParameters().Length == 1)
         .Single(m => m.GetParameters().First().ParameterType == string.Empty.GetType());
+
+    public static (string PropertyIdentifier, string Operator, string Value)? Split(string filter)
+    {
+        filter = filter.Trim();
+        var result = new List<string>();
+
+        var current = "";
+        for (var i = 0; i < filter.Length; i++)
+            if (filter[i] == Separator)
+            {
+                result.Add(current);
+                current = "";
+                if (result.Count != 2 || i == filter.Length - 1) continue;
+                result.Add(filter[(i + 1)..].TrimStart());
+                break;
+            }
+            else
+                current += filter[i];
+
+        if (result.Count != 3) return null;
+
+        return (result[0], result[1], result[2]);
+    }
+
+    public static bool TryParseValue(Type type, string value, [NotNullWhen(true)] out object? result)
+    {
+        result = type switch
+        {
+            _ when type == typeof(bool) => bool.TryParse(value, out var b) ? b : null,
+            _ when type == typeof(DateTime) => DateTime.TryParse(value, out var dt) ? dt : null,
+            _ when type == typeof(decimal) => decimal.TryParse(value, out var d) ? d : null,
+            _ when type == typeof(int) => int.TryParse(value, out var i) ? i : null,
+            _ when type.IsEnum => Enum.TryParse(type, value, true, out var e) ? e : null,
+            _ => value
+        };
+        return result is not null;
+    }
 }
 
 public class Filter<TEntity>(Expression<Func<TEntity, bool>> predicate) : IFilter<TEntity>
@@ -54,12 +91,12 @@ public class Filter<TEntity>(Expression<Func<TEntity, bool>> predicate) : IFilte
         string filter,
         IReadOnlyList<FilterProperty<TEntity>> filterProperties)
     {
-        var (identifier, @operator, value) = SplitFilter(filter.Trim());
+        var (identifier, @operator, value) = Filter.Split(filter)!.Value;
 
         var filterProperty = filterProperties.Single(fp => fp.Identifier == identifier);
 
         var propertyExpression = filterProperty.PropertySelector.Body;
-        var valueExpression = GetValueExpression(filterProperty.PropertySelector.ReturnType, value.TrimStart());
+        var valueExpression = GetValueExpression(filterProperty.PropertySelector.ReturnType, value);
         var expressionBody = GetExpressionBody(
             identifier,
             propertyExpression,
@@ -73,38 +110,12 @@ public class Filter<TEntity>(Expression<Func<TEntity, bool>> predicate) : IFilte
         return new Filter<TEntity>(predicate);
     }
 
-    private static (string, string, string) SplitFilter(string filter)
-    {
-        var result = new List<string>();
-
-        var current = "";
-        for (var i = 0; i < filter.Length; i++)
-            if (filter[i] == Filter.Separator)
-            {
-                result.Add(current);
-                current = "";
-                if (result.Count != 2) continue;
-                result.Add(filter[(i + 1)..]);
-                break;
-            }
-            else
-                current += filter[i];
-
-        return (result[0], result[1], result[2]);
-    }
-
     private static ConstantExpression GetValueExpression(Type type, string value)
     {
-        return type switch
-        {
-            not null when type == typeof(bool) => Expression.Constant(bool.Parse(value)),
-            not null when type == typeof(DateTime) => Expression.Constant(DateTime.Parse(value)),
-            not null when type == typeof(decimal) => Expression.Constant(decimal.Parse(value)),
-            not null when type == typeof(int) => Expression.Constant(int.Parse(value)),
-            not null when type == typeof(ProjectLifecycle) => Expression.Constant(Enum.Parse<ProjectLifecycle>(value, true)),
-            not null when type == typeof(ProjectStatusType) => Expression.Constant(Enum.Parse<ProjectStatusType>(value, true)),
-            _ => Expression.Constant(value)
-        };
+        if (!Filter.TryParseValue(type, value, out var parsedValue))
+            throw new FormatException($"The value '{value}' cannot be parsed to {type.Name}");
+
+        return Expression.Constant(parsedValue);
     }
 
     private static Expression GetExpressionBody(

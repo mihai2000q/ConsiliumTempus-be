@@ -49,17 +49,17 @@ public class WorkspaceControllerGetCollectionTest(WebAppFactory factory)
 
     [Fact]
     public async Task
-        GetCollectionWorkspace_WhenRequestHasIsPersonalWorkspaceFirst_ShouldReturnWorkspacesWithPersonalWorkspaceFirst()
+        GetCollectionWorkspace_WhenRequestHasIsPersonalFirst_ShouldReturnWorkspacesWithPersonalFirst()
     {
         // Arrange
         var user = WorkspaceData.Users.First();
         var request = WorkspaceRequestFactory.CreateGetCollectionWorkspaceRequest(
-            isPersonalWorkspaceFirst: true);
+            isPersonalFirst: true);
 
         // Act
         Client.UseCustomToken(user);
         var outcome = await Client.Get($"api/Workspaces" +
-                                       $"?isPersonalWorkspaceFirst={request.IsPersonalWorkspaceFirst}");
+                                       $"?isPersonalFirst={request.IsPersonalFirst}");
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);

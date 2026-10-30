@@ -1,13 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
-using ConsiliumTempus.Domain.User;
 
 namespace ConsiliumTempus.Domain.ProjectTask.Entities;
 
-public sealed class ProjectTaskComment : Entity<ProjectTaskCommentId>, ITimestamps
+public sealed class ProjectTaskComment : Entity<ProjectTaskCommentId>, IAuthored
 {
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private ProjectTaskComment()
@@ -15,33 +14,27 @@ public sealed class ProjectTaskComment : Entity<ProjectTaskCommentId>, ITimestam
     }
 
     private ProjectTaskComment(
+        ProjectTaskCommentId id,
         Message message,
-        ProjectTaskAggregate task,
-        DateTime createdDateTime,
-        DateTime updatedDateTime)
+        ProjectTaskAggregate task) : base(id)
     {
         Message = message;
         Task = task;
-        CreatedDateTime = createdDateTime;
-        UpdatedDateTime = updatedDateTime;
     }
 
     public Message Message { get; private set; } = null!;
-    public UserAggregate CreatedBy { get; init; } = null!;
     public DateOnly? Date { get; private set; }
     public TimeSpan? TimeSpent { get; private set; }
     public ProjectTaskAggregate Task { get; init; } = null!;
-    public DateTime CreatedDateTime { get; init; }
-    public DateTime UpdatedDateTime { get; private set; }
+    public Authorship Authorship { get; init; } = null!;
 
     public static ProjectTaskComment Create(
         Message message,
         ProjectTaskAggregate task)
     {
         return new ProjectTaskComment(
+            ProjectTaskCommentId.CreateUnique(),
             message,
-            task,
-            DateTime.UtcNow,
-            DateTime.UtcNow);
+            task);
     }
 }

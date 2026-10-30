@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.CustomFieldSetup.Variants;
@@ -21,8 +21,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
         CustomFieldSetupId id,
         Name name,
         Description description,
-        WorkspaceAggregate? workspace,
-        Audit audit) : base(id, name, description, workspace, audit)
+        WorkspaceAggregate? workspace) : base(id, name, description, workspace)
     {
         _options = options;
         DefaultOptionId = defaultOptionId;
@@ -44,8 +43,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
         Name name,
         Description description,
         WorkspaceAggregate? workspace,
-        ProjectAggregate? project,
-        UserAggregate createdBy)
+        ProjectAggregate? project)
     {
         var setup = new SingleSelectCustomFieldSetupAggregate(
             options,
@@ -53,8 +51,7 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
             CustomFieldSetupId.CreateUnique(),
             name,
             description,
-            workspace,
-            Audit.Create(createdBy));
+            workspace);
 
         if (project != null) setup.AddProject(project);
 
@@ -64,11 +61,10 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
     public void Update(
         Guid? defaultOptionId,
         Name name,
-        Description description,
-        UserAggregate updatedBy)
+        Description description)
     {
         DefaultOptionId = defaultOptionId;
-        base.Update(name, description, updatedBy);
+        base.Update(name, description);
     }
 
     public void AddOption(SingleSelectOption option)
@@ -83,6 +79,8 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
             Options[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
         }
         _options.Remove(option);
+        if (DefaultOptionId == option.Id) DefaultOptionId = null;
+        AddDomainEvent(new RemovedOptionFromSingleSelectCustomFieldSetup(this, option));
     }
 
     public void MoveOption(SingleSelectOption option, SingleSelectOption overOption)

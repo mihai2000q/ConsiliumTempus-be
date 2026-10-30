@@ -6,7 +6,6 @@ using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
-using ConsiliumTempus.Domain.User;
 using FluentAssertions.Extensions;
 
 namespace ConsiliumTempus.Application.UnitTests.TestUtils;
@@ -49,23 +48,6 @@ internal static partial class Utils
         var customOrderPosition = 0;
         options.OrderBy(s => s.CustomOrderPosition)
             .Should().AllSatisfyOrEmpty(o => o.CustomOrderPosition.Value.Should().Be(customOrderPosition++));
-    }
-
-    extension(Audit audit)
-    {
-        internal void ShouldBeCreated(UserAggregate createdBy)
-        {
-            audit.CreatedBy.Should().Be(createdBy);
-            audit.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-            audit.UpdatedBy.Should().Be(createdBy);
-            audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-        }
-
-        internal void ShouldBeUpdated(UserAggregate updatedBy)
-        {
-            audit.UpdatedBy.Should().Be(updatedBy);
-            audit.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
-        }
     }
 
     internal static bool AssertPagination(this PaginationInfo? paginationInfo, int? pageSize, int? currentPage)

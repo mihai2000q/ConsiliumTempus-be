@@ -6,34 +6,32 @@ This is a full picture of the database diagram:
 
 ```mermaid
 erDiagram
-    User |o--o{ Audit : "CreatedById"
-    User |o--o{ Audit : "UpdatedById"
     User ||--o{ RefreshToken : "UserId"
+    User |o--o{ Workspace : "CreatedById"
+    User |o--o{ Workspace : "UpdatedById"
     User ||--o{ Workspace : "OwnerId"
     Permission ||--o{ WorkspaceRoleHasPermission : "PermissionId"
     WorkspaceRole ||--o{ WorkspaceRoleHasPermission : "WorkspaceRoleId"
     RefreshToken ||--o{ RefreshTokenHistory : "RefreshTokenId"
-    Audit ||--o| CustomFieldSetup_Date : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_Date : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_DateTime : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_DateTime : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_Duration : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_Duration : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_MultiSelect : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_MultiSelect : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_Number : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_Number : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_People : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_People : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_SingleSelect : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_SingleSelect : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_Text : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_Text : "WorkspaceId"
-    Audit ||--o| CustomFieldSetup_Time : "AuditId"
-    Workspace |o--o{ CustomFieldSetup_Time : "WorkspaceId"
+    User |o--o{ CustomFieldSetup : "CreatedById"
+    User |o--o{ CustomFieldSetup : "UpdatedById"
+    Workspace |o--o{ CustomFieldSetup : "WorkspaceId"
+    CustomFieldSetup ||--|| CustomFieldSetup_Date : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_DateTime : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_Duration : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_MultiSelect : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_Number : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_People : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_SingleSelect : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_Text : "Id"
+    CustomFieldSetup ||--|| CustomFieldSetup_Time : "Id"
     User ||--o{ Membership : "UserId"
+    User |o--o{ Membership : "CreatedById"
+    User |o--o{ Membership : "UpdatedById"
     WorkspaceRole ||--o{ Membership : "WorkspaceRoleId"
     Workspace ||--o{ Membership : "WorkspaceId"
+    User |o--o{ Project : "CreatedById"
+    User |o--o{ Project : "UpdatedById"
     User ||--o{ Project : "OwnerId"
     Workspace ||--o{ Project : "WorkspaceId"
     User ||--o{ UserHasFavoriteWorkspace : "UserId"
@@ -45,18 +43,23 @@ erDiagram
     CustomFieldSetup_SingleSelect ||--o{ SingleSelectOption : "SetupId"
     Project ||--o{ ProjectHasAllowedMember : "ProjectId"
     User ||--o{ ProjectHasAllowedMember : "UserId"
-    Project ||--o{ ProjectHasCustomFieldSetup : "ProjectsId"
-    Audit ||--o| ProjectSprint : "AuditId"
+    Project ||--o{ ProjectHasCustomFieldSetup : "ProjectId"
+    CustomFieldSetup ||--o{ ProjectHasCustomFieldSetup : "CustomFieldSetupId"
+    User |o--o{ ProjectSprint : "CreatedById"
+    User |o--o{ ProjectSprint : "UpdatedById"
     Project ||--o{ ProjectSprint : "ProjectId"
-    Audit ||--o{ ProjectStatus : "AuditId"
+    User |o--o{ ProjectStatus : "CreatedById"
+    User |o--o{ ProjectStatus : "UpdatedById"
     Project ||--o{ ProjectStatus : "ProjectId"
     Project ||--o{ UserHasFavoriteProject : "ProjectId"
     User ||--o{ UserHasFavoriteProject : "UserId"
-    Audit ||--o| ProjectStage : "AuditId"
+    User |o--o{ ProjectStage : "CreatedById"
+    User |o--o{ ProjectStage : "UpdatedById"
     ProjectSprint ||--o{ ProjectStage : "SprintId"
     ProjectStage ||--o{ ProjectTask : "StageId"
     User |o--o{ ProjectTask : "AssigneeId"
-    User ||--o{ ProjectTask : "CreatedById"
+    User |o--o{ ProjectTask : "CreatedById"
+    User |o--o{ ProjectTask : "UpdatedById"
     User |o--o{ ProjectTask : "ReviewerId"
     CustomFieldSetup_Date ||--o{ CustomField_Date : "SetupId"
     ProjectTask ||--o{ CustomField_Date : "ProjectTaskId"
@@ -79,7 +82,7 @@ erDiagram
     CustomFieldSetup_Time ||--o{ CustomField_Time : "SetupId"
     ProjectTask ||--o{ CustomField_Time : "ProjectTaskId"
     ProjectTask ||--o{ ProjectTaskComment : "TaskId"
-    User ||--o{ ProjectTaskComment : "CreatedById"
+    User |o--o{ ProjectTaskComment : "AuthorId"
     CustomField_MultiSelect ||--o{ CustomField_MultiSelectHasOption : "CustomFieldId"
     MultiSelectOption ||--o{ CustomField_MultiSelectHasOption : "OptionId"
 
@@ -103,13 +106,6 @@ erDiagram
         nvarchar(max) Name
         nvarchar(max) Description
     }
-    Audit {
-        uniqueidentifier Id PK
-        uniqueidentifier CreatedById FK "nullable"
-        datetime2 CreatedDateTime
-        uniqueidentifier UpdatedById FK "nullable"
-        datetime2 UpdatedDateTime
-    }
     RefreshToken {
         uniqueidentifier Id PK
         datetime2 ExpiryDateTime
@@ -124,7 +120,9 @@ erDiagram
         bit IsPersonal
         uniqueidentifier OwnerId FK
         datetime2 LastActivity
+        uniqueidentifier CreatedById FK "nullable"
         datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
         datetime2 UpdatedDateTime
     }
     WorkspaceRoleHasPermission {
@@ -137,84 +135,60 @@ erDiagram
         datetime2 CreatedDateTime
         uniqueidentifier RefreshTokenId FK
     }
-    CustomFieldSetup_Date {
+    CustomFieldSetup {
         uniqueidentifier Id PK
         nvarchar(50) Name
         nvarchar(max) Description
         uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier CreatedById FK "nullable"
+        datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
+        datetime2 UpdatedDateTime
+    }
+    CustomFieldSetup_Date {
+        uniqueidentifier Id PK, FK
         date DefaultDate "nullable"
     }
     CustomFieldSetup_DateTime {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
         datetime2 DefaultDateTime "nullable"
     }
     CustomFieldSetup_Duration {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
         bigint DefaultDuration "nullable"
     }
     CustomFieldSetup_MultiSelect {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
     }
     CustomFieldSetup_Number {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
         nvarchar(3) CurrencyCode "nullable"
         smallint Decimals
         bit Rounding
         decimal DefaultNumber "precision 38, scale 9, nullable"
     }
     CustomFieldSetup_People {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
     }
     CustomFieldSetup_SingleSelect {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
         uniqueidentifier DefaultOptionId "nullable"
     }
     CustomFieldSetup_Text {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
         nvarchar(max) DefaultText "nullable"
     }
     CustomFieldSetup_Time {
-        uniqueidentifier Id PK
-        nvarchar(50) Name
-        nvarchar(max) Description
-        uniqueidentifier WorkspaceId FK "nullable"
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier Id PK, FK
         time DefaultTime "nullable"
     }
     Membership {
         uniqueidentifier UserId PK, FK
         uniqueidentifier WorkspaceId PK, FK
         int WorkspaceRoleId FK
+        uniqueidentifier CreatedById FK "nullable"
         datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
         datetime2 UpdatedDateTime
     }
     Project {
@@ -226,7 +200,9 @@ erDiagram
         int Lifecycle
         datetime2 LastActivity
         uniqueidentifier WorkspaceId FK
+        uniqueidentifier CreatedById FK "nullable"
         datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
         datetime2 UpdatedDateTime
     }
     UserHasFavoriteWorkspace {
@@ -259,8 +235,8 @@ erDiagram
         uniqueidentifier UserId PK, FK
     }
     ProjectHasCustomFieldSetup {
-        uniqueidentifier CustomFieldSetupsId PK "references any CustomFieldSetup_* table"
-        uniqueidentifier ProjectsId PK, FK
+        uniqueidentifier CustomFieldSetupId PK, FK
+        uniqueidentifier ProjectId PK, FK
     }
     ProjectSprint {
         uniqueidentifier Id PK
@@ -268,7 +244,10 @@ erDiagram
         date StartDate "nullable"
         date EndDate "nullable"
         uniqueidentifier ProjectId FK
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier CreatedById FK "nullable"
+        datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
+        datetime2 UpdatedDateTime
     }
     ProjectStatus {
         uniqueidentifier Id PK
@@ -276,7 +255,10 @@ erDiagram
         int Status
         nvarchar(max) Description
         uniqueidentifier ProjectId FK
-        uniqueidentifier AuditId FK
+        uniqueidentifier CreatedById FK "nullable"
+        datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
+        datetime2 UpdatedDateTime
     }
     UserHasFavoriteProject {
         uniqueidentifier UserId PK, FK
@@ -287,7 +269,10 @@ erDiagram
         nvarchar(50) Name
         int CustomOrderPosition
         uniqueidentifier SprintId FK
-        uniqueidentifier AuditId FK, UK
+        uniqueidentifier CreatedById FK "nullable"
+        datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
+        datetime2 UpdatedDateTime
     }
     ProjectTask {
         uniqueidentifier Id PK
@@ -296,13 +281,14 @@ erDiagram
         int CustomOrderPosition
         bit IsCompleted
         datetime2 CompletedOn "nullable"
-        uniqueidentifier CreatedById FK
         uniqueidentifier AssigneeId FK "nullable"
         uniqueidentifier ReviewerId FK "nullable"
         date DueDate "nullable"
         time EstimatedDuration "nullable"
         uniqueidentifier StageId FK
+        uniqueidentifier CreatedById FK "nullable"
         datetime2 CreatedDateTime
+        uniqueidentifier UpdatedById FK "nullable"
         datetime2 UpdatedDateTime
     }
     CustomField_Date {
@@ -361,7 +347,7 @@ erDiagram
     ProjectTaskComment {
         uniqueidentifier Id PK
         nvarchar(256) Message
-        uniqueidentifier CreatedById FK
+        uniqueidentifier AuthorId FK "nullable"
         date Date "nullable"
         time TimeSpent "nullable"
         uniqueidentifier TaskId FK

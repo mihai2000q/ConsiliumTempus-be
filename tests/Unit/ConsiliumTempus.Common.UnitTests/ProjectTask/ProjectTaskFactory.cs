@@ -1,8 +1,8 @@
-﻿using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
+﻿using ConsiliumTempus.Common.UnitTests.Common.ValueObjects;
+using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint.Entities;
 using ConsiliumTempus.Common.UnitTests.ProjectTask.Entities;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
-using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -23,8 +23,8 @@ public static class ProjectTaskFactory
             Name.Create(name),
             Description.Create(description),
             CustomOrderPosition.Create(customOrderPosition),
-            createdBy ?? UserFactory.Create(),
             stage ?? ProjectStageFactory.Create());
+        task.WithAudit(createdBy);
 
         task.ClearDomainEvents();
 
@@ -42,8 +42,8 @@ public static class ProjectTaskFactory
             Name.Create(name),
             Description.Create(description),
             CustomOrderPosition.Create(customOrderPosition),
-            createdBy ?? UserFactory.Create(),
             stage ?? ProjectStageFactory.Create());
+        task.WithAudit(createdBy);
 
         task.AddCustomField(CustomFieldFactory.CreateDate(new DateOnly(2022, 10, 10), task: task));
         task.AddCustomField(CustomFieldFactory.CreateDateTime(new DateTime(2022, 10, 10, 10, 55, 30), task: task));

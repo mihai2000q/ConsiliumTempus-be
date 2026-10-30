@@ -21,7 +21,8 @@ internal sealed class RefreshCommandHandler(
             RefreshTokenId.Create(command.RefreshToken),
             cancellationToken);
 
-        if (refreshToken is null || !jwtTokenValidator.ValidateRefreshToken(refreshToken))
+        if (refreshToken is null || !jwtTokenValidator.ValidateRefreshToken(refreshToken) ||
+            refreshToken.User.Id.Value != jwtTokenGenerator.GetUserIdFromToken(command.Token))
             return Errors.Authentication.InvalidTokens;
 
         var jwtId = JwtId.Create(jwtTokenGenerator.GetJwtIdFromToken(command.Token));

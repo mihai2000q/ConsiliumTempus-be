@@ -20,12 +20,13 @@ public class ProjectControllerUpdatePrivacyTest(WebAppFactory factory)
     {
         // Arrange
         var project = ProjectData.Projects.First();
+        var user = project.Owner;
         var request = ProjectRequestFactory.CreateUpdatePrivacyProjectRequest(
             project.Id.Value,
             true);
 
         // Act
-        Client.UseCustomToken(project.Owner);
+        Client.UseCustomToken(user);
         var outcome = await Client.Put("api/projects/privacy", request);
 
         // Assert
@@ -38,7 +39,7 @@ public class ProjectControllerUpdatePrivacyTest(WebAppFactory factory)
         var updatedProject = await dbContext.Projects
             .Include(p => p.Workspace)
             .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
-        Utils.Project.AssertUpdatePrivacy(updatedProject, request);
+        Utils.Project.AssertUpdatePrivacy(updatedProject, request, user);
     }
 
     [Fact]

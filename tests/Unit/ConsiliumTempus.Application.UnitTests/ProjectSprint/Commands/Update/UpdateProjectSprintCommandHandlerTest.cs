@@ -1,9 +1,7 @@
 ﻿using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
-using ConsiliumTempus.Application.Common.Interfaces.Security;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.ProjectSprint;
-using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using NSubstitute.ReturnsExtensions;
@@ -14,15 +12,13 @@ public class UpdateProjectSprintCommandHandlerTest
 {
     #region Setup
 
-    private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IProjectSprintRepository _projectSprintRepository;
     private readonly UpdateProjectSprintCommandHandler _uut;
 
     public UpdateProjectSprintCommandHandlerTest()
     {
-        _currentUserProvider = Substitute.For<ICurrentUserProvider>();
         _projectSprintRepository = Substitute.For<IProjectSprintRepository>();
-        _uut = new UpdateProjectSprintCommandHandler(_currentUserProvider, _projectSprintRepository);
+        _uut = new UpdateProjectSprintCommandHandler(_projectSprintRepository);
     }
 
     #endregion
@@ -31,12 +27,7 @@ public class UpdateProjectSprintCommandHandlerTest
     public async Task HandleUpdateProjectSprintCommand_WhenIsSuccessful_ShouldUpdateAndReturnSuccessResult()
     {
         // Arrange
-        var user = UserFactory.Create();
-        _currentUserProvider
-            .GetCurrentUserAfterPermissionCheck()
-            .Returns(user);
-
-        var sprint = ProjectSprintFactory.Create(createdBy: user);
+        var sprint = ProjectSprintFactory.Create();
         _projectSprintRepository
             .GetWithWorkspace(Arg.Any<ProjectSprintId>())
             .Returns(sprint);
@@ -50,14 +41,11 @@ public class UpdateProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        await _currentUserProvider
-            .Received(1)
-            .GetCurrentUserAfterPermissionCheck();
 
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new UpdateProjectSprintResult());
 
-        Utils.ProjectSprint.AssertFromUpdateCommand(sprint, command, user);
+        Utils.ProjectSprint.AssertFromUpdateCommand(sprint, command);
     }
 
     [Fact]
@@ -77,7 +65,6 @@ public class UpdateProjectSprintCommandHandlerTest
         await _projectSprintRepository
             .Received(1)
             .GetWithWorkspace(Arg.Is<ProjectSprintId>(id => id.Value == command.Id));
-        await _currentUserProvider.DidNotReceive().GetCurrentUserAfterPermissionCheck();
 
         outcome.ValidateError(Errors.ProjectSprint.NotFound);
     }

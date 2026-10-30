@@ -78,22 +78,49 @@ public class ProjectTaskControllerDeleteTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task DeleteProjectTask_WhenStageIsNotFound_ShouldReturnStageNotFoundError()
+    public async Task DeleteProjectTask_WhenStageIsNotFound_ShouldReturnTaskNotFoundError()
     {
         // Arrange
-        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest();
+        var task = ProjectTaskData.ProjectTasks.First();
+        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(task.Id.Value);
 
         // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
         var outcome = await Client.Delete($"api/projects/tasks/" +
                                           $"{request.Id}/from/{request.StageId}");
 
         // Assert
-        await outcome.ValidateError(Errors.ProjectStage.NotFound);
+        await outcome.ValidateError(Errors.ProjectTask.NotFound);
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         dbContext.ProjectTasks.Should().HaveCount(ProjectTaskData.ProjectTasks.Length);
         dbContext.ProjectTasks
             .SingleOrDefault(p => p.Id == ProjectTaskId.Create(request.Id))
-            .Should().BeNull();
+            .Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task DeleteProjectTask_WhenTaskIsNotInStage_ShouldReturnTaskNotFoundError()
+    {
+        // Arrange
+        var task = ProjectTaskData.ProjectTasks.First();
+        var stage = ProjectTaskData.ProjectStages.First(s => s.Id != task.Stage.Id);
+        var request = ProjectTaskRequestFactory.CreateDeleteProjectTaskRequest(
+            task.Id.Value,
+            stage.Id.Value);
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Delete($"api/projects/tasks/" +
+                                          $"{request.Id}/from/{request.StageId}");
+
+        // Assert
+        await outcome.ValidateError(Errors.ProjectTask.NotFound);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.ProjectTasks.Should().HaveCount(ProjectTaskData.ProjectTasks.Length);
+        dbContext.ProjectTasks
+            .SingleOrDefault(p => p.Id == ProjectTaskId.Create(request.Id))
+            .Should().NotBeNull();
     }
 }

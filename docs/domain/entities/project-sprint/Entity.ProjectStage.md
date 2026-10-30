@@ -37,4 +37,4 @@ For database design checkout the [Project Sprint Diagram](../../../database-diag
 ### Domain Errors
 
 - **Not Found** (`ProjectStage.NotFound`, 404) when the project stage cannot be found
-- **Only One Stage** (`ProjectStage.OnlyOneStage`, 404) when the project sprint only has one stage
+- **Only One Stage** (`ProjectStage.OnlyOneStage`, 409) when the project sprint only has one stage

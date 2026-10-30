@@ -65,7 +65,7 @@ internal static partial class Utils
             GetCollectionWorkspaceQuery query,
             GetCollectionWorkspaceRequest request)
         {
-            query.IsPersonalWorkspaceFirst.Should().Be(request.IsPersonalWorkspaceFirst);
+            query.IsPersonalFirst.Should().Be(request.IsPersonalFirst);
             query.PageSize.Should().Be(request.PageSize);
             query.CurrentPage.Should().Be(request.CurrentPage);
             query.OrderBy.Should().BeEquivalentTo(request.OrderBy);

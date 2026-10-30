@@ -6,6 +6,7 @@ using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
+using ConsiliumTempus.Infrastructure.Persistence.Configuration.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -44,9 +45,9 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
         builder.OwnsOne(t => t.CustomOrderPosition)
             .Property(o => o.Value)
             .HasColumnName(nameof(CustomOrderPosition));
+        builder.Navigation(t => t.CustomOrderPosition).ExcludeFromAudit();
 
-        builder.HasOne(t => t.CreatedBy)
-            .WithMany();
+        builder.OwnsAudit(t => t.Audit);
 
         builder.HasOne(t => t.Assignee)
             .WithMany();
@@ -56,14 +57,18 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
             .WithMany();
 
         builder.HasOne(t => t.Stage)
-            .WithMany(s => s.Tasks);
+            .WithMany(s => s.Tasks)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.OwnsMany(t => t.Comments, ConfigureComments);
         builder.Navigation(t => t.Comments).AutoInclude(false);
 
+        // Only one of the paths from a workspace to its custom fields can cascade (SQL Server does not allow
+        // multiple cascade paths), and it is this one, so that they are deleted with their tasks
+        // (see the Workspace of the Custom Field Setup Configuration for the other path)
         builder.HasMany(t => t.CustomFields)
             .WithOne(cf => cf.ProjectTask)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     private static void ConfigureComments(OwnedNavigationBuilder<ProjectTaskAggregate, ProjectTaskComment> builder)
@@ -81,9 +86,7 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
             .HasColumnName(nameof(Message))
             .HasMaxLength(PropertiesValidation.ProjectTaskComment.MessageMaximumLength);
 
-        builder.HasOne(c => c.CreatedBy)
-            .WithMany()
-            .OnDelete(DeleteBehavior.NoAction);
+        builder.OwnsAuthorship(c => c.Authorship);
 
         builder.HasOne(c => c.Task)
             .WithMany(t => t.Comments);
@@ -117,7 +120,8 @@ internal sealed class DateCustomFieldConfiguration : IEntityTypeConfiguration<Da
         builder.Property(d => d.Date);
 
         builder.HasOne(d => d.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(d => d.Setup).AutoInclude();
     }
 }
@@ -132,7 +136,8 @@ internal sealed class DateTimeCustomFieldConfiguration : IEntityTypeConfiguratio
         builder.Property(d => d.DateTime);
 
         builder.HasOne(d => d.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(d => d.Setup).AutoInclude();
     }
 }
@@ -148,7 +153,8 @@ internal sealed class DurationCustomFieldConfiguration : IEntityTypeConfiguratio
             .HasConversion<long>();
 
         builder.HasOne(d => d.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(d => d.Setup).AutoInclude();
     }
 }
@@ -166,7 +172,8 @@ internal sealed class MultiSelectCustomFieldConfiguration : IEntityTypeConfigura
         builder.Navigation(m => m.Options).AutoInclude();
 
         builder.HasOne(m => m.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(m => m.Setup).AutoInclude();
     }
 }
@@ -184,7 +191,8 @@ internal sealed class NumberCustomFieldConfiguration : IEntityTypeConfiguration<
             .HasPrecision(38, PropertiesValidation.CustomFieldSetup.Number.DecimalsMaximum);
 
         builder.HasOne(n => n.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(n => n.Setup).AutoInclude();
     }
 }
@@ -197,11 +205,13 @@ internal sealed class PeopleCustomFieldConfiguration : IEntityTypeConfiguration<
             .Underscore(CustomFieldType.People.ToString()));
 
         builder.HasOne(p => p.Person)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.SetNull);
         builder.Navigation(p => p.Person).AutoInclude();
 
         builder.HasOne(p => p.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(p => p.Setup).AutoInclude();
     }
 }
@@ -218,7 +228,8 @@ internal sealed class SingleSelectCustomFieldConfiguration : IEntityTypeConfigur
         builder.Navigation(s => s.Option).AutoInclude();
 
         builder.HasOne(s => s.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(s => s.Setup).AutoInclude();
     }
 }
@@ -235,7 +246,8 @@ internal sealed class TextCustomFieldConfiguration : IEntityTypeConfiguration<Te
             .HasColumnName(nameof(TextCustomField.Text));
 
         builder.HasOne(t => t.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(t => t.Setup).AutoInclude();
     }
 }
@@ -250,7 +262,8 @@ internal sealed class TimeCustomFieldConfiguration : IEntityTypeConfiguration<Ti
         builder.Property(t => t.Time);
 
         builder.HasOne(t => t.Setup)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(t => t.Setup).AutoInclude();
     }
 }

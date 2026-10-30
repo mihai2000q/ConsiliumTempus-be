@@ -56,16 +56,14 @@ internal static partial class Utils
             var membership = user.Memberships[0];
             membership.User.Should().Be(user);
             membership.WorkspaceRole.Should().Be(WorkspaceRole.Admin);
-            membership.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            membership.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            membership.Audit.ShouldBeCreated(user);
 
             membership.Workspace.Name.Value.Should().Be(Constants.Workspace.Name);
             membership.Workspace.Description.Value.Should().Be(Constants.Workspace.Description);
             membership.Workspace.Owner.Should().Be(user);
             membership.Workspace.IsPersonal.Value.Should().Be(true);
             membership.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            membership.Workspace.CreatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
-            membership.Workspace.UpdatedDateTime.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+            membership.Workspace.Audit.ShouldBeCreated(user);
         }
 
         internal static void AssertUpdate(

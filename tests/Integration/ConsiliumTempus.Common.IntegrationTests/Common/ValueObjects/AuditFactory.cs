@@ -1,7 +1,7 @@
-﻿using ConsiliumTempus.Domain.Common.Entities;
+﻿using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.User;
 
-namespace ConsiliumTempus.Common.IntegrationTests.Common.Entities;
+namespace ConsiliumTempus.Common.IntegrationTests.Common.ValueObjects;
 
 public static class AuditFactory
 {
@@ -12,7 +12,6 @@ public static class AuditFactory
         DateTime? updatedDateTime = null)
     {
         return EntityBuilder<Audit>.Empty()
-            .WithProperty(nameof(Audit.Id), Guid.NewGuid())
             .WithProperty(nameof(Audit.CreatedBy), createdBy)
             .WithProperty(nameof(Audit.UpdatedBy), updatedBy ?? createdBy)
             .WithProperty(nameof(Audit.CreatedDateTime), createdDateTime ?? DateTime.UtcNow)

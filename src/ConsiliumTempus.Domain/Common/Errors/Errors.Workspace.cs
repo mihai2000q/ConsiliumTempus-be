@@ -18,17 +18,25 @@ public static partial class Errors
             "Workspace.LeaveOwned",
             "Workspaces cannot be left by their owners");
 
+        public static Error UpdatePersonalWorkspaceOwner => Error.Conflict(
+            "Workspace.UpdatePersonalWorkspaceOwner",
+            "The owner of Personal Workspaces cannot be changed");
+
         public static Error CollaboratorNotFound => Error.NotFound(
             "Workspace.CollaboratorNotFound",
             "Collaborator could not be found inside workspace");
 
         public static Error KickYourself => Error.Conflict(
-            "Project.KickYourself",
+            "Workspace.KickYourself",
             "You cannot kick yourself from workspace");
 
         public static Error KickOwner => Error.Forbidden(
-            "Project.KickOwner",
+            "Workspace.KickOwner",
             "You cannot kick the owner of the workspace");
+
+        public static Error ChangeOwnerRole => Error.Forbidden(
+            "Workspace.ChangeOwnerRole",
+            "You cannot change the role of the owner of the workspace");
     }
 
     public static class WorkspaceInvitation
@@ -37,11 +45,11 @@ public static partial class Errors
             "WorkspaceInvitation.NotFound",
             "Workspace Invitation could not be found");
 
-        public static Error AlreadyInvited => Error.NotFound(
+        public static Error AlreadyInvited => Error.Conflict(
             "WorkspaceInvitation.AlreadyInvited",
             "This user has already been invited");
 
-        public static Error AlreadyCollaborator => Error.NotFound(
+        public static Error AlreadyCollaborator => Error.Conflict(
             "WorkspaceInvitation.AlreadyCollaborator",
             "This user is already a collaborator");
     }

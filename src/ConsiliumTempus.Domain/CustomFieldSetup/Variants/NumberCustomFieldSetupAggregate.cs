@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
-using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
 namespace ConsiliumTempus.Domain.CustomFieldSetup.Variants;
@@ -21,8 +19,7 @@ public sealed class NumberCustomFieldSetupAggregate : CustomFieldSetupAggregate
         CustomFieldSetupId id,
         Name name,
         Description description,
-        WorkspaceAggregate? workspace,
-        Audit audit) : base(id, name, description, workspace, audit)
+        WorkspaceAggregate? workspace) : base(id, name, description, workspace)
     {
         Settings = settings;
         DefaultNumber = defaultNumber;
@@ -37,8 +34,7 @@ public sealed class NumberCustomFieldSetupAggregate : CustomFieldSetupAggregate
         Name name,
         Description description,
         WorkspaceAggregate? workspace,
-        ProjectAggregate? project,
-        UserAggregate createdBy)
+        ProjectAggregate? project)
     {
         var setup = new NumberCustomFieldSetupAggregate(
             settings,
@@ -46,8 +42,7 @@ public sealed class NumberCustomFieldSetupAggregate : CustomFieldSetupAggregate
             CustomFieldSetupId.CreateUnique(),
             name,
             description,
-            workspace,
-            Audit.Create(createdBy));
+            workspace);
         
         if (project != null) setup.AddProject(project);
 
@@ -58,11 +53,10 @@ public sealed class NumberCustomFieldSetupAggregate : CustomFieldSetupAggregate
         NumberCustomFieldSettings settings,
         DecimalNumber? defaultNumber,
         Name name,
-        Description description,
-        UserAggregate updatedBy)
+        Description description)
     {
         Settings = settings;
         DefaultNumber = defaultNumber;
-        base.Update(name, description, updatedBy);
+        base.Update(name, description);
     }
 }

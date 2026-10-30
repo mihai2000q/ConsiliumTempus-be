@@ -20,6 +20,7 @@ internal sealed class MoveProjectTaskCommandHandler(IProjectTaskRepository proje
         var isError = task.Move(command.OverId);
         if (isError) return Errors.ProjectTask.OverNotFound;
 
+        projectTaskRepository.MarkAsUpdated(task);
         task.Stage.Sprint.Project.RefreshActivity();
 
         return new MoveProjectTaskResult();

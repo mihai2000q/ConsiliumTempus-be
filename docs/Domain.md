@@ -63,7 +63,6 @@ Typically, the entities will be persisted in the database on another table.
 
 The entities are:
 
-- [Audit](domain/entities/Entity.Audit.md)
 - [Custom Field](domain/entities/project-task/Entity.CustomField.md)
 - [Membership](domain/entities/Entity.Membership.md)
 - [Multi Select Option](domain/entities/Entity.MultiSelectOption.md)
@@ -87,6 +86,17 @@ Typically, the value objects will be flattened on the object before persisting i
 The shared value objects are the following (the ones that are specific to an aggregate or an entity,
 such as *IsCompleted* or *FirstName*, are described in their own documentation):
 
+- **Audit**, which holds who created and who updated something, and when
+  (*CreatedBy*, *CreatedDateTime*, *UpdatedBy* and *UpdatedDateTime*).
+  It is a part of the entities that implement `IAudit` (the custom field setups, the memberships, the projects, the project sprints,
+  the project stages, the project statuses, the project tasks and the workspaces), and the domain never creates nor updates it:
+  it is stamped by the `StampInterceptor` when the changes are saved
+  (see [Audit](Database.md#audit))
+- **Authorship**, which holds who wrote something, and when it was written and last edited
+  (*Author*, *CreatedDateTime* and *UpdatedDateTime*), for what only its author can edit.
+  It is a part of the entities that implement `IAuthored` (the project task comments), and the domain never creates nor updates it
+  either: it is stamped by the `StampInterceptor` when the changes are saved
+  (see [Authorship](Database.md#authorship))
 - Authentication
   - **IsInvalidated**, which encapsulates a boolean *Value*
   - **JwtId**, which encapsulates a Guid *Value*
@@ -128,6 +138,7 @@ Those include:
 
 - **CustomFieldMultiSelectHasOption**
 - **ProjectHasAllowedMember**
+- **ProjectHasCustomFieldSetup**
 - **UserHasFavoriteProject**
 - **UserHasFavoriteWorkspace**
 - **WorkspaceRoleHasPermission**
@@ -148,7 +159,6 @@ except the primary key and direct relations), check below:
   - [User Diagram](database-diagrams/aggregates/Diagram.User.md)
   - [Workspace Diagram](database-diagrams/aggregates/Diagram.Workspace.md)
 - Entities
-  - [Audit Diagram](database-diagrams/entities/Diagram.Audit.md)
   - [Membership Diagram](database-diagrams/entities/Diagram.Membership.md)
   - [Multi Select Option Diagram](database-diagrams/entities/Diagram.MultiSelectOption.md)
   - [Permission Diagram](database-diagrams/entities/Diagram.Permission.md)

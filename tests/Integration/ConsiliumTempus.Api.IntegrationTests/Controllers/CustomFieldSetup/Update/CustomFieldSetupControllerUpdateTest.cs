@@ -285,14 +285,16 @@ public class CustomFieldSetupControllerUpdateTest(WebAppFactory factory)
         // Arrange
         var user = CustomFieldSetupData.Users.First();
         var setup = CustomFieldSetupData.CustomFieldSetups[7];
+        // the option is the default, and it is also the value of a custom field
+        var option = ((SingleSelectCustomFieldSetupAggregate)setup).Options[0];
         var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
             setup.Id.Value,
             type: CustomFieldType.SingleSelect,
             singleSelectCustomFieldSetup: new UpdateCustomFieldSetupRequest.SingleSelectCustomFieldSetupRequest(
-                null,
+                option.Id,
                 UpdateCustomFieldSetupRequest.OptionOperation.Remove,
                 null,
-                ((SingleSelectCustomFieldSetupAggregate)setup).Options[1].Id,
+                option.Id,
                 null));
 
         await ActAndAssert(request, user);
@@ -325,6 +327,33 @@ public class CustomFieldSetupControllerUpdateTest(WebAppFactory factory)
                 new TimeOnly(20, 50)));
 
         await ActAndAssert(request, user);
+    }
+
+    [Fact]
+    public async Task UpdateCustomFieldSetup_WhenTypeDoesNotMatchTheCustomFieldSetup_ShouldReturnTypeMismatchError()
+    {
+        // Arrange
+        var setup = CustomFieldSetupData.CustomFieldSetups[1];
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
+            setup.Id.Value,
+            type: CustomFieldType.Number,
+            numberCustomFieldSetup: new UpdateCustomFieldSetupRequest.NumberCustomFieldSetupRequest(
+                new UpdateCustomFieldSetupRequest.NumberCustomFieldSetupRequest.NumberSettingsRequest(
+                    "USD",
+                    2,
+                    false),
+                null));
+
+        // Act
+        Client.UseCustomToken(CustomFieldSetupData.Users.First());
+        var outcome = await Client.Put("api/customFieldSetups", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.CustomFieldSetup.TypeMismatch);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.CustomFieldSetups.AsNoTracking().Single(cfs => cfs.Id == setup.Id)
+            .Should().BeOfType<DateCustomFieldSetupAggregate>();
     }
 
     [Fact]

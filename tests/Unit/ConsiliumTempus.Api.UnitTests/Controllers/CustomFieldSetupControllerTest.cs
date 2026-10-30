@@ -21,12 +21,10 @@ using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
-using ConsiliumTempus.Common.UnitTests.User;
-using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
-using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup;
+using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 
 namespace ConsiliumTempus.Api.UnitTests.Controllers;
 
@@ -53,8 +51,7 @@ public class CustomFieldSetupControllerTest
             CustomFieldSetupId.CreateUnique(),
             Name.Create("Unsupported"),
             Description.Create("Unsupported"),
-            null,
-            Audit.Create(UserFactory.Create()));
+            null);
 
     #endregion
 

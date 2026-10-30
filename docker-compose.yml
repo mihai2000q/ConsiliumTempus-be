@@ -1,4 +1,4 @@
-name: consilium-tempus
+name: ct-dev
 services:
   backend:
     build:
@@ -77,6 +77,7 @@ services:
       retries: 20
       start_period: 15s
     volumes:
+      # a named volume, because SQL Server can't run on a bind mount of a Windows folder
       - database-data:/var/opt/mssql
 
 volumes:

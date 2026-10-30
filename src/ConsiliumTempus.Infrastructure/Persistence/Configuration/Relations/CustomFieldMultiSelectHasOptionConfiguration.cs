@@ -1,5 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Relations;
+using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -13,26 +14,21 @@ internal sealed class
     {
         builder.ToTable("CustomField_MultiSelectHasOption");
 
-        /*builder.HasKey(c => new { c.MultiSelectCustomFieldId, c.OptionsId });
-        builder.HasOne<CustomField>()
+        builder.HasKey(c => new { c.MultiSelectCustomFieldId, c.OptionId });
+
+        builder.HasOne<MultiSelectCustomField>()
             .WithMany()
-            .HasForeignKey(c => c.MultiSelectCustomFieldId);*/
+            .HasForeignKey(c => c.MultiSelectCustomFieldId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<MultiSelectOption>()
             .WithMany()
-            .HasForeignKey(c => c.OptionsId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .HasForeignKey(c => c.OptionId);
 
-        /*builder.Property(c => c.MultiSelectCustomFieldId)
+        builder.Property(c => c.MultiSelectCustomFieldId)
             .HasConversion(
                 id => id.Value,
                 value => CustomFieldId.Create(value))
-            .HasColumnName(nameof(CustomFieldId));*/
-
-        builder.Property("MultiSelectCustomFieldId")
             .HasColumnName(nameof(CustomFieldId));
-
-        builder.Property(c => c.OptionsId)
-            .HasColumnName("OptionId");
     }
 }

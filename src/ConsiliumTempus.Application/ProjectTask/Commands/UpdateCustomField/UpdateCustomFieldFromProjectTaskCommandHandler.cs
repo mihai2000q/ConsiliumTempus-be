@@ -1,10 +1,12 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ErrorOr;
 using MediatR;
 
@@ -12,12 +14,14 @@ namespace ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 
 internal sealed class UpdateCustomFieldFromProjectTaskCommandHandler(
     IProjectTaskRepository projectTaskRepository,
-    IUserRepository userRepository)
+    IWorkspaceRepository workspaceRepository)
     : IRequestHandler<UpdateCustomFieldFromProjectTaskCommand, ErrorOr<UpdateCustomFieldFromProjectTaskResult>>
 {
     private sealed class UserNotFoundException : Exception;
 
     private sealed class MultiSelectOptionNotFoundException : Exception;
+
+    private sealed class SingleSelectOptionNotFoundException : Exception;
 
     public async Task<ErrorOr<UpdateCustomFieldFromProjectTaskResult>> Handle(
         UpdateCustomFieldFromProjectTaskCommand command,
@@ -30,6 +34,7 @@ internal sealed class UpdateCustomFieldFromProjectTaskCommandHandler(
 
         var customField = task.CustomFields.SingleOrDefault(cf => cf.Id.Value == command.CustomFieldId);
         if (customField is null) return Errors.CustomField.NotFound;
+        if (GetCustomFieldType(customField) != command.Type) return Errors.CustomField.TypeMismatch;
 
         try
         {
@@ -60,7 +65,11 @@ internal sealed class UpdateCustomFieldFromProjectTaskCommandHandler(
                     break;
 
                 case PeopleCustomField peopleCustomField:
-                    await UpdatePeopleCustomField(peopleCustomField, command, userRepository, cancellationToken);
+                    await UpdatePeopleCustomField(
+                        peopleCustomField,
+                        command,
+                        task.Stage.Sprint.Project.Workspace.Id,
+                        cancellationToken);
                     break;
 
                 case TextCustomField textCustomField:
@@ -80,11 +89,32 @@ internal sealed class UpdateCustomFieldFromProjectTaskCommandHandler(
         {
             return Errors.MultiSelectOption.NotFound;
         }
+        catch (SingleSelectOptionNotFoundException)
+        {
+            return Errors.SingleSelectOption.NotFound;
+        }
 
-        task.RefreshUpdatedDateTime();
+        projectTaskRepository.MarkAsUpdated(task);
         task.Stage.Sprint.Project.RefreshActivity();
 
         return new UpdateCustomFieldFromProjectTaskResult();
+    }
+
+    private static CustomFieldType GetCustomFieldType(CustomField customField)
+    {
+        return customField switch
+        {
+            DateCustomField => CustomFieldType.Date,
+            DateTimeCustomField => CustomFieldType.DateTime,
+            DurationCustomField => CustomFieldType.Duration,
+            MultiSelectCustomField => CustomFieldType.MultiSelect,
+            NumberCustomField => CustomFieldType.Number,
+            PeopleCustomField => CustomFieldType.People,
+            SingleSelectCustomField => CustomFieldType.SingleSelect,
+            TextCustomField => CustomFieldType.Text,
+            TimeCustomField => CustomFieldType.Time,
+            _ => throw new ArgumentOutOfRangeException(nameof(customField), customField, "Type Not Supported")
+        };
     }
 
     private static void UpdateDateCustomField(
@@ -129,14 +159,17 @@ internal sealed class UpdateCustomFieldFromProjectTaskCommandHandler(
         numberCustomField.Update(command.NumberCustomField!.Number.IfNotNull(DecimalNumber.Create));
     }
 
-    private static async Task UpdatePeopleCustomField(
+    private async Task UpdatePeopleCustomField(
         PeopleCustomField peopleCustomField,
         UpdateCustomFieldFromProjectTaskCommand command,
-        IUserRepository userRepository,
+        WorkspaceId workspaceId,
         CancellationToken cancellationToken)
     {
         var person = command.PeopleCustomField!.PersonId is not null
-            ? await userRepository.Get(UserId.Create(command.PeopleCustomField!.PersonId.Value), cancellationToken)
+            ? await workspaceRepository.GetCollaborator(
+                UserId.Create(command.PeopleCustomField!.PersonId.Value),
+                workspaceId,
+                cancellationToken)
             : null;
         if (person is null && command.PeopleCustomField!.PersonId is not null) throw new UserNotFoundException();
         peopleCustomField.Update(person);
@@ -148,6 +181,9 @@ internal sealed class UpdateCustomFieldFromProjectTaskCommandHandler(
     {
         var option = singleSelectCustomField.Setup.Options
             .SingleOrDefault(o => o.Id == command.SingleSelectCustomField!.OptionId);
+        if (option is null && command.SingleSelectCustomField!.OptionId is not null)
+            throw new SingleSelectOptionNotFoundException();
+
         singleSelectCustomField.Update(option);
     }
 

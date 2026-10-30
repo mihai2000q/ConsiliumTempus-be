@@ -35,7 +35,8 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
-            setup => Ok(Mapper.Map<GetCustomFieldSetupResponse>(setup)),
+            setup => new OkObjectResult(Mapper.Map<GetCustomFieldSetupResponse>(setup))
+            { DeclaredType = typeof(GetCustomFieldSetupResponse) },
             Problem
         );
     }
@@ -102,6 +103,7 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.AddCustomFieldSetupToProject)]
     [HttpPost("Add-Project")]
     public async Task<IActionResult> AddToProject(AddCustomFieldSetupToProjectRequest request,
@@ -159,8 +161,9 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         );
     }
 
+    [HasProjectAuthorization(ProjectAuthorizationLevel.IsAllowed)]
     [HasPermission(Permissions.RemoveCustomFieldSetupFromProject)]
-    [HttpDelete("{id:guid}/Remove-Project/{projectId:guid}")]
+    [HttpDelete("{id:guid}/From-Project/{projectId:guid}")]
     public async Task<IActionResult> RemoveFromProject(RemoveCustomFieldSetupFromProjectRequest request,
         CancellationToken cancellationToken)
     {

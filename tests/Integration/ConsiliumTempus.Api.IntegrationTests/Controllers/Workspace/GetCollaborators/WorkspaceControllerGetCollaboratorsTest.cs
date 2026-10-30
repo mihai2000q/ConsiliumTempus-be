@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using ConsiliumTempus.Domain.Common.Errors;
+using System.Net.Http.Json;
 using ConsiliumTempus.Api.Contracts.Workspace.GetCollaborators;
 using ConsiliumTempus.Api.IntegrationTests.Core;
 using ConsiliumTempus.Api.IntegrationTests.TestCollections;
@@ -126,7 +127,44 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
         Utils.Workspace.AssertGetCollaboratorsResponse(
             response!,
             expectedCollaborators,
-            workspace.Memberships.Count);
+            expectedCollaborators.Count);
+    }
+
+    [Fact]
+    public async Task
+        GetCollaboratorsFromWorkspace_WhenRequestHasSearchAndPagination_ShouldReturnTheTotalCountOfTheFilteredCollaborators()
+    {
+        // Arrange
+        var workspace = WorkspaceData.Workspaces.First();
+        var request = WorkspaceRequestFactory.CreateGetCollaboratorsFromWorkspaceRequest(
+            id: workspace.Id.Value,
+            pageSize: 1,
+            currentPage: 1,
+            orderBy: ["user_email.asc"],
+            search: ["workspace_role_name neq View"]);
+
+        // Act
+        Client.UseCustomToken(WorkspaceData.Users.First());
+        var outcome = await Client.Get($"api/workspaces/{request.Id}/collaborators" +
+                                       $"?{request.Search!.ToSearchQueryParam()}" +
+                                       $"&{request.OrderBy!.ToOrderByQueryParam()}" +
+                                       $"&currentPage={request.CurrentPage}&pageSize={request.PageSize}");
+
+        // Assert
+        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await outcome.Content.ReadFromJsonAsync<GetCollaboratorsFromWorkspaceResponse>();
+
+        var filteredCollaborators = workspace.Memberships
+            .Where(m => m.WorkspaceRole.Name != "View")
+            .OrderBy(m => m.User.Credentials.Email)
+            .ToList();
+        filteredCollaborators.Should().HaveCountLessThan(workspace.Memberships.Count);
+
+        Utils.Workspace.AssertGetCollaboratorsResponse(
+            response!,
+            [.. filteredCollaborators.Take(1)],
+            filteredCollaborators.Count,
+            true);
     }
 
     [Fact]
@@ -158,7 +196,7 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
     }
 
     [Fact]
-    public async Task GetCollaboratorsFromWorkspace_WhenWorkspaceIsNotFound_ShouldReturnEmpty()
+    public async Task GetCollaboratorsFromWorkspace_WhenWorkspaceIsNotFound_ShouldReturnWorkspaceNotFoundError()
     {
         // Arrange
         var request = WorkspaceRequestFactory.CreateGetCollaboratorsFromWorkspaceRequest(
@@ -168,8 +206,6 @@ public class WorkspaceControllerGetCollaboratorsTest(WebAppFactory factory)
         var outcome = await Client.Get($"api/workspaces/{request.Id}/collaborators");
 
         // Assert
-        outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCollaboratorsFromWorkspaceResponse>();
-        response!.Collaborators.Should().BeEmpty();
+        await outcome.ValidateError(Errors.Workspace.NotFound);
     }
 }

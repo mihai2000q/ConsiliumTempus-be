@@ -1,4 +1,5 @@
 ﻿using ConsiliumTempus.Common.UnitTests.Common.Entities;
+using ConsiliumTempus.Common.UnitTests.Common.ValueObjects;
 using ConsiliumTempus.Common.UnitTests.TestConstants;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.Common.ValueObjects;
@@ -16,11 +17,14 @@ public static class WorkspaceFactory
         UserAggregate? owner = null,
         bool isPersonal = false)
     {
-        return WorkspaceAggregate.Create(
+        var workspace = WorkspaceAggregate.Create(
             Name.Create(name),
             Description.Create(description),
             owner ?? UserFactory.Create(),
             IsPersonal.Create(isPersonal));
+        workspace.WithAudit(owner);
+
+        return workspace;
     }
 
     public static WorkspaceAggregate CreateWithCollaborators(
@@ -35,6 +39,7 @@ public static class WorkspaceFactory
             Description.Create(description),
             owner ?? UserFactory.Create(),
             IsPersonal.Create(isPersonal));
+        workspace.WithAudit(owner);
 
         Enumerable
             .Range(0, collaboratorsCount)

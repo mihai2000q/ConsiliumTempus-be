@@ -5,6 +5,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestCollections;
 using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.Workspace;
+using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Workspace.Entities;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
@@ -72,6 +73,59 @@ public class WorkspaceControllerAcceptInvitationTest(WebAppFactory factory)
         dbContext.Set<WorkspaceInvitation>()
             .SingleOrDefault(i => i.Id == WorkspaceInvitationId.Create(request.InvitationId))
             .Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task AcceptInvitationToWorkspace_WhenUserIsNotTheInvitedCollaborator_ShouldReturnInvitationNotFoundError()
+    {
+        // Arrange
+        var invitation = WorkspaceData.WorkspaceInvitations.First();
+        var request = WorkspaceRequestFactory.CreateAcceptInvitationToWorkspaceRequest(
+            invitation.Workspace.Id.Value,
+            invitation.Id.Value);
+
+        // Act
+        Client.UseCustomToken(invitation.Sender);
+        var outcome = await Client.Post("api/workspaces/accept-invitation", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.WorkspaceInvitation.NotFound);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Set<WorkspaceInvitation>()
+            .SingleOrDefault(i => i.Id == invitation.Id)
+            .Should().NotBeNull();
+        dbContext.Workspaces
+            .Include(w => w.Memberships)
+            .Single(w => w.Id == invitation.Workspace.Id)
+            .Memberships.Should().NotContain(m => m.User.Id == invitation.Collaborator.Id);
+    }
+
+    [Fact]
+    public async Task AcceptInvitationToWorkspace_WhenUserIsAlreadyCollaborator_ShouldReturnAlreadyCollaboratorError()
+    {
+        // Arrange
+        var invitation = WorkspaceData.WorkspaceInvitations[5]; // the collaborator is already a member
+        var collaborator = invitation.Collaborator;
+        var request = WorkspaceRequestFactory.CreateAcceptInvitationToWorkspaceRequest(
+            invitation.Workspace.Id.Value,
+            invitation.Id.Value);
+
+        // Act
+        Client.UseCustomToken(collaborator);
+        var outcome = await Client.Post("api/workspaces/accept-invitation", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.WorkspaceInvitation.AlreadyCollaborator);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Set<WorkspaceInvitation>()
+            .SingleOrDefault(i => i.Id == invitation.Id)
+            .Should().NotBeNull();
+        dbContext.Set<Membership>()
+            .Where(m => m.Workspace.Id == invitation.Workspace.Id)
+            .Count(m => m.User.Id == collaborator.Id)
+            .Should().Be(1);
     }
 
     [Fact]
