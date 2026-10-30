@@ -183,10 +183,21 @@ The endpoint is anonymous, so no token is needed.
 
 ### Sample Data
 
-The sample data (a few users, their workspaces and memberships), that can be used for both backend and frontend development,
+The sample data, that can be used for both backend and frontend development,
 is inserted by the `sample-data` service of Docker Compose, once the database has been migrated.
 It only runs when `SAMPLE_DATA_ENABLED=true` in the `.env` file (`.env.dev` enables it), so `docker compose up -d` is enough.
 All the sample users have the password `Password123`, for example `michael@jordan.com`.
+<br>
+It is meant to cover many use cases:
+
+- 8 users, 3 shared workspaces and the personal ones, with all the workspace roles, pending invitations and favorites;
+  `roger@federer.com` has no workspace and `serena@williams.com` only an invitation, and the `Retired Legends` workspace has no projects
+- 8 projects: public, private with and without allowed members, `Active`, `Archived` and `Upcoming`, with and without sprints or statuses
+- sprints in the past, current and future, with tasks that are completed, overdue, due today, unassigned, without a reviewer, without a due date, with comments
+- custom fields of all the 9 types (global and from a workspace), with values and empty values
+- `Bulk Load Test`, a project with 500 generated tasks, for pagination, filtering and ordering
+
+The dates are relative to the moment the data is inserted, so there are always overdue and upcoming tasks.
 <br>
 To insert it on its own, in an already running environment, type the following command:
 
@@ -194,9 +205,11 @@ To insert it on its own, in an already running environment, type the following c
 docker compose run --rm sample-data
 ```
 
-The data is written in plain `.sql` files, one per table, inside `sample-data/Data`.
-They are executed by the order of their names, so to add sample data for another table, just add a new file
-(for example `4.projects.sql`); to change a value, edit the file.
+The data is written in plain `.sql` files, one per table (or group of related tables), inside `sample-data/Data`.
+They are executed by the order of their numbers, so to add sample data for another table, just add a new file
+(for example `16.something.sql`); to change a value, edit the file.
+The ids are readable, for example `1000000N` for the users, `3000000N` for the projects and `6000000N` for the tasks,
+and the header of each file explains what it covers.
 <br>
 The `ConsiliumTempus.SampleData` project is independent of the migrations and of the Api, so the sample data
 never ships with the application. It is only inserted into an empty database (without users), so it is safe to run multiple times.
