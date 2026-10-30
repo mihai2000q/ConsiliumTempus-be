@@ -22,3 +22,29 @@ VALUES
     ('10000005-0000-0000-0000-000000000000', '20000015-0000-0000-0000-000000000000', 3, '2026-06-25 11:00:00', '2026-06-25 11:00:00'),
     ('10000006-0000-0000-0000-000000000000', '20000016-0000-0000-0000-000000000000', 3, '2026-06-26 23:00:00', '2026-06-26 23:00:00'),
     ('10000007-0000-0000-0000-000000000000', '20000017-0000-0000-0000-000000000000', 3, '2026-09-01 10:00:00', '2026-09-01 10:00:00');
+
+-- The 30 generated workspaces (20000101 - 20000130): the owner is Admin, Michael is a Member (owned by Steph) or a View member (owned by Kevin),
+-- and Steph is a Member of the ones owned by Michael.
+WITH Numbers AS (
+    SELECT TOP (30) CAST(ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS int) AS I
+    FROM sys.all_objects
+),
+Workspaces AS (
+    SELECT n.I,
+           CONVERT(uniqueidentifier, '2' + RIGHT('0000000' + CAST(100 + n.I AS varchar(7)), 7) + '-0000-0000-0000-000000000000') AS WorkspaceId,
+           CHOOSE(n.I % 3 + 1, 1, 4, 6) AS Owner,
+           DATEADD(day, -n.I * 3 - 20, SYSUTCDATETIME()) AS Created
+    FROM Numbers n
+)
+INSERT INTO Membership
+    (UserId, WorkspaceId, WorkspaceRoleId, CreatedDateTime, UpdatedDateTime)
+SELECT CONVERT(uniqueidentifier, '1000000' + CAST(w.Owner AS char(1)) + '-0000-0000-0000-000000000000'), w.WorkspaceId, 3, w.Created, w.Created
+FROM Workspaces w
+UNION ALL
+SELECT '10000001-0000-0000-0000-000000000000', w.WorkspaceId, CASE WHEN w.Owner = 4 THEN 2 ELSE 1 END, w.Created, w.Created
+FROM Workspaces w
+WHERE w.Owner <> 1
+UNION ALL
+SELECT '10000004-0000-0000-0000-000000000000', w.WorkspaceId, 2, w.Created, w.Created
+FROM Workspaces w
+WHERE w.Owner = 1;

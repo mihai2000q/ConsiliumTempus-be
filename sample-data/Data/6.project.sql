@@ -36,3 +36,31 @@ VALUES
     ('30000008-0000-0000-0000-000000000000', 'Personal Goals', '',
      1, '10000001-0000-0000-0000-000000000000', 1, DATEADD(day, -5, SYSUTCDATETIME()), '20000011-0000-0000-0000-000000000000',
      '10000001-0000-0000-0000-000000000000', '2026-06-30 10:00:00', '10000001-0000-0000-0000-000000000000', '2026-10-23 08:10:13');
+
+-- 45 more projects in Basketball, without sprints, to test the pagination of the projects. Ids: 30000101 - 30000145.
+-- Mostly Active, some Archived and Upcoming. Every 6th one is private and owned by Michael, the others are public (owned by Michael, Steph or Kevin).
+WITH Numbers AS (
+    SELECT TOP (45) CAST(ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS int) AS I
+    FROM sys.all_objects
+),
+Projects AS (
+    SELECT n.I,
+           CASE WHEN n.I % 6 = 0 THEN 1 ELSE CHOOSE(n.I % 3 + 1, 1, 4, 6) END AS Owner
+    FROM Numbers n
+)
+INSERT INTO Project
+    (Id, Name, Description, IsPrivate, OwnerId, Lifecycle, LastActivity, WorkspaceId, CreatedById, CreatedDateTime, UpdatedById, UpdatedDateTime)
+SELECT
+    CONVERT(uniqueidentifier, '3' + RIGHT('0000000' + CAST(100 + p.I AS varchar(7)), 7) + '-0000-0000-0000-000000000000'),
+    CHOOSE(p.I % 5 + 1, 'Roster', 'Camp', 'Marketing', 'Scouting', 'Facilities') + ' project ' + CAST(p.I AS varchar(3)),
+    CASE WHEN p.I % 2 = 0 THEN '' ELSE 'Generated project number ' + CAST(p.I AS varchar(3)) END,
+    CASE WHEN p.I % 6 = 0 THEN 1 ELSE 0 END,
+    CONVERT(uniqueidentifier, '1000000' + CAST(p.Owner AS char(1)) + '-0000-0000-0000-000000000000'),
+    CHOOSE(p.I % 5 + 1, 1, 1, 1, 0, 2),
+    DATEADD(hour, -p.I * 5, SYSUTCDATETIME()),
+    '20000001-0000-0000-0000-000000000000',
+    CONVERT(uniqueidentifier, '1000000' + CAST(p.Owner AS char(1)) + '-0000-0000-0000-000000000000'),
+    DATEADD(day, -p.I - 30, SYSUTCDATETIME()),
+    CONVERT(uniqueidentifier, '1000000' + CAST(p.Owner AS char(1)) + '-0000-0000-0000-000000000000'),
+    DATEADD(hour, -p.I * 5, SYSUTCDATETIME())
+FROM Projects p;

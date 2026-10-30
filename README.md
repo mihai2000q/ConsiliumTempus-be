@@ -196,6 +196,7 @@ It is meant to cover many use cases:
 - sprints in the past, current and future, with tasks that are completed, overdue, due today, unassigned, without a reviewer, without a due date, with comments
 - custom fields of all the 9 types (global and from a workspace), with values and empty values
 - `Bulk Load Test`, a project with 500 generated tasks, for pagination, filtering and ordering
+- 30 generated workspaces and 45 generated projects (in `Basketball`), all visible to Michael, for the pagination of workspaces and projects
 
 The dates are relative to the moment the data is inserted, so there are always overdue and upcoming tasks.
 <br>
