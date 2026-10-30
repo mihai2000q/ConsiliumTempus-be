@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using ConsiliumTempus.Domain.Common.Extensions;
 
 namespace ConsiliumTempus.Domain.Common.Models;
 
@@ -6,20 +7,8 @@ public abstract class FilterProperty<TEntity>(
     string identifier,
     Expression<Func<TEntity, object>> selector)
 {
-    public string Identifier { get; } = UpperCamelCaseToSnakeCase(identifier);
+    public string Identifier { get; } = identifier.UpperCamelCaseToSnakeCase();
     public LambdaExpression PropertySelector { get; } = StripConvert(selector);
-
-    private static string UpperCamelCaseToSnakeCase(string str)
-    {
-        if (string.IsNullOrEmpty(str)) return string.Empty;
-        var result = str[0].ToString().ToLower();
-        for (var i = 1; i < str.Length; i++)
-        {
-            result += char.IsUpper(str[i]) ? "_" + str[i].ToString().ToLower() : str[i];
-        }
-
-        return result;
-    }
 
     private static LambdaExpression StripConvert<T>(Expression<Func<T, object>> source)
     {

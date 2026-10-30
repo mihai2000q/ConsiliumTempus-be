@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using ConsiliumTempus.Domain.Common.Extensions;
 
 namespace ConsiliumTempus.Domain.Common.Models;
 
@@ -6,7 +7,7 @@ public abstract record OrderProperty<TEntity>(
     string Identifier,
     params Expression<Func<TEntity, object?>>[] PropertySelectors)
 {
-    public string Identifier { get; } = UpperCamelCaseToSnakeCase(Identifier);
+    public string Identifier { get; } = Identifier.UpperCamelCaseToSnakeCase();
 
     private static string UpperCamelCaseToSnakeCase(string str)
     {
