@@ -112,6 +112,8 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId>, IAudit
     public void UpdateOwner(UserAggregate owner)
     {
         Owner = owner;
+        // the owner is always an allowed member
+        if (!_allowedMembers.Contains(owner)) AddAllowedMember(owner);
         RefreshActivity();
     }
 

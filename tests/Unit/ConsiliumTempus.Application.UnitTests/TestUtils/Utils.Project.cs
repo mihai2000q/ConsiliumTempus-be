@@ -197,6 +197,7 @@ internal static partial class Utils
         {
             project.Id.Value.Should().Be(command.Id);
             project.Owner.Id.Value.Should().Be(command.OwnerId);
+            project.AllowedMembers.Count(u => u == project.Owner).Should().Be(1);
 
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);

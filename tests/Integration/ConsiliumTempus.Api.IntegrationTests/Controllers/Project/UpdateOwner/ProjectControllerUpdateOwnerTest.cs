@@ -38,6 +38,7 @@ public class ProjectControllerUpdateOwnerTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedProject = await dbContext.Projects
+            .Include(p => p.AllowedMembers)
             .Include(p => p.Workspace)
             .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
         Utils.Project.AssertUpdateOwner(updatedProject, request, user);
@@ -92,6 +93,7 @@ public class ProjectControllerUpdateOwnerTest(WebAppFactory factory)
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         var updatedProject = await dbContext.Projects
+            .Include(p => p.AllowedMembers)
             .Include(p => p.Workspace)
             .SingleAsync(p => p.Id == ProjectId.Create(request.Id));
         Utils.Project.AssertUpdateOwner(updatedProject, request, user);

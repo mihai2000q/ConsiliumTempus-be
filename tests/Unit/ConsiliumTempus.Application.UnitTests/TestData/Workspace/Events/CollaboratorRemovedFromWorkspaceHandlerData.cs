@@ -31,7 +31,6 @@ internal static class CollaboratorRemovedFromWorkspaceHandlerData
             projects[1].RemoveAllowedMember(projects[1].Owner);
             projects[1].ClearDomainEvents();
             projects[1].UpdateOwner(collaborator);
-            projects[1].AddAllowedMember(collaborator);
 
             projects[2].UpdatePrivacy(IsPrivate.Create(true));
             projects[2].AddAllowedMember(collaborator);
@@ -45,10 +44,8 @@ internal static class CollaboratorRemovedFromWorkspaceHandlerData
 
             projects[6].UpdatePrivacy(IsPrivate.Create(true));
             projects[6].UpdateOwner(collaborator);
-            projects[6].AddAllowedMember(collaborator);
 
             projects[7].UpdateOwner(collaborator);
-            projects[7].AddAllowedMember(collaborator);
 
             Add(domainEvent, projects);
 
@@ -74,28 +71,23 @@ internal static class CollaboratorRemovedFromWorkspaceHandlerData
             projects[2].RemoveAllowedMember(projects[2].Owner);
             projects[2].ClearDomainEvents();
             projects[2].UpdateOwner(collaborator);
-            projects[2].AddAllowedMember(collaborator);
 
             projects[3].RemoveAllowedMember(projects[3].Owner);
             projects[3].ClearDomainEvents();
             projects[3].UpdateOwner(collaborator);
-            projects[3].AddAllowedMember(collaborator);
 
             projects[5].RemoveAllowedMember(projects[5].Owner);
             projects[5].ClearDomainEvents();
             projects[5].UpdateOwner(collaborator);
-            projects[5].AddAllowedMember(collaborator);
             projects[5].AddAllowedMember(UserFactory.Create());
 
             projects[6].RemoveAllowedMember(projects[6].Owner);
             projects[6].ClearDomainEvents();
             projects[6].UpdateOwner(collaborator);
-            projects[6].AddAllowedMember(collaborator);
             projects[6].AddAllowedMember(UserFactory.Create());
             projects[6].AddAllowedMember(UserFactory.Create());
 
             projects[8].UpdateOwner(collaborator);
-            projects[8].AddAllowedMember(collaborator);
             projects[8].AddAllowedMember(UserFactory.Create());
             projects[8].UpdateFavorites(true, UserFactory.Create());
             projects[8].UpdateFavorites(true, collaborator);
@@ -104,7 +96,6 @@ internal static class CollaboratorRemovedFromWorkspaceHandlerData
             projects[12].AddAllowedMember(UserFactory.Create());
 
             projects[14].UpdateOwner(collaborator);
-            projects[14].AddAllowedMember(collaborator);
             projects[14].UpdateFavorites(true, collaborator);
 
             projects[15].UpdateFavorites(true, collaborator);
@@ -127,13 +118,11 @@ internal static class CollaboratorRemovedFromWorkspaceHandlerData
             projects[23].UpdateFavorites(true, UserFactory.Create());
 
             projects[24].UpdateOwner(collaborator);
-            projects[24].AddAllowedMember(collaborator);
             projects[24].UpdateFavorites(true, collaborator);
             projects[24].UpdateFavorites(true, UserFactory.Create());
 
             projects[28].UpdatePrivacy(IsPrivate.Create(true));
             projects[28].UpdateOwner(collaborator);
-            projects[28].AddAllowedMember(collaborator);
             projects[28].UpdateFavorites(true, collaborator);
             projects[28].UpdateFavorites(true, UserFactory.Create());
 

@@ -31,7 +31,6 @@ public class UpdateOwnerProjectCommandHandlerTest
         var workspace = WorkspaceFactory.CreateWithCollaborators();
         var collaborator = workspace.Memberships[1].User;
         var project = ProjectFactory.Create(workspace: workspace);
-        project.AddAllowedMember(collaborator);
         _projectRepository
             .GetWithCollaboratorsAndAllowedMembers(Arg.Any<ProjectId>())
             .Returns(project);

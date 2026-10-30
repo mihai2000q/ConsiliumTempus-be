@@ -207,6 +207,7 @@ internal static partial class Utils
 
             // changed
             project.Owner.Id.Value.Should().Be(request.OwnerId);
+            project.AllowedMembers.Count(u => u == project.Owner).Should().Be(1);
             project.LastActivity.Should().BeCloseTo(DateTime.UtcNow, TimeSpanPrecision);
             project.Audit.ShouldBeUpdated(user);
 

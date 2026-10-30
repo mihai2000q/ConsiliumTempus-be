@@ -63,7 +63,6 @@ internal sealed class UserDeletedHandler(
                     .First(m => m.User != user)
                     .User;
             project.UpdateOwner(newOwner);
-            if (!project.AllowedMembers.Contains(newOwner)) project.AddAllowedMember(newOwner);
         }
     }
 }
