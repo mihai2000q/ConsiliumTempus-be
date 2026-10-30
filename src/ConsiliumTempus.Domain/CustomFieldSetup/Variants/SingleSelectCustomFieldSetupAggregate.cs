@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Workspace;
@@ -78,6 +79,8 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
             Options[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i - 1));
         }
         _options.Remove(option);
+        if (DefaultOptionId == option.Id) DefaultOptionId = null;
+        AddDomainEvent(new RemovedOptionFromSingleSelectCustomFieldSetup(this, option));
     }
 
     public void MoveOption(SingleSelectOption option, SingleSelectOption overOption)
