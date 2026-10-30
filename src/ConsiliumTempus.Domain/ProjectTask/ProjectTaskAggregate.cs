@@ -121,13 +121,9 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, IAudit
 
         if (overStage is not null)
         {
-            Parallel.Invoke(
-                () =>
-                {
-                    ReorderStage();
-                    Stage.RemoveTask(this, false);
-                },
-                () => overStage.AddTask(this, true));
+            ReorderStage();
+            Stage.RemoveTask(this, false);
+            overStage.AddTask(this, true);
 
             CustomOrderPosition = CustomOrderPosition.Create(0);
             Stage = overStage;
@@ -175,21 +171,15 @@ public sealed class ProjectTaskAggregate : AggregateRoot<ProjectTaskId>, IAudit
 
         var newCustomOrderPosition = CustomOrderPosition.Create(overTask.CustomOrderPosition.Value);
 
-        Parallel.Invoke(
-            () =>
-            {
-                // reorder new stage
-                for (var i = overTask.CustomOrderPosition.Value; i < overStage.Tasks.Count; i++)
-                {
-                    overStage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
-                }
-                overStage.AddTask(this);
-            },
-            () =>
-            {
-                ReorderStage();
-                Stage.RemoveTask(this, false);
-            });
+        // reorder new stage
+        for (var i = overTask.CustomOrderPosition.Value; i < overStage.Tasks.Count; i++)
+        {
+            overStage.Tasks[i].UpdateCustomOrderPosition(CustomOrderPosition.Create(i + 1));
+        }
+        overStage.AddTask(this);
+
+        ReorderStage();
+        Stage.RemoveTask(this, false);
 
         Stage = overStage;
         CustomOrderPosition = newCustomOrderPosition;
