@@ -1,7 +1,6 @@
 ﻿using ConsiliumTempus.Domain.Common.Entities;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.Project.Enums;
 using FluentValidation;
 
 namespace ConsiliumTempus.Application.Common.Extensions;
@@ -160,12 +159,12 @@ internal static class FluentValidationExtensions
     {
         internal static bool SeparatorValidation(string filter)
         {
-            return SplitFilter(filter) is not null;
+            return Filter.Split(filter) is not null;
         }
 
         internal static bool SnakeCaseValidation(string filter)
         {
-            var parsedFilter = SplitFilter(filter);
+            var parsedFilter = Filter.Split(filter);
             return parsedFilter is null ||
                    !parsedFilter.Value.PropertyIdentifier.Any(char.IsUpper);
         }
@@ -174,7 +173,7 @@ internal static class FluentValidationExtensions
             string filter,
             IReadOnlyList<FilterProperty<TEntity>> filterProperties)
         {
-            var parsedFilter = SplitFilter(filter);
+            var parsedFilter = Filter.Split(filter);
             if (parsedFilter is null) return true;
 
             var property = filterProperties
@@ -185,7 +184,7 @@ internal static class FluentValidationExtensions
 
         internal static bool OperatorValidation(string filter)
         {
-            var parsedFilter = SplitFilter(filter);
+            var parsedFilter = Filter.Split(filter);
             return parsedFilter is null ||
                    Filter.OperatorToFilterOperator.TryGetValue(parsedFilter.Value.Operator, out _);
         }
@@ -194,7 +193,7 @@ internal static class FluentValidationExtensions
             string filter,
             IReadOnlyList<FilterProperty<TEntity>> filterProperties)
         {
-            var parsedFilter = SplitFilter(filter);
+            var parsedFilter = Filter.Split(filter);
             if (parsedFilter is null) return true;
 
             var property = filterProperties
@@ -202,93 +201,42 @@ internal static class FluentValidationExtensions
 
             return property is null ||
                    !Filter.OperatorToFilterOperator.TryGetValue(parsedFilter.Value.Operator, out var filterOperator) ||
-                   (SupportedOperatorsByType.ContainsKey(property.PropertySelector.ReturnType) &&
-                    SupportedOperatorsByType[property.PropertySelector.ReturnType].Contains(filterOperator));
+                   SupportedOperators(property.PropertySelector.ReturnType).Contains(filterOperator);
         }
 
         internal static bool ValueParsingValidation<TEntity>(
             string filter,
             IReadOnlyList<FilterProperty<TEntity>> filterProperties)
         {
-            var parsedFilter = SplitFilter(filter);
+            var parsedFilter = Filter.Split(filter);
             if (parsedFilter is null) return true;
 
             var property = filterProperties
                 .SingleOrDefault(fp => fp.Identifier == parsedFilter.Value.PropertyIdentifier);
-            if (property is null || !SupportedOperatorsByType.ContainsKey(property.PropertySelector.ReturnType))
+            if (property is null || SupportedOperators(property.PropertySelector.ReturnType).Length == 0)
                 return true;
 
-            var type = property.PropertySelector.ReturnType;
+            return Filter.TryParseValue(property.PropertySelector.ReturnType, parsedFilter.Value.Value, out _);
+        }
+
+        private static FilterOperator[] SupportedOperators(Type type)
+        {
             return type switch
             {
-                not null when type == typeof(bool) => bool.TryParse(parsedFilter.Value.Value, out _),
-                not null when type == typeof(DateTime) => DateTime.TryParse(parsedFilter.Value.Value, out _),
-                not null when type == typeof(decimal) => decimal.TryParse(parsedFilter.Value.Value, out _),
-                not null when type == typeof(int) => int.TryParse(parsedFilter.Value.Value, out _),
-                not null when type == typeof(ProjectLifecycle) =>
-                    Enum.TryParse<ProjectLifecycle>(parsedFilter.Value.Value, true, out _),
-                not null when type == typeof(ProjectStatusType) =>
-                    Enum.TryParse<ProjectStatusType>(parsedFilter.Value.Value, true, out _),
-                _ => true
-            };
-        }
-
-        private static (string PropertyIdentifier, string Operator, string Value)? SplitFilter(string filter)
-        {
-            filter = filter.Trim();
-            var result = new List<string>();
-
-            var current = "";
-            for (var i = 0; i < filter.Length; i++)
-                if (filter[i] == Filter.Separator)
-                {
-                    result.Add(current);
-                    current = "";
-                    if (result.Count != 2 || i == filter.Length - 1) continue;
-                    result.Add(filter[(i + 1)..]);
-                    break;
-                }
-                else
-                    current += filter[i];
-
-            if (result.Count != 3) return null;
-
-            return (result[0], result[1], result[2]);
-        }
-
-        private static readonly Dictionary<Type, List<FilterOperator>> SupportedOperatorsByType = new()
-        {
-            {
-                typeof(string), [
+                _ when type == typeof(string) =>
+                [
                     FilterOperator.Equal, FilterOperator.NotEqual,
                     FilterOperator.Contains, FilterOperator.StartsWith
-                ]
-            },
-            {
-                typeof(decimal), [
-                    FilterOperator.Equal, FilterOperator.NotEqual,
-                    FilterOperator.GreaterThan, FilterOperator.GreaterThanOrEqual,
-                    FilterOperator.LessThan, FilterOperator.LessThanOrEqual
-                ]
-            },
-            {
-                typeof(int), [
-                    FilterOperator.Equal, FilterOperator.NotEqual,
-                    FilterOperator.GreaterThan, FilterOperator.GreaterThanOrEqual,
-                    FilterOperator.LessThan, FilterOperator.LessThanOrEqual
-                ]
-            },
-            {
-                typeof(DateTime),
+                ],
+                _ when type == typeof(decimal) || type == typeof(int) || type == typeof(DateTime) =>
                 [
                     FilterOperator.Equal, FilterOperator.NotEqual,
                     FilterOperator.GreaterThan, FilterOperator.GreaterThanOrEqual,
                     FilterOperator.LessThan, FilterOperator.LessThanOrEqual
-                ]
-            },
-            { typeof(bool), [FilterOperator.Equal, FilterOperator.NotEqual] },
-            { typeof(ProjectLifecycle), [FilterOperator.Equal, FilterOperator.NotEqual] },
-            { typeof(ProjectStatusType), [FilterOperator.Equal, FilterOperator.NotEqual] }
-        };
+                ],
+                _ when type == typeof(bool) || type.IsEnum => [FilterOperator.Equal, FilterOperator.NotEqual],
+                _ => []
+            };
+        }
     }
 }
