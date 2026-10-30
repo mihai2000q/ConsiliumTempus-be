@@ -39,7 +39,7 @@ public class Order<TEntity> : IOrder<TEntity>
         var splitOrder = order.Trim().Split(Order.Separator);
 
         var propertySelectors = orderProperties
-            .Single(op => op.Identifier == splitOrder[0])
+            .Single(op => op.Identifier == splitOrder[0].Trim())
             .PropertySelectors;
         var orderType = splitOrder[1] == Order.Descending ? OrderType.Descending : OrderType.Ascending;
 
