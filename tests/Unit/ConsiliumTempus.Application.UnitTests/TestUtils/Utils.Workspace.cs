@@ -168,7 +168,8 @@ internal static partial class Utils
             List<ProjectAggregate> projects,
             Dictionary<ProjectAggregate, UserAggregate> previousOwners,
             List<ProjectAggregate> allowedMemberProjects,
-            List<ProjectAggregate> favoriteOnlyProjects)
+            List<ProjectAggregate> favoriteOnlyProjects,
+            List<ProjectAggregate> projectsToRemove)
         {
             var (workspace, collaborator) = domainEvent;
             workspace.IsFavorite(collaborator).Should().BeFalse();
@@ -200,6 +201,9 @@ internal static partial class Utils
             projects.Where(allowedMemberProjects.Contains).Should().AllSatisfyOrEmpty(p =>
                 p.DomainEvents.Should().ContainSingle(e =>
                     e is AllowedMemberRemovedFromProject && ((AllowedMemberRemovedFromProject)e).User == collaborator));
+            projectsToRemove.Should().AllSatisfyOrEmpty(p =>
+                p.DomainEvents.Should().ContainSingle(e =>
+                    e is ProjectDeleted && ((ProjectDeleted)e).Project == p));
             projects.Where(p => !allowedMemberProjects.Contains(p)).Should().AllSatisfyOrEmpty(p =>
                 p.DomainEvents.Should().BeEmpty());
             projects.Where(favoriteOnlyProjects.Contains).Should().AllSatisfyOrEmpty(p =>

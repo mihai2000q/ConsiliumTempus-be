@@ -83,7 +83,8 @@ public class CollaboratorRemovedFromWorkspaceHandlerTest
             projects.Where(p => !projectsToRemove.Contains(p)).ToList(),
             previousOwners,
             allowedMemberProjects,
-            favoriteOnlyProjects);
+            favoriteOnlyProjects,
+            projectsToRemove);
     }
 
     [Fact]

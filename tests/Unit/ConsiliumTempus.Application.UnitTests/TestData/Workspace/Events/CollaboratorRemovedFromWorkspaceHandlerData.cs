@@ -113,6 +113,10 @@ internal static class CollaboratorRemovedFromWorkspaceHandlerData
             projects[16].AddAllowedMember(collaborator);
             projects[16].UpdateFavorites(true, collaborator);
 
+            // private, and its only allowed member is not the collaborator (who only has it as a favorite)
+            projects[17].UpdatePrivacy(IsPrivate.Create(true));
+            projects[17].UpdateFavorites(true, collaborator);
+
             projects[20].UpdatePrivacy(IsPrivate.Create(true));
             projects[20].AddAllowedMember(collaborator);
             projects[20].UpdateFavorites(true, collaborator);
