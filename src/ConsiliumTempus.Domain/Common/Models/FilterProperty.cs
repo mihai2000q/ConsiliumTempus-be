@@ -23,21 +23,17 @@ public abstract class FilterProperty<TEntity>(
         return Expression.Lambda(result, source.Parameters);
     }
 
+    // Expression trees only have reference equality, so the Identifier (unique per entity) defines the property
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         return obj.GetType() == GetType() &&
-               Equals((FilterProperty<TEntity>)obj);
+               Identifier == ((FilterProperty<TEntity>)obj).Identifier;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Identifier, PropertySelector);
-    }
-
-    private bool Equals(FilterProperty<TEntity> other)
-    {
-        return Identifier == other.Identifier && PropertySelector.Equals(other.PropertySelector);
+        return HashCode.Combine(GetType(), Identifier);
     }
 }
