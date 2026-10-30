@@ -149,7 +149,7 @@ internal static class FluentValidationExtensions
             {
                 var propertyOrderType = order.Trim().Split(Order.Separator);
                 if (propertyOrderType.Length != 2) return true;
-                propertyIdentifiers.Add(propertyOrderType[0]);
+                propertyIdentifiers.Add(propertyOrderType[0].Trim());
             }
 
             return propertyIdentifiers.SequenceEqual(propertyIdentifiers.Distinct());
