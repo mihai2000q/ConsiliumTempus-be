@@ -7,7 +7,10 @@ using ConsiliumTempus.Domain.ProjectTask;
 
 namespace ConsiliumTempus.Domain.Common.Orders;
 
-public abstract class ProjectTaskOrder : Order<ProjectTaskAggregate>
+public sealed class ProjectTaskOrder(
+    Expression<Func<ProjectTaskAggregate, object?>> propertySelector, 
+    OrderType orderType)
+    : Order<ProjectTaskAggregate>(propertySelector, orderType)
 {
     public static readonly IReadOnlyList<OrderProperty<ProjectTaskAggregate>> OrderProperties =
     [
@@ -16,11 +19,6 @@ public abstract class ProjectTaskOrder : Order<ProjectTaskAggregate>
         new OrderProperties.ProjectTask.CreatedDateTimeProperty(),
         new OrderProperties.ProjectTask.UpdatedDateTimeProperty()
     ];
-
-    private ProjectTaskOrder(Expression<Func<ProjectTaskAggregate, object?>> propertySelector, OrderType orderType)
-        : base(propertySelector, orderType)
-    {
-    }
 
     public static IReadOnlyList<IOrder<ProjectTaskAggregate>> Parse(List<string> orders)
     {

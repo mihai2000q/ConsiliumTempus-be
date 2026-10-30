@@ -7,7 +7,10 @@ using ConsiliumTempus.Domain.Common.Orders.Properties;
 
 namespace ConsiliumTempus.Domain.Common.Orders;
 
-public abstract class MembershipOrder : Order<Membership>
+public sealed class MembershipOrder(
+    Expression<Func<Membership, object?>> propertySelector,
+    OrderType orderType)
+    : Order<Membership>(propertySelector, orderType)
 {
     public static readonly IReadOnlyList<OrderProperty<Membership>> OrderProperties =
     [
@@ -20,11 +23,6 @@ public abstract class MembershipOrder : Order<Membership>
         new OrderProperties.Membership.CreatedDateTimeProperty(),
         new OrderProperties.Membership.UpdatedDateTimeProperty()
     ];
-
-    private MembershipOrder(Expression<Func<Membership, object?>> propertySelector, OrderType orderType)
-        : base(propertySelector, orderType)
-    {
-    }
 
     public static IReadOnlyList<IOrder<Membership>> Parse(List<string> orders)
     {

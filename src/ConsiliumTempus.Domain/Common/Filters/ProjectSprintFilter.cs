@@ -6,16 +6,13 @@ using ConsiliumTempus.Domain.ProjectSprint;
 
 namespace ConsiliumTempus.Domain.Common.Filters;
 
-public abstract class ProjectSprintFilter : Filter<ProjectSprintAggregate>
+public sealed class ProjectSprintFilter(Expression<Func<ProjectSprintAggregate, bool>> predicate)
+    : Filter<ProjectSprintAggregate>(predicate)
 {
     public static readonly IReadOnlyList<FilterProperty<ProjectSprintAggregate>> FilterProperties =
     [
         new FilterProperties.ProjectSprint.NameFilterProperty()
     ];
-
-    private ProjectSprintFilter(Expression<Func<ProjectSprintAggregate, bool>> predicate) : base(predicate)
-    {
-    }
 
     public static IReadOnlyList<IFilter<ProjectSprintAggregate>> Parse(List<string> search)
     {

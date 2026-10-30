@@ -6,17 +6,14 @@ using ConsiliumTempus.Domain.ProjectTask;
 
 namespace ConsiliumTempus.Domain.Common.Filters;
 
-public abstract class ProjectTaskFilter : Filter<ProjectTaskAggregate>
+public sealed class ProjectTaskFilter(Expression<Func<ProjectTaskAggregate, bool>> predicate)
+    : Filter<ProjectTaskAggregate>(predicate)
 {
     public static readonly IReadOnlyList<FilterProperty<ProjectTaskAggregate>> FilterProperties =
     [
         new FilterProperties.ProjectTask.NameFilterProperty(),
         new FilterProperties.ProjectTask.IsCompletedFilterProperty()
     ];
-
-    private ProjectTaskFilter(Expression<Func<ProjectTaskAggregate, bool>> predicate) : base(predicate)
-    {
-    }
 
     public static IReadOnlyList<IFilter<ProjectTaskAggregate>> Parse(List<string> search)
     {
