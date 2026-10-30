@@ -6,7 +6,10 @@ using ConsiliumTempus.Application.ProjectSprint.Commands.MoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.RemoveStage;
 using ConsiliumTempus.Application.ProjectSprint.Commands.Update;
 using ConsiliumTempus.Application.ProjectSprint.Commands.UpdateStage;
+using ConsiliumTempus.Application.ProjectSprint.Queries.GetCollection;
 using ConsiliumTempus.Domain.Common.Constants;
+using ConsiliumTempus.Domain.Common.Filters;
+using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.ProjectSprint;
 
@@ -181,6 +184,19 @@ internal static partial class Utils
             outcome.Project.Should().Be(expected.Project);
             outcome.Audit.Should().Be(expected.Audit);
             outcome.Stages.Should().BeEquivalentTo(expected.Stages);
+        }
+
+        internal static bool AssertGetCollectionFilters(
+            IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
+            GetCollectionProjectSprintQuery query)
+        {
+            // the filters of the search, and then the one of this year
+            filters.Should().HaveCount(query.Search.Count + (query.FromThisYear ? 1 : 0));
+            if (query.FromThisYear)
+                filters[^1].Predicate.ToString().Should().Be(ProjectSprintFilter.FromThisYear().Predicate.ToString());
+            var searchFilters = query.FromThisYear ? filters.Take(filters.Count - 1).ToList() : filters;
+
+            return searchFilters.AssertFilters(query.Search, ProjectSprintFilter.FilterProperties);
         }
     }
 }

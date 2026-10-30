@@ -99,7 +99,11 @@ Sends the following as query parameters:
 
 - **projectId** is used to specify the project that the sprints are part of
 - **search** is used to filter the sprints dynamically by their properties
-- **fromThisYear** to get sprints only from this year (or if there are none, get one from last year)
+- **fromThisYear** to get sprints only from this year, which are the ones that start, end or were created on or after
+the first day of the current year (see the *From This Year* filter of the
+[Project Sprint](../domain/aggregates/Aggregate.ProjectSprint.md#filters)).
+It is added to the filters of the **search**, so the total count follows it too.
+When there are none, and no **search** is given, the most recent sprint of the project is returned instead
 
 #### Get Collection Project Sprint Response
 
