@@ -1,0 +1,4 @@
+INSERT INTO CustomFieldSetup_Time
+    (Id, DefaultTime)
+VALUES
+    ('70000008-0000-0000-0000-000000000000', '09:30:00');

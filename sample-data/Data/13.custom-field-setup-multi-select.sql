@@ -1,0 +1,4 @@
+INSERT INTO CustomFieldSetup_MultiSelect
+    (Id)
+VALUES
+    ('70000002-0000-0000-0000-000000000000');
