@@ -1,4 +1,4 @@
-name: consilium-tempus
+name: ct-dev
 services:
   backend:
     build:
