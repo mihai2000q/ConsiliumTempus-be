@@ -49,6 +49,10 @@ public interface IProjectTaskRepository
         MultiSelectCustomFieldSetupAggregate customFieldSetup,
         CancellationToken cancellationToken = default);
 
+    Task<List<SingleSelectCustomField>> GetSingleSelectCustomFieldsBySetup(
+        SingleSelectCustomFieldSetupAggregate customFieldSetup,
+        CancellationToken cancellationToken = default);
+
     void MarkAsUpdated(ProjectTaskAggregate task);
 
     Task DeleteCustomFieldsByProjectAndSetup(

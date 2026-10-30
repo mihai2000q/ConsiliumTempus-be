@@ -109,6 +109,16 @@ internal sealed class ProjectTaskRepository(ConsiliumTempusDbContext dbContext) 
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<List<SingleSelectCustomField>> GetSingleSelectCustomFieldsBySetup(
+        SingleSelectCustomFieldSetupAggregate customFieldSetup,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Set<CustomField>()
+            .OfType<SingleSelectCustomField>()
+            .Where(cf => cf.Setup == customFieldSetup)
+            .ToListAsync(cancellationToken);
+    }
+
     public void MarkAsUpdated(ProjectTaskAggregate task)
     {
         dbContext.MarkAsUpdated(task);
