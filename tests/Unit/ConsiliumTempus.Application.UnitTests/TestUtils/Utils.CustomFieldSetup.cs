@@ -521,6 +521,12 @@ internal static partial class Utils
                 case UpdateCustomFieldSetupCommand.OptionOperation.Remove:
                     setup.Options.ShouldBeOrdered();
                     setup.Options.Should().NotContain(o => o.Id == command.SingleSelectCustomFieldSetup!.OptionId);
+                    if (command.SingleSelectCustomFieldSetup.DefaultOptionId == command.SingleSelectCustomFieldSetup.OptionId)
+                        setup.DefaultOptionId.Should().BeNull();
+                    setup.DomainEvents.Should().ContainSingle(e =>
+                        e is RemovedOptionFromSingleSelectCustomFieldSetup &&
+                        ((RemovedOptionFromSingleSelectCustomFieldSetup)e).Option.Id ==
+                        command.SingleSelectCustomFieldSetup.OptionId);
                     break;
 
                 default:
