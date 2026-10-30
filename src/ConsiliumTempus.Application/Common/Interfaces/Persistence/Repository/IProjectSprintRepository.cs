@@ -16,7 +16,7 @@ public interface IProjectSprintRepository
         ProjectSprintId id,
         CancellationToken cancellationToken = default);
 
-    Task<ProjectSprintAggregate> GetFirstByProject(
+    Task<ProjectSprintAggregate?> GetFirstByProject(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
         CancellationToken cancellationToken = default);

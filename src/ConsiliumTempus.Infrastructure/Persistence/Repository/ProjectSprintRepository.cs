@@ -37,7 +37,7 @@ internal sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext
             .SingleOrDefaultAsync(ps => ps.Id == id, cancellationToken);
     }
 
-    public Task<ProjectSprintAggregate> GetFirstByProject(
+    public Task<ProjectSprintAggregate?> GetFirstByProject(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
         CancellationToken cancellationToken = default)
@@ -49,7 +49,7 @@ internal sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext
             .ThenByDescending(s => s.EndDate)
             .ThenByDescending(s => s.Name.Value)
             .ThenByDescending(s => s.Audit.CreatedDateTime)
-            .FirstAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public Task<List<ProjectSprintAggregate>> GetListByProject(
