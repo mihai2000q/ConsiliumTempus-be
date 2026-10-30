@@ -267,6 +267,30 @@ public class ProjectTaskControllerUpdateCustomFieldTest(WebAppFactory factory)
     }
 
     [Fact]
+    public async Task UpdateCustomFieldFromProjectTask_WhenTypeDoesNotMatchTheCustomField_ShouldReturnTypeMismatchError()
+    {
+        // Arrange
+        var task = ProjectTaskData.ProjectTasks.First();
+        var customField = task.CustomFields.OfType<TextCustomField>().First();
+        var request = ProjectTaskRequestFactory.CreateUpdateCustomFieldFromProjectTaskRequest(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.Number,
+            numberCustomField: new UpdateCustomFieldFromProjectTaskRequest.NumberCustomFieldRequest(10));
+
+        // Act
+        Client.UseCustomToken(ProjectTaskData.Users.First());
+        var outcome = await Client.Put("api/projects/tasks/custom-fields", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.CustomField.TypeMismatch);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.Set<CustomField>().AsNoTracking().Single(cf => cf.Id == customField.Id)
+            .Should().BeOfType<TextCustomField>();
+    }
+
+    [Fact]
     public async Task UpdateCustomFieldFromProjectTask_WhenCustomFieldIsNotFound_ShouldReturnCustomFieldNotFoundError()
     {
         // Arrange

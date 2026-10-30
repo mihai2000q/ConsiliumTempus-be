@@ -3,7 +3,9 @@ using ConsiliumTempus.Application.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.UnitTests.TestData.ProjectTask.Commands.UpdateCustomField;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
+using ConsiliumTempus.Common.UnitTests.ProjectTask.Entities;
 using ConsiliumTempus.Common.UnitTests.User;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.ProjectTask;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
@@ -82,6 +84,7 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
         var command = ProjectTaskCommandFactory.CreateUpdateCustomFieldFromProjectTaskCommand(
             id: task.Id.Value,
             customFieldId: customField.Id.Value,
+            type: CustomFieldType.MultiSelect,
             multiSelectCustomField: new UpdateCustomFieldFromProjectTaskCommand.MultiSelectCustomFieldCommand(
                 Guid.NewGuid(),
                 true));
@@ -116,6 +119,7 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
         var command = ProjectTaskCommandFactory.CreateUpdateCustomFieldFromProjectTaskCommand(
             id: task.Id.Value,
             customFieldId: customField.Id.Value,
+            type: CustomFieldType.SingleSelect,
             singleSelectCustomField: new UpdateCustomFieldFromProjectTaskCommand.SingleSelectCustomFieldCommand(
                 Guid.NewGuid()));
 
@@ -146,6 +150,7 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
         var command = ProjectTaskCommandFactory.CreateUpdateCustomFieldFromProjectTaskCommand(
             id: task.Id.Value,
             customFieldId: customField.Id.Value,
+            type: CustomFieldType.People,
             peopleCustomField: new UpdateCustomFieldFromProjectTaskCommand.PeopleCustomFieldCommand(Guid.NewGuid()));
 
         _projectTaskRepository
@@ -170,6 +175,39 @@ public class UpdateCustomFieldFromProjectTaskCommandHandlerTest
                 Arg.Is<WorkspaceId>(wId => wId == task.Stage.Sprint.Project.Workspace.Id));
 
         outcome.ValidateError(Errors.User.NotFound);
+    }
+
+    [Fact]
+    public async Task
+        HandleUpdateCustomFieldFromProjectTaskCommand_WhenTypeDoesNotMatchTheCustomField_ShouldReturnCustomFieldTypeMismatchError()
+    {
+        // Arrange
+        var task = ProjectTaskFactory.Create();
+        var customField = CustomFieldFactory.CreateText("Text", task: task);
+        task.AddCustomField(customField);
+        var command = ProjectTaskCommandFactory.CreateUpdateCustomFieldFromProjectTaskCommand(
+            task.Id.Value,
+            customField.Id.Value,
+            CustomFieldType.Number,
+            numberCustomField: new UpdateCustomFieldFromProjectTaskCommand.NumberCustomFieldCommand(10));
+
+        _projectTaskRepository
+            .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id))
+            .Returns(task);
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _projectTaskRepository
+            .Received(1)
+            .GetWithCustomFieldsAndWorkspace(Arg.Is<ProjectTaskId>(id => id.Value == command.Id));
+        _projectTaskRepository
+            .DidNotReceive()
+            .MarkAsUpdated(Arg.Any<ProjectTaskAggregate>());
+
+        outcome.ValidateError(Errors.CustomField.TypeMismatch);
+        customField.Text!.Value.Should().Be("Text");
     }
 
     [Fact]
