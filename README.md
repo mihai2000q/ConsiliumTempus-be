@@ -208,7 +208,7 @@ docker compose run --rm sample-data
 
 The data is written in plain `.sql` files, one per table (or group of related tables), inside `sample-data/Data`.
 They are executed by the order of their numbers, so to add sample data for another table, just add a new file
-(for example `16.something.sql`); to change a value, edit the file.
+(for example `37.something.sql`); to change a value, edit the file.
 The ids are readable, for example `1000000N` for the users, `3000000N` for the projects and `6000000N` for the tasks,
 and the header of each file explains what it covers.
 <br>

@@ -1,0 +1,4 @@
+INSERT INTO CustomFieldSetup_People
+    (Id)
+VALUES
+    ('70000010-0000-0000-0000-000000000000');
