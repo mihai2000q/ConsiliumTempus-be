@@ -114,7 +114,7 @@ test.describe('should allow operations on the workspace entity', () => {
       }
       await createWorkspace(request, createWorkspaceRequest)
 
-      const response = await request.get('/api/workspaces?isPersonalWorkspaceFirst=true', useToken())
+      const response = await request.get('/api/workspaces?isPersonalFirst=true', useToken())
 
       expect(response.ok()).toBeTruthy()
 

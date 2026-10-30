@@ -4,7 +4,7 @@ using MediatR;
 namespace ConsiliumTempus.Application.Workspace.Queries.GetCollection;
 
 public sealed record GetCollectionWorkspaceQuery(
-    bool IsPersonalWorkspaceFirst,
+    bool IsPersonalFirst,
     int? PageSize,
     int? CurrentPage,
     List<string> OrderBy,

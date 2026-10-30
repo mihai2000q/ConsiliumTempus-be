@@ -249,11 +249,9 @@ internal static partial class Utils
             GetCollectionWorkspaceQuery query,
             List<WorkspaceAggregate> workspaces,
             int workspacesCount,
-            WorkspaceAggregate personalWorkspace,
             UserAggregate currentUser)
         {
             result.Workspaces.Should().BeEquivalentTo(workspaces);
-            if (query.IsPersonalWorkspaceFirst) result.Workspaces.Should().HaveElementAt(0, personalWorkspace);
 
             result.TotalCount.Should().Be(workspacesCount);
             result.CurrentUser.Should().Be(currentUser);

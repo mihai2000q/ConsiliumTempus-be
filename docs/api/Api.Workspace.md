@@ -131,7 +131,7 @@ Sends optional query parameters for ordering, filtering, and page-based paginati
 - **currentPage** is used to specify the current page
 - **orderBy** is used to order the collection
 - **search** is used to filter the collection
-- **isPersonalWorkspaceFirst** is used to place the personal workspace of the user on top of the others
+- **isPersonalFirst** is used to place the personal workspace of the user on top of the others
 
 #### Get Collection Workspace Response
 
