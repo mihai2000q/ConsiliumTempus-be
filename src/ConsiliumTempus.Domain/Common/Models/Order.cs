@@ -9,6 +9,14 @@ public static class Order
     public const string Separator = ".";
     public const string Descending = "desc";
     public const string Ascending = "asc";
+
+    public static (string PropertyIdentifier, string OrderType)? Split(string order)
+    {
+        var splitOrder = order.Trim().Split(Separator);
+        if (splitOrder.Length != 2) return null;
+
+        return (splitOrder[0].Trim(), splitOrder[1]);
+    }
 }
 
 public class Order<TEntity> : IOrder<TEntity>
@@ -36,12 +44,12 @@ public class Order<TEntity> : IOrder<TEntity>
         string order,
         IReadOnlyList<OrderProperty<TEntity>> orderProperties)
     {
-        var splitOrder = order.Trim().Split(Order.Separator);
+        var (propertyIdentifier, stringOrderType) = Order.Split(order)!.Value;
 
         var propertySelectors = orderProperties
-            .Single(op => op.Identifier == splitOrder[0].Trim())
+            .Single(op => op.Identifier == propertyIdentifier)
             .PropertySelectors;
-        var orderType = splitOrder[1] == Order.Descending ? OrderType.Descending : OrderType.Ascending;
+        var orderType = stringOrderType == Order.Descending ? OrderType.Descending : OrderType.Ascending;
 
         return propertySelectors
             .Select(propertySelector => new Order<TEntity>(propertySelector, orderType));

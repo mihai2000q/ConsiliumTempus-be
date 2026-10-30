@@ -108,35 +108,31 @@ internal static class FluentValidationExtensions
     {
         internal static bool SeparatorValidation(string order)
         {
-            return order.Split(Order.Separator).Length == 2;
+            return Order.Split(order) is not null;
         }
 
         internal static bool OrderTypeValidation(string order)
         {
-            var propertyOrderType = order.Split(Order.Separator);
-            if (propertyOrderType.Length != 2) return true;
-
-            var orderType = propertyOrderType[1];
-            return orderType is Order.Descending or Order.Ascending;
+            var splitOrder = Order.Split(order);
+            return splitOrder is null ||
+                   splitOrder.Value.OrderType is Order.Descending or Order.Ascending;
         }
 
         internal static bool SnakeCaseValidation(string order)
         {
-            var propertyOrderType = order.Split(Order.Separator);
-            if (propertyOrderType.Length != 2) return true;
-
-            var property = propertyOrderType[0].Trim();
-            return !property.Any(char.IsUpper);
+            var splitOrder = Order.Split(order);
+            return splitOrder is null ||
+                   !splitOrder.Value.PropertyIdentifier.Any(char.IsUpper);
         }
 
         internal static bool PropertyValidation<TEntity>(
             string order,
             IReadOnlyList<OrderProperty<TEntity>> orderProperties)
         {
-            var propertyOrderType = order.Split(Order.Separator);
-            if (propertyOrderType.Length != 2) return true;
+            var splitOrder = Order.Split(order);
+            if (splitOrder is null) return true;
 
-            var property = propertyOrderType[0].Trim();
+            var property = splitOrder.Value.PropertyIdentifier;
             return property.Any(char.IsUpper) ||
                    orderProperties.Any(op => op.Identifier == property);
         }
@@ -146,9 +142,9 @@ internal static class FluentValidationExtensions
             var propertyIdentifiers = new List<string>();
             foreach (var order in orders)
             {
-                var propertyOrderType = order.Trim().Split(Order.Separator);
-                if (propertyOrderType.Length != 2) return true;
-                propertyIdentifiers.Add(propertyOrderType[0].Trim());
+                var splitOrder = Order.Split(order);
+                if (splitOrder is null) return true;
+                propertyIdentifiers.Add(splitOrder.Value.PropertyIdentifier);
             }
 
             return propertyIdentifiers.SequenceEqual(propertyIdentifiers.Distinct());
