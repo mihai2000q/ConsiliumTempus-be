@@ -54,6 +54,39 @@ public class UpdateCustomFieldSetupCommandHandlerTest
 
     [Fact]
     public async Task
+        HandleUpdateCustomFieldSetupCommand_WhenTypeDoesNotMatchTheCustomFieldSetup_ShouldReturnCustomFieldSetupTypeMismatchError()
+    {
+        // Arrange
+        var customFieldSetup = CustomFieldSetupFactory.CreateDate();
+        var defaultDate = customFieldSetup.DefaultDate;
+        _customFieldSetupRepository
+            .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
+            .Returns(customFieldSetup);
+
+        var command = CustomFieldSetupCommandFactory.CreateUpdateCustomFieldSetupCommand(
+            id: customFieldSetup.Id.Value,
+            type: CustomFieldType.Number,
+            numberCustomFieldSetup: new UpdateCustomFieldSetupCommand.NumberCustomFieldSetupCommand(
+                new UpdateCustomFieldSetupCommand.NumberCustomFieldSetupCommand.NumberSettingsCommand(
+                    "USD",
+                    2,
+                    true),
+                null));
+
+        // Act
+        var outcome = await _uut.Handle(command, CancellationToken.None);
+
+        // Assert
+        await _customFieldSetupRepository
+            .Received(1)
+            .GetWithWorkspaceAndProjects(Arg.Is<CustomFieldSetupId>(cId => cId.Value == command.Id));
+
+        outcome.ValidateError(Errors.CustomFieldSetup.TypeMismatch);
+        customFieldSetup.DefaultDate.Should().Be(defaultDate);
+    }
+
+    [Fact]
+    public async Task
         HandleUpdateCustomFieldSetupCommand_WhenMultiSelectOptionOperationIsNotSupported_ShouldThrowArgumentOutOfRangeException()
     {
         // Arrange

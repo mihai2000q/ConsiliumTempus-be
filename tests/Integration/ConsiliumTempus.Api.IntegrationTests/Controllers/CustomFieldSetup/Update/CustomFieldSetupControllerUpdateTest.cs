@@ -330,6 +330,33 @@ public class CustomFieldSetupControllerUpdateTest(WebAppFactory factory)
     }
 
     [Fact]
+    public async Task UpdateCustomFieldSetup_WhenTypeDoesNotMatchTheCustomFieldSetup_ShouldReturnTypeMismatchError()
+    {
+        // Arrange
+        var setup = CustomFieldSetupData.CustomFieldSetups[1];
+        var request = CustomFieldSetupRequestFactory.CreateUpdateCustomFieldSetupRequest(
+            setup.Id.Value,
+            type: CustomFieldType.Number,
+            numberCustomFieldSetup: new UpdateCustomFieldSetupRequest.NumberCustomFieldSetupRequest(
+                new UpdateCustomFieldSetupRequest.NumberCustomFieldSetupRequest.NumberSettingsRequest(
+                    "USD",
+                    2,
+                    false),
+                null));
+
+        // Act
+        Client.UseCustomToken(CustomFieldSetupData.Users.First());
+        var outcome = await Client.Put("api/customFieldSetups", request);
+
+        // Assert
+        await outcome.ValidateError(Errors.CustomFieldSetup.TypeMismatch);
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        dbContext.CustomFieldSetups.AsNoTracking().Single(cfs => cfs.Id == setup.Id)
+            .Should().BeOfType<DateCustomFieldSetupAggregate>();
+    }
+
+    [Fact]
     public async Task UpdateCustomFieldSetup_WhenIsNotFound_ShouldReturnNotFoundError()
     {
         // Arrange

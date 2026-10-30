@@ -1,8 +1,10 @@
 ﻿using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Application.Common.Interfaces.Persistence.Repository;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
+using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ErrorOr;
@@ -24,6 +26,7 @@ internal sealed class UpdateCustomFieldSetupCommandHandler(
             CustomFieldSetupId.Create(command.Id),
             cancellationToken);
         if (customFieldSetup is null) return Errors.CustomFieldSetup.NotFound;
+        if (GetCustomFieldType(customFieldSetup) != command.Type) return Errors.CustomFieldSetup.TypeMismatch;
 
         try
         {
@@ -79,6 +82,24 @@ internal sealed class UpdateCustomFieldSetupCommandHandler(
         customFieldSetup.Projects.ForEach(p => p.RefreshActivity());
 
         return new UpdateCustomFieldSetupResult();
+    }
+
+    private static CustomFieldType GetCustomFieldType(CustomFieldSetupAggregate customFieldSetup)
+    {
+        return customFieldSetup switch
+        {
+            DateCustomFieldSetupAggregate => CustomFieldType.Date,
+            DateTimeCustomFieldSetupAggregate => CustomFieldType.DateTime,
+            DurationCustomFieldSetupAggregate => CustomFieldType.Duration,
+            MultiSelectCustomFieldSetupAggregate => CustomFieldType.MultiSelect,
+            NumberCustomFieldSetupAggregate => CustomFieldType.Number,
+            PeopleCustomFieldSetupAggregate => CustomFieldType.People,
+            SingleSelectCustomFieldSetupAggregate => CustomFieldType.SingleSelect,
+            TextCustomFieldSetupAggregate => CustomFieldType.Text,
+            TimeCustomFieldSetupAggregate => CustomFieldType.Time,
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(customFieldSetup), customFieldSetup, "Type Not Supported")
+        };
     }
 
     private static void UpdateDateCustomFieldSetup(
