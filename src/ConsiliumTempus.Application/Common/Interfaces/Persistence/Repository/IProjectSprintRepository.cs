@@ -24,13 +24,11 @@ public interface IProjectSprintRepository
     Task<List<ProjectSprintAggregate>> GetListByProject(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
-        bool fromThisYear,
         CancellationToken cancellationToken = default);
 
     Task<int> GetListByProjectCount(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
-        bool fromThisYear,
         CancellationToken cancellationToken = default);
 
     Task<List<ProjectStage>> GetStages(ProjectSprintId id, CancellationToken cancellationToken = default);

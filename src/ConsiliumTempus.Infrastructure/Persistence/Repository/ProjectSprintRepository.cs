@@ -55,17 +55,10 @@ internal sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext
     public Task<List<ProjectSprintAggregate>> GetListByProject(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
-        bool fromThisYear,
         CancellationToken cancellationToken = default)
     {
-        var date = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         return dbContext.ProjectSprints
             .Where(ps => ps.Project.Id == projectId)
-            .WhereIf(fromThisYear, ps =>
-                ps.StartDate >= DateOnly.FromDateTime(date) ||
-                ps.EndDate >= DateOnly.FromDateTime(date) ||
-                ps.Audit.CreatedDateTime >= date)
             .ApplyFilters(filters)
             .OrderByDescending(s => s.StartDate)
             .ThenByDescending(s => s.EndDate)
@@ -77,17 +70,10 @@ internal sealed class ProjectSprintRepository(ConsiliumTempusDbContext dbContext
     public Task<int> GetListByProjectCount(
         ProjectId projectId,
         IReadOnlyList<IFilter<ProjectSprintAggregate>> filters,
-        bool fromThisYear,
         CancellationToken cancellationToken = default)
     {
-        var date = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         return dbContext.ProjectSprints
             .Where(ps => ps.Project.Id == projectId)
-            .WhereIf(fromThisYear, ps =>
-                ps.StartDate >= DateOnly.FromDateTime(date) ||
-                ps.EndDate >= DateOnly.FromDateTime(date) ||
-                ps.Audit.CreatedDateTime >= date)
             .ApplyFilters(filters)
             .CountAsync(cancellationToken);
     }
