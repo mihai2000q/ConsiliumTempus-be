@@ -24,6 +24,7 @@ For database design checkout the [Project Task Diagram](../../../database-diagra
 ### Domain Errors
 
 - **Not Found** (`CustomField.NotFound`, 404) when the custom field cannot be found
+- **Type Mismatch** (`CustomField.TypeMismatch`, 409) when the type of an update does not match the type of the custom field
 
 ### Variants
 

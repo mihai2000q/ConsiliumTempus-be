@@ -20,5 +20,9 @@ public static partial class Errors
         public static Error NotFound => Error.NotFound(
             "CustomField.NotFound",
             "Custom Field could not be found");
+
+        public static Error TypeMismatch => Error.Conflict(
+            "CustomField.TypeMismatch",
+            "The type of the request does not match the type of the Custom Field");
     }
 }
