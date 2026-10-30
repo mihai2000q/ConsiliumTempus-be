@@ -77,5 +77,8 @@ services:
       retries: 20
       start_period: 15s
     volumes:
-      # the data of the database stays in the repository folder (ignored by Git), not in a Docker named volume
-      - ./.container-data/database:/var/opt/mssql
+      # a named volume, because SQL Server can't run on a bind mount of a Windows folder
+      - database-data:/var/opt/mssql
+
+volumes:
+  database-data:
