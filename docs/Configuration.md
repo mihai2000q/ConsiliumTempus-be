@@ -35,7 +35,7 @@ For each of them, the settings are read from the following sources, from the wea
 | Setting         | Description                                                                          |
 |-----------------|--------------------------------------------------------------------------------------|
 | `SecretKey`     | the key that signs the tokens. It is empty on purpose and it must be provided        |
-| `ExpiryMinutes` | the lifetime of an access token, in minutes (5 by default)                           |
+| `ExpiryMinutes` | the lifetime of an access token, in minutes (5 by default), plus a clock skew of 1 minute |
 | `Issuer`        | the issuer of the tokens, that is also validated on each request                     |
 | `Audience`      | the audience of the tokens, that is also validated on each request                   |
 

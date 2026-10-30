@@ -60,7 +60,8 @@ public static class DependencyInjection
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateIssuerSigningKey = true,
-                        ValidateLifetime = true
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromMinutes(1)
                     };
                     options.MapInboundClaims = false;
                 });
