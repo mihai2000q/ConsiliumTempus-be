@@ -58,20 +58,18 @@ Sends the id of the custom Field Setup inside the route of the request.
 
 #### Get Custom Field Setup Response
 
-Returns a custom field setup inside the `customFieldSetup` property. However, the response will be different for each type,
+Returns the custom field setup at the root of the response. However, the response will be different for each type,
 which is identified by the `$type` discriminator (`<Type>CustomFieldSetupResponse`).
 
 ##### Date
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "DateCustomFieldSetupResponse",
-    "name": "the Date",
-    "description": "This is a custom field",
-    "type": "Date",
-    "defaultDate": "2022-10-10"
-  }
+  "$type": "DateCustomFieldSetupResponse",
+  "name": "the Date",
+  "description": "This is a custom field",
+  "type": "Date",
+  "defaultDate": "2022-10-10"
 }
 ```
 
@@ -79,13 +77,11 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "DateTimeCustomFieldSetupResponse",
-    "name": "Date and time",
-    "description": "This is a custom field",
-    "type": "DateTime",
-    "defaultDateTime": "2022-10-10T10:30:00"
-  }
+  "$type": "DateTimeCustomFieldSetupResponse",
+  "name": "Date and time",
+  "description": "This is a custom field",
+  "type": "DateTime",
+  "defaultDateTime": "2022-10-10T10:30:00"
 }
 ```
 
@@ -93,13 +89,11 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "DurationCustomFieldSetupResponse",
-    "name": "the Duration",
-    "description": "This is a custom field",
-    "type": "Duration",
-    "defaultDuration": "10:30:00"
-  }
+  "$type": "DurationCustomFieldSetupResponse",
+  "name": "the Duration",
+  "description": "This is a custom field",
+  "type": "Duration",
+  "defaultDuration": "10:30:00"
 }
 ```
 
@@ -107,24 +101,22 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "MultiSelectCustomFieldSetupResponse",
-    "name": "Priorities",
-    "description": "This is a custom field",
-    "type": "MultiSelect",
-    "options": [
-      {
-        "id": "10000000-0000-0000-0000-000000000000",
-        "color": "#FF0000",
-        "value": "High"
-      },
-      {
-        "id": "20000000-0000-0000-0000-000000000000",
-        "color": "#0000FF",
-        "value": "Low"
-      }
-    ]
-  }
+  "$type": "MultiSelectCustomFieldSetupResponse",
+  "name": "Priorities",
+  "description": "This is a custom field",
+  "type": "MultiSelect",
+  "options": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "color": "#FF0000",
+      "value": "High"
+    },
+    {
+      "id": "20000000-0000-0000-0000-000000000000",
+      "color": "#0000FF",
+      "value": "Low"
+    }
+  ]
 }
 ```
 
@@ -132,18 +124,16 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "NumberCustomFieldSetupResponse",
-    "name": "Budget",
-    "description": "This is a custom field",
-    "type": "Number",
-    "settings": {
-      "currencyCode": "USD",
-      "decimals": 2,
-      "rounding": true
-    },
-    "defaultNumber": 12
-  }
+  "$type": "NumberCustomFieldSetupResponse",
+  "name": "Budget",
+  "description": "This is a custom field",
+  "type": "Number",
+  "settings": {
+    "currencyCode": "USD",
+    "decimals": 2,
+    "rounding": true
+  },
+  "defaultNumber": 12
 }
 ```
 
@@ -151,12 +141,10 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "PeopleCustomFieldSetupResponse",
-    "name": "Guys",
-    "description": "This is a custom field",
-    "type": "People"
-  }
+  "$type": "PeopleCustomFieldSetupResponse",
+  "name": "Guys",
+  "description": "This is a custom field",
+  "type": "People"
 }
 ```
 
@@ -164,28 +152,26 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "SingleSelectCustomFieldSetupResponse",
-    "name": "Priority",
-    "description": "This is a custom field",
-    "type": "SingleSelect",
-    "options": [
-      {
-        "id": "10000000-0000-0000-0000-000000000000",
-        "color": "#FF0000",
-        "value": "High"
-      },
-      {
-        "id": "20000000-0000-0000-0000-000000000000",
-        "color": "#0000FF",
-        "value": "Low"
-      }
-    ],
-    "defaultOption": {
+  "$type": "SingleSelectCustomFieldSetupResponse",
+  "name": "Priority",
+  "description": "This is a custom field",
+  "type": "SingleSelect",
+  "options": [
+    {
+      "id": "10000000-0000-0000-0000-000000000000",
+      "color": "#FF0000",
+      "value": "High"
+    },
+    {
       "id": "20000000-0000-0000-0000-000000000000",
       "color": "#0000FF",
       "value": "Low"
     }
+  ],
+  "defaultOption": {
+    "id": "20000000-0000-0000-0000-000000000000",
+    "color": "#0000FF",
+    "value": "Low"
   }
 }
 ```
@@ -194,13 +180,11 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "TextCustomFieldSetupResponse",
-    "name": "Some Text",
-    "description": "This is a custom field",
-    "type": "Text",
-    "defaultText": "default"
-  }
+  "$type": "TextCustomFieldSetupResponse",
+  "name": "Some Text",
+  "description": "This is a custom field",
+  "type": "Text",
+  "defaultText": "default"
 }
 ```
 
@@ -208,13 +192,11 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "customFieldSetup": {
-    "$type": "TimeCustomFieldSetupResponse",
-    "name": "the time",
-    "description": "This is a custom field",
-    "type": "Time",
-    "defaultTime": "10:30:00"
-  }
+  "$type": "TimeCustomFieldSetupResponse",
+  "name": "the time",
+  "description": "This is a custom field",
+  "type": "Time",
+  "defaultTime": "10:30:00"
 }
 ```
 

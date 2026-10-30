@@ -56,13 +56,11 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(response.ok()).toBeTruthy()
 
       expect(await response.json()).toStrictEqual({
-        customFieldSetup: {
-          $type: expect.any(String),
-          name: createCustomFieldSetupOnProjectRequest.name,
-          description: createCustomFieldSetupOnProjectRequest.description,
-          type: createCustomFieldSetupOnProjectRequest.type,
-          defaultDate: createCustomFieldSetupOnProjectRequest.dateCustomFieldSetup?.defaultDate
-        }
+        $type: expect.any(String),
+        name: createCustomFieldSetupOnProjectRequest.name,
+        description: createCustomFieldSetupOnProjectRequest.description,
+        type: createCustomFieldSetupOnProjectRequest.type,
+        defaultDate: createCustomFieldSetupOnProjectRequest.dateCustomFieldSetup?.defaultDate
       })
     })
 
@@ -82,13 +80,11 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(response.ok()).toBeTruthy()
 
       expect(await response.json()).toStrictEqual({
-        customFieldSetup: {
-          $type: expect.any(String),
-          name: createCustomFieldSetupOnProjectRequest.name,
-          description: createCustomFieldSetupOnProjectRequest.description,
-          type: createCustomFieldSetupOnProjectRequest.type,
-          defaultDateTime: createCustomFieldSetupOnProjectRequest.dateTimeCustomFieldSetup?.defaultDateTime
-        }
+        $type: expect.any(String),
+        name: createCustomFieldSetupOnProjectRequest.name,
+        description: createCustomFieldSetupOnProjectRequest.description,
+        type: createCustomFieldSetupOnProjectRequest.type,
+        defaultDateTime: createCustomFieldSetupOnProjectRequest.dateTimeCustomFieldSetup?.defaultDateTime
       })
     })
 
@@ -108,13 +104,11 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(response.ok()).toBeTruthy()
 
       expect(await response.json()).toStrictEqual({
-        customFieldSetup: {
-          $type: expect.any(String),
-          name: createCustomFieldSetupOnProjectRequest.name,
-          description: createCustomFieldSetupOnProjectRequest.description,
-          type: createCustomFieldSetupOnProjectRequest.type,
-          defaultDuration: createCustomFieldSetupOnProjectRequest.durationCustomFieldSetup?.defaultDuration
-        }
+        $type: expect.any(String),
+        name: createCustomFieldSetupOnProjectRequest.name,
+        description: createCustomFieldSetupOnProjectRequest.description,
+        type: createCustomFieldSetupOnProjectRequest.type,
+        defaultDuration: createCustomFieldSetupOnProjectRequest.durationCustomFieldSetup?.defaultDuration
       })
     })
 
@@ -143,24 +137,22 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(response.ok()).toBeTruthy()
 
       expect(await response.json()).toStrictEqual({
-        customFieldSetup: {
-          $type: expect.any(String),
-          name: createCustomFieldSetupOnProjectRequest.name,
-          description: createCustomFieldSetupOnProjectRequest.description,
-          type: createCustomFieldSetupOnProjectRequest.type,
-          options: [
-            {
-              id: expect.any(String),
-              value: createCustomFieldSetupOnProjectRequest.multiSelectCustomFieldSetup?.options[0].value,
-              color: createCustomFieldSetupOnProjectRequest.multiSelectCustomFieldSetup?.options[0].color,
-            },
-            {
-              id: expect.any(String),
-              value: createCustomFieldSetupOnProjectRequest.multiSelectCustomFieldSetup?.options[1].value,
-              color: createCustomFieldSetupOnProjectRequest.multiSelectCustomFieldSetup?.options[1].color,
-            }
-          ]
-        }
+        $type: expect.any(String),
+        name: createCustomFieldSetupOnProjectRequest.name,
+        description: createCustomFieldSetupOnProjectRequest.description,
+        type: createCustomFieldSetupOnProjectRequest.type,
+        options: [
+          {
+            id: expect.any(String),
+            value: createCustomFieldSetupOnProjectRequest.multiSelectCustomFieldSetup?.options[0].value,
+            color: createCustomFieldSetupOnProjectRequest.multiSelectCustomFieldSetup?.options[0].color,
+          },
+          {
+            id: expect.any(String),
+            value: createCustomFieldSetupOnProjectRequest.multiSelectCustomFieldSetup?.options[1].value,
+            color: createCustomFieldSetupOnProjectRequest.multiSelectCustomFieldSetup?.options[1].color,
+          }
+        ]
       })
     })
 
@@ -185,18 +177,16 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(response.ok()).toBeTruthy()
 
       expect(await response.json()).toStrictEqual({
-        customFieldSetup: {
-          $type: expect.any(String),
-          name: createCustomFieldSetupOnProjectRequest.name,
-          description: createCustomFieldSetupOnProjectRequest.description,
-          type: createCustomFieldSetupOnProjectRequest.type,
-          settings: {
-            currencyCode: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.currencyCode,
-            decimals: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.decimals,
-            rounding: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.rounding,
-          },
-          defaultNumber: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup?.defaultNumber
-        }
+        $type: expect.any(String),
+        name: createCustomFieldSetupOnProjectRequest.name,
+        description: createCustomFieldSetupOnProjectRequest.description,
+        type: createCustomFieldSetupOnProjectRequest.type,
+        settings: {
+          currencyCode: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.currencyCode,
+          decimals: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.decimals,
+          rounding: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup!.settings.rounding,
+        },
+        defaultNumber: createCustomFieldSetupOnProjectRequest.numberCustomFieldSetup?.defaultNumber
       })
     })
 
@@ -213,12 +203,10 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(response.ok()).toBeTruthy()
 
       expect(await response.json()).toStrictEqual({
-        customFieldSetup: {
-          $type: expect.any(String),
-          name: createCustomFieldSetupOnProjectRequest.name,
-          description: createCustomFieldSetupOnProjectRequest.description,
-          type: createCustomFieldSetupOnProjectRequest.type
-        }
+        $type: expect.any(String),
+        name: createCustomFieldSetupOnProjectRequest.name,
+        description: createCustomFieldSetupOnProjectRequest.description,
+        type: createCustomFieldSetupOnProjectRequest.type
       })
     })
 
@@ -250,28 +238,26 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(response.ok()).toBeTruthy()
 
       expect(await response.json()).toStrictEqual({
-        customFieldSetup: {
-          $type: expect.any(String),
-          name: createCustomFieldSetupOnProjectRequest.name,
-          description: createCustomFieldSetupOnProjectRequest.description,
-          type: createCustomFieldSetupOnProjectRequest.type,
-          options: [
-            {
-              id: expect.any(String),
-              value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].value,
-              color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].color,
-            },
-            {
-              id: expect.any(String),
-              value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].value,
-              color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].color,
-            }
-          ],
-          defaultOption: {
+        $type: expect.any(String),
+        name: createCustomFieldSetupOnProjectRequest.name,
+        description: createCustomFieldSetupOnProjectRequest.description,
+        type: createCustomFieldSetupOnProjectRequest.type,
+        options: [
+          {
             id: expect.any(String),
             value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].value,
             color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].color,
+          },
+          {
+            id: expect.any(String),
+            value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].value,
+            color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[1].color,
           }
+        ],
+        defaultOption: {
+          id: expect.any(String),
+          value: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].value,
+          color: createCustomFieldSetupOnProjectRequest.singleSelectCustomFieldSetup!.options[0].color,
         }
       })
     })
@@ -292,13 +278,11 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(response.ok()).toBeTruthy()
 
       expect(await response.json()).toStrictEqual({
-        customFieldSetup: {
-          $type: expect.any(String),
-          name: createCustomFieldSetupOnProjectRequest.name,
-          description: createCustomFieldSetupOnProjectRequest.description,
-          type: createCustomFieldSetupOnProjectRequest.type,
-          defaultText: createCustomFieldSetupOnProjectRequest.textCustomFieldSetup?.defaultText,
-        }
+        $type: expect.any(String),
+        name: createCustomFieldSetupOnProjectRequest.name,
+        description: createCustomFieldSetupOnProjectRequest.description,
+        type: createCustomFieldSetupOnProjectRequest.type,
+        defaultText: createCustomFieldSetupOnProjectRequest.textCustomFieldSetup?.defaultText,
       })
     })
 
@@ -318,13 +302,11 @@ test.describe('should allow operations on the custom field setup entity', () => 
       expect(response.ok()).toBeTruthy()
 
       expect(await response.json()).toStrictEqual({
-        customFieldSetup: {
-          $type: expect.any(String),
-          name: createCustomFieldSetupOnProjectRequest.name,
-          description: createCustomFieldSetupOnProjectRequest.description,
-          type: createCustomFieldSetupOnProjectRequest.type,
-          defaultTime: createCustomFieldSetupOnProjectRequest.timeCustomFieldSetup?.defaultTime,
-        }
+        $type: expect.any(String),
+        name: createCustomFieldSetupOnProjectRequest.name,
+        description: createCustomFieldSetupOnProjectRequest.description,
+        type: createCustomFieldSetupOnProjectRequest.type,
+        defaultTime: createCustomFieldSetupOnProjectRequest.timeCustomFieldSetup?.defaultTime,
       })
     })
   })

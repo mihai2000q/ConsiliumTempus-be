@@ -5,49 +5,47 @@ using ConsiliumTempus.Domain.Common.Enums;
 namespace ConsiliumTempus.Api.Contracts.CustomFieldSetup.Get;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-public sealed record GetCustomFieldSetupResponse(GetCustomFieldSetupResponse.CustomFieldSetupResponse CustomFieldSetup)
+[JsonDerivedType(typeof(GetDateCustomFieldSetupResponse))]
+[JsonDerivedType(typeof(GetDateTimeCustomFieldSetupResponse))]
+[JsonDerivedType(typeof(GetDurationCustomFieldSetupResponse))]
+[JsonDerivedType(typeof(GetMultiSelectCustomFieldSetupResponse))]
+[JsonDerivedType(typeof(GetNumberCustomFieldSetupResponse))]
+[JsonDerivedType(typeof(GetPeopleCustomFieldSetupResponse))]
+[JsonDerivedType(typeof(GetSingleSelectCustomFieldSetupResponse))]
+[JsonDerivedType(typeof(GetTextCustomFieldSetupResponse))]
+[JsonDerivedType(typeof(GetTimeCustomFieldSetupResponse))]
+public abstract record GetCustomFieldSetupResponse(
+    string Name,
+    string Description,
+    CustomFieldType Type)
 {
-    [JsonDerivedType(typeof(DateCustomFieldSetupResponse), nameof(DateCustomFieldSetupResponse))]
-    [JsonDerivedType(typeof(DateTimeCustomFieldSetupResponse), nameof(DateTimeCustomFieldSetupResponse))]
-    [JsonDerivedType(typeof(DurationCustomFieldSetupResponse), nameof(DurationCustomFieldSetupResponse))]
-    [JsonDerivedType(typeof(MultiSelectCustomFieldSetupResponse), nameof(MultiSelectCustomFieldSetupResponse))]
-    [JsonDerivedType(typeof(NumberCustomFieldSetupResponse), nameof(NumberCustomFieldSetupResponse))]
-    [JsonDerivedType(typeof(PeopleCustomFieldSetupResponse), nameof(PeopleCustomFieldSetupResponse))]
-    [JsonDerivedType(typeof(SingleSelectCustomFieldSetupResponse), nameof(SingleSelectCustomFieldSetupResponse))]
-    [JsonDerivedType(typeof(TextCustomFieldSetupResponse), nameof(TextCustomFieldSetupResponse))]
-    [JsonDerivedType(typeof(TimeCustomFieldSetupResponse), nameof(TimeCustomFieldSetupResponse))]
-    public abstract record CustomFieldSetupResponse(
-        string Name,
-        string Description,
-        CustomFieldType Type);
-
-    public sealed record DateCustomFieldSetupResponse(
+    public sealed record GetDateCustomFieldSetupResponse(
         string Name,
         string Description,
         CustomFieldType Type,
         DateOnly? DefaultDate)
-        : CustomFieldSetupResponse(Name, Description, Type);
+        : GetCustomFieldSetupResponse(Name, Description, Type);
 
-    public sealed record DateTimeCustomFieldSetupResponse(
+    public sealed record GetDateTimeCustomFieldSetupResponse(
         string Name,
         string Description,
         CustomFieldType Type,
         DateTime? DefaultDateTime)
-        : CustomFieldSetupResponse(Name, Description, Type);
+        : GetCustomFieldSetupResponse(Name, Description, Type);
 
-    public sealed record DurationCustomFieldSetupResponse(
+    public sealed record GetDurationCustomFieldSetupResponse(
         string Name,
         string Description,
         CustomFieldType Type,
         TimeSpan? DefaultDuration)
-        : CustomFieldSetupResponse(Name, Description, Type);
+        : GetCustomFieldSetupResponse(Name, Description, Type);
 
-    public sealed record MultiSelectCustomFieldSetupResponse(
+    public sealed record GetMultiSelectCustomFieldSetupResponse(
         string Name,
         string Description,
         CustomFieldType Type,
-        List<MultiSelectCustomFieldSetupResponse.MultiSelectOptionResponse> Options)
-        : CustomFieldSetupResponse(Name, Description, Type)
+        List<GetMultiSelectCustomFieldSetupResponse.MultiSelectOptionResponse> Options)
+        : GetCustomFieldSetupResponse(Name, Description, Type)
     {
         public sealed record MultiSelectOptionResponse(
             Guid Id,
@@ -55,13 +53,13 @@ public sealed record GetCustomFieldSetupResponse(GetCustomFieldSetupResponse.Cus
             string Color);
     }
 
-    public sealed record NumberCustomFieldSetupResponse(
+    public sealed record GetNumberCustomFieldSetupResponse(
         string Name,
         string Description,
         CustomFieldType Type,
-        NumberCustomFieldSetupResponse.NumberCustomFieldSettingsResponse Settings,
+        GetNumberCustomFieldSetupResponse.NumberCustomFieldSettingsResponse Settings,
         decimal? DefaultNumber)
-        : CustomFieldSetupResponse(Name, Description, Type)
+        : GetCustomFieldSetupResponse(Name, Description, Type)
     {
         public sealed record NumberCustomFieldSettingsResponse(
             string CurrencyCode,
@@ -69,19 +67,19 @@ public sealed record GetCustomFieldSetupResponse(GetCustomFieldSetupResponse.Cus
             bool Rounding);
     }
 
-    public sealed record PeopleCustomFieldSetupResponse(
+    public sealed record GetPeopleCustomFieldSetupResponse(
         string Name,
         string Description,
         CustomFieldType Type)
-        : CustomFieldSetupResponse(Name, Description, Type);
+        : GetCustomFieldSetupResponse(Name, Description, Type);
 
-    public sealed record SingleSelectCustomFieldSetupResponse(
+    public sealed record GetSingleSelectCustomFieldSetupResponse(
         string Name,
         string Description,
         CustomFieldType Type,
-        List<SingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse> Options,
-        SingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse? DefaultOption)
-        : CustomFieldSetupResponse(Name, Description, Type)
+        List<GetSingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse> Options,
+        GetSingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse? DefaultOption)
+        : GetCustomFieldSetupResponse(Name, Description, Type)
     {
         public sealed record SingleSelectOptionResponse(
             Guid Id,
@@ -89,17 +87,17 @@ public sealed record GetCustomFieldSetupResponse(GetCustomFieldSetupResponse.Cus
             string Color);
     }
 
-    public sealed record TextCustomFieldSetupResponse(
+    public sealed record GetTextCustomFieldSetupResponse(
         string Name,
         string Description,
         CustomFieldType Type,
         string? DefaultText)
-        : CustomFieldSetupResponse(Name, Description, Type);
+        : GetCustomFieldSetupResponse(Name, Description, Type);
 
-    public sealed record TimeCustomFieldSetupResponse(
+    public sealed record GetTimeCustomFieldSetupResponse(
         string Name,
         string Description,
         CustomFieldType Type,
         TimeOnly? DefaultTime)
-        : CustomFieldSetupResponse(Name, Description, Type);
+        : GetCustomFieldSetupResponse(Name, Description, Type);
 }

@@ -57,7 +57,7 @@ internal static partial class Utils
         internal T ToResponse<T>()
         {
             response.Should().BeOfType<OkObjectResult>();
-            ((OkObjectResult)response).Value.Should().BeOfType<T>();
+            ((OkObjectResult)response).Value.Should().BeAssignableTo<T>();
 
             return (T)((OkObjectResult)response).Value!;
         }

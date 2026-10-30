@@ -360,19 +360,19 @@ internal static partial class Utils
             GetCustomFieldSetupResponse response,
             CustomFieldSetupAggregate customFieldSetup)
         {
-            response.CustomFieldSetup.Name.Should().Be(customFieldSetup.Name.Value);
-            response.CustomFieldSetup.Description.Should().Be(customFieldSetup.Description.Value);
-            switch (response.CustomFieldSetup)
+            response.Name.Should().Be(customFieldSetup.Name.Value);
+            response.Description.Should().Be(customFieldSetup.Description.Value);
+            switch (response)
             {
-                case GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse numberSetup:
+                case GetCustomFieldSetupResponse.GetNumberCustomFieldSetupResponse numberSetup:
                     AssertNumberCustomFieldSetupResponse(numberSetup,
                         (NumberCustomFieldSetupAggregate)customFieldSetup);
                     break;
-                case GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse singleSelectSetup:
+                case GetCustomFieldSetupResponse.GetSingleSelectCustomFieldSetupResponse singleSelectSetup:
                     AssertSingleSelectCustomFieldSetupResponse(singleSelectSetup,
                         (SingleSelectCustomFieldSetupAggregate)customFieldSetup);
                     break;
-                case GetCustomFieldSetupResponse.TextCustomFieldSetupResponse textSetup:
+                case GetCustomFieldSetupResponse.GetTextCustomFieldSetupResponse textSetup:
                     AssertTextCustomFieldSetupResponse(textSetup,
                         (TextCustomFieldSetupAggregate)customFieldSetup);
                     break;
@@ -398,7 +398,7 @@ internal static partial class Utils
         }
 
         private static void AssertNumberCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse response,
+            GetCustomFieldSetupResponse.GetNumberCustomFieldSetupResponse response,
             NumberCustomFieldSetupAggregate numberCustomFieldSetup)
         {
             response.Type.Should().Be(CustomFieldType.Number);
@@ -412,7 +412,7 @@ internal static partial class Utils
         }
 
         private static void AssertSingleSelectCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse response,
+            GetCustomFieldSetupResponse.GetSingleSelectCustomFieldSetupResponse response,
             SingleSelectCustomFieldSetupAggregate singleSelectCustomFieldSetup)
         {
             response.Type.Should().Be(CustomFieldType.SingleSelect);
@@ -427,7 +427,7 @@ internal static partial class Utils
         }
 
         private static void AssertTextCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.TextCustomFieldSetupResponse response,
+            GetCustomFieldSetupResponse.GetTextCustomFieldSetupResponse response,
             TextCustomFieldSetupAggregate textCustomFieldSetup)
         {
             response.Type.Should().Be(CustomFieldType.Text);
@@ -438,7 +438,7 @@ internal static partial class Utils
         }
 
         private static void AssertSingleSelectOptionResponse(
-            GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse? response,
+            GetCustomFieldSetupResponse.GetSingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse? response,
             SingleSelectOption option)
         {
             response.Should().NotBeNull();

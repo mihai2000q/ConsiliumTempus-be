@@ -171,58 +171,58 @@ internal static partial class Utils
             GetCustomFieldSetupResponse response,
             GetCustomFieldSetupResult result)
         {
-            response.CustomFieldSetup.Name.Should().Be(result.CustomFieldSetup.Name.Value);
-            response.CustomFieldSetup.Description.Should().Be(result.CustomFieldSetup.Description.Value);
-            switch (response.CustomFieldSetup)
+            response.Name.Should().Be(result.CustomFieldSetup.Name.Value);
+            response.Description.Should().Be(result.CustomFieldSetup.Description.Value);
+            switch (response)
             {
-                case GetCustomFieldSetupResponse.DateCustomFieldSetupResponse dateSetup:
+                case GetCustomFieldSetupResponse.GetDateCustomFieldSetupResponse dateSetup:
                     result.CustomFieldSetup.Should().BeOfType<DateCustomFieldSetupAggregate>();
                     AssertDateCustomFieldSetupResponse(dateSetup,
                         (DateCustomFieldSetupAggregate)result.CustomFieldSetup);
                     break;
 
-                case GetCustomFieldSetupResponse.DateTimeCustomFieldSetupResponse dateTimeSetup:
+                case GetCustomFieldSetupResponse.GetDateTimeCustomFieldSetupResponse dateTimeSetup:
                     result.CustomFieldSetup.Should().BeOfType<DateTimeCustomFieldSetupAggregate>();
                     AssertDateTimeCustomFieldSetupResponse(dateTimeSetup,
                         (DateTimeCustomFieldSetupAggregate)result.CustomFieldSetup);
                     break;
 
-                case GetCustomFieldSetupResponse.DurationCustomFieldSetupResponse durationSetup:
+                case GetCustomFieldSetupResponse.GetDurationCustomFieldSetupResponse durationSetup:
                     result.CustomFieldSetup.Should().BeOfType<DurationCustomFieldSetupAggregate>();
                     AssertDurationCustomFieldSetupResponse(durationSetup,
                         (DurationCustomFieldSetupAggregate)result.CustomFieldSetup);
                     break;
 
-                case GetCustomFieldSetupResponse.MultiSelectCustomFieldSetupResponse multiSelectSetup:
+                case GetCustomFieldSetupResponse.GetMultiSelectCustomFieldSetupResponse multiSelectSetup:
                     result.CustomFieldSetup.Should().BeOfType<MultiSelectCustomFieldSetupAggregate>();
                     AssertMultiSelectCustomFieldSetupResponse(multiSelectSetup,
                         (MultiSelectCustomFieldSetupAggregate)result.CustomFieldSetup);
                     break;
 
-                case GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse numberSetup:
+                case GetCustomFieldSetupResponse.GetNumberCustomFieldSetupResponse numberSetup:
                     result.CustomFieldSetup.Should().BeOfType<NumberCustomFieldSetupAggregate>();
                     AssertNumberCustomFieldSetupResponse(numberSetup,
                         (NumberCustomFieldSetupAggregate)result.CustomFieldSetup);
                     break;
 
-                case GetCustomFieldSetupResponse.PeopleCustomFieldSetupResponse peopleSetup:
+                case GetCustomFieldSetupResponse.GetPeopleCustomFieldSetupResponse peopleSetup:
                     result.CustomFieldSetup.Should().BeOfType<PeopleCustomFieldSetupAggregate>();
                     AssertPeopleCustomFieldSetupResponse(peopleSetup);
                     break;
 
-                case GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse singleSelectSetup:
+                case GetCustomFieldSetupResponse.GetSingleSelectCustomFieldSetupResponse singleSelectSetup:
                     result.CustomFieldSetup.Should().BeOfType<SingleSelectCustomFieldSetupAggregate>();
                     AssertSingleSelectCustomFieldSetupResponse(singleSelectSetup,
                         (SingleSelectCustomFieldSetupAggregate)result.CustomFieldSetup);
                     break;
 
-                case GetCustomFieldSetupResponse.TextCustomFieldSetupResponse textSetup:
+                case GetCustomFieldSetupResponse.GetTextCustomFieldSetupResponse textSetup:
                     result.CustomFieldSetup.Should().BeOfType<TextCustomFieldSetupAggregate>();
                     AssertTextCustomFieldSetupResponse(textSetup,
                         (TextCustomFieldSetupAggregate)result.CustomFieldSetup);
                     break;
 
-                case GetCustomFieldSetupResponse.TimeCustomFieldSetupResponse timeSetup:
+                case GetCustomFieldSetupResponse.GetTimeCustomFieldSetupResponse timeSetup:
                     result.CustomFieldSetup.Should().BeOfType<TimeCustomFieldSetupAggregate>();
                     AssertTimeCustomFieldSetupResponse(timeSetup,
                         (TimeCustomFieldSetupAggregate)result.CustomFieldSetup);
@@ -247,7 +247,7 @@ internal static partial class Utils
         }
 
         private static void AssertDateCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.DateCustomFieldSetupResponse response,
+            GetCustomFieldSetupResponse.GetDateCustomFieldSetupResponse response,
             DateCustomFieldSetupAggregate setup)
         {
             response.Type.Should().Be(CustomFieldType.Date);
@@ -255,7 +255,7 @@ internal static partial class Utils
         }
 
         private static void AssertDateTimeCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.DateTimeCustomFieldSetupResponse response,
+            GetCustomFieldSetupResponse.GetDateTimeCustomFieldSetupResponse response,
             DateTimeCustomFieldSetupAggregate setup)
         {
             response.Type.Should().Be(CustomFieldType.DateTime);
@@ -263,7 +263,7 @@ internal static partial class Utils
         }
 
         private static void AssertDurationCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.DurationCustomFieldSetupResponse response,
+            GetCustomFieldSetupResponse.GetDurationCustomFieldSetupResponse response,
             DurationCustomFieldSetupAggregate setup)
         {
             response.Type.Should().Be(CustomFieldType.Duration);
@@ -271,7 +271,7 @@ internal static partial class Utils
         }
 
         private static void AssertMultiSelectCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.MultiSelectCustomFieldSetupResponse response,
+            GetCustomFieldSetupResponse.GetMultiSelectCustomFieldSetupResponse response,
             MultiSelectCustomFieldSetupAggregate setup)
         {
             response.Type.Should().Be(CustomFieldType.MultiSelect);
@@ -280,7 +280,7 @@ internal static partial class Utils
         }
 
         private static void AssertNumberCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.NumberCustomFieldSetupResponse response,
+            GetCustomFieldSetupResponse.GetNumberCustomFieldSetupResponse response,
             NumberCustomFieldSetupAggregate setup)
         {
             response.Type.Should().Be(CustomFieldType.Number);
@@ -294,13 +294,13 @@ internal static partial class Utils
         }
 
         private static void AssertPeopleCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.PeopleCustomFieldSetupResponse response)
+            GetCustomFieldSetupResponse.GetPeopleCustomFieldSetupResponse response)
         {
             response.Type.Should().Be(CustomFieldType.People);
         }
 
         private static void AssertSingleSelectCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse response,
+            GetCustomFieldSetupResponse.GetSingleSelectCustomFieldSetupResponse response,
             SingleSelectCustomFieldSetupAggregate setup)
         {
             response.Type.Should().Be(CustomFieldType.SingleSelect);
@@ -314,7 +314,7 @@ internal static partial class Utils
         }
 
         private static void AssertTextCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.TextCustomFieldSetupResponse response,
+            GetCustomFieldSetupResponse.GetTextCustomFieldSetupResponse response,
             TextCustomFieldSetupAggregate setup)
         {
             response.Type.Should().Be(CustomFieldType.Text);
@@ -325,7 +325,7 @@ internal static partial class Utils
         }
 
         private static void AssertTimeCustomFieldSetupResponse(
-            GetCustomFieldSetupResponse.TimeCustomFieldSetupResponse response,
+            GetCustomFieldSetupResponse.GetTimeCustomFieldSetupResponse response,
             TimeCustomFieldSetupAggregate setup)
         {
             response.Type.Should().Be(CustomFieldType.Time);
@@ -333,7 +333,7 @@ internal static partial class Utils
         }
 
         private static void AssertMultiSelectOptionResponse(
-            GetCustomFieldSetupResponse.MultiSelectCustomFieldSetupResponse.MultiSelectOptionResponse response,
+            GetCustomFieldSetupResponse.GetMultiSelectCustomFieldSetupResponse.MultiSelectOptionResponse response,
             MultiSelectOption option)
         {
             response.Id.Should().Be(option.Id);
@@ -342,7 +342,7 @@ internal static partial class Utils
         }
 
         private static void AssertSingleSelectOptionResponse(
-            GetCustomFieldSetupResponse.SingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse? response,
+            GetCustomFieldSetupResponse.GetSingleSelectCustomFieldSetupResponse.SingleSelectOptionResponse? response,
             SingleSelectOption option)
         {
             response.Should().NotBeNull();

@@ -35,7 +35,8 @@ public sealed class CustomFieldSetupController(IMapper mapper, ISender mediator)
         var result = await Mediator.Send(query, cancellationToken);
 
         return result.Match(
-            setup => Ok(Mapper.Map<GetCustomFieldSetupResponse>(setup)),
+            setup => new OkObjectResult(Mapper.Map<GetCustomFieldSetupResponse>(setup))
+            { DeclaredType = typeof(GetCustomFieldSetupResponse) },
             Problem
         );
     }
