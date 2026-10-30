@@ -1,5 +1,5 @@
 import { test } from "@playwright/test";
-import { deleteUser, registerUser } from "../utils/users.utils";
+import { deleteAllUsers, registerUser } from "../utils/users.utils";
 import { getPersonalWorkspace } from "../utils/workspaces.utils";
 import { createProject } from "../utils/projects.utils";
 import { useToken } from "../utils/utils";
@@ -36,7 +36,7 @@ test.describe('should allow operations on the custom field setup entity', () => 
   })
 
   test.afterEach('should delete user', async ({ request }) => {
-    await deleteUser(request)
+    await deleteAllUsers(request)
   })
 
   test.describe('should allow retrieval of custom field setup', () => {

@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
-import { deleteUser, registerUser } from "../utils/users.utils";
+import { deleteAllUsers, registerUser } from "../utils/users.utils";
 import { getPersonalWorkspace } from "../utils/workspaces.utils";
 import { createProject, getProjectStatuses } from "../utils/projects.utils";
 import {
@@ -31,7 +31,7 @@ test.describe('should allow operations on the project sprint entity', () => {
   })
 
   test.afterEach('should delete user', async ({ request }) => {
-    await deleteUser(request)
+    await deleteAllUsers(request)
   })
 
   test('should get project sprint', async ({ request }) => {

@@ -20,7 +20,7 @@ import {
   inviteThemToWorkspace
 } from "../utils/workspaces.utils";
 import { PersonalWorkspaceName } from "../utils/constants";
-import { deleteUser, getCurrentUser, registerUser } from "../utils/users.utils";
+import { deleteAllUsers, getCurrentUser, registerUser } from "../utils/users.utils";
 import CreateWorkspaceRequest from "../types/requests/workspace/CreateWorkspaceRequest";
 import UpdateWorkspaceRequest from "../types/requests/workspace/UpdateWorkspaceRequest";
 import UpdateOverviewWorkspaceRequest from "../types/requests/workspace/UpdateOverviewWorkspaceRequest";
@@ -38,7 +38,7 @@ test.describe('should allow operations on the workspace entity', () => {
   })
 
   test.afterEach('should delete user', async ({ request }) => {
-    await deleteUser(request)
+    await deleteAllUsers(request)
   })
 
   test('should get workspace', async ({ request }) => {

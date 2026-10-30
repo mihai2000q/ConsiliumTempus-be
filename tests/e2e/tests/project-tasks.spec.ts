@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { useToken } from "../utils/utils";
 import { expect } from "../utils/matchers";
-import { deleteUser, registerUser } from "../utils/users.utils";
+import { deleteAllUsers, registerUser } from "../utils/users.utils";
 import { addCollaboratorToWorkspace, getPersonalWorkspace } from "../utils/workspaces.utils";
 import { createProject } from "../utils/projects.utils";
 import { addStageToProjectSprint, getProjectSprints } from "../utils/project-sprint.utils";
@@ -40,7 +40,7 @@ test.describe('should allow operations on the project task entity', () => {
   })
 
   test.afterEach('should delete user', async ({ request }) => {
-    await deleteUser(request)
+    await deleteAllUsers(request)
   })
 
   test('should get project task', async ({ request }) => {
