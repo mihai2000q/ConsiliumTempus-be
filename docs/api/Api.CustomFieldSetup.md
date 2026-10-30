@@ -59,13 +59,12 @@ Sends the id of the custom Field Setup inside the route of the request.
 #### Get Custom Field Setup Response
 
 Returns the custom field setup at the root of the response. However, the response will be different for each type,
-which is identified by the `$type` discriminator (`<Type>CustomFieldSetupResponse`).
+which is identified by the `type` property.
 
 ##### Date
 
 ```json
 {
-  "$type": "DateCustomFieldSetupResponse",
   "name": "the Date",
   "description": "This is a custom field",
   "type": "Date",
@@ -77,7 +76,6 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "$type": "DateTimeCustomFieldSetupResponse",
   "name": "Date and time",
   "description": "This is a custom field",
   "type": "DateTime",
@@ -89,7 +87,6 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "$type": "DurationCustomFieldSetupResponse",
   "name": "the Duration",
   "description": "This is a custom field",
   "type": "Duration",
@@ -101,7 +98,6 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "$type": "MultiSelectCustomFieldSetupResponse",
   "name": "Priorities",
   "description": "This is a custom field",
   "type": "MultiSelect",
@@ -124,7 +120,6 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "$type": "NumberCustomFieldSetupResponse",
   "name": "Budget",
   "description": "This is a custom field",
   "type": "Number",
@@ -141,7 +136,6 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "$type": "PeopleCustomFieldSetupResponse",
   "name": "Guys",
   "description": "This is a custom field",
   "type": "People"
@@ -152,7 +146,6 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "$type": "SingleSelectCustomFieldSetupResponse",
   "name": "Priority",
   "description": "This is a custom field",
   "type": "SingleSelect",
@@ -180,7 +173,6 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "$type": "TextCustomFieldSetupResponse",
   "name": "Some Text",
   "description": "This is a custom field",
   "type": "Text",
@@ -192,7 +184,6 @@ which is identified by the `$type` discriminator (`<Type>CustomFieldSetupRespons
 
 ```json
 {
-  "$type": "TimeCustomFieldSetupResponse",
   "name": "the time",
   "description": "This is a custom field",
   "type": "Time",

@@ -6,6 +6,7 @@ using ConsiliumTempus.Api.IntegrationTests.TestData;
 using ConsiliumTempus.Api.IntegrationTests.TestUtils;
 using ConsiliumTempus.Common.IntegrationTests.CustomFieldSetup;
 using ConsiliumTempus.Domain.Common.Errors;
+using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 
 namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.Get;
 
@@ -13,6 +14,19 @@ namespace ConsiliumTempus.Api.IntegrationTests.Controllers.CustomFieldSetup.Get;
 public class CustomFieldSetupControllerGetTest(WebAppFactory factory)
     : BaseIntegrationTest(factory, new CustomFieldSetupData())
 {
+    private static readonly Dictionary<Type, Type> SetupTypeToResponseType = new()
+    {
+        { typeof(DateCustomFieldSetupAggregate), typeof(GetCustomFieldSetupResponse.GetDateCustomFieldSetupResponse) },
+        { typeof(DateTimeCustomFieldSetupAggregate), typeof(GetCustomFieldSetupResponse.GetDateTimeCustomFieldSetupResponse) },
+        { typeof(DurationCustomFieldSetupAggregate), typeof(GetCustomFieldSetupResponse.GetDurationCustomFieldSetupResponse) },
+        { typeof(MultiSelectCustomFieldSetupAggregate), typeof(GetCustomFieldSetupResponse.GetMultiSelectCustomFieldSetupResponse) },
+        { typeof(NumberCustomFieldSetupAggregate), typeof(GetCustomFieldSetupResponse.GetNumberCustomFieldSetupResponse) },
+        { typeof(PeopleCustomFieldSetupAggregate), typeof(GetCustomFieldSetupResponse.GetPeopleCustomFieldSetupResponse) },
+        { typeof(SingleSelectCustomFieldSetupAggregate), typeof(GetCustomFieldSetupResponse.GetSingleSelectCustomFieldSetupResponse) },
+        { typeof(TextCustomFieldSetupAggregate), typeof(GetCustomFieldSetupResponse.GetTextCustomFieldSetupResponse) },
+        { typeof(TimeCustomFieldSetupAggregate), typeof(GetCustomFieldSetupResponse.GetTimeCustomFieldSetupResponse) }
+    };
+
     [Fact]
     public async Task GetCustomFieldSetup_WhenSuccessful_ShouldReturnCustomFieldSetup()
     {
@@ -26,8 +40,8 @@ public class CustomFieldSetupControllerGetTest(WebAppFactory factory)
 
         // Assert
         outcome.StatusCode.Should().Be(HttpStatusCode.OK);
-        var response = await outcome.Content.ReadFromJsonAsync<GetCustomFieldSetupResponse>(JsonOptions);
-        Utils.CustomFieldSetup.AssertGetResponse(response!, setup);
+        var response = await outcome.Content.ReadFromJsonAsync(SetupTypeToResponseType[setup.GetType()], JsonOptions);
+        Utils.CustomFieldSetup.AssertGetResponse((GetCustomFieldSetupResponse)response!, setup);
     }
 
     [Fact]
