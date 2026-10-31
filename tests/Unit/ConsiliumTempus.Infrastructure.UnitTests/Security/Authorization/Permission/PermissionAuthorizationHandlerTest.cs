@@ -1,6 +1,4 @@
-﻿using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
-using ErrorOr;
+﻿using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
 using System.Security.Claims;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Enums;
@@ -16,9 +14,11 @@ using ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorization;
 using ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
 using NSubstitute.ReturnsExtensions;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Targets;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.Security.Authorization.Permission;
 
@@ -131,25 +131,25 @@ public class PermissionAuthorizationHandlerTest
     }
 
     [Fact]
-    public async Task PermissionAuthorizationHandler_WhenPermissionIsNotSupported_ShouldThrowArgumentOutOfRangeException()
+    public async Task PermissionAuthorizationHandler_WhenEndpointIsNotSupported_ShouldThrowInvalidOperationException()
     {
         // Arrange
-        var requirements = new[] { new PermissionRequirement((Permissions)int.MaxValue) };
+        var requirements = new[] { new PermissionRequirement(Permissions.ReadWorkspace) };
         var user = new ClaimsPrincipal();
         user.AddIdentity(new ClaimsIdentity([
             new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString())
         ]));
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
-        Utils.Authorization.Permission.MockEmptyHttpRequest(
-            _httpContextAccessor,
-            PermissionAuthorizationHandlerData.RequestLocation.Route);
+        var request = _httpContextAccessor.HttpContext!.Request;
+        request.Method.Returns(HttpMethods.Get);
+        request.RouteValues.Returns(new RouteValueDictionary { ["controller"] = "Unknown" });
 
         // Act
         var outcome = async () => await _uut.HandleAsync(context);
 
         // Assert
-        await outcome.Should().ThrowAsync<ArgumentOutOfRangeException>();
+        await outcome.Should().ThrowAsync<InvalidOperationException>();
         await VerifyWorkspaceProviderDidNotReceiveAny();
         await _permissionProvider.DidNotReceive().GetPermissions(Arg.Any<UserId>(), Arg.Any<WorkspaceId>());
 
@@ -158,11 +158,11 @@ public class PermissionAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
-    public async Task PermissionAuthorizationHandler_WhenRequestIsEmpty_ShouldSucceed(
+    internal async Task PermissionAuthorizationHandler_WhenRequestIsEmpty_ShouldSucceed(
         Permissions permission,
-        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         string? _1,
-        PermissionAuthorizationHandlerData.StringIdType _2)
+        TargetKind _2)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission) };
@@ -172,7 +172,7 @@ public class PermissionAuthorizationHandlerTest
         ]));
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
-        Utils.Authorization.Permission.MockEmptyHttpRequest(_httpContextAccessor, requestLocation);
+        Utils.Authorization.Permission.MockEmptyHttpRequest(_httpContextAccessor, permission, requestLocation);
 
         // Act
         await _uut.HandleAsync(context);
@@ -189,11 +189,11 @@ public class PermissionAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
-    public async Task PermissionAuthorizationHandler_WhenRequestIdIsEmpty_ShouldSucceed(
+    internal async Task PermissionAuthorizationHandler_WhenRequestIdIsEmpty_ShouldSucceed(
         Permissions permission,
-        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         string? id,
-        PermissionAuthorizationHandlerData.StringIdType _1)
+        TargetKind _1)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission) };
@@ -204,7 +204,7 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         const string stringId = "";
-        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, permission, requestLocation, id, stringId);
 
         // Act
         await _uut.HandleAsync(context);
@@ -221,11 +221,11 @@ public class PermissionAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
-    public async Task PermissionAuthorizationHandler_WhenRequestIdIsNotGuid_ShouldSucceed(
+    internal async Task PermissionAuthorizationHandler_WhenRequestIdIsNotGuid_ShouldSucceed(
         Permissions permission,
-        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         string? id,
-        PermissionAuthorizationHandlerData.StringIdType _1)
+        TargetKind _1)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission) };
@@ -236,7 +236,7 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         const string stringId = "not guid";
-        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, permission, requestLocation, id, stringId);
 
         // Act
         await _uut.HandleAsync(context);
@@ -253,11 +253,11 @@ public class PermissionAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
-    public async Task PermissionAuthorizationHandler_WhenRequestIdIsEmptyGuid_ShouldSucceed(
+    internal async Task PermissionAuthorizationHandler_WhenRequestIdIsEmptyGuid_ShouldSucceed(
         Permissions permission,
-        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         string? id,
-        PermissionAuthorizationHandlerData.StringIdType _1)
+        TargetKind _1)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission) };
@@ -268,7 +268,7 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.Empty.ToString();
-        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, permission, requestLocation, id, stringId);
 
         // Act
         await _uut.HandleAsync(context);
@@ -285,11 +285,11 @@ public class PermissionAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
-    public async Task PermissionAuthorizationHandler_WhenWorkspaceIsNull_ShouldFailAsNotFound(
+    internal async Task PermissionAuthorizationHandler_WhenWorkspaceIsNull_ShouldFailAsNotFound(
         Permissions permission,
-        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         string? id,
-        PermissionAuthorizationHandlerData.StringIdType provider)
+        TargetKind provider)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission) };
@@ -300,7 +300,7 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.NewGuid().ToString();
-        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, permission, requestLocation, id, stringId);
 
         // Act
         await _uut.HandleAsync(context);
@@ -315,16 +315,16 @@ public class PermissionAuthorizationHandlerTest
         context.HasSucceeded.Should().BeFalse();
         context.HasFailed.Should().BeTrue();
         context.FailureReasons.OfType<NotFoundAuthorizationFailureReason>().Should().ContainSingle()
-            .Which.Error.Should().Be(GetNotFoundError(provider));
+            .Which.Error.Should().Be(Utils.Authorization.GetNotFoundError(provider));
     }
 
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
-    public async Task PermissionAuthorizationHandler_WhenTheyDoNotHavePermission_ShouldFail(
+    internal async Task PermissionAuthorizationHandler_WhenTheyDoNotHavePermission_ShouldFail(
         Permissions permission,
-        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         string? id,
-        PermissionAuthorizationHandlerData.StringIdType provider)
+        TargetKind provider)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission) };
@@ -336,7 +336,7 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.NewGuid().ToString();
-        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, permission, requestLocation, id, stringId);
 
         var workspace = WorkspaceFactory.Create();
         Utils.Authorization.Permission.MockWorkspaceProvider(_workspaceProvider, workspace);
@@ -365,11 +365,11 @@ public class PermissionAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
-    public async Task PermissionAuthorizationHandler_WhenTheyAreNotCollaborators_ShouldFailAsNotFound(
+    internal async Task PermissionAuthorizationHandler_WhenTheyAreNotCollaborators_ShouldFailAsNotFound(
         Permissions permission,
-        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         string? id,
-        PermissionAuthorizationHandlerData.StringIdType provider)
+        TargetKind provider)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission) };
@@ -381,7 +381,7 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.NewGuid().ToString();
-        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, permission, requestLocation, id, stringId);
 
         var workspace = WorkspaceFactory.Create();
         Utils.Authorization.Permission.MockWorkspaceProvider(_workspaceProvider, workspace);
@@ -407,16 +407,16 @@ public class PermissionAuthorizationHandlerTest
         context.HasSucceeded.Should().BeFalse();
         context.HasFailed.Should().BeTrue();
         context.FailureReasons.OfType<NotFoundAuthorizationFailureReason>().Should().ContainSingle()
-            .Which.Error.Should().Be(GetNotFoundError(provider));
+            .Which.Error.Should().Be(Utils.Authorization.GetNotFoundError(provider));
     }
 
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
-    public async Task PermissionAuthorizationHandler_WhenTheyHaveOtherPermissions_ShouldFail(
+    internal async Task PermissionAuthorizationHandler_WhenTheyHaveOtherPermissions_ShouldFail(
         Permissions permission,
-        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         string? id,
-        PermissionAuthorizationHandlerData.StringIdType provider)
+        TargetKind provider)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission) };
@@ -428,7 +428,7 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.NewGuid().ToString();
-        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, permission, requestLocation, id, stringId);
 
         var workspace = WorkspaceFactory.Create();
         Utils.Authorization.Permission.MockWorkspaceProvider(_workspaceProvider, workspace);
@@ -460,11 +460,11 @@ public class PermissionAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(PermissionAuthorizationHandlerData.GetPermissions))]
-    public async Task PermissionAuthorizationHandler_WhenTheyHavePermission_ShouldSucceed(
+    internal async Task PermissionAuthorizationHandler_WhenTheyHavePermission_ShouldSucceed(
         Permissions permission,
-        PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         string? id,
-        PermissionAuthorizationHandlerData.StringIdType provider)
+        TargetKind provider)
     {
         // Arrange
         var requirements = new[] { new PermissionRequirement(permission) };
@@ -476,7 +476,7 @@ public class PermissionAuthorizationHandlerTest
         var context = new AuthorizationHandlerContext(requirements, user, null);
 
         var stringId = Guid.NewGuid().ToString();
-        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, requestLocation, id, stringId);
+        Utils.Authorization.Permission.MockHttpRequest(_httpContextAccessor, permission, requestLocation, id, stringId);
 
         var workspace = WorkspaceFactory.Create();
         Utils.Authorization.Permission.MockWorkspaceProvider(_workspaceProvider, workspace);
@@ -500,19 +500,5 @@ public class PermissionAuthorizationHandlerTest
                 Arg.Is<WorkspaceId>(wId => wId == workspace.Id));
 
         context.HasSucceeded.Should().BeTrue();
-    }
-
-    private static Error GetNotFoundError(PermissionAuthorizationHandlerData.StringIdType stringIdType)
-    {
-        return stringIdType switch
-        {
-            PermissionAuthorizationHandlerData.StringIdType.CustomFieldSetup => Errors.CustomFieldSetup.NotFound,
-            PermissionAuthorizationHandlerData.StringIdType.Project => Errors.Project.NotFound,
-            PermissionAuthorizationHandlerData.StringIdType.ProjectSprint => Errors.ProjectSprint.NotFound,
-            PermissionAuthorizationHandlerData.StringIdType.ProjectStage => Errors.ProjectStage.NotFound,
-            PermissionAuthorizationHandlerData.StringIdType.ProjectTask => Errors.ProjectTask.NotFound,
-            PermissionAuthorizationHandlerData.StringIdType.Workspace => Errors.Workspace.NotFound,
-            _ => throw new ArgumentOutOfRangeException(nameof(stringIdType))
-        };
     }
 }

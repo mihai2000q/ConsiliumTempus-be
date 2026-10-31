@@ -1,6 +1,4 @@
-﻿using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
-using ErrorOr;
+﻿using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using ConsiliumTempus.Common.UnitTests.Common.Entities;
@@ -18,6 +16,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute.ReturnsExtensions;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Targets;
+using Controller = ConsiliumTempus.Infrastructure.UnitTests.TestUtils.Utils.Authorization.Controller;
+using Method = ConsiliumTempus.Infrastructure.UnitTests.TestUtils.Utils.Authorization.Method;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.Security.Authorization.WorkspaceAuthorization;
 
@@ -121,12 +122,12 @@ public class WorkspaceAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task WorkspaceAuthorizationHandler_WhenRequestControllerIsEmpty_ShouldSucceed(
+    internal async Task WorkspaceAuthorizationHandler_WhenRequestControllerIsEmpty_ShouldThrowForUnmappedEndpoint(
         WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
-        WorkspaceAuthorizationHandlerData.Controller _1,
-        WorkspaceAuthorizationHandlerData.Method _2,
-        WorkspaceAuthorizationHandlerData.RequestLocation _3,
-        WorkspaceAuthorizationHandlerData.StringIdType _4)
+        Controller _1,
+        Method _2,
+        IdLocation _3,
+        TargetKind _4)
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
@@ -143,25 +144,23 @@ public class WorkspaceAuthorizationHandlerTest
             .Returns(new RouteValueDictionary());
 
         // Act
-        await _uut.HandleAsync(context);
+        var act = async () => await _uut.HandleAsync(context);
 
         // Assert
-        _ = _httpContextAccessor
-            .Received(2)
-            .HttpContext;
+        await act.Should().ThrowAsync<InvalidOperationException>();
         await VerifyWorkspaceProviderDidNotReceiveAny();
 
-        context.HasSucceeded.Should().BeTrue();
+        context.HasSucceeded.Should().BeFalse();
     }
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task WorkspaceAuthorizationHandler_WhenRequestMethodIsEmpty_ShouldSucceed(
+    internal async Task WorkspaceAuthorizationHandler_WhenRequestMethodIsEmpty_ShouldThrowForUnmappedEndpoint(
         WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
-        WorkspaceAuthorizationHandlerData.Controller controller,
-        WorkspaceAuthorizationHandlerData.Method _1,
-        WorkspaceAuthorizationHandlerData.RequestLocation _2,
-        WorkspaceAuthorizationHandlerData.StringIdType _3)
+        Controller controller,
+        Method _1,
+        IdLocation _2,
+        TargetKind _3)
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
@@ -178,25 +177,23 @@ public class WorkspaceAuthorizationHandlerTest
             .Returns(new RouteValueDictionary { ["controller"] = controller.ToString() });
 
         // Act
-        await _uut.HandleAsync(context);
+        var act = async () => await _uut.HandleAsync(context);
 
         // Assert
-        _ = _httpContextAccessor
-            .Received(2)
-            .HttpContext;
+        await act.Should().ThrowAsync<InvalidOperationException>();
         await VerifyWorkspaceProviderDidNotReceiveAny();
 
-        context.HasSucceeded.Should().BeTrue();
+        context.HasSucceeded.Should().BeFalse();
     }
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task WorkspaceAuthorizationHandler_WhenRequestIsEmpty_ShouldSucceed(
+    internal async Task WorkspaceAuthorizationHandler_WhenRequestIsEmpty_ShouldSucceed(
         WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
-        WorkspaceAuthorizationHandlerData.Controller controller,
-        WorkspaceAuthorizationHandlerData.Method method,
-        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
-        WorkspaceAuthorizationHandlerData.StringIdType _1)
+        Controller controller,
+        Method method,
+        IdLocation requestLocation,
+        TargetKind _1)
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
@@ -213,7 +210,7 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .Received(2)
             .HttpContext;
         await VerifyWorkspaceProviderDidNotReceiveAny();
 
@@ -222,12 +219,12 @@ public class WorkspaceAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task WorkspaceAuthorizationHandler_WhenRequestIdIsEmpty_ShouldSucceed(
+    internal async Task WorkspaceAuthorizationHandler_WhenRequestIdIsEmpty_ShouldSucceed(
         WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
-        WorkspaceAuthorizationHandlerData.Controller controller,
-        WorkspaceAuthorizationHandlerData.Method method,
-        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
-        WorkspaceAuthorizationHandlerData.StringIdType _1)
+        Controller controller,
+        Method method,
+        IdLocation requestLocation,
+        TargetKind _1)
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
@@ -250,7 +247,7 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .Received(2)
             .HttpContext;
         await VerifyWorkspaceProviderDidNotReceiveAny();
 
@@ -259,12 +256,12 @@ public class WorkspaceAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task WorkspaceAuthorizationHandler_WhenRequestIdIsNotGuid_ShouldSucceed(
+    internal async Task WorkspaceAuthorizationHandler_WhenRequestIdIsNotGuid_ShouldSucceed(
         WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
-        WorkspaceAuthorizationHandlerData.Controller controller,
-        WorkspaceAuthorizationHandlerData.Method method,
-        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
-        WorkspaceAuthorizationHandlerData.StringIdType _1)
+        Controller controller,
+        Method method,
+        IdLocation requestLocation,
+        TargetKind _1)
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
@@ -287,7 +284,7 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .Received(2)
             .HttpContext;
         await VerifyWorkspaceProviderDidNotReceiveAny();
 
@@ -296,12 +293,12 @@ public class WorkspaceAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task WorkspaceAuthorizationHandler_WhenRequestIdIsEmptyGuid_ShouldSucceed(
+    internal async Task WorkspaceAuthorizationHandler_WhenRequestIdIsEmptyGuid_ShouldSucceed(
         WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
-        WorkspaceAuthorizationHandlerData.Controller controller,
-        WorkspaceAuthorizationHandlerData.Method method,
-        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
-        WorkspaceAuthorizationHandlerData.StringIdType _1)
+        Controller controller,
+        Method method,
+        IdLocation requestLocation,
+        TargetKind _1)
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
@@ -324,7 +321,7 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .Received(2)
             .HttpContext;
         await VerifyWorkspaceProviderDidNotReceiveAny();
 
@@ -333,12 +330,12 @@ public class WorkspaceAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task WorkspaceAuthorizationHandler_WhenWorkspaceIsNull_ShouldFailAsNotFound(
+    internal async Task WorkspaceAuthorizationHandler_WhenWorkspaceIsNull_ShouldFailAsNotFound(
         WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
-        WorkspaceAuthorizationHandlerData.Controller controller,
-        WorkspaceAuthorizationHandlerData.Method method,
-        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
-        WorkspaceAuthorizationHandlerData.StringIdType stringIdType)
+        Controller controller,
+        Method method,
+        IdLocation requestLocation,
+        TargetKind stringIdType)
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
@@ -361,14 +358,14 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .Received(2)
             .HttpContext;
         await Utils.Authorization.Workspace.VerifyWorkspaceProvider(_workspaceProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().BeFalse();
         context.HasFailed.Should().BeTrue();
         context.FailureReasons.OfType<NotFoundAuthorizationFailureReason>().Should().ContainSingle()
-            .Which.Error.Should().Be(GetNotFoundError(stringIdType));
+            .Which.Error.Should().Be(Utils.Authorization.GetNotFoundError(stringIdType));
     }
 
     [Fact]
@@ -388,9 +385,9 @@ public class WorkspaceAuthorizationHandlerTest
 
         Utils.Authorization.Workspace.MockHttpRequest(
             _httpContextAccessor,
-            WorkspaceAuthorizationHandlerData.Controller.Workspace,
-            WorkspaceAuthorizationHandlerData.Method.DELETE,
-            WorkspaceAuthorizationHandlerData.RequestLocation.Route,
+            Controller.Workspace,
+            Method.DELETE,
+            IdLocation.Route,
             workspace.Id.ToString());
 
         // Act
@@ -404,12 +401,12 @@ public class WorkspaceAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task WorkspaceAuthorizationHandler_WhenIsNotCollaborator_ShouldFailAsNotFound(
+    internal async Task WorkspaceAuthorizationHandler_WhenIsNotCollaborator_ShouldFailAsNotFound(
         WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
-        WorkspaceAuthorizationHandlerData.Controller controller,
-        WorkspaceAuthorizationHandlerData.Method method,
-        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
-        WorkspaceAuthorizationHandlerData.StringIdType stringIdType)
+        Controller controller,
+        Method method,
+        IdLocation requestLocation,
+        TargetKind stringIdType)
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
@@ -435,24 +432,24 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .Received(2)
             .HttpContext;
         await Utils.Authorization.Workspace.VerifyWorkspaceProvider(_workspaceProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().BeFalse();
         context.HasFailed.Should().BeTrue();
         context.FailureReasons.OfType<NotFoundAuthorizationFailureReason>().Should().ContainSingle()
-            .Which.Error.Should().Be(GetNotFoundError(stringIdType));
+            .Which.Error.Should().Be(Utils.Authorization.GetNotFoundError(stringIdType));
     }
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task WorkspaceAuthorizationHandler_WhenIsCollaboratorButNotOwner_ShouldSucceedOnlyForCollaboratorLevel(
+    internal async Task WorkspaceAuthorizationHandler_WhenIsCollaboratorButNotOwner_ShouldSucceedOnlyForCollaboratorLevel(
         WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
-        WorkspaceAuthorizationHandlerData.Controller controller,
-        WorkspaceAuthorizationHandlerData.Method method,
-        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
-        WorkspaceAuthorizationHandlerData.StringIdType stringIdType)
+        Controller controller,
+        Method method,
+        IdLocation requestLocation,
+        TargetKind stringIdType)
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
@@ -480,7 +477,7 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .Received(2)
             .HttpContext;
         await Utils.Authorization.Workspace.VerifyWorkspaceProvider(_workspaceProvider, stringIdType, stringId);
 
@@ -490,12 +487,12 @@ public class WorkspaceAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(WorkspaceAuthorizationHandlerData.GetAuthorizationLevels))]
-    public async Task WorkspaceAuthorizationHandler_WhenIsAuthorized_ShouldSucceed(
+    internal async Task WorkspaceAuthorizationHandler_WhenIsAuthorized_ShouldSucceed(
         WorkspaceAuthorizationLevel workspaceAuthorizationLevel,
-        WorkspaceAuthorizationHandlerData.Controller controller,
-        WorkspaceAuthorizationHandlerData.Method method,
-        WorkspaceAuthorizationHandlerData.RequestLocation requestLocation,
-        WorkspaceAuthorizationHandlerData.StringIdType stringIdType)
+        Controller controller,
+        Method method,
+        IdLocation requestLocation,
+        TargetKind stringIdType)
     {
         // Arrange
         var requirements = new[] { new WorkspaceAuthorizationRequirement(workspaceAuthorizationLevel) };
@@ -523,20 +520,10 @@ public class WorkspaceAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == WorkspaceAuthorizationHandlerData.RequestLocation.Route ? 3 : 4)
+            .Received(2)
             .HttpContext;
         await Utils.Authorization.Workspace.VerifyWorkspaceProvider(_workspaceProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().BeTrue();
-    }
-
-    private static Error GetNotFoundError(WorkspaceAuthorizationHandlerData.StringIdType stringIdType)
-    {
-        return stringIdType switch
-        {
-            WorkspaceAuthorizationHandlerData.StringIdType.Workspace => Errors.Workspace.NotFound,
-            WorkspaceAuthorizationHandlerData.StringIdType.Project => Errors.Project.NotFound,
-            _ => throw new ArgumentOutOfRangeException(nameof(stringIdType))
-        };
     }
 }

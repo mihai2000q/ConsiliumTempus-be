@@ -46,18 +46,18 @@ internal static partial class Utils
 
             internal static async Task VerifyWorkspaceProvider(
                 IWorkspaceProvider workspaceProvider,
-                WorkspaceAuthorizationHandlerData.StringIdType provider,
+                TargetKind provider,
                 string stringId)
             {
                 switch (provider)
                 {
-                    case WorkspaceAuthorizationHandlerData.StringIdType.Workspace:
+                    case TargetKind.Workspace:
                         await workspaceProvider
                             .Received(1)
                             .GetWithMemberships(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));
                         break;
 
-                    case WorkspaceAuthorizationHandlerData.StringIdType.Project:
+                    case TargetKind.Project:
                         await workspaceProvider
                             .Received(1)
                             .GetByProjectWithMemberships(Arg.Is<ProjectId>(pId => pId.Value.ToString() == stringId));

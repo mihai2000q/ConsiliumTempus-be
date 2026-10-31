@@ -1,6 +1,4 @@
-﻿using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
-using ErrorOr;
+﻿using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
 using System.Security.Claims;
 using ConsiliumTempus.Common.UnitTests.Project;
 using ConsiliumTempus.Common.UnitTests.User;
@@ -19,6 +17,9 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
 using NSubstitute.ReturnsExtensions;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Targets;
+using Action = ConsiliumTempus.Infrastructure.UnitTests.TestUtils.Utils.Authorization.Action;
+using Controller = ConsiliumTempus.Infrastructure.UnitTests.TestUtils.Utils.Authorization.Controller;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.Security.Authorization.ProjectAuthorization;
 
@@ -126,13 +127,13 @@ public class ProjectAuthorizationHandlerTest
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
-    public async Task ProjectAuthorizationHandler_WhenRequestControllerIsEmpty_ShouldSucceed(
+    internal async Task ProjectAuthorizationHandler_WhenRequestControllerIsEmpty_ShouldThrowForUnmappedEndpoint(
         ProjectAuthorizationLevel projectAuthorizationLevel,
-        ProjectAuthorizationHandlerData.RequestLocation _1,
+        IdLocation _1,
         Type? _2,
-        ProjectAuthorizationHandlerData.Controller _3,
-        string _4,
-        ProjectAuthorizationHandlerData.StringIdType _5)
+        Controller _3,
+        Action _4,
+        TargetKind _5)
     {
         // Arrange
         var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
@@ -149,27 +150,25 @@ public class ProjectAuthorizationHandlerTest
             .Returns(new RouteValueDictionary());
 
         // Act
-        await _uut.HandleAsync(context);
+        var act = async () => await _uut.HandleAsync(context);
 
         // Assert
-        _ = _httpContextAccessor
-            .Received(2)
-            .HttpContext;
+        await act.Should().ThrowAsync<InvalidOperationException>();
         await VerifyProjectProviderDidNotReceiveAny();
 
-        context.HasSucceeded.Should().BeTrue();
+        context.HasSucceeded.Should().BeFalse();
     }
 
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
-    public async Task ProjectAuthorizationHandler_WhenRequestActionIsEmpty_ShouldSucceed(
+    internal async Task ProjectAuthorizationHandler_WhenRequestMethodIsEmpty_ShouldThrowForUnmappedEndpoint(
         ProjectAuthorizationLevel projectAuthorizationLevel,
-        ProjectAuthorizationHandlerData.RequestLocation _1,
+        IdLocation _1,
         Type? _2,
-        ProjectAuthorizationHandlerData.Controller controller,
-        string _3,
-        ProjectAuthorizationHandlerData.StringIdType _4)
+        Controller controller,
+        Action _3,
+        TargetKind _4)
     {
         // Arrange
         var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
@@ -186,27 +185,25 @@ public class ProjectAuthorizationHandlerTest
             .Returns(new RouteValueDictionary { ["controller"] = controller.ToString() });
 
         // Act
-        await _uut.HandleAsync(context);
+        var act = async () => await _uut.HandleAsync(context);
 
         // Assert
-        _ = _httpContextAccessor
-            .Received(2)
-            .HttpContext;
+        await act.Should().ThrowAsync<InvalidOperationException>();
         await VerifyProjectProviderDidNotReceiveAny();
 
-        context.HasSucceeded.Should().BeTrue();
+        context.HasSucceeded.Should().BeFalse();
     }
 
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
-    public async Task ProjectAuthorizationHandler_WhenRequestIsEmpty_ShouldSucceed(
+    internal async Task ProjectAuthorizationHandler_WhenRequestIsEmpty_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
-        ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         Type? _1,
-        ProjectAuthorizationHandlerData.Controller controller,
-        string requestAction,
-        ProjectAuthorizationHandlerData.StringIdType _2)
+        Controller controller,
+        Action requestAction,
+        TargetKind _2)
     {
         // Arrange
         var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
@@ -224,7 +221,7 @@ public class ProjectAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(2)
             .HttpContext;
         await VerifyProjectProviderDidNotReceiveAny();
 
@@ -234,13 +231,13 @@ public class ProjectAuthorizationHandlerTest
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
-    public async Task ProjectAuthorizationHandler_WhenRequestIdIsEmpty_ShouldSucceed(
+    internal async Task ProjectAuthorizationHandler_WhenRequestIdIsEmpty_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
-        ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         Type? idType,
-        ProjectAuthorizationHandlerData.Controller controller,
-        string requestAction,
-        ProjectAuthorizationHandlerData.StringIdType _1)
+        Controller controller,
+        Action requestAction,
+        TargetKind _1)
     {
         // Arrange
         var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
@@ -264,7 +261,7 @@ public class ProjectAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(2)
             .HttpContext;
         await VerifyProjectProviderDidNotReceiveAny();
 
@@ -274,13 +271,13 @@ public class ProjectAuthorizationHandlerTest
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
-    public async Task ProjectAuthorizationHandler_WhenRequestIdIsNotGuid_ShouldSucceed(
+    internal async Task ProjectAuthorizationHandler_WhenRequestIdIsNotGuid_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
-        ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         Type? idType,
-        ProjectAuthorizationHandlerData.Controller controller,
-        string requestAction,
-        ProjectAuthorizationHandlerData.StringIdType _1)
+        Controller controller,
+        Action requestAction,
+        TargetKind _1)
     {
         // Arrange
         var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
@@ -304,7 +301,7 @@ public class ProjectAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(2)
             .HttpContext;
         await VerifyProjectProviderDidNotReceiveAny();
 
@@ -314,13 +311,13 @@ public class ProjectAuthorizationHandlerTest
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
-    public async Task ProjectAuthorizationHandler_WhenRequestIdIsEmptyGuid_ShouldSucceed(
+    internal async Task ProjectAuthorizationHandler_WhenRequestIdIsEmptyGuid_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
-        ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         Type? idType,
-        ProjectAuthorizationHandlerData.Controller controller,
-        string requestAction,
-        ProjectAuthorizationHandlerData.StringIdType _1)
+        Controller controller,
+        Action requestAction,
+        TargetKind _1)
     {
         // Arrange
         var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
@@ -344,7 +341,7 @@ public class ProjectAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(2)
             .HttpContext;
         await VerifyProjectProviderDidNotReceiveAny();
 
@@ -354,13 +351,13 @@ public class ProjectAuthorizationHandlerTest
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
-    public async Task ProjectAuthorizationHandler_WhenProjectIsNull_ShouldSucceedForGlobalCustomFieldSetupsAndFailAsNotFoundForTheRest(
+    internal async Task ProjectAuthorizationHandler_WhenProjectIsNull_ShouldSucceedForGlobalCustomFieldSetupsAndFailAsNotFoundForTheRest(
         ProjectAuthorizationLevel projectAuthorizationLevel,
-        ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         Type? idType,
-        ProjectAuthorizationHandlerData.Controller controller,
-        string requestAction,
-        ProjectAuthorizationHandlerData.StringIdType stringIdType)
+        Controller controller,
+        Action requestAction,
+        TargetKind stringIdType)
     {
         // Arrange
         var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
@@ -385,11 +382,11 @@ public class ProjectAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(2)
             .HttpContext;
         await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
-        if (stringIdType == ProjectAuthorizationHandlerData.StringIdType.CustomFieldSetup)
+        if (stringIdType == TargetKind.CustomFieldSetup)
         {
             // global custom field setups have no project, and the missing ones are found by the permission handler
             context.HasSucceeded.Should().BeTrue();
@@ -399,7 +396,7 @@ public class ProjectAuthorizationHandlerTest
             context.HasSucceeded.Should().BeFalse();
             context.HasFailed.Should().BeTrue();
             context.FailureReasons.OfType<NotFoundAuthorizationFailureReason>().Should().ContainSingle()
-                .Which.Error.Should().Be(GetNotFoundError(stringIdType));
+                .Which.Error.Should().Be(Utils.Authorization.GetNotFoundError(stringIdType));
         }
     }
 
@@ -421,10 +418,10 @@ public class ProjectAuthorizationHandlerTest
 
         Utils.Authorization.Project.MockHttpRequest(
             _httpContextAccessor,
-            ProjectAuthorizationHandlerData.RequestLocation.Route,
+            IdLocation.Route,
             null,
-            ProjectAuthorizationHandlerData.Controller.Project,
-            "Get",
+            Controller.Project,
+            Action.Get,
             project.Id.Value.ToString());
 
         // Act
@@ -438,13 +435,13 @@ public class ProjectAuthorizationHandlerTest
 
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
-    public async Task ProjectAuthorizationHandler_WhenLevelIsIsAllowedAndProjectIsNotPrivate_ShouldSucceed(
+    internal async Task ProjectAuthorizationHandler_WhenLevelIsIsAllowedAndProjectIsNotPrivate_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
-        ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         Type? idType,
-        ProjectAuthorizationHandlerData.Controller controller,
-        string requestAction,
-        ProjectAuthorizationHandlerData.StringIdType stringIdType)
+        Controller controller,
+        Action requestAction,
+        TargetKind stringIdType)
     {
         // Arrange
         var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
@@ -472,7 +469,7 @@ public class ProjectAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(2)
             .HttpContext;
         await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
@@ -482,13 +479,13 @@ public class ProjectAuthorizationHandlerTest
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
-    public async Task ProjectAuthorizationHandler_WhenIsNotAllowed_ShouldFailAsNotFound(
+    internal async Task ProjectAuthorizationHandler_WhenIsNotAllowed_ShouldFailAsNotFound(
         ProjectAuthorizationLevel projectAuthorizationLevel,
-        ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         Type? idType,
-        ProjectAuthorizationHandlerData.Controller controller,
-        string requestAction,
-        ProjectAuthorizationHandlerData.StringIdType stringIdType)
+        Controller controller,
+        Action requestAction,
+        TargetKind stringIdType)
     {
         // Arrange
         var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
@@ -516,26 +513,26 @@ public class ProjectAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(2)
             .HttpContext;
         await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().BeFalse();
         context.HasFailed.Should().BeTrue();
         context.FailureReasons.OfType<NotFoundAuthorizationFailureReason>().Should().ContainSingle()
-            .Which.Error.Should().Be(GetNotFoundError(stringIdType));
+            .Which.Error.Should().Be(Utils.Authorization.GetNotFoundError(stringIdType));
     }
 
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
-    public async Task ProjectAuthorizationHandler_WhenIsAllowedMemberButNotOwner_ShouldSucceedOnlyForIsAllowedLevel(
+    internal async Task ProjectAuthorizationHandler_WhenIsAllowedMemberButNotOwner_ShouldSucceedOnlyForIsAllowedLevel(
         ProjectAuthorizationLevel projectAuthorizationLevel,
-        ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         Type? idType,
-        ProjectAuthorizationHandlerData.Controller controller,
-        string requestAction,
-        ProjectAuthorizationHandlerData.StringIdType stringIdType)
+        Controller controller,
+        Action requestAction,
+        TargetKind stringIdType)
     {
         // Arrange
         var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
@@ -564,7 +561,7 @@ public class ProjectAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(2)
             .HttpContext;
         await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
@@ -575,13 +572,13 @@ public class ProjectAuthorizationHandlerTest
     [Theory]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsAllowed))]
     [ClassData(typeof(ProjectAuthorizationHandlerData.GetIsOwner))]
-    public async Task ProjectAuthorizationHandler_WhenIsAuthorized_ShouldSucceed(
+    internal async Task ProjectAuthorizationHandler_WhenIsAuthorized_ShouldSucceed(
         ProjectAuthorizationLevel projectAuthorizationLevel,
-        ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+        IdLocation requestLocation,
         Type? idType,
-        ProjectAuthorizationHandlerData.Controller controller,
-        string requestAction,
-        ProjectAuthorizationHandlerData.StringIdType stringIdType)
+        Controller controller,
+        Action requestAction,
+        TargetKind stringIdType)
     {
         // Arrange
         var requirements = new[] { new ProjectAuthorizationRequirement(projectAuthorizationLevel) };
@@ -610,23 +607,10 @@ public class ProjectAuthorizationHandlerTest
 
         // Assert
         _ = _httpContextAccessor
-            .Received(requestLocation == ProjectAuthorizationHandlerData.RequestLocation.Route ? 2 : 3)
+            .Received(2)
             .HttpContext;
         await Utils.Authorization.Project.VerifyProjectProvider(_projectProvider, stringIdType, stringId);
 
         context.HasSucceeded.Should().BeTrue();
-    }
-
-    private static Error GetNotFoundError(ProjectAuthorizationHandlerData.StringIdType stringIdType)
-    {
-        return stringIdType switch
-        {
-            ProjectAuthorizationHandlerData.StringIdType.CustomFieldSetup => Errors.CustomFieldSetup.NotFound,
-            ProjectAuthorizationHandlerData.StringIdType.Project => Errors.Project.NotFound,
-            ProjectAuthorizationHandlerData.StringIdType.ProjectSprint => Errors.ProjectSprint.NotFound,
-            ProjectAuthorizationHandlerData.StringIdType.ProjectStage => Errors.ProjectStage.NotFound,
-            ProjectAuthorizationHandlerData.StringIdType.ProjectTask => Errors.ProjectTask.NotFound,
-            _ => throw new ArgumentOutOfRangeException(nameof(stringIdType))
-        };
     }
 }

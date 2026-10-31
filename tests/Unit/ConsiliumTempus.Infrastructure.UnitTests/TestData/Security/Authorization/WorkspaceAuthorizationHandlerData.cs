@@ -1,52 +1,27 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using ConsiliumTempus.Domain.Common.Enums;
+﻿using ConsiliumTempus.Domain.Common.Enums;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Targets;
+using Controller = ConsiliumTempus.Infrastructure.UnitTests.TestUtils.Utils.Authorization.Controller;
+using Method = ConsiliumTempus.Infrastructure.UnitTests.TestUtils.Utils.Authorization.Method;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorization;
 
 public static class WorkspaceAuthorizationHandlerData
 {
-    public enum Controller
-    {
-        Workspace,
-        Project
-    }
-
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum Method
-    {
-        GET,
-        POST,
-        PUT,
-        DELETE
-    }
-
-    public enum RequestLocation
-    {
-        Route,
-        Body
-    }
-
-    public enum StringIdType
-    {
-        Workspace,
-        Project
-    }
-
     internal class GetAuthorizationLevels
-        : TheoryData<WorkspaceAuthorizationLevel, Controller, Method, RequestLocation, StringIdType>
+        : TheoryData<WorkspaceAuthorizationLevel, Controller, Method, IdLocation, TargetKind>
     {
         public GetAuthorizationLevels()
         {
             var level = WorkspaceAuthorizationLevel.IsCollaborator;
-            Add(level, Controller.Workspace, Method.DELETE, RequestLocation.Route, StringIdType.Workspace);
+            Add(level, Controller.Workspace, Method.DELETE, IdLocation.Route, TargetKind.Workspace);
 
-            Add(level, Controller.Project, Method.GET, RequestLocation.Route, StringIdType.Project);
-            Add(level, Controller.Project, Method.POST, RequestLocation.Body, StringIdType.Project);
-            Add(level, Controller.Project, Method.PUT, RequestLocation.Body, StringIdType.Project);
-            Add(level, Controller.Project, Method.DELETE, RequestLocation.Route, StringIdType.Project);
+            Add(level, Controller.Project, Method.GET, IdLocation.Route, TargetKind.Project);
+            Add(level, Controller.Project, Method.POST, IdLocation.Body, TargetKind.Project);
+            Add(level, Controller.Project, Method.PUT, IdLocation.Body, TargetKind.Project);
+            Add(level, Controller.Project, Method.DELETE, IdLocation.Route, TargetKind.Project);
 
             level = WorkspaceAuthorizationLevel.IsWorkspaceOwner;
-            Add(level, Controller.Workspace, Method.PUT, RequestLocation.Body, StringIdType.Workspace);
+            Add(level, Controller.Workspace, Method.PUT, IdLocation.Body, TargetKind.Workspace);
         }
     }
 }

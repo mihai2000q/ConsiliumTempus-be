@@ -68,42 +68,42 @@ internal static partial class Utils
 
             internal static async Task VerifyWorkspaceProvider(
                 IWorkspaceProvider workspaceProvider,
-                PermissionAuthorizationHandlerData.StringIdType provider,
+                TargetKind provider,
                 string stringId)
             {
                 switch (provider)
                 {
-                    case PermissionAuthorizationHandlerData.StringIdType.CustomFieldSetup:
+                    case TargetKind.CustomFieldSetup:
                         await workspaceProvider
                             .Received(1)
                             .GetByCustomFieldSetup(Arg.Is<CustomFieldSetupId>(cfsId => cfsId.Value.ToString() == stringId));
                         break;
 
-                    case PermissionAuthorizationHandlerData.StringIdType.Project:
+                    case TargetKind.Project:
                         await workspaceProvider
                             .Received(1)
                             .GetByProject(Arg.Is<ProjectId>(pId => pId.Value.ToString() == stringId));
                         break;
 
-                    case PermissionAuthorizationHandlerData.StringIdType.ProjectSprint:
+                    case TargetKind.ProjectSprint:
                         await workspaceProvider
                             .Received(1)
                             .GetByProjectSprint(Arg.Is<ProjectSprintId>(psId => psId.Value.ToString() == stringId));
                         break;
 
-                    case PermissionAuthorizationHandlerData.StringIdType.ProjectStage:
+                    case TargetKind.ProjectStage:
                         await workspaceProvider
                             .Received(1)
                             .GetByProjectStage(Arg.Is<ProjectStageId>(psId => psId.Value.ToString() == stringId));
                         break;
 
-                    case PermissionAuthorizationHandlerData.StringIdType.ProjectTask:
+                    case TargetKind.ProjectTask:
                         await workspaceProvider
                             .Received(1)
                             .GetByProjectTask(Arg.Is<ProjectTaskId>(ptId => ptId.Value.ToString() == stringId));
                         break;
 
-                    case PermissionAuthorizationHandlerData.StringIdType.Workspace:
+                    case TargetKind.Workspace:
                         await workspaceProvider
                             .Received(1)
                             .Get(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));
