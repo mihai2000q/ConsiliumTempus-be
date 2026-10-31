@@ -60,6 +60,8 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId>, IAudit
     public IReadOnlyList<CustomFieldSetupAggregate> CustomFieldSetups => _customFieldSetups.AsReadOnly();
     public Audit Audit { get; init; } = null!;
 
+    public bool IsFavorite(UserAggregate user) => _favorites.Contains(user);
+
     public static ProjectAggregate Create(
         Name name,
         IsPrivate isPrivate,
@@ -81,11 +83,6 @@ public sealed class ProjectAggregate : AggregateRoot<ProjectId>, IAudit
         project.AddDomainEvent(new ProjectCreated(project));
 
         return project;
-    }
-
-    public bool IsFavorite(UserAggregate user)
-    {
-        return _favorites.Contains(user);
     }
 
     public void Update(Name name, ProjectLifecycle lifecycle)
