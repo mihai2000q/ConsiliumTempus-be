@@ -1,4 +1,7 @@
 ﻿using System.Linq.Expressions;
+using ConsiliumTempus.Domain.Workspace.ValueObjects;
+using ConsiliumTempus.Domain.User.ValueObjects;
+using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
@@ -10,92 +13,80 @@ namespace ConsiliumTempus.Infrastructure.Extensions;
 
 internal static class QueryableExtensions
 {
-    public static IQueryable<CustomField> OfCustomFieldType(
-        this IQueryable<CustomField> queryable,
-        CustomFieldSetupAggregate customFieldSetup)
+    extension<TSource>(IQueryable<TSource> queryable)
     {
-        return customFieldSetup switch
+        public IQueryable<TSource> ApplyFilters(IEnumerable<IFilter<TSource>> filters)
         {
-            DateCustomFieldSetupAggregate => queryable.OfType<DateCustomField>(),
-            DateTimeCustomFieldSetupAggregate => queryable.OfType<DateTimeCustomField>(),
-            DurationCustomFieldSetupAggregate => queryable.OfType<DurationCustomField>(),
-            MultiSelectCustomFieldSetupAggregate => queryable.OfType<MultiSelectCustomField>(),
-            NumberCustomFieldSetupAggregate => queryable.OfType<NumberCustomField>(),
-            PeopleCustomFieldSetupAggregate => queryable.OfType<PeopleCustomField>(),
-            SingleSelectCustomFieldSetupAggregate => queryable.OfType<SingleSelectCustomField>(),
-            TextCustomFieldSetupAggregate => queryable.OfType<TextCustomField>(),
-            TimeCustomFieldSetupAggregate => queryable.OfType<TimeCustomField>(),
-            _ => throw new ArgumentOutOfRangeException(nameof(customFieldSetup), customFieldSetup, "Type Not Supported")
-        };
+            return filters.Aggregate(queryable, (query, filter) => query.Where(filter.Predicate));
+        }
+
+        public IQueryable<TSource> ApplyOrders<TKey>(
+            IReadOnlyList<IOrder<TSource>> orders,
+            Expression<Func<TSource, TKey>> tieBreaker)
+        {
+            if (orders.Count == 0) return queryable;
+            var orderedQueryable = queryable.ApplyOrder(orders[0]);
+            return orders
+                .Skip(1)
+                .Aggregate(orderedQueryable, ThenApplyOrder)
+                .ThenBy(tieBreaker);
+        }
+
+        public IQueryable<TSource> Paginate(PaginationInfo? paginationInfo)
+        {
+            if (paginationInfo is null) return queryable;
+            var (pageSize, currentPage) = paginationInfo;
+            return queryable
+                .Skip(pageSize * (currentPage - 1))
+                .Take(pageSize);
+        }
+
+        public IQueryable<TSource> WhereIf(bool condition, Expression<Func<TSource, bool>> predicate)
+        {
+            return condition ? queryable.Where(predicate) : queryable;
+        }
+
+        public IQueryable<TSource> OrderByIf<TKey>(bool condition, Expression<Func<TSource, TKey>> keySelector)
+        {
+            return condition ? queryable.OrderBy(keySelector) : queryable;
+        }
+        
+        private IOrderedQueryable<TSource> ApplyOrder(IOrder<TSource> order)
+        {
+            return order.Type == OrderType.Descending
+                ? queryable.OrderByDescending(order.PropertySelector)
+                : queryable.OrderBy(order.PropertySelector);
+        }
     }
 
-    public static IQueryable<TSource> ApplyFilters<TSource>(
-        this IQueryable<TSource> queryable,
-        IEnumerable<IFilter<TSource>> filters)
+    extension<TSource>(IOrderedQueryable<TSource> queryable)
     {
-        return filters.Aggregate(queryable, (query, filter) => query.Where(filter.Predicate));
+
+        private IOrderedQueryable<TSource> ThenApplyOrder(IOrder<TSource> order)
+        {
+            return order.Type == OrderType.Descending
+                ? queryable.ThenByDescending(order.PropertySelector)
+                : queryable.ThenBy(order.PropertySelector);
+        }
     }
 
-    /// <summary>
-    /// The tie-breaker (i.e., the identifier) goes after the orders, so that the items that the orders
-    /// cannot tell apart are always in the same order, and the pages do not overlap.
-    /// It is not applied when there are no orders.
-    /// </summary>
-    public static IQueryable<TSource> ApplyOrders<TSource, TKey>(
-        this IQueryable<TSource> queryable,
-        IReadOnlyList<IOrder<TSource>> orders,
-        Expression<Func<TSource, TKey>> tieBreaker)
+    extension(IQueryable<CustomField> queryable)
     {
-        if (orders.Count == 0) return queryable;
-        var orderedQueryable = queryable.ApplyOrder(orders[0]);
-        return orders
-            .Skip(1)
-            .Aggregate(orderedQueryable, ThenApplyOrder)
-            .ThenBy(tieBreaker);
-    }
-
-    public static IQueryable<TSource> Paginate<TSource>(
-        this IQueryable<TSource> queryable,
-        PaginationInfo? paginationInfo)
-    {
-        if (paginationInfo is null) return queryable;
-        var (pageSize, currentPage) = paginationInfo;
-        return queryable
-            .Skip(pageSize * (currentPage - 1))
-            .Take(pageSize);
-    }
-
-    public static IQueryable<TSource> WhereIf<TSource>(
-        this IQueryable<TSource> queryable,
-        bool condition,
-        Expression<Func<TSource, bool>> predicate)
-    {
-        return condition ? queryable.Where(predicate) : queryable;
-    }
-
-    public static IQueryable<TSource> OrderByIf<TSource, TKey>(
-        this IQueryable<TSource> queryable,
-        bool condition,
-        Expression<Func<TSource, TKey>> keySelector)
-    {
-        return condition ? queryable.OrderBy(keySelector) : queryable;
-    }
-
-    private static IOrderedQueryable<TSource> ApplyOrder<TSource>(
-        this IQueryable<TSource> queryable,
-        IOrder<TSource> order)
-    {
-        return order.Type == OrderType.Descending
-            ? queryable.OrderByDescending(order.PropertySelector)
-            : queryable.OrderBy(order.PropertySelector);
-    }
-
-    private static IOrderedQueryable<TSource> ThenApplyOrder<TSource>(
-        this IOrderedQueryable<TSource> queryable,
-        IOrder<TSource> order)
-    {
-        return order.Type == OrderType.Descending
-            ? queryable.ThenByDescending(order.PropertySelector)
-            : queryable.ThenBy(order.PropertySelector);
+        public IQueryable<CustomField> OfCustomFieldType(CustomFieldSetupAggregate customFieldSetup)
+        {
+            return customFieldSetup switch
+            {
+                DateCustomFieldSetupAggregate => queryable.OfType<DateCustomField>(),
+                DateTimeCustomFieldSetupAggregate => queryable.OfType<DateTimeCustomField>(),
+                DurationCustomFieldSetupAggregate => queryable.OfType<DurationCustomField>(),
+                MultiSelectCustomFieldSetupAggregate => queryable.OfType<MultiSelectCustomField>(),
+                NumberCustomFieldSetupAggregate => queryable.OfType<NumberCustomField>(),
+                PeopleCustomFieldSetupAggregate => queryable.OfType<PeopleCustomField>(),
+                SingleSelectCustomFieldSetupAggregate => queryable.OfType<SingleSelectCustomField>(),
+                TextCustomFieldSetupAggregate => queryable.OfType<TextCustomField>(),
+                TimeCustomFieldSetupAggregate => queryable.OfType<TimeCustomField>(),
+                _ => throw new ArgumentOutOfRangeException(nameof(customFieldSetup), customFieldSetup, "Type Not Supported")
+            };
+        }
     }
 }
