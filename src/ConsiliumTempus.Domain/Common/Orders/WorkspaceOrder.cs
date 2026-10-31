@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
-using ConsiliumTempus.Domain.Common.Orders.Properties;
 using ConsiliumTempus.Domain.User;
 using ConsiliumTempus.Domain.Workspace;
 
@@ -15,10 +15,10 @@ public sealed class WorkspaceOrder(
 {
     public static readonly IReadOnlyList<OrderProperty<WorkspaceAggregate>> OrderProperties =
     [
-        new OrderProperties.Workspace.NameOrderProperty(),
-        new OrderProperties.Workspace.LastActivityProperty(),
-        new OrderProperties.Workspace.UpdatedDateTimeProperty(),
-        new OrderProperties.Workspace.CreatedDateTimeProperty()
+        Properties.Name,
+        Properties.LastActivity,
+        Properties.UpdatedDateTime,
+        Properties.CreatedDateTime
     ];
 
     public static IReadOnlyList<IOrder<WorkspaceAggregate>> Parse(List<string> orders)
@@ -32,4 +32,27 @@ public sealed class WorkspaceOrder(
     {
         return new WorkspaceOrder(w => w.Owner == user && w.IsPersonal.Value, OrderType.Descending);
     }
+
+    #region Properties
+
+    private static class Properties
+    {
+        internal static readonly OrderProperty<WorkspaceAggregate> Name = new(
+            nameof(WorkspaceAggregate.Name),
+            p => p.Name.Value);
+
+        internal static readonly OrderProperty<WorkspaceAggregate> LastActivity = new(
+            nameof(WorkspaceAggregate.LastActivity),
+            p => p.LastActivity);
+
+        internal static readonly OrderProperty<WorkspaceAggregate> UpdatedDateTime = new(
+            nameof(WorkspaceAggregate.Audit.UpdatedDateTime),
+            p => p.Audit.UpdatedDateTime);
+
+        internal static readonly OrderProperty<WorkspaceAggregate> CreatedDateTime = new(
+            nameof(WorkspaceAggregate.Audit.CreatedDateTime),
+            p => p.Audit.CreatedDateTime);
+    }
+
+    #endregion
 }
