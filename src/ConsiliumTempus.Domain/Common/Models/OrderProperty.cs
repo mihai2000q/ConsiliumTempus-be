@@ -3,14 +3,14 @@ using ConsiliumTempus.Domain.Common.Extensions;
 
 namespace ConsiliumTempus.Domain.Common.Models;
 
-public abstract record OrderProperty<TEntity>(
+public sealed record OrderProperty<TEntity>(
     string Identifier,
     params Expression<Func<TEntity, object?>>[] PropertySelectors)
 {
     public string Identifier { get; } = Identifier.UpperCamelCaseToSnakeCase();
 
     // Expression trees only have reference equality, so the Identifier (unique per entity) defines the property
-    public virtual bool Equals(OrderProperty<TEntity>? other)
+    public bool Equals(OrderProperty<TEntity>? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;

@@ -3,7 +3,7 @@ using ConsiliumTempus.Domain.Common.Extensions;
 
 namespace ConsiliumTempus.Domain.Common.Models;
 
-public abstract class FilterProperty<TEntity>(
+public sealed class FilterProperty<TEntity>(
     string identifier,
     Expression<Func<TEntity, object>> selector)
 {
