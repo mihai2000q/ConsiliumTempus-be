@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ConsiliumTempus.ArchitectureTests.TestUtils;
 
-public static class Utils
+public static partial class Utils
 {
     public static GivenTypesConjunction AreNotInterfaces(
         this GivenTypesThat givenTypesThat) =>
