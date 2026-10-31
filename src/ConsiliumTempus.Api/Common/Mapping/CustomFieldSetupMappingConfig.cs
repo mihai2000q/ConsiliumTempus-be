@@ -25,19 +25,6 @@ namespace ConsiliumTempus.Api.Common.Mapping;
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 internal sealed class CustomFieldSetupMappingConfig : IRegister
 {
-    private readonly Dictionary<Type, CustomFieldType> _setupTypeToCustomFieldType = new()
-    {
-        { typeof(DateCustomFieldSetupAggregate), CustomFieldType.Date },
-        { typeof(DateTimeCustomFieldSetupAggregate), CustomFieldType.DateTime },
-        { typeof(DurationCustomFieldSetupAggregate), CustomFieldType.Duration },
-        { typeof(MultiSelectCustomFieldSetupAggregate), CustomFieldType.MultiSelect },
-        { typeof(NumberCustomFieldSetupAggregate), CustomFieldType.Number },
-        { typeof(PeopleCustomFieldSetupAggregate), CustomFieldType.People },
-        { typeof(SingleSelectCustomFieldSetupAggregate), CustomFieldType.SingleSelect },
-        { typeof(TextCustomFieldSetupAggregate), CustomFieldType.Text },
-        { typeof(TimeCustomFieldSetupAggregate), CustomFieldType.Time },
-    };
-
     public void Register(TypeAdapterConfig config)
     {
         GetMappings(config);
@@ -60,50 +47,41 @@ internal sealed class CustomFieldSetupMappingConfig : IRegister
         config.NewConfig<DateCustomFieldSetupAggregate, GetCustomFieldSetupResponse.GetDateCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.Date);
+            .Map(dest => dest.Description, src => src.Description.Value);
         config.NewConfig<DateTimeCustomFieldSetupAggregate, GetCustomFieldSetupResponse.GetDateTimeCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.DateTime);
+            .Map(dest => dest.Description, src => src.Description.Value);
         config.NewConfig<DurationCustomFieldSetupAggregate, GetCustomFieldSetupResponse.GetDurationCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.Duration);
+            .Map(dest => dest.Description, src => src.Description.Value);
         config.NewConfig<MultiSelectCustomFieldSetupAggregate, GetCustomFieldSetupResponse.GetMultiSelectCustomFieldSetupResponse>()
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.MultiSelect);
+            .Map(dest => dest.Description, src => src.Description.Value);
         config.NewConfig<NumberCustomFieldSetupAggregate, GetCustomFieldSetupResponse.GetNumberCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.DefaultNumber, src => src.DefaultNumber!.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.Number);
+            .Map(dest => dest.DefaultNumber, src => src.DefaultNumber!.Value);
         config.NewConfig<PeopleCustomFieldSetupAggregate, GetCustomFieldSetupResponse.GetPeopleCustomFieldSetupResponse>()
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.People);
+            .Map(dest => dest.Description, src => src.Description.Value);
         config
             .NewConfig<SingleSelectCustomFieldSetupAggregate, 
                 GetCustomFieldSetupResponse.GetSingleSelectCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.SingleSelect);
+            .Map(dest => dest.Description, src => src.Description.Value);
         config.NewConfig<TextCustomFieldSetupAggregate, GetCustomFieldSetupResponse.GetTextCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Name, src => src.Name.Value)
             .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.DefaultText, src => src.DefaultText!.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.Text);
+            .Map(dest => dest.DefaultText, src => src.DefaultText!.Value);
         config.NewConfig<TimeCustomFieldSetupAggregate, GetCustomFieldSetupResponse.GetTimeCustomFieldSetupResponse>()
             .IgnoreNullValues(true)
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.Type, src => CustomFieldType.Time);
+            .Map(dest => dest.Description, src => src.Description.Value);
 
     }
 
@@ -151,8 +129,7 @@ internal sealed class CustomFieldSetupMappingConfig : IRegister
                 GetCollectionCustomFieldSetupFromProjectResponse.CustomFieldSetupResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.Type, src => _setupTypeToCustomFieldType[src.GetType()]);
+            .Map(dest => dest.Description, src => src.Description.Value);
     }
 
     private void GetCollectionFromWorkspaceMappings(TypeAdapterConfig config)
@@ -164,8 +141,7 @@ internal sealed class CustomFieldSetupMappingConfig : IRegister
                 GetCollectionCustomFieldSetupFromWorkspaceResponse.CustomFieldSetupResponse>()
             .Map(dest => dest.Id, src => src.Id.Value)
             .Map(dest => dest.Name, src => src.Name.Value)
-            .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.Type, src => _setupTypeToCustomFieldType[src.GetType()]);
+            .Map(dest => dest.Description, src => src.Description.Value);
     }
 
     private static void CreateOnWorkspaceMappings(TypeAdapterConfig config)

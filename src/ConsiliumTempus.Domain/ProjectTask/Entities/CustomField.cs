@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
@@ -20,6 +21,7 @@ public abstract class CustomField : Entity<CustomFieldId>
 
     public ProjectTaskAggregate ProjectTask { get; init; } = null!;
     public abstract CustomFieldSetupAggregate Setup { get; }
+    public abstract CustomFieldType Type { get; }
 
     public static CustomField Create(CustomFieldSetupAggregate setup, ProjectTaskAggregate projectTask)
     {

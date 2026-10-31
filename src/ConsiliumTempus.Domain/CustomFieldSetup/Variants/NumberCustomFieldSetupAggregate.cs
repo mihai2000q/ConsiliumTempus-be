@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
@@ -27,6 +28,8 @@ public sealed class NumberCustomFieldSetupAggregate : CustomFieldSetupAggregate
 
     public NumberCustomFieldSettings Settings { get; private set; } = null!;
     public DecimalNumber? DefaultNumber { get; private set; }
+
+    public override CustomFieldType Type => CustomFieldType.Number;
 
     public static NumberCustomFieldSetupAggregate Create(
         NumberCustomFieldSettings settings,

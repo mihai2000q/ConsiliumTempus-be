@@ -34,7 +34,7 @@ internal sealed class UpdateCustomFieldFromProjectTaskCommandHandler(
 
         var customField = task.CustomFields.SingleOrDefault(cf => cf.Id.Value == command.CustomFieldId);
         if (customField is null) return Errors.CustomField.NotFound;
-        if (GetCustomFieldType(customField) != command.Type) return Errors.CustomField.TypeMismatch;
+        if (customField.Type != command.Type) return Errors.CustomField.TypeMismatch;
 
         try
         {
@@ -98,23 +98,6 @@ internal sealed class UpdateCustomFieldFromProjectTaskCommandHandler(
         task.Stage.Sprint.Project.RefreshActivity();
 
         return new UpdateCustomFieldFromProjectTaskResult();
-    }
-
-    private static CustomFieldType GetCustomFieldType(CustomField customField)
-    {
-        return customField switch
-        {
-            DateCustomField => CustomFieldType.Date,
-            DateTimeCustomField => CustomFieldType.DateTime,
-            DurationCustomField => CustomFieldType.Duration,
-            MultiSelectCustomField => CustomFieldType.MultiSelect,
-            NumberCustomField => CustomFieldType.Number,
-            PeopleCustomField => CustomFieldType.People,
-            SingleSelectCustomField => CustomFieldType.SingleSelect,
-            TextCustomField => CustomFieldType.Text,
-            TimeCustomField => CustomFieldType.Time,
-            _ => throw new ArgumentOutOfRangeException(nameof(customField), customField, "Type Not Supported")
-        };
     }
 
     private static void UpdateDateCustomField(
