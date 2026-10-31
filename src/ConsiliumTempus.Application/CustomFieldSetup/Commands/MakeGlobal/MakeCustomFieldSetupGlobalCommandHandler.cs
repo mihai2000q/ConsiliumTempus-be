@@ -18,12 +18,11 @@ internal sealed class MakeCustomFieldSetupGlobalCommandHandler(
             CustomFieldSetupId.Create(command.Id),
             cancellationToken);
         if (customFieldSetup is null) return Errors.CustomFieldSetup.NotFound;
-        if (customFieldSetup.Workspace is not null) return Errors.CustomFieldSetup.AlreadyGlobal;
+        if (customFieldSetup.IsGlobal) return Errors.CustomFieldSetup.AlreadyGlobal;
 
         var workspace = customFieldSetup.Projects.Single().Workspace;
-
         customFieldSetup.UpdateWorkspace(workspace);
-        customFieldSetup.Workspace?.RefreshActivity();
+        workspace.RefreshActivity();
 
         return new MakeCustomFieldSetupGlobalResult();
     }
