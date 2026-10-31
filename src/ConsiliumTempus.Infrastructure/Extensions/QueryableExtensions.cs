@@ -89,4 +89,16 @@ internal static class QueryableExtensions
             };
         }
     }
+
+    extension(IQueryable<ProjectAggregate> projects)
+    {
+
+        public IQueryable<ProjectAggregate> WhereVisibleToUser(UserId userId, WorkspaceId? workspaceId)
+        {
+            return projects
+                .Where(p => p.Workspace.Memberships.Any(m => m.User.Id == userId))
+                .Where(p => !p.IsPrivate.Value || p.AllowedMembers.Any(u => u.Id == userId))
+                .WhereIf(workspaceId is not null, p => p.Workspace.Id == workspaceId);
+        }
+    }
 }
