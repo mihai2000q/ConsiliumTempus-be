@@ -3,7 +3,6 @@ using ConsiliumTempus.Application.CustomFieldSetup.Commands.MakeGlobal;
 using ConsiliumTempus.Application.UnitTests.TestUtils;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Common.UnitTests.Project;
-using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Common.UnitTests.Workspace;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
@@ -34,12 +33,11 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
         // Arrange
         var command = CustomFieldSetupCommandFactory.CreateMakeCustomFieldSetupGlobalCommand();
 
-        var customFieldSetup = CustomFieldSetupFactory.CreateText(project: ProjectFactory.Create());
+        var workspace = WorkspaceFactory.Create();
+        var customFieldSetup = CustomFieldSetupFactory.CreateText(project: ProjectFactory.Create(workspace: workspace));
         _customFieldSetupRepository
             .GetWithWorkspaceAndProjects(Arg.Any<CustomFieldSetupId>())
             .Returns(customFieldSetup);
-
-        var user = UserFactory.Create();
 
         // Act
         var outcome = await _uut.Handle(command, CancellationToken.None);
@@ -52,8 +50,7 @@ public class MakeCustomFieldSetupGlobalCommandHandlerTest
         outcome.IsError.Should().BeFalse();
         outcome.Value.Should().Be(new MakeCustomFieldSetupGlobalResult());
 
-        var workspace = customFieldSetup.Projects.Single().Workspace;
-        customFieldSetup.Workspace.Should().Be(workspace);
+        customFieldSetup.Workspace.Should().BeSameAs(workspace);
         workspace.LastActivity.Should().BeCloseTo(DateTime.UtcNow, Utils.TimeSpanPrecision);
     }
 

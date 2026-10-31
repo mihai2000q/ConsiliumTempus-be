@@ -34,9 +34,7 @@ internal sealed class WorkspaceProvider(ConsiliumTempusDbContext dbContext) : IW
             .Include(cfs => cfs.Projects)
             .SingleOrDefaultAsync(cfs => cfs.Id == id, cancellationToken);
 
-        if (customFieldSetup is null) return null;
-
-        return customFieldSetup.Workspace ?? customFieldSetup.Projects[0].Workspace;
+        return customFieldSetup?.OwningWorkspace;
     }
 
     public async Task<WorkspaceAggregate?> GetByProject(ProjectId id, CancellationToken cancellationToken = default)
