@@ -29,6 +29,25 @@ class CustomFieldSetup
 
 For database design checkout the [Custom Field Setup Diagram](../../database-diagrams/aggregates/Diagram.CustomFieldSetup.md).
 
+### Global and Specific
+
+A custom field setup is in one of two states:
+
+- **Global**, when it belongs to a workspace (the *workspace* is set).
+  It is available to all the projects of the workspace, and it can be added to or removed from them,
+  so the *projects* are the ones that currently use it, if any
+- **Specific**, when it belongs to a single project (the *workspace* is null),
+  which is the only one in the *projects*
+
+The aggregate tells its state with `IsGlobal`, and answers with `OwningWorkspace` (its workspace,
+or the workspace of its project when it is specific) and `OwningProject` (the project that a specific setup belongs to,
+and none when it is global). They are not persisted, they come from the *workspace* and the *projects*,
+so the rule is not repeated by the ones that need it (i.e., the authorization, to find the workspace and the project
+of a setup).
+
+A specific custom field setup becomes global by being made global, which gives it the workspace of its project
+(it keeps the project).
+
 ### Properties Validation
 
 - The **Name** cannot be longer than 50 characters
