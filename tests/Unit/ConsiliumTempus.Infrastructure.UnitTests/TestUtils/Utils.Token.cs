@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using ConsiliumTempus.Common.UnitTests.User;
 using ConsiliumTempus.Domain.User;
-using ConsiliumTempus.Infrastructure;
 using ConsiliumTempus.Infrastructure.Security.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
