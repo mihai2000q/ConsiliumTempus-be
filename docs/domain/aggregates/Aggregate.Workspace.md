@@ -92,3 +92,9 @@ otherwise they can be part of other people's personal workspaces, but they can't
 - **LastActivity** to order by activity
 - **UpdatedDateTime** to order by last modified date
 - **CreatedDateTime** to order by creation time
+
+Besides the orders that can be requested by property (see [Api](../../api/Api.Workspace.md#get-collection-workspace-request)),
+the **Personal First** order (`WorkspaceOrder.PersonalFirst`) is added by the application when the personal workspace
+of the user is requested first. It goes before the requested orders, and it places on top the workspace that the user owns
+and that is personal (the user can also be a collaborator in the personal workspaces of other people,
+which do not count as theirs).

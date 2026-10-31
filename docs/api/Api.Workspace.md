@@ -132,6 +132,7 @@ Sends optional query parameters for ordering, filtering, and page-based paginati
 - **orderBy** is used to order the collection
 - **search** is used to filter the collection
 - **isPersonalFirst** is used to place the personal workspace of the user on top of the others
+  (see the **Personal First** order of the [Workspace](../domain/aggregates/Aggregate.Workspace.md#orders))
 
 #### Get Collection Workspace Response
 
