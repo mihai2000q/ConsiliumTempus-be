@@ -36,6 +36,7 @@
 * [Testing the Feature](#testing-the-feature)
 * [Documenting the Feature](#documenting-the-feature)
 * [Checklist](#checklist)
+* [Adding a Custom Field Type](#adding-a-custom-field-type)
 
 Implementing a new feature in this application follows the clean architecture principles,
 to put it in simple words:
@@ -753,3 +754,77 @@ Besides the code, the documentation has to be kept up to date:
 - [ ] **Tests**: unit, integration (including authorization and validation) and e2e, when needed
 - [ ] **Documentation**: the Api, the Domain, the diagrams and the Security
 - [ ] the solution builds, and all the tests pass, including the architecture ones
+
+## Adding a Custom Field Type
+
+The custom field setups and the custom fields come in several types (see the *CustomFieldType* enum in the
+[Domain Models](Domain.md#enums)). Each type stores, validates and maps its own data, so it is spread across all the
+layers: a new type touches about 25 source files and 35 test files (counted on the *Date* type).
+Below is the list of places to go through, using a type called *Rating* as the example
+(the name of the type is the prefix of its classes).
+
+Only a few of them are checked by the compiler. The rest are switches that end in an error at runtime
+(`_ => throw`), so a place that is forgotten only shows when the new type is used.
+
+### Domain
+
+- `Common/Enums/CustomFieldType.cs`: the new member
+- `CustomFieldSetup/Variants/RatingCustomFieldSetupAggregate.cs`: the setup, deriving from `CustomFieldSetupAggregate`,
+  with its `Create`, its `Update` and its `Type` (the compiler requires the `Type`)
+- `ProjectTask/Entities/RatingCustomField.cs`: the field, deriving from `CustomField`,
+  with its `Setup` and its `Type` (the compiler requires both)
+- `ProjectTask/Entities/CustomField.cs`: the case of `CustomField.Create`, which builds the field
+  from the default value of the setup
+
+### Infrastructure
+
+- `Persistence/Configuration/Aggregates/CustomFieldSetupConfiguration.cs`: the configuration of the setup,
+  which has its own table
+- `Persistence/Configuration/Aggregates/ProjectTaskConfiguration.cs`: the configuration of the field
+- `Extensions/QueryableExtensions.cs`: the case of `OfCustomFieldType`
+- a [migration](Database.md#migrations) for the new tables
+
+### Application
+
+- the three commands (`CustomFieldSetup/Commands/Create/CreateCustomFieldSetupCommand.cs`,
+  `CustomFieldSetup/Commands/Update/UpdateCustomFieldSetupCommand.cs` and
+  `ProjectTask/Commands/UpdateCustomField/UpdateCustomFieldFromProjectTaskCommand.cs`): the nullable object of the type,
+  when it carries data (they have one for each type, and the one that matches the *Type* is the one that has to be set)
+- the three handlers (in the same folders): the case of the switch, and the method that creates or updates the type
+- the three validators (in the same folders): a `When(c => c.Type == CustomFieldType.Rating, ...)` block
+  with the rules of the type, including that its object is not null
+
+### Api
+
+- the contracts of the custom field setups (`Contracts/CustomFieldSetup`): `Create/CreateCustomFieldSetupRequest.cs`,
+  `CreateOnProject/CreateCustomFieldSetupOnProjectRequest.cs`,
+  `CreateOnWorkspace/CreateCustomFieldSetupOnWorkspaceRequest.cs`, `Update/UpdateCustomFieldSetupRequest.cs`
+  and `Get/GetCustomFieldSetupResponse.cs`
+- the contracts of the project tasks (`Contracts/ProjectTask`): `Get/GetProjectTaskResponse.cs`,
+  `GetCollection/GetCollectionProjectTaskResponse.cs` and
+  `UpdateCustomField/UpdateCustomFieldFromProjectTaskRequest.cs`
+- the mapping: `Common/Mapping/CustomFieldSetupMappingConfig.cs` (the requests to the commands, the setup to its response,
+  and the `Convert` switch) and `Common/Mapping/ProjectTaskMappingConfig.cs` (the field to its responses,
+  both for the task and for the collection)
+
+### Tests
+
+- the factories of the setups, the fields, the commands and the requests, both in `Common.UnitTests`
+  and in `Common.IntegrationTests`
+- the test data and the test utilities that go through every type, in the Application, Api and integration tests,
+  and in the Infrastructure ones (the *OnDeleteBehavior* configuration test and the *QueryableExtensions* data)
+- the tests of the endpoints that create, get and update the setups, and the one that updates the custom field
+  of a task (see [Testing the Feature](#testing-the-feature))
+
+### Documentation
+
+- the variants of the [Custom Field Setup](domain/aggregates/Aggregate.CustomFieldSetup.md#variants)
+  and of the [Custom Field](domain/entities/project-task/Entity.CustomField.md#variants),
+  and the *CustomFieldType* in the [Domain Models](Domain.md#enums)
+- the Api documentation of both controllers ([Custom Field Setup](api/Api.CustomFieldSetup.md)
+  and [Project Task](api/Api.ProjectTask.md))
+- the database diagrams ([Custom Field Setup](database-diagrams/aggregates/Diagram.CustomFieldSetup.md)
+  and [Project Task](database-diagrams/aggregates/Diagram.ProjectTask.md))
+
+To check that nothing was forgotten, create, get and update a setup of the new type, and update its custom field
+on a task. The integration tests of the custom field setups and of the project tasks go through all of it.
