@@ -1,19 +1,12 @@
-﻿using ConsiliumTempus.Domain.Common.Enums;
-using ConsiliumTempus.Domain.Common.Errors;
-using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
-using ConsiliumTempus.Domain.Project;
+﻿using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project.ValueObjects;
-using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
-using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
-using ConsiliumTempus.Infrastructure.Extensions;
-using ConsiliumTempus.Infrastructure.Security.Authorization.Http;
 using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
-using ErrorOr;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Targets;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,21 +34,21 @@ internal sealed class PermissionAuthorizationHandler(IServiceScopeFactory servic
         if (request is null) return;
 
         var (workspaceId, idType, hasValidId) =
-            await GetWorkspaceId(request, workspaceProvider, requirement.Permission);
+            await GetWorkspaceId(request, workspaceProvider);
         if (!hasValidId)
         {
             context.Succeed(requirement); // let the system return the validation error
         }
         else if (workspaceId is null)
         {
-            context.Fail(new NotFoundAuthorizationFailureReason(this, GetNotFoundError(idType)));
+            context.Fail(new NotFoundAuthorizationFailureReason(this, idType.NotFoundError()));
         }
         else
         {
             var userId = UserId.Create(guidUserId);
             var permissions = await permissionProvider.GetPermissions(userId, workspaceId);
             if (permissions is null) // not a collaborator, so the user must not know that the resource exists
-                context.Fail(new NotFoundAuthorizationFailureReason(this, GetNotFoundError(idType)));
+                context.Fail(new NotFoundAuthorizationFailureReason(this, idType.NotFoundError()));
             else if (permissions.Contains(requirement.Permission.ToString())) context.Succeed(requirement);
         }
     }
@@ -67,208 +60,26 @@ internal sealed class PermissionAuthorizationHandler(IServiceScopeFactory servic
     /// and whether there is a valid id at all (when there is not, it is a validation error)
     /// </returns>
     /// </summary>
-    private static async Task<(WorkspaceId?, StringIdType, bool)> GetWorkspaceId(
+    private static async Task<(WorkspaceId?, TargetKind, bool)> GetWorkspaceId(
         HttpRequest request,
-        IWorkspaceProvider workspaceProvider,
-        Permissions permission)
+        IWorkspaceProvider workspaceProvider)
     {
-        var (stringId, idType) = await GetStringId(request, permission);
+        var target = AuthorizationTargets.For(request);
 
-        if (!Guid.TryParse(stringId, out var guidId) || guidId == Guid.Empty) return (null, idType, false);
+        if (!Guid.TryParse(await target.ReadAsync(request), out var guidId) || guidId == Guid.Empty)
+            return (null, target.Kind, false);
 
-        var workspace = idType switch
+        var workspace = target.Kind switch
         {
-            StringIdType.CustomFieldSetup => await workspaceProvider.GetByCustomFieldSetup(CustomFieldSetupId.Create(guidId)),
-            StringIdType.Project => await workspaceProvider.GetByProject(ProjectId.Create(guidId)),
-            StringIdType.ProjectSprint => await workspaceProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
-            StringIdType.ProjectStage => await workspaceProvider.GetByProjectStage(ProjectStageId.Create(guidId)),
-            StringIdType.ProjectTask => await workspaceProvider.GetByProjectTask(ProjectTaskId.Create(guidId)),
-            StringIdType.Workspace => await workspaceProvider.Get(WorkspaceId.Create(guidId)),
-            _ => throw new ArgumentOutOfRangeException(nameof(permission))
+            TargetKind.CustomFieldSetup => await workspaceProvider.GetByCustomFieldSetup(CustomFieldSetupId.Create(guidId)),
+            TargetKind.Project => await workspaceProvider.GetByProject(ProjectId.Create(guidId)),
+            TargetKind.ProjectSprint => await workspaceProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
+            TargetKind.ProjectStage => await workspaceProvider.GetByProjectStage(ProjectStageId.Create(guidId)),
+            TargetKind.ProjectTask => await workspaceProvider.GetByProjectTask(ProjectTaskId.Create(guidId)),
+            TargetKind.Workspace => await workspaceProvider.Get(WorkspaceId.Create(guidId)),
+            _ => throw new ArgumentOutOfRangeException(nameof(target), target.Kind, null)
         };
 
-        return (workspace?.Id, idType, true);
-    }
-
-    private static Error GetNotFoundError(StringIdType idType)
-    {
-        return idType switch
-        {
-            StringIdType.CustomFieldSetup => Errors.CustomFieldSetup.NotFound,
-            StringIdType.Project => Errors.Project.NotFound,
-            StringIdType.ProjectSprint => Errors.ProjectSprint.NotFound,
-            StringIdType.ProjectStage => Errors.ProjectStage.NotFound,
-            StringIdType.ProjectTask => Errors.ProjectTask.NotFound,
-            StringIdType.Workspace => Errors.Workspace.NotFound,
-            _ => throw new ArgumentOutOfRangeException(nameof(idType))
-        };
-    }
-
-    /// <summary>
-    /// Instead of CRUD - it is "C.U.D.R.", because, most of the time,
-    /// the id will be on body for a Create or Update Request,
-    /// and on the route for a Delete or Read operation,
-    /// and sometimes, as a query param for a reading operation
-    /// </summary>
-    private static async Task<(string?, StringIdType)> GetStringId(HttpRequest request, Permissions permission)
-    {
-        return permission switch
-        {
-            // Custom Field Setup
-            Permissions.CreateCustomFieldSetupOnWorkspace => (
-                await HttpRequestReader.GetStringIdFromBody(request, typeof(WorkspaceAggregate).ToCamelId()),
-                StringIdType.Workspace),
-            Permissions.CreateCustomFieldSetupOnProject => (
-                await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()),
-                StringIdType.Project),
-
-            Permissions.AddCustomFieldSetupToProject or
-            Permissions.UpdateCustomFieldSetup or
-            Permissions.MakeCustomFieldSetupGlobal => (
-                await HttpRequestReader.GetStringIdFromBody(request),
-                StringIdType.CustomFieldSetup),
-
-            Permissions.ReadCollectionCustomFieldSetupFromWorkspace => (
-                HttpRequestReader.GetStringIdFromRoute(request, typeof(WorkspaceAggregate).ToCamelId()),
-                StringIdType.Workspace),
-            Permissions.ReadCollectionCustomFieldSetupFromProject => (
-                HttpRequestReader.GetStringIdFromRoute(request, typeof(ProjectAggregate).ToCamelId()),
-                StringIdType.Project),
-
-            Permissions.ReadCustomFieldSetup or
-            Permissions.DeleteCustomFieldSetup or
-            Permissions.RemoveCustomFieldSetupFromProject => (
-                HttpRequestReader.GetStringIdFromRoute(request),
-                StringIdType.CustomFieldSetup),
-            
-            // Project
-            Permissions.CreateProject => (
-                await HttpRequestReader.GetStringIdFromBody(request, typeof(WorkspaceAggregate).ToCamelId()),
-                StringIdType.Workspace),
-
-            Permissions.UpdateProject or
-            Permissions.UpdateFavoritesProject or
-            Permissions.UpdateOverviewProject => (
-                await HttpRequestReader.GetStringIdFromBody(request),
-                StringIdType.Project),
-
-            Permissions.DeleteProject or
-            Permissions.ReadProject or
-            Permissions.ReadOverviewProject => (
-                HttpRequestReader.GetStringIdFromRoute(request),
-                StringIdType.Project),
-
-            Permissions.ReadCollectionProject => (
-                HttpRequestReader.GetStringIdFromQuery(request, typeof(WorkspaceAggregate).ToCamelId()),
-                StringIdType.Workspace),
-
-            // Project - Allowed Members
-            Permissions.ReadAllowedMembersFromProject => (
-                HttpRequestReader.GetStringIdFromRoute(request),
-                StringIdType.Project),
-
-            // Project - Project Status
-            Permissions.AddStatusToProject or
-            Permissions.UpdateStatusFromProject => (
-                await HttpRequestReader.GetStringIdFromBody(request),
-                StringIdType.Project),
-
-            Permissions.RemoveStatusFromProject or
-            Permissions.ReadStatusesFromProject => (
-                HttpRequestReader.GetStringIdFromRoute(request),
-                StringIdType.Project),
-
-            // Project Sprint
-            Permissions.CreateProjectSprint => (
-                await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()),
-                StringIdType.Project),
-
-            Permissions.UpdateProjectSprint => (
-                await HttpRequestReader.GetStringIdFromBody(request),
-                StringIdType.ProjectSprint),
-
-            Permissions.DeleteProjectSprint or
-            Permissions.ReadProjectSprint => (
-                HttpRequestReader.GetStringIdFromRoute(request),
-                StringIdType.ProjectSprint),
-
-            Permissions.ReadCollectionProjectSprint => (
-                HttpRequestReader.GetStringIdFromQuery(request, typeof(ProjectAggregate).ToCamelId()),
-                StringIdType.Project),
-
-            // Project Sprint - Project Stage
-            Permissions.AddStageToProjectSprint or
-            Permissions.MoveStageFromProjectSprint or
-            Permissions.UpdateStageFromProjectSprint => (
-                await HttpRequestReader.GetStringIdFromBody(request),
-                StringIdType.ProjectSprint),
-
-            Permissions.RemoveStageFromProjectSprint or
-            Permissions.ReadStagesFromProjectSprint => (
-                HttpRequestReader.GetStringIdFromRoute(request),
-                StringIdType.ProjectSprint),
-
-            // Project Task
-            Permissions.CreateProjectTask => (
-                await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectStage).ToCamelId()),
-                StringIdType.ProjectStage),
-
-            Permissions.MoveProjectTask or
-            Permissions.UpdateProjectTask or
-            Permissions.UpdateCustomFieldFromProjectTask or
-            Permissions.UpdateIsCompletedProjectTask or
-            Permissions.UpdateOverviewProjectTask => (
-                await HttpRequestReader.GetStringIdFromBody(request),
-                StringIdType.ProjectTask),
-
-            Permissions.DeleteProjectTask or
-            Permissions.ReadProjectTask => (
-                HttpRequestReader.GetStringIdFromRoute(request),
-                StringIdType.ProjectTask),
-
-            Permissions.ReadCollectionProjectTask => (
-                HttpRequestReader.GetStringIdFromQuery(request, typeof(ProjectStage).ToCamelId()),
-                StringIdType.ProjectStage),
-            
-            // Workspace
-            Permissions.UpdateWorkspace or
-            Permissions.UpdateFavoritesWorkspace or
-            Permissions.UpdateOverviewWorkspace => (
-                await HttpRequestReader.GetStringIdFromBody(request),
-                StringIdType.Workspace),
-
-            Permissions.DeleteWorkspace or
-            Permissions.ReadWorkspace or
-            Permissions.ReadOverviewWorkspace => (
-                HttpRequestReader.GetStringIdFromRoute(request), 
-                StringIdType.Workspace),
-
-            Permissions.ReadInvitationsFromWorkspace => (
-                HttpRequestReader.GetStringIdFromQuery(request, typeof(WorkspaceAggregate).ToCamelId()),
-                StringIdType.Workspace),
-
-            // Workspace - Collaborators
-            Permissions.InviteCollaboratorToWorkspace or
-            Permissions.UpdateCollaboratorFromWorkspace => (
-                await HttpRequestReader.GetStringIdFromBody(request),
-                StringIdType.Workspace),
-
-            Permissions.KickCollaboratorFromWorkspace or
-            Permissions.ReadCollaboratorsFromWorkspace => (
-                HttpRequestReader.GetStringIdFromRoute(request),
-                StringIdType.Workspace),
-
-            _ => throw new ArgumentOutOfRangeException(nameof(permission))
-        };
-    }
-    
-    private enum StringIdType
-    {
-        CustomFieldSetup,
-        Project,
-        ProjectSprint,
-        ProjectStage,
-        ProjectTask,
-        Workspace,
+        return (workspace?.Id, target.Kind, true);
     }
 }

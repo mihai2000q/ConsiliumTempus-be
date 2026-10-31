@@ -1,6 +1,5 @@
 ﻿using ConsiliumTempus.Infrastructure.Persistence.Configuration.ValueObjects;
 using ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
-using Microsoft.EntityFrameworkCore;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.Persistence.Configuration;
 

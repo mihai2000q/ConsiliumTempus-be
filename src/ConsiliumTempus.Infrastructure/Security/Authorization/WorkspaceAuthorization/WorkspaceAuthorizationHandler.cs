@@ -1,13 +1,11 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
-using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Workspace;
 using ConsiliumTempus.Domain.Workspace.ValueObjects;
-using ConsiliumTempus.Infrastructure.Security.Authorization.Http;
 using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
-using ErrorOr;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Targets;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +38,7 @@ internal sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory service
         }
         else if (workspace is null)
         {
-            context.Fail(new NotFoundAuthorizationFailureReason(this, GetNotFoundError(idType)));
+            context.Fail(new NotFoundAuthorizationFailureReason(this, idType.NotFoundError()));
         }
         else
         {
@@ -48,59 +46,26 @@ internal sealed class WorkspaceAuthorizationHandler(IServiceScopeFactory service
             if (IsAuthorized(requirement.AuthorizationLevel, workspace, userId))
                 context.Succeed(requirement);
             else if (!IsCollaborator(workspace, userId)) // the user must not know that the resource exists
-                context.Fail(new NotFoundAuthorizationFailureReason(this, GetNotFoundError(idType)));
+                context.Fail(new NotFoundAuthorizationFailureReason(this, idType.NotFoundError()));
         }
     }
 
-    private static async Task<(WorkspaceAggregate?, StringIdType, bool)> GetWorkspace(
+    private static async Task<(WorkspaceAggregate?, TargetKind, bool)> GetWorkspace(
         HttpRequest request,
         IWorkspaceProvider workspaceProvider)
     {
-        if (await GetStringId(request) is not var (stringId, idType)) return (null, default, false);
-        if (!Guid.TryParse(stringId, out var workspaceId) || workspaceId == Guid.Empty) return (null, idType, false);
-        var workspace = idType switch
-        {
-            StringIdType.Workspace => await workspaceProvider.GetWithMemberships(WorkspaceId.Create(workspaceId)),
-            StringIdType.Project => await workspaceProvider.GetByProjectWithMemberships(ProjectId.Create(workspaceId)),
-            _ => throw new ArgumentOutOfRangeException(nameof(request))
-        };
-        return (workspace, idType, true);
-    }
+        var target = AuthorizationTargets.For(request);
 
-    private static async Task<(string?, StringIdType)?> GetStringId(HttpRequest request)
-    {
-        return request.RouteValues["controller"] switch
-        {
-            "Workspace" => request.Method switch
-            {
-                "GET" or "DELETE" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.Workspace),
-                "PUT" or "POST" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.Workspace),
-                _ => null
-            },
-            "Project" => request.Method switch
-            {
-                "GET" or "DELETE" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.Project),
-                "PUT" or "POST" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.Project),
-                _ => null
-            },
-            _ => null
-        };
-    }
+        if (!Guid.TryParse(await target.ReadAsync(request), out var guidId) || guidId == Guid.Empty)
+            return (null, target.Kind, false);
 
-    private enum StringIdType
-    {
-        Workspace,
-        Project
-    }
-
-    private static Error GetNotFoundError(StringIdType idType)
-    {
-        return idType switch
+        var workspace = target.Kind switch
         {
-            StringIdType.Workspace => Errors.Workspace.NotFound,
-            StringIdType.Project => Errors.Project.NotFound,
-            _ => throw new ArgumentOutOfRangeException(nameof(idType))
+            TargetKind.Workspace => await workspaceProvider.GetWithMemberships(WorkspaceId.Create(guidId)),
+            TargetKind.Project => await workspaceProvider.GetByProjectWithMemberships(ProjectId.Create(guidId)),
+            _ => throw new ArgumentOutOfRangeException(nameof(target), target.Kind, null)
         };
+        return (workspace, target.Kind, true);
     }
 
     private static bool IsCollaborator(WorkspaceAggregate workspace, UserId userId)

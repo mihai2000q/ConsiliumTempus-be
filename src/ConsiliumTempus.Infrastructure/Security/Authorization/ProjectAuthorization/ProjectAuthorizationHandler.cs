@@ -1,17 +1,13 @@
 ﻿using ConsiliumTempus.Domain.Common.Enums;
-using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.User.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
-using ConsiliumTempus.Domain.ProjectSprint.Entities;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
-using ConsiliumTempus.Infrastructure.Extensions;
-using ConsiliumTempus.Infrastructure.Security.Authorization.Http;
 using ConsiliumTempus.Infrastructure.Security.Authorization.NotFound;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
-using ErrorOr;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Targets;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,7 +38,7 @@ internal sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceSc
         {
             context.Succeed(requirement); // let the system return the validation error
         }
-        else if (project is null && idType == StringIdType.CustomFieldSetup)
+        else if (project is null && idType == TargetKind.CustomFieldSetup)
         {
             // global custom field setups do not belong to a project, and the ones that do not exist
             // are already reported by the permission authorization, which finds the workspace of the setup
@@ -50,7 +46,7 @@ internal sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceSc
         }
         else if (project is null)
         {
-            context.Fail(new NotFoundAuthorizationFailureReason(this, GetNotFoundError(idType)));
+            context.Fail(new NotFoundAuthorizationFailureReason(this, idType.NotFoundError()));
         }
         else
         {
@@ -58,135 +54,29 @@ internal sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceSc
             if (IsAuthorized(requirement.AuthorizationLevel, project, userId))
                 context.Succeed(requirement);
             else if (!IsAllowed(project, userId)) // the user must not know that the resource exists
-                context.Fail(new NotFoundAuthorizationFailureReason(this, GetNotFoundError(idType)));
+                context.Fail(new NotFoundAuthorizationFailureReason(this, idType.NotFoundError()));
         }
     }
 
-    private static async Task<(ProjectAggregate?, StringIdType, bool)> GetProject(
+    private static async Task<(ProjectAggregate?, TargetKind, bool)> GetProject(
         HttpRequest request,
         IProjectProvider projectProvider)
     {
-        if (await GetStringId(request) is not var (stringId, idType)) return (null, default, false);
-        if (!Guid.TryParse(stringId, out var guidId) || guidId == Guid.Empty) return (null, idType, false);
-        var project = idType switch
+        var target = AuthorizationTargets.ForProject(request);
+
+        if (!Guid.TryParse(await target.ReadAsync(request), out var guidId) || guidId == Guid.Empty)
+            return (null, target.Kind, false);
+
+        var project = target.Kind switch
         {
-            StringIdType.CustomFieldSetup => await projectProvider.GetByCustomFieldSetup(CustomFieldSetupId.Create(guidId)),
-            StringIdType.Project => await projectProvider.Get(ProjectId.Create(guidId)),
-            StringIdType.ProjectSprint => await projectProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
-            StringIdType.ProjectStage => await projectProvider.GetByProjectStage(ProjectStageId.Create(guidId)),
-            StringIdType.ProjectTask => await projectProvider.GetByProjectTask(ProjectTaskId.Create(guidId)),
-            _ => throw new ArgumentOutOfRangeException(nameof(request))
+            TargetKind.CustomFieldSetup => await projectProvider.GetByCustomFieldSetup(CustomFieldSetupId.Create(guidId)),
+            TargetKind.Project => await projectProvider.Get(ProjectId.Create(guidId)),
+            TargetKind.ProjectSprint => await projectProvider.GetByProjectSprint(ProjectSprintId.Create(guidId)),
+            TargetKind.ProjectStage => await projectProvider.GetByProjectStage(ProjectStageId.Create(guidId)),
+            TargetKind.ProjectTask => await projectProvider.GetByProjectTask(ProjectTaskId.Create(guidId)),
+            _ => throw new ArgumentOutOfRangeException(nameof(target), target.Kind, null)
         };
-        return (project, idType, true);
-    }
-
-    private static async Task<(string?, StringIdType)?> GetStringId(HttpRequest request)
-    {
-        return request.RouteValues["controller"] switch
-        {
-            "CustomFieldSetup" => request.RouteValues["action"] switch
-            {
-                "Get" or
-                "Delete" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.CustomFieldSetup),
-
-                "GetCollectionFromProject" => (
-                    HttpRequestReader.GetStringIdFromRoute(request, typeof(ProjectAggregate).ToCamelId()),
-                    StringIdType.Project),
-
-                "CreateOnProject" or
-                "AddToProject" => (
-                    await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()),
-                    StringIdType.Project),
-
-                "RemoveFromProject" => (
-                    HttpRequestReader.GetStringIdFromRoute(request, typeof(ProjectAggregate).ToCamelId()),
-                    StringIdType.Project),
-
-                "Update" or
-                "MakeGlobal" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.CustomFieldSetup),
-
-                _ => null
-            },
-            "Project" => request.RouteValues["action"] switch
-            {
-                "Get" or
-                "GetOverview" or
-                "GetAllowedMembers" or
-                "GetStatuses" or
-                "Delete" or
-                "LeavePrivate" or
-                "RemoveAllowedMember" or
-                "RemoveStatus" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.Project),
-
-                "AddAllowedMember" or
-                "AddStatus" or
-                "Update" or
-                "UpdateFavorites" or
-                "UpdateOverview" or
-                "UpdateOwner" or
-                "UpdatePrivacy" or
-                "UpdateStatus" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.Project),
-
-                _ => null
-            },
-            "ProjectSprint" => request.RouteValues["action"] switch
-            {
-                "Get" or
-                "GetStages" or
-                "Delete" or
-                "RemoveStage" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.ProjectSprint),
-
-                "GetCollection" => (
-                    HttpRequestReader.GetStringIdFromQuery(request, typeof(ProjectAggregate).ToCamelId()), 
-                    StringIdType.Project),
-
-                "Create" => (
-                    await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectAggregate).ToCamelId()), 
-                    StringIdType.Project),
-
-                "AddStage" or
-                "Update" or
-                "MoveStage" or
-                "UpdateStage" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.ProjectSprint),
-
-                _ => null
-            },
-            "ProjectTask" => request.RouteValues["action"] switch
-            {
-                "Get" or
-                "Delete" => (HttpRequestReader.GetStringIdFromRoute(request), StringIdType.ProjectTask),
-
-                "GetCollection" => (
-                    HttpRequestReader.GetStringIdFromQuery(request, typeof(ProjectStage).ToCamelId()), 
-                    StringIdType.ProjectStage),
-
-                "Create" => (
-                    await HttpRequestReader.GetStringIdFromBody(request, typeof(ProjectStage).ToCamelId()), 
-                    StringIdType.ProjectStage),
-
-                "Move" or
-                "Update" or
-                "UpdateCustomField" or
-                "UpdateIsCompleted" or
-                "UpdateOverview" => (await HttpRequestReader.GetStringIdFromBody(request), StringIdType.ProjectTask),
-
-                _ => null
-            },
-            _ => null
-        };
-    }
-
-    private static Error GetNotFoundError(StringIdType idType)
-    {
-        return idType switch
-        {
-            StringIdType.CustomFieldSetup => Errors.CustomFieldSetup.NotFound,
-            StringIdType.Project => Errors.Project.NotFound,
-            StringIdType.ProjectSprint => Errors.ProjectSprint.NotFound,
-            StringIdType.ProjectStage => Errors.ProjectStage.NotFound,
-            StringIdType.ProjectTask => Errors.ProjectTask.NotFound,
-            _ => throw new ArgumentOutOfRangeException(nameof(idType))
-        };
+        return (project, target.Kind, true);
     }
 
     private static bool IsAllowed(ProjectAggregate project, UserId userId)
@@ -205,14 +95,5 @@ internal sealed class ProjectAuthorizationHandler(IServiceScopeFactory serviceSc
             ProjectAuthorizationLevel.IsProjectOwner => project.Owner.Id == userId,
             _ => throw new ArgumentOutOfRangeException(nameof(authorizationLevel))
         };
-    }
-
-    private enum StringIdType
-    {
-        CustomFieldSetup,
-        Project,
-        ProjectSprint,
-        ProjectStage,
-        ProjectTask
     }
 }

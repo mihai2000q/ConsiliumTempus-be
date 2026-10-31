@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
@@ -8,8 +8,7 @@ using ConsiliumTempus.Domain.Workspace.ValueObjects;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
 using ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Primitives;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Targets;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 
@@ -21,78 +20,22 @@ internal static partial class Utils
         {
             internal static void MockEmptyHttpRequest(
                 IHttpContextAccessor httpContextAccessor,
-                PermissionAuthorizationHandlerData.RequestLocation requestLocation)
+                Permissions permission,
+                IdLocation requestLocation)
             {
-                switch (requestLocation)
-                {
-                    case PermissionAuthorizationHandlerData.RequestLocation.Route:
-                        httpContextAccessor
-                            .HttpContext!
-                            .Request
-                            .RouteValues
-                            .Returns(new RouteValueDictionary());
-                        break;
-
-                    case PermissionAuthorizationHandlerData.RequestLocation.Query:
-                        httpContextAccessor
-                            .HttpContext!
-                            .Request
-                            .Query
-                            .Returns(new QueryCollection());
-                        break;
-
-                    case PermissionAuthorizationHandlerData.RequestLocation.Body:
-                        var bodyStream = JsonSerializer.SerializeToUtf8Bytes(new Dictionary<string, string>());
-                        httpContextAccessor
-                            .HttpContext!
-                            .Request
-                            .Body
-                            .Returns(new MemoryStream(bodyStream));
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(requestLocation), requestLocation, null);
-                }
+                var (controller, action, method) = PermissionAuthorizationHandlerData.Endpoints[permission];
+                MockRequest(httpContextAccessor, controller, action, method, requestLocation, "id", null);
             }
 
             internal static void MockHttpRequest(
                 IHttpContextAccessor httpContextAccessor,
-                PermissionAuthorizationHandlerData.RequestLocation requestLocation,
+                Permissions permission,
+                IdLocation requestLocation,
                 string? idName,
                 string stringId)
             {
-                switch (requestLocation)
-                {
-                    case PermissionAuthorizationHandlerData.RequestLocation.Body:
-                        var body = new Dictionary<string, string> { [idName ?? "id"] = stringId };
-                        var bodyStream = JsonSerializer.SerializeToUtf8Bytes(body);
-                        httpContextAccessor
-                            .HttpContext!
-                            .Request
-                            .Body
-                            .Returns(new MemoryStream(bodyStream));
-                        break;
-
-                    case PermissionAuthorizationHandlerData.RequestLocation.Route:
-                        httpContextAccessor
-                            .HttpContext!
-                            .Request
-                            .RouteValues
-                            .Returns(new RouteValueDictionary { [idName ?? "id"] = stringId });
-                        break;
-
-                    case PermissionAuthorizationHandlerData.RequestLocation.Query:
-                        httpContextAccessor
-                            .HttpContext!
-                            .Request
-                            .Query
-                            .Returns(new QueryCollection(
-                                new Dictionary<string, StringValues> { [idName ?? "id"] = stringId }));
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(requestLocation), requestLocation, null);
-                }
+                var (controller, action, method) = PermissionAuthorizationHandlerData.Endpoints[permission];
+                MockRequest(httpContextAccessor, controller, action, method, requestLocation, idName ?? "id", stringId);
             }
 
             internal static void MockWorkspaceProvider(IWorkspaceProvider workspaceProvider,
@@ -125,42 +68,42 @@ internal static partial class Utils
 
             internal static async Task VerifyWorkspaceProvider(
                 IWorkspaceProvider workspaceProvider,
-                PermissionAuthorizationHandlerData.StringIdType provider,
+                TargetKind provider,
                 string stringId)
             {
                 switch (provider)
                 {
-                    case PermissionAuthorizationHandlerData.StringIdType.CustomFieldSetup:
+                    case TargetKind.CustomFieldSetup:
                         await workspaceProvider
                             .Received(1)
                             .GetByCustomFieldSetup(Arg.Is<CustomFieldSetupId>(cfsId => cfsId.Value.ToString() == stringId));
                         break;
 
-                    case PermissionAuthorizationHandlerData.StringIdType.Project:
+                    case TargetKind.Project:
                         await workspaceProvider
                             .Received(1)
                             .GetByProject(Arg.Is<ProjectId>(pId => pId.Value.ToString() == stringId));
                         break;
 
-                    case PermissionAuthorizationHandlerData.StringIdType.ProjectSprint:
+                    case TargetKind.ProjectSprint:
                         await workspaceProvider
                             .Received(1)
                             .GetByProjectSprint(Arg.Is<ProjectSprintId>(psId => psId.Value.ToString() == stringId));
                         break;
 
-                    case PermissionAuthorizationHandlerData.StringIdType.ProjectStage:
+                    case TargetKind.ProjectStage:
                         await workspaceProvider
                             .Received(1)
                             .GetByProjectStage(Arg.Is<ProjectStageId>(psId => psId.Value.ToString() == stringId));
                         break;
 
-                    case PermissionAuthorizationHandlerData.StringIdType.ProjectTask:
+                    case TargetKind.ProjectTask:
                         await workspaceProvider
                             .Received(1)
                             .GetByProjectTask(Arg.Is<ProjectTaskId>(ptId => ptId.Value.ToString() == stringId));
                         break;
 
-                    case PermissionAuthorizationHandlerData.StringIdType.Workspace:
+                    case TargetKind.Workspace:
                         await workspaceProvider
                             .Received(1)
                             .Get(Arg.Is<WorkspaceId>(wId => wId.Value.ToString() == stringId));

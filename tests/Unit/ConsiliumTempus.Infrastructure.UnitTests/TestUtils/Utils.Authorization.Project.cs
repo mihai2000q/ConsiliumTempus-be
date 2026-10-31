@@ -1,15 +1,12 @@
-﻿using System.Text.Json;
-using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+﻿using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
-using ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Primitives;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Targets;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 
@@ -21,100 +18,28 @@ internal static partial class Utils
         {
             internal static void MockEmptyHttpRequest(
                 IHttpContextAccessor httpContextAccessor,
-                ProjectAuthorizationHandlerData.RequestLocation requestLocation,
-                ProjectAuthorizationHandlerData.Controller controller,
-                string requestAction)
+                IdLocation requestLocation,
+                Controller controller,
+                Action requestAction)
             {
-                var dictionary = new RouteValueDictionary
-                {
-                    ["controller"] = controller.ToString(),
-                    ["action"] = requestAction
-                };
-
-                switch (requestLocation)
-                {
-                    case ProjectAuthorizationHandlerData.RequestLocation.Route:
-                        break;
-
-                    case ProjectAuthorizationHandlerData.RequestLocation.Query:
-                        httpContextAccessor
-                            .HttpContext!
-                            .Request
-                            .Query
-                            .Returns(new QueryCollection());
-                        break;
-
-                    case ProjectAuthorizationHandlerData.RequestLocation.Body:
-                        var bodyStream = JsonSerializer.SerializeToUtf8Bytes(new Dictionary<string, string>());
-                        httpContextAccessor
-                            .HttpContext!
-                            .Request
-                            .Body
-                            .Returns(new MemoryStream(bodyStream));
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(requestLocation), requestLocation, null);
-                }
-
-                httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .RouteValues
-                    .Returns(dictionary);
+                MockRequest(httpContextAccessor, controller, requestAction, GetHttpMethod(requestLocation),
+                    requestLocation, "id", null);
             }
 
             internal static void MockHttpRequest(
                 IHttpContextAccessor httpContextAccessor,
-                ProjectAuthorizationHandlerData.RequestLocation requestLocation,
+                IdLocation requestLocation,
                 Type? idType,
-                ProjectAuthorizationHandlerData.Controller controller,
-                string requestAction,
+                Controller controller,
+                Action requestAction,
                 string stringId)
             {
-                var idName = idType?.ToCamelId() ?? "id";
-
-                var dictionary = new RouteValueDictionary
-                {
-                    ["controller"] = controller.ToString(),
-                    ["action"] = requestAction
-                };
-
-                switch (requestLocation)
-                {
-                    case ProjectAuthorizationHandlerData.RequestLocation.Body:
-                        var body = new Dictionary<string, string> { [idName] = stringId };
-                        var bodyStream = JsonSerializer.SerializeToUtf8Bytes(body);
-                        httpContextAccessor
-                            .HttpContext!
-                            .Request
-                            .Body
-                            .Returns(new MemoryStream(bodyStream));
-                        break;
-
-                    case ProjectAuthorizationHandlerData.RequestLocation.Route:
-                        dictionary[idName] = stringId;
-                        break;
-
-                    case ProjectAuthorizationHandlerData.RequestLocation.Query:
-                        httpContextAccessor
-                            .HttpContext!
-                            .Request
-                            .Query
-                            .Returns(new QueryCollection(
-                                new Dictionary<string, StringValues> { [idName] = stringId }));
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(requestLocation), requestLocation, null);
-                }
-
-                httpContextAccessor
-                    .HttpContext!
-                    .Request
-                    .RouteValues
-                    .Returns(dictionary);
+                MockRequest(httpContextAccessor, controller, requestAction, GetHttpMethod(requestLocation),
+                    requestLocation, idType?.ToCamelId() ?? "id", stringId);
             }
+
+            private static Method GetHttpMethod(IdLocation requestLocation) =>
+                requestLocation == IdLocation.Body ? Method.POST : Method.GET;
 
             internal static void MockProjectProvider(IProjectProvider projectProvider, ProjectAggregate project)
             {
@@ -141,36 +66,36 @@ internal static partial class Utils
 
             internal static async Task VerifyProjectProvider(
                 IProjectProvider projectProvider,
-                ProjectAuthorizationHandlerData.StringIdType provider,
+                TargetKind provider,
                 string stringId)
             {
                 switch (provider)
                 {
-                    case ProjectAuthorizationHandlerData.StringIdType.CustomFieldSetup:
+                    case TargetKind.CustomFieldSetup:
                         await projectProvider
                             .Received(1)
                             .GetByCustomFieldSetup(Arg.Is<CustomFieldSetupId>(cfsId => cfsId.Value.ToString() == stringId));
                         break;
 
-                    case ProjectAuthorizationHandlerData.StringIdType.Project:
+                    case TargetKind.Project:
                         await projectProvider
                             .Received(1)
                             .Get(Arg.Is<ProjectId>(pId => pId.Value.ToString() == stringId));
                         break;
 
-                    case ProjectAuthorizationHandlerData.StringIdType.ProjectSprint:
+                    case TargetKind.ProjectSprint:
                         await projectProvider
                             .Received(1)
                             .GetByProjectSprint(Arg.Is<ProjectSprintId>(psId => psId.Value.ToString() == stringId));
                         break;
 
-                    case ProjectAuthorizationHandlerData.StringIdType.ProjectStage:
+                    case TargetKind.ProjectStage:
                         await projectProvider
                             .Received(1)
                             .GetByProjectStage(Arg.Is<ProjectStageId>(psId => psId.Value.ToString() == stringId));
                         break;
 
-                    case ProjectAuthorizationHandlerData.StringIdType.ProjectTask:
+                    case TargetKind.ProjectTask:
                         await projectProvider
                             .Received(1)
                             .GetByProjectTask(Arg.Is<ProjectTaskId>(ptId => ptId.Value.ToString() == stringId));

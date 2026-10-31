@@ -21,6 +21,8 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="ConsiliumTempus.Infrastructure.UnitTests"/>
+        <!-- Checks that every authorized endpoint of the Api is mapped to the entity it targets -->
+        <InternalsVisibleTo Include="ConsiliumTempus.ArchitectureTests"/>
         <!-- NSubstitute (Castle DynamicProxy) needs it to mock the internal interfaces -->
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
     </ItemGroup>

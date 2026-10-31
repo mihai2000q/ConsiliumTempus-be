@@ -4,6 +4,7 @@
 * [Role-Based Access Control (RBAC)](#role-based-access-control-rbac)
 * [Workspace Authorization Levels](#workspace-authorization-levels)
 * [Project Authorization Levels](#project-authorization-levels)
+* [Targeted Entity](#targeted-entity)
 * [Hidden Resources](#hidden-resources)
 * [Workspace Roles](#workspace-roles)
 * [Permissions](#permissions)
@@ -68,6 +69,30 @@ while the ones that manage the allowed members, the owner or the privacy of a pr
 require a Project Authorization Level together with the Workspace Authorization Level **Is Collaborator**.
 The checks of each endpoint are listed in its [Api documentation](api/Api.Project.md),
 and they are applied through attributes (see [Authorization](Api.md#authorization)).
+
+## Targeted Entity
+
+Every check starts by finding the entity that the endpoint is about, through the id that comes with the request
+(the project of a project id, the workspace of a task id, etc.).
+Where that id is, for each endpoint, is decided in a single place, the `AuthorizationTargets` class of the Infrastructure,
+and it is used by the permission and by both authorization levels.
+
+By convention, an endpoint is about the entity of its own controller, through the property `id`,
+which is in the route for a `GET` or a `DELETE` and in the body for a `POST`, `PATCH` or a `PUT`.
+The endpoints that work through a parent entity instead are the exceptions, and they are listed in the class:
+- the ones that create or list entities of a parent (e.g., creating a project sprint through the `projectId`
+  in the body, or listing the project tasks through the `projectStageId` in the query)
+- the ones that, for the project authorization levels, are about the project, although the permission is about
+  another entity (adding a custom field setup to a project, or removing it from one)
+
+The place of the id comes from the endpoint, never from the content of the request,
+because it has to be the one that the model binding is going to use.
+An endpoint that cannot be resolved (an unknown controller or HTTP method) fails instead of passing.
+
+Since the convention is not enforced by the compiler, the `AuthorizationTargetsTest` of the architecture tests
+checks every endpoint that has a permission or an authorization level:
+the id that it resolves has to exist in the request of the endpoint, and has to be bound from the place
+that it was resolved to (route, query or body).
 
 ## Hidden Resources
 
@@ -235,8 +260,10 @@ To add a new permission, the following steps are needed:
 1. Add it to the **Permissions** enum, inside the Domain
    (the id of the permission in the database is its position in the enum, plus one).
 2. Grant it to the roles that should have it, inside the `WorkspaceRoleHasPermission` class.
-3. Tell the `PermissionAuthorizationHandler`, inside the Infrastructure, where to find the id that links the request
-   to its workspace (the body, the route or the query of the request).
+3. Make sure that the Infrastructure finds the id that links the request to its workspace
+   (see [Targeted Entity](#targeted-entity)): nothing is needed when the endpoint follows the convention,
+   otherwise add it to the exceptions of the `AuthorizationTargets` class.
+   The `AuthorizationTargetsTest` of the architecture tests fails when the id is not where the endpoint binds it.
 4. Create a [migration](Database.md#migrations), because both the permissions and the roles to permissions
    relations are persisted by the migrations.
 5. Add the **Has Permission** attribute with the new permission to the endpoint (see [Authorization](Api.md#authorization)).
