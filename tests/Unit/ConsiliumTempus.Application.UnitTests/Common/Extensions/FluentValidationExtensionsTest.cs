@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using ConsiliumTempus.Application.Common.Extensions;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project.Enums;
@@ -22,33 +21,26 @@ public class FluentValidationExtensionsTest
         ProjectStatusType Status,
         Guid Identifier);
 
-    private sealed class ItemFilterProperty(string identifier, Expression<Func<Item, object>> selector)
-        : FilterProperty<Item>(identifier, selector);
-
-    // ReSharper disable NotAccessedPositionalProperty.Local
-    private sealed record ItemOrderProperty(string Key, Expression<Func<Item, object?>> Selector)
-        : OrderProperty<Item>(Key, Selector);
-
     private sealed record Request(List<string> Search, List<string>? OrderBy = null);
 
     private sealed class RequestValidator : AbstractValidator<Request>
     {
         private static readonly List<OrderProperty<Item>> OrderProperties =
         [
-            new ItemOrderProperty(nameof(Item.Name), i => i.Name),
-            new ItemOrderProperty(nameof(Item.Count), i => i.Count)
+            new(nameof(Item.Name), i => i.Name),
+            new(nameof(Item.Count), i => i.Count)
         ];
 
         private static readonly List<FilterProperty<Item>> FilterProperties =
         [
-            new ItemFilterProperty(nameof(Item.Name), i => i.Name),
-            new ItemFilterProperty(nameof(Item.Count), i => i.Count),
-            new ItemFilterProperty(nameof(Item.Amount), i => i.Amount),
-            new ItemFilterProperty(nameof(Item.Flag), i => i.Flag),
-            new ItemFilterProperty(nameof(Item.Date), i => i.Date),
-            new ItemFilterProperty(nameof(Item.Lifecycle), i => i.Lifecycle),
-            new ItemFilterProperty(nameof(Item.Status), i => i.Status),
-            new ItemFilterProperty(nameof(Item.Identifier), i => i.Identifier)
+            new(nameof(Item.Name), i => i.Name),
+            new(nameof(Item.Count), i => i.Count),
+            new(nameof(Item.Amount), i => i.Amount),
+            new(nameof(Item.Flag), i => i.Flag),
+            new(nameof(Item.Date), i => i.Date),
+            new(nameof(Item.Lifecycle), i => i.Lifecycle),
+            new(nameof(Item.Status), i => i.Status),
+            new(nameof(Item.Identifier), i => i.Identifier)
         ];
 
         public RequestValidator()

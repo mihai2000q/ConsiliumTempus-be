@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using ConsiliumTempus.Domain.Common.Entities;
-using ConsiliumTempus.Domain.Common.Filters.Properties;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 
@@ -11,13 +10,32 @@ public sealed class MembershipFilter(Expression<Func<Membership, bool>> predicat
 {
     public static readonly IReadOnlyList<FilterProperty<Membership>> FilterProperties =
     [
-        new FilterProperties.Membership.UserNameFilterProperty(),
-        new FilterProperties.Membership.WorkspaceRoleIdFilterProperty(),
-        new FilterProperties.Membership.WorkspaceRoleNameFilterProperty()
+        Properties.UserName,
+        Properties.WorkspaceRoleId,
+        Properties.WorkspaceRoleName
     ];
 
     public static IReadOnlyList<IFilter<Membership>> Parse(List<string> search)
     {
         return Parse(search, FilterProperties);
     }
+
+    #region Properties
+
+    private static class Properties
+    {
+        internal static readonly FilterProperty<Membership> UserName = new(
+            nameof(Membership.User) + nameof(Membership.User.Name),
+            m => m.User.FirstName.Value + " " + m.User.LastName.Value);
+
+        internal static readonly FilterProperty<Membership> WorkspaceRoleId = new(
+            nameof(Membership.WorkspaceRole) + nameof(Membership.WorkspaceRole.Id),
+            m => m.WorkspaceRole.Id);
+
+        internal static readonly FilterProperty<Membership> WorkspaceRoleName = new(
+            nameof(Membership.WorkspaceRole) + nameof(Membership.WorkspaceRole.Name),
+            m => m.WorkspaceRole.Name);
+    }
+
+    #endregion
 }

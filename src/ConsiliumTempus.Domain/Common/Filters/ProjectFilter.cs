@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using ConsiliumTempus.Domain.Common.Filters.Properties;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Project;
@@ -11,17 +11,52 @@ public sealed class ProjectFilter(Expression<Func<ProjectAggregate, bool>> predi
 {
     public static readonly IReadOnlyList<FilterProperty<ProjectAggregate>> FilterProperties =
     [
-        new FilterProperties.Project.NameFilterProperty(),
-        new FilterProperties.Project.LifecycleProperty(),
-        new FilterProperties.Project.IsPrivateProperty(),
-        new FilterProperties.Project.LatestStatusProperty(),
-        new FilterProperties.Project.LastActivityProperty(),
-        new FilterProperties.Project.CreatedDateTimeProperty(),
-        new FilterProperties.Project.UpdatedDateTimeProperty()
+        Properties.Name,
+        Properties.Lifecycle,
+        Properties.IsPrivate,
+        Properties.LatestStatus,
+        Properties.LastActivity,
+        Properties.CreatedDateTime,
+        Properties.UpdatedDateTime
     ];
 
     public static IReadOnlyList<IFilter<ProjectAggregate>> Parse(List<string> search)
     {
         return Parse(search, FilterProperties);
     }
+
+    #region Properties
+
+    private static class Properties
+    {
+        internal static readonly FilterProperty<ProjectAggregate> Name = new(
+            nameof(ProjectAggregate.Name),
+            p => p.Name.Value);
+
+        internal static readonly FilterProperty<ProjectAggregate> Lifecycle = new(
+            nameof(ProjectAggregate.Lifecycle),
+            p => p.Lifecycle);
+
+        internal static readonly FilterProperty<ProjectAggregate> IsPrivate = new(
+            nameof(ProjectAggregate.IsPrivate),
+            p => p.IsPrivate.Value);
+
+        internal static readonly FilterProperty<ProjectAggregate> LatestStatus = new(
+            nameof(ProjectAggregate.LatestStatus),
+            p => p.Statuses.OrderByDescending(s => s.Audit.CreatedDateTime).First().Status);
+
+        internal static readonly FilterProperty<ProjectAggregate> LastActivity = new(
+            nameof(ProjectAggregate.LastActivity),
+            p => p.LastActivity.Date);
+
+        internal static readonly FilterProperty<ProjectAggregate> CreatedDateTime = new(
+            nameof(Audit.CreatedDateTime),
+            p => p.Audit.CreatedDateTime.Date);
+
+        internal static readonly FilterProperty<ProjectAggregate> UpdatedDateTime = new(
+            nameof(Audit.UpdatedDateTime),
+            p => p.Audit.UpdatedDateTime.Date);
+    }
+
+    #endregion
 }

@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using ConsiliumTempus.Domain.Common.Filters.Properties;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.Workspace;
@@ -11,15 +11,42 @@ public sealed class WorkspaceFilter(Expression<Func<WorkspaceAggregate, bool>> p
 {
     public static readonly IReadOnlyList<FilterProperty<WorkspaceAggregate>> FilterProperties =
     [
-        new FilterProperties.Workspace.NameFilterProperty(),
-        new FilterProperties.Workspace.IsPersonalFilterProperty(),
-        new FilterProperties.Workspace.LastActivityProperty(),
-        new FilterProperties.Workspace.CreatedDateTimeProperty(),
-        new FilterProperties.Workspace.UpdatedDateTimeProperty()
+        Properties.Name,
+        Properties.IsPersonal,
+        Properties.LastActivity,
+        Properties.CreatedDateTime,
+        Properties.UpdatedDateTime
     ];
 
     public static IReadOnlyList<IFilter<WorkspaceAggregate>> Parse(List<string> search)
     {
         return Parse(search, FilterProperties);
     }
+
+    #region Properties
+
+    private static class Properties
+    {
+        internal static readonly FilterProperty<WorkspaceAggregate> Name = new(
+            nameof(WorkspaceAggregate.Name),
+            w => w.Name.Value);
+
+        internal static readonly FilterProperty<WorkspaceAggregate> IsPersonal = new(
+            nameof(WorkspaceAggregate.IsPersonal),
+            w => w.IsPersonal.Value);
+
+        internal static readonly FilterProperty<WorkspaceAggregate> LastActivity = new(
+            nameof(WorkspaceAggregate.LastActivity),
+            w => w.LastActivity.Date);
+
+        internal static readonly FilterProperty<WorkspaceAggregate> CreatedDateTime = new(
+            nameof(Audit.CreatedDateTime),
+            w => w.Audit.CreatedDateTime.Date);
+
+        internal static readonly FilterProperty<WorkspaceAggregate> UpdatedDateTime = new(
+            nameof(Audit.UpdatedDateTime),
+            w => w.Audit.UpdatedDateTime.Date);
+    }
+
+    #endregion
 }

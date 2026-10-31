@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using ConsiliumTempus.Domain.Common.Filters.Properties;
+using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.ProjectSprint;
@@ -11,7 +11,7 @@ public sealed class ProjectSprintFilter(Expression<Func<ProjectSprintAggregate, 
 {
     public static readonly IReadOnlyList<FilterProperty<ProjectSprintAggregate>> FilterProperties =
     [
-        new FilterProperties.ProjectSprint.NameFilterProperty()
+        Properties.Name
     ];
 
     public static IReadOnlyList<IFilter<ProjectSprintAggregate>> Parse(List<string> search)
@@ -28,4 +28,15 @@ public sealed class ProjectSprintFilter(Expression<Func<ProjectSprintAggregate, 
             ps.EndDate >= DateOnly.FromDateTime(date) ||
             ps.Audit.CreatedDateTime >= date);
     }
+
+    #region Properties
+
+    private static class Properties
+    {
+        internal static readonly FilterProperty<ProjectSprintAggregate> Name = new(
+            nameof(ProjectSprintAggregate.Name),
+            ps => ps.Name.Value);
+    }
+
+    #endregion
 }

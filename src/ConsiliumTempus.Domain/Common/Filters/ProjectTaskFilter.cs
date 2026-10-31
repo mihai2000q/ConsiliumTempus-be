@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using ConsiliumTempus.Domain.Common.Filters.Properties;
 using ConsiliumTempus.Domain.Common.Interfaces;
 using ConsiliumTempus.Domain.Common.Models;
 using ConsiliumTempus.Domain.ProjectTask;
@@ -11,12 +10,27 @@ public sealed class ProjectTaskFilter(Expression<Func<ProjectTaskAggregate, bool
 {
     public static readonly IReadOnlyList<FilterProperty<ProjectTaskAggregate>> FilterProperties =
     [
-        new FilterProperties.ProjectTask.NameFilterProperty(),
-        new FilterProperties.ProjectTask.IsCompletedFilterProperty()
+        Properties.Name,
+        Properties.IsCompleted
     ];
 
     public static IReadOnlyList<IFilter<ProjectTaskAggregate>> Parse(List<string> search)
     {
         return Parse(search, FilterProperties);
     }
+
+    #region Properties
+
+    private static class Properties
+    {
+        internal static readonly FilterProperty<ProjectTaskAggregate> Name = new(
+            nameof(ProjectTaskAggregate.Name),
+            ps => ps.Name.Value);
+
+        internal static readonly FilterProperty<ProjectTaskAggregate> IsCompleted = new(
+            nameof(ProjectTaskAggregate.IsCompleted),
+            ps => ps.IsCompleted.Value);
+    }
+
+    #endregion
 }
