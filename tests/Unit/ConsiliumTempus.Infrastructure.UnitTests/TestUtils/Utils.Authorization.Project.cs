@@ -1,15 +1,12 @@
-﻿using System.Text.Json;
-using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
+﻿using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
 using ConsiliumTempus.Domain.Project.ValueObjects;
 using ConsiliumTempus.Domain.ProjectSprint.ValueObjects;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Infrastructure.Extensions;
 using ConsiliumTempus.Infrastructure.Security.Authorization.Providers;
-using ConsiliumTempus.Infrastructure.UnitTests.TestData.Security.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Primitives;
+using ConsiliumTempus.Infrastructure.Security.Authorization.Targets;
 
 namespace ConsiliumTempus.Infrastructure.UnitTests.TestUtils;
 
