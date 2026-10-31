@@ -35,6 +35,10 @@ public abstract class CustomFieldSetupAggregate : AggregateRoot<CustomFieldSetup
     public IReadOnlyList<ProjectAggregate> Projects => _projects.AsReadOnly();
     public Audit Audit { get; init; } = null!;
 
+    public bool IsGlobal => Workspace is not null;
+    public WorkspaceAggregate OwningWorkspace => Workspace ?? Projects.Single().Workspace;
+    public ProjectAggregate? OwningProject => IsGlobal ? null : Projects.Single();
+
     protected void Update(
         Name name,
         Description description)
