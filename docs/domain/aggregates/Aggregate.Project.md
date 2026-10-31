@@ -44,6 +44,14 @@ class Project
 
 For database design checkout the [Project Diagram](../../database-diagrams/aggregates/Diagram.Project.md).
 
+### Visibility
+
+A project is visible to a user when they are a collaborator of its workspace and the project either is not private
+or they are one of its allowed members.
+The project lists apply both conditions in a single query (the projects of the collection and its total count),
+whereas, for a single project, the workspace is checked by the permission and the privacy by the authorization level
+**Is Allowed** (see [Hidden Resources](../../Security.md#hidden-resources)).
+
 ### Entities
 
 - [Project Status](../entities/project/Entity.ProjectStatus.md)

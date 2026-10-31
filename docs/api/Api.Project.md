@@ -152,6 +152,8 @@ Returns a project overview.
 Anyone that is part of the workspace can read the projects
 ([Read Collection Project Permission](../Security.md#permissions)),
 in case the workspace Id is mentioned, otherwise any logged-in user will get their projects.
+The private projects that the user is not an allowed member of are never returned, nor counted in the **totalCount**
+(see [Visibility](../domain/aggregates/Aggregate.Project.md#visibility)).
 
 ```js
 GET {{host}}/api/projects?pageSize=2&currentPage=1&orderBy=name.desc&orderBy=last_activity.asc&search=name sw project&search=is_private eq false&workspaceId=10000000-0000-0000-0000-000000000000
