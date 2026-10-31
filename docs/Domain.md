@@ -38,12 +38,15 @@ however, an **Aggregate** will usually be a model that contains all the relation
 
 Each aggregate can have its own set of **entities** or **value objects**.
 
-Each aggregate has a set of possible *errors*, *filters*, 
-*filter properties*, *orders*, *order properties* or *properties validation*.
+Each aggregate has a set of possible *errors*, *filters*, *orders* or *properties validation*.
 The aforementioned refers to the constraints that each property has
 (i.e., the name cannot be longer than 100 characters).
 
-To allow a new order or filter for a property for an entity that already supports it, add a new filter/order property.
+The filters and the orders (i.e., `ProjectFilter` and `ProjectOrder`) list the properties that the Api can search
+and order by, and they declare them in a `Properties` region at the end of the class,
+each one with its identifier (written in snake case in the Api) and the selector of the value.
+To allow a new order or filter for a property of an entity that already supports it, declare the property there
+and add it to the `OrderProperties` or the `FilterProperties` list of the class.
 
 The aggregates are:
 
