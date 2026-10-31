@@ -76,28 +76,28 @@ internal sealed class ProjectTaskMappingConfig : IRegister
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.Date,
+                src.Type,
                 src.Date));
         config.NewConfig<DateTimeCustomField, GetProjectTaskResponse.DateTimeCustomFieldResponse>()
             .ConstructUsing(src => new GetProjectTaskResponse.DateTimeCustomFieldResponse(
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.DateTime,
+                src.Type,
                 src.DateTime));
         config.NewConfig<DurationCustomField, GetProjectTaskResponse.DurationCustomFieldResponse>()
             .ConstructUsing(src => new GetProjectTaskResponse.DurationCustomFieldResponse(
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.Duration,
+                src.Type,
                 src.Duration));
         config.NewConfig<MultiSelectCustomField, GetProjectTaskResponse.MultiSelectCustomFieldResponse>()
             .ConstructUsing(src => new GetProjectTaskResponse.MultiSelectCustomFieldResponse(
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.MultiSelect,
+                src.Type,
                 src.Options.Adapt<List<GetProjectTaskResponse.MultiSelectCustomFieldResponse.
                     MultiSelectOptionResponse>>(),
                 src.Setup.Options.Adapt<List<GetProjectTaskResponse.MultiSelectCustomFieldResponse.
@@ -107,21 +107,21 @@ internal sealed class ProjectTaskMappingConfig : IRegister
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.Number,
+                src.Type,
                 src.Number == null ? null : src.Number.Value));
         config.NewConfig<PeopleCustomField, GetProjectTaskResponse.PeopleCustomFieldResponse>()
             .ConstructUsing(src => new GetProjectTaskResponse.PeopleCustomFieldResponse(
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.People,
+                src.Type,
                 src.Person.Adapt<GetProjectTaskResponse.UserResponse>()));
         config.NewConfig<SingleSelectCustomField, GetProjectTaskResponse.SingleSelectCustomFieldResponse>()
             .ConstructUsing(src => new GetProjectTaskResponse.SingleSelectCustomFieldResponse(
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.SingleSelect,
+                src.Type,
                 src.Option == null
                     ? null
                     : src.Option.Adapt<GetProjectTaskResponse.SingleSelectCustomFieldResponse
@@ -133,14 +133,14 @@ internal sealed class ProjectTaskMappingConfig : IRegister
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.Text,
+                src.Type,
                 src.Text == null ? null : src.Text.Value));
         config.NewConfig<TimeCustomField, GetProjectTaskResponse.TimeCustomFieldResponse>()
             .ConstructUsing(src => new GetProjectTaskResponse.TimeCustomFieldResponse(
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.Time,
+                src.Type,
                 src.Time));
 
         config.NewConfig<CustomField, GetProjectTaskResponse.CustomFieldResponse>()
@@ -202,28 +202,28 @@ internal sealed class ProjectTaskMappingConfig : IRegister
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.Date,
+                src.Type,
                 src.Date));
         config.NewConfig<DateTimeCustomField, GetCollectionProjectTaskResponse.DateTimeCustomFieldResponse>()
             .ConstructUsing(src => new GetCollectionProjectTaskResponse.DateTimeCustomFieldResponse(
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.DateTime,
+                src.Type,
                 src.DateTime));
         config.NewConfig<DurationCustomField, GetCollectionProjectTaskResponse.DurationCustomFieldResponse>()
             .ConstructUsing(src => new GetCollectionProjectTaskResponse.DurationCustomFieldResponse(
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.Duration,
+                src.Type,
                 src.Duration));
         config.NewConfig<MultiSelectCustomField, GetCollectionProjectTaskResponse.MultiSelectCustomFieldResponse>()
             .ConstructUsing(src => new GetCollectionProjectTaskResponse.MultiSelectCustomFieldResponse(
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.MultiSelect,
+                src.Type,
                 src.Options.Adapt<List<GetCollectionProjectTaskResponse.MultiSelectCustomFieldResponse.
                     MultiSelectOptionResponse>>()));
         config.NewConfig<NumberCustomField, GetCollectionProjectTaskResponse.NumberCustomFieldResponse>()
@@ -231,21 +231,21 @@ internal sealed class ProjectTaskMappingConfig : IRegister
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.Number,
+                src.Type,
                 src.Number == null ? null : src.Number.Value));
         config.NewConfig<PeopleCustomField, GetCollectionProjectTaskResponse.PeopleCustomFieldResponse>()
             .ConstructUsing(src => new GetCollectionProjectTaskResponse.PeopleCustomFieldResponse(
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.People,
+                src.Type,
                 src.Person.Adapt<GetCollectionProjectTaskResponse.UserResponse>()));
         config.NewConfig<SingleSelectCustomField, GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse>()
             .ConstructUsing(src => new GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse(
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.SingleSelect,
+                src.Type,
                 src.Option == null
                     ? null
                     : src.Option.Adapt<GetCollectionProjectTaskResponse.SingleSelectCustomFieldResponse.
@@ -255,14 +255,14 @@ internal sealed class ProjectTaskMappingConfig : IRegister
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.Text,
+                src.Type,
                 src.Text == null ? null : src.Text.Value));
         config.NewConfig<TimeCustomField, GetCollectionProjectTaskResponse.TimeCustomFieldResponse>()
             .ConstructUsing(src => new GetCollectionProjectTaskResponse.TimeCustomFieldResponse(
                 src.Id.Value,
                 src.Setup.Name.Value,
                 src.Setup.Description.Value,
-                CustomFieldType.Time,
+                src.Type,
                 src.Time));
 
         config.NewConfig<CustomField, GetCollectionProjectTaskResponse.CustomFieldResponse>()

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 
@@ -23,6 +24,8 @@ public sealed class TimeCustomField : CustomField
 
     public TimeOnly? Time { get; private set; }
     public override TimeCustomFieldSetupAggregate Setup { get; } = null!;
+
+    public override CustomFieldType Type => CustomFieldType.Time;
 
     public static TimeCustomField Create(
         TimeOnly? time,

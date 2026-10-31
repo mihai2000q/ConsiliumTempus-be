@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 
@@ -24,6 +25,8 @@ public sealed class SingleSelectCustomField : CustomField
 
     public SingleSelectOption? Option { get; private set; }
     public override SingleSelectCustomFieldSetupAggregate Setup { get; } = null!;
+
+    public override CustomFieldType Type => CustomFieldType.SingleSelect;
 
     public static SingleSelectCustomField Create(
         SingleSelectOption? option,

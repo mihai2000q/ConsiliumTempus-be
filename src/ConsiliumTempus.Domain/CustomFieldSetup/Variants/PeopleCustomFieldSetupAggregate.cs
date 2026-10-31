@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
@@ -20,6 +21,8 @@ public sealed class PeopleCustomFieldSetupAggregate : CustomFieldSetupAggregate
         WorkspaceAggregate? workspace) : base(id, name, description, workspace)
     {
     }
+
+    public override CustomFieldType Type => CustomFieldType.People;
 
     public static PeopleCustomFieldSetupAggregate Create(
         Name name,

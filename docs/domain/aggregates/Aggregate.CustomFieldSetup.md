@@ -81,6 +81,9 @@ such as the number of decimals after the floating point, or if the number should
 ### Variants
 
 All the below represent entities that are derived from the Custom Field Setup.
+Each of them says which type it is through `Type` (the *CustomFieldType*), so the rest of the application
+does not have to look at its class to know it.
+To add a new one, follow [Adding a Custom Field Type](../../Feature-Development-Workflow.md#adding-a-custom-field-type).
 
 #### Date
 

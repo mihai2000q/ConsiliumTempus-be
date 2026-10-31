@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
@@ -31,6 +32,8 @@ public sealed class MultiSelectCustomFieldSetupAggregate : CustomFieldSetupAggre
         .OrderBy(o => o.CustomOrderPosition)
         .ToList()
         .AsReadOnly();
+
+    public override CustomFieldType Type => CustomFieldType.MultiSelect;
 
     public static MultiSelectCustomFieldSetupAggregate Create(
         List<MultiSelectOption> options,

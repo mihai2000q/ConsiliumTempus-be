@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.Events;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
@@ -36,6 +37,8 @@ public sealed class SingleSelectCustomFieldSetupAggregate : CustomFieldSetupAggr
         .OrderBy(o => o.CustomOrderPosition)
         .ToList()
         .AsReadOnly();
+
+    public override CustomFieldType Type => CustomFieldType.SingleSelect;
 
     public static SingleSelectCustomFieldSetupAggregate Create(
         List<SingleSelectOption> options,

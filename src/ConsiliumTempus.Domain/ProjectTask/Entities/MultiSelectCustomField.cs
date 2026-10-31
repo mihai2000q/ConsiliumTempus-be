@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ConsiliumTempus.Domain.Common.Entities;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 
@@ -28,6 +29,8 @@ public sealed class MultiSelectCustomField : CustomField
         .AsReadOnly();
 
     public override MultiSelectCustomFieldSetupAggregate Setup { get; } = null!;
+
+    public override CustomFieldType Type => CustomFieldType.MultiSelect;
 
     public static MultiSelectCustomField Create(
         MultiSelectCustomFieldSetupAggregate setup,

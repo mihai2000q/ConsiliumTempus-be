@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 
@@ -23,6 +24,8 @@ public sealed class DateTimeCustomField : CustomField
 
     public DateTime? DateTime { get; private set; }
     public override DateTimeCustomFieldSetupAggregate Setup { get; } = null!;
+
+    public override CustomFieldType Type => CustomFieldType.DateTime;
 
     public static DateTimeCustomField Create(
         DateTime? dateTime,

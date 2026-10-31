@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.CustomFieldSetup.Variants;
 using ConsiliumTempus.Domain.ProjectTask.ValueObjects;
 using ConsiliumTempus.Domain.User;
@@ -24,6 +25,8 @@ public sealed class PeopleCustomField : CustomField
 
     public UserAggregate? Person { get; private set; }
     public override PeopleCustomFieldSetupAggregate Setup { get; } = null!;
+
+    public override CustomFieldType Type => CustomFieldType.People;
 
     public static PeopleCustomField Create(
         UserAggregate? person,

@@ -29,6 +29,7 @@ For database design checkout the [Project Task Diagram](../../../database-diagra
 ### Variants
 
 All the below represent entities that are derived from the Custom Field.
+Each of them says which type it is through `Type` (the *CustomFieldType*), which is the type of its setup.
 
 #### Date
 

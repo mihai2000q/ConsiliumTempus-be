@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup.ValueObjects;
 using ConsiliumTempus.Domain.Project;
@@ -24,6 +25,8 @@ public sealed class TextCustomFieldSetupAggregate : CustomFieldSetupAggregate
     }
 
     public Text? DefaultText { get; private set; }
+
+    public override CustomFieldType Type => CustomFieldType.Text;
 
     public static TextCustomFieldSetupAggregate Create(
         Text? defaultText,

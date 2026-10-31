@@ -22,6 +22,7 @@ using ConsiliumTempus.Application.ProjectTask.Queries.Get;
 using ConsiliumTempus.Application.ProjectTask.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
 using ConsiliumTempus.Common.UnitTests.ProjectTask;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.CustomFieldSetup;
 using ConsiliumTempus.Domain.ProjectTask.Entities;
@@ -52,6 +53,7 @@ public class ProjectTaskControllerTest
         : CustomField(CustomFieldId.CreateUnique(), task)
     {
         public override CustomFieldSetupAggregate Setup { get; } = CustomFieldSetupFactory.CreateText();
+        public override CustomFieldType Type => (CustomFieldType)int.MaxValue;
     }
 
     #endregion

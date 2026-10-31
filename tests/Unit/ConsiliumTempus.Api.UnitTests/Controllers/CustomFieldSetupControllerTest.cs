@@ -21,6 +21,7 @@ using ConsiliumTempus.Application.CustomFieldSetup.Commands.Update;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.Get;
 using ConsiliumTempus.Application.CustomFieldSetup.Queries.GetCollection;
 using ConsiliumTempus.Common.UnitTests.CustomFieldSetup;
+using ConsiliumTempus.Domain.Common.Enums;
 using ConsiliumTempus.Domain.Common.Errors;
 using ConsiliumTempus.Domain.Common.ValueObjects;
 using ConsiliumTempus.Domain.CustomFieldSetup;
@@ -51,7 +52,10 @@ public class CustomFieldSetupControllerTest
             CustomFieldSetupId.CreateUnique(),
             Name.Create("Unsupported"),
             Description.Create("Unsupported"),
-            null);
+            null)
+    {
+        public override CustomFieldType Type => (CustomFieldType)int.MaxValue;
+    }
 
     #endregion
 
